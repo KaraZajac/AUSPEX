@@ -61,22 +61,25 @@ Reported under the **null = miss** convention: every labeled event is scored, an
 sole true label has no other example in the corpus (structurally unrankable under leave-one-out)
 counts as a miss — it is *not* excluded from the denominator. See
 [`docs/AUDIT-2026-05-29.md`](docs/AUDIT-2026-05-29.md) for the methodology and the prior→current
-delta (the earlier 59.4% attribution figure excluded 41 unrankable singletons).
+delta (the earlier 59.4% attribution figure excluded 41 unrankable singletons). Counter-operations
+(state takedowns / sanctions / bounties) carry a null actor and are excluded from the
+attribution and joint label spaces — they are state actions, not threat-actor puzzles — which is
+why those engines' `n` is below the doctrine/pillar counts.
 
 | Engine | top-1 | top-3 | mAP / MRR | n |
 |---|---|---|---|---|
-| Attribution | 56.9% | 73.8% | 0.664 MRR | 538 |
-| Doctrine | 71.5% | 89.0% | 0.696 mAP | 555 |
-| Pillar | 64.4% | 81.6% | 0.681 mAP | 489 |
-| Joint (actor × doctrine) | 48.4% | 67.2% | 0.594 MRR | 467 |
+| Attribution | 56.6% | 75.0% | 0.666 MRR | 519 |
+| Doctrine | 72.3% | 89.0% | 0.697 mAP | 555 |
+| Pillar | 64.0% | 81.6% | 0.680 mAP | 489 |
+| Joint (actor × doctrine) | 48.4% | 68.0% | 0.597 MRR | 450 |
 
 With the editorial `campaign_id` "known-linkage" feature ablated, attribution top-1 / top-3 falls
-to 49.4% / 71.4% — published as a sensitivity bound, since `campaign_id` is analyst-assigned and
-can encode the attribution for single-actor campaigns.
+to 50.5% / 72.3% (−6.2pp / −2.7pp) — published as a sensitivity bound, since `campaign_id` is
+analyst-assigned and can encode the attribution for single-actor campaigns.
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
 diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.7%, with top-3 set-stability 99.2% (seeded resampler,
+stability under 10% corpus dropout: 91.8%, with top-3 set-stability 99.1% (seeded resampler,
 reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
 false-flag handling.
 

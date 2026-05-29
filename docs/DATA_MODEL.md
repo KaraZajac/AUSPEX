@@ -643,6 +643,23 @@ This also pre-empts the "i-SOON contractor leak" type problem: when
 attribution shifts from "unknown" to "MSS-via-contractor" years later,
 the doctrine tag was already correct and doesn't need to change.
 
+**Counter-operations get `actor_id: null` (locked 2026-05-29).** A second
+class of null-actor events: when the event *is* a state counter-action —
+an infrastructure takedown/seizure, a law-enforcement disruption, a
+sanctions designation, or a bounty — the cyber operation it describes was
+carried out by a law-enforcement / sanctioning / diplomatic body (FBI,
+NCA, Europol, OFAC, State Dept), **not** by a tracked threat actor. So
+`actor_id` is null, the acting body is recorded in `attributing_org`, and
+the targeted actor is named in the `summary` (and, where verifiable, an
+inline `# was <actor>` note on the row). These events are excluded from
+the attribution label space — predicting "who conducted the LockBit
+takedown" is not a threat-attribution puzzle. The distinguishing test is
+`incident_type`: a counter-action carries `disruption`/`documentary`/
+`policy-action` only, whereas an event that *documents a threat actor's
+own operation* (an indictment detailing the intrusions, a vendor
+attribution) carries an operational type (`intrusion`, `data-theft`,
+`financial-theft`, …) and keeps the actor. See `docs/AUDIT-2026-05-29.md`.
+
 ## 10. Open editorial decisions (not blocking schema)
 
 - **False-flag tracking as a top-level field** — recommend yes, given
