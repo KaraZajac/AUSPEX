@@ -40,6 +40,9 @@ const ciMrr  = bootstrapMeanCI(mrrVals);
 // rank-5 is small. The post-calibration plot uses the fitted T.)
 const samplesUncal: Array<{ predicted: number; correct: boolean }> = [];
 const samplesCal: Array<{ predicted: number; correct: boolean }> = [];
+// Per-actor calibration: map predicted-actor → samples. Built from the
+// post-calibration probabilities so we measure deployable confidence.
+const perActorSamples = new Map<string, Array<{ predicted: number; correct: boolean }>>();
 for (const r of eval_.events) {
   if (r.top5.length === 0) continue;
   const scores = r.top5.map((c) => c.logScore);
@@ -48,8 +51,20 @@ for (const r of eval_.events) {
   const top1Actor = r.top5[0].actorId;
   const correct = r.trueActors.includes(top1Actor);
   if (Number.isFinite(probsUncal[0])) samplesUncal.push({ predicted: probsUncal[0], correct });
-  if (Number.isFinite(probsCal[0]))   samplesCal.push({   predicted: probsCal[0],   correct });
+  if (Number.isFinite(probsCal[0]))   {
+    samplesCal.push({ predicted: probsCal[0], correct });
+    let bucket = perActorSamples.get(top1Actor);
+    if (!bucket) { bucket = []; perActorSamples.set(top1Actor, bucket); }
+    bucket.push({ predicted: probsCal[0], correct });
+  }
 }
+// Keep actors with n >= 15 predictions — below that the reliability
+// diagram has too few points-per-bin to read.
+const perActorRows = [...perActorSamples.entries()]
+  .filter(([, samples]) => samples.length >= 15)
+  .map(([actorId, samples]) => ({ actorId, samples, n: samples.length }))
+  .sort((a, b) => b.n - a.n)
+  .slice(0, 8);
 
 // ─── accuracy-heatmap rows ───
 const heatmapRows = perState.map(([state, row]) => ({
@@ -153,6 +168,51 @@ const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationS
       (n={CALIBRATION.attribution.sampleSize}).
     </p>
   </section>
+
+  {perActorRows.length > 0 && (
+    <section>
+      <h2>Per-actor calibration</h2>
+      <p>
+        The engine-wide reliability diagram above can mask per-actor
+        miscalibration — an engine can be well-calibrated on average
+        while being systematically overconfident on one cluster and
+        underconfident on another. Below: reliability diagrams for
+        the top-{perActorRows.length} actors by prediction count
+        (n ≥ 15). Same identity diagonal, same 10-bin protocol, same
+        T = {CALIBRATION.attribution.temperature.toFixed(1)}.
+        Per-actor ECE quantifies the cluster-specific calibration
+        gap; tight clusters (≤ 0.05) indicate analyst-deployable
+        confidence numbers for that actor; wider gaps mean the
+        engine's probability for that actor should be treated as
+        an ordinal hint, not a calibrated likelihood.
+      </p>
+      <div class="cal-grid">
+        {perActorRows.map((row) => {
+          const actor = a.actors.get(row.actorId);
+          const label = actor?.canonical_name ?? row.actorId;
+          return (
+            <ReliabilityDiagram
+              samples={row.samples}
+              title={`${label} · n=${row.n}`}
+              size={260}
+              bins={6}
+            />
+          );
+        })}
+      </div>
+      <p class="reading" style="margin-top: 0.5rem;">
+        <strong>Reading.</strong> Six bins instead of ten because
+        per-actor sample sizes don't support 10-bin resolution
+        without empty bins. Actors are shown in descending order of
+        prediction count (the engine predicted them most often).
+        Cluster identification by inspection: tight points on the
+        diagonal = good calibration for that cluster; consistent
+        gap above the diagonal = the engine is systematically
+        under-confident for this cluster (probabilities should be
+        bumped up); gap below = systematic over-confidence.
+      </p>
+    </section>
+  )}
 
   <section>
     <h2>Top confusion pairs</h2>

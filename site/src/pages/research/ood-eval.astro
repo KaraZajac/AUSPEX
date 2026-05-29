@@ -1,0 +1,345 @@
+---
+import Base from '../../layouts/Base.astro';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+interface OODJson {
+  events: Array<{
+    eventId: string;
+    eventName: string;
+    startDate?: string;
+    trueState?: string;
+    entropy: number;
+    maxProb: number;
+    jaccardDistance: number;
+    correct: boolean;
+    bestRank: number | null;
+  }>;
+  trainingEntropiesSorted: number[];
+  percentiles: { p10: number; p25: number; p50: number; p75: number; p85: number; p90: number; p95: number; p99: number };
+  pearsonEntropyJaccard: number;
+  meanEntropyCorrect: number;
+  meanEntropyWrong: number;
+  generatedAt: string;
+}
+
+const here = dirname(fileURLToPath(import.meta.url));
+const cachePath = resolve(here, '..', '..', '..', '.cache', 'ood-eval.json');
+const data: OODJson | null = existsSync(cachePath)
+  ? JSON.parse(readFileSync(cachePath, 'utf8'))
+  : null;
+
+// Build histograms client-side at build time.
+const HIST_BINS = 30;
+const lnK = Math.log(10); // max entropy for K=10
+
+function histogram(values: number[], min: number, max: number, bins: number): number[] {
+  const out = new Array<number>(bins).fill(0);
+  const w = (max - min) / bins;
+  for (const v of values) {
+    if (!Number.isFinite(v)) continue;
+    let i = Math.floor((v - min) / w);
+    if (i < 0) i = 0;
+    if (i >= bins) i = bins - 1;
+    out[i]++;
+  }
+  return out;
+}
+
+const histAll      = data ? histogram(data.events.map((e) => e.entropy), 0, lnK, HIST_BINS) : [];
+const histCorrect  = data ? histogram(data.events.filter((e) => e.correct).map((e) => e.entropy), 0, lnK, HIST_BINS) : [];
+const histWrong    = data ? histogram(data.events.filter((e) => !e.correct).map((e) => e.entropy), 0, lnK, HIST_BINS) : [];
+const histMax = Math.max(1, ...histAll, ...histCorrect, ...histWrong);
+
+// Scatter for entropy × Jaccard
+const SCATTER_W = 480;
+const SCATTER_H = 280;
+const PAD_L = 40, PAD_R = 12, PAD_T = 12, PAD_B = 36;
+const innerW = SCATTER_W - PAD_L - PAD_R;
+const innerH = SCATTER_H - PAD_T - PAD_B;
+function sx(e: number) { return PAD_L + (e / lnK) * innerW; }
+function sy(d: number) { return PAD_T + (1 - d) * innerH; }
+
+// Histogram geometry
+const H_W = 560;
+const H_H = 220;
+const HPAD_L = 40, HPAD_R = 12, HPAD_T = 14, HPAD_B = 30;
+const hInnerW = H_W - HPAD_L - HPAD_R;
+const hInnerH = H_H - HPAD_T - HPAD_B;
+function hx(i: number) { return HPAD_L + (i / HIST_BINS) * hInnerW; }
+function hy(c: number) { return HPAD_T + (1 - c / histMax) * hInnerH; }
+const barW = hInnerW / HIST_BINS;
+---
+<Base title="OOD methodology — backtest" wide>
+  <p class="kicker">Research</p>
+  <h1>Out-of-distribution detection</h1>
+  <p class="lede">
+    Two complementary methodologies for "is this event weird enough
+    that I should treat the engine's prediction with extra caution?"
+    <strong>Jaccard nearest-neighbor</strong> catches structural
+    novelty — events whose feature set doesn't match anything in
+    the training corpus. <strong>Calibrated-softmax entropy</strong>
+    catches model uncertainty — events where the engine itself can't
+    decide between candidates. They're orthogonal signals; we expose
+    both.
+  </p>
+
+  {!data ? (
+    <p class="reading">
+      <strong>No cached result.</strong> Run <code>pnpm run eval-ood</code>
+      from <code>site/</code> to populate <code>.cache/ood-eval.json</code>,
+      then rebuild.
+    </p>
+  ) : (
+    <>
+      <p class="meta">
+        Generated {data.generatedAt} · n = {data.events.length} held-out events
+        scored via LOO with NB · calibrated at T = 2.0 (the fitted
+        attribution-engine temperature).
+      </p>
+
+      <section>
+        <h2>Headline finding</h2>
+        <div class="stat-grid">
+          <div class="stat"><strong>{data.meanEntropyCorrect.toFixed(2)}</strong>mean entropy on correct predictions (nats)</div>
+          <div class="stat"><strong>{data.meanEntropyWrong.toFixed(2)}</strong>mean entropy on incorrect predictions</div>
+          <div class="stat"><strong>{(data.meanEntropyWrong / data.meanEntropyCorrect).toFixed(2)}×</strong>entropy gap</div>
+          <div class="stat"><strong>r = {data.pearsonEntropyJaccard.toFixed(3)}</strong>Pearson(entropy, Jaccard distance)</div>
+        </div>
+        <p class="reading">
+          The entropy gap ({(data.meanEntropyWrong / data.meanEntropyCorrect).toFixed(2)}×)
+          is the empirical signal that supports using softmax entropy
+          as an abstain-or-flag mechanism: when the engine's entropy
+          is in the high tail, it's correct {((100 * data.events.filter((e) => e.entropy > data.percentiles.p85 && e.correct).length) / Math.max(1, data.events.filter((e) => e.entropy > data.percentiles.p85).length)).toFixed(0)}%
+          of the time (above the 85th-percentile threshold) versus
+          {' '}{((100 * data.events.filter((e) => e.entropy <= data.percentiles.p85 && e.correct).length) / Math.max(1, data.events.filter((e) => e.entropy <= data.percentiles.p85).length)).toFixed(0)}%
+          below. The orthogonality between entropy and Jaccard
+          distance (r = {data.pearsonEntropyJaccard.toFixed(3)}) means
+          neither methodology subsumes the other — they catch
+          different OOD modes.
+        </p>
+      </section>
+
+      <section>
+        <h2>Training-event entropy distribution</h2>
+        <p>
+          The empirical training distribution. Vertical lines mark
+          the percentile thresholds AUSPEX uses to classify a query
+          event as in-distribution, borderline, or OOD. Maximum
+          possible entropy for K=10 candidates is
+          ln(10) = {lnK.toFixed(3)} nats (uniform distribution); the
+          right edge of the histogram approaches this limit.
+        </p>
+        <figure class="chart">
+          <svg viewBox={`0 0 ${H_W} ${H_H}`} width={H_W} height={H_H} role="img" aria-label="Histogram of LOO entropies">
+            {/* y-axis baseline */}
+            <line x1={HPAD_L} y1={HPAD_T + hInnerH} x2={HPAD_L + hInnerW} y2={HPAD_T + hInnerH} stroke="var(--ctp-overlay0)" />
+            <line x1={HPAD_L} y1={HPAD_T} x2={HPAD_L} y2={HPAD_T + hInnerH} stroke="var(--ctp-overlay0)" />
+
+            {/* Bars: stacked (correct = green, wrong = red) */}
+            {histAll.map((_, i) => {
+              const c = histCorrect[i];
+              const w = histWrong[i];
+              const cH = (c / histMax) * hInnerH;
+              const wH = (w / histMax) * hInnerH;
+              const yC = HPAD_T + hInnerH - cH;
+              const yW = yC - wH;
+              return (
+                <g>
+                  {c > 0 && <rect x={hx(i) + 1} y={yC} width={barW - 2} height={cH} fill="var(--ctp-green)" opacity="0.7" />}
+                  {w > 0 && <rect x={hx(i) + 1} y={yW} width={barW - 2} height={wH} fill="var(--ctp-red)" opacity="0.7" />}
+                </g>
+              );
+            })}
+
+            {/* Percentile threshold lines */}
+            {[
+              { p: data.percentiles.p50, label: 'median', color: 'var(--ctp-blue)' },
+              { p: data.percentiles.p85, label: '85% (borderline)', color: 'var(--ctp-yellow)' },
+              { p: data.percentiles.p95, label: '95% (OOD)',        color: 'var(--ctp-red)'    },
+            ].map(({ p, label, color }) => (
+              <g>
+                <line x1={HPAD_L + (p / lnK) * hInnerW} y1={HPAD_T} x2={HPAD_L + (p / lnK) * hInnerW} y2={HPAD_T + hInnerH} stroke={color} stroke-width="1.5" stroke-dasharray="3 3" />
+                <text x={HPAD_L + (p / lnK) * hInnerW} y={HPAD_T - 2} text-anchor="middle" class="h-label" style={`fill: ${color};`}>{label}</text>
+              </g>
+            ))}
+
+            {/* x-axis ticks */}
+            {[0, 0.5, 1, 1.5, 2].map((t) => (
+              t < lnK && (
+                <g>
+                  <line x1={HPAD_L + (t / lnK) * hInnerW} y1={HPAD_T + hInnerH} x2={HPAD_L + (t / lnK) * hInnerW} y2={HPAD_T + hInnerH + 3} stroke="var(--ctp-overlay0)" />
+                  <text x={HPAD_L + (t / lnK) * hInnerW} y={HPAD_T + hInnerH + 14} text-anchor="middle" class="h-tick">{t.toFixed(1)}</text>
+                </g>
+              )
+            ))}
+            <text x={HPAD_L + (lnK / lnK) * hInnerW} y={HPAD_T + hInnerH + 14} text-anchor="middle" class="h-tick">{lnK.toFixed(2)}</text>
+
+            {/* axis labels */}
+            <text x={HPAD_L + hInnerW / 2} y={H_H - 4} text-anchor="middle" class="h-axis">entropy (nats)</text>
+            <text x={12} y={HPAD_T + hInnerH / 2} text-anchor="middle" class="h-axis" transform={`rotate(-90 12 ${HPAD_T + hInnerH / 2})`}>n events</text>
+          </svg>
+          <figcaption>
+            <span class="leg"><span class="sw" style="background: var(--ctp-green);"></span>engine got rank-1 correct</span>
+            <span class="leg"><span class="sw" style="background: var(--ctp-red);"></span>engine got rank-1 wrong</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>Entropy × Jaccard distance</h2>
+        <p>
+          Scatter of held-out events, colored by correctness. If the
+          two OOD methodologies were redundant, points would cluster
+          on a diagonal; instead they fill the plane, confirming the
+          methodologies catch different OOD modes. Correct events
+          (green) concentrate in the bottom-left (low entropy, low
+          Jaccard distance — "the engine confidently identifies a
+          familiar pattern"); wrong events (red) fan out across the
+          rest of the plane.
+        </p>
+        <figure class="chart">
+          <svg viewBox={`0 0 ${SCATTER_W} ${SCATTER_H}`} width={SCATTER_W} height={SCATTER_H} role="img" aria-label="Entropy vs Jaccard scatter">
+            {/* gridlines */}
+            {[0.25, 0.5, 0.75].map((p) => (
+              <g>
+                <line x1={PAD_L} y1={PAD_T + p * innerH} x2={PAD_L + innerW} y2={PAD_T + p * innerH} stroke="var(--ctp-surface0)" stroke-dasharray="2 3" />
+                <text x={PAD_L - 6} y={PAD_T + p * innerH + 3} text-anchor="end" class="h-tick">{(1 - p).toFixed(2)}</text>
+              </g>
+            ))}
+            {[0.25, 0.5, 0.75, 1].map((p) => (
+              <g>
+                <line x1={PAD_L + p * innerW} y1={PAD_T} x2={PAD_L + p * innerW} y2={PAD_T + innerH} stroke="var(--ctp-surface0)" stroke-dasharray="2 3" />
+                <text x={PAD_L + p * innerW} y={PAD_T + innerH + 14} text-anchor="middle" class="h-tick">{(p * lnK).toFixed(2)}</text>
+              </g>
+            ))}
+            {/* axis baselines */}
+            <line x1={PAD_L} y1={PAD_T} x2={PAD_L} y2={PAD_T + innerH} stroke="var(--ctp-overlay0)" />
+            <line x1={PAD_L} y1={PAD_T + innerH} x2={PAD_L + innerW} y2={PAD_T + innerH} stroke="var(--ctp-overlay0)" />
+            {/* points */}
+            {data.events.map((e) => (
+              <circle
+                cx={sx(e.entropy).toFixed(1)}
+                cy={sy(e.jaccardDistance).toFixed(1)}
+                r="2.5"
+                fill={e.correct ? 'var(--ctp-green)' : 'var(--ctp-red)'}
+                opacity="0.45"
+              />
+            ))}
+            {/* axis labels */}
+            <text x={PAD_L + innerW / 2} y={SCATTER_H - 4} text-anchor="middle" class="h-axis">entropy (nats)</text>
+            <text x={10} y={PAD_T + innerH / 2} text-anchor="middle" class="h-axis" transform={`rotate(-90 10 ${PAD_T + innerH / 2})`}>Jaccard distance</text>
+          </svg>
+        </figure>
+      </section>
+
+      <section>
+        <h2>Methodology</h2>
+        <ol>
+          <li>
+            <strong>Jaccard nearest-neighbor (existing).</strong>
+            Feature-set similarity max over training events.
+            1 − max-similarity = distance. Hand-tuned thresholds
+            (0.55 borderline, 0.75 OOD) selected to match the LOO
+            error-rate transition. Catches structural OOD — events
+            whose features don't co-occur in any training event.
+          </li>
+          <li>
+            <strong>Calibrated-softmax entropy (Hendrycks &amp; Gimpel 2016).</strong>
+            Softmax the top-10 NB log-scores with temperature scaling
+            (T = {(2.0).toFixed(1)}, fitted via the engine-wide
+            calibration); take Shannon entropy. High entropy means
+            the engine is spread thin across many candidates.
+            Thresholds are <em>data-derived</em>: the 85th and 95th
+            percentiles of the training-event entropy distribution
+            give the borderline / OOD cutoffs. No hand-tuning
+            beyond the percentile choice.
+          </li>
+          <li>
+            <strong>How to use both.</strong> A query event is
+            classified as <em>in-distribution</em> only if both
+            methodologies agree it's in-distribution. If either
+            flags borderline / OOD, the engine's prediction should
+            carry a confidence caveat. The two signals are orthogonal
+            (r = {data.pearsonEntropyJaccard.toFixed(3)}), so the
+            intersection is a stricter test than either alone.
+          </li>
+        </ol>
+        <p class="reading">
+          <strong>Caveat.</strong> The training distribution used
+          here is computed from a single LOO pass. For thesis-grade
+          reporting, the right protocol is the same stratified k-fold
+          we use for the stacker (each event participates in eval
+          exactly once with its entropy computed from a model that
+          never saw it). The single-LOO distribution is a close
+          approximation but should be re-computed under k-fold for
+          the snapshot. See <a href="/research/stacked-eval">/research/stacked-eval</a>
+          for the k-fold pattern.
+        </p>
+      </section>
+    </>
+  )}
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .stat {
+    display: flex; flex-direction: column; gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext1);
+  }
+  .stat strong { font-size: 1.5rem; color: var(--ctp-text); font-weight: 600; }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .chart {
+    margin: 0.5rem 0 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+  }
+  .chart figcaption {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+  }
+  .leg { display: inline-flex; align-items: center; gap: 0.375rem; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+  .h-tick {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay1);
+  }
+  .h-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+  }
+  .h-axis {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ctp-subtext0);
+  }
+  ol li { margin: 0.5rem 0; }
+</style>
