@@ -40,15 +40,16 @@ export interface EventFeatures {
   malware: Set<string>;
   /** Named target identities — orgs/<slug> and infra/<slug> from event.targets. */
   targets: Set<string>;
-  /** Geopolitical-marker proximity tokens. For each timeline marker
-   *  relevant to the event's attacking state (or multilateral), encode
-   *  `markerId:bucket` where bucket reflects how recent the marker is
-   *  relative to the event date:
-   *   - `:recent` (0–365d post-marker)
-   *   - `:mid`    (365d–3y post-marker)
-   *   - `:late`   (3y+ post-marker)
-   *  Pre-marker events get nothing. Captures regime shifts —
-   *  Russian ops post-2022-02-24, IR ops post-Soleimani, etc. */
+  /** Geopolitical-marker proximity + cyber-reactivity tokens. Timeline
+   *  markers near the event fire from BOTH the attacking state and each
+   *  target country, encoded `role:markerId:bucket` where role is `a`
+   *  (attacker-side) or `t` (target-side) and bucket reflects recency
+   *  post-marker: `:recent` (0–365d), `:mid` (365d–3y), `:late` (3y+).
+   *  Pre-marker events get nothing. Additionally encodes cyber-to-cyber
+   *  reactivity for the (attacker,target) dyad as
+   *  `dyad:<state>><targets>:<bucket>` (reactive-acute ≤30d / -recent
+   *  ≤90d / -year ≤365d / -distant). Captures regime shifts — Russian
+   *  ops post-2022-02-24, IR ops post-Soleimani — and tit-for-tat timing. */
   markers: Set<string>;
   /** Campaign cluster id (if set). Single-valued; events that belong
    *  to a named campaign cluster (Olympic Games, SolarWinds chain,
@@ -369,11 +370,15 @@ function addToProfile(dst: ActorProfile, src: ActorProfile, w: number) {
   addMap(dst.inferredCampaigns, src.inferredCampaigns);
   addMap(dst.proseTerms, src.proseTerms);
   addMap(dst.operators, src.operators);
-  // Sets (ttps, malware) — union, weights don't apply since these are presence-only signals.
-  if (w > 0) {
-    for (const t of src.ttps) dst.ttps.add(t);
-    for (const m of src.malware) dst.malware.add(m);
-  }
+  // Presence-only Sets (ttps, malware) are intentionally NOT blended by the
+  // service prior. A fractional/borrowed presence has no principled meaning for
+  // a binary coverage signal, and unioning the service's whole vocabulary into
+  // every actor floods rare actors with tradecraft they never used — and could
+  // not be undone under leave-one-out (a negative weight cannot remove a Set
+  // member). The Empirical-Bayes prior therefore smooths only the multinomial
+  // COUNT families above; each actor keeps its own observed / MITRE-seeded TTP
+  // and malware presence. (Corrected per AUDIT-2026-05-29 B1; previously this
+  // block unioned src's Sets whenever w>0, breaking leave-one-out.)
 }
 
 /** Build per-actor feature profiles from a training event set. */
@@ -448,18 +453,18 @@ export function buildProfiles(
   const lambdaMax = opts.servicePriorLambda ?? 0;
   if (lambdaMax > 0) {
     const k = 5;
-    const servicePofiles = new Map<string, ActorProfile>();
+    const serviceProfiles = new Map<string, ActorProfile>();
     for (const [actorId, p] of profiles) {
       const sid = atlas.actors.get(actorId)?.primary_service_id;
       if (!sid) continue;
-      let svc = servicePofiles.get(sid);
-      if (!svc) { svc = newEmptyProfileForBlending(); servicePofiles.set(sid, svc); }
+      let svc = serviceProfiles.get(sid);
+      if (!svc) { svc = newEmptyProfileForBlending(); serviceProfiles.set(sid, svc); }
       addToProfile(svc, p, 1.0);
     }
     for (const [actorId, p] of profiles) {
       const sid = atlas.actors.get(actorId)?.primary_service_id;
       if (!sid) continue;
-      const svc = servicePofiles.get(sid);
+      const svc = serviceProfiles.get(sid);
       if (!svc) continue;
       const lambdaEff = lambdaMax * k / (k + p.total);
       if (lambdaEff < 0.01) continue;
@@ -794,9 +799,11 @@ export function scoreActor(
   }
 
   // Malware-family signature with genealogy-aware partial credit.
-  // Exact family match counts full; same-lineage-group match counts half;
-  // direct parent/child match (one hop) counts 0.7. Lineage data lives in
-  // atlas.malwareLineageGroup; if unavailable, falls back to exact match.
+  // Exact family match counts full (1.0); same-lineage-group match counts
+  // half (0.5). Lineage data lives in atlas.malwareLineageGroup; if
+  // unavailable, falls back to exact match. (A one-hop parent/child tier was
+  // specced at 0.7 but is not implemented — the lineage `parent` field is
+  // unused; documented per AUDIT-2026-05-29 rather than built.)
   if (profile.malware.size > 0 && features.malware.size > 0) {
     let weightedMatches = 0;
     let totalMatches = 0;

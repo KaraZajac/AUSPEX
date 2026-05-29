@@ -516,6 +516,42 @@ import Base from '../layouts/Base.astro';
       adjustment is applied symmetrically and documented per
       research page.
     </p>
+
+    <h3>Scoring conventions and leakage disclosures</h3>
+    <p>
+      Hit-rates use the <strong>null&nbsp;=&nbsp;miss</strong>
+      convention: every labeled event is scored, and an event whose only
+      true label has no other example in the corpus — structurally
+      unrankable under leave-one-out — counts as a miss (reciprocal
+      rank&nbsp;0), not an exclusion. This is the standard
+      information-retrieval treatment and is applied identically across
+      every engine and the MITRE / stacked baselines, so the numbers are
+      directly comparable.
+    </p>
+    <p>
+      The attribution engine includes an editorial
+      <code>campaign_id</code> feature: when an event is publicly
+      reported as part of a named campaign, that linkage is genuine
+      analyst-available evidence. Because a single-actor campaign tag can
+      effectively encode the attribution, we publish the attribution
+      hit-rate <em>both with and without</em> this feature — the ablated
+      figure is the lower bound on genuinely novel, untagged events. The
+      algorithmically-inferred campaign clusters are label-blind by
+      construction, and a held-out event's own inferred-campaign
+      membership is suppressed while it is scored, so a cluster it helped
+      form cannot leak its label back.
+    </p>
+    <p>
+      The hierarchical service-prior (Empirical&nbsp;Bayes,
+      λ&nbsp;=&nbsp;0.2) smooths the multinomial count features of rare
+      actors toward their service's shape under leave-one-out;
+      presence-only TTP and malware signals are deliberately not smoothed
+      (each actor keeps only its own observed tradecraft). TF-IDF prose
+      weighting uses a corpus-global document frequency — a fixed,
+      label-free vocabulary statistic, consistent with standard practice.
+      Corpus-stability resampling uses a seeded generator so the figure
+      is reproducible build-to-build.
+    </p>
   </section>
 
   <section id="dont">

@@ -12,14 +12,16 @@
  * Methodology:
  *   1. LOO with NB → top-K candidates per held-out event
  *   2. Per (candidate, event) pair, compute a meta-feature vector
- *   3. Split events into stacker-train (80%) and stacker-eval (20%),
- *      seeded so numbers reproduce. The stacker NEVER trains on an
- *      event it later re-ranks.
- *   4. Train L2-regularized logistic regression on the train pairs
- *   5. Re-rank candidates on stacker-eval events; report top-K metrics
+ *   3. Stratified 5-fold cross-validation (folds balanced by attacker
+ *      state, seeded so numbers reproduce). The stacker NEVER trains on
+ *      an event it later re-ranks; every event is scored exactly once.
+ *   4. Train L2-regularized logistic regression on each fold's train pairs
+ *   5. Re-rank the held-out fold's candidates; report top-K metrics under
+ *      the null=miss convention (a true actor outside the NB top-K is a
+ *      miss for both NB and stacker, and stays in the denominator).
  *
- * Output is comparable to the plain LOO attribution numbers on the
- * stacker-eval slice — same denominator, same per-state breakdown.
+ * Output is comparable to the plain LOO attribution numbers — same event
+ * set, same null=miss denominator, same per-state breakdown.
  */
 import { atlas, type AuspexEvent, type Atlas, type Actor } from './atlas';
 import {
@@ -113,7 +115,12 @@ function pairFeatures(
   const text = ((event.summary ?? '') + ' ' + (event.outcome_summary ?? '')).toLowerCase();
   let malwareLineageHit = 0;
   for (const fam of atlas.malwareLineage.keys()) {
-    if (!text.includes(fam)) continue;
+    // Word-boundary match (AUDIT-2026-05-29): raw substring let 2-3 char lineage keys
+    // like 'cs' (a Cobalt Strike alias) match inside ordinary words — 'politics',
+    // 'logistics', 'jwics' — firing a spurious lineage hit on ~119 events. \b...\b
+    // mirrors the engine's own inferEventMalware regex.
+    const esc = fam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (!new RegExp(`\\b${esc}\\b`).test(text)) continue;
     if (actorMalware.has(fam)) {
       malwareLineageHit += 2; // exact match
       continue;
@@ -352,7 +359,7 @@ export function runStackedAttributionLOO(numFolds: number = DEFAULT_K_FOLDS): St
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
-    const opts: ProfileBuildOptions = { servicePriorLambda: 0.1 };
+    const opts: ProfileBuildOptions = { servicePriorLambda: 0.2 }; // λ=0.2, matches headline engine (AUDIT-2026-05-29 B1)
     if (refDate) opts.referenceDate = refDate;
     const profiles = buildProfiles(training, a, opts);
     const vocab = buildVocab(training, a);

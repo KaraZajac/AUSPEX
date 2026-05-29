@@ -25,7 +25,10 @@ export interface JointEventResult {
 
 export interface JointEvalSummary {
   events: JointEventResult[];
+  /** All labeled (actor+doctrine) events; null=miss convention. */
   scored: number;
+  /** Events with no rankable true pair (unrankable under LOO); counted as misses. */
+  unrankable: number;
   hit1: number;
   hit3: number;
   hit5: number;
@@ -52,6 +55,9 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
     const features = extractFeatures(heldOut, a);
+    // LOO hygiene (AUDIT-2026-05-29): suppress held-out event's own inferred-campaign id
+    // (cluster formed with it present; verified equivalent to per-fold recompute).
+    features.inferredCampaign = null;
     const ranked = rankPairs(features, training, a, { ...opts, referenceDate: refDate });
 
     const trueActors = [...actorsOfEvent(heldOut)];
@@ -82,12 +88,15 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  // null=miss convention (AUDIT-2026-05-29 A1): all labeled events scored;
+  // unrankable pairs count as misses, not exclusions.
+  const scored = results;
+  const unrankable = results.filter((r) => r.bestRank === null).length;
   const hit1 = scored.filter((r) => r.hit1).length;
   const hit3 = scored.filter((r) => r.hit3).length;
   const hit5 = scored.filter((r) => r.hit5).length;
   const hit10 = scored.filter((r) => r.hit10).length;
-  const mrr = scored.reduce((s, r) => s + 1 / r.bestRank!, 0) / Math.max(scored.length, 1);
+  const mrr = scored.reduce((s, r) => s + (r.bestRank ? 1 / r.bestRank : 0), 0) / Math.max(scored.length, 1);
 
   const perState = new Map<string, { scored: number; hit1: number; hit3: number; hit5: number; mrr: number }>();
   for (const r of scored) {
@@ -101,11 +110,11 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
     if (r.hit1) row.hit1++;
     if (r.hit3) row.hit3++;
     if (r.hit5) row.hit5++;
-    row.mrr += 1 / r.bestRank!;
+    row.mrr += r.bestRank ? 1 / r.bestRank : 0;
   }
   for (const row of perState.values()) row.mrr /= row.scored;
 
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 15);
+  const worst = [...scored].sort((a, b) => (b.bestRank ?? Infinity) - (a.bestRank ?? Infinity)).slice(0, 15);
   const confidentHits = [...scored]
     .filter((r) => r.hit1 && (r.top5[0]?.coOccurrence ?? 0) >= 2)
     .sort((a, b) => (b.top5[0]?.coOccurrence ?? 0) - (a.top5[0]?.coOccurrence ?? 0))
@@ -114,6 +123,7 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
   return {
     events: results,
     scored: scored.length,
+    unrankable,
     hit1, hit3, hit5, hit10, mrr,
     perState,
     worst,

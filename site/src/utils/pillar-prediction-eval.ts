@@ -35,7 +35,10 @@ export interface PillarEventResult {
 
 export interface PillarEvalSummary {
   events: PillarEventResult[];
+  /** All labeled events; null=miss convention. */
   scored: number;
+  /** Events whose true pillar never ranks (singleton); counted as misses. */
+  unrankable: number;
   hit1: number;
   hit3: number;
   hit5: number;
@@ -86,6 +89,9 @@ export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary
     const vocab: Vocab = buildVocab(training, a);
     const idf = buildPillarIDF(profiles);
     const features = extractFeatures(heldOut, a);
+    // LOO hygiene (AUDIT-2026-05-29): suppress held-out event's own inferred-campaign id
+    // (cluster formed with it present; verified equivalent to per-fold recompute).
+    features.inferredCampaign = null;
     const ranked = rankPillars(features, profiles, vocab, { ...opts, idf });
 
     const truePillars = [...pillarsOfEvent(heldOut, a)];
@@ -158,7 +164,10 @@ export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  // null=miss convention (AUDIT-2026-05-29 A1): all labeled events scored;
+  // a true pillar that never ranks (singleton) counts as a miss (recall/AP = 0).
+  const scored = results;
+  const unrankable = results.filter((r) => r.bestRank === null).length;
   const hit1Count = scored.filter((r) => r.hit1).length;
   const hit3Count = scored.filter((r) => r.hit3).length;
   const hit5Count = scored.filter((r) => r.hit5).length;
@@ -196,11 +205,12 @@ export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary
     .sort((a, b) => b.count - a.count)
     .slice(0, 20);
 
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 15);
+  const worst = [...scored].sort((a, b) => (b.bestRank ?? Infinity) - (a.bestRank ?? Infinity)).slice(0, 15);
 
   return {
     events: results,
     scored: scored.length,
+    unrankable,
     hit1: hit1Count,
     hit3: hit3Count,
     hit5: hit5Count,

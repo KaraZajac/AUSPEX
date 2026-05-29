@@ -130,6 +130,7 @@ export function runAttributionTemporal(trainEnd: string, opts: ScoringOptions = 
     const profiles = buildProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildIDF(profiles);
     const features = extractFeatures(ev, a);
+    features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29), consistent with the LOO evals
     const ranked = rankActors(features, profiles, vocab, { ...opts, idf });
     const trueActors = [...actorsOfEvent(ev)];
     const ranks = trueActors.map((t) => ranked.findIndex((c) => c.actorId === t) + 1).filter((r) => r > 0);
@@ -191,6 +192,7 @@ export function runDoctrineTemporal(trainEnd: string, opts: ScoringOptions = {})
     const profiles = buildDoctrineProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildDoctrineIDF(profiles);
     const features = extractFeatures(ev, a);
+    features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankDoctrines(features, profiles, vocab, { ...opts, idf });
     const trueDoctrines = [...doctrinesOfEvent(ev, a)];
     const ranks = trueDoctrines.map((d) => ranked.findIndex((c) => c.doctrineId === d) + 1).filter((r) => r > 0);
@@ -241,6 +243,7 @@ export function runPillarTemporal(trainEnd: string, opts: ScoringOptions = {}): 
     const profiles = buildPillarProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildPillarIDF(profiles);
     const features = extractFeatures(ev, a);
+    features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankPillars(features, profiles, vocab, { ...opts, idf });
     const truePillars = [...pillarsOfEvent(ev, a)];
     const ranks = truePillars.map((p) => ranked.findIndex((c) => c.pillarId === p) + 1).filter((r) => r > 0);
@@ -288,6 +291,7 @@ export function runJointTemporal(trainEnd: string, opts: JointScoringOptions = {
   const results: TemporalTestResult[] = [];
   for (const ev of test) {
     const features = extractFeatures(ev, a);
+    features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankPairs(features, train, a, opts);
     const trueActors = [...actorsOfEvent(ev)];
     const trueDoctrines = [...doctrinesOfEvent(ev, a)];

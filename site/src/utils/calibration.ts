@@ -101,11 +101,15 @@ function attributionPredictions(): PredictionRecord[] {
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
-    const profiles = buildProfiles(training, a, refDate ? { referenceDate: refDate } : {});
+    // Calibration must be fit on the SAME config the deployed eval uses (AUDIT-2026-05-29):
+    // λ=0.2 service prior, malware-lineage grouping, and inferred-campaign LOO suppression —
+    // otherwise T is fit on a score distribution the engine no longer produces.
+    const profiles = buildProfiles(training, a, refDate ? { referenceDate: refDate, servicePriorLambda: 0.2 } : { servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, a);
     const idf = buildIDF(profiles);
     const features = extractFeatures(heldOut, a);
-    const ranked = rankActors(features, profiles, vocab, { idf });
+    features.inferredCampaign = null;
+    const ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: a.malwareLineageGroup });
     const scores = ranked.map((r) => r.logScore);
     // Multi-label: pick the best-ranking true actor for the calibration target.
     const trueActors = actorsOfEvent(heldOut);
@@ -133,6 +137,7 @@ function doctrinePredictions(): PredictionRecord[] {
     const vocab = buildVocab(training, a);
     const idf = buildDoctrineIDF(profiles);
     const features = extractFeatures(heldOut, a);
+    features.inferredCampaign = null; // match deployed eval (AUDIT-2026-05-29)
     const ranked = rankDoctrines(features, profiles, vocab, { idf });
     const scores = ranked.map((r) => r.logScore);
     const trueSet = doctrinesOfEvent(heldOut, a);
@@ -160,6 +165,7 @@ function pillarPredictions(): PredictionRecord[] {
     const vocab = buildVocab(training, a);
     const idf = buildPillarIDF(profiles);
     const features = extractFeatures(heldOut, a);
+    features.inferredCampaign = null; // match deployed eval (AUDIT-2026-05-29)
     const ranked = rankPillars(features, profiles, vocab, { idf });
     const scores = ranked.map((r) => r.logScore);
     const trueSet = pillarsOfEvent(heldOut, a);

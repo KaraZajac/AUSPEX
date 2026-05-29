@@ -160,7 +160,7 @@ export function computeEntropyOOD(
   trainingEntropies?: number[],
 ): EntropyOODResult {
   // Train NB on the training set.
-  const profiles = buildProfiles(training, atlas, { servicePriorLambda: 0.1 });
+  const profiles = buildProfiles(training, atlas, { servicePriorLambda: 0.2 });
   const vocab = buildVocab(training, atlas);
   const idf = buildIDF(profiles);
   // Score the query.
@@ -216,7 +216,7 @@ export function runOODBaselineEval(atlas: Atlas): {
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     // Score with NB.
-    const profiles = buildProfiles(training, atlas, { servicePriorLambda: 0.1 });
+    const profiles = buildProfiles(training, atlas, { servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, atlas);
     const idf = buildIDF(profiles);
     const features = extractFeatures(heldOut, atlas);

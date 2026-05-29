@@ -34,7 +34,11 @@ export interface EventEvalResult {
 
 export interface EvalSummary {
   events: EventEvalResult[];
+  /** All labeled events. Under the null=miss convention every labeled event is scored. */
   scored: number;
+  /** Events whose sole true actor is a corpus singleton (no other training event),
+   *  hence unrankable under LOO. Counted as misses (RR=0), not excluded. */
+  unrankable: number;
   hit1: number;
   hit3: number;
   hit5: number;
@@ -77,10 +81,16 @@ export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
-    const profiles = buildProfiles(training, a, { referenceDate: refDate, servicePriorLambda: 0.1 });
+    // servicePriorLambda=0.2: corrected Empirical-Bayes prior (Set-flood fixed), λ selected
+    // by LOO sweep — peak top-1/top-3/MRR at 0.2, declines by 0.3 (AUDIT-2026-05-29 B1).
+    const profiles = buildProfiles(training, a, { referenceDate: refDate, servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, a);
     const idf = buildIDF(profiles);
     const features = extractFeatures(heldOut, a);
+    // LOO hygiene (AUDIT-2026-05-29): suppress the held-out event's own inferred-campaign
+    // membership — the cluster was formed with this event present, so scoring against it
+    // leaks label-correlated structure. Verified equivalent to recomputing clusters on N-1.
+    features.inferredCampaign = null;
     const ranked = rankActors(features, profiles, vocab, { ...opts, idf, malwareLineageGroup: a.malwareLineageGroup });
 
     const trueActors = [...actorsOfEvent(heldOut)];
@@ -113,12 +123,18 @@ export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  // null=miss convention (AUDIT-2026-05-29 A1): every labeled event is scored.
+  // An event whose sole true actor has no other corpus event is unrankable
+  // under LOO and counts as a miss (RR=0) — it is NOT excluded from the
+  // denominator. This is the IR-standard treatment and matches the stacked
+  // eval. (Previously these events were dropped, inflating top-1 by ~4.5pp.)
+  const scored = results;
+  const unrankable = results.filter((r) => r.bestRank === null).length;
   const hit1Count = scored.filter((r) => r.hit1).length;
   const hit3Count = scored.filter((r) => r.hit3).length;
   const hit5Count = scored.filter((r) => r.hit5).length;
   const hit10Count = scored.filter((r) => r.hit10).length;
-  const mrr = scored.reduce((sum, r) => sum + 1 / r.bestRank!, 0) / Math.max(scored.length, 1);
+  const mrr = scored.reduce((sum, r) => sum + (r.bestRank ? 1 / r.bestRank : 0), 0) / Math.max(scored.length, 1);
 
   // Per-state breakdown
   const perState = new Map<string, { scored: number; hit1: number; hit3: number; hit5: number; mrr: number }>();
@@ -133,7 +149,7 @@ export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
     if (r.hit1) row.hit1++;
     if (r.hit3) row.hit3++;
     if (r.hit5) row.hit5++;
-    row.mrr += 1 / r.bestRank!;
+    row.mrr += r.bestRank ? 1 / r.bestRank : 0;
   }
   for (const row of perState.values()) row.mrr /= row.scored;
 
@@ -146,12 +162,13 @@ export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
     .sort((a, b) => b.count - a.count)
     .slice(0, 20);
 
-  // Worst predictions (largest bestRank, only among scored events)
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 15);
+  // Worst predictions (largest bestRank; unrankable events sort first as the worst case)
+  const worst = [...scored].sort((a, b) => (b.bestRank ?? Infinity) - (a.bestRank ?? Infinity)).slice(0, 15);
 
   return {
     events: results,
     scored: scored.length,
+    unrankable,
     hit1: hit1Count,
     hit3: hit3Count,
     hit5: hit5Count,
@@ -180,7 +197,7 @@ export interface StabilityResult {
  * random, retrain, score all labeled events, measure how often the
  * top candidate is the same as on the full corpus.
  */
-export function runStability(n: number = 10, dropFraction: number = 0.1, opts: ScoringOptions = {}): StabilityResult {
+export function runStability(n: number = 10, dropFraction: number = 0.1, opts: ScoringOptions = {}, seed: number = 0xc0ffee): StabilityResult {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
@@ -204,9 +221,16 @@ export function runStability(n: number = 10, dropFraction: number = 0.1, opts: S
   let top3Agreements = 0;
   let top3Comparisons = 0;
 
-  // Deterministic-seed-ish: use math.random — n is small enough that it doesn't matter.
+  // Seeded LCG (same generator family as eval-stats.ts) so the stability figure is
+  // reproducible build-to-build (AUDIT-2026-05-29; previously an unseeded RNG, so the
+  // published 91.2% could not be regenerated). Numerical Recipes LCG constants.
+  let rngState = seed >>> 0;
+  const rand = () => {
+    rngState = (Math.imul(rngState, 1664525) + 1013904223) >>> 0;
+    return rngState / 4294967296;
+  };
   for (let i = 0; i < n; i++) {
-    const surviving = allEvents.filter(() => Math.random() >= dropFraction);
+    const surviving = allEvents.filter(() => rand() >= dropFraction);
     const profiles = buildProfiles(surviving, a);
     const vocab = buildVocab(surviving, a);
 

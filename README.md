@@ -53,17 +53,32 @@ Bayesian Naive Bayes with multi-hot features and Laplace smoothing. Feature fami
 - TF-IDF prose terms (extracted from event summary/outcome)
 - Indictment-named individual operators
 
-Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes), out-of-distribution detection via Jaccard similarity, and temperature-scaling calibration (T = 2.0 / 3.0 / 3.0 for attribution / doctrine / pillar).
+Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes, λ = 0.2), out-of-distribution detection (Jaccard nearest-neighbour + calibrated-entropy), and temperature-scaling calibration (T = 2.0 / 3.0 / 3.0 for attribution / doctrine / pillar).
 
 ### Current accuracy (leave-one-out)
 
-| Engine | top-1 | top-3 | mAP / MRR |
-|---|---|---|---|
-| Attribution | 59.4% | 78.5% | 0.700 MRR |
-| Doctrine | 72.0% | 89.2% | 0.698 mAP |
-| Pillar | 65.3% | 82.4% | 0.688 mAP |
+Reported under the **null = miss** convention: every labeled event is scored, and an event whose
+sole true label has no other example in the corpus (structurally unrankable under leave-one-out)
+counts as a miss — it is *not* excluded from the denominator. See
+[`docs/AUDIT-2026-05-29.md`](docs/AUDIT-2026-05-29.md) for the methodology and the prior→current
+delta (the earlier 59.4% attribution figure excluded 41 unrankable singletons).
 
-Calibration improves NLL by 27.8% / 39.1% / 43.5% on the three engines. Rank-1 stability under 10% corpus dropout: 91.2%. NotPetya counterfactual carried as a standing adversarial test for false-flag handling.
+| Engine | top-1 | top-3 | mAP / MRR | n |
+|---|---|---|---|---|
+| Attribution | 56.9% | 73.8% | 0.664 MRR | 538 |
+| Doctrine | 71.5% | 89.0% | 0.696 mAP | 555 |
+| Pillar | 64.4% | 81.6% | 0.681 mAP | 489 |
+| Joint (actor × doctrine) | 48.4% | 67.2% | 0.594 MRR | 467 |
+
+With the editorial `campaign_id` "known-linkage" feature ablated, attribution top-1 / top-3 falls
+to 49.4% / 71.4% — published as a sensitivity bound, since `campaign_id` is analyst-assigned and
+can encode the attribution for single-actor campaigns.
+
+Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
+diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
+stability under 10% corpus dropout: 91.7%, with top-3 set-stability 99.2% (seeded resampler,
+reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
+false-flag handling.
 
 ## Quick start
 

@@ -4,20 +4,21 @@
  * predictions; baked here so the /predict UI and any other consumer
  * can apply calibration without re-running LOO at request time.
  *
- * Refit whenever the corpus changes substantially (e.g., a
- * significant batch of new events). Last fit: 2026-05-27, against
- * the temporal + IDF engine over 425 events.
+ * Refit whenever the corpus changes substantially, or the engine
+ * configuration changes.
  */
-// Refit 2026-05-28 against the full-stack engine over 658 events
-// (UK/FR/SK/UAE doctrine-state expansion + per-state backfill pass +
-// task-12 latent campaign clustering + ShinyHunters corpus).
-// Temperatures stable at T = 2.0 / 3.0 / 3.0; improvement-pct drifted
-// slightly down across all three engines as the larger backfilled
-// corpus made raw logits marginally less overconfident on average.
+// Refit 2026-05-29 (AUDIT-2026-05-29) on the DEPLOYED config — the same
+// settings the eval/OOD paths use: null=miss LOO, λ=0.2 service prior +
+// malware-lineage grouping (attribution), and inferred-campaign LOO
+// suppression. Temperatures are unchanged at T = 2.0 / 3.0 / 3.0 (robust
+// across config variants). Attribution's improvement-pct fell 27.8 → 17.9
+// once fit on the deployed distribution — the prior figure was fit WITHOUT
+// the service prior / lineage and overstated the NLL gain. Doctrine and
+// pillar are essentially unchanged (those engines use no service prior).
 export const CALIBRATION = {
-  attribution: { temperature: 2.0, improvementPct: 27.8, sampleSize: 502 },
-  doctrine:    { temperature: 3.0, improvementPct: 39.1, sampleSize: 554 },
-  pillar:      { temperature: 3.0, improvementPct: 43.5, sampleSize: 484 },
+  attribution: { temperature: 2.0, improvementPct: 17.9, sampleSize: 497 },
+  doctrine:    { temperature: 3.0, improvementPct: 38.9, sampleSize: 554 },
+  pillar:      { temperature: 3.0, improvementPct: 43.2, sampleSize: 484 },
 } as const;
 
 export type EngineKind = keyof typeof CALIBRATION;
