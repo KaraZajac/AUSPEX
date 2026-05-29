@@ -15,7 +15,11 @@
  * Fit by grid search; the underlying loss is convex in 1/T so
  * a coarse grid finds the minimum cleanly.
  */
-import { atlas, type AuspexEvent } from './atlas';
+import { atlas } from './atlas';
+// calibratedProbs lives in calibration-constants (pure, fs-free) so the
+// browser/OOD graph never pulls in the fs-bound atlas() singleton. Re-export
+// it here for existing callers (research/*-eval.astro).
+export { calibratedProbs } from './calibration-constants';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -80,16 +84,6 @@ export function fitTemperature(predictions: PredictionRecord[]): CalibrationFit 
     improvementPct: baselineLoss > 0 ? ((baselineLoss - bestLoss) / baselineLoss) * 100 : 0,
     sampleSize: predictions.length,
   };
-}
-
-/** Apply a fitted temperature to a set of log-scores and return calibrated probabilities. */
-export function calibratedProbs(scores: number[], temperature: number): number[] {
-  if (scores.length === 0) return [];
-  const scaled = scores.map((s) => s / temperature);
-  const m = Math.max(...scaled);
-  const exp = scaled.map((s) => Math.exp(s - m));
-  const sum = exp.reduce((a, b) => a + b, 0);
-  return sum > 0 ? exp.map((e) => e / sum) : exp.map(() => 0);
 }
 
 /** Run LOO over the attribution engine and collect predictions for calibration. */

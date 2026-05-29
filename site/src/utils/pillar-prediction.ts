@@ -11,7 +11,7 @@
  * doctrine_id (without a pillar_id or program_id) contribute no
  * pillar label and don't train the engine.
  */
-import { Atlas, type AuspexEvent } from './atlas';
+import { Atlas, type AuspexEvent } from './atlas-core';
 import { extractFeatures, type EventFeatures, type Vocab, type ProfileBuildOptions, type IDFMap } from './attribution';
 import { parentTechnique } from './ttp-extract';
 

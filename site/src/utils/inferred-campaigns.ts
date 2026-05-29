@@ -15,7 +15,7 @@
  * Events with an explicit `campaign_id` are skipped — they're already
  * served by the editorial `campaigns` feature family.
  */
-import type { Atlas } from './atlas';
+import type { Atlas } from './atlas-core';
 import { inferEventTTPs, parentTechnique } from './ttp-extract';
 import { inferEventMalware } from './malware-extract';
 

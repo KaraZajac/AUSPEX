@@ -8,7 +8,7 @@
  * the precision side; this is the recall side that lets event features
  * meet actor profiles in TTP space.
  */
-import type { AuspexEvent } from './atlas';
+import type { AuspexEvent } from './atlas-core';
 
 /** initial_vector field → MITRE technique ids. */
 const VECTOR_TTPS: Record<string, string[]> = {

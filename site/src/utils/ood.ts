@@ -19,7 +19,7 @@
  * because it only requires the event to look like SOMETHING
  * familiar — outliers fail every comparison.
  */
-import { Atlas, type AuspexEvent } from './atlas';
+import { Atlas, type AuspexEvent } from './atlas-core';
 import {
   extractFeatures,
   type EventFeatures,
@@ -29,8 +29,10 @@ import {
   rankActors,
   actorsOfEvent,
 } from './attribution';
-import { calibratedProbs } from './calibration';
-import { CALIBRATION } from './calibration-constants';
+// calibratedProbs imported from the pure constants module (not ./calibration)
+// so this module's import graph stays free of node:fs — required for the
+// browser /predict bundle, which imports computeOOD from here.
+import { calibratedProbs, CALIBRATION } from './calibration-constants';
 
 /** Build the flat feature-string set used for Jaccard comparison. */
 function featureSet(f: EventFeatures): Set<string> {

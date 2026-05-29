@@ -22,7 +22,7 @@
  * Weight in scoring: low (~0.4) — these are noisy relative to
  * structured features but contribute orthogonal information.
  */
-import type { Atlas, AuspexEvent } from './atlas';
+import type { Atlas, AuspexEvent } from './atlas-core';
 
 // Stopwords: standard English + cybersecurity-overcommon terms that
 // would otherwise dominate TF-IDF distinctiveness if not pruned.

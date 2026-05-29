@@ -11,7 +11,7 @@
  * rewards plausibility — APT41 × MIC2025 has been seen many times,
  * Lazarus × MIC2025 has not.
  */
-import { Atlas, type AuspexEvent } from './atlas';
+import { Atlas, type AuspexEvent } from './atlas-core';
 import {
   actorsOfEvent,
   buildProfiles,

@@ -79,7 +79,7 @@ analyst-assigned and can encode the attribution for single-actor campaigns.
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
 diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.8%, with top-3 set-stability 99.1% (seeded resampler,
+stability under 10% corpus dropout: 91.7%, with top-3 set-stability 98.9% (seeded resampler,
 reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
 false-flag handling.
 

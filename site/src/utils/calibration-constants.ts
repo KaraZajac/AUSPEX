@@ -22,3 +22,18 @@ export const CALIBRATION = {
 } as const;
 
 export type EngineKind = keyof typeof CALIBRATION;
+
+/**
+ * Apply a fitted temperature to a set of log-scores and return calibrated
+ * probabilities. Pure math — lives here (rather than in calibration.ts,
+ * which pulls in the fs-bound atlas() singleton) so the browser/OOD graph
+ * stays fs-free. Re-exported from calibration.ts for existing callers.
+ */
+export function calibratedProbs(scores: number[], temperature: number): number[] {
+  if (scores.length === 0) return [];
+  const scaled = scores.map((s) => s / temperature);
+  const m = Math.max(...scaled);
+  const exp = scaled.map((s) => Math.exp(s - m));
+  const sum = exp.reduce((a, b) => a + b, 0);
+  return sum > 0 ? exp.map((e) => e / sum) : exp.map(() => 0);
+}

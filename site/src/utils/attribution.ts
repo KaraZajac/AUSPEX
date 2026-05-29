@@ -13,7 +13,7 @@
  * This module is intentionally framework-free so it can run in
  * Astro build, tsx CLI, and a browser bundle interchangeably.
  */
-import { Atlas, type AuspexEvent } from './atlas';
+import { Atlas, type AuspexEvent } from './atlas-core';
 import { inferEventTTPs, parentTechnique } from './ttp-extract';
 import { inferEventMalware } from './malware-extract';
 import { extractProseTerms } from './prose-features';

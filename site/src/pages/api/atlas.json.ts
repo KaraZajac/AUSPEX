@@ -36,6 +36,11 @@ export const GET: APIRoute = () => {
       }
       return out;
     })(),
+    // event_id → inferred-campaign cluster id (latent campaign feature).
+    // Built by inferCampaigns(atlas); excludes events with editorial
+    // campaign_id. Required by the isomorphic engine so the browser builds
+    // the same inferredCampaigns profile family the server eval does.
+    inferredCampaignByEvent: Object.fromEntries(a.inferredCampaignByEvent),
   };
   return new Response(JSON.stringify(payload, null, 2), {
     headers: {

@@ -8,7 +8,7 @@
  * input is the same; only the label space (doctrines, not actors)
  * and aggregation differ.
  */
-import { Atlas, type AuspexEvent } from './atlas';
+import { Atlas, type AuspexEvent } from './atlas-core';
 import { extractFeatures, type EventFeatures, type Vocab, type ProfileBuildOptions, type IDFMap } from './attribution';
 import { parentTechnique } from './ttp-extract';
 
