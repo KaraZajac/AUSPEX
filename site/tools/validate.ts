@@ -177,6 +177,9 @@ for (const d of a.doctrines.values() as IterableIterator<Doctrine>) {
 }
 
 // actors
+// Controlled metadata vocabs used in the actors + target-entity loops below (declared here to avoid TDZ).
+const ACTOR_STATUS = new Set(['active', 'dormant', 'indicted', 'sanctioned', 'disbanded']);
+const CRITICALITY = new Set(['national-cii', 'regional-cii', 'commercial', 'civil-society']);
 for (const act of a.actors.values()) {
   if (act.primary_service_id && fkMissing(a.services as Map<string, unknown>, act.primary_service_id)) {
     add('error', 'dangling-fk', `actors/${act.id}`, `primary_service_id not found: ${act.primary_service_id}`);
@@ -205,12 +208,39 @@ for (const act of a.actors.values()) {
       add('warning', 'dangling-fk', `actors/${act.id}`, `cited source not found: ${sid}`);
     }
   }
+  if (act.status && !ACTOR_STATUS.has(act.status)) {
+    add('warning', 'enum', `actors/${act.id}`, `actor status not in controlled set: ${act.status}`);
+  }
+}
+
+// target-entity criticality (controlled metadata vocab)
+for (const tgt of a.targets.values()) {
+  if (tgt.criticality && !CRITICALITY.has(tgt.criticality)) {
+    add('warning', 'enum', `targets/${tgt.id}`, `criticality not in controlled set: ${tgt.criticality}`);
+  }
 }
 
 // events
 const CONF_LINK = new Set(['attested', 'strongly_inferred', 'plausible']);
 const CONF_ORG = new Set(['high', 'moderate', 'low']);
 const ASSESS = new Set(['concur', 'concur-with-caveat', 'partial', 'contested']);
+// Controlled feature vocabularies (AUDIT-2026-05-29). initial_vector + incident_type
+// are model features; a dirty value silently corrupts the engine, so these are
+// enforced as errors (not warnings). New values require a deliberate edit here.
+const INITIAL_VECTOR = new Set([
+  'phishing', 'n-day', '0-day', 'supply-chain', 'valid-creds', 'insider', 'physical', 'unknown',
+]);
+const INCIDENT_TYPE = new Set([
+  'intrusion', 'data-theft', 'destructive', 'wiper', 'ransomware', 'financial-theft', 'extortion',
+  'supply-chain', 'pre-positioning', 'disruption', 'espionage', 'surveillance', 'bulk-collection',
+  'reconnaissance', 'influence-operation', 'hack-and-leak', 'leak', 'insider', 'cyber-physical',
+  // meta / documentary (kept in the engine for now; exclusion deferred)
+  'documentary', 'disclosure', 'doctrine-publication', 'attribution-publication', 'policy', 'law-enforcement',
+]);
+// Controlled metadata vocabularies (warnings — display/analysis only, not engine features).
+// (CRITICALITY + ACTOR_STATUS are declared earlier, above the actors loop, to avoid a TDZ.)
+const FALSE_FLAG = new Set(['none', 'suspected', 'confirmed']);
+const TARGET_ROLE = new Set(['primary', 'collateral', 'staging', 'transit']);
 const SEC_PREFIXES = ['sectors/']; // anything under targets/sectors/<slug>
 
 let danglingOrgs = 0;
@@ -219,6 +249,17 @@ const missingOrgs = new Set<string>();
 const missingInfra = new Set<string>();
 
 for (const ev of a.events.values()) {
+  if (ev.initial_vector && !INITIAL_VECTOR.has(ev.initial_vector)) {
+    add('error', 'enum', `events/${ev.id}`, `initial_vector not in controlled set: ${ev.initial_vector}`);
+  }
+  for (const it of ev.incident_type ?? []) {
+    if (!INCIDENT_TYPE.has(it)) {
+      add('error', 'enum', `events/${ev.id}`, `incident_type not in controlled set: ${it}`);
+    }
+  }
+  if (ev.false_flag_risk && !FALSE_FLAG.has(ev.false_flag_risk)) {
+    add('warning', 'enum', `events/${ev.id}`, `false_flag_risk not in {none,suspected,confirmed}: ${ev.false_flag_risk}`);
+  }
   for (const attr of ev.attributions ?? []) {
     if (attr.actor_id && fkMissing(a.actors as Map<string, unknown>, attr.actor_id)) {
       add('error', 'dangling-fk', `events/${ev.id}`, `attribution actor_id not found: ${attr.actor_id}`);
@@ -276,6 +317,9 @@ for (const ev of a.events.values()) {
   }
   for (const t of ev.targets ?? []) {
     const tid = t.target_id ?? '';
+    if (t.role && !TARGET_ROLE.has(t.role)) {
+      add('warning', 'enum', `events/${ev.id}`, `target role not in {primary,collateral,staging,transit}: ${t.role}`);
+    }
     if (tid.startsWith('sectors/')) {
       const slug = tid.replace(/^sectors\//, '');
       if (fkMissing(a.sectors as Map<string, unknown>, slug)) {

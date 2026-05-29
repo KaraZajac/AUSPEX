@@ -68,13 +68,13 @@ why those engines' `n` is below the doctrine/pillar counts.
 
 | Engine | top-1 | top-3 | mAP / MRR | n |
 |---|---|---|---|---|
-| Attribution | 56.6% | 75.0% | 0.666 MRR | 519 |
-| Doctrine | 72.3% | 89.0% | 0.697 mAP | 555 |
-| Pillar | 64.0% | 81.6% | 0.680 mAP | 489 |
-| Joint (actor × doctrine) | 48.4% | 68.0% | 0.597 MRR | 450 |
+| Attribution | 56.8% | 74.6% | 0.665 MRR | 519 |
+| Doctrine | 71.7% | 88.8% | 0.696 mAP | 555 |
+| Pillar | 64.8% | 81.0% | 0.683 mAP | 489 |
+| Joint (actor × doctrine) | 48.9% | 68.9% | 0.599 MRR | 450 |
 
 With the editorial `campaign_id` "known-linkage" feature ablated, attribution top-1 / top-3 falls
-to 50.5% / 72.3% (−6.2pp / −2.7pp) — published as a sensitivity bound, since `campaign_id` is
+to 50.3% / 71.5% (−6.5pp / −3.1pp) — published as a sensitivity bound, since `campaign_id` is
 analyst-assigned and can encode the attribution for single-actor campaigns.
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
