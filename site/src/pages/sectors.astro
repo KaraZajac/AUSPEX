@@ -1,0 +1,133 @@
+---
+import Base from '../layouts/Base.astro';
+import { atlas, type Sector } from '../utils/atlas';
+
+const a = atlas();
+const roots = a.rootSectors();
+
+interface Node {
+  sector: Sector;
+  count: number;
+  children: Node[];
+}
+
+function build(sector: Sector): Node {
+  return {
+    sector,
+    count: a.eventsForSector(sector.id).length,
+    children: a.childSectors(sector.id).map(build),
+  };
+}
+
+const tree = roots.map(build);
+---
+<Base title="Sectors" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Sectors</h1>
+  <p class="lede">
+    The target-sector taxonomy. Events tag against the most specific
+    supported level; queries roll up to parents. Counts shown are
+    direct hits at that level.
+  </p>
+
+  <div class="sector-grid">
+    {tree.map((node) => (
+      <article class="sector-group">
+        <h2>
+          <a href={`/sector/${node.sector.id}`}>{node.sector.name}</a>
+          {node.count > 0 && <span class="count">{node.count}</span>}
+        </h2>
+        {node.children.length > 0 && (
+          <ul class="children">
+            {node.children.map((child) => (
+              <li>
+                <a href={`/sector/${child.sector.id}`}>{child.sector.name}</a>
+                {child.count > 0 && <span class="count-inline">{child.count}</span>}
+                {child.children.length > 0 && (
+                  <ul class="grandchildren">
+                    {child.children.map((gc) => (
+                      <li>
+                        <a href={`/sector/${gc.sector.id}`}>{gc.sector.name}</a>
+                        {gc.count > 0 && <span class="count-inline">{gc.count}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .sector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem 2rem;
+    margin-top: 1.5rem;
+  }
+  .sector-group h2 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    padding-bottom: 0.25rem;
+  }
+  .sector-group h2 a {
+    text-decoration: none;
+    color: var(--ctp-text);
+    font-family: var(--font-mono);
+  }
+  .sector-group h2 a:hover { color: var(--ctp-blue); }
+  .sector-group .count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    font-weight: 400;
+  }
+  ul.children {
+    list-style: none;
+    padding-left: 0.75rem;
+    margin: 0;
+    border-left: 1px solid var(--ctp-surface0);
+  }
+  ul.children > li {
+    margin: 0.25rem 0;
+    font-size: 0.9375rem;
+  }
+  ul.children > li > a {
+    text-decoration: none;
+    color: var(--ctp-subtext1);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  ul.children > li > a:hover { color: var(--ctp-blue); }
+  ul.grandchildren {
+    list-style: none;
+    padding-left: 0.75rem;
+    margin: 0.125rem 0;
+    border-left: 1px solid var(--ctp-surface0);
+  }
+  ul.grandchildren > li {
+    margin: 0.125rem 0;
+    font-size: 0.875rem;
+  }
+  ul.grandchildren > li > a {
+    text-decoration: none;
+    color: var(--ctp-subtext0);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  ul.grandchildren > li > a:hover { color: var(--ctp-blue); }
+  .count-inline {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    margin-left: 0.4rem;
+  }
+</style>

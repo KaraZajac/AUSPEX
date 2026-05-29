@@ -1,0 +1,100 @@
+---
+interface Slice {
+  pillarId: string | null;
+  pillarName: string;
+  count: number;
+  percent: number;
+}
+
+interface Props {
+  slices: Slice[];
+  total: number;
+}
+const { slices, total } = Astro.props;
+
+const palette = [
+  'var(--ctp-blue)',
+  'var(--ctp-mauve)',
+  'var(--ctp-peach)',
+  'var(--ctp-teal)',
+  'var(--ctp-pink)',
+  'var(--ctp-yellow)',
+  'var(--ctp-green)',
+  'var(--ctp-sapphire)',
+  'var(--ctp-maroon)',
+  'var(--ctp-lavender)',
+];
+
+function colorFor(i: number, pillarId: string | null): string {
+  if (pillarId === null) return 'var(--ctp-surface1)';
+  return palette[i % palette.length];
+}
+---
+{total > 0 && (
+  <div class="pillar-breakdown">
+    <div class="bar-track" role="img" aria-label="Doctrine pillar event distribution">
+      {slices.map((s, i) => (
+        <span
+          class="bar-segment"
+          style={`width: ${s.percent.toFixed(3)}%; background: ${colorFor(i, s.pillarId)};`}
+          title={`${s.pillarName} — ${s.count} event${s.count === 1 ? '' : 's'} (${s.percent.toFixed(0)}%)`}
+        ></span>
+      ))}
+    </div>
+    <ul class="pillar-list">
+      {slices.map((s, i) => (
+        <li>
+          <span class="swatch" style={`background: ${colorFor(i, s.pillarId)};`}></span>
+          <span class="p-name">{s.pillarName}</span>
+          <span class="p-count">{s.count}</span>
+          <span class="p-pct">{s.percent.toFixed(0)}%</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  .pillar-breakdown { margin: 1rem 0; }
+  .bar-track {
+    display: flex;
+    height: 1.5rem;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--ctp-surface0);
+    margin-bottom: 0.75rem;
+  }
+  .bar-segment { display: block; height: 100%; transition: filter 0.15s; }
+  .bar-segment:hover { filter: brightness(1.2); }
+  .pillar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .pillar-list li {
+    display: grid;
+    grid-template-columns: 0.875rem 1fr auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .swatch { width: 0.75rem; height: 0.75rem; border-radius: 2px; }
+  .p-name {
+    font-family: var(--font-mono);
+    color: var(--ctp-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .p-count { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ctp-subtext1); }
+  .p-pct {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+</style>

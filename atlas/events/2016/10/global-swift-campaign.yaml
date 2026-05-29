@@ -1,0 +1,80 @@
+id: 2016-10/global-swift-campaign
+name: Global SWIFT campaign (FEIB Taiwan, BancoEstado Chile, others)
+start_date: 2016-10-01
+disclosure_date: 2017-10-06  # FEIB Taiwan disclosed October 2017
+end_date: 2019-08-01  # extends into Cosmos Bank / Bank of Valletta era
+incident_type:
+  - financial-theft
+  - intrusion
+initial_vector: phishing
+outcome_summary: |
+  Coordinated multi-year APT38 / BeagleBoyz campaign against
+  smaller-tier SWIFT-network banks: Vietnam (Tien Phong Bank,
+  attempted), Taiwan (Far Eastern International Bank ~$60M),
+  Mexico (Bancomext attempted), Chile (BancoEstado), among
+  others. Tens of millions stolen across operations; pattern
+  documented in CISA AA20-239A (BeagleBoyz).
+quantified_impact:
+  usd_stolen: 60000000  # FEIB alone; full campaign totals higher
+false_flag_risk: none
+campaign_id: apt38-swift-bank-heists
+operators_named:
+  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
+  - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
+  - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
+summary: |
+  Continuation of the Bangladesh Bank SWIFT-network pattern at
+  scale. Demonstrated APT38's progressive operationalization of
+  SWIFT-manipulation tradecraft across geographies. CISA AA20-239A
+  formally consolidated the campaign attribution under the
+  BeagleBoyz designation. Tradecraft per the advisory, Mandiant's
+  2018 APT38 report, and the 2021 Lazarus indictment includes:
+  spear-phishing of bank IT and treasury staff with weaponized
+  Office documents, the DYEPACK SWIFT-message-manipulation toolkit
+  used to suppress confirmation messages on the targeted bank's
+  Alliance Access SWIFT software, the NESTEGG / KEYMARBLE /
+  HOPLIGHT / FALLCHILL backdoors, valid credentials for lateral
+  movement, Mimikatz credential dumping, and the deployment of
+  the Hermes (FEIB Taiwan) or DYEPACK-paired wiper components as
+  post-heist evidence destruction.
+attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: US CISA + Treasury + FBI + USCYBERCOM
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-08-26
+    attribution_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+  - actor_id: kp/rgb/apt38
+    attributing_org: US DOJ
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-02-17
+    attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: attested
+    reasoning: |
+      DOJ 2021 indictment and CISA AA20-239A both attest to the
+      WMD-financing strategic goal underlying APT38's SWIFT
+      campaign. Standard OFAC-language attestation pattern.
+    attesting_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/feib-taiwan
+    role: primary
+    outcome: ~$60M routed to international destinations; substantial recovery.
+  - target_id: orgs/bancoestado-chile
+    role: primary
+  - target_id: orgs/bancomext-mexico
+    role: primary
+    outcome: Attempted theft blocked.
+  - target_id: orgs/tien-phong-bank-vietnam
+    role: primary
+    outcome: Attempted theft blocked.
+sources:
+  - cisa/2020-08-26_aa20-239a-beagleboyz
+  - doj/2021-02-17_lazarus-three-officers-indictment
+  - mandiant/2018-10-03_apt38-report

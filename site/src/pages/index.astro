@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import EventRow from '../components/EventRow.astro';
+import WorldMapDashboard from '../components/WorldMapDashboard.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const stats = a.stats();
+
+// Doctrine cards: top doctrines by event count
+const topDoctrines = [...a.doctrines.values()]
+  .map((d) => ({ d, count: a.eventsForDoctrine(d.id).length }))
+  .sort((x, y) => y.count - x.count)
+  .slice(0, 12);
+
+// Recent events: top 8 most recent
+const recent = a.allEventsSorted().slice(0, 8);
+---
+<Base title="AUSPEX" wide>
+  <WorldMapDashboard />
+
+  <section>
+    <p class="kicker">What we do</p>
+    <h2 style="margin-top:0;">Doctrine-tagged cyber-event intelligence.</h2>
+    <p class="lede">
+      Every state-sponsored cyber event sits inside a strategic doctrine —
+      Made in China 2025, Foreign Policy Concept 2023, the Resistance Axis,
+      Byungjin, the National Cybersecurity Strategy. AUSPEX tags each event
+      against the doctrine it serves, with explicit confidence labels and
+      primary-source citations.
+    </p>
+    <p>
+      The data model is open. The methodology is documented. The doctrine
+      tag holds even when attribution doesn't. See <a href="/about">how we do it</a>.
+    </p>
+  </section>
+
+  <section>
+    <p class="kicker">Doctrines we track</p>
+    <div class="doctrine-grid">
+      {topDoctrines.map(({ d, count }) => (
+        <a class="doctrine-card" href={`/doctrine/${d.id}`}>
+          <span class="doctrine-card-flag">{d.nation_state_id.toUpperCase()}</span>
+          <span class="doctrine-card-name">{d.short_name ?? d.name}</span>
+          <span class="doctrine-card-count">{count} events</span>
+        </a>
+      ))}
+    </div>
+    <p style="color: var(--ctp-subtext0); font-size: 0.875rem;">
+      <a href="/doctrines">See all {stats.doctrines} doctrines →</a>
+    </p>
+  </section>
+
+  <section>
+    <p class="kicker">Recent</p>
+    <div class="event-list">
+      {recent.map((ev) => <EventRow event={ev} />)}
+    </div>
+    <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-top: 0.75rem;">
+      <a href="/events">All events →</a>
+    </p>
+  </section>
+
+  <section>
+    <p class="kicker">Confidence, explicit</p>
+    <p>Every doctrine link carries one of three confidence labels:</p>
+    <p style="display:flex; gap:0.5rem; flex-wrap:wrap; margin: 1rem 0;">
+      <span class="confidence confidence-attested">attested</span>
+      <span class="confidence confidence-strongly-inferred">strongly inferred</span>
+      <span class="confidence confidence-plausible">plausible</span>
+    </p>
+    <p>
+      <em>attested</em> means the attributing government or vendor
+      explicitly named the strategic goal — Treasury sanctions for DPRK
+      crypto theft citing "support for the DPRK's weapons of mass
+      destruction and ballistic missile programs," for instance. We don't
+      upgrade. Black-flag analysis requires showing your work.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--ctp-subtext1);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+  }
+  .stat strong {
+    font-size: 1.875rem;
+    color: var(--ctp-text);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .stat[href]:hover {
+    border-color: var(--ctp-blue);
+  }
+  .doctrine-card-count {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    margin-top: 0.25rem;
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

@@ -1,0 +1,90 @@
+id: 2016-02/bangladesh-bank-swift
+name: Bangladesh Bank SWIFT heist
+start_date: 2015-08-01  # long pre-positioning began months earlier
+disclosure_date: 2016-02-05
+end_date: 2016-02-08
+incident_type:
+  - financial-theft
+  - intrusion
+initial_vector: phishing
+outcome_summary: |
+  Long-dwell network compromise (months of pre-positioning)
+  inside Bangladesh Bank with SWIFT Alliance Access message
+  manipulation; printer-output suppression to delay detection
+  over a weekend. 35 fraudulent transfer instructions sent via
+  the New York Fed correspondent account; $81M routed to RCBC
+  Manila and $20M to Sri Lanka completed before the remaining
+  $850M were blocked. ~$15M of the $81M was recovered. Largest
+  publicly-confirmed bank cyber-heist of its time and the
+  canonical APT38 origin event.
+quantified_impact:
+  usd_stolen: 81000000
+  usd_attempted: 951000000
+  usd_recovered: 15000000
+false_flag_risk: none
+campaign_id: apt38-swift-bank-heists
+operators_named:
+  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Sep 2018 complaint + Feb 2021 indictment
+  - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
+  - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
+summary: |
+  Origin event of the modern APT38 SWIFT campaign. DOJ February
+  2021 three-hacker indictment formally attributed the operation
+  to RGB / Lab 110 personnel including Park Jin Hyok. Initial
+  access was via spear-phishing of bank IT staff (a watering-hole
+  compromise of jobs.bangladeshbank.org and weaponized resume
+  attachments) delivering the Nestegg / Manuscrypt remote-access
+  trojans; operators then dwelled for months mapping the SWIFT
+  Alliance Access environment, harvested valid credentials via
+  Mimikatz-style credential dumping, and deployed the DYEPACK
+  toolkit on the SWIFT workstation to manipulate the outgoing
+  MT-103 messages while patching the Alliance Access nroff-based
+  print routine and database so confirmation receipts would not
+  print on the bank's monitoring printer over the Bangladesh
+  weekend. The Hermes wiper was scheduled for post-heist
+  evidence destruction — the same primitive later reused in the
+  FEIB Taiwan operation. Treasury and DOJ language ties proceeds
+  to DPRK weapons-program financing.
+attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: US DOJ
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-02-17
+    attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+  - actor_id: kp/rgb/lazarus
+    attributing_org: US DOJ (Park Jin Hyok complaint)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2018-09-06
+    attribution_source_id: doj/2018-09-06_park-jin-hyok-complaint
+  - actor_id: kp/rgb/apt38
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2018-10-03
+    attribution_source_id: mandiant/2018-10-03_apt38-report
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: attested
+    reasoning: |
+      DOJ 2021 indictment language explicitly ties APT38 financial
+      operations to DPRK regime hard-currency revenue requirements
+      in the Byungjin window. Canonical attested doctrine link
+      for the SWIFT-era theft pattern.
+    attesting_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/bangladesh-bank
+    role: primary
+    outcome: $81M stolen via SWIFT manipulation; $850M attempted but blocked.
+  - target_id: orgs/ny-fed
+    role: transit
+    outcome: Used as correspondent-account routing for fraudulent transfers; processed instructions before pattern detected.
+sources:
+  - doj/2021-02-17_lazarus-three-officers-indictment
+  - doj/2018-09-06_park-jin-hyok-complaint
+  - mandiant/2018-10-03_apt38-report

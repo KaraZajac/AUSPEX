@@ -1,0 +1,70 @@
+id: 2022-01/whispergate
+name: WhisperGate wiper (pre-invasion)
+start_date: 2022-01-13
+disclosure_date: 2022-01-15
+end_date: 2022-01-15
+incident_type:
+  - destructive
+  - wiper
+  - influence-operation
+initial_vector: unknown
+outcome_summary: |
+  MBR wiper masquerading as ransomware deployed against Ukrainian
+  government websites and IT systems in the run-up to the February
+  2022 invasion. Defacements of >70 Ukrainian government sites
+  accompanied by a "Free Civilian" hack-and-leak persona.
+false_flag_risk: suspected  # ransomware masquerade
+campaign_id: hermetic-wave-feb-2022
+summary: |
+  Microsoft MSTIC initial disclosure 15 January 2022; subsequent
+  June 2023 MSTIC attribution to Cadet Blizzard / DEV-0586 — a
+  GRU unit distinct from Sandworm. WhisperGate executes in two
+  stages: a first-stage MBR overwriter (stage1.exe) that posts a
+  fake ransom note while irrecoverably corrupting the Master Boot
+  Record, and a second-stage Discord-hosted downloader
+  (stage2.exe) retrieving a file-corrupter that overwrites a
+  hard-coded extension list with fixed bytes — defeating the
+  ransom note pretext on inspection and confirming the operation
+  as a wiper masquerading as ransomware. Initial access into
+  Ukrainian government estates appears to have leveraged web-
+  shell access to Orion-Soft / OctoberCMS-vulnerable web servers
+  alongside abuse of valid credentials, with parallel defacements
+  of more than 70 government sites and a "Free Civilian" hack-
+  and-leak persona used to launder the GRU operation.
+attributions:
+  - actor_id: ru/gru/cadet-blizzard
+    attributing_org: Microsoft MSTIC
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-06-14
+    attribution_source_id: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+doctrine_links:
+  - doctrine_id: ru/russkiy-mir
+    pillar_id: ru/russkiy-mir/ukraine-theater
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Pre-kinetic shaping of the Ukrainian information environment
+      ahead of invasion. MSTIC attribution language frames the
+      operation as Russian state-sponsored pre-positioning.
+    attesting_source_id: mstic/2022-01-15_destructive-malware-ukrainian-organizations
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/nato-ultimatum-2021
+    pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      The operation falls in the window between the December 2021
+      ultimatum and the February 2022 invasion — pre-kinetic
+      shaping consistent with the ultimatum's coercive framing.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/ukraine-government
+    role: primary
+sources:
+  - mstic/2022-01-15_destructive-malware-ukrainian-organizations
+  - mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor

@@ -1,0 +1,230 @@
+---
+/**
+ * Generic attribution map — given any set of events, render a world
+ * map where countries are peach-graded by event-target count. Optional
+ * `selfIso2` highlights a "self" country in green (for state pages
+ * showing "what we attack" or actor pages showing the actor's
+ * primary-service country).
+ *
+ * Used by:
+ *   - state/[id]: selfIso2 = stateId, events = eventsForState(stateId)
+ *   - actor/[id]: selfIso2 = actor's primary state, events = eventsForActor(actorId)
+ *   - doctrine/[id]: no selfIso2, events = eventsForDoctrine(doctrineId)
+ *   - sector/[id]: no selfIso2, events = eventsForSector(...)
+ */
+import { atlas, type AuspexEvent } from '../utils/atlas';
+import { COUNTRIES, MAP_W, MAP_H } from '../utils/world-map-paths';
+
+interface Props {
+  events: AuspexEvent[];
+  selfIso2?: string | null;
+  /** Top-N targets to list below the map (default 15). */
+  topN?: number;
+}
+
+const { events, selfIso2 = null, topN = 15 } = Astro.props as Props;
+const a = atlas();
+const self = selfIso2 ? selfIso2.toLowerCase() : null;
+
+const counts = new Map<string, number>();
+for (const ev of events) {
+  const seen = new Set<string>();
+  for (const t of ev.targets ?? []) {
+    const c = (t.country ?? '').toLowerCase();
+    if (!c || seen.has(c)) continue;
+    seen.add(c);
+    counts.set(c, (counts.get(c) ?? 0) + 1);
+  }
+}
+const maxCount = Math.max(0, ...counts.values());
+
+const topTargets = [...counts.entries()]
+  .filter(([c]) => c !== self)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, topN)
+  .map(([country, count]) => ({
+    country,
+    count,
+    name: a.nationStates.get(country)?.name ?? country.toUpperCase(),
+  }));
+
+function tier(iso2: string | null): string {
+  if (!iso2) return '';
+  if (self && iso2 === self) return 'self';
+  const n = counts.get(iso2) ?? 0;
+  if (n === 0) return '';
+  const ratio = maxCount > 0 ? n / maxCount : 0;
+  if (ratio >= 0.6) return 'tier-high';
+  if (ratio >= 0.25) return 'tier-mid';
+  if (n >= 2) return 'tier-low';
+  return 'tier-min';
+}
+const otherCountriesHit = counts.size - (self && counts.has(self) ? 1 : 0);
+---
+
+<div class="am-wrap">
+  <div class="am-legend">
+    {self && <span class="leg-pair"><span class="dot dot-self"></span>{self.toUpperCase()}</span>}
+    <span class="leg-pair"><span class="dot dot-high"></span>most-targeted</span>
+    <span class="leg-pair"><span class="dot dot-mid"></span>mid</span>
+    <span class="leg-pair"><span class="dot dot-low"></span>some</span>
+  </div>
+
+  <svg
+    class="am-svg"
+    viewBox={`0 0 ${MAP_W} ${MAP_H}`}
+    role="img"
+    aria-label="Target-country attribution map"
+  >
+    <rect class="ocean" x="0" y="0" width={MAP_W} height={MAP_H} />
+    {COUNTRIES.map((c) => {
+      const t = tier(c.iso2);
+      const n = c.iso2 ? counts.get(c.iso2) ?? 0 : 0;
+      return (
+        <path
+          d={c.d}
+          class={`country ${t}`}
+          data-iso={c.iso2 || ''}
+          data-name={c.name}
+          data-count={n > 0 ? String(n) : null}
+        />
+      );
+    })}
+  </svg>
+
+  <div class="am-tooltip" hidden={true}></div>
+
+  {topTargets.length > 0 && (
+    <div class="am-targets">
+      <p class="kicker">Top targeted countries ({topTargets.length} of {otherCountriesHit})</p>
+      <div class="target-list">
+        {topTargets.map((t) => (
+          <span class="target-chip">
+            <code>{t.country.toUpperCase()}</code>
+            <span class="tc-name">{t.name}</span>
+            <span class="tc-count">{t.count}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+<script is:inline>
+  (function () {
+    const wraps = document.querySelectorAll('.am-wrap');
+    for (const wrap of wraps) {
+      const svg = wrap.querySelector('svg.am-svg');
+      const tip = wrap.querySelector('.am-tooltip');
+      if (!svg || !tip) continue;
+      svg.addEventListener('mousemove', (e) => {
+        const t = e.target;
+        if (!(t instanceof Element) || t.tagName !== 'path') { tip.hidden = true; return; }
+        const name = t.getAttribute('data-name') || '';
+        const count = t.getAttribute('data-count');
+        const tier = t.classList.contains('self') ? '— attacker' : count ? `— ${count} event${count === '1' ? '' : 's'}` : '';
+        tip.textContent = `${name} ${tier}`;
+        tip.hidden = false;
+        const r = svg.getBoundingClientRect();
+        const tr = t.getBoundingClientRect();
+        tip.style.left = (tr.left - r.left + tr.width / 2) + 'px';
+        tip.style.top = (tr.top - r.top - 8) + 'px';
+      });
+      svg.addEventListener('mouseleave', () => { tip.hidden = true; });
+    }
+  })();
+</script>
+
+<style>
+  .am-wrap {
+    position: relative;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+  .am-svg { width: 100%; height: auto; display: block; }
+  .ocean { fill: transparent; }
+  .country {
+    fill: var(--ctp-surface0);
+    stroke: var(--ctp-base);
+    stroke-width: 0.5;
+    transition: fill 150ms ease, stroke 100ms ease;
+  }
+  .country.self {
+    fill: var(--ctp-green);
+    stroke: var(--ctp-text);
+    stroke-width: 0.9;
+  }
+  .country.tier-high { fill: color-mix(in srgb, var(--ctp-peach) 95%, var(--ctp-surface0)); }
+  .country.tier-mid  { fill: color-mix(in srgb, var(--ctp-peach) 65%, var(--ctp-surface0)); }
+  .country.tier-low  { fill: color-mix(in srgb, var(--ctp-peach) 35%, var(--ctp-surface0)); }
+  .country.tier-min  { fill: color-mix(in srgb, var(--ctp-peach) 18%, var(--ctp-surface0)); }
+  .country[data-iso]:not([data-iso='']):hover {
+    stroke: var(--ctp-text);
+    stroke-width: 1;
+    filter: brightness(1.15);
+  }
+  .am-legend {
+    position: absolute;
+    bottom: 0.875rem;
+    left: 0.875rem;
+    z-index: 3;
+    display: inline-flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    align-items: center;
+    background: color-mix(in srgb, var(--ctp-base) 80%, transparent);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.4rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+  }
+  .leg-pair { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--ctp-overlay0);
+  }
+  .dot-self { background: var(--ctp-green); }
+  .dot-high { background: color-mix(in srgb, var(--ctp-peach) 95%, transparent); }
+  .dot-mid  { background: color-mix(in srgb, var(--ctp-peach) 65%, transparent); }
+  .dot-low  { background: color-mix(in srgb, var(--ctp-peach) 35%, transparent); }
+  .am-tooltip {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: var(--ctp-crust);
+    color: var(--ctp-text);
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ctp-surface0);
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 4;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .am-targets { margin-top: 0.75rem; padding: 0 0.25rem; }
+  .target-list { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .target-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.55rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+  }
+  .target-chip code { font-size: 0.6875rem; color: var(--ctp-overlay0); }
+  .tc-name { font-weight: 500; }
+  .tc-count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+</style>

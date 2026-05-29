@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import EventRow from '../components/EventRow.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const events = a.allEventsSorted();
+const byYear = new Map<string, typeof events>();
+for (const ev of events) {
+  const year = (ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4) || '????';
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(ev);
+}
+const yearsDesc = [...byYear.keys()].sort((a, b) => b.localeCompare(a));
+---
+<Base title="Events" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Events</h1>
+  <p class="lede">
+    {events.length} state-sponsored cyber events in the atlas, sorted by
+    intrusion-start date. Each links to the full record: attributions,
+    doctrine links with confidence and reasoning, sources.
+  </p>
+
+  {yearsDesc.map((year) => {
+    const yearEvents = byYear.get(year)!;
+    return (
+      <section>
+        <h2 class="year-heading">{year} <span class="year-count">{yearEvents.length}</span></h2>
+        <div class="event-list">
+          {yearEvents.map((ev) => <EventRow event={ev} />)}
+        </div>
+      </section>
+    );
+  })}
+</Base>
+
+<style>
+  .year-heading {
+    font-size: 1.5rem;
+    margin: 2rem 0 0.5rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    padding-bottom: 0.25rem;
+  }
+  .year-count {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--ctp-overlay0);
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

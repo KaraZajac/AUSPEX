@@ -1,0 +1,228 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import EventRow from '../../components/EventRow.astro';
+import { atlas } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.targets.values()].map((t) => ({
+    params: { slug: t.id },
+    props: { targetId: t.id },
+  }));
+}
+
+const { targetId } = Astro.props as { targetId: string };
+const a = atlas();
+const target = a.targets.get(targetId);
+if (!target) {
+  throw new Error(`target not found: ${targetId}`);
+}
+const events = a.eventsForTarget(targetId);
+const sector = target.sector_id ? a.sectors.get(target.sector_id) : undefined;
+
+// Top attributing actors across events that hit this target
+const actorCounts = new Map<string, number>();
+for (const ev of events) {
+  const seen = new Set<string>();
+  for (const attr of ev.attributions ?? []) {
+    if (attr.actor_id && !seen.has(attr.actor_id)) {
+      seen.add(attr.actor_id);
+      actorCounts.set(attr.actor_id, (actorCounts.get(attr.actor_id) ?? 0) + 1);
+    }
+  }
+}
+const topActors = [...actorCounts.entries()]
+  .map(([id, count]) => ({ actor: a.actors.get(id), count }))
+  .filter((x) => x.actor)
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 8);
+
+// Top doctrines (rolled up)
+const doctrineCounts = new Map<string, number>();
+for (const ev of events) {
+  const seen = new Set<string>();
+  for (const link of ev.doctrine_links ?? []) {
+    const did =
+      link.doctrine_id ??
+      (link.pillar_id ? a.pillars.get(link.pillar_id)?.doctrineId : undefined) ??
+      (link.program_id ? a.programs.get(link.program_id)?.doctrineId : undefined);
+    if (did && !seen.has(did)) {
+      seen.add(did);
+      doctrineCounts.set(did, (doctrineCounts.get(did) ?? 0) + 1);
+    }
+  }
+}
+const topDoctrines = [...doctrineCounts.entries()]
+  .map(([id, count]) => ({ doctrine: a.doctrines.get(id), count }))
+  .filter((x) => x.doctrine)
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 6);
+
+const isOrg = target.id.startsWith('orgs/');
+const isInfra = target.id.startsWith('infra/');
+---
+<Base title={target.name} wide>
+  <p class="kicker">Target · {isOrg ? 'organization' : isInfra ? 'infrastructure' : 'entity'}</p>
+  <div class="target-header">
+    {target.nation_state_id && <FlagChip state={target.nation_state_id} />}
+    <h1 style="margin:0;">{target.name}</h1>
+    {target.criticality && <span class={`crit crit-${target.criticality.replace(/[^a-z-]/g, '')}`}>{target.criticality}</span>}
+  </div>
+  <p class="meta"><code>{target.id}</code></p>
+
+  <dl class="t-meta">
+    {target.nation_state_id && (
+      <>
+        <dt>Country</dt>
+        <dd><code>{target.nation_state_id.toUpperCase()}</code> {a.nationStates.get(target.nation_state_id)?.name ?? ''}</dd>
+      </>
+    )}
+    {sector && (
+      <>
+        <dt>Sector</dt>
+        <dd><a href={`/sector/${sector.id}`}>{sector.name}</a></dd>
+      </>
+    )}
+    {target.tech_focus && target.tech_focus.length > 0 && (
+      <>
+        <dt>Tech focus</dt>
+        <dd>{target.tech_focus.map((t) => <code style="margin-right: 0.5rem;">{t}</code>)}</dd>
+      </>
+    )}
+  </dl>
+
+  {target.summary && (
+    <section>
+      <h2>Summary</h2>
+      <p style="white-space: pre-line;">{target.summary}</p>
+    </section>
+  )}
+
+  {topDoctrines.length > 0 && (
+    <section>
+      <h2>Doctrines served by attacks on this target</h2>
+      <div class="chip-row">
+        {topDoctrines.map(({ doctrine, count }) => (
+          <a class="doctrine-chip" href={`/doctrine/${doctrine!.id}`}>
+            <span class="d-name">{doctrine!.short_name ?? doctrine!.name}</span>
+            <span class="d-count">{count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {topActors.length > 0 && (
+    <section>
+      <h2>Top attributed actors</h2>
+      <div class="chip-row">
+        {topActors.map(({ actor, count }) => (
+          <a class="actor-chip" href={`/actor/${actor!.id}`}>
+            <span class="a-name">{actor!.canonical_name}</span>
+            <span class="a-count">{count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2>Events targeting this {isOrg ? 'organization' : 'entity'} ({events.length})</h2>
+    {events.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">
+        No events in the atlas reference this target. (The slug is
+        materialized for future reference.)
+      </p>
+    ) : (
+      <div class="event-list">
+        {events.map((ev) => <EventRow event={ev} />)}
+      </div>
+    )}
+  </section>
+
+  {target.sources && target.sources.length > 0 && (
+    <section>
+      <h2>Sources</h2>
+      <ol class="src-list">
+        {target.sources.map((sid) => {
+          const src = a.sources.get(sid);
+          return (
+            <li>
+              {src?.url ? (
+                <a href={src.url} target="_blank" rel="noopener noreferrer">{src.title ?? sid}</a>
+              ) : (
+                <span>{src?.title ?? sid}</span>
+              )}
+              {src?.publisher && <span class="src-pub"> — {src.publisher}</span>}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  )}
+</Base>
+
+<style>
+  .target-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 0.5rem;
+  }
+  .crit {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+  }
+  .crit-national-cii { background: var(--ctp-peach); color: var(--ctp-base); }
+  .crit-regional-cii { background: var(--ctp-yellow); color: var(--ctp-base); }
+  .crit-civil-society { background: var(--ctp-mauve); color: var(--ctp-base); }
+  .meta { color: var(--ctp-subtext0); margin: 0 0 1rem; }
+  .t-meta {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    row-gap: 0.4rem;
+    column-gap: 1rem;
+    margin: 0.75rem 0 1.5rem;
+    font-size: 0.9375rem;
+  }
+  .t-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+  }
+  .t-meta dd { margin: 0; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .doctrine-chip, .actor-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  .doctrine-chip:hover, .actor-chip:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .d-count, .a-count { font-size: 0.6875rem; color: var(--ctp-overlay0); }
+  .doctrine-chip:hover .d-count, .actor-chip:hover .a-count { color: var(--ctp-base); }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+  .src-list li { margin: 0.3rem 0; }
+  .src-pub { color: var(--ctp-subtext0); }
+</style>

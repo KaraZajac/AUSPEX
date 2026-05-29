@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import FlagChip from '../components/FlagChip.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const all = [...a.targets.values()];
+const states = ['us', 'ua', 'kr', 'jp', 'tw', 'il', 'sa', 'de', 'gb', 'fr', 'au'];
+
+interface Bucket {
+  id: string;
+  stateName: string;
+  targets: Array<{ t: typeof all[number]; evCount: number }>;
+}
+
+function bucketFor(stateId: string | undefined): string {
+  return stateId ?? 'unaffiliated';
+}
+
+const buckets = new Map<string, Bucket>();
+for (const t of all) {
+  const key = bucketFor(t.nation_state_id);
+  let row = buckets.get(key);
+  if (!row) {
+    row = {
+      id: key,
+      stateName: key === 'unaffiliated' ? 'Unaffiliated / cross-border' : a.nationStates.get(key)?.name ?? key.toUpperCase(),
+      targets: [],
+    };
+    buckets.set(key, row);
+  }
+  row.targets.push({ t, evCount: a.eventsForTarget(t.id).length });
+}
+for (const b of buckets.values()) {
+  b.targets.sort((x, y) => y.evCount - x.evCount || x.t.name.localeCompare(y.t.name));
+}
+
+const ordered: Bucket[] = [];
+for (const s of states) if (buckets.has(s)) ordered.push(buckets.get(s)!);
+for (const [k, v] of buckets) if (!states.includes(k) && k !== 'unaffiliated') ordered.push(v);
+if (buckets.has('unaffiliated')) ordered.push(buckets.get('unaffiliated')!);
+---
+<Base title="Targets" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Targets</h1>
+  <p class="lede">
+    Organizations and infrastructure systems referenced as victims across
+    the event corpus. Materialized as canonical entities so the same target
+    can be linked from multiple events without slug drift.
+  </p>
+  <p class="meta">{all.length} targets across {ordered.length} countries.</p>
+
+  {ordered.map((b) => (
+    <section>
+      <div class="state-head">
+        {b.id !== 'unaffiliated' && <FlagChip state={b.id} />}
+        <h2 style="margin:0;">{b.stateName}</h2>
+        <span class="count">{b.targets.length}</span>
+      </div>
+      <div class="target-list">
+        {b.targets.map(({ t, evCount }) => (
+          <a class="target-row" href={`/target/${t.id}`}>
+            <span class="t-name">{t.name}</span>
+            {t.criticality && <span class={`crit crit-${t.criticality.replace(/[^a-z-]/g, '')}`}>{t.criticality}</span>}
+            <span class="t-id">{t.id}</span>
+            <span class="event-count">{evCount} ev</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); margin: 0 0 1.5rem; }
+  .state-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 0.75rem;
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .target-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .target-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+  }
+  .target-row:last-child { border-bottom: none; }
+  .target-row:hover { background: var(--ctp-mantle); }
+  .t-name { font-weight: 500; }
+  .t-id {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .event-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+  }
+  .crit {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+  }
+  .crit-national-cii { background: var(--ctp-peach); color: var(--ctp-base); }
+  .crit-regional-cii { background: var(--ctp-yellow); color: var(--ctp-base); }
+  .crit-civil-society { background: var(--ctp-mauve); color: var(--ctp-base); }
+</style>

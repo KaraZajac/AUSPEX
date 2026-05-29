@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import { atlas } from '../utils/atlas';
+const a = atlas();
+const stateCount = a.nationStates.size;
+const doctrineCount = a.doctrines.size;
+const actorCount = a.actors.size;
+const eventCount = a.events.size;
+const earliestYear = [...a.events.values()]
+  .map((e) => parseInt((e.start_date ?? e.disclosure_date ?? '').slice(0, 4), 10))
+  .filter((y) => Number.isFinite(y))
+  .reduce((min, y) => Math.min(min, y), 9999);
+---
+<Base title="About">
+  <p class="kicker">About</p>
+  <h1 style="margin-top:0;">Doctrine before attribution</h1>
+
+  <p class="lede">
+    AUSPEX is a doctrine-tagged atlas of state-sponsored cyber events,
+    published by Black Flag Intelligence. The name is the Roman augur
+    who read signs to advise the senate before military action — the
+    same job, in a different age.
+  </p>
+
+  <h2>The wedge</h2>
+  <p>
+    Vendor threat intel — Mandiant, Microsoft, CrowdStrike, Recorded
+    Future — indexes <em>what</em>, <em>who</em>, and <em>how</em>: IOCs,
+    TTPs, attributed actors. Strategic-studies institutions — CSIS,
+    RUSI, RAND — index the <em>why</em>: doctrines, grand strategies,
+    timeline pressures. Nobody indexes events <em>against</em>
+    doctrines as a first-class data model. That join is the product.
+  </p>
+
+  <h2>The model</h2>
+  <p>
+    Every event in the atlas can carry any number of doctrine links,
+    each with its own confidence label and reasoning. A single
+    pre-positioning intrusion may serve Taiwan-reunification doctrine
+    <em>and</em> Military-Civil Fusion's civil-infrastructure-targeting
+    pillar at different confidence levels backed by different sources.
+    The model exposes that complexity rather than collapsing it.
+  </p>
+
+  <p>
+    Crucially: <strong>a doctrine link can stand without an attributed
+    actor</strong>. When the victim, the timing, and the technique fit
+    a doctrine pillar but no public attribution has been made, we still
+    tag — at <em>plausible</em> or <em>strongly inferred</em>
+    confidence — and we say why. That's the black-flag cell, and it's
+    where AUSPEX is most useful.
+  </p>
+
+  <h2>The atlas</h2>
+  <p>
+    Atlas v0 covers {stateCount} nation-states, {doctrineCount} doctrines,
+    {actorCount} named cyber actors, and {eventCount} events from {earliestYear}
+    onward. Coverage is hand-curated, source-anchored, and revised in
+    public. The structured atlas is regenerated from YAML on every
+    build; primary sources are linked from every claim.
+  </p>
+
+  <h2>Confidence labels</h2>
+  <ul>
+    <li>
+      <span class="confidence confidence-attested">attested</span>
+      &mdash; the attributing government or vendor explicitly named the
+      strategic goal. Highest standard.
+    </li>
+    <li>
+      <span class="confidence confidence-strongly-inferred">strongly inferred</span>
+      &mdash; victim sector, timing, and actor mission align with a
+      named doctrine pillar with no major alternative explanation.
+    </li>
+    <li>
+      <span class="confidence confidence-plausible">plausible</span>
+      &mdash; fits the doctrine, but other explanations exist. Flagged
+      for analyst review and presented with the alternative.
+    </li>
+  </ul>
+
+  <h2>Not affiliated</h2>
+  <p>
+    AUSPEX is independent. We do not work for, contract with, or take
+    funding from any government, intelligence service, or vendor named
+    in the atlas. We rely on open-source primary materials: official
+    disclosures, indictments, sanctions actions, CERT advisories, and
+    peer-reviewed vendor research. When sources disagree, we say so.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    <a href="mailto:auspex@blackflagintel.com">auspex@blackflagintel.com</a>
+  </p>
+</Base>

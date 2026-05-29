@@ -1,0 +1,55 @@
+id: 2017-09/ccleaner-supply-chain
+name: CCleaner supply-chain attack
+start_date: 2017-08-15
+disclosure_date: 2017-09-18
+end_date: 2017-09-12
+incident_type:
+  - supply-chain
+  - intrusion
+initial_vector: supply-chain
+outcome_summary: |
+  Trojanized Piriform CCleaner distributed 2.27 million compromised
+  downloads. Second-stage selectively targeted approximately 40
+  specific technology firms — Intel, Samsung, Cisco, Microsoft,
+  Sony, VMware, others — for IP collection.
+false_flag_risk: none
+summary: |
+  Attributed to APT41 / Barium by Avast / Cisco Talos. Attackers
+  compromised Piriform's build environment to inject the CCBkdr
+  backdoor into CCleaner v5.33, signed with a valid Piriform code-
+  signing certificate and distributed through legitimate download
+  channels. The implant included a Domain Generation Algorithm
+  fallback, anti-analysis delays, and a registry-based command-
+  scheduling mechanism, and routed traffic via HTTPS to hard-coded
+  C2 (216.126.225.148) or DGA domains. The second-stage payload
+  was hand-selected against ~40 named technology firms — Intel,
+  Samsung, Cisco, Microsoft, Sony, VMware, others — consistent
+  with APT41/BARIUM supply-chain tradecraft also seen in the
+  NetSarang/ShadowPad and ShadowHammer operations.
+attributions:
+  - actor_id: cn/mss/apt41
+    attributing_org: Avast + Cisco Talos
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2017-09-18
+    attribution_source_id: avast/2017-09_ccleaner
+doctrine_links:
+  - doctrine_id: cn/mic2025
+    pillar_id: cn/mic2025/next-gen-it
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Selective second-stage targeting of Intel, Samsung, Cisco,
+      Microsoft, Sony, VMware maps to the MIC2025 IT / semiconductor
+      pillar.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/piriform-ccleaner
+    role: staging
+  - target_id: sectors/ict/semiconductors/design
+    role: primary
+sources:
+  - avast/2017-09_ccleaner

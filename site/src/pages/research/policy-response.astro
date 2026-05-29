@@ -1,0 +1,222 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import { atlas } from '../../utils/atlas';
+import { runPolicyResponseAnalysis } from '../../utils/policy-response-analysis';
+
+const a = atlas();
+const result = runPolicyResponseAnalysis({ minInstances: 3 });
+const classes = result.classes;
+---
+<Base title="Policy-response correlator" wide>
+  <p class="kicker">Research</p>
+  <h1>Policy-response correlator</h1>
+  <p class="lede">
+    Conditional statistics, not causal claims. For each policy-action
+    class with ≥3 historical instances, we compute the distribution
+    of cyber events attributed to the target state in the days following
+    each action — and compare to that state's baseline event rate.
+  </p>
+  <p class="meta">
+    Generated {result.generatedAt} · {result.totalActions} policy actions ·
+    {result.totalEvents} events · {classes.length} qualifying classes
+  </p>
+
+  <section>
+    <h2>How to read this</h2>
+    <p class="reading">
+      <strong>Mean / instance</strong> is the average count of cyber
+      events from the target state appearing in each post-action
+      lag window, averaged across instances. <strong>Baseline</strong>
+      is that state's all-time cyber-event rate per 30 days.
+      <strong>Elevation factor</strong> = window mean / baseline.
+      An elevation > 1 means cyber activity from the target state was
+      <em>more frequent</em> than its background rate in that lag
+      window — suggestive of response but not proof.
+    </p>
+    <p class="reading">
+      <strong>Caveats:</strong> small instance counts (n=3 to n=10)
+      give wide confidence intervals; baseline rates over a 20-year
+      atlas window underweight recent acceleration; top-doctrine and
+      top-actor columns are simple counts within the window, not
+      causal attributions.
+    </p>
+  </section>
+
+  {classes.map((c) => {
+    const targetName = a.nationStates.get(c.classKey.target_state)?.short_name ?? c.classKey.target_state.toUpperCase();
+    return (
+      <section class="cls">
+        <h2>
+          <span class="cls-type">{c.classKey.action_type.replace(/-/g, ' ')}</span>
+          → <FlagChip state={c.classKey.target_state} />
+          <span class="cls-target">{targetName}</span>
+          <span class="cls-n">n = {c.instanceCount}</span>
+        </h2>
+        <p class="meta">
+          Baseline: {c.baselineRatePerMonth.toFixed(2)} events / 30 days
+          for {targetName}.
+          Instance dates: <code class="dates">{c.instanceDates.slice(0, 6).join(', ')}{c.instanceDates.length > 6 ? `, +${c.instanceDates.length - 6} more` : ''}</code>
+        </p>
+        <table class="lag-table">
+          <thead>
+            <tr>
+              <th>window</th>
+              <th>events</th>
+              <th>mean / instance</th>
+              <th>elevation</th>
+              <th>top doctrines</th>
+              <th>top actors</th>
+              <th>top sectors</th>
+            </tr>
+          </thead>
+          <tbody>
+            {c.postWindows.map((w) => {
+              const elev = c.baselineRatePerMonth > 0
+                ? w.meanPerInstance / (c.baselineRatePerMonth * ((w.window.endDays - w.window.startDays) / 30))
+                : 0;
+              const elevClass = elev > 2 ? 'elev-high' : elev > 1.3 ? 'elev-med' : 'elev-low';
+              return (
+                <tr>
+                  <td><code>{w.window.label}</code></td>
+                  <td>{w.totalEvents}</td>
+                  <td>{w.meanPerInstance.toFixed(2)}</td>
+                  <td class={elevClass}>{elev > 0 ? elev.toFixed(2) + '×' : '—'}</td>
+                  <td>{w.topDoctrines.slice(0, 3).map((d) => (
+                    <span class="mini-chip"><a href={`/doctrine/${d.id}`}>{d.name}</a> <span class="c">{d.count}</span></span>
+                  ))}</td>
+                  <td>{w.topActors.slice(0, 3).map((act) => (
+                    <span class="mini-chip"><a href={`/actor/${act.id}`}>{act.name}</a> <span class="c">{act.count}</span></span>
+                  ))}</td>
+                  <td>{w.topSectors.slice(0, 3).map((s) => (
+                    <span class="mini-chip"><a href={`/sector/${s.id}`}>{s.name}</a> <span class="c">{s.count}</span></span>
+                  ))}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </section>
+    );
+  })}
+
+  <section>
+    <h2>What this enables</h2>
+    <ul>
+      <li>
+        <strong>Forward-looking risk priors.</strong> When a new policy
+        action of class C is announced, the empirical lag distribution
+        for class C tells us where elevated cyber activity is likely
+        to land in sector / actor / doctrine space.
+      </li>
+      <li>
+        <strong>Per-event policy context.</strong> An event happening
+        47 days after a BIS export-control with a 2.7× historical
+        elevation factor for that lag window is a stronger doctrine
+        claim than the same event happening at a random time.
+      </li>
+      <li>
+        <strong>Class watchlist on `/calendar`</strong>. Upcoming
+        actions of classes with high historical elevation factors get
+        highlighted as elevated-risk windows.
+      </li>
+    </ul>
+    <p>
+      Engine source: <code>src/utils/policy-response-analysis.ts</code>.
+      JSON: <a href="/api/policy-response.json">/api/policy-response.json</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 0.75rem; }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+  }
+  .cls {
+    margin: 2rem 0;
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    background: var(--ctp-mantle);
+  }
+  .cls h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 1.0625rem;
+    margin: 0 0 0.5rem;
+    border: none;
+    padding: 0;
+  }
+  .cls-type {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.875rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+  .cls-target {
+    font-family: var(--font-mono);
+    color: var(--ctp-text);
+  }
+  .cls-n {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-overlay0);
+  }
+  .dates { color: var(--ctp-subtext0); font-size: 0.8125rem; }
+  .lag-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+  }
+  .lag-table th, .lag-table td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    vertical-align: top;
+  }
+  .lag-table th {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+  }
+  .lag-table td:first-child code {
+    font-size: 0.8125rem;
+    color: var(--ctp-text);
+    background: transparent;
+  }
+  .elev-high { color: var(--ctp-peach); font-weight: 700; }
+  .elev-med { color: var(--ctp-yellow); font-weight: 600; }
+  .elev-low { color: var(--ctp-subtext0); }
+  .mini-chip {
+    display: inline-block;
+    margin: 0 0.25rem 0.125rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+  .mini-chip a {
+    color: var(--ctp-text);
+    text-decoration: none;
+    padding: 0.1rem 0.3rem;
+    background: var(--ctp-surface0);
+    border-radius: 2px;
+  }
+  .mini-chip a:hover { color: var(--ctp-blue); }
+  .mini-chip .c { color: var(--ctp-overlay0); margin-left: 0.2rem; }
+  ul li { margin: 0.4rem 0; }
+</style>

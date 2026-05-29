@@ -1,0 +1,58 @@
+id: 2022-03/isaacwiper-caddywiper
+name: IsaacWiper / CaddyWiper (Ukraine wiper wave continuation)
+start_date: 2022-02-24
+disclosure_date: 2022-03-01
+end_date: 2022-03-31
+incident_type:
+  - destructive
+  - wiper
+initial_vector: unknown
+outcome_summary: |
+  IsaacWiper deployed against a Ukrainian government network on
+  invasion D-day; CaddyWiper deployed in mid-March 2022 against
+  Ukrainian banks and government. Data destruction at scale;
+  part of the densest concentration of destructive nation-state
+  operations on record.
+false_flag_risk: none
+campaign_id: hermetic-wave-feb-2022
+summary: |
+  ESET and CERT-UA attributed both wipers to Sandworm on the basis
+  of tooling and tradecraft. IsaacWiper overwrites disk contents
+  with pseudo-random data and zeros the MBR; CaddyWiper enumerates
+  files and overwrites their content with null bytes, then destroys
+  partition information using DeviceIoControl, while preserving
+  the Domain Controller distinguished name to keep the wiper
+  propagating laterally before the domain itself dies. Lateral
+  movement to victim hosts used valid credentials and Active
+  Directory-based deployment (Group Policy / scheduled tasks)
+  consistent with prior Sandworm Ukraine operations, and CERT-UA
+  observed CaddyWiper paired with the ArguePatch loader and the
+  ORCSHRED / SOLOSHRED Linux variants. The wiper wave continued
+  through 2022 with DoubleZero, AcidPour, and SwiftSlicer.
+attributions:
+  - actor_id: ru/gru/74455/sandworm
+    attributing_org: ESET / CERT-UA
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-03-01
+    attribution_source_id: eset/2022-02-24_hermeticwiper-isaacwiper
+doctrine_links:
+  - doctrine_id: ru/russkiy-mir
+    pillar_id: ru/russkiy-mir/ukraine-theater
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Continuous invasion-support destructive operations against
+      Ukrainian government and banks.
+    attesting_source_id: eset/2023-02-24_year-of-wiper-attacks-ukraine
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/ukraine-government
+    role: primary
+  - target_id: orgs/ukraine-banking-sector
+    role: primary
+sources:
+  - eset/2022-02-24_hermeticwiper-isaacwiper
+  - eset/2023-02-24_year-of-wiper-attacks-ukraine

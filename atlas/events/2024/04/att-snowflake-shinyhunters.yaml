@@ -1,0 +1,61 @@
+id: 2024-04/att-snowflake-shinyhunters
+name: AT&T Snowflake-tenant customer call-records exfiltration
+start_date: 2024-04-14
+disclosure_date: 2024-07-12
+end_date: 2024-07-31
+incident_type:
+  - data-theft
+  - intrusion
+initial_vector: valid-creds  # via UNC5537 Snowflake-tenant access
+outcome_summary: |
+  AT&T disclosed via SEC 8-K filing July 12, 2024 the
+  exfiltration of approximately 110 million customers' call
+  detail records (CDRs) — including phone numbers called,
+  number of interactions, and aggregate call duration — across
+  a six-month period in 2022 from an AT&T workspace in the
+  Snowflake cloud-data-warehouse environment. AT&T paid
+  approximately USD 370,000 in ransom to UNC5537 actor Moucka
+  ("Judische") to delete the dataset; the transaction was
+  visible on-chain. Cellular CDRs at this scale are uniquely
+  sensitive for traffic-analysis applications.
+quantified_impact:
+  individuals_affected: 110000000
+  ransom_paid_usd: 370000
+  months_of_cdrs_compromised: 6
+false_flag_risk: none
+campaign_id: shinyhunters-snowflake-cluster
+operators_named:
+  - moucka-connor-riley  # UNC5537 "Judische", DOJ Nov 2024 — paid the AT&T ransom
+summary: |
+  Notable cellular-CDR exfiltration sitting in the AUSPEX
+  criminal-baseline corpus because the operator profile is
+  cleanly financial (UNC5537 + ShinyHunters), but the dataset
+  itself is exactly the kind of metadata that state SIGINT
+  services prize for traffic-analysis targeting of US persons.
+  The case is a useful boundary instance for the AUSPEX engine:
+  high state-interest target with no state operator.
+attributions:
+  - actor_id: criminal/unc5537
+    attributing_org: Mandiant + Snowflake + AT&T
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-07-12
+    attribution_source_id: doj/2024-01-09_raoult-shinyhunters-sentencing
+  - actor_id: criminal/shinyhunters
+    attributing_org: AT&T + journalism consensus
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-07-12
+    attribution_source_id: doj/2024-01-09_raoult-shinyhunters-sentencing
+    notes: |
+      ShinyHunters was the original BreachForums seller persona
+      offering the AT&T dataset; UNC5537 was the upstream
+      intrusion operator.
+doctrine_links: []
+targets:
+  - target_id: orgs/att
+    role: primary
+  - target_id: orgs/snowflake
+    role: secondary
+sources:
+  - doj/2024-01-09_raoult-shinyhunters-sentencing

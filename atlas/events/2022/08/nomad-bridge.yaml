@@ -1,0 +1,84 @@
+id: 2022-08/nomad-bridge
+name: Nomad Bridge permissionless drain
+start_date: 2022-08-01
+disclosure_date: 2022-08-02
+end_date: 2022-08-02
+incident_type:
+  - financial-theft
+initial_vector: vulnerability-exploit
+outcome_summary: |
+  Approximately USD 190M drained from the Nomad cross-chain
+  bridge after a faulty Replica-contract initialization enabled
+  forged Merkle proofs. Once the initial exploit transaction was
+  published, hundreds of opportunistic addresses copied the
+  calldata and drained additional funds in a permissionless
+  pile-on. Partial recovery achieved through white-hat returns
+  to a Nomad-controlled address.
+quantified_impact:
+  usd_stolen: 190000000
+  asset_classes:
+    - WBTC
+    - WETH
+    - USDC
+    - DAI
+false_flag_risk: low
+campaign_id: bridge-theft-chain
+summary: |
+  Anomalous bridge-theft event in the 2022 cluster. Distinct
+  from Ronin (validator-key compromise) and Harmony
+  (validator-key compromise) — Nomad was a smart-contract
+  initialization bug, not a credential heist. Treasury's August
+  2022 Tornado Cash designation (jy0916) specifically cited
+  Nomad proceeds as among the mixer's laundering volume,
+  attesting that at least a portion of the drain transited
+  Tornado, but the multi-actor pile-on pattern means
+  no single coordinated attribution to Lazarus has been
+  published; some portion may be DPRK, some criminal. AUSPEX
+  records this as doctrine-plausible (criminal-state blur) with
+  null actor — the canonical "permissionless pile-on" cell.
+attributions:
+  - actor_id: null
+    attributing_org: US Treasury OFAC (partial — laundering side)
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2022-08-08
+    attribution_source_id: treasury/2022-08-08_jy0916-tornado-cash
+    notes: |
+      Treasury's Tornado Cash designation cites Nomad proceeds
+      as among the mixer's laundering volume but does not
+      attribute the initial theft itself. The pile-on dynamic
+      means proceeds were split across hundreds of
+      opportunistic addresses; some are assessed by Chainalysis
+      as DPRK-linked, others as ordinary criminal.
+doctrine_links:
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    confidence: plausible
+    reasoning: |
+      Portion of the proceeds laundered via Tornado Cash per
+      Treasury's August 2022 designation; the Chainalysis
+      bridge-hack overview groups Nomad with Ronin and Harmony
+      as the canonical 2022 cross-chain-bridge theft cluster.
+      Counter-explanation: the permissionless pile-on dynamic
+      means the bulk of the drain was opportunistic rather
+      than DPRK-coordinated; attribution to a single state
+      actor would over-claim.
+    attesting_source_id: null
+    counter_explanation: |
+      Nomad's bug was published as a transaction template; the
+      bulk of the $190M drain was opportunistic copying by
+      anonymous addresses across the open internet. While some
+      addresses were later linked by Chainalysis to DPRK
+      laundering clusters, no published source attributes the
+      initial exploit transaction itself to Lazarus.
+    contested: true
+    analyst: claude
+targets:
+  - target_id: orgs/nomad-bridge
+    role: primary
+    outcome: ~$190M drained; partial recovery via white-hat returns.
+sources:
+  - chainalysis/2022-08-02_cross-chain-bridge-hacks
+  - halborn/2022-08-03_nomad-hack-explained
+  - treasury/2022-08-08_jy0916-tornado-cash

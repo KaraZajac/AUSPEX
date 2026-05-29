@@ -1,0 +1,185 @@
+---
+/**
+ * Generic distribution donut. Used for:
+ *   - actor → doctrines  (DoctrineAlignmentDonut wraps this on actor pages)
+ *   - doctrine → actors  (hrefBase=/actor)
+ *   - sector → actors    (hrefBase=/actor)
+ *   - state → sectors    (hrefBase=/sector)
+ *
+ * Slices with id starting with `__` (e.g. __other__) or with id===null
+ * (unattributed bucket) are rendered as text, not links.
+ */
+export interface DonutSlice {
+  id: string | null;
+  name: string;
+  count: number;
+  percent: number;
+}
+
+interface Props {
+  slices: DonutSlice[];
+  total: number;
+  unitLabel?: string;
+  hrefBase?: string;  // e.g. '/actor', '/sector', '/doctrine'
+  fallbackBackground?: string;  // CSS color for the null-id (unattributed) bucket
+}
+const {
+  slices,
+  total,
+  unitLabel = 'events',
+  hrefBase = '/actor',
+  fallbackBackground = 'var(--ctp-surface1)',
+} = Astro.props;
+
+const palette = [
+  'var(--ctp-blue)',
+  'var(--ctp-mauve)',
+  'var(--ctp-peach)',
+  'var(--ctp-teal)',
+  'var(--ctp-pink)',
+  'var(--ctp-yellow)',
+  'var(--ctp-green)',
+  'var(--ctp-sapphire)',
+  'var(--ctp-maroon)',
+  'var(--ctp-lavender)',
+];
+
+const colored = slices.filter((s) => s.id !== null);
+const fallback = slices.find((s) => s.id === null);
+
+let cursor = 0;
+const stops: string[] = [];
+colored.forEach((s, i) => {
+  const start = cursor;
+  const end = cursor + (s.percent / 100) * 360;
+  stops.push(`${palette[i % palette.length]} ${start.toFixed(3)}deg ${end.toFixed(3)}deg`);
+  cursor = end;
+});
+if (fallback) {
+  const start = cursor;
+  const end = cursor + (fallback.percent / 100) * 360;
+  stops.push(`${fallbackBackground} ${start.toFixed(3)}deg ${end.toFixed(3)}deg`);
+}
+const gradient = stops.length > 0
+  ? `conic-gradient(from -90deg, ${stops.join(', ')})`
+  : `conic-gradient(var(--ctp-surface0) 0deg 360deg)`;
+
+function isLinkable(id: string | null): boolean {
+  return Boolean(id && !id.startsWith('__'));
+}
+---
+{total > 0 ? (
+  <div class="alignment">
+    <div class="donut" style={`background: ${gradient};`}>
+      <div class="donut-hole">
+        <div class="donut-total">{total}</div>
+        <div class="donut-label">{unitLabel}</div>
+      </div>
+    </div>
+    <ul class="legend">
+      {colored.map((s, i) => (
+        <li>
+          <span class="swatch" style={`background: ${palette[i % palette.length]};`}></span>
+          {isLinkable(s.id) ? (
+            <a class="leg-name" href={`${hrefBase}/${s.id}`}>{s.name}</a>
+          ) : (
+            <span class="leg-name leg-name-muted">{s.name}</span>
+          )}
+          <span class="leg-count">{s.count}</span>
+          <span class="leg-pct">{s.percent.toFixed(0)}%</span>
+        </li>
+      ))}
+      {fallback && (
+        <li>
+          <span class="swatch" style={`background: ${fallbackBackground};`}></span>
+          <span class="leg-name leg-name-muted">{fallback.name}</span>
+          <span class="leg-count">{fallback.count}</span>
+          <span class="leg-pct">{fallback.percent.toFixed(0)}%</span>
+        </li>
+      )}
+    </ul>
+  </div>
+) : (
+  <p style="color: var(--ctp-subtext0);">No data here yet.</p>
+)}
+
+<style>
+  .alignment {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    .alignment { grid-template-columns: 1fr; }
+  }
+  .donut {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    position: relative;
+    margin: 0.25rem auto;
+  }
+  .donut-hole {
+    position: absolute;
+    inset: 22%;
+    background: var(--ctp-base);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .donut-total {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--ctp-text);
+    line-height: 1;
+  }
+  .donut-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.125rem;
+  }
+  .legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.375rem;
+  }
+  .legend li {
+    display: grid;
+    grid-template-columns: 0.875rem 1fr auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .swatch { width: 0.75rem; height: 0.75rem; border-radius: 2px; }
+  .leg-name {
+    font-family: var(--font-mono);
+    text-decoration: none;
+    color: var(--ctp-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .leg-name:hover { color: var(--ctp-blue); }
+  .leg-name-muted { color: var(--ctp-subtext0); font-style: italic; }
+  .leg-count {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext1);
+  }
+  .leg-pct {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+</style>

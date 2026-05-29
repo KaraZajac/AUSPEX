@@ -1,0 +1,61 @@
+id: 2024-05/ascension-black-basta
+name: Black Basta ransomware against Ascension Health
+start_date: 2024-05-08
+disclosure_date: 2024-05-09
+end_date: 2024-06-14
+incident_type:
+  - ransomware
+  - disruption
+  - data-theft
+initial_vector: phishing
+outcome_summary: |
+  Black Basta ransomware shut down clinical IT systems at 140
+  Ascension hospitals across 19 US states for approximately
+  five weeks. Manual paper-record fallback; ambulance diversion
+  at multiple facilities; patient-safety concerns reported in
+  several Ascension press releases. Estimated 5.6M patient
+  records affected. CISA released joint advisory AA24-131A
+  May 10 2024 with FBI, HHS, MS-ISAC.
+quantified_impact:
+  hospitals_affected: 140
+  individuals_affected: 5600000
+  downtime_weeks: 5
+false_flag_risk: none
+summary: |
+  Most disruptive US healthcare ransomware incident since Change
+  Healthcare (Feb 2024). Initial access into Ascension came via
+  a phishing email opened by a contractor that delivered the
+  Qakbot-successor loader DarkGate, followed by Black Basta
+  affiliate tradecraft per CISA AA24-131A: Cobalt Strike beacons,
+  credential dumping via Mimikatz, lateral movement on valid
+  credentials through Ascension's hospital network, PSExec and
+  RDP for hands-on-keyboard intrusion, BlackByte / WMI-based
+  defense evasion, and bulk data exfiltration over rclone before
+  the Black Basta ChaCha20 encryptor was detonated network-wide.
+  Together with the Change Healthcare incident the breach
+  catalyzed HHS Office for Civil Rights' move toward mandatory
+  cybersecurity-rule updates for HIPAA-covered entities (NPRM Dec
+  2024).
+attributions:
+  - actor_id: ru/proxies/black-basta
+    attributing_org: CISA + FBI + HHS
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-05-10
+    attribution_source_id: cisa/2024-05-10_aa24-131a-black-basta-advisory
+doctrine_links:
+  - doctrine_id: ru/sanctions-response-2022
+    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Russian-tolerated post-Conti splinter; opportunistic-affiliate
+      target selection in US healthcare CII.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/ascension-health
+    role: primary
+sources:
+  - cisa/2024-05-10_aa24-131a-black-basta-advisory
+  - hhs/2024-05-10_ascension-black-basta-bulletin

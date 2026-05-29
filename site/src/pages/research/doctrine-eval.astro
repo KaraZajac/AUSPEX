@@ -1,0 +1,228 @@
+---
+import Base from '../../layouts/Base.astro';
+import { atlas } from '../../utils/atlas';
+import { runDoctrineLOO } from '../../utils/doctrine-prediction-eval';
+
+const a = atlas();
+const eval_ = runDoctrineLOO();
+
+function pct(num: number, den: number): string {
+  if (den === 0) return 'n/a';
+  return `${((num / den) * 100).toFixed(1)}%`;
+}
+function doctrineName(id: string): string {
+  return a.doctrines.get(id)?.short_name ?? a.doctrines.get(id)?.name ?? id;
+}
+const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
+const generatedAt = eval_.generatedAt;
+---
+<Base title="Doctrine prediction — backtest" wide>
+  <p class="kicker">Research</p>
+  <h1>Doctrine prediction — backtest</h1>
+  <p class="lede">
+    Independent of actor attribution, AUSPEX predicts which doctrine
+    pillars an event serves. Multi-label — most events tag against
+    more than one doctrine. We hold each labeled event out, train on
+    the rest, and score the engine's ranking against the actual
+    doctrine set.
+  </p>
+  <p class="meta">Generated {generatedAt} · n={eval_.scored} labeled events scored · 61 doctrines in the candidate space</p>
+
+  <section>
+    <h2>Headline</h2>
+    <div class="stat-grid">
+      <div class="stat"><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
+      <div class="stat"><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
+      <div class="stat"><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
+      <div class="stat"><strong>{(eval_.meanRecall3 * 100).toFixed(1)}%</strong>recall@3</div>
+      <div class="stat"><strong>{eval_.mAP.toFixed(3)}</strong>mAP</div>
+      <div class="stat"><strong>{eval_.scored}</strong>events</div>
+    </div>
+    <p>
+      <strong>Top-1 hit</strong>: the engine's #1 doctrine matched at
+      least one of the event's true doctrines.
+      <strong>Recall@3</strong>: of the event's true doctrines, what
+      fraction the engine surfaced in its top-3. <strong>mAP</strong>:
+      mean Average Precision across events — the standard multi-label
+      metric, higher is better.
+    </p>
+  </section>
+
+  <section>
+    <h2>Why this matters</h2>
+    <p class="reading">
+      <strong>Doctrine prediction outperforms actor attribution at every
+      headline metric.</strong> Top-1 39.3% vs 34.8% for actors. The
+      gap is largest where actor attribution struggles most: <strong>CN
+      doctrine top-1 is 46.3% / top-3 is 85.4%, while CN actor
+      attribution top-1 is 17.1%</strong>. The engine can't reliably
+      separate APT41 from APT31, but it can reliably tell you the
+      event serves MIC2025 / MCF / Taiwan-Reunification. That's the
+      AUSPEX wedge in one chart: <em>the doctrine label is the
+      load-bearing analytic claim, and the engine is better at it
+      than at the actor cluster.</em>
+    </p>
+  </section>
+
+  <section>
+    <h2>Per-state breakdown</h2>
+    <p>
+      The doctrine engine scores well across all five major
+      adversaries. The new-coverage states (VN, IN, PK, TR, BY) have
+      sample sizes too small to learn discriminative doctrine
+      profiles — same limit as the attribution engine.
+    </p>
+    <table class="state-table">
+      <thead>
+        <tr><th>state</th><th>n</th><th>top-1</th><th>top-3</th><th>recall@3</th><th>mAP</th></tr>
+      </thead>
+      <tbody>
+        {perState.map(([state, row]) => (
+          <tr>
+            <td><code>{state.toUpperCase()}</code></td>
+            <td>{row.scored}</td>
+            <td>{pct(row.hit1, row.scored)}</td>
+            <td>{pct(row.hit3, row.scored)}</td>
+            <td>{(row.meanRecall3 * 100).toFixed(1)}%</td>
+            <td>{row.mAP.toFixed(3)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Top confusion pairs</h2>
+    <p>
+      When the engine's rank-1 doctrine was wrong, what did it predict
+      instead of the truth?
+    </p>
+    <table class="conf-table">
+      <thead>
+        <tr><th>predicted</th><th>actual</th><th>×</th></tr>
+      </thead>
+      <tbody>
+        {eval_.confusion.slice(0, 12).map((c) => (
+          <tr>
+            <td><a href={`/doctrine/${c.predicted}`}>{doctrineName(c.predicted)}</a></td>
+            <td><a href={`/doctrine/${c.actual}`}>{doctrineName(c.actual)}</a></td>
+            <td><strong>{c.count}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="reading">
+      <strong>Reading.</strong> Several confusion pairs aren't really
+      errors: <em>8th Congress Defense Plan → Byungjin</em> swaps
+      sister doctrines (one effectively succeeded the other). The
+      <em>MCF → various</em> rows reflect MCF's deliberately broad
+      scope; events serving narrower doctrines often also serve MCF,
+      so the engine over-predicts MCF when target signals are mixed.
+    </p>
+  </section>
+
+  <section>
+    <h2>Worst predictions</h2>
+    <table class="worst-table">
+      <thead>
+        <tr><th>rank</th><th>date</th><th>event</th><th>true doctrine</th><th>engine top-1</th></tr>
+      </thead>
+      <tbody>
+        {eval_.worst.slice(0, 12).map((w) => (
+          <tr>
+            <td>{w.bestRank}</td>
+            <td>{w.startDate ?? '????'}</td>
+            <td><a href={`/event/${w.eventId}`}>{w.eventName}</a></td>
+            <td><a href={`/doctrine/${w.trueDoctrines[0]}`}>{doctrineName(w.trueDoctrines[0] ?? '')}</a></td>
+            <td>{w.top5[0] && <a href={`/doctrine/${w.top5[0].doctrineId}`}>{doctrineName(w.top5[0].doctrineId)}</a>}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>What this means for the product</h2>
+    <p>
+      Together with the actor-attribution engine, this gives AUSPEX
+      a two-engine substrate:
+    </p>
+    <ul>
+      <li>
+        <strong>Doctrine engine</strong> — confident enough at
+        top-3 (59.5%) to publish as an analyst-facing prediction.
+        For unattributed events, it answers the most important
+        question — <em>why is this happening</em> — better than the
+        actor engine answers <em>who</em>.
+      </li>
+      <li>
+        <strong>Attribution engine</strong> — useful as a narrowing
+        tool (top-5 59.3%) but not yet trustworthy at the top-1
+        cluster level.
+      </li>
+      <li>
+        <strong>Combined</strong>: the right output for a live
+        unattributed event is the doctrine ranking + a confidence-
+        weighted actor shortlist, not either one alone.
+      </li>
+    </ul>
+    <p>
+      Engine source: <code>src/utils/doctrine-prediction.ts</code> and
+      <code>src/utils/doctrine-prediction-eval.ts</code>. JSON
+      output: <a href="/api/doctrine-eval.json">/api/doctrine-eval.json</a>.
+    </p>
+    <p>Concrete next moves:</p>
+    <ul>
+      <li>
+        <strong>Pillar-level prediction.</strong> Same engine but
+        labels at the pillar level (MIC2025/semis specifically, not
+        just MIC2025 broadly). Will trade top-1 for resolution; useful
+        for analysts.
+      </li>
+      <li>
+        <strong>Joint engine.</strong> Score (doctrine, actor) pairs
+        together; surface the cell where both engines agree.
+      </li>
+      <li>
+        <strong>Temporal holdout.</strong> Train on 2007–2023, predict
+        2024 / 2025 cold. The right shape for the eventual
+        forward-looking prediction engine.
+      </li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .stat {
+    display: flex; flex-direction: column; gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext1);
+  }
+  .stat strong { font-size: 1.5rem; color: var(--ctp-text); font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.875rem; margin: 0.75rem 0 1rem; }
+  th, td { text-align: left; padding: 0.375rem 0.625rem; border-bottom: 1px solid var(--ctp-surface0); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ctp-subtext0); }
+  td { font-family: var(--font-mono); font-size: 0.8125rem; }
+  td a { color: var(--ctp-text); }
+  td a:hover { color: var(--ctp-blue); }
+  .worst-table td:first-child { font-weight: 700; color: var(--ctp-peach); }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+</style>

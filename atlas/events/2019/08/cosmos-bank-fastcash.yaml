@@ -1,0 +1,54 @@
+id: 2019-08/cosmos-bank-fastcash
+name: Cosmos Bank (India) FASTCash ATM cash-out
+start_date: 2018-08-11  # actual incident date August 2018; CISA disclosure 2020
+disclosure_date: 2020-08-26
+end_date: 2018-08-13
+incident_type:
+  - financial-theft
+initial_vector: intrusion
+outcome_summary: |
+  FASTCash malware deployed on Cosmos Cooperative Bank's payment
+  switch infrastructure. Coordinated worldwide ATM cash-out
+  across 28 countries simultaneously over a two-day window
+  extracted $13.5M.
+quantified_impact:
+  usd_stolen: 13500000
+  countries_atm_cashout: 28
+false_flag_risk: none
+summary: |
+  Canonical APT38 / BeagleBoyz FASTCash operation. CISA AA20-239A
+  details the tradecraft: initial access via spear-phishing of
+  bank employees, lateral movement on valid credentials,
+  installation of the FASTCash malware (an AIX / Linux library
+  on the Cosmos payment switch) which intercepts and modifies
+  ISO 8583 ATM withdrawal messages to authorize attacker cards
+  beyond their actual balance, paired with cloned debit cards
+  used by money mules at ATMs in 28 countries during a two-day
+  cash-out window. Post-exploitation tooling overlapping with
+  prior BeagleBoyz / APT38 operations includes the Manuscrypt
+  remote-access trojan, the FALLCHILL backdoor, Mimikatz-style
+  credential dumping, and PowerShell-based reconnaissance.
+attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: US CISA + Treasury + FBI + USCYBERCOM
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-08-26
+    attribution_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: attested
+    reasoning: |
+      CISA AA20-239A explicitly ties BeagleBoyz operations to DPRK
+      WMD financing.
+    attesting_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/cosmos-bank
+    role: primary
+    outcome: $13.5M extracted via coordinated ATM cash-out in 28 countries.
+sources:
+  - cisa/2020-08-26_aa20-239a-beagleboyz

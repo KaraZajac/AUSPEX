@@ -1,0 +1,727 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Methodology" wide>
+  <p class="kicker">Methodology</p>
+  <h1>How we build the atlas</h1>
+  <p class="lede">
+    AUSPEX is a doctrine-tagged atlas of state-sponsored cyber events.
+    This page documents the choices we make so analysts can decide how
+    much weight to put on any claim.
+  </p>
+
+  <nav class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#wedge">The doctrine wedge</a></li>
+      <li><a href="#model">The data model</a></li>
+      <li><a href="#confidence">Confidence labels</a></li>
+      <li><a href="#sourcing">Sourcing hierarchy</a></li>
+      <li><a href="#sec9">Doctrine without attribution</a></li>
+      <li><a href="#attribution">Attribution norms and limits</a></li>
+      <li><a href="#naming">Naming reconciliation</a></li>
+      <li><a href="#editorial">Editorial process</a></li>
+      <li><a href="#evals">Engine evaluations</a></li>
+      <li><a href="#dont">What we don't do</a></li>
+      <li><a href="#limits">Known limits</a></li>
+      <li><a href="#stability">Versioning and stability</a></li>
+      <li><a href="#license">License and contact</a></li>
+    </ol>
+  </nav>
+
+  <section id="wedge">
+    <h2>The doctrine wedge</h2>
+    <p>
+      The tier-one vendor threat-intel ecosystem — Mandiant, Microsoft
+      MSTIC, CrowdStrike, Recorded Future, Kaspersky GReAT — indexes
+      cyber activity by <em>what happened</em> (IOCs, TTPs, vendor
+      cluster names). Strategic-studies institutions — CSIS, RUSI, RAND,
+      IISS — index the <em>why</em>: grand strategies, doctrines,
+      timeline pressures. Nobody indexes events <em>against</em>
+      doctrines as a first-class relationship. That join is the AUSPEX
+      product.
+    </p>
+    <p>
+      Concretely: every cyber event in the atlas can carry any number of
+      links to specific doctrine pillars or programs, each with its own
+      confidence level and explicit reasoning. <strong>The link can stand
+      without a named actor.</strong> That asymmetry — doctrine
+      attribution as decoupled from actor attribution — is the editorial
+      property the model is built to support.
+    </p>
+  </section>
+
+  <section id="model">
+    <h2>The data model</h2>
+    <p>
+      The atlas is a directed-graph of typed entities, stored as YAML
+      files in a git repository, regenerated into a queryable index on
+      every build. The full schema lives in
+      <code>docs/DATA_MODEL.md</code> in the repo; the short version:
+    </p>
+    <ul>
+      <li>
+        <strong>Nation-state</strong> → <strong>Service</strong> →
+        <strong>Actor</strong>. Hierarchical attribution chain. A
+        service may have sub-services (GRU has 26165, 74455, 54777;
+        FSB has Centers 16 and 18). An actor may have multiple
+        services in the additional-service list when public reporting
+        is split.
+      </li>
+      <li>
+        <strong>Doctrine</strong> → <strong>Pillar</strong> →
+        <strong>Program</strong>. Doctrines have a published or
+        inferred top-level frame (MIC2025, Foreign Policy Concept
+        2023, Resistance Axis, Byungjin, NCS 2023). Pillars are the
+        sector-or-thematic decomposition; programs are named
+        initiatives within a pillar. Events tag at the most specific
+        level the source supports.
+      </li>
+      <li>
+        <strong>Event</strong>. The atomic unit. Carries <em>attributions</em>
+        (one or more, each with attributing-org), <em>doctrine_links</em>
+        (one or more, each with confidence and reasoning),
+        <em>targets</em> (target_id + country), <em>anticipated_timeline_markers</em>,
+        and <em>sources</em>.
+      </li>
+      <li>
+        <strong>Target</strong>. Either a sector (with optional
+        country code), an organization (orgs/&lt;slug&gt;), or named
+        infrastructure (infra/&lt;slug&gt;). Sector slugs follow the
+        hierarchical taxonomy at <code>atlas/sectors/sectors.yaml</code>.
+      </li>
+      <li>
+        <strong>Source</strong>. Every claim has at least one. Sources
+        carry publisher, kind (govt-primary / cert-advisory /
+        vendor-research / think-tank / journalism / academic /
+        leaked-doc / book), tier (primary / secondary / tertiary),
+        URL, archive_url.
+      </li>
+      <li>
+        <strong>Timeline marker</strong>. Anchors for predictive
+        analysis: Davidson Window 2027, the 8th Party Congress
+        defense-plan endpoint (2025), JCPOA snapback (2025),
+        Soleimani assassination anniversary, election cycles.
+      </li>
+      <li>
+        <strong>External references</strong>. Each actor carries
+        <code>external_refs</code> pointing into MITRE ATT&amp;CK
+        Groups (G####), MISP Galaxy (UUID), and where present, Malpedia
+        and ETDA. These let analysts join AUSPEX against existing
+        canonical registries.
+      </li>
+      <li>
+        <strong>Policy action</strong>. External pressure events that
+        historically correlate with state-sponsored cyber tasking:
+        sanctions, indictments, export controls, treaties, summits,
+        elections, party congresses, Olympics, military exercises,
+        weapons tests, anniversaries. Forward calendar through 2029
+        and a historical record from 2014. Events can be linked to
+        policy actions via the <code>responds_to</code> /
+        <code>anticipates</code> edges; the
+        <a href="/research/policy-response">policy-response correlator</a>
+        publishes conditional statistics on the historical lag
+        distribution between (action_type, target_state) classes
+        and subsequent cyber events.
+      </li>
+    </ul>
+  </section>
+
+  <section id="confidence">
+    <h2>Confidence labels</h2>
+
+    <h3>Doctrine-link confidence</h3>
+    <p>
+      Every <code>doctrine_link</code> on an event carries one of three
+      labels. The label discipline is the central editorial commitment
+      of the atlas.
+    </p>
+    <table class="conf-table">
+      <thead><tr><th>Label</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="confidence confidence-attested">attested</span></td>
+          <td>
+            The attributing government or vendor <strong>explicitly named the
+            strategic goal</strong>. Treasury's April 2022 designation of
+            the Ronin Bridge theft to Lazarus stating that "the funds
+            support the DPRK's weapons of mass destruction and ballistic
+            missile programs" is the canonical pattern. FBI Director
+            Wray's House testimony naming Volt Typhoon as Taiwan-conflict
+            pre-positioning is another. We do not upgrade; if a source
+            stopped short, we stop short.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="confidence confidence-strongly-inferred">strongly inferred</span></td>
+          <td>
+            Victim sector, timing, technique, and known actor mission
+            align with a named doctrine pillar with no major alternative
+            explanation. Used when the doctrinal logic is well-documented
+            in primary doctrinal writing (MCF strategists on
+            civil-infrastructure targeting, IRGC on
+            forward-defense-via-cyber) but the specific attributing
+            source did not articulate the strategic goal.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="confidence confidence-plausible">plausible</span></td>
+          <td>
+            The link fits the doctrine, but other explanations exist.
+            Surfaced with an explicit <code>counter_explanation</code>
+            field on the event so the reader sees both readings. Most
+            commonly used for retroactive framings (e.g., pre-2022
+            Russian-aligned ransomware framed as criminal-state
+            symbiosis is plausible — the doctrine
+            <em>crystallized</em> post-invasion, the activity preceded
+            it).
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Attribution confidence</h3>
+    <p>
+      Separately, each attribution row carries the
+      <em>attributing organization's own</em> confidence at the time of
+      attribution, in the ICD-203 vocabulary:
+    </p>
+    <table class="conf-table">
+      <thead><tr><th>Level</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>high</code></td><td>Strong evidence; alternatives have been considered and ruled out.</td></tr>
+        <tr><td><code>moderate</code></td><td>Credible but not conclusive; alternatives remain.</td></tr>
+        <tr><td><code>low</code></td><td>Fragmentary; possible but not preferred among alternatives.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>AUSPEX assessment</h3>
+    <p>
+      Finally, each attribution row carries an
+      <code>auspex_assessment</code> recording where we land:
+    </p>
+    <ul>
+      <li>
+        <code>concur</code> (default) — we agree with the attributing
+        organization's call.
+      </li>
+      <li>
+        <code>concur-with-caveat</code> — we agree but note context.
+        Used when an attribution was retrospective (Salt Typhoon's
+        2023 IOS XE campaign got proper attribution only in the 2025
+        AA25-239A advisory) or when cluster boundaries are unsettled.
+      </li>
+      <li>
+        <code>partial</code> — we agree with part of the attribution
+        but not all of it (e.g., service-level attribution holds but
+        the specific actor cluster doesn't).
+      </li>
+      <li>
+        <code>contested</code> — material disagreement among credible
+        sources. Surfaced explicitly so the reader knows.
+      </li>
+    </ul>
+    <p>
+      We publish our second-order assessment because it is part of the
+      value buyers can't easily reproduce — but we always show the
+      attributing organization's own framing first.
+    </p>
+  </section>
+
+  <section id="sourcing">
+    <h2>Sourcing hierarchy</h2>
+    <p>
+      Sources are ranked into three tiers. The ranking determines what
+      we are willing to label <em>attested</em>.
+    </p>
+    <ol>
+      <li>
+        <strong>Tier 1 — Primary government documents.</strong>
+        Treasury OFAC SDN listings and press releases (jyXXX, sbXXXX
+        series), DOJ press releases and unsealed indictments, CISA /
+        FBI / NSA advisories (AAYY-NNNL series, IC3 advisories),
+        ODNI Annual Threat Assessment, Treasury / State / Commerce
+        SDN actions, Five Eyes joint advisories, foreign-ministry
+        statements where attributive language is direct. These are
+        the only sources that can carry an <em>attested</em>
+        doctrine-link label.
+      </li>
+      <li>
+        <strong>Tier 2 — Authoritative vendor research and Five Eyes
+        partner agencies.</strong> Mandiant (Google Cloud TAG),
+        Microsoft MSTIC and Threat Intelligence Center, CrowdStrike
+        Falcon Intelligence, Recorded Future Insikt Group, Kaspersky
+        GReAT, ESET Research, SentinelLabs, Volexity, Palo Alto Unit
+        42, Trend Micro Zero Day Initiative, Proofpoint, Talos,
+        Dragos and Claroty (ICS-focused), Group-IB. Plus NCSC-UK,
+        CCCS Canada, ACSC Australia, BSI Germany, ANSSI France,
+        JPCERT/CC, NIS Korea, INCD Israel. These can carry
+        <em>strongly inferred</em> doctrine-link labels and ICD-203
+        confidence ratings we generally concur with.
+      </li>
+      <li>
+        <strong>Tier 3 — Independent / open research and journalism.</strong>
+        MITRE ATT&amp;CK Groups, MISP Galaxy, CSIS Significant Cyber
+        Incidents, ASPI International Cyber Policy Centre, RUSI, CEPA,
+        CNAS, Atlantic Council DFRLab, FDD, Lawfare, The Record,
+        CyberScoop, Wired, Reuters, NYT, WaPo, Krebs on Security, plus
+        the Chainalysis / TRM Labs / Elliptic crypto-tracing trio.
+        These can support <em>plausible</em> labels and provide
+        corroborating context but not standalone primary attestation.
+      </li>
+    </ol>
+    <p>
+      Where sources conflict, we surface the conflict in the
+      <code>notes</code> field and pick the most rigorous tier-1
+      reading. When a source's URL is unverified — typically Lawfare
+      analysis pieces and committee-testimony transcripts whose
+      canonical URLs change — we publish the source stub with the
+      publisher and title set and the URL marked unverified rather
+      than fabricate.
+    </p>
+  </section>
+
+  <section id="sec9">
+    <h2>§9: Doctrine without attribution</h2>
+    <p>
+      The atlas's most editorially distinct cell is the
+      doctrine-tagged-but-unattributed event. The schema explicitly
+      permits an event to carry one or more <code>doctrine_link</code>
+      entries with no named actor.
+    </p>
+    <p>The black-flag cell exists for cases like these:</p>
+    <ul>
+      <li>
+        <strong>Estonia 2007 and Georgia 2008.</strong> Pro-Kremlin
+        DDoS campaigns assessed by Estonian CERT, NATO CCDCOE, and
+        US-CCU as state-coordinated; never legally proven. Doctrine
+        link: Russian "near abroad" assertion. Actor: null.
+      </li>
+      <li>
+        <strong>The Romanian 2024 presidential interference.</strong>
+        CSAT declassified attribution to "a state actor" without
+        naming Russia. The event sits in the atlas with no actor and
+        a strongly-inferred Russian-doctrine link.
+      </li>
+      <li>
+        <strong>Unattributed water-utility intrusions during PLA
+        exercise windows.</strong> The atlas can tag these to the
+        Taiwan-reunification pillar at <em>plausible</em> with no
+        actor field populated, surfacing the doctrinal pattern even
+        when individual events lack public attribution.
+      </li>
+    </ul>
+    <p>
+      Operationally: actor attribution and doctrine attribution are
+      independent decisions. Either can be empty. The interesting cell
+      is <em>(no actor, doctrine linked)</em> — that is where AUSPEX
+      makes claims tier-one vendor reporting structurally cannot.
+    </p>
+    <p>
+      The black-flag cell also pre-empts the
+      <em>i-SOON-style</em> problem: when attribution shifts from
+      "unknown" to "MSS-via-contractor" years later (as it did when
+      the i-SOON leak surfaced in February 2024), the doctrine tag
+      was already correct and doesn't need to change.
+    </p>
+  </section>
+
+  <section id="attribution">
+    <h2>Attribution norms and limits</h2>
+    <p>
+      The atlas does not invent attribution. It records what attributing
+      organizations have said, with our second-order assessment of
+      whether the call holds.
+    </p>
+
+    <h3>Frameworks we use</h3>
+    <p>
+      Attribution decisions in the atlas are evaluated against the
+      Diamond Model of Intrusion Analysis (Caltagirone, Pendergast,
+      Betz) and Lockheed Martin's Cyber Kill Chain, both as evidence
+      frameworks rather than as outcomes. Where an attributing source
+      walks the Diamond corners explicitly (adversary, capability,
+      infrastructure, victim), we generally <code>concur</code>. Where
+      they assert without walking, we look for corroboration before
+      moving past <code>concur-with-caveat</code>.
+    </p>
+
+    <h3>Known failure modes</h3>
+    <p>The atlas treats these as first-order analytic risks:</p>
+    <ul>
+      <li>
+        <strong>False flags.</strong> Olympic Destroyer (2018) is the
+        canonical case — initial attribution to North Korea was
+        deliberately seeded as misdirection by GRU Unit 74455. The
+        atlas now flags every event with a <code>false_flag_risk</code>
+        field. Predatory Sparrow is the inverse case: an Israeli (or
+        Israel-aligned) operator whose tradecraft has at times been
+        miscoded as Iranian by reflex; the atlas lists it under
+        <code>actors/il/predatory-sparrow</code> with explicit
+        not-Iranian flagging.
+      </li>
+      <li>
+        <strong>Criminal-state blur.</strong> Conti is the canonical
+        case. The 2022 ContiLeaks exposed direct FSB Center-18
+        liaison alongside an ordinary ransomware-as-a-service
+        business. The atlas records actor-state relationships as
+        operational rather than direct-control unless attestation is
+        explicit. Russian-aligned ransomware actors carry plausible
+        links to the post-2022 sanctions-response doctrine because
+        the ecosystem tolerance is well-documented, but individual
+        events generally do not carry attested doctrine links.
+      </li>
+      <li>
+        <strong>Contractor outsourcing.</strong> The i-SOON leak
+        (February 2024) systematically documented PRC MSS
+        provincial-bureau tasking through contractor firms. The same
+        pattern recurs with Iran (Najee Technology, Afkar System,
+        Rana Intelligence Computing), India (Appin Security, BellTroX
+        / Dark Basin), and others. The atlas treats contractors as
+        distinct actor entries with explicit parent-service
+        attribution where DOJ or OFAC have named the relationship.
+      </li>
+      <li>
+        <strong>Multi-stage attribution.</strong> A single intrusion
+        may be initial-access-broker A → ransomware-affiliate B →
+        ransomware-brand C. Where public reporting names each stage,
+        the atlas records each as a distinct attribution row.
+      </li>
+      <li>
+        <strong>Retroactive re-attribution.</strong> Salt Typhoon's
+        2023 IOS XE campaign was attributed to PRC only retroactively
+        via AA25-239A in 2025. The atlas marks the original event with
+        <code>auspex_assessment: concur-with-caveat</code> and notes
+        the lag.
+      </li>
+    </ul>
+  </section>
+
+  <section id="naming">
+    <h2>Naming reconciliation</h2>
+    <p>
+      The same actor cluster routinely carries five or more names across
+      vendors. Lazarus = Hidden Cobra (US CISA) = Labyrinth Chollima
+      (CrowdStrike) = ZINC / Diamond Sleet (Microsoft) = TEMP.Hermit
+      (Mandiant) = G0032 (MITRE) = Hastati Group (McAfee, historical).
+    </p>
+    <p>
+      The atlas treats <strong>one canonical name per actor</strong>
+      and a complete <code>aliases</code> table mapping the vendor
+      names with an explicit <code>assigning_org</code> and
+      <code>confidence</code> (equivalent / overlapping / disputed).
+      Where vendor clusters genuinely don't line up — the Silk
+      Typhoon / Hafnium / APT27 reconciliation problem — alias entries
+      carry <em>overlapping</em> or <em>disputed</em> and the event
+      attributions to the contested cluster carry <code>contested: true</code>.
+    </p>
+    <p>
+      We also publish each actor's <code>external_refs</code> with
+      stable join keys into MITRE ATT&amp;CK Groups (G####) and MISP
+      Galaxy (UUID). Analysts who already maintain their own taxonomy
+      can join AUSPEX against it on either key.
+    </p>
+  </section>
+
+  <section id="editorial">
+    <h2>Editorial process</h2>
+    <p>
+      The atlas is hand-curated YAML in a versioned repository.
+      Changes are reviewed before merge. Each event records the
+      analyst who authored its doctrine links (internal-only field).
+    </p>
+    <p>The editorial pipeline for a new event:</p>
+    <ol>
+      <li>
+        Event is identified from a primary source (Tier 1 ideally,
+        Tier 2 acceptable for emerging events). The source is written
+        to <code>atlas/sources/&lt;publisher&gt;/&lt;date&gt;_&lt;slug&gt;.yaml</code> first.
+      </li>
+      <li>
+        Actor attribution rows are written using only what the
+        attributing source said. If the source named a service but not
+        a specific cluster, <code>actor_id</code> is null and
+        <code>service_id</code> is set.
+      </li>
+      <li>
+        Doctrine links are drafted. Each carries explicit reasoning
+        prose, an attesting source where one exists, and a
+        counter-explanation where alternatives are reasonable.
+      </li>
+      <li>
+        Targets are tagged with the most specific sector slug
+        supported by the source, plus country code where applicable.
+      </li>
+      <li>
+        The validator (<code>pnpm run validate</code>) is run.
+        Dangling FK references are resolved before the event ships.
+      </li>
+    </ol>
+  </section>
+
+  <section id="evals">
+    <h2>Engine evaluations — what we publish</h2>
+    <p>
+      Four prediction engines run over the atlas with backtests
+      published on dedicated research pages:
+    </p>
+    <ul>
+      <li>
+        <a href="/research/attribution-eval">Attribution</a> —
+        predicts the most likely actor cluster from event features.
+        Leave-one-out cross-validation. Top-1 / top-3 / top-5 hit
+        rates plus Monte Carlo corpus-stability resampling.
+      </li>
+      <li>
+        <a href="/research/doctrine-eval">Doctrine prediction</a> —
+        multi-label, predicts the strategic doctrine(s) an event
+        serves. Top-K hit and recall@K, mAP.
+      </li>
+      <li>
+        <a href="/research/pillar-eval">Pillar prediction</a> —
+        finer-resolution variant predicting specific within-doctrine
+        pillars.
+      </li>
+      <li>
+        <a href="/research/joint-eval">Joint pair</a> — scores
+        (actor × doctrine) candidate pairs together using
+        co-occurrence as a confidence-calibration layer.
+      </li>
+      <li>
+        <a href="/research/temporal-eval">Temporal holdout</a> —
+        the forward-prediction test. Train on events with
+        <code>start_date ≤ 2023-12-31</code>, score every event
+        afterwards cold, no per-event retraining.
+      </li>
+      <li>
+        <a href="/research/policy-response">Policy-response
+        correlator</a> — for each policy-action class with ≥3
+        historical instances, publishes the lag-window distribution
+        of cyber events from the target state. Conditional
+        statistics, not causal claims.
+      </li>
+    </ul>
+
+    <h3>Supersession-equivalence in eval</h3>
+    <p>
+      Some doctrines supersede others (Byungjin → 8th Congress
+      Defense Plan; NCS 2023 → 2026 Trump Cyber Strategy; FPC 2016
+      → FPC 2023). When the supersession relationship is modeled in
+      the atlas, the eval engines treat the supersession chain as a
+      single equivalence class for hit-rate purposes — a top-1
+      prediction of Byungjin when the truth tagged
+      8th-Congress-Defense-Plan counts as correct, because they're
+      the same operational program under sequential doctrinal frames.
+      This is a fairness adjustment, not a model change. The
+      adjustment is applied symmetrically and documented per
+      research page.
+    </p>
+  </section>
+
+  <section id="dont">
+    <h2>What we don't do</h2>
+    <ul>
+      <li>
+        <strong>Invent attribution.</strong> If no public source has
+        attributed an event, we don't either. We tag the doctrine if
+        the circumstantial case is strong; we leave the actor null.
+      </li>
+      <li>
+        <strong>Manufacture specificity.</strong> If a source says
+        "an MSS-linked group" we tag it that way (service-level
+        attribution); we do not upgrade to a specific cluster.
+      </li>
+      <li>
+        <strong>Anonymize sources.</strong> Every claim has at least
+        one source slug pointing at a source file. Source files carry
+        publisher, title, URL.
+      </li>
+      <li>
+        <strong>Fabricate URLs.</strong> Where the canonical URL for a
+        cited piece can't be verified, the source file is written with
+        <code>url: null</code> and a <code>notes</code> field that
+        explains the gap. Better honest than fake-precise.
+      </li>
+      <li>
+        <strong>Take vendor product placement.</strong> AUSPEX has no
+        commercial relationship with any vendor named in the atlas.
+        We rely on what those vendors publish; we do not edit on
+        request.
+      </li>
+      <li>
+        <strong>Coordinate publication with attributing agencies.</strong>
+        We track government attributions as primary sources but we
+        are not embedded with, briefed by, or pre-clearing through
+        any IC component.
+      </li>
+    </ul>
+  </section>
+
+  <section id="limits">
+    <h2>Known limits</h2>
+    <ul>
+      <li>
+        <strong>Post-April-2024 DPRK monitoring blackout.</strong> The
+        UN 1718 Panel of Experts mandate ended 30 April 2024 after a
+        Russian veto. The successor MSMT (Multilateral Sanctions
+        Monitoring Team, May 2024 stand-up) has produced limited
+        outputs. DPRK financial-theft figures in the atlas after
+        mid-2024 are likely under-counted relative to ground truth.
+      </li>
+      <li>
+        <strong>Classified-side asymmetry on US operations.</strong>
+        US cyber <em>doctrine</em> is publicly published in detail.
+        US cyber <em>operations</em> are largely classified, with
+        public knowledge coming from leaks (Snowden 2013, Shadow
+        Brokers 2016–17, Vault 7 2017) and rare declassifications
+        (Olympic Games / Stuxnet, the IRA disruption, KV-Botnet / Volt
+        Typhoon takedown). The atlas's US-operations corpus is
+        therefore biased toward leak-attributed material; ordinary
+        US offensive cyber that has not leaked is invisible.
+      </li>
+      <li>
+        <strong>Inference standards for non-doctrine-publishing
+        states.</strong> Iran, DPRK, and several of the v0.1 additions
+        (Vietnam, Pakistan, Belarus) do not publish formal cyber
+        doctrine documents. Their doctrine entries in the atlas carry
+        <code>status: inferred</code> and the inference is
+        reconstructed from constitutional documents, supreme-leader
+        speeches, and operational pattern. The atlas labels this
+        openly; downstream consumers should weight inferred doctrines
+        differently from attested ones.
+      </li>
+      <li>
+        <strong>Cluster naming churn.</strong> Microsoft renamed its
+        entire taxonomy in April 2023 (Typhoon = PRC, Blizzard = RU,
+        Sandstorm = IR, Sleet = DPRK, Hail = SK, Tempest =
+        financially-motivated criminal, Tsunami = private-sector
+        offensive). CrowdStrike, Mandiant, Talos, Kaspersky have
+        their own conventions. Secureworks's BRONZE/IRON/COBALT/NICKEL
+        taxonomy is at risk after the February 2025 Sophos acquisition.
+        The atlas pins to MITRE ATT&amp;CK Group IDs (G####) and MISP
+        Galaxy UUIDs where present because those are the most stable
+        join keys.
+      </li>
+      <li>
+        <strong>Continuous-compromise actors under-counted.</strong>
+        Kimsuky and APT37 operate through continuous spear-phishing
+        rather than discrete campaigns; their event-row counts in the
+        atlas systematically under-represent their volume. A
+        <code>Campaign</code> entity is planned for v0.2 to capture
+        this.
+      </li>
+      <li>
+        <strong>Israeli, Saudi, UAE, French, and other allied-state
+        offensive operations.</strong> Where attribution is public, we
+        include them (Predatory Sparrow under IL with no formal
+        service). Most allied offensive activity is not public
+        enough to make the atlas; absence here does not mean absence
+        in reality.
+      </li>
+    </ul>
+  </section>
+
+  <section id="stability">
+    <h2>Versioning and stability</h2>
+    <p>
+      The atlas schema is documented in <code>docs/DATA_MODEL.md</code>
+      in the repository. Breaking schema changes bump
+      <code>schema_version</code> in the <a href="/api/atlas.json">JSON
+      dump</a>. The current schema version is <code>0.1</code>.
+    </p>
+    <p>
+      Slugs are <strong>stable forever once published</strong>. If we
+      get a slug wrong, we leave the old slug as an alias and add a
+      new canonical. Renames break analyst code; we won't do them.
+    </p>
+    <p>
+      Event entries are <em>updatable</em> as new disclosure
+      arrives — late-breaking attributions, additional doctrine
+      links, late-arriving source citations. Material updates carry
+      an analyst note.
+    </p>
+    <p>
+      The atlas YAML repository is the canonical source. The site, the
+      JSON API, and the RSS feed are derived. If you need to integrate
+      AUSPEX into your own tooling, prefer the <a href="/api/atlas.json">JSON
+      dump</a> over scraping HTML.
+    </p>
+  </section>
+
+  <section id="license">
+    <h2>License and contact</h2>
+    <p>
+      AUSPEX is independent. We do not work for, contract with, or take
+      funding from any government, intelligence service, or vendor
+      named in the atlas.
+    </p>
+    <p>
+      The curated dataset (the atlas) is © Black Flag Intelligence.
+      Made available for non-commercial research, journalism, and
+      educational use with attribution. Commercial licensing — for
+      embedded use in vendor products, paid research tools, or
+      enterprise reporting — contact us.
+    </p>
+    <p>
+      Corrections, source additions, and editorial pushback are
+      welcome and the atlas improves from them. Email
+      <a href="mailto:auspex@blackflagintel.com">auspex@blackflagintel.com</a>
+      with the event slug, the claim you're questioning, and the
+      primary source supporting your correction. We respond.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .toc {
+    margin: 1.5rem 0 2rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+  }
+  .toc strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    columns: 2;
+    column-gap: 1.5rem;
+  }
+  .toc li { margin: 0.125rem 0; break-inside: avoid; }
+  @media (max-width: 640px) {
+    .toc ol { columns: 1; }
+  }
+  section { margin: 2.5rem 0; }
+  section h2 { border-bottom: 1px solid var(--ctp-surface0); padding-bottom: 0.25rem; }
+  section h3 { margin-top: 1.5rem; }
+  .conf-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.75rem 0 1.5rem;
+    font-size: 0.9375rem;
+  }
+  .conf-table th, .conf-table td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    vertical-align: top;
+  }
+  .conf-table th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    width: 9rem;
+  }
+  ol li, ul li { margin: 0.4rem 0; }
+</style>

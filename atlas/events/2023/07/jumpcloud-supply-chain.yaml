@@ -1,0 +1,71 @@
+id: 2023-07/jumpcloud-supply-chain
+name: JumpCloud supply-chain compromise
+start_date: 2023-06-22
+disclosure_date: 2023-07-12
+end_date: 2023-07-12
+incident_type:
+  - supply-chain
+  - intrusion
+initial_vector: phishing
+outcome_summary: |
+  Spear-phishing into JumpCloud (cloud identity SaaS); lateral
+  pivot through the JumpCloud commands API to compromise
+  approximately five downstream cryptocurrency customer firms.
+  Approximately $147.5M in follow-on crypto thefts from the
+  compromised downstream firms.
+quantified_impact:
+  usd_stolen_downstream: 147500000
+  downstream_orgs_affected: 5
+false_flag_risk: none
+campaign_id: apt38-crypto-pivot
+summary: |
+  Second canonical 2023 supply-chain pivot operation (after 3CX).
+  Initial access into JumpCloud came via spear-phishing of an
+  engineering employee delivering a TraderTraitor / Citrine Sleet
+  macOS dropper; operators then leveraged valid credentials to
+  pivot into the JumpCloud commands API, injected attacker-
+  controlled commands into customer agents on selected
+  cryptocurrency-firm tenants, and used those commands to
+  exfiltrate hot-wallet key material from approximately five
+  downstream crypto firms. Tradecraft includes the FullHouse.Doored,
+  STRATOFEAR, and TIEDYE Mach-O implants documented by Mandiant
+  / CrowdStrike, credential dumping, and Tor-fronted C2.
+  TraderTraitor's institutionalization of the supplier-to-customer
+  pivot model — JumpCloud was the staging victim; the actual ~$147.5M
+  crypto theft occurred at JumpCloud's downstream customers.
+attributions:
+  - actor_id: kp/rgb/tradertraitor
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-07-24
+    attribution_source_id: jumpcloud/2023-07-12_post-incident
+  - actor_id: kp/rgb/tradertraitor
+    attributing_org: CrowdStrike
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-07-24
+    attribution_source_id: jumpcloud/2023-07-12_post-incident
+doctrine_links:
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    confidence: attested
+    reasoning: |
+      Downstream crypto thefts (~$147.5M) explicitly tied to
+      TraderTraitor by Mandiant / CrowdStrike vendor consensus
+      with USG corroboration in subsequent CISA reporting. WMD-
+      financing strategic goal per standard attribution pattern.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/jumpcloud
+    role: staging
+    outcome: Identity-SaaS lateral pivot vector; five downstream crypto customers compromised.
+  - target_id: sectors/finance/crypto-exchange
+    role: primary
+    outcome: ~$147.5M in crypto stolen from five downstream JumpCloud customer firms.
+  - target_id: sectors/ict/identity
+    role: staging
+sources:
+  - jumpcloud/2023-07-12_post-incident

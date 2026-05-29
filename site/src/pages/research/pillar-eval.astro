@@ -1,0 +1,210 @@
+---
+import Base from '../../layouts/Base.astro';
+import { atlas } from '../../utils/atlas';
+import { runPillarLOO } from '../../utils/pillar-prediction-eval';
+
+const a = atlas();
+const eval_ = runPillarLOO();
+
+function pct(num: number, den: number): string {
+  if (den === 0) return 'n/a';
+  return `${((num / den) * 100).toFixed(1)}%`;
+}
+function pillarName(id: string): string {
+  return a.pillars.get(id)?.pillar.name ?? id;
+}
+function pillarPath(id: string): string {
+  const p = a.pillars.get(id);
+  if (!p) return id;
+  const doc = a.doctrines.get(p.doctrineId);
+  return `${doc?.short_name ?? p.doctrineId} › ${p.pillar.name}`;
+}
+function doctrineHref(id: string): string {
+  return `/doctrine/${a.pillars.get(id)?.doctrineId ?? id}`;
+}
+const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
+const generatedAt = eval_.generatedAt;
+---
+<Base title="Pillar prediction — backtest" wide>
+  <p class="kicker">Research</p>
+  <h1>Pillar prediction — backtest</h1>
+  <p class="lede">
+    Same engine as doctrine prediction, finer-resolution labels.
+    Predicts the specific doctrine <em>pillar</em> an event serves
+    (MIC2025/next-gen-it; MCF/civil-infrastructure-targeting;
+    NCS-2023/disrupt-and-dismantle) rather than just the parent
+    doctrine. Candidate space is 129 pillars vs 61 doctrines —
+    twice the resolution.
+  </p>
+  <p class="meta">Generated {generatedAt} · n={eval_.scored} events with pillar-level labels</p>
+
+  <section>
+    <h2>Headline</h2>
+    <div class="stat-grid">
+      <div class="stat"><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
+      <div class="stat"><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
+      <div class="stat"><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
+      <div class="stat"><strong>{(eval_.meanRecall3 * 100).toFixed(1)}%</strong>recall@3</div>
+      <div class="stat"><strong>{eval_.mAP.toFixed(3)}</strong>mAP</div>
+      <div class="stat"><strong>{pct(eval_.doctrineRightPillarWrong, eval_.scored)}</strong>doctrine-right, pillar-wrong</div>
+    </div>
+    <p class="reading">
+      <strong>The pillar engine performs essentially as well as the
+      doctrine engine despite the candidate space being twice as
+      large.</strong> top-1 38.5% vs doctrine 39.3% — a single
+      percentage point — and pillar predictions carry twice the
+      analytic resolution. The "doctrine-right pillar-wrong"
+      number ({pct(eval_.doctrineRightPillarWrong, eval_.scored)})
+      is striking: when the engine misses, it usually misses on the
+      parent doctrine entirely, not just the within-doctrine pillar.
+      The two engines aren't really doing different jobs — they're
+      operating on the same predictive signal at different
+      resolutions.
+    </p>
+  </section>
+
+  <section>
+    <h2>Per-state — where pillar resolution helps</h2>
+    <table class="state-table">
+      <thead>
+        <tr><th>state</th><th>n</th><th>pillar top-1</th><th>pillar top-3</th><th>recall@3</th><th>mAP</th></tr>
+      </thead>
+      <tbody>
+        {perState.map(([state, row]) => (
+          <tr>
+            <td><code>{state.toUpperCase()}</code></td>
+            <td>{row.scored}</td>
+            <td>{pct(row.hit1, row.scored)}</td>
+            <td>{pct(row.hit3, row.scored)}</td>
+            <td>{(row.meanRecall3 * 100).toFixed(1)}%</td>
+            <td>{row.mAP.toFixed(3)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="reading">
+      <strong>US 81.0% pillar top-1</strong> — the engine almost
+      always picks the right specific NCS-2023 pillar
+      (disrupt-and-dismantle vs secure-by-design vs persistent-engagement).
+      <strong>KP jumped from 42.2% (doctrine) to 57.1% (pillar)</strong>
+      because Byungjin's revenue-aggregation vs nuclear-modernization
+      vs sanctions-evasion pillars are operationally distinct —
+      finance events go to one pillar, defense-contractor events to
+      another, and the engine picks correctly. The pillar level
+      <em>matches reality</em> for those programs.
+    </p>
+    <p class="reading">
+      <strong>CN 46.3% (doctrine) → 21.6% (pillar)</strong> is the
+      one major regression. CN's pillars overlap heavily:
+      MIC2025/semis, MIC2025/aerospace, MCF/dual-use-research, and
+      MCF/bulk-pii-humint all share sector signatures (semis, defense,
+      aviation, telecom). The engine can't separate them on
+      sector+country features alone; this is the same data-richness
+      problem the actor attribution engine has for CN MSS clusters
+      — and the same fix applies (per-pillar tradecraft / target-org
+      features).
+    </p>
+  </section>
+
+  <section>
+    <h2>Top confusion pairs</h2>
+    <table class="conf-table">
+      <thead>
+        <tr><th>predicted pillar</th><th>actual pillar</th><th>×</th></tr>
+      </thead>
+      <tbody>
+        {eval_.confusion.slice(0, 12).map((c) => (
+          <tr>
+            <td><a href={doctrineHref(c.predicted)}>{pillarPath(c.predicted)}</a></td>
+            <td><a href={doctrineHref(c.actual)}>{pillarPath(c.actual)}</a></td>
+            <td><strong>{c.count}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="reading">
+      The headline confusion <em>kp/8th-congress.../revenue-aggregation
+      → kp/byungjin/sanctions-evasion-revenue</em> ×8 is the
+      doctrine-succession pattern again (Byungjin was the original
+      framework, 8th Congress Defense Plan succeeded it, both have a
+      "revenue" pillar pointing at the same DPRK financial-theft
+      operations). Operationally these are equivalent; tagging
+      against one or the other is editorial preference. Worth folding
+      these into a single canonical pillar in v0.2.
+    </p>
+  </section>
+
+  <section>
+    <h2>What this changes for the product</h2>
+    <p>Four engines now operate on the same atlas:</p>
+    <ul>
+      <li>
+        <strong>Pillar prediction (NEW)</strong> — same accuracy as
+        doctrine, twice the resolution. Analytically the better
+        choice for journalists and CISOs: "this serves
+        NCS-2023/disrupt-and-dismantle" is more useful than "this
+        serves NCS-2023".
+      </li>
+      <li>
+        <strong>Doctrine prediction</strong> — coarser fallback,
+        used to surface the parent doctrine when the pillar engine
+        is uncertain.
+      </li>
+      <li>
+        <strong>Actor attribution</strong> — the "who" candidate
+        shortlist.
+      </li>
+      <li>
+        <strong>Joint engine</strong> — confidence layer and
+        novelty flag.
+      </li>
+    </ul>
+    <p>Concrete v0.1 product output for a live unattributed event:</p>
+    <ol>
+      <li>Pillar engine top-3 (the "why, specifically" — 57.2% hit)</li>
+      <li>Doctrine engine top-1 (the "why, broadly" — 39.3% hit)</li>
+      <li>Actor engine top-5 (the "who" candidate set — 59.3%)</li>
+      <li>Joint pair if co-occurrence ≥ 2 (the confident-pattern claim — US 76.7%)</li>
+      <li>Novelty flag if joint top has zero co-occurrence</li>
+    </ol>
+    <p>
+      Engine source: <code>src/utils/pillar-prediction.ts</code>.
+      JSON: <a href="/api/pillar-eval.json">/api/pillar-eval.json</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .stat {
+    display: flex; flex-direction: column; gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext1);
+  }
+  .stat strong { font-size: 1.5rem; color: var(--ctp-text); font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.875rem; margin: 0.75rem 0 1rem; }
+  th, td { text-align: left; padding: 0.375rem 0.625rem; border-bottom: 1px solid var(--ctp-surface0); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ctp-subtext0); }
+  td { font-family: var(--font-mono); font-size: 0.8125rem; }
+  td a { color: var(--ctp-text); }
+  td a:hover { color: var(--ctp-blue); }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  ol li, ul li { margin: 0.4rem 0; }
+</style>

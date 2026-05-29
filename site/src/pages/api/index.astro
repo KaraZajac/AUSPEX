@@ -1,0 +1,153 @@
+---
+import Base from '../../layouts/Base.astro';
+import { atlas } from '../../utils/atlas';
+const stats = atlas().stats();
+---
+<Base title="API">
+  <p class="kicker">API</p>
+  <h1>Atlas API</h1>
+  <p class="lede">
+    The atlas is published as static JSON for analyst tooling.
+    Read-only; canonical source remains the <code>atlas/</code> YAML tree
+    in the repo.
+  </p>
+
+  <h2>Endpoints</h2>
+
+  <dl class="endpoints">
+    <dt><a href="/api/atlas.json"><code>GET /api/atlas.json</code></a></dt>
+    <dd>
+      The complete atlas as one JSON document. Includes
+      <code>counts</code>, <code>nation_states</code>, <code>services</code>,
+      <code>doctrines</code> (with nested pillars and programs),
+      <code>actors</code> (with external_refs and aliases),
+      <code>events</code> (with attributions, doctrine_links, targets,
+      sources), <code>sources</code>, <code>timeline_markers</code>,
+      <code>sectors</code>. <code>schema_version: 0.1</code>.
+    </dd>
+
+    <dt><a href="/api/attribution-eval.json"><code>GET /api/attribution-eval.json</code></a></dt>
+    <dd>
+      Leave-one-out backtest results for the actor-attribution engine:
+      headline hit-rate metrics (top-1, top-3, top-5, top-10, MRR),
+      per-state breakdown, top confusion pairs, worst predictions,
+      and Monte Carlo stability scores. See
+      <a href="/research/attribution-eval">/research/attribution-eval</a>
+      for the human reading. Regenerated every build.
+    </dd>
+
+    <dt><a href="/api/doctrine-eval.json"><code>GET /api/doctrine-eval.json</code></a></dt>
+    <dd>
+      Leave-one-out backtest results for the doctrine-prediction
+      engine: multi-label hit/recall metrics (top-1, top-3, top-5,
+      recall@K, mAP), per-state breakdown, confusion, worst
+      predictions. See
+      <a href="/research/doctrine-eval">/research/doctrine-eval</a>.
+    </dd>
+
+    <dt><a href="/api/joint-eval.json"><code>GET /api/joint-eval.json</code></a></dt>
+    <dd>
+      Joint (actor × doctrine) engine backtest. Pair-hit metrics over
+      the 7,381-cell (actor × doctrine) space, plus confident-hit and
+      worst-prediction lists. The joint engine isn't a single-metric
+      winner over the marginal engines — it's the confidence and
+      novelty layer over the other two. See
+      <a href="/research/joint-eval">/research/joint-eval</a>.
+    </dd>
+
+    <dt><a href="/api/pillar-eval.json"><code>GET /api/pillar-eval.json</code></a></dt>
+    <dd>
+      Pillar-prediction engine backtest. Predicts the specific
+      doctrine pillar (MIC2025/semis vs MIC2025/aerospace, not just
+      MIC2025). 129-pillar candidate space. Roughly the same accuracy
+      as the doctrine engine at twice the analytic resolution. See
+      <a href="/research/pillar-eval">/research/pillar-eval</a>.
+    </dd>
+
+    <dt><a href="/api/temporal-eval.json"><code>GET /api/temporal-eval.json</code></a></dt>
+    <dd>
+      <strong>Temporal-holdout backtest for all four engines.</strong>
+      Train on events ≤ 2023-12-31, score everything after cold —
+      no per-event retraining, no information leakage. The honest
+      forward-prediction test. Includes per-year and per-state
+      breakdowns. See <a href="/research/temporal-eval">/research/temporal-eval</a>.
+    </dd>
+
+    <dt><a href="/rss.xml"><code>GET /rss.xml</code></a></dt>
+    <dd>
+      RSS 2.0 feed of the 50 most recent events. Country flag, doctrine /
+      attribution counts in each item's description.
+    </dd>
+
+    <dt><a href="/sitemap-index.xml"><code>GET /sitemap-index.xml</code></a></dt>
+    <dd>
+      Sitemap index. Points at <code>/sitemap-0.xml</code> with all
+      page URLs.
+    </dd>
+  </dl>
+
+  <h2>Atlas stats</h2>
+  <table class="stats">
+    <tbody>
+      <tr><th>nation_states</th><td>{stats.nationStates}</td></tr>
+      <tr><th>services</th><td>{stats.services}</td></tr>
+      <tr><th>doctrines</th><td>{stats.doctrines}</td></tr>
+      <tr><th>pillars</th><td>{stats.pillars}</td></tr>
+      <tr><th>programs</th><td>{stats.programs}</td></tr>
+      <tr><th>actors</th><td>{stats.actors}</td></tr>
+      <tr><th>events</th><td>{stats.events}</td></tr>
+      <tr><th>sources</th><td>{stats.sources}</td></tr>
+      <tr><th>timeline_markers</th><td>{stats.timelineMarkers}</td></tr>
+      <tr><th>sectors</th><td>{stats.sectors}</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Use</h2>
+  <pre><code>{`# Python
+import requests
+r = requests.get("https://auspex.blackflagintel.com/api/atlas.json")
+atlas = r.json()
+print(atlas["counts"])
+print(len(atlas["events"]))`}</code></pre>
+
+  <pre><code>{`# JavaScript
+const atlas = await fetch("https://auspex.blackflagintel.com/api/atlas.json")
+  .then((r) => r.json());`}</code></pre>
+
+  <h2>Stability and licensing</h2>
+  <p>
+    Schema follows <code>docs/DATA_MODEL.md</code> in the project repo.
+    Breaking changes will bump <code>schema_version</code> in the
+    payload. Cache TTL on the endpoint is short (5 minutes); the file
+    is regenerated on every site build.
+  </p>
+  <p>
+    AUSPEX content (the curated dataset) is © Black Flag Intelligence
+    and made available for non-commercial research, journalism, and
+    educational use with attribution. Contact for commercial licensing.
+  </p>
+</Base>
+
+<style>
+  .endpoints dt {
+    margin: 1rem 0 0.25rem;
+    font-family: var(--font-mono);
+  }
+  .endpoints dd {
+    margin: 0 0 0.75rem;
+    color: var(--ctp-subtext1);
+  }
+  .stats {
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  .stats th, .stats td {
+    text-align: left;
+    padding: 0.25rem 1rem 0.25rem 0;
+  }
+  .stats th { color: var(--ctp-subtext0); font-weight: 500; }
+  .stats td { color: var(--ctp-text); }
+  pre { margin: 0.75rem 0 1.5rem; }
+</style>

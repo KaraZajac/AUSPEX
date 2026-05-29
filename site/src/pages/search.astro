@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Search" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Search</h1>
+  <p class="lede">
+    Full-text search across the atlas — doctrines, actors, events,
+    services, sectors. Search index is built at site-build time. In
+    dev mode, the index is unavailable.
+  </p>
+
+  <div id="search" class="search-container"></div>
+
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script src="/pagefind/pagefind-ui.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof PagefindUI !== 'undefined') {
+        new PagefindUI({
+          element: '#search',
+          showImages: false,
+          excerptLength: 24,
+          autofocus: true,
+          resetStyles: false,
+        });
+      } else {
+        document.getElementById('search').innerHTML =
+          '<p style="color: var(--ctp-subtext0);"><em>Search index not built. Run <code>pnpm build</code> and serve via <code>pnpm preview</code> to use search.</em></p>';
+      }
+    });
+  </script>
+</Base>
+
+<style is:global>
+  /* Pagefind UI uses CSS variables — override with our Catppuccin palette. */
+  .pagefind-ui {
+    --pagefind-ui-primary: var(--ctp-blue);
+    --pagefind-ui-text: var(--ctp-text);
+    --pagefind-ui-background: var(--ctp-base);
+    --pagefind-ui-border: var(--ctp-surface0);
+    --pagefind-ui-tag: var(--ctp-mantle);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-font: var(--font-sans);
+  }
+  .pagefind-ui__search-input {
+    background: var(--ctp-mantle) !important;
+  }
+  .pagefind-ui__result {
+    border-color: var(--ctp-surface0) !important;
+  }
+</style>
+
+<style>
+  .search-container { margin-top: 1rem; }
+</style>

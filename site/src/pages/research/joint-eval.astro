@@ -1,0 +1,250 @@
+---
+import Base from '../../layouts/Base.astro';
+import { atlas } from '../../utils/atlas';
+import { runJointLOO } from '../../utils/joint-prediction-eval';
+
+const a = atlas();
+const eval_ = runJointLOO();
+
+function pct(num: number, den: number): string {
+  if (den === 0) return 'n/a';
+  return `${((num / den) * 100).toFixed(1)}%`;
+}
+function actorName(id: string): string {
+  return a.actors.get(id)?.canonical_name ?? id;
+}
+function doctrineName(id: string): string {
+  return a.doctrines.get(id)?.short_name ?? a.doctrines.get(id)?.name ?? id;
+}
+const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
+const generatedAt = eval_.generatedAt;
+---
+<Base title="Joint (actor × doctrine) prediction" wide>
+  <p class="kicker">Research</p>
+  <h1>Joint engine — actor × doctrine</h1>
+  <p class="lede">
+    Combines the actor-attribution and doctrine-prediction engines
+    into a single ranking over <code>(actor, doctrine)</code> pairs.
+    Joint score = log P(actor) + log P(doctrine) + log(1 + co-occurrence).
+    The third term rewards pairs we've seen in training.
+  </p>
+  <p class="meta">Generated {generatedAt} · n={eval_.scored} events with both actor and doctrine labels</p>
+
+  <section>
+    <h2>Headline</h2>
+    <div class="stat-grid">
+      <div class="stat"><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 pair hit</div>
+      <div class="stat"><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 pair hit</div>
+      <div class="stat"><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 pair hit</div>
+      <div class="stat"><strong>{pct(eval_.hit10, eval_.scored)}</strong>top-10 pair hit</div>
+      <div class="stat"><strong>{eval_.mrr.toFixed(3)}</strong>MRR</div>
+      <div class="stat"><strong>{eval_.scored}</strong>events</div>
+    </div>
+    <p>
+      <strong>Pair hit</strong> means the engine's #K pair (actor +
+      doctrine, both correct simultaneously) matched at least one
+      true (actor, doctrine) cross-product cell. The candidate space
+      is 121 actors × 61 doctrines = <strong>7,381 possible pairs</strong>;
+      random chance is 0.014%. The engine performs 2,500× better
+      than random.
+    </p>
+  </section>
+
+  <section>
+    <h2>How to read this — honest framing</h2>
+    <p class="reading">
+      <strong>This engine is NOT a strict upgrade over the single
+      engines.</strong> Both engines score better in isolation —
+      doctrine top-3 is 59.5%, actor top-5 is 59.3%. The joint metric
+      ("pair hit") is fundamentally harder: actor AND doctrine must
+      both be right.
+    </p>
+    <p>The joint engine's actual product value is different:</p>
+    <ul>
+      <li>
+        <strong>Confidence calibration.</strong> Pairs with high
+        actor-score + high doctrine-score + high co-occurrence are
+        the engine's high-confidence outputs. Pairs with high scores
+        but zero co-occurrence get demoted — they're the engine's
+        "novel claim" flag. <em>This is the layer analyst-grade
+        tooling actually wants.</em>
+      </li>
+      <li>
+        <strong>Cross-checking.</strong> When actor and doctrine
+        engines disagree (actor says A, doctrine says D, but (A, D)
+        has zero training co-occurrence), the joint engine surfaces
+        the disagreement. That flag is what makes a v0.1 analyst
+        review-queue.
+      </li>
+      <li>
+        <strong>Per-state utility varies dramatically</strong> —
+        the US case below is the example.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Per-state breakdown</h2>
+    <table class="state-table">
+      <thead>
+        <tr><th>state</th><th>n</th><th>top-1</th><th>top-3</th><th>top-5</th><th>MRR</th></tr>
+      </thead>
+      <tbody>
+        {perState.map(([state, row]) => (
+          <tr>
+            <td><code>{state.toUpperCase()}</code></td>
+            <td>{row.scored}</td>
+            <td>{pct(row.hit1, row.scored)}</td>
+            <td>{pct(row.hit3, row.scored)}</td>
+            <td>{pct(row.hit5, row.scored)}</td>
+            <td>{row.mrr.toFixed(3)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="reading">
+      <strong>US 76.7% top-1</strong> is the headline finding. The
+      US's (actor, doctrine) signatures are dense and stable — CNMF
+      almost always pairs with NCS-2023's disrupt-and-dismantle pillar
+      because every major US disruption operation has been tagged
+      against that same doctrine. High co-occurrence makes the joint
+      score very confident here. Other states are sparser, so the
+      joint engine reverts toward the marginal product of the two
+      single engines.
+    </p>
+  </section>
+
+  <section>
+    <h2>Confident hits</h2>
+    <p>
+      Top-1 correct predictions where the engine had high training
+      co-occurrence backing the pair. These are the joint engine's
+      best operating mode.
+    </p>
+    <table class="hits-table">
+      <thead>
+        <tr><th>date</th><th>event</th><th>predicted pair</th><th>co-occurrence</th></tr>
+      </thead>
+      <tbody>
+        {eval_.confidentHits.slice(0, 10).map((h) => (
+          <tr>
+            <td>{h.startDate ?? '????'}</td>
+            <td><a href={`/event/${h.eventId}`}>{h.eventName}</a></td>
+            <td>
+              <a href={`/actor/${h.top5[0].actorId}`}>{actorName(h.top5[0].actorId)}</a>{' × '}
+              <a href={`/doctrine/${h.top5[0].doctrineId}`}>{doctrineName(h.top5[0].doctrineId)}</a>
+            </td>
+            <td><strong>{h.top5[0].coOccurrence}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Worst predictions</h2>
+    <p>
+      Where the engine confidently picked a popular pair when the
+      correct answer was an outlier.
+    </p>
+    <table class="worst-table">
+      <thead>
+        <tr><th>rank</th><th>date</th><th>event</th><th>true</th><th>engine top-1</th></tr>
+      </thead>
+      <tbody>
+        {eval_.worst.slice(0, 10).map((w) => (
+          <tr>
+            <td>{w.bestRank}</td>
+            <td>{w.startDate ?? '????'}</td>
+            <td><a href={`/event/${w.eventId}`}>{w.eventName}</a></td>
+            <td>
+              {w.trueActors[0] && <><a href={`/actor/${w.trueActors[0]}`}>{actorName(w.trueActors[0])}</a> × <a href={`/doctrine/${w.trueDoctrines[0]}`}>{doctrineName(w.trueDoctrines[0] ?? '')}</a></>}
+            </td>
+            <td>
+              {w.top5[0] && <><a href={`/actor/${w.top5[0].actorId}`}>{actorName(w.top5[0].actorId)}</a> × <a href={`/doctrine/${w.top5[0].doctrineId}`}>{doctrineName(w.top5[0].doctrineId)}</a></>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="reading">
+      <strong>Reading.</strong> The repeated <em>APT41 × MCF</em>
+      fallback in the worst-predictions list is the signature of
+      defaulting to the most-common pair. When features don't strongly
+      pull elsewhere, the engine reverts to the densest cell. That's
+      a calibration issue — the prior weight on co-occurrence is
+      probably too high.
+    </p>
+  </section>
+
+  <section>
+    <h2>What this changes</h2>
+    <p>
+      We now have three engines operating on the same atlas:
+    </p>
+    <ul>
+      <li>
+        <strong>Doctrine prediction</strong> — the primary "why"
+        engine. Highest top-K rates. Use this as the analytic
+        headline.
+      </li>
+      <li>
+        <strong>Actor attribution</strong> — the "who" engine.
+        Useful for narrowing the candidate cluster.
+      </li>
+      <li>
+        <strong>Joint engine</strong> — the confidence and novelty
+        layer. Not for headline ranking; for grading the other two
+        engines' outputs and flagging novel attribution patterns.
+      </li>
+    </ul>
+    <p>
+      The right v0.1 product output for a live unattributed event:
+    </p>
+    <ol>
+      <li>Doctrine engine top-3 (the "why" framing — 60% top-3 hit rate)</li>
+      <li>Actor engine top-5 (the "who" shortlist — 59% top-5)</li>
+      <li>Joint engine top-1 pair — only published when co-occurrence ≥ 2 (the "confident pattern" claim)</li>
+      <li>Disagreement flag — fired when the joint top pair has zero co-occurrence (the "novel pattern" claim)</li>
+    </ol>
+    <p>Engine source: <code>src/utils/joint-prediction.ts</code>. JSON: <a href="/api/joint-eval.json">/api/joint-eval.json</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .stat {
+    display: flex; flex-direction: column; gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext1);
+  }
+  .stat strong { font-size: 1.5rem; color: var(--ctp-text); font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.875rem; margin: 0.75rem 0 1rem; }
+  th, td { text-align: left; padding: 0.375rem 0.625rem; border-bottom: 1px solid var(--ctp-surface0); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ctp-subtext0); }
+  td { font-family: var(--font-mono); font-size: 0.8125rem; }
+  td a { color: var(--ctp-text); }
+  td a:hover { color: var(--ctp-blue); }
+  .worst-table td:first-child, .hits-table td:last-child { font-weight: 700; }
+  .worst-table td:first-child { color: var(--ctp-peach); }
+  .hits-table td:last-child { color: var(--ctp-green); }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  ol li, ul li { margin: 0.4rem 0; }
+</style>

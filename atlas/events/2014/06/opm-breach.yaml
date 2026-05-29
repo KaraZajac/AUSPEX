@@ -1,0 +1,86 @@
+id: 2014-06/opm-breach
+name: Office of Personnel Management (OPM) breach
+start_date: 2013-11-01  # earliest assessed compromise
+disclosure_date: 2015-06-04
+end_date: 2014-06-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: valid-creds  # via KeyPoint contractor compromise
+outcome_summary: |
+  Theft of approximately 22.1 million SF-86 background-investigation
+  records — security-clearance applicants, family, and references —
+  from US OPM via compromise of contractor KeyPoint. Long dwell;
+  the most consequential single PII theft in US national-security
+  history. Subsequent cross-referencing with the Anthem (2015) and
+  Equifax (2017) thefts created a near-comprehensive MSS dataset
+  on cleared US persons.
+quantified_impact:
+  records_exfiltrated: 22100000
+false_flag_risk: none
+campaign_id: prc-bulk-pii-collection-wave
+summary: |
+  US IC public attribution to MSS Jiangsu State Security Department
+  (no DOJ indictment). The OPM event defines the bulk-PII-for-HUMINT
+  pattern and is the canonical anchor for the MCF bulk-PII-collection
+  pillar. Initial access came through the contractor KeyPoint
+  Government Solutions, where valid credentials were stolen and
+  reused to log into OPM systems. Post-intrusion tradecraft
+  included use of the Sakula remote-access trojan, the PlugX
+  modular backdoor, and the Hikit rootkit — all part of the Deep
+  Panda / Hurricane Panda toolset Symantec and CrowdStrike later
+  documented — along with credential dumping, lateral movement
+  across OPM's flat internal network, and exfiltration of the
+  e-QIP / SF-86 background investigation database including
+  fingerprint records for ~5.6 million federal cleared persons.
+attributions:
+  - actor_id: cn/mss/deep-panda  # working assignment per MSS-Jiangsu-linked Deep Panda cluster
+    attributing_org: US Intelligence Community (public attribution)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2015-09-01
+    attribution_source_id: wikipedia/opm-data-breach
+    notes: |
+      Public attribution to "China"; specific actor cluster
+      assignment is to the MSS Jiangsu SSD-linked operations
+      cluster that overlaps with Deep Panda / Black Vine. Not
+      tied to a DOJ indictment.
+
+      Citation weakness flagged by the 2026-05-26 verification
+      sweep: Wikipedia is a tertiary attestation here. Primary
+      sources (DNI Clapper 2015 hill testimony, OPM-OIG report,
+      contemporary NYT/WaPo coverage) should be folded in when
+      source stubs are created.
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/bulk-pii-humint-enabling
+    program_id: null
+    confidence: attested
+    reasoning: |
+      US IC public attribution explicitly cited the counterintelligence
+      and HUMINT-vetting value of SF-86 records. The bulk-PII / MCF
+      enabling pattern is one of the cleanest attested doctrine
+      links in PRC cyber.
+    attesting_source_id: wikipedia/opm-data-breach
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/national-intelligence-law-2017
+    pillar_id: null
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Pre-dates the 2017 Intelligence Law; the bulk-PII collection
+      pattern aligns with the law's later codified compelled-
+      cooperation regime but cannot be doctrinally attested to it.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/us-opm
+    role: primary
+  - target_id: orgs/keypoint
+    role: staging
+sources:
+  - wikipedia/opm-data-breach

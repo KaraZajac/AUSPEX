@@ -1,0 +1,1125 @@
+---
+import Base from '../layouts/Base.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const stateOptions = [...a.nationStates.values()].sort((x, y) => x.short_name?.localeCompare(y.short_name ?? '') ?? 0);
+const sectorOptions = [...a.sectors.values()].filter((s) => !s.parent_id).sort((x, y) => x.name.localeCompare(y.name));
+const incidentTypeOptions = [
+  'intrusion', 'data-theft', 'destructive', 'wiper', 'ransomware', 'financial-theft',
+  'pre-positioning', 'disruption', 'influence-operation', 'supply-chain', 'documentary',
+];
+const vectorOptions = [
+  'phishing', 'spear-phishing', 'n-day', '0-day', 'supply-chain',
+  'valid-creds', 'insider', 'physical', 'unknown',
+];
+const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 'tw', 'kr', 'jp', 'au', 'ca', 'in', 'pk', 'ir', 'ru', 'cn', 'kp', 'tr', 'vn', 'by'];
+---
+<Base title="Predict" wide>
+  <p class="kicker">Live engine</p>
+  <h1>Predict</h1>
+  <p class="lede">
+    Describe a cyber event by its observable features. AUSPEX runs
+    all four engines against the description and returns ranked
+    candidates — doctrine, pillar, actor, and the joint
+    (actor × doctrine) pair.
+  </p>
+  <p class="meta">
+    Calibrated against the <a href="/research/temporal-eval">temporal-holdout
+    backtest</a> (train ≤ 2023-12-31, score 2024–2026 cold): doctrine
+    top-3 hit ≈ 68%, actor top-5 hit ≈ 63%, joint pair top-1 ≈ 49%.
+  </p>
+
+  <div id="loading" class="loading">Loading atlas…</div>
+
+  <form id="predict-form" class="predict-form" style="display: none;">
+    <div class="grid">
+      <div class="field">
+        <label>Target sector(s) <span class="hint">multi-select</span></label>
+        <div id="sector-options" class="checks">
+          {sectorOptions.map((s) => (
+            <label class="check"><input type="checkbox" name="sector" value={s.id} /> <span>{s.name}</span></label>
+          ))}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Target country</label>
+        <select name="country">
+          <option value="">— any —</option>
+          {countryOptions.map((c) => <option value={c}>{c.toUpperCase()}</option>)}
+        </select>
+
+        <label style="margin-top: 0.875rem;">Year</label>
+        <input type="number" name="year" value="2026" min="2000" max="2030" />
+
+        <label style="margin-top: 0.875rem;">Initial vector</label>
+        <select name="vector">
+          <option value="">— unknown —</option>
+          {vectorOptions.map((v) => <option value={v}>{v}</option>)}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Incident type(s) <span class="hint">multi-select</span></label>
+        <div class="checks">
+          {incidentTypeOptions.map((t) => (
+            <label class="check"><input type="checkbox" name="incidentType" value={t} /> <span>{t}</span></label>
+          ))}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Free-text description <span class="hint">malware / tradecraft keywords extracted automatically</span></label>
+        <textarea name="description" rows="6" placeholder="Paste the event description, advisory text, or news summary. The engine scans for malware family names (PlugX, ShadowPad, Mimikatz, Cobalt Strike, etc.) and tradecraft phrases (living off the land, DLL side-loading, valid credentials, web shell)."></textarea>
+
+        <label style="margin-top: 0.625rem;">Explicit malware families <span class="hint">comma-separated, optional — lineage-aware matching</span></label>
+        <input type="text" name="malware" placeholder="ShadowPad, PlugX, Cobalt Strike" />
+
+        <label style="margin-top: 0.625rem;">Named operators <span class="hint">indictment-named individuals; surname-given slug, comma-separated</span></label>
+        <input type="text" name="operators" placeholder="lashgarian-hamid-reza, vasinskyi-yaroslav, park-jin-hyok" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="primary">Predict</button>
+      <button type="reset" class="secondary">Reset</button>
+      <span id="status" class="status"></span>
+    </div>
+  </form>
+
+  <div id="results" class="results"></div>
+</Base>
+
+<script is:inline define:vars={{ }}>
+  // Top-level vars set at module init
+  let ATLAS = null;
+  let ACTOR_PROFILES = null;
+  let DOCTRINE_PROFILES = null;
+  let PILLAR_PROFILES = null;
+  let CO_OCCURRENCE = null;
+  let VOCAB = null;
+  let ACTOR_IDF = null;
+  let DOCTRINE_IDF = null;
+  let PILLAR_IDF = null;
+  let SECTOR_INDEX = null; // id -> Sector
+  let PILLAR_INDEX = null; // pillarId -> {pillar, doctrineId}
+  let KNOWN_MALWARE = null;
+  let MALWARE_REGEX = null;
+  let MALWARE_LINEAGE = null;       // Map<lowercase-name, lineage_group>
+  let LAST_BUILD_REF_YEAR = null;   // year the profiles were last built for; rebuild on mismatch
+
+  // Engine-improvement constants (mirror of server-side calibration-constants.ts)
+  const CALIBRATION = {
+    attribution: 2.0,
+    doctrine: 3.0,
+    pillar: 3.0,
+  };
+  const TEMPORAL_TAU = 3; // exponential-decay constant in years
+  const CURRENT_YEAR = new Date().getFullYear();
+
+  // Embedded TTP keyword regexes (subset of server-side ttp-extract.ts)
+  const TTP_KEYWORDS = [
+    [/\bliving[- ]off[- ]the[- ]land\b/i, ['T1218', 'T1059']],
+    [/\bpowershell\b/i, ['T1059']],
+    [/\bcobalt strike\b/i, ['T1059', 'T1071']],
+    [/\bmimikatz\b/i, ['T1003']],
+    [/\bdll side[- ]load(ing)?\b/i, ['T1574']],
+    [/\bweb shell\b/i, ['T1505']],
+    [/\bspear[- ]phish/i, ['T1566']],
+    [/\bzero[- ]day\b/i, ['T1190', 'T1203']],
+    [/\bvalid credentials?\b/i, ['T1078']],
+    [/\bcredential dumping\b/i, ['T1003']],
+    [/\blateral movement\b/i, ['T1021']],
+    [/\bsupply[- ]chain\b/i, ['T1195']],
+    [/\bproxyshell\b|\bproxylogon\b/i, ['T1190']],
+    [/\beternalblue\b/i, ['T1210']],
+    [/\blog4shell\b|\blog4j\b/i, ['T1190']],
+  ];
+
+  const VECTOR_TTPS = {
+    'phishing': ['T1566'],
+    'spear-phishing': ['T1566'],
+    'n-day': ['T1190'],
+    '0-day': ['T1190', 'T1203'],
+    'supply-chain': ['T1195'],
+    'valid-creds': ['T1078'],
+    'insider': ['T1078'],
+    'physical': ['T1200'],
+  };
+  const INCIDENT_TTPS = {
+    'ransomware': ['T1486'],
+    'wiper': ['T1485', 'T1561'],
+    'destructive': ['T1485', 'T1561'],
+    'pre-positioning': ['T1133', 'T1505'],
+    'data-theft': ['T1567'],
+    'financial-theft': ['T1486'],
+    'influence-operation': ['T1583'],
+    'supply-chain': ['T1195'],
+    'disruption': ['T1499'],
+  };
+
+  function parentTechnique(t) {
+    const i = t.indexOf('.');
+    return i < 0 ? t : t.slice(0, i);
+  }
+
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // ── load atlas ─────────────────────────────────────────────────────
+  async function loadAtlas() {
+    const r = await fetch('/api/atlas.json');
+    if (!r.ok) throw new Error('Failed to load atlas');
+    ATLAS = await r.json();
+
+    SECTOR_INDEX = new Map();
+    for (const s of ATLAS.sectors) SECTOR_INDEX.set(s.id, s);
+
+    PILLAR_INDEX = new Map();
+    for (const d of ATLAS.doctrines) {
+      for (const p of d.pillars ?? []) {
+        PILLAR_INDEX.set(p.id, { pillar: p, doctrineId: d.id });
+      }
+    }
+
+    // Collect known malware from actor entries' mitre_malware (if present in atlas dump)
+    KNOWN_MALWARE = new Set();
+    for (const actor of ATLAS.actors) {
+      for (const m of actor.mitre_malware ?? []) {
+        if (m.length >= 3) KNOWN_MALWARE.add(m.toLowerCase());
+      }
+    }
+    if (KNOWN_MALWARE.size > 0) {
+      const names = [...KNOWN_MALWARE].sort((a, b) => b.length - a.length).map(escapeRegex);
+      MALWARE_REGEX = new RegExp(`\\b(${names.join('|')})\\b`, 'gi');
+    }
+
+    // Load malware lineage table (best-effort — emitted by api/atlas.json server-side)
+    MALWARE_LINEAGE = new Map();
+    for (const fam of ATLAS.malwareLineage ?? []) {
+      const lg = fam.lineage_group;
+      if (!lg) continue;
+      for (const key of [fam.name, ...(fam.aliases ?? [])]) {
+        if (key) MALWARE_LINEAGE.set(String(key).toLowerCase(), lg);
+      }
+    }
+
+    // Initial profile build, weighted toward the current year. The renderResults
+    // path rebuilds per-query if the user enters a different reference year.
+    rebuildProfilesForYear(CURRENT_YEAR);
+  }
+
+  function sectorAncestorsTopId(slug) {
+    let cur = SECTOR_INDEX.get(slug);
+    if (!cur) return null;
+    while (cur.parent_id) {
+      const p = SECTOR_INDEX.get(cur.parent_id);
+      if (!p) break;
+      cur = p;
+    }
+    return cur.id;
+  }
+
+  function extractEventFeatures(ev) {
+    const sectors = new Set();
+    const countries = new Set();
+    const targets = new Set();
+    for (const t of ev.targets ?? []) {
+      if (t.target_id?.startsWith('sectors/')) {
+        let slug = t.target_id.replace(/^sectors\//, '');
+        while (slug && !SECTOR_INDEX.has(slug)) {
+          const i = slug.lastIndexOf('/');
+          if (i < 0) { slug = ''; break; }
+          slug = slug.slice(0, i);
+        }
+        if (slug) {
+          const top = sectorAncestorsTopId(slug);
+          if (top) sectors.add(top);
+        }
+      } else if (t.target_id?.startsWith('orgs/') || t.target_id?.startsWith('infra/')) {
+        targets.add(t.target_id);
+      }
+      if (t.country) countries.add(t.country);
+    }
+    const ttps = new Set();
+    if (ev.initial_vector && VECTOR_TTPS[ev.initial_vector]) {
+      for (const t of VECTOR_TTPS[ev.initial_vector]) ttps.add(parentTechnique(t));
+    }
+    for (const it of ev.incident_type ?? []) {
+      if (INCIDENT_TTPS[it]) for (const t of INCIDENT_TTPS[it]) ttps.add(parentTechnique(t));
+    }
+    const text = (ev.name ?? '') + '\n' + (ev.summary ?? '') + '\n' + (ev.outcome_summary ?? '');
+    for (const [rx, codes] of TTP_KEYWORDS) {
+      if (rx.test(text)) for (const t of codes) ttps.add(parentTechnique(t));
+    }
+    const malware = new Set();
+    if (MALWARE_REGEX && text) {
+      MALWARE_REGEX.lastIndex = 0;
+      let m;
+      while ((m = MALWARE_REGEX.exec(text))) malware.add(m[1].toLowerCase());
+    }
+    const operators = new Set(ev.operators_named ?? []);
+    const campaign = ev.campaign_id ?? null;
+    return {
+      sectors, countries, targets, ttps, malware,
+      vector: ev.initial_vector ?? null,
+      year: (ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4) || null,
+      incidentTypes: new Set(ev.incident_type ?? []),
+      operators, campaign,
+    };
+  }
+
+  function temporalWeight(eventYearStr, refYear, tau) {
+    const ey = parseInt(eventYearStr ?? '', 10);
+    if (!Number.isFinite(ey) || !Number.isFinite(refYear)) return 1.0;
+    return Math.exp(-Math.abs(ey - refYear) / tau);
+  }
+
+  function buildAllProfiles(atlas, refYear) {
+    // Default: weight all events equally (legacy behavior). When refYear
+    // is set, each event contributes exp(-|yearsDiff|/tau) — actor
+    // behavior closer in time to the query gets more weight.
+    const useTemporal = Number.isFinite(refYear);
+    const actorProfiles = new Map();
+    const doctrineProfiles = new Map();
+    const pillarProfiles = new Map();
+    const co = new Map();
+    const vocab = {
+      sectors: new Set(), countries: new Set(), vectors: new Set(),
+      years: new Set(), incidentTypes: new Set(), ttps: new Set(),
+      malware: new Set(), targets: new Set(), totalEvents: atlas.events.length,
+    };
+
+    const actorMitre = new Map();   // id -> {ttps:Set, malware:Set}
+    for (const act of atlas.actors) {
+      const ttps = new Set();
+      const malware = new Set();
+      for (const t of act.mitre_techniques ?? []) ttps.add(parentTechnique(t));
+      for (const m of act.mitre_malware ?? []) malware.add(m);
+      actorMitre.set(act.id, { ttps, malware });
+    }
+
+    function actorsOf(ev) {
+      const out = new Set();
+      for (const a of ev.attributions ?? []) if (a.actor_id) out.add(a.actor_id);
+      return out;
+    }
+    function doctrinesOf(ev) {
+      const out = new Set();
+      for (const l of ev.doctrine_links ?? []) {
+        let did = l.doctrine_id;
+        if (!did && l.pillar_id) did = PILLAR_INDEX.get(l.pillar_id)?.doctrineId;
+        if (did) out.add(did);
+      }
+      return out;
+    }
+    function pillarsOf(ev) {
+      const out = new Set();
+      for (const l of ev.doctrine_links ?? []) {
+        if (l.pillar_id) out.add(l.pillar_id);
+      }
+      return out;
+    }
+
+    for (const ev of atlas.events) {
+      const f = extractEventFeatures(ev);
+      const w = useTemporal ? temporalWeight(f.year, refYear, TEMPORAL_TAU) : 1.0;
+      for (const s of f.sectors) vocab.sectors.add(s);
+      for (const c of f.countries) vocab.countries.add(c);
+      if (f.vector) vocab.vectors.add(f.vector);
+      if (f.year) vocab.years.add(f.year);
+      for (const it of f.incidentTypes) vocab.incidentTypes.add(it);
+      for (const t of f.ttps) vocab.ttps.add(t);
+      for (const m of f.malware) vocab.malware.add(m);
+      for (const t of f.targets) vocab.targets.add(t);
+
+      // Actor profiles
+      const actors = actorsOf(ev);
+      const doctrines = doctrinesOf(ev);
+      const pillars = pillarsOf(ev);
+      for (const aid of actors) {
+        let p = actorProfiles.get(aid);
+        if (!p) {
+          const m = actorMitre.get(aid) ?? { ttps: new Set(), malware: new Set() };
+          p = { total: 0, sectors: new Map(), countries: new Map(), vectors: new Map(), years: new Map(), incidentTypes: new Map(), ttps: new Set(m.ttps), malware: new Set(m.malware), targets: new Map(), operators: new Map(), campaigns: new Map() };
+          actorProfiles.set(aid, p);
+        }
+        p.total += w;
+        for (const s of f.sectors) p.sectors.set(s, (p.sectors.get(s) ?? 0) + w);
+        for (const c of f.countries) p.countries.set(c, (p.countries.get(c) ?? 0) + w);
+        if (f.vector) p.vectors.set(f.vector, (p.vectors.get(f.vector) ?? 0) + w);
+        if (f.year) p.years.set(f.year, (p.years.get(f.year) ?? 0) + w);
+        for (const it of f.incidentTypes) p.incidentTypes.set(it, (p.incidentTypes.get(it) ?? 0) + w);
+        for (const t of f.ttps) p.ttps.add(t);
+        for (const m of f.malware) p.malware.add(m);
+        for (const t of f.targets) p.targets.set(t, (p.targets.get(t) ?? 0) + w);
+        for (const op of f.operators) p.operators.set(op, (p.operators.get(op) ?? 0) + w);
+        if (f.campaign) p.campaigns.set(f.campaign, (p.campaigns.get(f.campaign) ?? 0) + w);
+      }
+      for (const did of doctrines) {
+        let p = doctrineProfiles.get(did);
+        if (!p) p = { total: 0, sectors: new Map(), countries: new Map(), vectors: new Map(), years: new Map(), incidentTypes: new Map(), ttps: new Map(), malware: new Map(), targets: new Map() }, doctrineProfiles.set(did, p);
+        p.total += w;
+        for (const s of f.sectors) p.sectors.set(s, (p.sectors.get(s) ?? 0) + w);
+        for (const c of f.countries) p.countries.set(c, (p.countries.get(c) ?? 0) + w);
+        if (f.vector) p.vectors.set(f.vector, (p.vectors.get(f.vector) ?? 0) + w);
+        if (f.year) p.years.set(f.year, (p.years.get(f.year) ?? 0) + w);
+        for (const it of f.incidentTypes) p.incidentTypes.set(it, (p.incidentTypes.get(it) ?? 0) + w);
+        for (const t of f.ttps) p.ttps.set(t, (p.ttps.get(t) ?? 0) + w);
+        for (const m of f.malware) p.malware.set(m, (p.malware.get(m) ?? 0) + w);
+        for (const t of f.targets) p.targets.set(t, (p.targets.get(t) ?? 0) + w);
+      }
+      for (const pid of pillars) {
+        let p = pillarProfiles.get(pid);
+        if (!p) p = { total: 0, sectors: new Map(), countries: new Map(), vectors: new Map(), years: new Map(), incidentTypes: new Map(), ttps: new Map(), malware: new Map(), targets: new Map() }, pillarProfiles.set(pid, p);
+        p.total += w;
+        for (const s of f.sectors) p.sectors.set(s, (p.sectors.get(s) ?? 0) + w);
+        for (const c of f.countries) p.countries.set(c, (p.countries.get(c) ?? 0) + w);
+        if (f.vector) p.vectors.set(f.vector, (p.vectors.get(f.vector) ?? 0) + w);
+        if (f.year) p.years.set(f.year, (p.years.get(f.year) ?? 0) + w);
+        for (const it of f.incidentTypes) p.incidentTypes.set(it, (p.incidentTypes.get(it) ?? 0) + w);
+        for (const t of f.ttps) p.ttps.set(t, (p.ttps.get(t) ?? 0) + w);
+        for (const m of f.malware) p.malware.set(m, (p.malware.get(m) ?? 0) + w);
+        for (const t of f.targets) p.targets.set(t, (p.targets.get(t) ?? 0) + w);
+      }
+      // Co-occurrence (integer-counted, not temporally weighted — it's a binary relation, not a frequency)
+      for (const aid of actors) for (const did of doctrines) {
+        const k = aid + '|' + did;
+        co.set(k, (co.get(k) ?? 0) + 1);
+      }
+    }
+
+    // Add MITRE-derived ttps/malware to vocab even if not in events
+    for (const act of atlas.actors) {
+      for (const t of act.mitre_techniques ?? []) vocab.ttps.add(parentTechnique(t));
+      for (const m of act.mitre_malware ?? []) vocab.malware.add(m);
+    }
+    return [actorProfiles, doctrineProfiles, pillarProfiles, co, vocab];
+  }
+
+  // ── IDF (inverse document frequency) over a profile map ──────────
+  // Mirror of server-side buildIDF / buildDoctrineIDF / buildPillarIDF.
+  // Returns an object with one Map<key, idf> per feature family.
+  function buildIDF(profiles, isActorMap) {
+    function idfOver(extract) {
+      const docCounts = new Map();
+      let N = 0;
+      for (const p of profiles.values()) {
+        if (p.total === 0) continue;
+        N++;
+        const seen = new Set();
+        for (const k of extract(p)) {
+          if (seen.has(k)) continue;
+          seen.add(k);
+          docCounts.set(k, (docCounts.get(k) ?? 0) + 1);
+        }
+      }
+      const out = new Map();
+      for (const [k, c] of docCounts) out.set(k, Math.log((N + 1) / (c + 1)) + 1);
+      return out;
+    }
+    return {
+      sectors:       idfOver((p) => p.sectors.keys()),
+      countries:     idfOver((p) => p.countries.keys()),
+      vectors:       idfOver((p) => p.vectors.keys()),
+      years:         idfOver((p) => p.years.keys()),
+      incidentTypes: idfOver((p) => p.incidentTypes.keys()),
+      // Actor profiles store ttps/malware as Sets; doctrine/pillar profiles store them as Maps.
+      ttps:          idfOver((p) => isActorMap ? p.ttps : p.ttps.keys()),
+      malware:       idfOver((p) => isActorMap ? p.malware : p.malware.keys()),
+      targets:       idfOver((p) => p.targets.keys()),
+      operators:     idfOver((p) => (p.operators ?? new Map()).keys()),
+      campaigns:     idfOver((p) => (p.campaigns ?? new Map()).keys()),
+    };
+  }
+  // sqrt-dampened IDF — full IDF over-amplifies broad-mission actors.
+  function idfFor(map, key) {
+    if (!map) return 1.0;
+    const raw = map.get(key) ?? 1.0;
+    return Math.sqrt(Math.max(raw, 0.01));
+  }
+
+  // ── scoring (mirrors server-side weights) ──────────────────────────
+  function logS(valCount, total, vocabSize, alpha) {
+    return Math.log((valCount + alpha) / (total + alpha * Math.max(vocabSize, 1)));
+  }
+
+  // Tracks WHY an actor scored well — surfaced as badges in the result UI.
+  // Mutated by scoreActor when features.matchReasons is provided.
+  function scoreActor(features, actorId, profile, idf, matchReasons) {
+    const alpha = 0.5;
+    const w = { sectors: 1.0, countries: 1.0, vector: 1.0, year: 0.5, incident: 1.0, ttps: 1.0, malware: 2.0, targets: 3.0, operators: 5.0, campaign: 4.0 };
+    let s = Math.log((profile.total + alpha) / (VOCAB.totalEvents + alpha * VOCAB.sectors.size));
+    for (const sec of features.sectors) s += w.sectors * idfFor(idf?.sectors, sec) * logS(profile.sectors.get(sec) ?? 0, profile.total, VOCAB.sectors.size, alpha);
+    for (const c of features.countries) s += w.countries * idfFor(idf?.countries, c) * logS(profile.countries.get(c) ?? 0, profile.total, VOCAB.countries.size, alpha);
+    if (features.vector) s += w.vector * idfFor(idf?.vectors, features.vector) * logS(profile.vectors.get(features.vector) ?? 0, profile.total, VOCAB.vectors.size, alpha);
+    if (features.year) s += w.year * idfFor(idf?.years, features.year) * logS(profile.years.get(features.year) ?? 0, profile.total, VOCAB.years.size, alpha);
+    for (const it of features.incidentTypes) s += w.incident * idfFor(idf?.incidentTypes, it) * logS(profile.incidentTypes.get(it) ?? 0, profile.total, VOCAB.incidentTypes.size, alpha);
+    if (profile.ttps.size > 0 && features.ttps.size > 0) {
+      let weightedMatches = 0, totalMatches = 0;
+      for (const t of features.ttps) {
+        if (profile.ttps.has(t)) { totalMatches++; weightedMatches += idfFor(idf?.ttps, t); }
+      }
+      if (totalMatches > 0) {
+        const norm = totalMatches / features.ttps.size;
+        s += w.ttps * Math.log(1 + weightedMatches) * (0.5 + 0.5 * norm);
+      }
+    }
+    if (profile.malware.size > 0 && features.malware.size > 0) {
+      let weightedMatches = 0, totalMatches = 0;
+      // Build profile-side lineage-group set for partial-credit matching.
+      let profileLineageGroups = null;
+      if (MALWARE_LINEAGE) {
+        profileLineageGroups = new Set();
+        for (const m of profile.malware) {
+          const lg = MALWARE_LINEAGE.get(String(m).toLowerCase());
+          if (lg) profileLineageGroups.add(lg);
+        }
+      }
+      const lineageHits = [];
+      for (const m of features.malware) {
+        if (profile.malware.has(m)) {
+          totalMatches++;
+          weightedMatches += idfFor(idf?.malware, m);
+          if (matchReasons) matchReasons.malware.push(m);
+          continue;
+        }
+        const lg = MALWARE_LINEAGE?.get(String(m).toLowerCase());
+        if (lg && profileLineageGroups?.has(lg)) {
+          totalMatches++;
+          weightedMatches += 0.5 * idfFor(idf?.malware, m);
+          lineageHits.push({ family: m, group: lg });
+        }
+      }
+      if (totalMatches > 0) {
+        const norm = totalMatches / features.malware.size;
+        s += w.malware * Math.log(1 + weightedMatches) * (0.5 + 0.5 * norm);
+      }
+      if (matchReasons && lineageHits.length > 0) matchReasons.malwareLineage = lineageHits;
+    }
+    if (profile.targets.size > 0 && features.targets.size > 0) {
+      let weightedMatches = 0, totalMatches = 0;
+      for (const t of features.targets) {
+        if (profile.targets.has(t)) {
+          totalMatches++;
+          weightedMatches += idfFor(idf?.targets, t);
+          if (matchReasons) matchReasons.targets.push(t);
+        }
+      }
+      if (totalMatches > 0) {
+        const norm = totalMatches / features.targets.size;
+        s += w.targets * Math.log(1 + weightedMatches) * (0.5 + 0.5 * norm);
+      }
+    }
+    // Named operators — sharpest single feature when it fires.
+    if (features.operators?.size > 0 && profile.operators?.size > 0) {
+      let weightedMatches = 0, totalMatches = 0;
+      for (const op of features.operators) {
+        if (profile.operators.has(op)) {
+          totalMatches++;
+          weightedMatches += idfFor(idf?.operators, op);
+          if (matchReasons) matchReasons.operators.push(op);
+        }
+      }
+      if (totalMatches > 0) {
+        const norm = totalMatches / features.operators.size;
+        s += w.operators * Math.log(1 + weightedMatches) * (0.5 + 0.5 * norm);
+      }
+    }
+    // Campaign cluster — additive bonus when actor is known in this campaign.
+    if (features.campaign && profile.campaigns?.size > 0) {
+      const cnt = profile.campaigns.get(features.campaign) ?? 0;
+      if (cnt > 0) {
+        const idfBonus = idfFor(idf?.campaigns, features.campaign);
+        s += w.campaign * idfBonus * Math.log(1 + cnt);
+        if (matchReasons) matchReasons.campaign = features.campaign;
+      }
+    }
+    return s;
+  }
+
+  function scoreLabeled(features, labelId, profile, weights, idf) {
+    const alpha = 0.5;
+    let s = Math.log((profile.total + alpha) / (VOCAB.totalEvents + alpha * VOCAB.sectors.size));
+    for (const sec of features.sectors) s += weights.sectors * idfFor(idf?.sectors, sec) * logS(profile.sectors.get(sec) ?? 0, profile.total, VOCAB.sectors.size, alpha);
+    for (const c of features.countries) s += weights.countries * idfFor(idf?.countries, c) * logS(profile.countries.get(c) ?? 0, profile.total, VOCAB.countries.size, alpha);
+    if (features.vector) s += weights.vector * idfFor(idf?.vectors, features.vector) * logS(profile.vectors.get(features.vector) ?? 0, profile.total, VOCAB.vectors.size, alpha);
+    if (features.year) s += weights.year * idfFor(idf?.years, features.year) * logS(profile.years.get(features.year) ?? 0, profile.total, VOCAB.years.size, alpha);
+    for (const it of features.incidentTypes) s += weights.incident * idfFor(idf?.incidentTypes, it) * logS(profile.incidentTypes.get(it) ?? 0, profile.total, VOCAB.incidentTypes.size, alpha);
+    for (const t of features.ttps) s += weights.ttps * idfFor(idf?.ttps, t) * logS(profile.ttps.get(t) ?? 0, profile.total, VOCAB.ttps.size, alpha);
+    for (const m of features.malware) s += weights.malware * idfFor(idf?.malware, m) * logS(profile.malware.get(m) ?? 0, profile.total, VOCAB.malware.size, alpha);
+    for (const t of features.targets) s += weights.targets * idfFor(idf?.targets, t) * logS(profile.targets.get(t) ?? 0, profile.total, VOCAB.targets.size, alpha);
+    return s;
+  }
+
+  const DOCTRINE_WEIGHTS = { sectors: 1.0, countries: 1.0, vector: 0.5, year: 0.5, incident: 1.0, ttps: 0.6, malware: 0.8, targets: 1.0 };
+  const PILLAR_WEIGHTS   = { sectors: 1.5, countries: 1.0, vector: 0.5, year: 0.3, incident: 1.0, ttps: 0.6, malware: 0.8, targets: 1.0 };
+
+  function rankActors(features, withReasons) {
+    const out = [];
+    for (const [id, p] of ACTOR_PROFILES) {
+      const reasons = withReasons ? { operators: [], campaign: null, malware: [], targets: [], malwareLineage: [] } : null;
+      const score = scoreActor(features, id, p, ACTOR_IDF, reasons);
+      out.push({ id, score, reasons });
+    }
+    out.sort((a, b) => b.score - a.score);
+    return out;
+  }
+  function rankDoctrines(features) {
+    const out = [];
+    for (const [id, p] of DOCTRINE_PROFILES) out.push({ id, score: scoreLabeled(features, id, p, DOCTRINE_WEIGHTS, DOCTRINE_IDF) });
+    out.sort((a, b) => b.score - a.score);
+    return out;
+  }
+  function rankPillars(features) {
+    const out = [];
+    for (const [id, p] of PILLAR_PROFILES) out.push({ id, score: scoreLabeled(features, id, p, PILLAR_WEIGHTS, PILLAR_IDF) });
+    out.sort((a, b) => b.score - a.score);
+    return out;
+  }
+
+  // ── OOD: Jaccard distance from query to nearest training event ──────
+  function eventFeatureSet(f) {
+    const s = new Set();
+    for (const v of f.sectors) s.add('sec:' + v);
+    for (const v of f.countries) s.add('cn:' + v);
+    if (f.vector) s.add('vec:' + f.vector);
+    for (const v of f.incidentTypes) s.add('it:' + v);
+    for (const v of f.ttps) s.add('ttp:' + v);
+    for (const v of f.malware) s.add('mw:' + v);
+    for (const v of f.targets) s.add('tgt:' + v);
+    return s;
+  }
+  function jaccardSim(a, b) {
+    if (a.size === 0 && b.size === 0) return 0;
+    let inter = 0;
+    for (const x of a) if (b.has(x)) inter++;
+    const union = a.size + b.size - inter;
+    return union === 0 ? 0 : inter / union;
+  }
+  function computeOOD(features) {
+    const qfv = eventFeatureSet(features);
+    let bestSim = 0, bestId = null, closeNeighbors = 0;
+    for (const ev of ATLAS.events) {
+      const ef = extractEventFeatures(ev);
+      const tfv = eventFeatureSet(ef);
+      const sim = jaccardSim(qfv, tfv);
+      if (sim >= 0.3) closeNeighbors++;
+      if (sim > bestSim) { bestSim = sim; bestId = ev.id; }
+    }
+    const distance = 1 - bestSim;
+    let tier;
+    if (distance < 0.55) tier = 'in-distribution';
+    else if (distance < 0.75) tier = 'borderline';
+    else tier = 'out-of-distribution';
+    return { distance, nearestSimilarity: bestSim, nearestEventId: bestId, tier, closeNeighborCount: closeNeighbors };
+  }
+  function rankPairs(features) {
+    const actors = rankActors(features).slice(0, 30);
+    const doctrines = rankDoctrines(features).slice(0, 15);
+    const out = [];
+    for (const a of actors) for (const d of doctrines) {
+      const co = CO_OCCURRENCE.get(a.id + '|' + d.id) ?? 0;
+      const joint = a.score + d.score + 1.0 * Math.log(1 + co);
+      out.push({ actorId: a.id, doctrineId: d.id, co, jointScore: joint });
+    }
+    out.sort((a, b) => b.jointScore - a.jointScore);
+    return out;
+  }
+
+  // ── form handling ──────────────────────────────────────────────────
+  function readForm() {
+    const form = document.getElementById('predict-form');
+    const sectors = new Set();
+    form.querySelectorAll('input[name="sector"]:checked').forEach((el) => sectors.add(el.value));
+    const incidentTypes = new Set();
+    form.querySelectorAll('input[name="incidentType"]:checked').forEach((el) => incidentTypes.add(el.value));
+    const countries = new Set();
+    const c = form.querySelector('[name="country"]').value.trim();
+    if (c) countries.add(c.toLowerCase());
+    const year = form.querySelector('[name="year"]').value;
+    const vector = form.querySelector('[name="vector"]').value || null;
+    const description = form.querySelector('[name="description"]').value;
+    const malwareInput = form.querySelector('[name="malware"]').value;
+
+    const ttps = new Set();
+    if (vector && VECTOR_TTPS[vector]) for (const t of VECTOR_TTPS[vector]) ttps.add(parentTechnique(t));
+    for (const it of incidentTypes) if (INCIDENT_TTPS[it]) for (const t of INCIDENT_TTPS[it]) ttps.add(parentTechnique(t));
+    for (const [rx, codes] of TTP_KEYWORDS) {
+      if (rx.test(description)) for (const t of codes) ttps.add(parentTechnique(t));
+    }
+
+    const malware = new Set();
+    if (MALWARE_REGEX && description) {
+      MALWARE_REGEX.lastIndex = 0;
+      let m;
+      while ((m = MALWARE_REGEX.exec(description))) malware.add(m[1].toLowerCase());
+    }
+    for (const raw of malwareInput.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)) {
+      malware.add(raw);
+    }
+
+    const operatorsInput = form.querySelector('[name="operators"]').value || '';
+    const operators = new Set(operatorsInput.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean));
+
+    return {
+      sectors, countries, targets: new Set(), ttps, malware,
+      vector, year, incidentTypes,
+      operators, campaign: null,
+    };
+  }
+
+  function actorName(id) {
+    const a = ATLAS.actors.find((x) => x.id === id);
+    return a?.canonical_name ?? id;
+  }
+  function doctrineName(id) {
+    const d = ATLAS.doctrines.find((x) => x.id === id);
+    return d?.short_name ?? d?.name ?? id;
+  }
+  function pillarName(id) {
+    const ref = PILLAR_INDEX.get(id);
+    if (!ref) return id;
+    return doctrineName(ref.doctrineId) + ' › ' + ref.pillar.name;
+  }
+
+  function softmaxTop(items, getScore, k, temperature) {
+    // Use a wider slice (top-20) for the softmax denominator so calibrated
+    // probabilities reflect competition with all reasonable candidates,
+    // not just the top-k we display.
+    const T = temperature ?? 1.0;
+    const widePool = items.slice(0, Math.max(20, k));
+    const wideScores = widePool.map(getScore).map((s) => s / T);
+    const m = Math.max(...wideScores);
+    const exp = wideScores.map((s) => Math.exp(s - m));
+    const sum = exp.reduce((a, b) => a + b, 0);
+    return widePool.slice(0, k).map((x, i) => ({ ...x, prob: sum > 0 ? exp[i] / sum : 0 }));
+  }
+
+  function rebuildProfilesForYear(refYear) {
+    if (LAST_BUILD_REF_YEAR === refYear) return;
+    [ACTOR_PROFILES, DOCTRINE_PROFILES, PILLAR_PROFILES, CO_OCCURRENCE, VOCAB] = buildAllProfiles(ATLAS, refYear);
+    ACTOR_IDF = buildIDF(ACTOR_PROFILES, true);
+    DOCTRINE_IDF = buildIDF(DOCTRINE_PROFILES, false);
+    PILLAR_IDF = buildIDF(PILLAR_PROFILES, false);
+    LAST_BUILD_REF_YEAR = refYear;
+  }
+
+  function renderResults(features) {
+    const root = document.getElementById('results');
+    const refYear = features.year ? parseInt(features.year, 10) : CURRENT_YEAR;
+    rebuildProfilesForYear(Number.isFinite(refYear) ? refYear : CURRENT_YEAR);
+
+    const actors = rankActors(features, true /* withReasons */);
+    const doctrines = rankDoctrines(features);
+    const pillars = rankPillars(features);
+    const pairs = rankPairs(features);
+
+    // Calibrated probabilities — temperature-scaled softmax over the top-20
+    // pool. Calibration constants fit against LOO log-loss; see
+    // src/utils/calibration-constants.ts.
+    const actorTop = softmaxTop(actors, (x) => x.score, 5, CALIBRATION.attribution);
+    const doctrineTop = softmaxTop(doctrines, (x) => x.score, 3, CALIBRATION.doctrine);
+    const pillarTop = softmaxTop(pillars, (x) => x.score, 3, CALIBRATION.pillar);
+    const pairTop = softmaxTop(pairs, (x) => x.jointScore, 3, CALIBRATION.attribution);
+
+    const ood = computeOOD(features);
+
+    function fmtPct(p) { return (p * 100).toFixed(1) + '%'; }
+
+    const oodNearestLink = ood.nearestEventId
+      ? `<a href="/event/${ood.nearestEventId}">${escapeHtml(ood.nearestEventId)}</a>`
+      : '<em>none</em>';
+
+    const oodBanner = (ood.tier === 'out-of-distribution' || ood.tier === 'borderline') ? `
+      <section class="ood-banner ood-${ood.tier}">
+        <p class="ood-title">
+          ${ood.tier === 'out-of-distribution' ? '⚠ Out-of-distribution' : 'Borderline match'}
+          <span class="ood-num">distance = ${ood.distance.toFixed(2)}</span>
+        </p>
+        <p class="ood-body">
+          ${ood.tier === 'out-of-distribution'
+            ? "This event description doesn't closely match anything in the corpus. Engine predictions below are based on the best available training signal but should be treated with caution. This is the kind of case where the engine may be confidently wrong — review the nearest neighbor below and your own technical assessment before relying on the rankings."
+            : 'This event has only loose similarity to events in the corpus. Top predictions are still informative but less certain than for well-matched events.'}
+        </p>
+        <p class="ood-nearest">Nearest training event: ${oodNearestLink} (${fmtPct(ood.nearestSimilarity)} feature overlap, ${ood.closeNeighborCount} events with ≥30% overlap).</p>
+      </section>
+    ` : `
+      <section class="ood-banner ood-in-distribution">
+        <p class="ood-title">In-distribution
+          <span class="ood-num">distance = ${ood.distance.toFixed(2)}</span>
+        </p>
+        <p class="ood-body">This event description matches training corpus patterns. Engine predictions below carry their typical reliability (see calibration footer).</p>
+        <p class="ood-nearest">Nearest training event: ${oodNearestLink} (${fmtPct(ood.nearestSimilarity)} feature overlap).</p>
+      </section>
+    `;
+
+    root.innerHTML = `
+      <h2>Results</h2>
+      ${oodBanner}
+      <div class="results-grid">
+        <section class="rcard">
+          <h3>Doctrine <span class="cal">temporal top-3: 68%</span></h3>
+          ${doctrineTop.map((d, i) => `
+            <div class="row">
+              <span class="rank">${i + 1}</span>
+              <a class="lbl" href="/doctrine/${d.id}">${escapeHtml(doctrineName(d.id))}</a>
+              <span class="prob">${fmtPct(d.prob)}</span>
+            </div>
+          `).join('')}
+        </section>
+
+        <section class="rcard">
+          <h3>Pillar <span class="cal">temporal top-3: 65%</span></h3>
+          ${pillarTop.map((p, i) => `
+            <div class="row">
+              <span class="rank">${i + 1}</span>
+              <a class="lbl" href="/doctrine/${PILLAR_INDEX.get(p.id)?.doctrineId ?? ''}">${escapeHtml(pillarName(p.id))}</a>
+              <span class="prob">${fmtPct(p.prob)}</span>
+            </div>
+          `).join('')}
+        </section>
+
+        <section class="rcard rcard-wide">
+          <h3>Actor — candidate shortlist <span class="cal">temporal top-5: 73%</span></h3>
+          ${actorTop.map((a, i) => {
+            const r = a.reasons ?? {};
+            const badges = [];
+            if (r.operators?.length > 0) badges.push(`<span class="badge badge-op" title="Matched named operator(s): ${r.operators.join(', ')}">👤 operator: ${escapeHtml(r.operators[0])}${r.operators.length > 1 ? ` +${r.operators.length-1}` : ''}</span>`);
+            if (r.campaign) badges.push(`<span class="badge badge-cam" title="Actor previously seen in this campaign cluster">🧵 ${escapeHtml(r.campaign)}</span>`);
+            if (r.targets?.length > 0) badges.push(`<span class="badge badge-tgt" title="Matched named target(s): ${r.targets.join(', ')}">🎯 ${escapeHtml(r.targets[0])}${r.targets.length > 1 ? ` +${r.targets.length-1}` : ''}</span>`);
+            if (r.malware?.length > 0) badges.push(`<span class="badge badge-mw" title="Matched malware family/families: ${r.malware.join(', ')}">⚙ ${escapeHtml(r.malware[0])}${r.malware.length > 1 ? ` +${r.malware.length-1}` : ''}</span>`);
+            if (r.malwareLineage?.length > 0) {
+              const lg = r.malwareLineage[0];
+              badges.push(`<span class="badge badge-lin" title="Lineage-group partial match (different family, same code lineage): ${r.malwareLineage.map(x=>x.family+' → '+x.group).join(', ')}">🧬 lineage: ${escapeHtml(lg.group)}</span>`);
+            }
+            const badgeHtml = badges.length > 0 ? `<div class="badges">${badges.join('')}</div>` : '';
+            return `
+              <div class="row rich">
+                <span class="rank">${i + 1}</span>
+                <div class="lbl-col">
+                  <a class="lbl" href="/actor/${a.id}">${escapeHtml(actorName(a.id))}</a>
+                  ${badgeHtml}
+                </div>
+                <span class="prob">${fmtPct(a.prob)}</span>
+              </div>
+            `;
+          }).join('')}
+        </section>
+
+        <section class="rcard rcard-wide">
+          <h3>Joint pair — confidence layer <span class="cal">temporal top-1: 49%</span></h3>
+          ${pairTop.map((pair, i) => {
+            const confTag = pair.co >= 5 ? 'HIGH' : pair.co >= 2 ? 'MED' : pair.co === 0 ? 'NOVEL' : 'LOW';
+            const confClass = pair.co >= 5 ? 'conf-high' : pair.co >= 2 ? 'conf-med' : pair.co === 0 ? 'conf-novel' : 'conf-low';
+            return `
+              <div class="pair-row">
+                <span class="rank">${i + 1}</span>
+                <span class="pair-lbl">
+                  <a href="/actor/${pair.actorId}">${escapeHtml(actorName(pair.actorId))}</a>
+                  × <a href="/doctrine/${pair.doctrineId}">${escapeHtml(doctrineName(pair.doctrineId))}</a>
+                </span>
+                <span class="conf ${confClass}">${confTag}</span>
+                <span class="co">co-occurrence ${pair.co}</span>
+              </div>
+            `;
+          }).join('')}
+          <p class="reading">
+            <strong>HIGH</strong> co-occurrence ≥ 5 — engine has seen this
+            pair many times and is confident.
+            <strong>MED</strong> ≥ 2 — recurrent pattern.
+            <strong>LOW</strong> 1 — sparse but observed.
+            <strong>NOVEL</strong> 0 — engine has never seen this pair;
+            either a real novel attribution or a sign of cross-engine
+            disagreement.
+          </p>
+        </section>
+      </div>
+
+      <section>
+        <h3>Extracted features</h3>
+        <ul class="fdump">
+          <li><strong>sectors</strong>: ${[...features.sectors].join(', ') || '<em>none</em>'}</li>
+          <li><strong>countries</strong>: ${[...features.countries].join(', ') || '<em>none</em>'}</li>
+          <li><strong>vector</strong>: ${features.vector || '<em>none</em>'}</li>
+          <li><strong>year</strong>: ${features.year || '<em>none</em>'}</li>
+          <li><strong>incident types</strong>: ${[...features.incidentTypes].join(', ') || '<em>none</em>'}</li>
+          <li><strong>ttps (inferred)</strong>: ${[...features.ttps].join(', ') || '<em>none</em>'}</li>
+          <li><strong>malware (extracted)</strong>: ${[...features.malware].join(', ') || '<em>none</em>'}</li>
+        </ul>
+      </section>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // ── bootstrap ──────────────────────────────────────────────────────
+  async function boot() {
+    const loading = document.getElementById('loading');
+    const form = document.getElementById('predict-form');
+    try {
+      loading.textContent = 'Loading atlas (1.7 MB)…';
+      await loadAtlas();
+      loading.textContent = 'Building profiles…';
+      // (already done at end of loadAtlas)
+      loading.style.display = 'none';
+      form.style.display = '';
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const features = readForm();
+        renderResults(features);
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      form.addEventListener('reset', () => {
+        setTimeout(() => { document.getElementById('results').innerHTML = ''; }, 0);
+      });
+    } catch (err) {
+      loading.textContent = 'Failed to load atlas: ' + (err.message ?? err);
+    }
+  }
+  boot();
+</script>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .loading { padding: 2rem; text-align: center; color: var(--ctp-subtext0); font-family: var(--font-mono); }
+
+  /* OOD distribution banner */
+  .ood-banner {
+    margin: 1.25rem 0 1.5rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--ctp-overlay0);
+    background: var(--ctp-mantle);
+  }
+  .ood-banner.ood-in-distribution {
+    border-left-color: var(--ctp-green);
+  }
+  .ood-banner.ood-borderline {
+    border-left-color: var(--ctp-yellow);
+    background: color-mix(in srgb, var(--ctp-yellow) 7%, var(--ctp-mantle));
+  }
+  .ood-banner.ood-out-of-distribution {
+    border-left-color: var(--ctp-peach);
+    background: color-mix(in srgb, var(--ctp-peach) 9%, var(--ctp-mantle));
+  }
+  .ood-banner .ood-title {
+    margin: 0 0 0.25rem;
+    font-weight: 600;
+    color: var(--ctp-text);
+  }
+  .ood-banner .ood-num {
+    margin-left: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    font-weight: 400;
+  }
+  .ood-banner .ood-body {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: var(--ctp-subtext1);
+  }
+  .ood-banner .ood-nearest {
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+  }
+  .ood-banner .ood-nearest a { color: var(--ctp-blue); }
+
+  .row.rich { align-items: flex-start; }
+  .lbl-col { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-base);
+    white-space: nowrap;
+  }
+  .badge-op  { background: var(--ctp-red); }
+  .badge-cam { background: var(--ctp-mauve); }
+  .badge-tgt { background: var(--ctp-peach); }
+  .badge-mw  { background: var(--ctp-yellow); }
+  .badge-lin { background: var(--ctp-teal); }
+  .predict-form { margin: 1.5rem 0 2rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .field {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: var(--ctp-mantle);
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.4rem;
+  }
+  .field .hint {
+    color: var(--ctp-overlay0);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 0.5rem;
+  }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 0.4rem 0.55rem;
+    background: var(--ctp-base);
+    color: var(--ctp-text);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  textarea { font-family: var(--font-sans); }
+  .checks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.25rem 0.5rem;
+    max-height: 18rem;
+    overflow-y: auto;
+  }
+  .check {
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--ctp-text);
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin: 0;
+  }
+  .actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  button.primary {
+    background: var(--ctp-blue);
+    color: var(--ctp-base);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1.25rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.secondary {
+    background: transparent;
+    border: 1px solid var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+  }
+  .results { margin-top: 2rem; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media (max-width: 900px) { .results-grid { grid-template-columns: 1fr; } }
+  .rcard {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    background: var(--ctp-mantle);
+  }
+  .rcard.rcard-wide { grid-column: 1 / -1; }
+  .rcard h3 {
+    font-size: 0.875rem;
+    margin: 0 0 0.5rem;
+    font-family: var(--font-mono);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .cal {
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    font-weight: 400;
+  }
+  .row, .pair-row {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--ctp-surface0);
+    font-size: 0.9375rem;
+  }
+  .pair-row {
+    grid-template-columns: 1.5rem 1fr auto auto;
+  }
+  .row:last-child, .pair-row:last-child { border-bottom: none; }
+  .rank {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .lbl, .pair-lbl a { color: var(--ctp-text); text-decoration: none; }
+  .lbl:hover, .pair-lbl a:hover { color: var(--ctp-blue); }
+  .prob, .co {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext1);
+  }
+  .conf {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .conf-high { background: var(--ctp-green); color: var(--ctp-base); }
+  .conf-med { background: var(--ctp-yellow); color: var(--ctp-base); }
+  .conf-low { background: var(--ctp-overlay0); color: var(--ctp-base); }
+  .conf-novel { background: var(--ctp-peach); color: var(--ctp-base); }
+  .reading {
+    background: var(--ctp-base);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    margin: 0.75rem 0 0;
+    color: var(--ctp-subtext1);
+  }
+  .fdump {
+    list-style: none;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext1);
+  }
+  .fdump li { padding: 0.2rem 0; }
+  .fdump strong { color: var(--ctp-text); display: inline-block; min-width: 9rem; }
+</style>

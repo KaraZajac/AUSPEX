@@ -1,0 +1,109 @@
+id: 2007-01/olympic-games-stuxnet
+name: Operation Olympic Games / Stuxnet (Natanz centrifuge sabotage)
+start_date: 2007-01-01  # development was earlier; deployment 2007-2010
+disclosure_date: 2010-06-17  # VirusBlokAda first public sample analysis
+end_date: 2010-09-30  # discovered after escape into the wild summer/fall 2010
+incident_type:
+  - destructive
+  - pre-positioning
+initial_vector: supply-chain  # USB removable media bridging air gap; supply-chain-style insertion
+outcome_summary: |
+  Estimated destruction of approximately 1,000 IR-1 centrifuges at the
+  Natanz uranium-enrichment facility; ~2-year delay in the Iranian
+  enrichment program per ISIS analysis. Established cyber as a
+  strategic-effect tool and informed subsequent PPD-20 / NSPM-13
+  development. Never officially acknowledged by US or Israeli
+  governments.
+quantified_impact:
+  centrifuges_destroyed_estimate: 1000
+  enrichment_program_delay_years_estimate: 2
+false_flag_risk: none
+campaign_id: olympic-games
+summary: |
+  Joint US/Israeli sabotage operation against Iranian uranium
+  enrichment at Natanz, using a four-zero-day Windows worm carrying a
+  PLC rootkit that targeted Siemens S7-315/417 controllers driving
+  IR-1 centrifuges. The worm spread via removable media to bridge the
+  air gap, used certificates stolen from Realtek and JMicron for
+  driver signing, and modulated centrifuge rotor speeds while spoofing
+  SCADA feedback. Discovered after escaping into the wild in 2010 and
+  technically dissected by Symantec (Falliere/O'Murchu/Chien) in
+  February 2011.
+
+  Foundational US offensive-cyber case study. Demonstrated cyber as a
+  strategic-effect tool; influenced both PPD-20 / NSPM-13 development
+  and Iranian counter-doctrine (the basis for IRGC-IO and MOIS
+  destructive-cyber capabilities).
+
+  **v0 schema gap flagged**: this is a *joint US + Israel* operation.
+  The current AUSPEX data model does not have a `cooperating_nation_state_ids`
+  field on Event (proposed for v0.1 per DATA_MODEL §10). For v0, the
+  joint nature is captured in narrative and in the actor entry.
+attributions:
+  - actor_id: us/olympic-games-team
+    attributing_org: David Sanger / NYT (multi-source journalism)
+    attributing_org_confidence: high
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2012-06-01
+    attribution_source_id: nyt/2012-06-01_sanger-obama-order-cyberattacks-iran
+    notes: |
+      Attribution is `journalistic + leak-attributed` — never
+      officially acknowledged by US or Israeli governments. Israel
+      has maintained its standing non-attestation posture on
+      offensive cyber operations throughout; multi-source tier-1
+      reporting (Sanger 2012, Zetter 2014, Symantec technical
+      analysis Feb 2011) and Snowden 2013 IC corroboration
+      establish the joint US/IL attribution with high confidence.
+doctrine_links:
+  - doctrine_id: us/title-10-title-50
+    pillar_id: null
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Operation predates NSPM-13 and the Defend Forward / Persistent
+      Engagement doctrinal vocabulary. Authority pathway was the
+      then-PPD-20 framework. Tagged here as the closest extant
+      doctrine; the foundational nature is captured in narrative.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: il/begin-doctrine
+    pillar_id: il/begin-doctrine/counter-wmd-cyber-sabotage
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Stuxnet is the type specimen of the Begin Doctrine's cyber
+      extension — counter-WMD action by code where kinetic strike
+      against Natanz was politically and operationally infeasible.
+      Joint US-Israeli authorship is journalistically established
+      (Sanger 2012, Zetter 2014, Bamford 2016) but never officially
+      attested by Israel; the Begin Doctrine alignment is the
+      doctrinal frame under which Israeli participation is best
+      understood.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: il/counter-iran-posture
+    pillar_id: il/counter-iran-posture/counter-nuclear-program
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Operation against Iranian uranium enrichment at Natanz sits
+      squarely under the counter-nuclear-program pillar — the
+      operational debut of Israeli counter-WMD-cyber.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/natanz-fuel-enrichment-plant
+    role: primary
+    outcome: |
+      ~1,000 IR-1 centrifuges destroyed; ~2-year enrichment delay.
+sources:
+  - nyt/2012-06-01_sanger-obama-order-cyberattacks-iran
+  - sanger/2012_confront-and-conceal
+  - zetter/2014_countdown-to-zero-day
+  - symantec/2011-02_w32-stuxnet-dossier

@@ -1,0 +1,58 @@
+id: 2015-12/banco-del-austro
+name: Banco del Austro (Ecuador) SWIFT theft
+start_date: 2015-12-01  # approximate; pre-Bangladesh prototype window
+disclosure_date: 2016-05-19  # via Reuters reporting
+end_date: 2016-01-31
+incident_type:
+  - financial-theft
+initial_vector: unknown
+outcome_summary: |
+  SWIFT-message manipulation against Banco del Austro (Ecuador),
+  routing $12M in fraudulent transfers. Partial recovery via
+  litigation against Wells Fargo. Pre-Bangladesh prototype
+  attack — established the SWIFT-network financial-theft pattern
+  that APT38 would scale at Bangladesh Bank two months later.
+quantified_impact:
+  usd_stolen: 12000000
+false_flag_risk: none
+campaign_id: apt38-swift-bank-heists
+summary: |
+  Retrospectively attributed to APT38 by Mandiant's October 2018
+  report on tradecraft similarity to Bangladesh Bank. Less
+  attested than the canonical APT38 events because no DOJ
+  indictment or Treasury action names this incident specifically.
+  Mandiant links the operation to the same APT38 / BeagleBoyz
+  toolkit later catalogued in CISA AA20-239A: long pre-heist
+  reconnaissance, abuse of valid credentials on the bank's SWIFT
+  Alliance Access workstations, DYEPACK-style manipulation of
+  outbound MT-103 messages and suppression of corresponding
+  confirmation receipts, and the use of NESTEGG / KEYMARBLE /
+  FALLCHILL-lineage backdoors with Manuscrypt-family loaders for
+  C2. The $12M routed through Wells Fargo to receiving accounts
+  in Hong Kong and Dubai prefigures the Bangladesh Bank attempt
+  two months later.
+attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: Mandiant
+    attributing_org_confidence: moderate
+    auspex_assessment: concur
+    attribution_date: 2018-10-03
+    attribution_source_id: mandiant/2018-10-03_apt38-report
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Byungjin-window hard-currency generation via SWIFT-network
+      theft. Same doctrinal logic as Bangladesh Bank; less
+      attested because attribution itself is retrospective and
+      via vendor research rather than US-government indictment.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/banco-del-austro
+    role: primary
+    outcome: $12M fraudulently transferred; partial recovery.
+sources:
+  - mandiant/2018-10-03_apt38-report

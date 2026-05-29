@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const { sectors, years, counts } = a.sectorYearMatrix();
+
+const maxCount = Math.max(
+  1,
+  ...sectors.flatMap((s) => years.map((y) => counts.get(s.id)?.get(y) ?? 0)),
+);
+
+function alpha(n: number): number {
+  if (n === 0) return 0;
+  // Square-root scaling so smaller values still register visually.
+  return 0.15 + 0.85 * Math.sqrt(n / maxCount);
+}
+
+// Compute totals per row + col for headers
+const rowTotals = new Map<string, number>();
+for (const s of sectors) {
+  const r = counts.get(s.id);
+  rowTotals.set(s.id, r ? [...r.values()].reduce((a, b) => a + b, 0) : 0);
+}
+const colTotals = new Map<string, number>();
+for (const y of years) {
+  let t = 0;
+  for (const s of sectors) t += counts.get(s.id)?.get(y) ?? 0;
+  colTotals.set(y, t);
+}
+const grandTotal = [...rowTotals.values()].reduce((a, b) => a + b, 0);
+---
+<Base title="Explore — doctrine intensity heatmap" wide>
+  <p class="kicker">Explore</p>
+  <h1>Sector × year intensity</h1>
+  <p class="lede">
+    Number of atlas events targeting each top-level sector, per year.
+    Country-qualified target slugs are folded into their parent sector;
+    sub-sectors roll up to their root. Color intensity scales as
+    √(count / max) — small clusters still register visually.
+  </p>
+  <p class="meta">
+    {grandTotal} target-sector tags across {sectors.length} top-level
+    sectors and {years.length} years. Max in a single cell:{' '}
+    <strong>{maxCount}</strong>.
+  </p>
+
+  <div class="heatmap" style={`grid-template-columns: 13rem repeat(${years.length}, minmax(2rem, 1fr)) 4rem;`}>
+    <div class="cell-empty"></div>
+    {years.map((y) => (
+      <a class="cell-year" href={`/year/${y}`}>{y}</a>
+    ))}
+    <div class="cell-empty cell-total-header">total</div>
+
+    {sectors.map((s) => (
+      <>
+        <a class="cell-sector" href={`/sector/${s.id}`}>
+          <span class="sector-name">{s.name}</span>
+          <span class="sector-id">{s.id}</span>
+        </a>
+        {years.map((y) => {
+          const n = counts.get(s.id)?.get(y) ?? 0;
+          const a = alpha(n);
+          const bg = n === 0 ? 'transparent' : `rgba(30, 102, 245, ${a.toFixed(3)})`;
+          const fg = a > 0.5 ? 'var(--ctp-base)' : 'var(--ctp-subtext1)';
+          return (
+            <div class="cell-value" style={`background: ${bg}; color: ${fg};`} title={`${s.name} · ${y}: ${n} event${n === 1 ? '' : 's'}`}>
+              {n > 0 ? n : ''}
+            </div>
+          );
+        })}
+        <div class="cell-row-total">{rowTotals.get(s.id) ?? 0}</div>
+      </>
+    ))}
+
+    <div class="cell-empty cell-total-header" style="text-align: right;">total</div>
+    {years.map((y) => (
+      <div class="cell-col-total">{colTotals.get(y) ?? 0}</div>
+    ))}
+    <div class="cell-grand-total">{grandTotal}</div>
+  </div>
+
+  <p style="margin-top: 1.5rem; color: var(--ctp-subtext0); font-size: 0.8125rem;">
+    A cell's count is the number of events with a target tagged
+    (transitively) to that sector in that year. Click a sector to
+    see the events; click a year for the year-in-review page.
+  </p>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .heatmap {
+    display: grid;
+    grid-auto-rows: 2.25rem;
+    gap: 1px;
+    background: var(--ctp-surface0);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .cell-empty {
+    background: var(--ctp-mantle);
+  }
+  .cell-year {
+    background: var(--ctp-mantle);
+    color: var(--ctp-subtext1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .cell-year:hover { background: var(--ctp-surface0); color: var(--ctp-text); }
+  .cell-sector {
+    background: var(--ctp-mantle);
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--ctp-text);
+    overflow: hidden;
+  }
+  .cell-sector:hover { background: var(--ctp-surface0); }
+  .sector-name {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sector-id {
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cell-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ctp-base);
+    font-weight: 600;
+  }
+  .cell-row-total {
+    background: var(--ctp-mantle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ctp-text);
+    font-weight: 600;
+    font-size: 0.8125rem;
+  }
+  .cell-col-total {
+    background: var(--ctp-mantle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ctp-subtext1);
+    font-weight: 600;
+  }
+  .cell-grand-total {
+    background: var(--ctp-surface0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ctp-text);
+    font-weight: 700;
+  }
+  .cell-total-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+</style>

@@ -1,0 +1,67 @@
+id: 2017-05/equifax-breach
+name: Equifax breach (PLA 54th Research Institute)
+start_date: 2017-05-13
+disclosure_date: 2017-09-07
+end_date: 2017-07-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: n-day  # CVE-2017-5638 Apache Struts
+outcome_summary: |
+  Exploitation of unpatched Apache Struts (CVE-2017-5638) at
+  Equifax; pivot through internal network; deletion of logs to
+  evade detection; exfiltration via 34 servers in ~20 countries.
+  PII of 145 million Americans (names, DOB, SSN), driver's
+  license numbers for 10 million, and credit-card data for
+  200,000.
+quantified_impact:
+  records_exfiltrated: 145000000
+false_flag_risk: none
+campaign_id: prc-bulk-pii-collection-wave
+operators_named:
+  - wu-zhiyong  # PLA 54th Research Institute, DOJ Feb 2020
+  - wang-qian  # PLA 54th Research Institute, DOJ Feb 2020
+  - xu-ke  # PLA 54th Research Institute, DOJ Feb 2020
+  - liu-lei  # PLA 54th Research Institute, DOJ Feb 2020
+summary: |
+  DOJ February 2020 indictment of four PLA 54th Research Institute
+  officers (Wu Zhiyong, Wang Qian, Xu Ke, Liu Lei). Combined with
+  OPM and Anthem, Equifax completes the MSS / PLA bulk-PII trinity.
+  Initial access exploited an unpatched Apache Struts2 OGNL
+  injection (CVE-2017-5638) on Equifax's online customer dispute
+  portal to drop web shells, after which the operators used
+  valid credentials harvested from a misplaced credential file
+  to pivot across an internal-network segment that lacked
+  segmentation from the production databases. They ran ~9,000
+  reconnaissance queries against 48 unrelated databases, staged
+  exfiltration through 34 attacker-controlled servers in roughly
+  20 countries, encrypted the output, and deliberately deleted
+  log files to defeat forensics — the indictment treats these as
+  anti-forensic tradecraft establishing nation-state rather than
+  criminal intent.
+attributions:
+  - actor_id: cn/pla/54th-ri-equifax
+    attributing_org: US DOJ (Northern District of Georgia)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-02-10
+    attribution_source_id: doj/2020-02-10_pla-54th-ri-equifax-indictment
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/bulk-pii-humint-enabling
+    program_id: null
+    confidence: attested
+    reasoning: |
+      DOJ indictment frames the operation as economic espionage
+      with counterintelligence value; bulk-PII / HUMINT enabling
+      pillar applies directly.
+    attesting_source_id: doj/2020-02-10_pla-54th-ri-equifax-indictment
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/equifax
+    role: primary
+sources:
+  - doj/2020-02-10_pla-54th-ri-equifax-indictment
+  - fbi-wanted/pla-54th-research-institute

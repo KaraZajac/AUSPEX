@@ -1,0 +1,286 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import EventRow from '../../components/EventRow.astro';
+import AttributionDonut from '../../components/AttributionDonut.astro';
+import AttributionMap from '../../components/AttributionMap.astro';
+import EventTimeline from '../../components/EventTimeline.astro';
+import { atlas } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.nationStates.values()].map((s) => ({
+    params: { id: s.id },
+    props: { stateId: s.id },
+  }));
+}
+
+const { stateId } = Astro.props as { stateId: string };
+const a = atlas();
+const state = a.nationStates.get(stateId)!;
+const doctrines = a.topDoctrinesForState(stateId, 12);
+const actors = a.topActorsForState(stateId, 12);
+const services = a.servicesForState(stateId);
+const allEvents = a.eventsForState(stateId);
+const recentEvents = allEvents.slice(0, 12);
+const markers = [...a.timelineMarkers.values()].filter((m) => {
+  const did = m.doctrine_id ?? '';
+  return did.split('/')[0] === stateId;
+});
+
+// Service hierarchy: roots first
+const rootServices = services.filter((s) => !s.parent_service_id || !a.services.has(s.parent_service_id));
+
+// Top targeted country (for the headline stat)
+const targetCountries = a.topTargetCountriesForState(stateId, 1);
+const topTargetCountry = targetCountries[0];
+
+// Recent activity volume (last 5 years)
+const cutoffYear = new Date().getFullYear() - 5;
+const recent5y = allEvents.filter((ev) => {
+  const y = parseInt((ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4), 10);
+  return Number.isFinite(y) && y >= cutoffYear;
+});
+
+// Sector attribution donut
+const sectorAttr = a.sectorAttributionForState(stateId);
+const TOP_N = 9;
+let sectorSlices = sectorAttr;
+if (sectorAttr.length > TOP_N + 1) {
+  const top = sectorAttr.slice(0, TOP_N);
+  const rest = sectorAttr.slice(TOP_N).filter((s) => s.id !== null);
+  const fallback = sectorAttr.find((s) => s.id === null);
+  const tail = rest.reduce((sum, s) => sum + s.count, 0);
+  const total = sectorAttr.reduce((sum, s) => sum + s.count, 0);
+  const merged = [...top];
+  if (tail > 0) {
+    merged.push({
+      id: '__other__',
+      name: `${rest.length} other sector${rest.length === 1 ? '' : 's'}`,
+      count: tail,
+      percent: (tail / total) * 100,
+    });
+  }
+  if (fallback && !top.find((s) => s.id === null)) merged.push(fallback);
+  sectorSlices = merged;
+}
+const sectorTotal = sectorAttr.reduce((s, x) => s + x.count, 0);
+---
+<Base title={state.name} wide>
+  <p class="kicker">State</p>
+  <div class="state-header">
+    <FlagChip state={stateId} />
+    <h1 style="margin:0;">{state.name}</h1>
+  </div>
+
+  {state.summary && (
+    <p class="lede" style="white-space: pre-line;">{state.summary}</p>
+  )}
+
+  <section>
+    <p class="kicker">At a glance</p>
+    <div class="stat-grid">
+      <div class="stat"><strong>{allEvents.length}</strong>events</div>
+      <div class="stat"><strong>{recent5y.length}</strong>last 5y</div>
+      <div class="stat"><strong>{a.actorsForState(stateId).length}</strong>actors</div>
+      <div class="stat"><strong>{doctrines.length}</strong>doctrines</div>
+      <div class="stat"><strong>{services.length}</strong>services</div>
+      <div class="stat"><strong>{markers.length}</strong>markers</div>
+      {topTargetCountry && (
+        <div class="stat"><strong>{topTargetCountry.country.toUpperCase()}</strong>top target</div>
+      )}
+    </div>
+  </section>
+
+  {allEvents.length > 0 && (
+    <section>
+      <p class="kicker">Attribution map</p>
+      <h2 style="margin-top: 0;">Where {state.short_name ?? state.name} attacks</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem;">
+        Countries hit by events attributed to {state.short_name ?? state.name},
+        graded by event count. {state.short_name ?? state.name} itself is shown
+        in green; targets in peach.
+      </p>
+      <AttributionMap events={allEvents} selfIso2={stateId} />
+    </section>
+  )}
+
+  {allEvents.length > 0 && (
+    <section>
+      <p class="kicker">Activity over time</p>
+      <h2 style="margin-top: 0;">Year-by-year event volume</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem;">
+        Events attributed to {state.short_name ?? state.name} by year. Red
+        markers indicate {state.short_name ?? state.name}-relevant geopolitical
+        timeline events; hover for details.
+      </p>
+      <EventTimeline events={allEvents} markers={markers} />
+    </section>
+  )}
+
+  {doctrines.length > 0 && (
+    <section>
+      <h2>Top doctrines</h2>
+      <div class="doc-list">
+        {doctrines.map(({ doctrine, count }) => (
+          <a class="doc-row" href={`/doctrine/${doctrine.id}`}>
+            <span class="doc-name">{doctrine.short_name ?? doctrine.name}</span>
+            <span class="doc-status">{doctrine.status ?? 'active'}</span>
+            <span class="doc-count">{count} event{count === 1 ? '' : 's'}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {rootServices.length > 0 && (
+    <section>
+      <h2>Services</h2>
+      <div class="chip-row">
+        {rootServices.map((svc) => (
+          <a class="svc-chip" href={`/service/${svc.id}`}>{svc.short_name ?? svc.name}</a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {sectorTotal > 0 && (
+    <section>
+      <h2>Where they target</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 1rem;">
+        Top-level target sectors across events attributed to this state.
+        Each event counts once per sector it touches; sub-sectors roll up
+        to their root.
+      </p>
+      <AttributionDonut slices={sectorSlices} total={sectorTotal} hrefBase="/sector" unitLabel="hits" />
+    </section>
+  )}
+
+  {actors.length > 0 && (
+    <section>
+      <h2>Top actors</h2>
+      <div class="chip-row">
+        {actors.map(({ actor, count }) => (
+          <a class="actor-chip-counted" href={`/actor/${actor.id}`}>
+            {actor.canonical_name}
+            <span class="ac-count">{count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {markers.length > 0 && (
+    <section>
+      <h2>Timeline markers</h2>
+      <ul>
+        {markers.map((m) => (
+          <li>
+            <strong>{typeof m.date === 'string' ? m.date : `${m.date?.start ?? ''} → ${m.date?.end ?? ''}`}</strong>
+            {' — '}{m.description ?? m.id}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section>
+    <h2>Recent events ({allEvents.length} total)</h2>
+    {recentEvents.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">No events currently attributed to this state.</p>
+    ) : (
+      <>
+        <div class="event-list">
+          {recentEvents.map((ev) => <EventRow event={ev} />)}
+        </div>
+        {allEvents.length > recentEvents.length && (
+          <p style="margin-top: 0.75rem; color: var(--ctp-subtext0); font-size: 0.875rem;">
+            <a href={`/events#${stateId}`}>All {allEvents.length} events →</a>
+          </p>
+        )}
+      </>
+    )}
+  </section>
+</Base>
+
+<style>
+  .state-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0 1rem;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.625rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext1);
+  }
+  .stat strong {
+    font-size: 1.5rem;
+    color: var(--ctp-text);
+    font-weight: 600;
+  }
+  .doc-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .doc-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+    align-items: center;
+  }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-row:hover { background: var(--ctp-mantle); }
+  .doc-name { font-family: var(--font-mono); font-size: 0.9375rem; }
+  .doc-status {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    text-transform: uppercase;
+  }
+  .doc-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-subtext0); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
+  .svc-chip, .actor-chip-counted {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .svc-chip:hover, .actor-chip-counted:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .ac-count {
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .actor-chip-counted:hover .ac-count { color: var(--ctp-base); }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

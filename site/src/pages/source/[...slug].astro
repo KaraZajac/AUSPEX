@@ -1,0 +1,187 @@
+---
+import Base from '../../layouts/Base.astro';
+import EventRow from '../../components/EventRow.astro';
+import { atlas } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.sources.values()].map((s) => ({
+    params: { slug: s.id },
+    props: { sourceId: s.id },
+  }));
+}
+
+const { sourceId } = Astro.props as { sourceId: string };
+const a = atlas();
+const source = a.sources.get(sourceId)!;
+const cites = a.citationsForSource(sourceId);
+
+// Combined event-citation set (events that cite + use as attestation + as attribution source)
+const allCitingEvents = new Map<string, typeof cites.events[number]>();
+for (const ev of [...cites.events, ...cites.eventAttributions, ...cites.eventDoctrineLinks]) {
+  allCitingEvents.set(ev.id, ev);
+}
+const eventList = [...allCitingEvents.values()].sort(
+  (a, b) => (b.start_date ?? '').localeCompare(a.start_date ?? ''),
+);
+
+const totalCitations =
+  eventList.length + cites.actors.length + cites.doctrines.length + cites.services.length + cites.timelineMarkers.length;
+---
+<Base title={source.title ?? source.id} wide>
+  <p class="kicker">Source · {source.kind ?? 'unknown kind'}{source.tier && <> · {source.tier}</>}</p>
+  <h1>{source.title ?? source.id}</h1>
+  <p class="meta"><code>{source.id}</code></p>
+
+  <dl class="src-meta">
+    {source.publisher && (
+      <>
+        <dt>Publisher</dt>
+        <dd>{source.publisher}</dd>
+      </>
+    )}
+    {source.published_on && (
+      <>
+        <dt>Published</dt>
+        <dd>{source.published_on}</dd>
+      </>
+    )}
+    {source.retrieved_on && (
+      <>
+        <dt>Retrieved</dt>
+        <dd>{source.retrieved_on}</dd>
+      </>
+    )}
+    {source.url ? (
+      <>
+        <dt>URL</dt>
+        <dd><a href={source.url} target="_blank" rel="noopener noreferrer">{source.url}</a></dd>
+      </>
+    ) : (
+      <>
+        <dt>URL</dt>
+        <dd style="color: var(--ctp-overlay0); font-style: italic;">not yet verified — see notes</dd>
+      </>
+    )}
+    {source.archive_url && (
+      <>
+        <dt>Archive</dt>
+        <dd><a href={source.archive_url} target="_blank" rel="noopener noreferrer">archive.org snapshot</a></dd>
+      </>
+    )}
+  </dl>
+
+  {source.notes && (
+    <section>
+      <h2>Notes</h2>
+      <p style="white-space: pre-line;">{source.notes}</p>
+    </section>
+  )}
+
+  <section>
+    <h2>Cited by ({totalCitations})</h2>
+
+    {eventList.length > 0 && (
+      <div class="cite-group">
+        <h3>Events ({eventList.length})</h3>
+        <div class="event-list">
+          {eventList.map((ev) => <EventRow event={ev} />)}
+        </div>
+      </div>
+    )}
+
+    {cites.actors.length > 0 && (
+      <div class="cite-group">
+        <h3>Actors ({cites.actors.length})</h3>
+        <div class="chip-row">
+          {cites.actors.map((act) => (
+            <a class="actor-chip" href={`/actor/${act.id}`}>{act.canonical_name}</a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {cites.doctrines.length > 0 && (
+      <div class="cite-group">
+        <h3>Doctrines ({cites.doctrines.length})</h3>
+        <ul>
+          {cites.doctrines.map((d) => (
+            <li><a href={`/doctrine/${d.id}`}>{d.name}</a> <span class="muted">({d.nation_state_id.toUpperCase()})</span></li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {cites.services.length > 0 && (
+      <div class="cite-group">
+        <h3>Services ({cites.services.length})</h3>
+        <ul>
+          {cites.services.map((s) => (
+            <li><a href={`/service/${s.id}`}>{s.name}</a> <span class="muted">({s.nation_state_id.toUpperCase()})</span></li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {cites.timelineMarkers.length > 0 && (
+      <div class="cite-group">
+        <h3>Timeline markers ({cites.timelineMarkers.length})</h3>
+        <ul>
+          {cites.timelineMarkers.map((m) => <li>{m.description ?? m.id}</li>)}
+        </ul>
+      </div>
+    )}
+
+    {totalCitations === 0 && (
+      <p style="color: var(--ctp-subtext0);">
+        Nothing in the atlas currently cites this source. It may have been
+        written as a stub for a future entry.
+      </p>
+    )}
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); margin: 0 0 1rem; }
+  .src-meta {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+    margin: 1rem 0 2rem;
+    font-size: 0.9375rem;
+  }
+  .src-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    padding-top: 0.125rem;
+  }
+  .src-meta dd { margin: 0; word-break: break-all; }
+  .cite-group { margin: 1.5rem 0; }
+  .cite-group h3 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
+    color: var(--ctp-subtext1);
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .actor-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+  .actor-chip:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .muted { color: var(--ctp-overlay0); font-family: var(--font-mono); font-size: 0.8125rem; }
+</style>

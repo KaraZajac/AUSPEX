@@ -1,0 +1,139 @@
+---
+/**
+ * Generic year-by-year activity bar chart for any event set.
+ *
+ * Used by:
+ *   - state/[id]: events = eventsForState, markers = state-prefixed markers
+ *   - actor/[id]: events = eventsForActor, markers = actor's state markers
+ *   - doctrine/[id]: events = eventsForDoctrine, markers = doctrine's markers
+ *   - sector/[id]: events = eventsForSector, no markers
+ */
+import { type AuspexEvent, type TimelineMarker } from '../utils/atlas';
+
+interface Props {
+  events: AuspexEvent[];
+  markers?: TimelineMarker[];
+}
+const { events, markers = [] } = Astro.props as Props;
+
+const byYear = new Map<number, number>();
+for (const ev of events) {
+  const y = parseInt((ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4), 10);
+  if (!Number.isFinite(y)) continue;
+  byYear.set(y, (byYear.get(y) ?? 0) + 1);
+}
+const years = [...byYear.keys()].sort((a, b) => a - b);
+const minY = years[0] ?? new Date().getFullYear();
+const maxY = years[years.length - 1] ?? new Date().getFullYear();
+const yearsAll: number[] = [];
+for (let y = minY; y <= maxY; y++) yearsAll.push(y);
+const max = Math.max(1, ...byYear.values());
+
+const markerYears = markers
+  .map((m) => {
+    const ds = typeof m.date === 'string' ? m.date : m.date?.start ?? m.date_range?.start;
+    if (!ds) return null;
+    const y = parseInt(ds.slice(0, 4), 10);
+    if (!Number.isFinite(y)) return null;
+    if (y < minY || y > maxY) return null;
+    return { year: y, name: m.name ?? m.id, id: m.id };
+  })
+  .filter((m): m is { year: number; name: string; id: string } => !!m);
+
+const W = 960;
+const H = 220;
+const PAD = { top: 14, bottom: 24, left: 30, right: 10 };
+const innerW = W - PAD.left - PAD.right;
+const innerH = H - PAD.top - PAD.bottom;
+const barW = innerW / Math.max(1, yearsAll.length);
+
+function xOf(year: number): number {
+  return PAD.left + (year - minY) * barW + barW / 2;
+}
+---
+{events.length > 0 && yearsAll.length > 0 && (
+  <div class="evt-wrap">
+    <svg
+      class="evt-svg"
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label="Event-volume timeline by year"
+    >
+      <rect x="0" y="0" width={W} height={H} fill="transparent" />
+      {[0, 0.5, 1].map((frac) => {
+        const v = Math.round(max * frac);
+        const y = PAD.top + innerH * (1 - frac);
+        return (
+          <g>
+            <line x1={PAD.left} y1={y} x2={W - PAD.right} y2={y} class={frac === 0 ? 'axis' : 'grid'} />
+            <text x={PAD.left - 4} y={y + 4} class="tick">{v}</text>
+          </g>
+        );
+      })}
+      {yearsAll.map((y, i) => {
+        const cx = xOf(y);
+        const showLabel = i === 0 || i === yearsAll.length - 1 || y % 5 === 0;
+        return showLabel ? (
+          <text x={cx} y={H - 6} class="tick" text-anchor="middle">{y}</text>
+        ) : null;
+      })}
+      {yearsAll.map((y) => {
+        const n = byYear.get(y) ?? 0;
+        const h = (n / max) * innerH;
+        return (
+          <rect
+            class={`bar ${n === 0 ? 'bar-zero' : ''}`}
+            x={PAD.left + (y - minY) * barW + 1}
+            y={PAD.top + innerH - h}
+            width={Math.max(1, barW - 2)}
+            height={h}
+            data-year={y}
+            data-count={n}
+          >
+            <title>{`${y}: ${n} event${n === 1 ? '' : 's'}`}</title>
+          </rect>
+        );
+      })}
+      {markerYears.map((m) => {
+        const cx = xOf(m.year);
+        return (
+          <g class="marker">
+            <line x1={cx} y1={PAD.top - 4} x2={cx} y2={H - PAD.bottom} class="marker-line" />
+            <text x={cx} y={PAD.top + 4} class="marker-label" text-anchor="middle">
+              <title>{m.name}</title>
+              ▾
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+)}
+
+<style>
+  .evt-wrap { width: 100%; margin: 0.5rem 0; }
+  .evt-svg { width: 100%; height: auto; display: block; }
+  .bar { fill: var(--ctp-blue); opacity: 0.85; }
+  .bar:hover { fill: var(--ctp-mauve); opacity: 1; }
+  .bar-zero { fill: var(--ctp-surface0); opacity: 0.3; }
+  .axis { stroke: var(--ctp-overlay0); stroke-width: 1; }
+  .grid { stroke: var(--ctp-surface0); stroke-width: 0.6; stroke-dasharray: 2 3; }
+  .tick {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    fill: var(--ctp-subtext0);
+    text-anchor: end;
+  }
+  .marker-line {
+    stroke: var(--ctp-red);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+    opacity: 0.6;
+  }
+  .marker-label {
+    font-size: 0.625rem;
+    fill: var(--ctp-red);
+    cursor: help;
+  }
+  .marker-label:hover { fill: var(--ctp-peach); opacity: 1; }
+</style>

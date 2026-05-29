@@ -1,0 +1,75 @@
+id: 2023-11/midnight-blizzard-microsoft-corporate
+name: Midnight Blizzard / SVR intrusion into Microsoft corporate environment
+start_date: 2023-11-01  # MSRC: late November 2023
+disclosure_date: 2024-01-19
+end_date: 2024-01-13  # MSRC stated when access was cut
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: valid-creds  # password spray against legacy non-production test tenant without MFA
+outcome_summary: |
+  SVR (APT29 / Midnight Blizzard) compromised a legacy
+  non-production Microsoft test tenant lacking MFA via password
+  spray, then abused an OAuth application granted full_access_as_app
+  on Exchange Online to read corporate email of Microsoft senior
+  leadership and cybersecurity, legal, and other functions. HPE
+  disclosed a parallel SVR intrusion the same week. Microsoft
+  disclosed the breach in a 19 January 2024 MSRC blog and contemporaneous
+  SEC 8-K filing under the post-2023 incident disclosure rules.
+false_flag_risk: none
+campaign_id: apt29-midnight-blizzard
+summary: |
+  A canonical attested example of SVR cloud-identity-supply-chain
+  tradecraft: legacy-tenant compromise → OAuth app abuse → tenant-
+  hopping to corporate Exchange. Strategic significance is the
+  victim — Microsoft corporate, including the leadership and the
+  identity- and security-tooling staff defending Microsoft customers.
+  HPE's parallel disclosure (24 January 2024) reinforced the campaign
+  shape. The incident drove the post-Microsoft CSRB report (Apr
+  2024) on Microsoft cloud security.
+attributions:
+  - actor_id: ru/svr/apt29
+    attributing_org: Microsoft MSRC
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-01-19
+    attribution_source_id: msrc/2024-01-19_midnight-blizzard-microsoft-corporate
+doctrine_links:
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
+    program_id: null
+    confidence: attested
+    reasoning: |
+      SVR strategic foreign-intelligence collection, targeting the
+      provider of identity and email services to the bulk of US/EU
+      government and large-enterprise tenants. The 2016 Information
+      Security Doctrine pillar is the operational frame.
+    attesting_source_id: msrc/2024-01-19_midnight-blizzard-microsoft-corporate
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/fpc-2023
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Targeting the US identity-provider hyperscaler whose
+      vulnerability disproportionately affects US and Anglo-Saxon
+      governments fits the FPC-2023 anti-Anglo-Saxon priority.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/microsoft-corporate
+    role: primary
+    outcome: |
+      Emails of senior leadership, cybersecurity, and legal teams
+      exfiltrated; some source-code repositories and internal
+      systems accessed in follow-on intrusions disclosed Mar 2024.
+  - target_id: orgs/hpe-corporate
+    role: primary
+    outcome: |
+      Parallel intrusion disclosed Jan 24 2024 SEC 8-K; SharePoint
+      and email of cybersecurity and other functions accessed.
+sources:
+  - msrc/2024-01-19_midnight-blizzard-microsoft-corporate

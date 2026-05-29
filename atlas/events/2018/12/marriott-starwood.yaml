@@ -1,0 +1,72 @@
+id: 2018-12/marriott-starwood
+name: Marriott / Starwood guest-database breach
+start_date: 2014-07-01  # via legacy Starwood compromise predating the Marriott acquisition
+disclosure_date: 2018-11-30
+end_date: 2018-09-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: unknown
+outcome_summary: |
+  Theft of approximately 500 million guest reservation records
+  from the Starwood guest database (acquired by Marriott in 2016).
+  Travel-pattern data of foreign officials and corporate executives
+  particularly valuable to MSS counterintelligence.
+quantified_impact:
+  records_exfiltrated: 500000000
+false_flag_risk: none
+summary: |
+  Reuters and US official statements (December 2018) attributed the
+  breach to MSS-affiliated actors. No DOJ indictment. Investigators
+  recovered MSS-cluster tradecraft inside the Starwood environment
+  consistent with APT10 / Stone Panda hospitality-collection
+  patterns: PlugX and Cobalt Strike beacons used for command and
+  control, Mimikatz for credential dumping, valid credentials for
+  lateral movement across the Starwood Active Directory, web shells
+  on customer-facing Starwood reservation servers, and large-scale
+  staged exfiltration of the central guest reservation database.
+  The campaign predates the 2016 Marriott acquisition by two years
+  and sat undetected through it, demonstrating long-dwell bulk-PII
+  collection of foreign-traveler itineraries valuable for MSS
+  counterintelligence targeting alongside the OPM, Anthem, and
+  Equifax trinity.
+attributions:
+  - actor_id: cn/mss/apt10  # working assignment to MSS hospitality-collection cluster
+    attributing_org: US officials (via Reuters)
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2018-12-11
+    attribution_source_id: reuters/2018-12_marriott-china
+    notes: |
+      Country-level attribution only; specific cluster assignment
+      to APT10 / MSS is open-source consensus but not DOJ-attested.
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/bulk-pii-humint-enabling
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Bulk travel-pattern data of foreign officials is MCF-aligned
+      HUMINT-enabling collection — same logic as OPM / Anthem /
+      Equifax extended to travel.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/national-intelligence-law-2017
+    pillar_id: null
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Intelligence Law's compelled-cooperation regime is the legal
+      counterpart to bulk-PII collection — though the Marriott
+      compromise predates routine MSS use of the law.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/marriott-starwood
+    role: primary
+sources:
+  - reuters/2018-12_marriott-china

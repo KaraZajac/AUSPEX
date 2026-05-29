@@ -1,0 +1,190 @@
+---
+import Base from '../../layouts/Base.astro';
+import EventRow from '../../components/EventRow.astro';
+import AttributionDonut from '../../components/AttributionDonut.astro';
+import { atlas } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.sectors.values()].map((s) => ({
+    params: { slug: s.id },
+    props: { sectorId: s.id },
+  }));
+}
+
+const { sectorId } = Astro.props as { sectorId: string };
+const a = atlas();
+const sector = a.sectors.get(sectorId)!;
+const ancestors = a.sectorAncestors(sectorId).slice(0, -1); // exclude self
+const children = a.childSectors(sectorId);
+const events = a.eventsForSector(sectorId);
+const eventsRecursive = a.eventsForSectorRecursive(sectorId);
+const hasDescendants = a.descendantSectors(sectorId).length > 0;
+const actors = a.actorsForTargetSector(sectorId);
+const doctrines = a.doctrinesForTargetSector(sectorId);
+const attribution = a.actorAttributionForSector(sectorId);
+
+// Cap to top 9 + "N others" bucket, like the doctrine page.
+const TOP_N = 9;
+let attributionSlices = attribution;
+if (attribution.length > TOP_N + 1) {
+  const top = attribution.slice(0, TOP_N);
+  const rest = attribution.slice(TOP_N).filter((s) => s.id !== null);
+  const unattr = attribution.find((s) => s.id === null);
+  const tailCount = rest.reduce((sum, s) => sum + s.count, 0);
+  const total = attribution.reduce((sum, s) => sum + s.count, 0);
+  const merged = [...top];
+  if (tailCount > 0) {
+    merged.push({
+      id: '__other__',
+      name: `${rest.length} other actor${rest.length === 1 ? '' : 's'}`,
+      count: tailCount,
+      percent: (tailCount / total) * 100,
+    });
+  }
+  if (unattr && !top.find((s) => s.id === null)) merged.push(unattr);
+  attributionSlices = merged;
+}
+const attributionTotal = attribution.reduce((sum, s) => sum + s.count, 0);
+---
+<Base title={sector.name} wide>
+  <p class="kicker">
+    Sector
+    {ancestors.length > 0 && (
+      <>
+        {' · '}
+        {ancestors.map((s, i) => (
+          <>
+            <a href={`/sector/${s.id}`}>{s.name}</a>
+            {i < ancestors.length - 1 && ' › '}
+          </>
+        ))}
+      </>
+    )}
+  </p>
+  <h1>{sector.name}</h1>
+  <p class="meta"><code>{sector.id}</code></p>
+
+  {sector.summary && (
+    <p class="lede" style="white-space: pre-line;">{sector.summary}</p>
+  )}
+
+  {children.length > 0 && (
+    <section>
+      <h2>Sub-sectors</h2>
+      <div class="chip-row">
+        {children.map((c) => (
+          <a class="sector-chip-link" href={`/sector/${c.id}`}>
+            {c.name}
+            <span class="count">{a.eventsForSector(c.id).length}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {doctrines.length > 0 && (
+    <section>
+      <h2>Doctrines targeting this sector</h2>
+      <ul>
+        {doctrines.map((d) => (
+          <li>
+            <a href={`/doctrine/${d.id}`}>{d.name}</a>
+            <span class="state-hint"> &nbsp; ({d.nation_state_id.toUpperCase()})</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {attributionTotal > 0 && (
+    <section>
+      <h2>Who targets this sector</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 1rem;">
+        Attributed actors across all events targeting this sector
+        {hasDescendants && ' or its sub-sectors'}. Each event counts each
+        distinct attributed actor once; events without a named actor go
+        into the sector-only bucket.
+      </p>
+      <AttributionDonut slices={attributionSlices} total={attributionTotal} />
+    </section>
+  )}
+
+  {actors.length > 0 && (
+    <section>
+      <h2>Actors with this sector on their target list</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.5rem;">
+        Actors whose <code>target_sector_ids</code> includes this sector
+        (declared targeting, separate from observed events above).
+      </p>
+      <div class="chip-row">
+        {actors.map((act) => (
+          <a class="actor-chip" href={`/actor/${act.id}`}>{act.canonical_name}</a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2>
+      Events targeting this sector
+      {hasDescendants ? (
+        <> ({eventsRecursive.length} across sub-sectors, {events.length} direct)</>
+      ) : (
+        <> ({events.length})</>
+      )}
+    </h2>
+    {eventsRecursive.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">
+        No events currently tagged to this sector or any of its sub-sectors.
+        {ancestors.length > 0 && <> Try the parent: <a href={`/sector/${ancestors[ancestors.length - 1].id}`}>{ancestors[ancestors.length - 1].name}</a>.</>}
+      </p>
+    ) : (
+      <div class="event-list">
+        {eventsRecursive.map((ev) => <EventRow event={ev} />)}
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); margin: 0 0 1rem; }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.5rem 0;
+  }
+  .sector-chip-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ctp-text);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  .sector-chip-link:hover { border-color: var(--ctp-blue); }
+  .sector-chip-link .count { color: var(--ctp-overlay0); font-size: 0.6875rem; }
+  .actor-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+  .actor-chip:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .state-hint { color: var(--ctp-overlay0); font-family: var(--font-mono); font-size: 0.8125rem; }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

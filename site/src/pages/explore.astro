@@ -1,0 +1,548 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Explore" wide>
+  <p class="kicker">Explore</p>
+  <h1>Pivot</h1>
+  <p class="lede">
+    Scope in and out of the atlas. State, doctrine, pillar, actor,
+    service, target country, sector, year, confidence. Click any facet
+    to add it as a filter. Click <code>×</code> on a chip to remove it.
+    Linkable via URL.
+  </p>
+
+  <div id="active-filters" class="active-filters"></div>
+  <div id="status" class="status"></div>
+
+  <div class="explore-grid">
+    <div id="results" class="results">
+      <p class="loading">Loading atlas…</p>
+    </div>
+    <aside id="facets" class="facets"></aside>
+  </div>
+</Base>
+
+<script>
+  // ─── types (loose) ─────────────────────────────────────────────────
+  interface DoctrineLink { doctrine_id?: string; pillar_id?: string; program_id?: string; confidence?: string }
+  interface Attribution { actor_id?: string | null; service_id?: string | null; attributing_org?: string }
+  interface TargetRow { target_id?: string; country?: string; role?: string }
+  interface EventRec {
+    id: string; name: string;
+    start_date?: string; disclosure_date?: string;
+    incident_type?: string[]; initial_vector?: string;
+    attributions?: Attribution[];
+    doctrine_links?: DoctrineLink[];
+    targets?: TargetRow[];
+  }
+  interface Actor { id: string; canonical_name: string; primary_service_id?: string | null }
+  interface Doctrine { id: string; name: string; short_name?: string; nation_state_id?: string; pillars?: Array<{ id: string; name: string }> }
+  interface Service { id: string; name: string; short_name?: string; nation_state_id?: string }
+  interface Sector { id: string; name: string; parent_id?: string | null }
+  interface NationState { id: string; name: string; short_name?: string }
+
+  // ─── state ─────────────────────────────────────────────────────────
+  let atlas: {
+    events: EventRec[];
+    actors: Actor[];
+    doctrines: Doctrine[];
+    services: Service[];
+    sectors: Sector[];
+    nation_states: NationState[];
+  };
+  const byActor = new Map<string, Actor>();
+  const byDoctrine = new Map<string, Doctrine>();
+  const byPillar = new Map<string, { pillar: { id: string; name: string }; doctrineId: string }>();
+  const byService = new Map<string, Service>();
+  const bySector = new Map<string, Sector>();
+  const byState = new Map<string, NationState>();
+
+  // ─── filter helpers ────────────────────────────────────────────────
+  type FilterKey = 'state' | 'doctrine' | 'pillar' | 'actor' | 'service' | 'sector' | 'target_country' | 'year' | 'confidence' | 'q';
+  const FILTER_LABELS: Record<FilterKey, string> = {
+    state: 'state', doctrine: 'doctrine', pillar: 'pillar', actor: 'actor',
+    service: 'service', sector: 'sector', target_country: 'target',
+    year: 'year', confidence: 'confidence', q: 'q',
+  };
+  function readParams(): Record<string, string> {
+    const sp = new URLSearchParams(window.location.search);
+    const out: Record<string, string> = {};
+    for (const [k, v] of sp.entries()) if (v) out[k] = v;
+    return out;
+  }
+  function writeParams(p: Record<string, string>): void {
+    const sp = new URLSearchParams();
+    for (const [k, v] of Object.entries(p)) if (v) sp.set(k, v);
+    const url = sp.toString() ? `?${sp.toString()}` : window.location.pathname;
+    window.history.pushState({}, '', url);
+  }
+
+  // Resolve a doctrine link to its top-level doctrine id.
+  function linkToDoctrineId(link: DoctrineLink): string | undefined {
+    if (link.doctrine_id) return link.doctrine_id;
+    if (link.pillar_id) {
+      const p = byPillar.get(link.pillar_id);
+      if (p) return p.doctrineId;
+    }
+    return undefined;
+  }
+  function eventAttackerState(ev: EventRec): string | undefined {
+    for (const attr of ev.attributions ?? []) {
+      if (attr.actor_id) {
+        const act = byActor.get(attr.actor_id);
+        const svc = act?.primary_service_id;
+        if (svc) return svc.split('/')[0];
+      }
+    }
+    for (const attr of ev.attributions ?? []) {
+      if (attr.service_id) return attr.service_id.split('/')[0];
+    }
+    for (const link of ev.doctrine_links ?? []) {
+      const id = linkToDoctrineId(link);
+      if (id) return id.split('/')[0];
+    }
+    return undefined;
+  }
+  function eventActors(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const a of ev.attributions ?? []) if (a.actor_id) s.add(a.actor_id);
+    return [...s];
+  }
+  function eventServices(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const a of ev.attributions ?? []) if (a.service_id) s.add(a.service_id);
+    // also implicit services via actor.primary_service_id
+    for (const aid of eventActors(ev)) {
+      const act = byActor.get(aid);
+      if (act?.primary_service_id) s.add(act.primary_service_id);
+    }
+    return [...s];
+  }
+  function eventDoctrineIds(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const link of ev.doctrine_links ?? []) {
+      const did = linkToDoctrineId(link);
+      if (did) s.add(did);
+    }
+    return [...s];
+  }
+  function eventPillarIds(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const link of ev.doctrine_links ?? []) if (link.pillar_id) s.add(link.pillar_id);
+    return [...s];
+  }
+  function eventTopSectorIds(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const t of ev.targets ?? []) {
+      if (!t.target_id?.startsWith('sectors/')) continue;
+      const slug = t.target_id.replace(/^sectors\//, '');
+      if (!bySector.has(slug)) continue;
+      let cur: Sector | undefined = bySector.get(slug);
+      while (cur && cur.parent_id) cur = bySector.get(cur.parent_id);
+      if (cur) s.add(cur.id);
+    }
+    return [...s];
+  }
+  function eventTargetCountries(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const t of ev.targets ?? []) if (t.country) s.add(t.country);
+    return [...s];
+  }
+  function eventYear(ev: EventRec): string {
+    return (ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4);
+  }
+  function eventConfidences(ev: EventRec): string[] {
+    const s = new Set<string>();
+    for (const link of ev.doctrine_links ?? []) if (link.confidence) s.add(link.confidence);
+    return [...s];
+  }
+
+  // Apply the active filter set, returning the matching events.
+  function applyFilters(events: EventRec[], filters: Record<string, string>): EventRec[] {
+    let out = events;
+    if (filters.state) out = out.filter((e) => eventAttackerState(e) === filters.state);
+    if (filters.doctrine) out = out.filter((e) => eventDoctrineIds(e).includes(filters.doctrine));
+    if (filters.pillar) out = out.filter((e) => eventPillarIds(e).includes(filters.pillar));
+    if (filters.actor) out = out.filter((e) => eventActors(e).includes(filters.actor));
+    if (filters.service) out = out.filter((e) => eventServices(e).includes(filters.service));
+    if (filters.sector) out = out.filter((e) => eventTopSectorIds(e).includes(filters.sector));
+    if (filters.target_country) out = out.filter((e) => eventTargetCountries(e).includes(filters.target_country));
+    if (filters.year) out = out.filter((e) => eventYear(e) === filters.year);
+    if (filters.confidence) out = out.filter((e) => eventConfidences(e).includes(filters.confidence));
+    if (filters.q) {
+      const q = filters.q.toLowerCase();
+      out = out.filter((e) =>
+        e.name.toLowerCase().includes(q) ||
+        e.id.toLowerCase().includes(q) ||
+        eventActors(e).some((a) => byActor.get(a)?.canonical_name.toLowerCase().includes(q))
+      );
+    }
+    return out;
+  }
+
+  // ─── render ────────────────────────────────────────────────────────
+  function el(tag: string, attrs: Record<string, string> = {}, ...kids: (string | Node)[]): HTMLElement {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') n.className = v;
+      else if (k.startsWith('data-')) n.setAttribute(k, v);
+      else n.setAttribute(k, v);
+    }
+    for (const k of kids) n.append(typeof k === 'string' ? document.createTextNode(k) : k);
+    return n;
+  }
+
+  function renderActiveFilters(filters: Record<string, string>): void {
+    const root = document.getElementById('active-filters')!;
+    root.innerHTML = '';
+    const entries = Object.entries(filters).filter(([_, v]) => v);
+    if (entries.length === 0) {
+      root.append(el('span', { class: 'no-filters' }, 'No filters — showing all events. Click any facet on the right to scope in.'));
+      return;
+    }
+    for (const [k, v] of entries) {
+      const label = FILTER_LABELS[k as FilterKey] ?? k;
+      const display = displayValue(k, v);
+      const chip = el('span', { class: 'chip' },
+        el('span', { class: 'chip-key' }, `${label}:`),
+        el('span', { class: 'chip-val' }, display),
+      );
+      const x = el('button', { class: 'chip-remove', 'aria-label': `Remove ${label} filter`, 'data-key': k }, '×');
+      x.addEventListener('click', () => {
+        const next = { ...filters };
+        delete next[k];
+        writeParams(next);
+        rerender();
+      });
+      chip.append(x);
+      root.append(chip);
+    }
+    const clear = el('button', { class: 'chip-clear' }, 'Clear all');
+    clear.addEventListener('click', () => {
+      writeParams({});
+      rerender();
+    });
+    root.append(clear);
+  }
+  function displayValue(k: string, v: string): string {
+    if (k === 'state') return byState.get(v)?.short_name ?? byState.get(v)?.name ?? v.toUpperCase();
+    if (k === 'doctrine') return byDoctrine.get(v)?.short_name ?? byDoctrine.get(v)?.name ?? v;
+    if (k === 'pillar') return byPillar.get(v)?.pillar.name ?? v;
+    if (k === 'actor') return byActor.get(v)?.canonical_name ?? v;
+    if (k === 'service') return byService.get(v)?.short_name ?? byService.get(v)?.name ?? v;
+    if (k === 'sector') return bySector.get(v)?.name ?? v;
+    if (k === 'target_country') return v.toUpperCase();
+    return v;
+  }
+
+  function renderEvents(events: EventRec[]): void {
+    const root = document.getElementById('results')!;
+    root.innerHTML = '';
+    if (events.length === 0) {
+      root.append(el('p', { class: 'empty' }, 'No events match. Try removing a filter.'));
+      return;
+    }
+    const list = el('div', { class: 'event-list' });
+    for (const ev of events) {
+      const row = el('a', { class: 'ev', href: `/event/${ev.id}` });
+      const date = ev.start_date ?? ev.disclosure_date ?? '';
+      const state = eventAttackerState(ev);
+      const targets = eventTargetCountries(ev);
+      row.append(el('span', { class: 'ev-date' }, date));
+      if (state) row.append(el('span', { class: 'ev-state' }, state.toUpperCase()));
+      else row.append(el('span', { class: 'ev-state ev-state-empty' }, '??'));
+      row.append(el('span', { class: 'ev-name' }, ev.name));
+      if (targets.length > 0) {
+        row.append(el('span', { class: 'ev-target' }, `→ ${targets.join(', ').toUpperCase()}`));
+      }
+      list.append(row);
+    }
+    root.append(list);
+  }
+
+  function renderStatus(total: number, all: number): void {
+    document.getElementById('status')!.textContent =
+      total === all
+        ? `${total} event${total === 1 ? '' : 's'}.`
+        : `${total} of ${all} events match.`;
+  }
+
+  // Build top-N facets from the filtered event set.
+  function buildFacet<T>(
+    events: EventRec[],
+    getValues: (ev: EventRec) => T[],
+    options: { limit?: number; nameFor: (k: T) => string },
+  ): Array<{ key: T; name: string; count: number }> {
+    const limit = options.limit ?? 8;
+    const counts = new Map<T, number>();
+    for (const ev of events) {
+      const seen = new Set<T>();
+      for (const v of getValues(ev)) {
+        if (seen.has(v)) continue;
+        seen.add(v);
+        counts.set(v, (counts.get(v) ?? 0) + 1);
+      }
+    }
+    return [...counts.entries()]
+      .map(([key, count]) => ({ key, count, name: options.nameFor(key) }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
+  }
+
+  function renderFacets(events: EventRec[], currentFilters: Record<string, string>): void {
+    const root = document.getElementById('facets')!;
+    root.innerHTML = '';
+
+    function addGroup(title: string, items: Array<{ key: string; name: string; count: number }>, filterKey: FilterKey): void {
+      const filtered = items.filter((it) => currentFilters[filterKey] !== it.key);
+      if (filtered.length === 0) return;
+      const group = el('section', { class: 'facet' });
+      group.append(el('h3', {}, title));
+      const ul = el('ul');
+      for (const item of filtered) {
+        const li = el('li');
+        const btn = el('button', { class: 'facet-btn', 'data-key': filterKey, 'data-val': item.key },
+          el('span', { class: 'f-name' }, item.name),
+          el('span', { class: 'f-count' }, String(item.count)),
+        );
+        btn.addEventListener('click', () => {
+          const next = { ...currentFilters, [filterKey]: item.key };
+          writeParams(next);
+          rerender();
+        });
+        li.append(btn);
+        ul.append(li);
+      }
+      group.append(ul);
+      root.append(group);
+    }
+
+    addGroup('Attacker state', buildFacet(events, (e) => {
+      const s = eventAttackerState(e);
+      return s ? [s] : [];
+    }, { nameFor: (k) => byState.get(k)?.short_name ?? byState.get(k)?.name ?? k.toUpperCase() }), 'state');
+
+    addGroup('Doctrine', buildFacet(events, eventDoctrineIds, {
+      nameFor: (k) => byDoctrine.get(k)?.short_name ?? byDoctrine.get(k)?.name ?? k,
+    }), 'doctrine');
+
+    addGroup('Pillar', buildFacet(events, eventPillarIds, {
+      nameFor: (k) => byPillar.get(k)?.pillar.name ?? k,
+    }), 'pillar');
+
+    addGroup('Actor', buildFacet(events, eventActors, {
+      nameFor: (k) => byActor.get(k)?.canonical_name ?? k,
+    }), 'actor');
+
+    addGroup('Service', buildFacet(events, eventServices, {
+      nameFor: (k) => byService.get(k)?.short_name ?? byService.get(k)?.name ?? k,
+    }), 'service');
+
+    addGroup('Sector', buildFacet(events, eventTopSectorIds, {
+      nameFor: (k) => bySector.get(k)?.name ?? k,
+    }), 'sector');
+
+    addGroup('Target country', buildFacet(events, eventTargetCountries, {
+      nameFor: (k) => k.toUpperCase(),
+    }), 'target_country');
+
+    addGroup('Year', buildFacet(events, (e) => {
+      const y = eventYear(e);
+      return y ? [y] : [];
+    }, { nameFor: (k) => k }), 'year');
+
+    addGroup('Confidence', buildFacet(events, eventConfidences, {
+      nameFor: (k) => k.replace(/_/g, ' '),
+    }), 'confidence');
+  }
+
+  function rerender(): void {
+    const filters = readParams();
+    renderActiveFilters(filters);
+    const matched = applyFilters(atlas.events, filters);
+    renderStatus(matched.length, atlas.events.length);
+    renderEvents(matched);
+    renderFacets(matched, filters);
+  }
+
+  // ─── bootstrap ─────────────────────────────────────────────────────
+  async function boot(): Promise<void> {
+    const r = await fetch('/api/atlas.json');
+    if (!r.ok) {
+      document.getElementById('results')!.innerHTML = `<p class="empty">Failed to load atlas (${r.status}).</p>`;
+      return;
+    }
+    atlas = await r.json();
+    for (const a of atlas.actors) byActor.set(a.id, a);
+    for (const d of atlas.doctrines) {
+      byDoctrine.set(d.id, d);
+      for (const p of d.pillars ?? []) byPillar.set(p.id, { pillar: p, doctrineId: d.id });
+    }
+    for (const s of atlas.services) byService.set(s.id, s);
+    for (const s of atlas.sectors) bySector.set(s.id, s);
+    for (const s of atlas.nation_states) byState.set(s.id, s);
+    // Sort events newest first.
+    atlas.events.sort((a, b) => (b.start_date ?? '').localeCompare(a.start_date ?? ''));
+    window.addEventListener('popstate', rerender);
+    rerender();
+  }
+  boot();
+</script>
+
+<style>
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin: 1rem 0;
+    min-height: 2rem;
+  }
+  .no-filters {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--ctp-blue);
+    color: var(--ctp-base);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .chip-key {
+    padding: 0.2rem 0.4rem 0.2rem 0.6rem;
+    opacity: 0.7;
+    text-transform: lowercase;
+  }
+  .chip-val {
+    padding: 0.2rem 0.4rem;
+    font-weight: 600;
+  }
+  .chip-remove {
+    background: rgba(0,0,0,0.18);
+    border: none;
+    color: inherit;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.4;
+    height: 100%;
+  }
+  .chip-remove:hover { background: rgba(0,0,0,0.32); }
+  .chip-clear {
+    background: transparent;
+    border: 1px solid var(--ctp-surface1);
+    color: var(--ctp-subtext1);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .chip-clear:hover { color: var(--ctp-text); border-color: var(--ctp-overlay0); }
+  .status {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+  }
+  .explore-grid {
+    display: grid;
+    grid-template-columns: 1fr 18rem;
+    gap: 1.5rem;
+  }
+  @media (max-width: 900px) {
+    .explore-grid { grid-template-columns: 1fr; }
+  }
+  .results .loading, .results .empty {
+    padding: 1.5rem;
+    color: var(--ctp-subtext0);
+    text-align: center;
+    font-style: italic;
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .ev {
+    display: grid;
+    grid-template-columns: 6.5rem 2rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+  }
+  .ev:last-child { border-bottom: none; }
+  .ev:hover { background: var(--ctp-mantle); }
+  .ev-date { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ctp-subtext0); }
+  .ev-state {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.375rem;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .ev-state-empty { color: var(--ctp-overlay0); }
+  .ev-name { font-size: 0.9375rem; }
+  .ev-target {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .facets {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .facet h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    margin: 0 0 0.375rem;
+    font-family: var(--font-mono);
+  }
+  .facet ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .facet li { margin: 0; }
+  .facet-btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0;
+    color: var(--ctp-text);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    border-radius: 2px;
+  }
+  .facet-btn:hover { color: var(--ctp-blue); }
+  .f-name {
+    font-size: 0.875rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 0.5rem;
+  }
+  .f-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    flex-shrink: 0;
+  }
+</style>

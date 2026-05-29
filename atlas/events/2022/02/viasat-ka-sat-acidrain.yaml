@@ -1,0 +1,83 @@
+id: 2022-02/viasat-ka-sat-acidrain
+name: Viasat KA-SAT / AcidRain (invasion-day satellite disruption)
+start_date: 2022-02-24
+disclosure_date: 2022-03-10
+end_date: 2022-02-24
+incident_type:
+  - destructive
+  - disruption
+  - wiper
+initial_vector: valid-creds
+outcome_summary: |
+  AcidRain wiper pushed via Viasat's management network bricked
+  tens of thousands of consumer modems serving Ukrainian military
+  C2 and European broadband customers. Major spillover effects
+  including collateral wind-turbine outages in Germany. Degraded
+  Ukrainian military C2 in the opening hours of the invasion.
+false_flag_risk: none
+campaign_id: hermetic-wave-feb-2022
+summary: |
+  EU Council, UK FCDO, US State, and Five Eyes partners issued a
+  coordinated joint attribution to Russia in May 2022, explicitly
+  naming the invasion-support objective. SentinelLabs technical
+  analysis (Mar 2022) traced AcidRain tooling to GRU/Sandworm by
+  linking shared development idioms with the prior VPNFilter
+  router implant. AcidRain is a MIPS ELF wiper for SurfBeam2 and
+  similar satellite modems that overwrites all writable flash and
+  storage paths (/dev/mtd*, /dev/mmcblk*, /dev/sd*) with bytes and
+  reboots, bricking the modem until physical replacement. Initial
+  access was via valid credentials abused at Viasat's KA-SAT
+  management plane (operated by Skylogic), pivoting from a
+  misconfigured VPN appliance and pushing the wiper over the
+  legitimate modem-management channel to tens of thousands of
+  consumer modems serving Ukrainian military C2 and European
+  broadband customers.
+attributions:
+  - actor_id: ru/gru/74455/sandworm
+    attributing_org: EU Council / UK FCDO / US State (Five Eyes)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-05-10
+    attribution_source_id: council-eu/2022-05-10_viasat-russia-attribution
+  - actor_id: ru/gru/74455/sandworm
+    attributing_org: SentinelLabs
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-03-31
+    attribution_source_id: sentinelone/2022-03-31_acidrain-viasat
+doctrine_links:
+  - doctrine_id: ru/military-doctrine-2014
+    pillar_id: ru/military-doctrine-2014/non-contact-warfare
+    program_id: null
+    confidence: attested
+    reasoning: |
+      EU/UK/US joint attribution explicitly names Russia and the
+      invasion-support objective. Coordinated cyber strike with
+      kinetic invasion is paradigmatic non-contact-warfare
+      integration.
+    attesting_source_id: council-eu/2022-05-10_viasat-russia-attribution
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/nato-ultimatum-2021
+    pillar_id: ru/nato-ultimatum-2021/nato-degradation
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      European collateral (German wind farm outages, broadband
+      disruption across France/Italy/UK) reads as tolerated /
+      desired spillover signaling to NATO members supporting
+      Ukraine.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/viasat-ka-sat
+    role: staging
+  - target_id: orgs/ukraine-military-c2
+    role: primary
+  - target_id: orgs/enercon-german-wind-farms
+    role: collateral
+sources:
+  - council-eu/2022-05-10_viasat-russia-attribution
+  - sentinelone/2022-03-31_acidrain-viasat

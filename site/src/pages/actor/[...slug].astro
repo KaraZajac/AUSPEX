@@ -1,0 +1,549 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import EventRow from '../../components/EventRow.astro';
+import ExternalRefs from '../../components/ExternalRefs.astro';
+import DoctrineAlignmentDonut from '../../components/DoctrineAlignmentDonut.astro';
+import AttributionMap from '../../components/AttributionMap.astro';
+import EventTimeline from '../../components/EventTimeline.astro';
+import { atlas } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.actors.values()].map((act) => ({
+    params: { slug: act.id },
+    props: { actorId: act.id },
+  }));
+}
+
+const { actorId } = Astro.props as { actorId: string };
+const a = atlas();
+const actor = a.actors.get(actorId);
+if (!actor) {
+  throw new Error(`actor not found: ${actorId}`);
+}
+const state = (actor.primary_service_id ?? '').split('/')[0];
+const service = actor.primary_service_id ? a.services.get(actor.primary_service_id) : undefined;
+const events = a.eventsForActor(actor.id);
+const alignedDoctrines = (actor.default_doctrine_alignment_ids ?? [])
+  .map((id) => a.doctrines.get(id) ?? a.pillars.get(id) ?? a.programs.get(id))
+  .filter(Boolean);
+const alignmentSlices = a.doctrineAlignmentForActor(actor.id);
+const alignmentTotal = alignmentSlices.reduce((s, x) => s + x.count, 0);
+
+// Activity timeline: this actor's events + policy actions involving
+// the actor's state (as issuer or target). Sorted chronologically.
+interface TimelineRow {
+  date: string;
+  kind: 'event' | 'policy';
+  // event fields
+  eventId?: string;
+  eventName?: string;
+  eventIncidentTypes?: string[];
+  // policy fields
+  policyId?: string;
+  policyType?: string;
+  policySummary?: string;
+  policySignificance?: string;
+  policyIssuedBy?: string;
+}
+const timelineRows: TimelineRow[] = [];
+for (const ev of events) {
+  timelineRows.push({
+    date: ev.start_date ?? ev.disclosure_date ?? '',
+    kind: 'event',
+    eventId: ev.id,
+    eventName: ev.name,
+    eventIncidentTypes: ev.incident_type ?? [],
+  });
+}
+if (state) {
+  const relevantPolicy = [...a.policyActions.values()].filter((p) => {
+    if (p.issued_by_state_id === state) return true;
+    if ((p.targets_state_ids ?? []).includes(state)) return true;
+    return false;
+  });
+  for (const p of relevantPolicy) {
+    timelineRows.push({
+      date: p.date ?? '',
+      kind: 'policy',
+      policyId: p.id,
+      policyType: p.action_type,
+      policySummary: p.summary?.split('\n')[0] ?? '',
+      policySignificance: p.significance,
+      policyIssuedBy: p.issued_by_state_id,
+    });
+  }
+}
+timelineRows.sort((a, b) => a.date.localeCompare(b.date));
+// Reverse: newest first
+const timelineDesc = [...timelineRows].reverse();
+
+// Surface state-relevant timeline markers for the EventTimeline overlay
+const stateMarkers = state
+  ? [...a.timelineMarkers.values()].filter((m) => (m.id ?? '').startsWith(state + '/'))
+  : [];
+
+// Aggregate named operators across this actor's attributed events
+const operatorCounts = new Map<string, number>();
+for (const ev of events) {
+  for (const op of ev.operators_named ?? []) {
+    operatorCounts.set(op, (operatorCounts.get(op) ?? 0) + 1);
+  }
+}
+const namedOperators = [...operatorCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .map(([slug, count]) => ({ slug, count }));
+
+// Aggregate campaign clusters this actor has been seen in
+const campaignCounts = new Map<string, number>();
+for (const ev of events) {
+  if (ev.campaign_id) campaignCounts.set(ev.campaign_id, (campaignCounts.get(ev.campaign_id) ?? 0) + 1);
+}
+const actorCampaigns = [...campaignCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+// Sibling actors under the same primary service
+const siblings = actor.primary_service_id
+  ? [...a.actors.values()]
+      .filter((x) => x.id !== actor.id && x.primary_service_id === actor.primary_service_id)
+      .map((x) => ({ id: x.id, name: x.canonical_name, count: a.eventsForActor(x.id).length }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 12)
+  : [];
+
+// Aggregate malware families observed in this actor's events (for the new tools surface)
+const malwareCounts = new Map<string, number>();
+for (const ev of events) {
+  const f = new Set<string>();
+  const text = ((ev.summary ?? '') + ' ' + (ev.outcome_summary ?? '')).toLowerCase();
+  for (const fam of a.malwareLineage.keys()) {
+    if (text.includes(fam) && !f.has(fam)) {
+      f.add(fam);
+      malwareCounts.set(fam, (malwareCounts.get(fam) ?? 0) + 1);
+    }
+  }
+}
+const topMalware = [...malwareCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 12)
+  .map(([fam, count]) => {
+    const entry = a.malwareLineage.get(fam);
+    return { name: fam, count, lineage: entry?.lineage_group ?? null, canonical: entry?.name ?? fam.toUpperCase() };
+  });
+---
+<Base title={actor.canonical_name} wide>
+  <p class="kicker">Actor</p>
+  <div class="actor-header">
+    <FlagChip state={state} />
+    <h1 style="margin:0;">{actor.canonical_name}</h1>
+    {actor.status && actor.status !== 'active' && (
+      <span class="status-chip">{actor.status}</span>
+    )}
+  </div>
+  <p class="meta">
+    {service && (
+      <>Service: <strong>{service.name}</strong>{service.short_name && <> ({service.short_name})</>}{' · '}</>
+    )}
+    {actor.active_since && <>Active since <strong>{actor.active_since}</strong></>}
+    {actor.active_until && <> &mdash; until {actor.active_until}</>}
+  </p>
+
+  {events.length > 0 && (
+    <section>
+      <p class="kicker">Target footprint</p>
+      <h2 style="margin-top: 0;">Where {actor.canonical_name} has hit</h2>
+      <p class="lede-soft">
+        Countries hit by events attributed to {actor.canonical_name}, peach-graded
+        by event count.{state && <> Home country ({state.toUpperCase()}) shown in green.</>}
+      </p>
+      <AttributionMap events={events} selfIso2={state || null} />
+    </section>
+  )}
+
+  {events.length > 0 && (
+    <section>
+      <p class="kicker">Operational tempo</p>
+      <h2 style="margin-top: 0;">Year-by-year event volume</h2>
+      <EventTimeline events={events} markers={stateMarkers} />
+    </section>
+  )}
+
+  {namedOperators.length > 0 && (
+    <section>
+      <p class="kicker">Named operators</p>
+      <h2 style="margin-top: 0;">Indictment / sanction-named individuals</h2>
+      <p class="lede-soft">
+        Specific humans named in primary-source attribution (indictments,
+        OFAC designations, FCDO sanctions). The single most stable signal —
+        a named operator's career persists across actor rebrands.
+      </p>
+      <div class="chip-row">
+        {namedOperators.map((o) => (
+          <span class="op-chip">
+            <code>{o.slug}</code>
+            {o.count > 1 && <span class="op-count">{o.count}</span>}
+          </span>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {actorCampaigns.length > 0 && (
+    <section>
+      <p class="kicker">Campaigns</p>
+      <h2 style="margin-top: 0;">Operational threads</h2>
+      <div class="chip-row">
+        {actorCampaigns.map(([camp, count]) => (
+          <span class="campaign-chip">
+            🧵 {camp}
+            <span class="op-count">{count}</span>
+          </span>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {topMalware.length > 0 && (
+    <section>
+      <p class="kicker">Tradecraft signature</p>
+      <h2 style="margin-top: 0;">Malware families seen with this actor</h2>
+      <div class="chip-row">
+        {topMalware.map((m) => (
+          <span class={`mw-chip ${m.lineage ? 'mw-has-lineage' : ''}`} title={m.lineage ? `Lineage group: ${m.lineage}` : ''}>
+            {m.canonical}
+            {m.count > 1 && <span class="op-count">{m.count}</span>}
+            {m.lineage && <span class="mw-lin">🧬</span>}
+          </span>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {siblings.length > 0 && (
+    <section>
+      <p class="kicker">Service siblings</p>
+      <h2 style="margin-top: 0;">Other actors under {service?.short_name ?? service?.name ?? actor.primary_service_id}</h2>
+      <div class="chip-row">
+        {siblings.map((s) => (
+          <a class="sibling-chip" href={`/actor/${s.id}`}>
+            {s.name}
+            <span class="op-count">{s.count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {actor.external_refs && Object.keys(actor.external_refs).length > 0 && (
+    <section>
+      <h2>External references</h2>
+      <ExternalRefs refs={actor.external_refs} />
+    </section>
+  )}
+
+  {actor.aliases && actor.aliases.length > 0 && (
+    <section>
+      <h2>Aliases</h2>
+      <table class="alias-table">
+        <thead>
+          <tr>
+            <th>Alias</th>
+            <th>Assigning org</th>
+            <th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          {actor.aliases.map((al) => (
+            <tr>
+              <td><code>{al.alias}</code></td>
+              <td>{al.assigning_org ?? ''}</td>
+              <td>{al.confidence ?? ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  )}
+
+  {actor.mission && actor.mission.length > 0 && (
+    <section>
+      <h2>Mission</h2>
+      <div class="chip-row">
+        {actor.mission.map((m) => <span class="mission-chip">{m}</span>)}
+      </div>
+    </section>
+  )}
+
+  {actor.target_sector_ids && actor.target_sector_ids.length > 0 && (
+    <section>
+      <h2>Observed targeting</h2>
+      <div class="chip-row">
+        {actor.target_sector_ids.map((s) => <span class="sector-chip">{s}</span>)}
+      </div>
+    </section>
+  )}
+
+  {actor.ttp_summary && (
+    <section>
+      <h2>Tradecraft</h2>
+      <p style="white-space: pre-line;">{actor.ttp_summary}</p>
+    </section>
+  )}
+
+  {actor.summary && (
+    <section>
+      <h2>Summary</h2>
+      <p style="white-space: pre-line;">{actor.summary}</p>
+    </section>
+  )}
+
+  {alignedDoctrines.length > 0 && (
+    <section>
+      <h2>Doctrine alignment</h2>
+      <ul>
+        {alignedDoctrines.map((d: any) => (
+          <li>
+            {d.pillar ? (
+              <a href={`/doctrine/${d.doctrineId}`}>{d.pillar.name} <span style="color: var(--ctp-overlay0);">({d.pillar.id})</span></a>
+            ) : d.program ? (
+              <a href={`/doctrine/${d.doctrineId}`}>{d.program.name} <span style="color: var(--ctp-overlay0);">({d.program.id})</span></a>
+            ) : (
+              <a href={`/doctrine/${d.id}`}>{d.name}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {alignmentTotal > 0 && (
+    <section>
+      <h2>Doctrine alignment</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 1rem;">
+        Distribution of this actor's attributed events across the doctrines
+        they serve. Each event may link to multiple doctrines; each link is
+        counted once.
+      </p>
+      <DoctrineAlignmentDonut slices={alignmentSlices} total={alignmentTotal} />
+    </section>
+  )}
+
+  <section>
+    <h2>Attributed events ({events.length})</h2>
+    {events.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">No events currently attributed to this actor.</p>
+    ) : (
+      <div class="event-list">
+        {events.map((ev) => <EventRow event={ev} />)}
+      </div>
+    )}
+  </section>
+
+  {timelineRows.length > events.length && (
+    <section>
+      <h2>Activity timeline</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem;">
+        This actor's events plotted alongside policy actions involving
+        their state ({state.toUpperCase()}) as issuer or target. Newest
+        first. Read top-down for reverse chronology, bottom-up for
+        cause-and-effect reasoning.
+      </p>
+      <ol class="tl">
+        {timelineDesc.map((r) => r.kind === 'event' ? (
+          <li class="tl-row tl-event">
+            <span class="tl-date">{r.date}</span>
+            <span class="tl-marker tl-marker-event">●</span>
+            <span class="tl-body">
+              <a class="tl-link" href={`/event/${r.eventId}`}>{r.eventName}</a>
+              {r.eventIncidentTypes && r.eventIncidentTypes.length > 0 && (
+                <span class="tl-tags">{r.eventIncidentTypes.join(' · ')}</span>
+              )}
+            </span>
+          </li>
+        ) : (
+          <li class={`tl-row tl-policy ${r.policySignificance === 'high' ? 'tl-sig-high' : ''}`}>
+            <span class="tl-date">{r.date}</span>
+            <span class="tl-marker tl-marker-policy">◇</span>
+            <span class="tl-body">
+              <span class="tl-policy-type">{r.policyType?.replace(/-/g, ' ')}</span>
+              {r.policySignificance === 'high' && <span class="tl-sig-chip">high</span>}
+              <span class="tl-issued-by">[{r.policyIssuedBy?.toUpperCase()}]</span>
+              <span class="tl-summary">{r.policySummary}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+</Base>
+
+<style>
+  .actor-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 0.5rem;
+  }
+  .meta {
+    color: var(--ctp-subtext0);
+    margin: 0 0 1rem;
+    font-size: 0.9375rem;
+  }
+  .alias-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  .alias-table th, .alias-table td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .alias-table th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ctp-subtext0);
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .mission-chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--ctp-blue);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .sector-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .status-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--ctp-overlay0);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .lede-soft { color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem; }
+  .op-chip, .campaign-chip, .mw-chip, .sibling-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm);
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    text-decoration: none;
+  }
+  .op-chip { border-left: 2px solid var(--ctp-red); }
+  .op-chip code { font-size: 0.75rem; color: var(--ctp-text); }
+  .campaign-chip { border-left: 2px solid var(--ctp-mauve); }
+  .mw-chip { border-left: 2px solid var(--ctp-yellow); }
+  .mw-chip.mw-has-lineage { background: color-mix(in srgb, var(--ctp-teal) 18%, var(--ctp-surface0)); }
+  .mw-lin { font-size: 0.75rem; color: var(--ctp-teal); }
+  .sibling-chip { border-left: 2px solid var(--ctp-blue); }
+  .sibling-chip:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .op-count {
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    font-family: var(--font-mono);
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+  /* Activity timeline */
+  ol.tl {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    border-left: 2px solid var(--ctp-surface0);
+  }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 6rem 1.5rem 1fr;
+    gap: 0.5rem;
+    padding: 0.375rem 0.625rem;
+    align-items: center;
+    border-bottom: 1px solid var(--ctp-surface0);
+    font-size: 0.875rem;
+    margin-left: -1px;
+  }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-event { background: transparent; }
+  .tl-policy { background: var(--ctp-mantle); }
+  .tl-policy.tl-sig-high { background: rgba(254, 100, 11, 0.07); }
+  .tl-date {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+  }
+  .tl-marker {
+    font-family: var(--font-mono);
+    text-align: center;
+  }
+  .tl-marker-event { color: var(--ctp-blue); font-size: 0.875rem; }
+  .tl-marker-policy { color: var(--ctp-peach); font-size: 1rem; }
+  .tl-body {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  .tl-link { color: var(--ctp-text); text-decoration: none; }
+  .tl-link:hover { color: var(--ctp-blue); }
+  .tl-tags {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .tl-policy-type {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .tl-sig-chip {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    background: var(--ctp-peach);
+    color: var(--ctp-base);
+    padding: 0.1rem 0.3rem;
+    border-radius: 2px;
+  }
+  .tl-issued-by {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .tl-summary {
+    color: var(--ctp-subtext1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import FlagChip from '../components/FlagChip.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const states = [...new Set([...a.services.values()].map((s) => s.nation_state_id))].sort();
+const byState = states.map((stateId) => {
+  // Order: parentless services first, then their descendants.
+  const services = a.servicesForState(stateId);
+  const roots = services.filter((s) => !s.parent_service_id || !a.services.has(s.parent_service_id));
+  return { stateId, state: a.nationStates.get(stateId), roots, all: services };
+});
+---
+<Base title="Services" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Services</h1>
+  <p class="lede">
+    Intelligence and military services that direct state-sponsored
+    cyber operations. Actors belong to services; events without a
+    named actor cluster may attribute at the service level.
+  </p>
+
+  {byState.map(({ stateId, state, roots, all }) => (
+    <section>
+      <div class="state-head">
+        <FlagChip state={stateId} />
+        <h2 style="margin:0;">{state?.name ?? stateId.toUpperCase()}</h2>
+      </div>
+      <div class="svc-list">
+        {roots.map((svc) => {
+          const childCount = a.childServices(svc.id).length;
+          const actorCount = a.actorsForServiceRecursive(svc.id).length;
+          return (
+            <a class="svc-row" href={`/service/${svc.id}`}>
+              <span class="svc-name">{svc.name}</span>
+              {svc.short_name && <span class="svc-short">({svc.short_name})</span>}
+              <span class="svc-id">{svc.id}</span>
+              {childCount > 0 && <span class="svc-count">{childCount} sub</span>}
+              <span class="svc-count">{actorCount} actor{actorCount === 1 ? '' : 's'}</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .state-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+  }
+  .svc-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .svc-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+  }
+  .svc-row:last-child { border-bottom: none; }
+  .svc-row:hover { background: var(--ctp-mantle); }
+  .svc-name { font-weight: 500; }
+  .svc-short { color: var(--ctp-subtext0); font-family: var(--font-mono); font-size: 0.875rem; }
+  .svc-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-overlay0); }
+  .svc-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-subtext0); }
+</style>

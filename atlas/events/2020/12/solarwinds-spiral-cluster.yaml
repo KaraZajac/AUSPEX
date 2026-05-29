@@ -1,0 +1,59 @@
+id: 2020-12/solarwinds-spiral-cluster
+name: SolarWinds "Spiral" cluster (PRC-distinct from SVR Sunburst)
+start_date: 2020-03-01
+disclosure_date: 2020-12-22
+end_date: 2020-12-31
+incident_type:
+  - intrusion
+  - supply-chain
+initial_vector: n-day  # CVE-2020-10148 "Supernova" / authentication bypass
+outcome_summary: |
+  PRC-attributed intrusion cluster exploiting CVE-2020-10148
+  ("Supernova" authentication bypass in SolarWinds Orion) for
+  selective second-stage targeting of US government entities.
+  Distinct from the contemporaneous SVR Sunburst supply-chain
+  compromise.
+false_flag_risk: none
+summary: |
+  Disclosed alongside the SVR Sunburst event but with different
+  intrusion mechanism — the SUPERNOVA web shell, a malicious
+  in-memory .NET DLL (App_Web_logoimagehandler.ashx.b6031896.dll)
+  deployed by exploiting the SolarWinds Orion authentication
+  bypass CVE-2020-10148, not the Sunburst trojanized update.
+  Attributed to TG-3390-adjacent / SPIRAL by Secureworks;
+  Microsoft separately observed PRC TTPs. Post-exploitation
+  tradecraft included credential dumping with Mimikatz, lateral
+  movement via valid credentials, DLL side-loading using signed
+  binaries, ChinaChopper-family ASPX web shells on internet-facing
+  servers, and the PlugX, ShadowPad, and HyperBro implants from
+  the broader TG-3390 / Iron Tiger toolset for follow-on
+  collection at US-government victims.
+attributions:
+  - actor_id: cn/mss/apt27
+    attributing_org: Secureworks CTU
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-12-22
+    attribution_source_id: secureworks/2020-12_spiral-solarwinds-supernova
+    notes: |
+      Vendor attribution to "SPIRAL" / TG-3390-adjacent. Not a DOJ
+      indictment.
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: null
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Generic MCF-aligned US-government collection; specific
+      doctrine framing not attested.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/solarwinds-supernova
+    role: staging
+  - target_id: sectors/government
+    role: primary
+sources:
+  - secureworks/2020-12_spiral-solarwinds-supernova

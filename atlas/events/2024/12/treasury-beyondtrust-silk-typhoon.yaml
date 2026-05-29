@@ -1,0 +1,90 @@
+id: 2024-12/treasury-beyondtrust-silk-typhoon
+name: US Treasury BeyondTrust compromise (Silk Typhoon / APT27 cluster)
+start_date: 2024-12-08  # estimated initial access via BeyondTrust
+disclosure_date: 2024-12-30  # Treasury statement
+end_date: 2024-12-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: n-day  # CVE-2024-12356 / CVE-2024-12686 BeyondTrust Remote Support
+outcome_summary: |
+  Exploitation of BeyondTrust Remote Support (CVE-2024-12356 /
+  CVE-2024-12686) gave PRC-attributed actors access to a
+  cryptographic key used to secure a Treasury cloud-based
+  service, then to ~3,000 unclassified files across ~100
+  Treasury workstations, including OFAC and the Office of the
+  Secretary. Microsoft attributed to "Silk Typhoon" (formerly
+  Hafnium); OFAC subsequently sanctioned Yin Kecheng (Jan 17
+  2025) as a Shanghai-based MSS-linked perpetrator.
+quantified_impact:
+  files_accessed: 3000
+  workstations_accessed: 100
+false_flag_risk: none
+summary: |
+  Targeting OFAC reads as counterintelligence on pending PRC
+  sanctions — specifically the Salt Typhoon (Sichuan Juxinhe)
+  and Flax Typhoon (Integrity Tech) designations Treasury
+  announced just weeks later in January 2025. The Silk Typhoon
+  vs Hafnium vs APT27 cluster question is contested: Microsoft
+  consolidated as "Silk Typhoon"; vendor consensus via the Yin
+  Kecheng OFAC designation places the actor in the APT27
+  cluster ecosystem; AUSPEX flags the attribution accordingly.
+attributions:
+  - actor_id: cn/mss/hafnium  # = Silk Typhoon in current Microsoft taxonomy
+    attributing_org: US Treasury
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-12-30
+    attribution_source_id: null
+  - actor_id: cn/mss/hafnium
+    attributing_org: US Treasury OFAC (Jan 2025 Yin Kecheng designation)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2025-01-17
+    attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
+  - actor_id: cn/mss/apt27
+    attributing_org: open-source consensus (post-Yin Kecheng)
+    attributing_org_confidence: moderate
+    auspex_assessment: contested
+    attribution_date: 2025-01-17
+    attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
+    notes: |
+      Silk Typhoon / Hafnium / APT27 cluster reconciliation is
+      contested. Microsoft consolidated under "Silk Typhoon";
+      other vendors map the Yin Kecheng-associated tradecraft
+      to the APT27 cluster. AUSPEX records both attributions
+      pending vendor consensus.
+doctrine_links:
+  - doctrine_id: cn/national-intelligence-law-2017
+    pillar_id: null
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Targeting OFAC and Office of the Secretary is decision-
+      maker political-intelligence collection on US sanctions
+      policy — directly invoking the Intelligence Law's
+      political-intelligence mandate.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/taiwan-reunification
+    pillar_id: cn/taiwan-reunification/decision-maker-sigint
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      OFAC and Treasury Secretary office are decision-maker
+      targets on China-policy, which subsumes Taiwan-policy
+      and PRC-sanctions decision-making.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/us-treasury-ofac
+    role: primary
+    outcome: |
+      ~3,000 unclassified files across ~100 workstations
+      accessed; Treasury authentication keys compromised.
+  - target_id: orgs/us-treasury
+    role: primary
+sources:
+  - treasury/2025-01-17_salt-typhoon-sichuan-juxinhe

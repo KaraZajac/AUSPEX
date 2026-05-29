@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import FlagChip from '../components/FlagChip.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const byState = [...a.nationStates.keys()]
+  .sort()
+  .map((s) => ({
+    id: s,
+    state: a.nationStates.get(s),
+    doctrines: a.doctrinesForState(s),
+  }))
+  .filter((r) => r.doctrines.length > 0);
+---
+<Base title="Doctrines" wide>
+  <p class="kicker">Atlas</p>
+  <h1>Doctrines</h1>
+  <p class="lede">
+    The strategic frameworks that shape state-sponsored cyber tasking,
+    organized by issuing state. Each doctrine has one or more pillars
+    (and optionally programs) — events tag against the most specific
+    level the source supports.
+  </p>
+
+  {byState.map(({ id, state, doctrines }) => (
+    <section>
+      <div class="state-head">
+        <FlagChip state={id} />
+        <h2 style="margin:0;">{state?.name ?? id.toUpperCase()}</h2>
+      </div>
+      <div class="doctrine-list">
+        {doctrines.map((d) => {
+          const evCount = a.eventsForDoctrine(d.id).length;
+          return (
+            <a class="doctrine-row" href={`/doctrine/${d.id}`}>
+              <span class="doctrine-name">{d.name}</span>
+              <span class="doctrine-id">{d.id}</span>
+              {d.status && d.status !== 'active' && (
+                <span class="status-chip">{d.status}</span>
+              )}
+              <span class="event-count">{evCount} event{evCount === 1 ? '' : 's'}</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .state-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 2rem 0 1rem;
+  }
+  .doctrine-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .doctrine-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+  }
+  .doctrine-row:last-child { border-bottom: none; }
+  .doctrine-row:hover { background: var(--ctp-mantle); }
+  .doctrine-name {
+    font-weight: 500;
+  }
+  .doctrine-id {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .event-count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+  }
+  .status-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--ctp-overlay0);
+    color: var(--ctp-base);
+    padding: 0.0625rem 0.375rem;
+    border-radius: var(--radius-sm);
+  }
+</style>

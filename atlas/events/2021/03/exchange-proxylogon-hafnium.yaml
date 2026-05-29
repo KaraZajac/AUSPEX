@@ -1,0 +1,86 @@
+id: 2021-03/exchange-proxylogon-hafnium
+name: Microsoft Exchange ProxyLogon (Hafnium)
+start_date: 2021-01-03
+disclosure_date: 2021-03-02
+end_date: 2021-03-31
+incident_type:
+  - intrusion
+  - supply-chain
+initial_vector: 0-day
+outcome_summary: |
+  Zero-day chain CVE-2021-26855, -26857, -26858, -27065 against
+  on-prem Microsoft Exchange Server enabled bulk web-shell
+  deployment at unprecedented scale (~250,000 servers affected
+  globally). Selective downstream exploitation of high-value
+  organizations including infectious-disease researchers, law
+  firms, universities, defense contractors, think tanks, NGOs.
+false_flag_risk: none
+summary: |
+  The White House issued a high-confidence MSS attribution on 19
+  July 2021, joined by Five Eyes plus NATO and EU partners. ODNI
+  / NCSC bulletin issued the same day. ProxyLogon defined PRC
+  bulk-initial-access tradecraft at industrial scale: a four-bug
+  zero-day chain against on-premises Microsoft Exchange Server
+  (CVE-2021-26855 SSRF, CVE-2021-26857 deserialization,
+  CVE-2021-26858 + CVE-2021-27065 arbitrary file write) was used
+  to plant web shells (China Chopper variants, ASPX shells) on
+  the Outlook Web Access front end at unprecedented scale, after
+  which Hafnium and follow-on actors performed credential dumping
+  (LSASS) and lateral movement via valid credentials. Hafnium
+  tooling included PowerShell post-exploitation, Procdump, and
+  Nishang offensive PowerShell modules; the same web shells were
+  rapidly re-used by additional PRC clusters (later tracked as
+  Silk Typhoon) and by criminal ransomware operators in the days
+  after Microsoft's emergency patch.
+attributions:
+  - actor_id: cn/mss/hafnium
+    attributing_org: The White House + Five Eyes + NATO + EU
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-07-19
+    attribution_source_id: state/2021-07-19_white-house-mss-attribution
+  - actor_id: cn/mss/hafnium
+    attributing_org: ODNI / NCSC
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-07-19
+    attribution_source_id: odni/2021-07-19_hafnium-exchange
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/dual-use-research
+    program_id: null
+    confidence: attested
+    reasoning: |
+      White House attribution statement frames the operation as
+      MSS irresponsible behavior in service of strategic collection
+      across MIC2025-relevant sectors. ODNI / NCSC bulletin names
+      targeted sectors consistent with MCF dual-use-research
+      pillar.
+    attesting_source_id: state/2021-07-19_white-house-mss-attribution
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/national-intelligence-law-2017
+    pillar_id: null
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      The strategic-collection scale aligns with the Intelligence
+      Law's compelled-cooperation logic, though no PRC vendor was
+      compelled in this specific compromise.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/healthcare/research
+    role: primary
+  - target_id: sectors/academic/university
+    role: primary
+  - target_id: sectors/legal
+    role: primary
+  - target_id: sectors/defense/contractor
+    role: primary
+sources:
+  - state/2021-07-19_white-house-mss-attribution
+  - odni/2021-07-19_hafnium-exchange

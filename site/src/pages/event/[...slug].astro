@@ -1,0 +1,678 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import ConfidenceChip from '../../components/ConfidenceChip.astro';
+import DoctrineLinkPanel from '../../components/DoctrineLinkPanel.astro';
+import { atlas, eventStateId } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.events.values()].map((ev) => ({
+    params: { slug: ev.id },
+    props: { eventId: ev.id },
+  }));
+}
+
+const { eventId } = Astro.props as { eventId: string };
+const a = atlas();
+const event = a.events.get(eventId);
+if (!event) {
+  throw new Error(`event not found: ${eventId}`);
+}
+const state = eventStateId(event, a);
+
+function sourceUrl(id: string): string | undefined {
+  return a.sources.get(id)?.url;
+}
+function sourceTitle(id: string): string {
+  return a.sources.get(id)?.title ?? id;
+}
+function sourcePub(id: string): string | undefined {
+  return a.sources.get(id)?.publisher;
+}
+
+// Policy-context: actions within ±90 days that involve the attacker
+// state (as issuer OR target). Sorted by absolute lag.
+const eventDate = event.start_date ?? event.disclosure_date ?? '';
+const policyContext = eventDate
+  ? a.policyActionsNear(eventDate, 90).filter((pc) => {
+      if (!state) return false;
+      const p = pc.action;
+      if (p.issued_by_state_id === state) return true;
+      if ((p.targets_state_ids ?? []).includes(state)) return true;
+      // Also include the target-country side
+      const targetCountries = (event.targets ?? []).map((t) => t.country).filter(Boolean) as string[];
+      if (p.issued_by_state_id && targetCountries.includes(p.issued_by_state_id)) return true;
+      return false;
+    })
+  : [];
+const policyContextPrior = policyContext.filter((pc) => pc.lagDays > 0); // action before event
+const policyContextAfter = policyContext.filter((pc) => pc.lagDays < 0);  // action after event
+
+// Campaign chain — other events in the same campaign cluster, sorted chronologically
+const campaignChain = event.campaign_id
+  ? [...a.events.values()]
+      .filter((e) => e.campaign_id === event.campaign_id)
+      .sort((x, y) => (x.start_date ?? '').localeCompare(y.start_date ?? ''))
+  : [];
+
+// Attribution timeline — extract dated attribution events for visual rendering
+interface AttribStop { date: string; org: string; confidence: string; isSelf: boolean; }
+const attribStops: AttribStop[] = [];
+for (const attr of event.attributions ?? []) {
+  if (attr.attribution_date && attr.attributing_org) {
+    attribStops.push({
+      date: attr.attribution_date,
+      org: attr.attributing_org,
+      confidence: attr.attributing_org_confidence ?? 'unknown',
+      isSelf: false,
+    });
+  }
+}
+attribStops.sort((a, b) => a.date.localeCompare(b.date));
+---
+<Base title={event.name} wide>
+  <p class="kicker">Event · {event.id}</p>
+  <div class="event-header">
+    <FlagChip state={state} />
+    <h1 style="margin:0;">{event.name}</h1>
+  </div>
+  <p class="meta">
+    {event.start_date && <><strong>Started</strong> {event.start_date}</>}
+    {event.end_date && <> &mdash; ended {event.end_date}</>}
+    {event.disclosure_date && <> · <strong>Disclosed</strong> {event.disclosure_date}</>}
+  </p>
+
+  {(event.incident_type && event.incident_type.length > 0) && (
+    <div class="chip-row" style="margin-bottom: 1.5rem;">
+      {event.incident_type.map((t) => <span class="incident-chip">{t}</span>)}
+      {event.initial_vector && <span class="vector-chip">via {event.initial_vector}</span>}
+      {event.false_flag_risk && event.false_flag_risk !== 'none' && (
+        <span class="ff-chip">false-flag: {event.false_flag_risk}</span>
+      )}
+    </div>
+  )}
+
+  {event.outcome_summary && (
+    <section>
+      <h2>Outcome</h2>
+      <p style="white-space: pre-line;">{event.outcome_summary}</p>
+    </section>
+  )}
+
+  {campaignChain.length > 1 && (
+    <section>
+      <p class="kicker">Campaign chain · {event.campaign_id}</p>
+      <h2 style="margin-top: 0;">Operational thread ({campaignChain.length} events)</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem;">
+        Events publicly linked to this same campaign cluster.
+        This event is highlighted; read left-to-right for chronological order.
+      </p>
+      <div class="campaign-chain">
+        {campaignChain.map((ev) => {
+          const isThis = ev.id === event.id;
+          const dateShort = (ev.start_date ?? ev.disclosure_date ?? '').slice(0, 7);
+          return (
+            <a class={`cc-link ${isThis ? 'cc-self' : ''}`} href={`/event/${ev.id}`}>
+              <span class="cc-date">{dateShort}</span>
+              <span class="cc-name">{ev.name}</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  {attribStops.length > 0 && (
+    <section>
+      <p class="kicker">Attribution maturity</p>
+      <h2 style="margin-top: 0;">When attestations arrived</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem;">
+        Each attesting source plotted by date relative to the event itself.
+        Captures how attribution matured over time — vendor first, government later, indictment last.
+      </p>
+      <ol class="attrib-stops">
+        <li class="attrib-stop attrib-event">
+          <span class="as-date">{eventDate.slice(0, 10)}</span>
+          <span class="as-marker">●</span>
+          <span class="as-body">Event occurred</span>
+        </li>
+        {attribStops.map((s) => {
+          const evMs = Date.parse(eventDate);
+          const asMs = Date.parse(s.date);
+          const lagDays = (Number.isFinite(evMs) && Number.isFinite(asMs)) ? Math.round((asMs - evMs) / 86400000) : null;
+          return (
+            <li class={`attrib-stop conf-${s.confidence.replace(/[^a-z]/gi, '')}`}>
+              <span class="as-date">{s.date.slice(0, 10)}</span>
+              <span class="as-marker">◆</span>
+              <span class="as-body">
+                <strong>{s.org}</strong>
+                <span class="as-conf">{s.confidence}</span>
+                {lagDays !== null && (
+                  <span class="as-lag">
+                    {lagDays > 0 ? `+${lagDays}d` : lagDays === 0 ? 'same day' : `${lagDays}d`}
+                  </span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  )}
+
+  {event.quantified_impact && Object.keys(event.quantified_impact).length > 0 && (
+    <section>
+      <h2>Quantified impact</h2>
+      <table class="impact-table">
+        <tbody>
+          {Object.entries(event.quantified_impact).map(([k, v]) => (
+            <tr>
+              <th>{k}</th>
+              <td>{typeof v === 'number' ? v.toLocaleString() : String(v)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  )}
+
+  {event.summary && (
+    <section>
+      <h2>Summary</h2>
+      <p style="white-space: pre-line;">{event.summary}</p>
+    </section>
+  )}
+
+  <section>
+    <h2>Attributions ({(event.attributions ?? []).length})</h2>
+    {(!event.attributions || event.attributions.length === 0 || event.attributions.every((x) => !x.actor_id)) && (
+      <p style="color: var(--ctp-subtext0);">
+        No actor publicly attributed. Doctrine linkage below is independent of actor attribution — see methodology.
+      </p>
+    )}
+    {event.attributions && event.attributions.map((attr) => {
+      const actor = attr.actor_id ? a.actors.get(attr.actor_id) : undefined;
+      const src = attr.attribution_source_id ? a.sources.get(attr.attribution_source_id) : undefined;
+      return (
+        <div class="attribution">
+          <div class="attribution-head">
+            {actor ? (
+              <a class="actor-link" href={`/actor/${actor.id}`}>{actor.canonical_name}</a>
+            ) : (
+              <span class="actor-link" style="color: var(--ctp-overlay0);">No actor named</span>
+            )}
+            <span class="attributing-org">attributed by <strong>{attr.attributing_org}</strong></span>
+            {attr.attributing_org_confidence && (
+              <span class="org-conf">org confidence: {attr.attributing_org_confidence}</span>
+            )}
+            {attr.auspex_assessment && attr.auspex_assessment !== 'concur' && (
+              <span class="auspex-asmt">AUSPEX: {attr.auspex_assessment}</span>
+            )}
+          </div>
+          {attr.attribution_date && (
+            <p class="attr-meta">Attribution dated {attr.attribution_date}</p>
+          )}
+          {src && (
+            <p class="attr-meta">
+              <a href={src.url} target="_blank" rel="noopener noreferrer">{src.title ?? src.id}</a>
+              {src.publisher && ` — ${src.publisher}`}
+            </p>
+          )}
+          {attr.notes && <p class="attr-notes">{attr.notes}</p>}
+        </div>
+      );
+    })}
+  </section>
+
+  {policyContext.length > 0 && (
+    <section>
+      <h2>Policy context (±90 days)</h2>
+      <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin-bottom: 0.75rem;">
+        Policy actions that occurred within 90 days before or after this
+        event, where the issuing or target state matches the event's
+        attacking state or target country. See
+        <a href="/research/policy-response">/research/policy-response</a>
+        for the historical lag-distribution analysis.
+      </p>
+      {policyContextPrior.length > 0 && (
+        <div class="pc-group">
+          <h3 class="pc-h">Before this event</h3>
+          <ul class="pc-list">
+            {policyContextPrior.map(({ action, lagDays }) => (
+              <li class={`pc-row pc-${action.significance ?? 'none'}`}>
+                <span class="pc-lag">{lagDays}d before</span>
+                <FlagChip state={action.issued_by_state_id} small />
+                <span class="pc-type">{action.action_type.replace(/-/g, ' ')}</span>
+                {action.significance === 'high' && <span class="pc-sig">high</span>}
+                <span class="pc-summary">{action.summary?.split('\n')[0] ?? ''}</span>
+                {action.official_url && <a class="pc-link" href={action.official_url} target="_blank" rel="noopener noreferrer">↗</a>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {policyContextAfter.length > 0 && (
+        <div class="pc-group">
+          <h3 class="pc-h">After this event</h3>
+          <ul class="pc-list">
+            {policyContextAfter.map(({ action, lagDays }) => (
+              <li class={`pc-row pc-${action.significance ?? 'none'}`}>
+                <span class="pc-lag">{Math.abs(lagDays)}d after</span>
+                <FlagChip state={action.issued_by_state_id} small />
+                <span class="pc-type">{action.action_type.replace(/-/g, ' ')}</span>
+                {action.significance === 'high' && <span class="pc-sig">high</span>}
+                <span class="pc-summary">{action.summary?.split('\n')[0] ?? ''}</span>
+                {action.official_url && <a class="pc-link" href={action.official_url} target="_blank" rel="noopener noreferrer">↗</a>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )}
+
+  {event.doctrine_links && event.doctrine_links.length > 0 && (
+    <section>
+      <h2>Doctrine links ({event.doctrine_links.length})</h2>
+      {event.doctrine_links.map((link) => <DoctrineLinkPanel link={link} />)}
+    </section>
+  )}
+
+  {event.anticipated_timeline_markers && event.anticipated_timeline_markers.length > 0 && (
+    <section>
+      <h2>Anticipated timeline markers</h2>
+      {event.anticipated_timeline_markers.map((m) => {
+        const marker = a.timelineMarkers.get(m.marker_id);
+        return (
+          <div class="marker">
+            <div class="marker-head">
+              <ConfidenceChip value={m.confidence} />
+              <strong>{marker?.description ?? m.marker_id}</strong>
+            </div>
+            {m.reasoning && <p style="margin: 0.25rem 0 0; color: var(--ctp-subtext1);">{m.reasoning}</p>}
+          </div>
+        );
+      })}
+    </section>
+  )}
+
+  {event.targets && event.targets.length > 0 && (
+    <section>
+      <h2>Targets</h2>
+      <ul class="target-list">
+        {event.targets.map((t) => {
+          const tid = t.target_id;
+          const targetEnt = a.targets.get(tid);
+          const sectorEnt = tid.startsWith('sectors/') ? a.sectors.get(tid.replace(/^sectors\//, '')) : undefined;
+          let href: string | undefined;
+          let label: string = tid;
+          let kind: 'org' | 'infra' | 'sector' | 'other' = 'other';
+          if (targetEnt) {
+            href = `/target/${targetEnt.id}`;
+            label = targetEnt.name;
+            kind = targetEnt.id.startsWith('infra/') ? 'infra' : 'org';
+          } else if (sectorEnt) {
+            href = `/sector/${sectorEnt.id}`;
+            label = sectorEnt.name;
+            kind = 'sector';
+          }
+          return (
+            <li>
+              {href ? (
+                <a class={`target-chip kind-${kind}`} href={href}>
+                  <span class="t-label">{label}</span>
+                  <span class="t-id">{tid}</span>
+                </a>
+              ) : (
+                <span class="target-chip kind-other">
+                  <span class="t-label"><code>{tid}</code></span>
+                </span>
+              )}
+              {t.country && <span class="t-country">{t.country.toUpperCase()}</span>}
+              {t.role && t.role !== 'primary' && <em class="t-role">{t.role}</em>}
+              {t.outcome && <div class="t-outcome">{t.outcome}</div>}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )}
+
+  {event.sources && event.sources.length > 0 && (
+    <section>
+      <h2>Sources</h2>
+      <ol class="source-list">
+        {event.sources.map((sid) => {
+          const url = sourceUrl(sid);
+          return (
+            <li>
+              {url ? (
+                <a href={url} target="_blank" rel="noopener noreferrer">{sourceTitle(sid)}</a>
+              ) : (
+                <span>{sourceTitle(sid)}</span>
+              )}
+              {sourcePub(sid) && <span class="src-pub"> — {sourcePub(sid)}</span>}
+              <span class="src-id">{sid}</span>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  )}
+</Base>
+
+<style>
+  .event-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 0.5rem;
+  }
+  .meta {
+    color: var(--ctp-subtext0);
+    margin: 0 0 1rem;
+    font-size: 0.9375rem;
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .incident-chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .vector-chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--ctp-mantle);
+    color: var(--ctp-subtext0);
+    border: 1px solid var(--ctp-surface0);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .ff-chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--ctp-peach);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+  .impact-table {
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .impact-table th, .impact-table td {
+    padding: 0.375rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .impact-table th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+  }
+  .attribution {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    margin: 0.75rem 0;
+    background: var(--ctp-mantle);
+  }
+  .attribution-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .actor-link {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .attributing-org {
+    font-size: 0.875rem;
+    color: var(--ctp-subtext1);
+  }
+  .org-conf, .auspex-asmt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .attr-meta {
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+    margin: 0.25rem 0;
+  }
+  .attr-notes {
+    font-size: 0.875rem;
+    color: var(--ctp-subtext1);
+    margin: 0.5rem 0 0;
+  }
+  .marker {
+    border-left: 3px solid var(--ctp-lavender);
+    padding: 0.5rem 0 0.5rem 1rem;
+    margin: 0.75rem 0;
+  }
+  .marker-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .source-list li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+  }
+  .src-pub {
+    color: var(--ctp-subtext0);
+  }
+  .src-id {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    display: block;
+    margin-top: 0.125rem;
+  }
+  .pc-h {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    margin: 0.5rem 0 0.25rem;
+  }
+  .pc-group { margin: 0.5rem 0 1rem; }
+  .pc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .pc-row {
+    display: grid;
+    grid-template-columns: 5rem 2.2rem 7rem auto 1fr auto;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    font-size: 0.8125rem;
+  }
+  .pc-row:last-child { border-bottom: none; }
+  .pc-row.pc-high { background: rgba(254, 100, 11, 0.05); }
+  .pc-lag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+  }
+  .pc-type {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .pc-sig {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    background: var(--ctp-peach);
+    color: var(--ctp-base);
+    padding: 0.1rem 0.3rem;
+    border-radius: 2px;
+  }
+  .pc-summary {
+    color: var(--ctp-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pc-link { color: var(--ctp-blue); text-decoration: none; }
+  .target-list { list-style: none; padding: 0; margin: 0; }
+  .target-list > li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed var(--ctp-surface0);
+  }
+  .target-list > li:last-child { border-bottom: none; }
+  .target-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  a.target-chip:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  a.target-chip:hover .t-id { color: var(--ctp-base); }
+  .target-chip.kind-org   { border-left: 2px solid var(--ctp-teal); }
+  .target-chip.kind-infra { border-left: 2px solid var(--ctp-peach); }
+  .target-chip.kind-sector{ border-left: 2px solid var(--ctp-mauve); }
+  .target-chip.kind-other { border-left: 2px solid var(--ctp-overlay0); }
+  .t-label { font-weight: 500; }
+  .t-id {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .t-country {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+  }
+  .t-role {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    color: var(--ctp-yellow);
+    letter-spacing: 0.05em;
+  }
+  .t-outcome {
+    flex-basis: 100%;
+    margin-top: 0.15rem;
+    color: var(--ctp-subtext1);
+    font-size: 0.875rem;
+  }
+
+  /* Campaign chain — horizontal scroll of linked events */
+  .campaign-chain {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0.25rem;
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    background: var(--ctp-mantle);
+  }
+  .cc-link {
+    flex: 0 0 14rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-radius: var(--radius-sm);
+    border-top: 3px solid var(--ctp-mauve);
+    text-decoration: none;
+    font-size: 0.8125rem;
+  }
+  .cc-link:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .cc-self {
+    background: var(--ctp-mauve);
+    color: var(--ctp-base);
+    border-top-color: var(--ctp-text);
+  }
+  .cc-self:hover { background: var(--ctp-mauve); color: var(--ctp-base); }
+  .cc-date {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .cc-self .cc-date { color: var(--ctp-base); opacity: 0.7; }
+  .cc-name { font-weight: 500; line-height: 1.25; }
+
+  /* Attribution stops — vertical timeline */
+  ol.attrib-stops {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    border-left: 2px solid var(--ctp-surface0);
+  }
+  .attrib-stop {
+    display: grid;
+    grid-template-columns: 6.5rem 1.5rem 1fr;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    align-items: center;
+    border-bottom: 1px solid var(--ctp-surface0);
+    margin-left: -1px;
+    font-size: 0.875rem;
+  }
+  .attrib-stop:last-child { border-bottom: none; }
+  .attrib-event { background: var(--ctp-mantle); }
+  .as-date {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+  }
+  .as-marker { text-align: center; color: var(--ctp-blue); }
+  .attrib-event .as-marker { color: var(--ctp-mauve); }
+  .as-body { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .as-conf {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    padding: 0.1rem 0.35rem;
+    border-radius: var(--radius-sm);
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+  }
+  .conf-high .as-conf { background: var(--ctp-green); color: var(--ctp-base); }
+  .conf-moderate .as-conf { background: var(--ctp-yellow); color: var(--ctp-base); }
+  .conf-low .as-conf { background: var(--ctp-overlay0); color: var(--ctp-base); }
+  .as-lag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    margin-left: auto;
+  }
+</style>

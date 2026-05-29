@@ -1,0 +1,81 @@
+id: 2017-08/triton-petro-rabigh
+name: Triton / Trisis attack on Saudi Petro Rabigh
+start_date: 2017-06-01  # long-dwell preceding the August trip event
+disclosure_date: 2017-12-14
+end_date: 2017-08-04  # plant trip
+incident_type:
+  - intrusion
+  - destructive
+  - pre-positioning
+initial_vector: unknown
+outcome_summary: |
+  Long-dwell IT-to-OT lateral movement and deployment of custom
+  Triton/Trisis malware against Schneider Electric Triconex
+  safety-instrumented-system (SIS) controllers at the Saudi
+  Petro Rabigh petrochemical facility. Payload misfired during
+  reconfiguration, causing an unscheduled plant shutdown. First
+  known SIS-targeting nation-state malware — capable of disabling
+  the last line of safety before a catastrophic physical event.
+false_flag_risk: none
+operators_named:
+  - gladkikh-evgeny  # TsNIIKhM programmer, DOJ Mar 2022 (Triton author)
+summary: |
+  US Treasury OFAC October 2020 sanctions on TsNIIKhM (Russian
+  state research institute) and DOJ March 2022 indictment of
+  TsNIIKhM programmer Evgeny Gladkikh formalized the attribution.
+  Mandiant/FireEye April 2019 TRITON Actor TTP Profile remains
+  the foundational technical analysis. Tradecraft documented
+  across the Mandiant and Dragos reports: spear-phishing for
+  initial IT-network access, multi-year dwell, custom HATMAN /
+  TRITON / TRISIS malware targeting Schneider Electric Triconex
+  3008 safety-instrumented-system controllers via the proprietary
+  TriStation TCM protocol, Mimikatz credential dumping, lateral
+  movement on valid credentials across the IT-OT boundary,
+  PowerShell-based persistence, scheduled tasks, custom remote-
+  access trojans deployed on the engineering workstation, web
+  shells on intermediate web servers, and the dropping of a
+  payload (inject.bin) into the Triconex controller intended to
+  reprogram the safety logic prior to a process-manipulation
+  follow-on. The payload mis-fired during reconfiguration,
+  causing the SIS to fail safe.
+attributions:
+  - actor_id: ru/tsniikhm/triton
+    attributing_org: US Department of the Treasury (OFAC)
+    attributing_org_confidence: high
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-10-23
+    attribution_source_id: treasury/2020-10-23_tsniikhm-triton-sanctions
+    notes: |
+      AUSPEX caveat: TsNIIKhM organizational placement is contested
+      (Treasury says MoD-controlled; some vendors place the
+      operator as FSB-adjacent). The strategic doctrine link
+      (energy-weaponization / SIS-targeting) holds regardless of
+      which service ultimately tasked the activity.
+  - actor_id: ru/tsniikhm/triton
+    attributing_org: US Department of Justice
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-03-24
+    attribution_source_id: doj/2022-03-24_berserk-bear-triton-indictment
+doctrine_links:
+  - doctrine_id: ru/energy-weaponization
+    pillar_id: ru/energy-weaponization/sis-targeting
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Treasury press release names TsNIIKhM's responsibility for
+      development of Triton — the only publicly attributed
+      nation-state SIS-targeting capability. Gold-standard
+      attestation for the SIS-targeting energy-weaponization
+      pillar.
+    attesting_source_id: treasury/2020-10-23_tsniikhm-triton-sanctions
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/petro-rabigh
+    role: primary
+sources:
+  - treasury/2020-10-23_tsniikhm-triton-sanctions
+  - doj/2022-03-24_berserk-bear-triton-indictment
+  - mandiant/2019-04-10_triton-actor-ttp-profile

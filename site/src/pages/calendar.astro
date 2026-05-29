@@ -1,0 +1,233 @@
+---
+import Base from '../layouts/Base.astro';
+import FlagChip from '../components/FlagChip.astro';
+import { atlas, type PolicyAction } from '../utils/atlas';
+
+const a = atlas();
+const today = new Date().toISOString().slice(0, 10);
+const actions = a.allPolicyActions();
+const forward = actions.filter((p) => p.date >= today);
+const past = actions.filter((p) => p.date < today);
+
+// Build action_type → count for filter chips
+const typeCounts = new Map<string, number>();
+for (const p of actions) typeCounts.set(p.action_type, (typeCounts.get(p.action_type) ?? 0) + 1);
+const typeOptions = [...typeCounts.entries()].sort((a, b) => b[1] - a[1]);
+
+// Significance counts
+const sigCounts = { high: 0, medium: 0, low: 0, none: 0 };
+for (const p of actions) {
+  const s = p.significance as keyof typeof sigCounts | undefined;
+  if (s && s in sigCounts) sigCounts[s]++;
+  else sigCounts.none++;
+}
+
+// Group forward by year-quarter for the timeline view
+function quarterOf(date: string): string {
+  if (!date || date.length < 7) return '????';
+  const y = date.slice(0, 4);
+  const m = parseInt(date.slice(5, 7), 10);
+  const q = Math.ceil(m / 3);
+  return `${y}-Q${q}`;
+}
+const forwardByQuarter = new Map<string, PolicyAction[]>();
+for (const p of forward) {
+  const q = quarterOf(p.date);
+  if (!forwardByQuarter.has(q)) forwardByQuarter.set(q, []);
+  forwardByQuarter.get(q)!.push(p);
+}
+const orderedQuarters = [...forwardByQuarter.keys()].sort();
+---
+<Base title="Calendar — policy actions and pressure events" wide>
+  <p class="kicker">Calendar</p>
+  <h1>Pressure-event calendar</h1>
+  <p class="lede">
+    Upcoming policy actions and pressure events that historically correlate with
+    state-sponsored cyber tasking — elections, summits, Olympics, sanctions
+    windows, party congresses, treaty milestones. The atlas tracks
+    {actions.length} policy actions; {forward.length} are upcoming (after
+    today), {past.length} are historical.
+  </p>
+
+  <section class="counters">
+    <div class="counter"><strong>{forward.length}</strong>upcoming</div>
+    <div class="counter"><strong>{past.length}</strong>historical</div>
+    <div class="counter"><strong>{sigCounts.high}</strong>high significance</div>
+    <div class="counter"><strong>{typeOptions.length}</strong>action types</div>
+  </section>
+
+  <section class="filters">
+    <p class="kicker">Action types in corpus (with counts)</p>
+    <div class="chips">
+      {typeOptions.map(([type, count]) => (
+        <span class="type-chip">
+          <span class="t">{type.replace(/-/g, ' ')}</span>
+          <span class="n">{count}</span>
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <h2>Forward calendar</h2>
+    {orderedQuarters.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">No upcoming actions in the atlas.</p>
+    ) : (
+      orderedQuarters.map((q) => (
+        <article class="quarter">
+          <h3>{q}</h3>
+          <ol class="actions">
+            {forwardByQuarter.get(q)!.sort((x, y) => x.date.localeCompare(y.date)).map((p) => (
+              <li class={`action sig-${p.significance ?? 'none'}`}>
+                <span class="date">{p.date}</span>
+                <FlagChip state={p.issued_by_state_id} small />
+                <span class="type">{p.action_type.replace(/-/g, ' ')}</span>
+                {p.significance && p.significance === 'high' && <span class="sig-high-chip">high</span>}
+                {p.confidence && p.confidence !== 'confirmed' && <span class="conf-chip">{p.confidence}</span>}
+                <span class="summary">{p.summary?.split('\n')[0] ?? ''}</span>
+                {p.targets_state_ids && p.targets_state_ids.length > 0 && (
+                  <span class="targets">→ {p.targets_state_ids.map((s) => s.toUpperCase()).join(', ')}</span>
+                )}
+                {p.official_url && <a class="link" href={p.official_url} target="_blank" rel="noopener noreferrer">↗</a>}
+              </li>
+            ))}
+          </ol>
+        </article>
+      ))
+    )}
+  </section>
+
+  <section>
+    <h2>Historical pressure events</h2>
+    <p style="color: var(--ctp-subtext0); font-size: 0.875rem;">
+      The most recent {Math.min(40, past.length)} of {past.length} historical
+      policy actions. See <a href="/research/policy-response">/research/policy-response</a>
+      for the lag-distribution analysis correlating these with subsequent
+      cyber-event tempo.
+    </p>
+    <ol class="actions" style="margin-top: 0.75rem;">
+      {past.slice(-40).reverse().map((p) => (
+        <li class={`action sig-${p.significance ?? 'none'}`}>
+          <span class="date">{p.date}</span>
+          <FlagChip state={p.issued_by_state_id} small />
+          <span class="type">{p.action_type.replace(/-/g, ' ')}</span>
+          {p.significance && p.significance === 'high' && <span class="sig-high-chip">high</span>}
+          <span class="summary">{p.summary?.split('\n')[0] ?? ''}</span>
+          {p.targets_state_ids && p.targets_state_ids.length > 0 && (
+            <span class="targets">→ {p.targets_state_ids.map((s) => s.toUpperCase()).join(', ')}</span>
+          )}
+          {p.official_url && <a class="link" href={p.official_url} target="_blank" rel="noopener noreferrer">↗</a>}
+        </li>
+      ))}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .counters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .counter {
+    display: flex; flex-direction: column;
+    padding: 0.625rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext0);
+  }
+  .counter strong { font-size: 1.5rem; color: var(--ctp-text); }
+  .filters { margin: 1rem 0 2rem; }
+  .filters .chips { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+  .type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.55rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .type-chip .t { color: var(--ctp-text); }
+  .type-chip .n { color: var(--ctp-overlay0); }
+  .quarter h3 {
+    font-family: var(--font-mono);
+    margin: 1.25rem 0 0.5rem;
+    color: var(--ctp-subtext1);
+    font-size: 0.9375rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    padding-bottom: 0.25rem;
+  }
+  ol.actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .action {
+    display: grid;
+    grid-template-columns: 6.5rem 2.2rem 7rem auto auto 1fr auto auto;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    font-size: 0.875rem;
+  }
+  .action:last-child { border-bottom: none; }
+  .action.sig-high { background: rgba(254, 100, 11, 0.05); }
+  .date { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ctp-subtext0); }
+  .type {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .sig-high-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    background: var(--ctp-peach);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.35rem;
+    border-radius: var(--radius-sm);
+  }
+  .conf-chip {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    background: var(--ctp-yellow);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.35rem;
+    border-radius: var(--radius-sm);
+  }
+  .summary {
+    color: var(--ctp-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .targets {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
+  .link {
+    text-decoration: none;
+    color: var(--ctp-blue);
+    font-size: 0.875rem;
+  }
+  @media (max-width: 900px) {
+    .action {
+      grid-template-columns: 6rem auto auto 1fr;
+    }
+    .action .type, .action .targets, .action .link { display: none; }
+  }
+</style>

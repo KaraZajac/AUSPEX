@@ -1,0 +1,73 @@
+id: 2022-07/cisa-aa22-187a-maui-ransomware
+name: CISA AA22-187A Maui Ransomware advisory (Andariel)
+start_date: 2021-05-01  # campaign onset per advisory
+disclosure_date: 2022-07-06
+end_date: null  # ongoing per CISA AA23-040A
+incident_type:
+  - ransomware
+  - intrusion
+initial_vector: n-day
+outcome_summary: |
+  Manually-deployed Maui custom ransomware (AES encryption with
+  operator-supplied keys) against US healthcare and public-health
+  sector targets since May 2021. Multiple hospital encryption
+  events; ransoms paid in BTC. CISA / FBI / HHS / Treasury joint
+  advisory consolidates the campaign and provides IoCs.
+false_flag_risk: none
+operators_named:
+  - rim-jong-hyok  # Andariel, DOJ Kansas Jul 2024 (retroactive Maui attribution)
+summary: |
+  Canonical Andariel revenue-self-funding operation per the 2024
+  Rim Jong Hyok DOJ indictment, which retroactively confirms that
+  ransom proceeds were laundered via PRC facilitators to fund
+  follow-on defense-network intrusions. Maui is a manually run
+  command-line encryptor — operators pre-stage it on the victim
+  domain, select files, and trigger AES encryption with an
+  operator-supplied key, then leave a manual ransom demand
+  outside the encrypted filesystem. Initial access tradecraft
+  per the advisory and follow-on DOJ indictment includes
+  Log4Shell exploitation against VMware Horizon, web shells on
+  internet-facing servers, valid credentials harvested via
+  Mimikatz-style credential dumping, lateral movement on RDP and
+  SMB, and the BLINDINGCAN, Dtrack, and 3PROXY tooling from the
+  broader Andariel toolset before the Maui encryptor runs.
+attributions:
+  - actor_id: kp/rgb/andariel
+    attributing_org: US CISA + FBI + HHS + Treasury
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-07-06
+    attribution_source_id: cisa/2022-07-06_aa22-187a-maui-ransomware
+doctrine_links:
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Advisory text and the subsequent 2024 Rim indictment both
+      attest to the WMD-financing strategic goal. Maui proceeds
+      flowed through PRC laundering channels to fund Andariel's
+      defense-collection operations.
+    attesting_source_id: cisa/2022-07-06_aa22-187a-maui-ransomware
+    contested: false
+    analyst: claude
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Ransomware revenue tightly coupled to Andariel's
+      defense-network intrusion budget per 2024 DOJ indictment;
+      secondary mission of disruption-tolerance against US
+      healthcare.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/healthcare/hospital
+    role: primary
+  - target_id: sectors/healthcare/research
+    role: primary
+sources:
+  - cisa/2022-07-06_aa22-187a-maui-ransomware
+  - cisa/2023-02-09_aa23-040a-stopransomware-dprk
+  - doj/2024-07-25_andariel-rim-jong-hyok-indictment

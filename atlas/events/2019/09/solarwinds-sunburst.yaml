@@ -1,0 +1,106 @@
+id: 2019-09/solarwinds-sunburst
+name: SolarWinds Orion supply-chain compromise (SUNBURST)
+start_date: 2019-09-01  # initial software-build-system compromise
+disclosure_date: 2020-12-13
+end_date: 2020-12-31
+incident_type:
+  - supply-chain
+  - intrusion
+  - data-theft
+initial_vector: supply-chain
+outcome_summary: |
+  Compromise of the SolarWinds software build system to inject
+  SUNBURST/SUNSPOT/TEARDROP backdoors into legitimate signed
+  Orion network-monitoring updates. ~18,000 organizations
+  downloaded the trojaned update; ~100 were actually targeted,
+  including US Treasury, Commerce, State, DHS, DOE/NNSA, Justice;
+  Microsoft, FireEye, Mimecast. Most-significant strategic-
+  espionage supply-chain compromise on record; reshaped US
+  executive-branch cyber policy (EO 14028).
+quantified_impact:
+  organizations_with_trojaned_update: 18000
+  organizations_actually_targeted: 100
+false_flag_risk: none
+campaign_id: solarwinds-chain
+summary: |
+  White House April 2021 fact sheet and Treasury OFAC EO 14024
+  sanctions formally attributed the operation to the SVR (APT29 /
+  Cozy Bear / Nobelium). FBI Director Wray June 2021 confirmed.
+  The operation began with SUNSPOT, an injector implanted on
+  SolarWinds's MSBuild server that surreptitiously rewrote the
+  Orion source tree at build time to insert SUNBURST — a
+  signed-binary backdoor in SolarWinds.Orion.Core.BusinessLayer.dll
+  with a Domain Generation Algorithm beacon and selective
+  second-stage targeting via the TEARDROP and RAINDROP Cobalt
+  Strike loaders. Post-access tradecraft at the ~100 hand-
+  selected victims included credential dumping and abuse of
+  valid credentials, golden-SAML token forgery against on-prem
+  ADFS for persistent cloud access, the GoldMax / SUNSHUTTLE
+  backdoor, and the GoldFinder / Sibot loaders — establishing
+  SVR's cloud-identity tradecraft that the post-2021 campaign
+  refined.
+attributions:
+  - actor_id: ru/svr/apt29
+    attributing_org: The White House (Apr 2021 attribution)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-04-15
+    attribution_source_id: whitehouse/2021-04-15_svr-solarwinds-attribution
+  - actor_id: ru/svr/apt29
+    attributing_org: US Department of the Treasury (OFAC EO 14024)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-04-15
+    attribution_source_id: treasury/2021-04-15_eo-14024-svr-sanctions
+doctrine_links:
+  - doctrine_id: ru/fpc-2023
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: attested
+    reasoning: |
+      White House fact sheet names "broad-scope cyber espionage"
+      as the strategic intent. SVR strategic-collection priorities
+      align cleanly with the FPC 2023 anti-Anglo-Saxon framing
+      and (predecessor) FPC 2016 priorities; the doctrine post-
+      dates the operation but the strategic priority is continuous.
+    attesting_source_id: whitehouse/2021-04-15_svr-solarwinds-attribution
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      SVR strategic-espionage operations exemplify the 2016
+      Information Security Doctrine's framing of the information
+      sphere as a national-security domain.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/solarwinds
+    role: staging
+  - target_id: orgs/us-treasury
+    role: primary
+  - target_id: orgs/us-commerce
+    role: primary
+  - target_id: orgs/us-state-dept
+    role: primary
+  - target_id: orgs/us-dhs
+    role: primary
+  - target_id: orgs/us-doe-nnsa
+    role: primary
+  - target_id: orgs/us-doj
+    role: primary
+  - target_id: orgs/microsoft
+    role: primary
+  - target_id: orgs/fireeye
+    role: primary
+  - target_id: orgs/mimecast
+    role: collateral
+sources:
+  - whitehouse/2021-04-15_svr-solarwinds-attribution
+  - treasury/2021-04-15_eo-14024-svr-sanctions
+  - cisa/2020-12-13_ed-21-01-solarwinds
+  - ncsc-uk/2021-05_further-ttps-svr

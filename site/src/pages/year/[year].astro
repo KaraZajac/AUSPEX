@@ -1,0 +1,160 @@
+---
+import Base from '../../layouts/Base.astro';
+import EventRow from '../../components/EventRow.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import { atlas, eventStateId } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return a.eventYears().map((year) => ({
+    params: { year },
+    props: { year },
+  }));
+}
+
+const { year } = Astro.props as { year: string };
+const a = atlas();
+const events = a.eventsInYear(year);
+
+// Group by state
+const byState = new Map<string, typeof events>();
+for (const ev of events) {
+  const s = eventStateId(ev, a) ?? '??';
+  if (!byState.has(s)) byState.set(s, []);
+  byState.get(s)!.push(ev);
+}
+const stateRows = [...byState.entries()]
+  .map(([s, evs]) => ({ stateId: s, state: a.nationStates.get(s), events: evs }))
+  .sort((x, y) => y.events.length - x.events.length);
+
+// Doctrine link totals
+const doctrineCounts = new Map<string, number>();
+for (const ev of events) {
+  const seen = new Set<string>();
+  for (const link of ev.doctrine_links ?? []) {
+    const id = link.doctrine_id
+      ?? (link.pillar_id ? a.pillars.get(link.pillar_id)?.doctrineId : undefined)
+      ?? (link.program_id ? a.programs.get(link.program_id)?.doctrineId : undefined);
+    if (id && !seen.has(id)) {
+      seen.add(id);
+      doctrineCounts.set(id, (doctrineCounts.get(id) ?? 0) + 1);
+    }
+  }
+}
+const topDoctrines = [...doctrineCounts.entries()]
+  .map(([id, c]) => ({ doctrine: a.doctrines.get(id), count: c }))
+  .filter((d) => d.doctrine)
+  .sort((x, y) => y.count - x.count)
+  .slice(0, 10);
+
+const years = a.eventYears();
+const idx = years.indexOf(year);
+const prevYear = idx >= 0 && idx < years.length - 1 ? years[idx + 1] : undefined;
+const nextYear = idx > 0 ? years[idx - 1] : undefined;
+---
+<Base title={`${year} in review`} wide>
+  <p class="kicker">Year in review</p>
+  <h1>{year}</h1>
+  <p class="lede">
+    {events.length} state-sponsored cyber event{events.length === 1 ? '' : 's'}
+    recorded in {year}. Doctrine alignment by attacking state below.
+  </p>
+
+  <nav class="year-nav">
+    {prevYear && <a href={`/year/${prevYear}`}>← {prevYear}</a>}
+    <span></span>
+    {nextYear && <a href={`/year/${nextYear}`}>{nextYear} →</a>}
+  </nav>
+
+  {topDoctrines.length > 0 && (
+    <section>
+      <h2>Top doctrines this year</h2>
+      <div class="doc-list">
+        {topDoctrines.map(({ doctrine, count }) => (
+          <a class="doc-row" href={`/doctrine/${doctrine!.id}`}>
+            <span class="doc-flag">{doctrine!.nation_state_id.toUpperCase()}</span>
+            <span class="doc-name">{doctrine!.short_name ?? doctrine!.name}</span>
+            <span class="doc-count">{count} event{count === 1 ? '' : 's'}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2>By attacking state</h2>
+    {stateRows.map(({ stateId, state, events: evs }) => (
+      <div class="state-group">
+        <div class="state-head">
+          <FlagChip state={stateId} />
+          <h3 style="margin:0;">
+            {state?.name ?? (stateId === '??' ? 'Unattributed / cross-cutting' : stateId.toUpperCase())}
+            <span class="state-count"> · {evs.length}</span>
+          </h3>
+        </div>
+        <div class="event-list">
+          {evs.map((ev) => <EventRow event={ev} />)}
+        </div>
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .year-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    margin: 1rem 0 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  .year-nav a:nth-child(1) { text-align: left; }
+  .year-nav a:nth-child(3) { text-align: right; grid-column-start: 3; }
+  .doc-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .doc-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+    align-items: center;
+  }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-row:hover { background: var(--ctp-mantle); }
+  .doc-flag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .doc-name { font-family: var(--font-mono); font-size: 0.9375rem; }
+  .doc-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-subtext0); }
+  .state-group { margin: 1.5rem 0; }
+  .state-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .state-count {
+    font-family: var(--font-mono);
+    color: var(--ctp-overlay0);
+    font-weight: 400;
+    font-size: 0.875rem;
+  }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

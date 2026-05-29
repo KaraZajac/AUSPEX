@@ -1,0 +1,88 @@
+id: 2024-11/storm-2372-teams-device-code-phishing
+name: Storm-2372 Russia-aligned device-code phishing via Microsoft Teams (Aug 2024 onward)
+start_date: 2024-08-01  # earliest observed per Microsoft
+disclosure_date: 2025-02-13
+end_date: null
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: phishing
+outcome_summary: |
+  Microsoft disclosed an ongoing Russian-aligned device-code phishing
+  campaign by the actor it tracks as Storm-2372, active since at
+  least August 2024 against government, NGO, IT-services, defense,
+  telecoms, healthcare, higher-education, and energy organisations
+  across Europe, North America, Africa, and the Middle East.
+  Operators used Microsoft Teams "chat" lures impersonating
+  prominent individuals to socially engineer victims into
+  authorising attacker-controlled OAuth device-code flows, granting
+  persistent token-based access without harvesting passwords.
+false_flag_risk: low
+campaign_id: apt29-midnight-blizzard
+summary: |
+  Doctrinally novel as the first widely disclosed Russia-aligned
+  campaign built around OAuth device-code social engineering at
+  scale. The tradecraft bypasses password-based MFA entirely:
+  the victim provides the attacker-controlled code in an
+  authorised legitimate Microsoft flow, generating refresh tokens
+  the attacker can use for sustained access. Pairs with the
+  February 2024 Five Eyes SVR cloud-access advisory (AA24-057A)
+  as the operational evolution: SVR moved from password-spray /
+  service-account compromise toward consent-phishing and OAuth
+  trust abuse.
+attributions:
+  - actor_id: ru/svr/apt29
+    attributing_org: Microsoft MSTIC
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-02-13
+    attribution_source_id: microsoft/2025-02-13_storm-2372-device-code-phishing
+    notes: |
+      Microsoft attributes to "Russian-aligned" Storm-2372 without
+      a confirmed SVR linkage in the public report; AUSPEX uses
+      ru/svr/apt29 as the closest cluster on tradecraft and
+      victimology grounds, with concur-with-caveat to flag the
+      uncertain attribution.
+doctrine_links:
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Espionage-mission targeting of NATO / Ukraine-aiding
+      government, defense, telecoms, and energy organisations is
+      canonical information-sphere-as-domain SVR collection.
+    attesting_source_id: microsoft/2025-02-13_storm-2372-device-code-phishing
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/nato-ultimatum-2021
+    pillar_id: ru/nato-ultimatum-2021/nato-degradation
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      European / North American / Middle Eastern government and
+      defense targeting during the active phase of the invasion.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/sanctions-response-2022
+    pillar_id: ru/sanctions-response-2022/aid-state-targeting
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Concentration on European NATO states supporting Ukraine
+      fits the aid-state-targeting pillar.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/government
+    role: primary
+  - target_id: sectors/defense
+    role: primary
+  - target_id: sectors/ict
+    role: primary
+  - target_id: sectors/energy
+    role: primary
+sources:
+  - microsoft/2025-02-13_storm-2372-device-code-phishing

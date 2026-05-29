@@ -1,0 +1,90 @@
+id: 2023-05/storm-0558-exchange-online
+name: Storm-0558 forged-token Exchange Online intrusion (State / Commerce)
+start_date: 2023-05-15
+disclosure_date: 2023-07-11  # Microsoft + State Dept public disclosure
+end_date: 2023-06-24
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: valid-creds  # forged Azure AD tokens via stolen MSA signing key
+outcome_summary: |
+  PRC-attributed actor "Storm-0558" used a stolen Microsoft
+  consumer MSA signing key (extracted from a 2021 Windows crash
+  dump that improperly contained the key) to forge Azure AD
+  authentication tokens and access Exchange Online OWA mailboxes
+  of US government officials. Approximately 60,000 State
+  Department emails exfiltrated from the Secretary's office and
+  East Asia / Pacific bureau over a six-week dwell, plus
+  Commerce Secretary Raimondo's office, Congressional staff, and
+  approximately 25 organizations including European foreign
+  ministries.
+quantified_impact:
+  emails_exfiltrated: 60000
+  affected_orgs: 25
+false_flag_risk: none
+summary: |
+  Detected by State Department analysts; Microsoft disclosed
+  the technique on 2023-07-11 and the Cyber Safety Review Board
+  published a critical post-mortem (2024-04) condemning
+  Microsoft's identity-system security culture. Timing
+  (immediately before US Secretary of State Blinken's June 2023
+  Beijing visit) and the EAP-bureau focus point to Taiwan and
+  China-policy decision-maker SIGINT. The CSRB report is itself
+  doctrinally consequential — it reframed US public-sector cloud
+  identity as a strategic-collection battleground.
+attributions:
+  - actor_id: cn/mss/storm-0558
+    attributing_org: Microsoft MSTIC
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-07-14
+    attribution_source_id: microsoft/2023-07-14_storm-0558-analysis
+  - actor_id: cn/mss/storm-0558
+    attributing_org: US Cyber Safety Review Board
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-04-02
+    attribution_source_id: csrb/2024-04_storm-0558-review
+doctrine_links:
+  - doctrine_id: cn/taiwan-reunification
+    pillar_id: cn/taiwan-reunification/decision-maker-sigint
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Mailbox selection (Secretary of State office, EAP bureau,
+      Ambassador to PRC Nicholas Burns, Assistant Secretary for
+      EAP Daniel Kritenbrink) and timing (immediately preceding
+      the Blinken-Xi June 2023 meeting and a series of US-PRC
+      ministerial engagements) aligns precisely with the
+      Taiwan / China-policy decision-maker SIGINT pillar. No
+      attesting US-government statement names the doctrine
+      explicitly, but the target list does the work.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/mcf
+    pillar_id: null
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Bulk-mailbox access at the cabinet-secretary level also
+      serves general strategic-collection objectives of the kind
+      MCF dual-use research framing implies, though the
+      operation's diplomatic-target focus is the dominant signal.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/us-state-department
+    role: primary
+    outcome: |
+      ~60,000 emails from the Secretary's office and EAP bureau
+      exfiltrated over six-week dwell.
+  - target_id: orgs/us-commerce-department
+    role: primary
+  - target_id: sectors/government/foreign-ministry
+    role: primary
+sources:
+  - microsoft/2023-07-14_storm-0558-analysis
+  - csrb/2024-04_storm-0558-review

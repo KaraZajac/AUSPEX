@@ -1,0 +1,100 @@
+---
+import type { ExternalRefs as Refs } from '../utils/atlas';
+
+interface Props {
+  refs: Refs | undefined;
+}
+const { refs } = Astro.props;
+if (!refs || Object.keys(refs).length === 0) {
+  // render nothing if no refs
+}
+
+function mitreUrl(g: string): string {
+  return `https://attack.mitre.org/groups/${g}/`;
+}
+function mispUrl(uuid: string, name?: string): string {
+  // MISP Galaxy threat-actor page anchors by canonical name; UUID is the stable join key.
+  if (name) {
+    return `https://misp-galaxy.org/threat-actor/#${encodeURIComponent(name).replace(/%20/g, '+')}`;
+  }
+  return `https://misp-galaxy.org/threat-actor/#uuid-${uuid}`;
+}
+function etdaUrl(slug: string): string {
+  return `https://apt.etda.or.th/cgi-bin/showcard.cgi?g=${encodeURIComponent(slug)}`;
+}
+function malpediaUrl(slug: string): string {
+  return `https://malpedia.caad.fkie.fraunhofer.de/actor/${encodeURIComponent(slug)}`;
+}
+function otxUrl(id: string): string {
+  return `https://otx.alienvault.com/pulse/${encodeURIComponent(id)}`;
+}
+---
+{refs && (refs.mitre_attack || refs.misp_galaxy || refs.etda_apt || refs.malpedia || refs.otx) && (
+  <ul class="ext-refs">
+    {refs.mitre_attack && (
+      <li>
+        <span class="ext-source">MITRE ATT&amp;CK</span>
+        <a href={mitreUrl(refs.mitre_attack)} target="_blank" rel="noopener noreferrer"><code>{refs.mitre_attack}</code></a>
+      </li>
+    )}
+    {refs.misp_galaxy && (
+      <li>
+        <span class="ext-source">MISP Galaxy</span>
+        <a href={mispUrl(refs.misp_galaxy, refs.misp_galaxy_name)} target="_blank" rel="noopener noreferrer">
+          <code>{refs.misp_galaxy_name ?? refs.misp_galaxy.slice(0, 8) + '…'}</code>
+        </a>
+      </li>
+    )}
+    {refs.etda_apt && (
+      <li>
+        <span class="ext-source">ETDA / ThaiCERT</span>
+        <a href={etdaUrl(refs.etda_apt)} target="_blank" rel="noopener noreferrer"><code>{refs.etda_apt}</code></a>
+      </li>
+    )}
+    {refs.malpedia && (
+      <li>
+        <span class="ext-source">Malpedia</span>
+        <a href={malpediaUrl(refs.malpedia)} target="_blank" rel="noopener noreferrer"><code>{refs.malpedia}</code></a>
+      </li>
+    )}
+    {refs.otx && (
+      <li>
+        <span class="ext-source">AlienVault OTX</span>
+        <a href={otxUrl(refs.otx)} target="_blank" rel="noopener noreferrer"><code>{refs.otx}</code></a>
+      </li>
+    )}
+  </ul>
+)}
+
+<style>
+  .ext-refs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5rem;
+  }
+  .ext-refs li {
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .ext-source {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ctp-subtext0);
+  }
+  .ext-refs code {
+    background: transparent;
+    padding: 0;
+    color: var(--ctp-blue);
+    font-size: 0.8125rem;
+  }
+</style>

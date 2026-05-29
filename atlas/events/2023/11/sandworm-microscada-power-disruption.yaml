@@ -1,0 +1,80 @@
+id: 2023-11/sandworm-microscada-power-disruption
+name: Sandworm MicroSCADA living-off-the-land power disruption (Oct 2022 op, disclosed Nov 2023)
+start_date: 2022-10-10
+disclosure_date: 2023-11-09
+end_date: 2022-10-12
+incident_type:
+  - intrusion
+  - destructive
+  - disruption
+initial_vector: living-off-the-land
+outcome_summary: |
+  Sandworm used a native ICS binary (MicroSCADA) on a Ukrainian
+  critical-infrastructure operator's hypervisor to issue a
+  substation disconnection command in October 2022, causing an
+  unplanned power outage that coincided with kinetic missile
+  strikes against Ukrainian energy infrastructure. Two days later,
+  Sandworm deployed a CaddyWiper variant against the same victim.
+  Disclosed by Mandiant on 9 November 2023.
+false_flag_risk: none
+campaign_id: sandworm-ukraine-grid-wave
+summary: |
+  Doctrinally significant for two reasons. First, the operation
+  pioneered Sandworm's living-off-the-land OT tradecraft: instead
+  of deploying purpose-built ICS malware (Industroyer / Industroyer2),
+  operators abused a native MicroSCADA control binary already on
+  the engineering workstation to issue a 60870-5-104
+  disconnect-via-OPC command — much harder to detect and signature.
+  Second, the cyber substation disconnect was coordinated with
+  kinetic missile strikes on Ukrainian energy infrastructure,
+  giving a clean attested case of cyber-kinetic synchronisation in
+  the post-invasion energy campaign. The 2022 operation was held
+  in disclosure until the APT44 promotion arc (which culminated
+  April 2024).
+attributions:
+  - actor_id: ru/gru/74455/sandworm
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-11-09
+    attribution_source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+doctrine_links:
+  - doctrine_id: ru/energy-weaponization
+    pillar_id: ru/energy-weaponization/grid-attack
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Cyber substation disconnect coordinated with kinetic strikes
+      on energy infrastructure — direct attested instance of the
+      grid-attack pillar.
+    attesting_source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/military-doctrine-2014
+    pillar_id: ru/military-doctrine-2014/non-contact-warfare
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Cyber-kinetic synchronisation against critical infrastructure
+      is the paradigmatic non-contact-warfare integration named in
+      the 2014 Military Doctrine.
+    attesting_source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/russkiy-mir
+    pillar_id: ru/russkiy-mir/ukraine-theater
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Continuous coercive-blackout campaign against Ukrainian
+      civilian energy infrastructure during active hostilities.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/energy/electric-power/transmission
+    role: primary
+  - target_id: sectors/energy/electric-power/grid-ot
+    role: primary
+sources:
+  - mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot

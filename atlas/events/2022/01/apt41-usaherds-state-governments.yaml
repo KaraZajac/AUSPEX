@@ -1,0 +1,67 @@
+id: 2022-01/apt41-usaherds-state-governments
+name: APT41 USAHerds US state-government breach
+start_date: 2021-05-01
+disclosure_date: 2022-03-08
+end_date: 2022-02-28
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: 0-day  # CVE-2021-44207 USAHerds + Log4Shell
+outcome_summary: |
+  APT41 compromised at least six US state governments via a
+  zero-day in USAHerds animal-health management software
+  (CVE-2021-44207) and Log4Shell. Potential bulk-PII collection
+  and political-intelligence value.
+false_flag_risk: none
+summary: |
+  Mandiant disclosed in March 2022. APT41 chained an authentication-
+  bypass zero-day in USAHerds animal-health management software
+  (CVE-2021-44207, hard-coded ASP.NET machine keys enabling
+  ViewState deserialization RCE) and Log4Shell (CVE-2021-44228)
+  to obtain initial code execution on internet-facing servers at
+  at least six US state governments. Post-exploitation tooling
+  included the DEADEYE / KEYPLUG modular backdoors with
+  Cloudflare-fronted C2, DUSTPAN / DUSTTRAP in-memory loaders,
+  Mimikatz-style credential dumping, valid credentials reused for
+  lateral movement, DLL side-loading via signed binaries for
+  defense evasion, and the Cobalt Strike beacon for persistence —
+  the same kit Mandiant later catalogued in the 2024 APT41 / DUST
+  reporting. Significant because it documents APT41 pivoting to
+  US state-government targeting in parallel with the post-2021
+  critical-infrastructure / pre-positioning wave.
+attributions:
+  - actor_id: cn/mss/apt41
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-03-08
+    attribution_source_id: mandiant/2022-03-08_apt41-usaherds
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/bulk-pii-humint-enabling
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      US state-government datasets are MCF-aligned bulk-PII
+      collection plus political intelligence; no primary attesting
+      source.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/national-intelligence-law-2017
+    pillar_id: null
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Aligns with the Intelligence Law's collection logic but
+      cannot be attested to it.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/government/local
+    role: primary
+sources:
+  - mandiant/2022-03-08_apt41-usaherds

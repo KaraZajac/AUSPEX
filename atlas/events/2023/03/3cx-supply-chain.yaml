@@ -1,0 +1,71 @@
+id: 2023-03/3cx-supply-chain
+name: 3CX supply-chain compromise
+start_date: 2022-09-01  # X_TRADER prior compromise; actual onset earlier
+disclosure_date: 2023-03-29
+end_date: 2023-04-30
+incident_type:
+  - supply-chain
+  - intrusion
+  - data-theft
+initial_vector: supply-chain
+outcome_summary: |
+  First publicly documented cascading software-supply-chain
+  compromise. Initial-access stage: prior compromise of Trading
+  Technologies *X_TRADER* installer. Second stage: trojanized
+  3CX DesktopApp distributed to ~600,000 customers globally
+  with DLL side-loading delivering ICONIC Stealer + Gopuram
+  second-stage payload, deployed selectively against
+  cryptocurrency firms among the 3CX customer base. Data
+  exfiltration from selected crypto victims; broad downstream
+  IoC scramble.
+quantified_impact:
+  customers_at_risk: 600000
+false_flag_risk: none
+campaign_id: apt38-crypto-pivot
+summary: |
+  Critical demonstration of cascading supply-chain doctrine: one
+  supplier (X_TRADER) compromised to reach another supplier
+  (3CX) used to reach final targets (crypto firms). Mandiant
+  attribution to UNC4736 (= Citrine Sleet per AUSPEX cluster
+  mapping). Distinct cluster boundary from Lazarus core per
+  Mandiant's March 2024 "Not So Lazarus" disaggregation —
+  AUSPEX honors this by attributing to Citrine Sleet rather
+  than Lazarus core.
+attributions:
+  - actor_id: kp/rgb/citrine-sleet
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2023-04-20
+    attribution_source_id: mandiant/2023-04-20_3cx-supply-chain
+    notes: |
+      Mandiant attributes to UNC4736 (Citrine Sleet); CrowdStrike
+      attributes to Labyrinth Chollima (overlapping); Volexity
+      tracked separately. AUSPEX attributes to Citrine Sleet per
+      the cluster-boundary call.
+doctrine_links:
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    confidence: attested
+    reasoning: |
+      Selective second-stage deployment against cryptocurrency
+      firms confirms revenue-aggregation purpose. Mandiant's
+      cluster attribution to Citrine Sleet (specialized in
+      crypto-firm targeting) further attests to the
+      WMD-financing strategic goal pattern.
+    attesting_source_id: mandiant/2023-04-20_3cx-supply-chain
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/3cx
+    role: staging
+    outcome: 3CX DesktopApp trojanized; ~600K customers received compromised binary.
+  - target_id: orgs/trading-technologies-x-trader
+    role: staging
+    outcome: Initial supply-chain pivot vector; X_TRADER installer trojanized first.
+  - target_id: sectors/finance/crypto-exchange
+    role: primary
+    outcome: Selective second-stage compromise of crypto-firm subset; data exfil.
+sources:
+  - mandiant/2023-04-20_3cx-supply-chain

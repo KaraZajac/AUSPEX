@@ -1,0 +1,88 @@
+id: 2017-05/wannacry
+name: WannaCry 2.0 global ransomware worm
+start_date: 2017-05-12
+disclosure_date: 2017-05-12
+end_date: 2017-05-15  # kill-switch activated; tail of infections continued for years
+incident_type:
+  - ransomware
+  - destructive
+initial_vector: n-day
+outcome_summary: |
+  Self-propagating ransomware worm leveraging EternalBlue
+  (CVE-2017-0144, leaked NSA exploit) plus DoublePulsar backdoor.
+  Estimated ~200,000 systems in 150+ countries infected within
+  72 hours, including UK National Health Service surgeries
+  cancelled. Estimated global economic damage $4B+. Actual
+  ransom collected: ~$140,000 — many assessments consider the
+  worm an out-of-control test rather than a deliberate
+  revenue operation. Kill-switch domain registered by Marcus
+  Hutchins halted further propagation.
+quantified_impact:
+  systems_infected_estimate: 200000
+  countries_affected: 150
+  usd_economic_damage_estimate: 4000000000
+  usd_ransom_collected: 140000
+false_flag_risk: none
+operators_named:
+  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Sep 2018 complaint + Feb 2021 indictment
+  - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
+  - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
+summary: |
+  Largest publicly impactful ransomware event in history at the
+  time. Self-propagating worm that paired the leaked NSA
+  EternalBlue SMB exploit (CVE-2017-0144) with the DoublePulsar
+  kernel backdoor for code execution, then dropped the WannaCry
+  / WannaCryptor ransomware payload to encrypt local files and
+  spread laterally over SMB. Five Eyes joint public attribution
+  to DPRK on 19 December 2017 (UK NCSC + US/AU/CA/NZ/JP). DOJ
+  Park Jin Hyok complaint (September 2018) charges WannaCry
+  alongside Sony and the Bangladesh Bank theft, linking the
+  worm's earlier 1.x prototypes to Lazarus development
+  infrastructure shared with those operations.
+attributions:
+  - actor_id: kp/rgb/lazarus
+    attributing_org: UK NCSC + Five Eyes
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2017-12-19
+    attribution_source_id: uknscsc/2017-12-19_wannacry-attribution
+  - actor_id: kp/rgb/lazarus
+    attributing_org: US DOJ
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2018-09-06
+    attribution_source_id: doj/2018-09-06_park-jin-hyok-complaint
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: attested
+    reasoning: |
+      DOJ Park Jin Hyok complaint and Five Eyes joint attribution
+      both characterize the ransomware as a regime hard-currency
+      operation within the Byungjin window. Attested per the
+      WMD-financing framing in subsequent USG attribution
+      patterns. Caveated by analyst consensus that actual revenue
+      yield was accidental rather than designed.
+    attesting_source_id: doj/2018-09-06_park-jin-hyok-complaint
+    counter_explanation: |
+      Many analysts have argued WannaCry was a test or
+      development failure rather than a deliberate revenue
+      operation, given the trivial actual yield. The doctrine
+      tag holds on the regime's *intended* purpose for the tool;
+      operational outcome may have been incidental.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/critical-infrastructure
+    role: primary
+    outcome: |
+      UK NHS surgeries cancelled; FedEx, Renault, Deutsche Bahn,
+      Spanish Telefonica, Russian Interior Ministry, Indian
+      police affected; global economic disruption estimated $4B+.
+  - target_id: sectors/healthcare/hospital
+    role: primary
+sources:
+  - uknscsc/2017-12-19_wannacry-attribution
+  - doj/2018-09-06_park-jin-hyok-complaint
+  - doj/2021-02-17_lazarus-three-officers-indictment

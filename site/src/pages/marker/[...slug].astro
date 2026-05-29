@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlagChip from '../../components/FlagChip.astro';
+import EventRow from '../../components/EventRow.astro';
+import { atlas, markerDisplayName } from '../../utils/atlas';
+
+export function getStaticPaths() {
+  const a = atlas();
+  return [...a.timelineMarkers.values()].map((m) => ({
+    params: { slug: m.id },
+    props: { markerId: m.id },
+  }));
+}
+
+const { markerId } = Astro.props as { markerId: string };
+const a = atlas();
+const marker = a.timelineMarkers.get(markerId)!;
+const events = a.eventsForMarker(markerId);
+const state = marker.doctrine_id ? marker.doctrine_id.split('/')[0] : undefined;
+const doctrine = marker.doctrine_id
+  ? a.doctrines.get(marker.doctrine_id)
+    ?? a.pillars.get(marker.doctrine_id)?.pillar
+    ?? a.programs.get(marker.doctrine_id)?.program
+  : undefined;
+---
+<Base title={markerDisplayName(marker)}>
+  <p class="kicker">Timeline marker</p>
+  <div class="marker-head">
+    {state && <FlagChip state={state} />}
+    <h1 style="margin:0;">{markerDisplayName(marker)}</h1>
+  </div>
+  <p class="meta"><code>{marker.id}</code></p>
+
+  {(marker.date || marker.date_range) && (
+    <p class="date">
+      <strong>
+        {marker.date_range
+          ? `${marker.date_range.start ?? '?'} → ${marker.date_range.end ?? '?'}`
+          : typeof marker.date === 'string'
+          ? marker.date
+          : `${marker.date?.start ?? '?'} → ${marker.date?.end ?? '?'}`}
+      </strong>
+    </p>
+  )}
+
+  {marker.description && (
+    <p style="white-space: pre-line;">{marker.description}</p>
+  )}
+
+  {marker.doctrine_id && doctrine && (
+    <p class="meta">
+      Anchored to doctrine: <a href={`/doctrine/${marker.doctrine_id.split('/')[0]}/${marker.doctrine_id.split('/').slice(1).join('/')}`}>{('name' in doctrine ? doctrine.name : marker.doctrine_id)}</a>
+    </p>
+  )}
+
+  <section>
+    <h2>Events anticipating this marker ({events.length})</h2>
+    {events.length === 0 ? (
+      <p style="color: var(--ctp-subtext0);">
+        No events currently link to this marker via{' '}
+        <code>anticipated_timeline_markers</code>.
+      </p>
+    ) : (
+      <div class="event-list">
+        {events.map((ev) => <EventRow event={ev} />)}
+      </div>
+    )}
+  </section>
+
+  {marker.cited_by && marker.cited_by.length > 0 && (
+    <section>
+      <h2>Sources</h2>
+      <ul>
+        {marker.cited_by.map((sid) => {
+          const src = a.sources.get(sid);
+          return (
+            <li>
+              {src?.url ? (
+                <a href={src.url} target="_blank" rel="noopener noreferrer">{src.title ?? sid}</a>
+              ) : (
+                <span>{src?.title ?? sid}</span>
+              )}
+              {src?.publisher && <span class="muted"> &mdash; {src.publisher}</span>}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<style>
+  .marker-head { display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0 0.5rem; }
+  .meta { color: var(--ctp-subtext0); margin: 0 0 0.5rem; }
+  .date { font-family: var(--font-mono); margin: 0 0 1rem; }
+  .muted { color: var(--ctp-overlay0); }
+  .event-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .event-list :global(.event-row:last-child) { border-bottom: none; }
+</style>

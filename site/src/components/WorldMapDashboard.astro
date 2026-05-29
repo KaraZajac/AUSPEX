@@ -1,0 +1,549 @@
+---
+/**
+ * Build-time interactive world-map dashboard.
+ * - Real Mercator projection via d3-geo on world-atlas TopoJSON
+ * - 5 doctrine states (RU, CN, IR, KP, US) glow in their palette
+ * - Click → side panel slides in with per-state dossier
+ * - Toggle: "as attacker" vs "as target" recolors the map
+ */
+import { atlas } from '../utils/atlas';
+import FlagChip from './FlagChip.astro';
+import { COUNTRIES, MAP_W, MAP_H } from '../utils/world-map-paths';
+
+const a = atlas();
+
+// Atlas state palette (catppuccin tokens)
+const STATE_COLOR: Record<string, string> = {
+  ru: 'var(--ctp-red)',
+  cn: 'var(--ctp-yellow)',
+  ir: 'var(--ctp-green)',
+  kp: 'var(--ctp-mauve)',
+  us: 'var(--ctp-blue)',
+};
+
+// ─── Project the world ──────────────────────────────────────────────────
+// Paths come from the shared world-map-paths module (computed once at
+// module load, reused across this dashboard and per-state attribution maps).
+const W = MAP_W;
+const H = MAP_H;
+const ACTOR_SET = new Set<string>(['ru', 'cn', 'ir', 'kp', 'us']);
+const countries = COUNTRIES.map((c) => ({
+  ...c,
+  isActor: c.iso2 ? ACTOR_SET.has(c.iso2) : false,
+}));
+
+// ─── Build the per-state dossier (5 states) ─────────────────────────────
+const ACTOR_STATES = ['ru', 'cn', 'ir', 'kp', 'us'] as const;
+
+function topTargetSectors(state: string, limit = 6) {
+  // sectorAttributionForState returns top-level sectors with name+count+percent
+  return a.sectorAttributionForState(state).slice(0, limit);
+}
+
+const dossiers = ACTOR_STATES.map((sid) => {
+  const events = a.eventsForState(sid);
+  const recent90 = events.filter((ev) => {
+    const d = ev.start_date ?? ev.disclosure_date ?? '';
+    if (!d) return false;
+    const ageDays = (Date.now() - new Date(d).getTime()) / 86400000;
+    return ageDays >= 0 && ageDays <= 90;
+  });
+  return {
+    id: sid,
+    name: a.nationStates.get(sid)?.name ?? sid.toUpperCase(),
+    color: STATE_COLOR[sid],
+    eventCount: events.length,
+    recent90Count: recent90.length,
+    recent5: events.slice(0, 5),
+    doctrines: a.topDoctrinesForState(sid, 6),
+    actors: a.topActorsForState(sid, 6),
+    targetCountries: a.topTargetCountriesForState(sid, 8),
+    targetSectors: topTargetSectors(sid, 6),
+  };
+});
+
+// ─── Target-mode color scale ────────────────────────────────────────────
+// For "as target" mode: build a histogram of target-country mentions.
+const targetCounts = a.targetCountryCounts();
+const maxTarget = Math.max(...targetCounts.values(), 1);
+const targetCountryClass = new Map<string, string>(); // iso2 → tier label
+for (const [iso2, n] of targetCounts) {
+  if (ACTOR_STATES.includes(iso2 as any)) continue; // attacker states have their own color
+  if (n >= maxTarget * 0.6) targetCountryClass.set(iso2, 'target-tier-high');
+  else if (n >= maxTarget * 0.25) targetCountryClass.set(iso2, 'target-tier-mid');
+  else if (n >= 2) targetCountryClass.set(iso2, 'target-tier-low');
+}
+
+// Per-iso CSS class lookup for path elements
+function classForCountry(c: typeof countries[number]): string {
+  const a2 = c.iso2;
+  const cls = ['country'];
+  if (a2 && ACTOR_STATES.includes(a2 as any)) cls.push(`actor-${a2}`);
+  if (a2 && targetCountryClass.has(a2)) cls.push(targetCountryClass.get(a2)!);
+  return cls.join(' ');
+}
+
+// Aggregate stats for the header strip
+const totalEvents = a.events.size;
+const recent90Total = a.allEventsSorted().filter((ev) => {
+  const d = ev.start_date ?? ev.disclosure_date ?? '';
+  if (!d) return false;
+  const ageDays = (Date.now() - new Date(d).getTime()) / 86400000;
+  return ageDays >= 0 && ageDays <= 90;
+}).length;
+---
+
+<div class="dash-root">
+  <div class="dash-top">
+    <div class="brand">
+      <p class="brand-org">A Black Flag Intelligence product</p>
+      <h1 class="brand-name">AUSPEX</h1>
+      <p class="brand-tagline">
+        Mandiant tells you who. <span class="emphasized">We tell you why.</span>
+      </p>
+    </div>
+    <div class="topline">
+      <div class="topline-stat"><strong>{totalEvents}</strong><span>events</span></div>
+      <div class="topline-stat"><strong>{recent90Total}</strong><span>last 90d</span></div>
+      <div class="topline-stat"><strong>{a.doctrines.size}</strong><span>doctrines</span></div>
+      <div class="topline-stat"><strong>{a.actors.size}</strong><span>actors</span></div>
+    </div>
+  </div>
+
+  <div class="map-wrap">
+    <div class="mode-toggle" role="tablist" aria-label="Map mode">
+      <button class="mode-btn is-active" data-mode="attacker">As attacker</button>
+      <button class="mode-btn" data-mode="target">As target</button>
+    </div>
+
+    <div class="legend legend-attacker">
+      {ACTOR_STATES.map((s) => (
+        <span class={`leg leg-${s}`}><span class="leg-dot"></span>{s.toUpperCase()}</span>
+      ))}
+    </div>
+    <div class="legend legend-target" hidden={true}>
+      <span class="leg leg-tt-high"><span class="leg-dot"></span>most-targeted</span>
+      <span class="leg leg-tt-mid"><span class="leg-dot"></span>mid</span>
+      <span class="leg leg-tt-low"><span class="leg-dot"></span>some</span>
+    </div>
+
+    <svg
+      class="world"
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label="World map of doctrine-state cyber activity"
+    >
+      <rect class="ocean" x="0" y="0" width={W} height={H} />
+      {countries.map((c) => (
+        <path
+          d={c.d}
+          class={classForCountry(c)}
+          data-iso={c.iso2 || ''}
+          data-name={c.name}
+        />
+      ))}
+    </svg>
+
+    <div id="map-tooltip" class="tooltip" hidden={true}></div>
+
+    <div id="dossier-panel" class="panel" hidden={true} role="complementary">
+      <button id="panel-close" class="panel-close" aria-label="Close">×</button>
+      <div id="panel-body"></div>
+    </div>
+  </div>
+
+  {/* Hidden dossier blocks (one per actor state). JS swaps these into the panel. */}
+  <div id="dossier-templates" hidden={true}>
+    {dossiers.map((d) => (
+      <div class="dossier-tpl" data-iso={d.id}>
+        <header class="dh">
+          <FlagChip state={d.id} />
+          <h2>{d.name}</h2>
+          <span class="dh-count">{d.eventCount} events</span>
+        </header>
+
+        <section class="dsec">
+          <p class="kicker">Doctrines we track ({d.doctrines.length})</p>
+          <ul class="chiplist">
+            {d.doctrines.map(({ doctrine, count }) => (
+              <li><a href={`/doctrine/${doctrine.id}`}>
+                <span class="chip-name">{doctrine.short_name ?? doctrine.name}</span>
+                <span class="chip-count">{count}</span>
+              </a></li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="dsec">
+          <p class="kicker">Top actors</p>
+          <ul class="chiplist">
+            {d.actors.map(({ actor, count }) => (
+              <li><a href={`/actor/${actor.id}`}>
+                <span class="chip-name">{actor.canonical_name}</span>
+                <span class="chip-count">{count}</span>
+              </a></li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="dsec">
+          <p class="kicker">Target countries</p>
+          <ul class="chiplist">
+            {d.targetCountries.map(({ country, count }) => (
+              <li>
+                <span class="chip-name"><code>{country.toUpperCase()}</code></span>
+                <span class="chip-count">{count}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="dsec">
+          <p class="kicker">Target sectors</p>
+          <ul class="chiplist">
+            {d.targetSectors.map((s: any) => (
+              <li>
+                {s.id ? (
+                  <a href={`/sector/${s.id}`}>
+                    <span class="chip-name">{s.name}</span>
+                    <span class="chip-count">{s.count}</span>
+                  </a>
+                ) : (
+                  <>
+                    <span class="chip-name">{s.name}</span>
+                    <span class="chip-count">{s.count}</span>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="dsec">
+          <p class="kicker">Recent events</p>
+          <ul class="event-mini">
+            {d.recent5.map((ev) => (
+              <li><a href={`/event/${ev.id}`}>
+                <span class="ev-date">{(ev.start_date ?? ev.disclosure_date ?? '').slice(0, 10)}</span>
+                <span class="ev-name">{ev.name}</span>
+              </a></li>
+            ))}
+          </ul>
+        </section>
+
+        <a class="full-link" href={`/state/${d.id}`}>Full {d.name} dossier →</a>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script is:inline src="/js/world-map-dashboard.js" defer></script>
+
+<style>
+  .dash-root {
+    width: 100%;
+  }
+  .dash-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 0.5rem 0 1.25rem;
+    flex-wrap: wrap;
+  }
+  .brand-org {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ctp-overlay0);
+    margin: 0 0 0.25rem;
+  }
+  .brand-name {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--ctp-blue), var(--ctp-mauve));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brand-tagline {
+    font-size: 0.9375rem;
+    color: var(--ctp-subtext0);
+    margin: 0.375rem 0 0;
+  }
+  .brand-tagline .emphasized { color: var(--ctp-text); font-weight: 600; }
+
+  .topline {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .topline-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0.5rem 0.875rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    min-width: 5.5rem;
+  }
+  .topline-stat strong {
+    font-size: 1.625rem;
+    line-height: 1;
+    color: var(--ctp-text);
+    font-weight: 600;
+  }
+  .topline-stat span {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ctp-subtext0);
+    margin-top: 0.25rem;
+  }
+
+  .map-wrap {
+    position: relative;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-lg, 12px);
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+
+  .mode-toggle {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    z-index: 3;
+    display: inline-flex;
+    background: var(--ctp-base);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .mode-btn {
+    background: none;
+    border: none;
+    color: var(--ctp-subtext0);
+    padding: 0.375rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 100ms ease, color 100ms ease;
+  }
+  .mode-btn:hover { color: var(--ctp-text); }
+  .mode-btn.is-active {
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+  }
+
+  .legend {
+    position: absolute;
+    bottom: 0.875rem;
+    left: 0.875rem;
+    z-index: 3;
+    display: inline-flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    align-items: center;
+    background: color-mix(in srgb, var(--ctp-base) 80%, transparent);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.4rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+    letter-spacing: 0.05em;
+  }
+  .leg { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .leg-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--ctp-overlay0);
+  }
+  .leg-ru .leg-dot { background: var(--ctp-red); }
+  .leg-cn .leg-dot { background: var(--ctp-yellow); }
+  .leg-ir .leg-dot { background: var(--ctp-green); }
+  .leg-kp .leg-dot { background: var(--ctp-mauve); }
+  .leg-us .leg-dot { background: var(--ctp-blue); }
+  .leg-tt-high .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 90%, transparent); }
+  .leg-tt-mid  .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 55%, transparent); }
+  .leg-tt-low  .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 25%, transparent); }
+
+  .world {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: transparent;
+  }
+  .ocean { fill: transparent; }
+  .country {
+    fill: var(--ctp-surface0);
+    stroke: var(--ctp-base);
+    stroke-width: 0.5;
+    transition: fill 150ms ease, stroke 100ms ease;
+  }
+
+  /* Attacker mode (default): the 5 doctrine states glow in palette */
+  .dash-root[data-mode='attacker'] .actor-ru { fill: var(--ctp-red); }
+  .dash-root[data-mode='attacker'] .actor-cn { fill: var(--ctp-yellow); }
+  .dash-root[data-mode='attacker'] .actor-ir { fill: var(--ctp-green); }
+  .dash-root[data-mode='attacker'] .actor-kp { fill: var(--ctp-mauve); }
+  .dash-root[data-mode='attacker'] .actor-us { fill: var(--ctp-blue); }
+
+  /* Target mode: peach-graded by times-targeted */
+  .dash-root[data-mode='target'] .country { fill: var(--ctp-surface0); }
+  .dash-root[data-mode='target'] .target-tier-high {
+    fill: color-mix(in srgb, var(--ctp-peach) 90%, var(--ctp-surface0));
+  }
+  .dash-root[data-mode='target'] .target-tier-mid {
+    fill: color-mix(in srgb, var(--ctp-peach) 55%, var(--ctp-surface0));
+  }
+  .dash-root[data-mode='target'] .target-tier-low {
+    fill: color-mix(in srgb, var(--ctp-peach) 25%, var(--ctp-surface0));
+  }
+  /* In target mode the attacker states still get a thin outline */
+  .dash-root[data-mode='target'] .actor-ru,
+  .dash-root[data-mode='target'] .actor-cn,
+  .dash-root[data-mode='target'] .actor-ir,
+  .dash-root[data-mode='target'] .actor-kp,
+  .dash-root[data-mode='target'] .actor-us {
+    stroke: var(--ctp-text);
+    stroke-width: 0.75;
+  }
+
+  .country[data-iso]:not([data-iso='']):hover {
+    cursor: pointer;
+    stroke: var(--ctp-text);
+    stroke-width: 1;
+    filter: brightness(1.15);
+  }
+  .country:focus { outline: none; stroke: var(--ctp-text); stroke-width: 1.25; }
+
+  .tooltip {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: var(--ctp-crust);
+    color: var(--ctp-text);
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ctp-surface0);
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 4;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  /* ─── Side panel ────────────────────────────────────────────────────── */
+  .panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: clamp(20rem, 40%, 28rem);
+    background: var(--ctp-base);
+    border-left: 1px solid var(--ctp-surface0);
+    box-shadow: -8px 0 24px rgba(0,0,0,0.25);
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 200ms ease;
+    z-index: 5;
+  }
+  .panel.is-open { transform: translateX(0); }
+  .panel-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    background: transparent;
+    border: none;
+    color: var(--ctp-subtext0);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.5rem 0.875rem;
+    z-index: 1;
+  }
+  .panel-close:hover { color: var(--ctp-text); }
+  #panel-body { padding: 0.5rem 1.125rem 1.5rem; }
+  .dh { display: flex; align-items: center; gap: 0.5rem; margin: 0.25rem 0 1rem; }
+  .dh h2 { margin: 0; font-size: 1.375rem; }
+  .dh-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    letter-spacing: 0.06em;
+  }
+  .dsec { margin: 1rem 0; }
+  .dsec .kicker { margin: 0 0 0.4rem; }
+  .chiplist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .chiplist li > a, .chiplist li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.2rem 0.55rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 0.8125rem;
+  }
+  .chiplist li > a:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+  .chip-count {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--ctp-overlay0);
+  }
+  .chiplist li > a:hover .chip-count { color: var(--ctp-base); }
+  .event-mini { list-style: none; padding: 0; margin: 0; }
+  .event-mini li { margin: 0.2rem 0; }
+  .event-mini a {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--ctp-text);
+    padding: 0.25rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+  }
+  .event-mini a:hover { background: var(--ctp-mantle); }
+  .ev-date {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+  }
+  .full-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-text);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  .full-link:hover { background: var(--ctp-blue); color: var(--ctp-base); }
+
+  @media (max-width: 720px) {
+    .panel { width: 100%; }
+    .dash-top { flex-direction: column; align-items: flex-start; }
+    .topline { width: 100%; justify-content: space-between; }
+  }
+</style>

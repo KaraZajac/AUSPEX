@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import FlagChip from '../components/FlagChip.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const states = [...a.nationStates.values()].sort((x, y) => x.short_name?.localeCompare(y.short_name ?? '') ?? 0);
+const rows = states.map((s) => ({
+  state: s,
+  doctrines: a.doctrinesForState(s.id).length,
+  services: a.servicesForState(s.id).length,
+  actors: a.actorsForState(s.id).length,
+  events: a.eventsForState(s.id).length,
+}));
+---
+<Base title="States" wide>
+  <p class="kicker">Atlas</p>
+  <h1>States</h1>
+  <p class="lede">
+    Nation-states covered in the atlas. Each card aggregates the
+    state's doctrines, services, actors, and attributed events — the
+    canonical "what is this country doing in cyber" topic page.
+  </p>
+
+  <div class="state-grid">
+    {rows.map(({ state, doctrines, services, actors, events }) => (
+      <a class="state-card" href={`/state/${state.id}`}>
+        <div class="state-head">
+          <FlagChip state={state.id} />
+          <h2>{state.name}</h2>
+        </div>
+        <div class="state-stats">
+          <span><strong>{doctrines}</strong> doctrines</span>
+          <span><strong>{services}</strong> services</span>
+          <span><strong>{actors}</strong> actors</span>
+          <span><strong>{events}</strong> events</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .state-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--ctp-text);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .state-card:hover { border-color: var(--ctp-blue); transform: translateY(-1px); }
+  .state-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .state-head h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-family: var(--font-mono);
+  }
+  .state-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.375rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext1);
+  }
+  .state-stats strong {
+    color: var(--ctp-text);
+    font-weight: 600;
+    margin-right: 0.25rem;
+  }
+</style>

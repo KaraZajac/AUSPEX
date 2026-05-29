@@ -1,0 +1,35 @@
+---
+// Theme toggle: cycles light (Latte) / dark (Mocha) / system.
+// Initial state is set inline in <head> to avoid FOUC.
+---
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" type="button">
+  <span data-when="latte">Mocha</span>
+  <span data-when="mocha" hidden>Latte</span>
+</button>
+
+<script is:inline>
+  (function () {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('auspex-theme');
+    if (stored === 'mocha' || stored === 'latte') {
+      root.setAttribute('data-theme', stored);
+    }
+    function applyButton() {
+      const current = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte');
+      document.querySelectorAll('#theme-toggle [data-when]').forEach((el) => {
+        el.hidden = el.getAttribute('data-when') === current;
+      });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      applyButton();
+      const btn = document.getElementById('theme-toggle');
+      btn?.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'mocha' : 'latte');
+        const next = current === 'mocha' ? 'latte' : 'mocha';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('auspex-theme', next);
+        applyButton();
+      });
+    });
+  })();
+</script>

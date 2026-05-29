@@ -1,0 +1,84 @@
+id: 2023-03/winter-vivern-european-government-targeting
+name: Winter Vivern (TA473 / UAC-0114) European government credential-phish campaign
+start_date: 2022-04-01  # SentinelLabs: campaign observed from early 2022
+disclosure_date: 2023-03-16
+end_date: null
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: phishing
+outcome_summary: |
+  SentinelLabs disclosed a sustained Winter Vivern campaign
+  targeting Polish, Italian, Indian, and Ukrainian government and
+  defense entities, plus a parallel arm focused on UK and EU
+  parliamentary infrastructure. Operators used credential
+  phishing, doc-themed lure pages mimicking government login
+  portals, and webmail XSS exploitation (Zimbra CVE-2022-27926,
+  later Roundcube CVE-2023-5631) for mailbox access. Russia /
+  Belarus-aligned with no named-service public link.
+false_flag_risk: low
+summary: |
+  Winter Vivern's targeting matrix tracks the political-military
+  priorities of Russia / Belarus through the post-invasion phase —
+  Ukrainian foreign and defense ministries, Polish government,
+  Italian defense, and UK / EU parliamentary infrastructure. The
+  webmail-XSS pivot in 2023 is doctrinally novel: rather than
+  endpoint-implant tradecraft typical of GRU/SVR clusters, Winter
+  Vivern weaponised browser-side credential capture against
+  unpatched government webmail. Continued through 2024 per
+  Recorded Future TAG-70 reporting.
+attributions:
+  - actor_id: ru/proxies/winter-vivern
+    attributing_org: SentinelLabs / Proofpoint / Recorded Future
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-03-16
+    attribution_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
+    notes: |
+      Vendor attribution to "Russia / Belarus aligned" without a
+      named-service link. AUSPEX tags as proxy with FSB/KGB
+      additional service IDs to capture the alignment without
+      overclaiming.
+doctrine_links:
+  - doctrine_id: ru/russkiy-mir
+    pillar_id: ru/russkiy-mir/ukraine-theater
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Sustained targeting of Ukrainian foreign and defense
+      ministries during active hostilities aligns with the
+      Ukraine-theater pillar.
+    attesting_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/nato-ultimatum-2021
+    pillar_id: ru/nato-ultimatum-2021/nato-degradation
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      UK Parliament, Polish government, Italian defense, EU
+      parliamentary infrastructure — canonical NATO-degradation
+      target set.
+    attesting_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Diplomatic and parliamentary intelligence collection through
+      webmail compromise is canonical information-sphere-as-domain
+      tradecraft.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/government/foreign-ministry
+    role: primary
+  - target_id: sectors/government/defense-ministry
+    role: primary
+  - target_id: sectors/government
+    role: primary
+sources:
+  - sentinelone/2023-03-16_winter-vivern-global-espionage

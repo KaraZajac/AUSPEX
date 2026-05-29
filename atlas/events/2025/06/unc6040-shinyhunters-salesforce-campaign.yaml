@@ -1,0 +1,79 @@
+id: 2025-06/unc6040-shinyhunters-salesforce-campaign
+name: UNC6040 / ShinyHunters voice-phishing Salesforce-OAuth campaign (umbrella)
+start_date: 2025-04-01
+disclosure_date: 2025-06-04
+end_date: 2025-12-31
+incident_type:
+  - intrusion
+  - data-theft
+  - extortion
+initial_vector: phishing  # voice phishing (vishing) → OAuth-token grant
+outcome_summary: |
+  Sustained 2025 campaign in which Google Threat Intelligence
+  Group tracked actor UNC6040 (Salesforce-instance access via
+  vishing) and UNC6240 (post-intrusion extortion, claiming the
+  ShinyHunters name). Operators called targeted-organization
+  IT-support staff impersonating IT vendors or internal help
+  desks, walking the victim through approval of a malicious
+  modified-Data-Loader connected app in the Salesforce
+  connected-apps panel, then using the resulting OAuth token
+  to query and exfiltrate Salesforce object tables — typically
+  CRM customer-contact records. Extortion demands followed,
+  ranging from days to months later, denominated in bitcoin
+  with 72-hour deadlines, branded as "ShinyHunters".
+  Confirmed victim organizations through 2025 include Adidas
+  (May), Allianz Life (Jul), Qantas (Jul), LVMH brands
+  (Louis Vuitton, Dior, Tiffany — Jul-Aug), Chanel (Aug),
+  Pandora (Aug), Cisco (Aug), Workday (Aug), TransUnion
+  (Aug), Coca-Cola (Sep), Air France-KLM (Sep), Farmers
+  Insurance (Sep), and Google itself (a corporate Salesforce
+  instance). Campaign exhibits operational overlap with the
+  Scattered Spider help-desk-attack tradecraft pattern;
+  some 2025 reporting treats them as a co-operating cluster.
+false_flag_risk: suspected
+campaign_id: shinyhunters-salesforce-2025
+summary: |
+  Umbrella event for the 2025 ShinyHunters-branded Salesforce-
+  cloud campaign. Modeled as a single multi-month event with
+  individual high-profile victims tracked as separate events.
+  AUSPEX classifies the campaign as criminal-baseline (UNC6040
+  + UNC6240, financially motivated) but dual-attributes with
+  Scattered Spider because Google TIG and multiple vendor
+  reports document operational-tradecraft overlap on the
+  vishing chain. Cluster-boundary fuzziness is the signature
+  property of the campaign: the ShinyHunters name is used as
+  an extortion brand, not necessarily as a stable cluster.
+attributions:
+  - actor_id: criminal/shinyhunters
+    attributing_org: Google Threat Intelligence Group (Mandiant)
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2025-06-04
+    attribution_source_id: mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
+    notes: |
+      GTIG tracks the extortion-side cluster as UNC6240, which
+      has consistently claimed the ShinyHunters name in
+      extortion communications. AUSPEX records the attribution
+      as ShinyHunters-brand without committing to whether
+      UNC6240 = the historic ShinyHunters operators.
+  - actor_id: criminal/scattered-spider
+    attributing_org: Google Threat Intelligence Group + journalism consensus
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-08-08
+    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    notes: |
+      Scattered Spider tradecraft pattern is documented for
+      some 2025 vishing-chain intrusions; cluster-boundary
+      with ShinyHunters-branded extortion remains fuzzy.
+doctrine_links: []
+targets:
+  - target_id: sectors/ict/software
+    role: primary
+  - target_id: sectors/retail
+    role: primary
+sources:
+  - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
+  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+  - mandiant/2025-08-12_unc6040-proactive-hardening
+  - krebs/2025-10_shinyhunters-corporate-extortion-spree

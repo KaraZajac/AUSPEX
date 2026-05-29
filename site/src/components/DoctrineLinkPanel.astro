@@ -1,0 +1,121 @@
+---
+import ConfidenceChip from './ConfidenceChip.astro';
+import { atlas, type DoctrineLink } from '../utils/atlas';
+
+interface Props {
+  link: DoctrineLink;
+}
+const { link } = Astro.props;
+const a = atlas();
+
+const doctrine = link.doctrine_id ? a.doctrines.get(link.doctrine_id) : undefined;
+const pillarRef = link.pillar_id ? a.pillars.get(link.pillar_id) : undefined;
+const programRef = link.program_id ? a.programs.get(link.program_id) : undefined;
+
+const doctrineForPillar = pillarRef ? a.doctrines.get(pillarRef.doctrineId) : undefined;
+const doctrineForProgram = programRef ? a.doctrines.get(programRef.doctrineId) : undefined;
+const pillarForProgram = programRef ? a.pillars.get(programRef.pillarId) : undefined;
+
+const resolvedDoctrine = doctrine ?? doctrineForPillar ?? doctrineForProgram;
+const resolvedPillar = pillarRef?.pillar ?? pillarForProgram?.pillar;
+const resolvedProgram = programRef?.program;
+
+const attesting = link.attesting_source_id ? a.sources.get(link.attesting_source_id) : undefined;
+---
+<div class={`doctrine-link ${link.contested ? 'doctrine-link-contested' : ''}`}>
+  <div class="doctrine-link-head">
+    <ConfidenceChip value={link.confidence} />
+    {link.contested && <span class="contested-flag">contested</span>}
+    <span class="doctrine-link-path">
+      {resolvedDoctrine && (
+        <a href={`/doctrine/${resolvedDoctrine.id}`}>{resolvedDoctrine.name}</a>
+      )}
+      {resolvedPillar && (
+        <>
+          <span class="sep">›</span>
+          <span>{resolvedPillar.name}</span>
+        </>
+      )}
+      {resolvedProgram && (
+        <>
+          <span class="sep">›</span>
+          <span>{resolvedProgram.name}</span>
+        </>
+      )}
+    </span>
+  </div>
+  {link.reasoning && <p class="doctrine-link-reasoning">{link.reasoning}</p>}
+  {attesting && (
+    <p class="doctrine-link-attesting">
+      <strong>Attesting source:</strong>{' '}
+      <a href={attesting.url} target="_blank" rel="noopener noreferrer">{attesting.title ?? attesting.id}</a>
+      {attesting.publisher && ` — ${attesting.publisher}`}
+    </p>
+  )}
+  {link.counter_explanation && (
+    <details class="doctrine-link-counter">
+      <summary>Counter-explanation</summary>
+      <p>{link.counter_explanation}</p>
+    </details>
+  )}
+</div>
+
+<style>
+  .doctrine-link {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    margin: 0.75rem 0;
+    background: var(--ctp-mantle);
+  }
+  .doctrine-link-contested {
+    border-left: 3px solid var(--ctp-peach);
+  }
+  .doctrine-link-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .doctrine-link-path {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext1);
+  }
+  .doctrine-link-path .sep {
+    color: var(--ctp-overlay0);
+    margin: 0 0.25rem;
+  }
+  .doctrine-link-reasoning {
+    color: var(--ctp-subtext1);
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+  }
+  .doctrine-link-attesting {
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+    margin: 0.5rem 0 0;
+  }
+  .doctrine-link-counter {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .doctrine-link-counter summary {
+    cursor: pointer;
+    color: var(--ctp-subtext0);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .contested-flag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--ctp-peach);
+    color: var(--ctp-base);
+    padding: 0.125rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+</style>

@@ -1,0 +1,57 @@
+id: 2018-04/asus-shadowhammer
+name: ASUS Live Update supply-chain attack ("ShadowHammer")
+start_date: 2018-06-01
+disclosure_date: 2019-03-25
+end_date: 2018-11-30
+incident_type:
+  - supply-chain
+  - intrusion
+initial_vector: supply-chain
+outcome_summary: |
+  Trojanized ASUS Live Update delivered backdoored updates to
+  approximately 1 million ASUS notebook owners, with selective
+  exploitation limited to ~600 hard-coded MAC addresses
+  (targeted individuals).
+false_flag_risk: none
+summary: |
+  Attributed to APT41 / Barium by Kaspersky. The compromised
+  ASUS Live Update installers were signed with valid ASUSTeK
+  digital certificates and distributed from official ASUS
+  update servers (liveupdate01s.asus[.]com, liveupdate01.asus[.]com),
+  giving the supply-chain compromise legitimate code-signing
+  cover. The trojanized binaries remained dormant unless the
+  infected system's network-adapter MAC address matched one of
+  roughly 600 hard-coded targets, enabling surgical second-stage
+  delivery. Kaspersky's verdict for the implants was
+  HEUR:Trojan.Win32.ShadowHammer, and the operation reuses
+  Winnti-lineage tradecraft consistent with the BARIUM cluster
+  inside APT41.
+attributions:
+  - actor_id: cn/mss/apt41
+    attributing_org: Kaspersky
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2019-03-25
+    attribution_source_id: kaspersky/2019-03_shadowhammer-asus
+doctrine_links:
+  - doctrine_id: cn/mic2025
+    pillar_id: cn/mic2025/next-gen-it
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Targeted intelligence collection on specific individuals via
+      a hardware-vendor supply-chain compromise is consistent with
+      MIC2025 IT / hardware-sector mapping but cannot be fully
+      attested without knowing target identities.
+    attesting_source_id: null
+    counter_explanation: |
+      Targeted-individual collection could equally be aligned with
+      Intelligence-Law / political collection rather than IP-sector
+      MIC2025 framing.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/asus
+    role: staging
+sources:
+  - kaspersky/2019-03_shadowhammer-asus

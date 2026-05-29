@@ -1,0 +1,102 @@
+id: 2017-03/operation-cloud-hopper
+name: Operation Cloud Hopper (APT10)
+start_date: 2014-05-01  # earliest documented MSP campaigns
+disclosure_date: 2017-04-03  # PwC + BAE
+end_date: 2018-12-20  # DOJ indictment / public-attribution close-out
+incident_type:
+  - intrusion
+  - data-theft
+  - supply-chain
+initial_vector: phishing
+outcome_summary: |
+  APT10 / MSS Tianjin via contractor Huaying Haitai phished managed
+  service providers (HPE, IBM, Fujitsu, NTT, others), harvested
+  admin credentials, then pivoted into customer environments in
+  12+ countries. Theft from aerospace, satellite, telecom,
+  healthcare, manufacturing, and the US Navy explicitly cited
+  in the DOJ indictment. Touched every MIC2025-listed sector
+  ("10/10").
+false_flag_risk: none
+campaign_id: cloud-hopper
+summary: |
+  The canonical MSP supply-chain compromise. PwC + BAE Systems
+  jointly published the "Operation Cloud Hopper" report in April
+  2017; UK NCSC and Five Eyes joint statement followed the
+  December 2018 DOJ indictment. APT10 / Stone Panda / MenuPass
+  ran high-volume spear-phishing of managed service provider
+  administrators, then used PlugX, ChChes, RedLeaves, QuasarRAT,
+  and PoisonIvy backdoors with DLL side-loading via legitimately
+  signed binaries for defense evasion, Mimikatz for credential
+  dumping, and valid credentials harvested from MSP jump hosts
+  to lateral-move into downstream customer environments — pivoting
+  from a single HPE / IBM / Fujitsu / NTT administrator into
+  hundreds of customer Active Directories. The indictment also
+  charges direct intrusions at US Navy personnel records, NASA,
+  and the DOE Lawrence Berkeley Lab, demonstrating MSP-pivot and
+  direct-collection used as alternating modes inside the same
+  cluster.
+attributions:
+  - actor_id: cn/mss/apt10
+    attributing_org: PwC + BAE Systems
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2017-04-03
+    attribution_source_id: pwc-bae/2017-04_operation-cloud-hopper
+  - actor_id: cn/mss/apt10
+    attributing_org: US DOJ
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2018-12-20
+    attribution_source_id: doj/2018-12-20_apt10-indictment
+doctrine_links:
+  - doctrine_id: cn/mic2025
+    pillar_id: null
+    program_id: null
+    confidence: attested
+    reasoning: |
+      DOJ indictment names victims and sectors that map 1:1 onto
+      MIC2025 pillars: aerospace, satellite, telecom, mining,
+      pharma, biotech, IT. PwC + BAE describe Cloud Hopper as a
+      strategic-IP-collection program at MIC2025-pillar scale.
+    attesting_source_id: doj/2018-12-20_apt10-indictment
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/dual-use-research
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Victim mix straddles civilian and dual-use research; MCF is
+      the meta-doctrine that licenses MSS to treat both as one
+      target set.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/standards-2035
+    pillar_id: cn/standards-2035/telecom-standards
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Telecom-vendor and carrier targets in the victim list are
+      consistent with standards-2035-aligned collection, though
+      MIC2025 framing is more direct.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/hpe
+    role: staging
+  - target_id: orgs/ibm
+    role: staging
+  - target_id: orgs/fujitsu
+    role: staging
+  - target_id: orgs/ntt
+    role: staging
+  - target_id: sectors/ict/managed-services
+    role: primary
+sources:
+  - doj/2018-12-20_apt10-indictment
+  - pwc-bae/2017-04_operation-cloud-hopper

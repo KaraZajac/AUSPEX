@@ -1,0 +1,66 @@
+id: 2024-06/snowflake-unc5537
+name: UNC5537 / Snowflake customer-tenant mass-credential intrusion
+start_date: 2024-04-14
+disclosure_date: 2024-06-02
+end_date: 2024-09-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: valid-creds
+outcome_summary: |
+  UNC5537 used infostealer logs (RedLine / Raccoon / LummaC2)
+  purchased from criminal markets to access ~165 Snowflake
+  customer tenants lacking MFA. Major victims (rolled out via
+  ShinyHunters / IntelBroker BreachForums posts April–September
+  2024): Ticketmaster / Live Nation (~560M records), AT&T
+  (~110M call detail records, ransom ~USD 370K paid), Santander
+  (~30M records), Advance Auto Parts (~2.3M records), Neiman
+  Marcus, Pure Storage, LendingTree, Anheuser-Busch. Snowflake
+  itself was not breached — the failure was at customer-tenant
+  identity hygiene. Connor Moucka ("Judische") arrested in
+  Canada Oct 30 2024 on a US warrant; co-conspirator John Erin
+  Binns previously detained in Turkey.
+quantified_impact:
+  organizations_affected: 165
+  individuals_affected: 700000000  # cumulative across published exfils
+  at_t_ransom_paid_usd: 370000
+false_flag_risk: none
+campaign_id: shinyhunters-snowflake-cluster
+operators_named:
+  - moucka-connor-riley  # UNC5537 "Judische", DOJ Nov 2024
+  - binns-john-erin  # Snowflake co-conspirator, detained in Turkey
+summary: |
+  Largest cumulative-records-exfiltrated data-theft event on
+  public record (depends on counting method). Catalyzed
+  industry-wide push for mandatory MFA on cloud-data-warehouse
+  tenants (Snowflake announced default MFA Oct 2024). The case
+  is the AUSPEX type-specimen for "infostealer-logs-to-
+  enterprise-SaaS-tenant access at scale."
+attributions:
+  - actor_id: criminal/unc5537
+    attributing_org: Mandiant + Snowflake
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2024-06-10
+    attribution_source_id: mandiant/2024-06-10_unc5537-snowflake
+  - actor_id: criminal/shinyhunters
+    attributing_org: Mandiant + journalism consensus
+    attributing_org_confidence: moderate
+    auspex_assessment: partial
+    attribution_date: 2024-06-10
+    attribution_source_id: mandiant/2024-06-10_unc5537-snowflake
+    notes: |
+      ShinyHunters and IntelBroker were the resale / leak-site
+      personas; UNC5537 was the intrusion operator cluster.
+      Cluster boundary is fuzzy by design.
+doctrine_links: []
+targets:
+  - target_id: orgs/snowflake
+    role: primary
+  - target_id: orgs/att
+    role: primary
+  - target_id: orgs/ticketmaster
+    role: primary
+sources:
+  - mandiant/2024-06-10_unc5537-snowflake
+  - doj/2024-11-04_moucka-snowflake-indictment

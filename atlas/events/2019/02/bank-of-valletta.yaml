@@ -1,0 +1,59 @@
+id: 2019-02/bank-of-valletta
+name: Bank of Valletta (Malta) SWIFT theft
+start_date: 2019-02-13
+disclosure_date: 2019-02-13
+end_date: 2019-02-14
+incident_type:
+  - financial-theft
+initial_vector: phishing
+outcome_summary: |
+  SWIFT-style fraudulent transfers totaling €13M routed to
+  accounts in the UK, US, Czech Republic, and Hong Kong. Bank
+  detected the activity within hours and shut down all systems
+  for approximately one day; transfers were reversed.
+quantified_impact:
+  usd_attempted: 14600000  # €13M ≈ $14.6M
+  usd_recovered: 14600000  # transfers reversed
+false_flag_risk: none
+campaign_id: apt38-swift-bank-heists
+summary: |
+  Late-era APT38 SWIFT operation. Notable for the speed of bank
+  detection and reversal — a tradecraft response curve that
+  contributed to APT38's migration to direct crypto-exchange
+  theft over the following years. Mandiant's tracking links the
+  intrusion to the same APT38 / BeagleBoyz playbook: spear-
+  phishing of bank employees with weaponized Office documents,
+  valid-credentials lateral movement to the SWIFT Alliance
+  Access environment, DYEPACK-style manipulation of SWIFT
+  messages to suppress confirmation receipts during the transfer
+  window, and FALLCHILL / NESTEGG / Hermes-lineage tooling for
+  command-and-control and post-operation cleanup. The transfers
+  to UK, US, Czech, and Hong Kong accounts were caught by
+  receiver-side fraud screening before money mules could cash
+  out.
+attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2019-02-15  # contemporaneous Mandiant tracking
+    attribution_source_id: mandiant/2018-10-03_apt38-report
+doctrine_links:
+  - doctrine_id: kp/byungjin
+    pillar_id: kp/byungjin/sanctions-evasion-revenue
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Continuation of the APT38 SWIFT campaign attested by CISA
+      AA20-239A. WMD-financing strategic goal per US-government
+      framing.
+    attesting_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/bank-of-valletta
+    role: primary
+    outcome: €13M routed; full reversal achieved via swift bank shutdown.
+sources:
+  - mandiant/2018-10-03_apt38-report
+  - cisa/2020-08-26_aa20-239a-beagleboyz

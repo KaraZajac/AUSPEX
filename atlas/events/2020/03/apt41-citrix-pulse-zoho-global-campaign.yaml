@@ -1,0 +1,80 @@
+id: 2020-03/apt41-citrix-pulse-zoho-global-campaign
+name: APT41 global N-day campaign (Citrix, Pulse, Zoho)
+start_date: 2020-01-20
+disclosure_date: 2020-03-25
+end_date: 2020-03-11
+incident_type:
+  - intrusion
+initial_vector: n-day
+outcome_summary: |
+  Mandiant discloses an APT41 high-tempo campaign between
+  late January and early March 2020 against 75+ victims in
+  20+ countries. Exploited N-days included CVE-2019-19781
+  (Citrix ADC / NetScaler path traversal), CVE-2019-11510
+  (Pulse Secure SSL VPN arbitrary file read), and
+  CVE-2020-10189 (Zoho ManageEngine Desktop Central
+  deserialization). Verticals: banking, defense, government,
+  healthcare, manufacturing, oil-and-gas, telecom, utilities.
+false_flag_risk: none
+summary: |
+  Defining N-day-velocity event for APT41 — Mandiant frames
+  it as one of the broadest opportunistic N-day campaigns by
+  a single PRC operator ever publicly disclosed. The timing
+  is significant: APT41 ran the wave during the early COVID
+  lockdown weeks when many victims were urgently expanding
+  remote-access infrastructure (Citrix and Pulse Secure
+  appliances in particular) and were therefore delayed on
+  patching. Cross-vertical victim coverage spanning every
+  MIC2025 pillar makes this a textbook case of state-aligned
+  N-day opportunism layered over standing strategic
+  collection tasking; sector mix runs from biotech and
+  healthcare (COVID-research adjacent) through banking and
+  utilities (CII pillar).
+attributions:
+  - actor_id: cn/mss/apt41
+    attributing_org: FireEye / Mandiant
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-03-25
+    attribution_source_id: mandiant/2020-03-25_apt41-global-intrusion-multiple-exploits
+doctrine_links:
+  - doctrine_id: cn/mic2025
+    pillar_id: null
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Victim mix (defense, manufacturing, healthcare,
+      oil-and-gas, telecom) covers nearly every MIC2025 pillar.
+      Mandiant does not name doctrine; sector mix is
+      sufficiently broad to read as opportunistic-aligned-with-
+      strategic-collection.
+    attesting_source_id: null
+    counter_explanation: |
+      Pure opportunism (N-day vulnerability targeting whatever
+      is exposed) could also be the dominant frame, with
+      MIC2025-aligned post-selection.
+    contested: false
+    analyst: claude
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/civil-infrastructure-targeting
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Utilities and telecom verticals in the victim mix touch
+      the civil-infrastructure-targeting lane; oil-and-gas
+      and banking add CII breadth.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/critical-infrastructure
+    role: primary
+  - target_id: sectors/healthcare
+    role: primary
+  - target_id: sectors/finance
+    role: primary
+  - target_id: sectors/ict/telecom
+    role: primary
+sources:
+  - mandiant/2020-03-25_apt41-global-intrusion-multiple-exploits

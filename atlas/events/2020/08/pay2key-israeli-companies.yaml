@@ -1,0 +1,77 @@
+id: 2020-08/pay2key-israeli-companies
+name: First Pay2Key wave against Israeli companies
+start_date: 2020-08-01
+disclosure_date: 2020-11-06  # Check Point / ClearSky reports
+end_date: 2021-03-31
+incident_type:
+  - ransomware
+  - influence-operation
+initial_vector: n-day  # VPN / edge-device exploitation
+outcome_summary: |
+  Israeli logistics, insurance, and retail companies hit by
+  Pay2Key ransomware with leak-site amplification. Limited
+  ransoms paid; data leaks served the coercive / influence
+  function more than the revenue function.
+false_flag_risk: none
+summary: |
+  Attributed to Fox Kitten / Pioneer Kitten by ClearSky and Check
+  Point. Pay2Key represents the IRGC-affiliated destructive-leak
+  persona pattern in ransomware form. ClearSky's Fox Kitten
+  reporting documents the underlying intrusion tradecraft: mass
+  exploitation of Pulse Secure (CVE-2019-11510), Fortinet
+  FortiOS (CVE-2018-13379), Citrix ADC (CVE-2019-19781), and
+  Microsoft Exchange / RDP for initial access, web shells planted
+  on internet-facing servers, lateral movement using valid
+  credentials, and persistence via PowerShell and scheduled tasks.
+  The Pay2Key encryptor itself is a relatively unsophisticated
+  C++ binary deployed manually after the operators have already
+  exfiltrated victim data to a leak server — the actual coercion
+  is the public-data-dump channel rather than the encryption.
+  Sibling operations against Israeli targets in this cluster
+  include the Black Shadow Shirbit leak (Dec 2020) and the later
+  Moses Staff PyDCrypt campaign.
+attributions:
+  - actor_id: ir/irgc/pioneer-kitten
+    attributing_org: ClearSky
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-11-06
+    attribution_source_id: clearsky/2020-02_fox-kitten
+  - actor_id: ir/irgc/pioneer-kitten
+    attributing_org: Check Point
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2020-12-17
+    attribution_source_id: checkpoint/2020-12_pay2key
+doctrine_links:
+  - doctrine_id: ir/cyber-deniable-retaliation
+    pillar_id: ir/cyber-deniable-retaliation/persona-laundering
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Pay2Key persona used to launder anti-Israel coercion as
+      ransomware crime.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ir/forward-defense
+    pillar_id: null
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Israeli targets consistent with Forward Defense.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: sectors/transport/logistics
+    country: il
+    role: primary
+  - target_id: sectors/finance/banking
+    country: il
+    role: primary
+sources:
+  - clearsky/2020-02_fox-kitten
+  - checkpoint/2020-12_pay2key

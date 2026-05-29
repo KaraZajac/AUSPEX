@@ -1,0 +1,63 @@
+id: 2011-03/rsa-securid-lockheed
+name: RSA SecurID breach + Lockheed follow-on
+start_date: 2011-03-01
+disclosure_date: 2011-03-17
+end_date: 2011-06-30
+incident_type:
+  - intrusion
+  - data-theft
+  - supply-chain
+initial_vector: phishing
+outcome_summary: |
+  Spear-phishing of RSA (EMC) employees with a malicious Excel
+  attachment compromised SecurID seed values. Stolen seeds were
+  subsequently used in attempted intrusions against US defense
+  primes including Lockheed Martin. Undermined confidence in
+  millions of two-factor tokens; Lockheed-side follow-on intrusion
+  blocked.
+false_flag_risk: none
+summary: |
+  Vendor assessment subsequently assigned to APT1 / PLA, with some
+  analysts attributing to APT12. The pattern — break the two-
+  factor token vendor to attack the defense-prime customer base —
+  was an early canonical supply-chain compromise. Initial access
+  was a spear-phishing email titled "2011 Recruitment Plan" with
+  a malicious Excel attachment exploiting an Adobe Flash zero-day
+  (CVE-2011-0609) to drop the Poison Ivy remote-access trojan,
+  followed by privilege escalation, credential dumping, and
+  lateral movement to the SecurID engineering enclave where the
+  seed-record database was exfiltrated. The Lockheed Martin
+  follow-on, blocked in May 2011, used the stolen SecurID seeds
+  against Lockheed's two-factor VPN — establishing the canonical
+  "compromise the supply chain to defeat the defense in depth"
+  pattern that subsequent PLA / MSS supply-chain operations
+  refined.
+attributions:
+  - actor_id: cn/pla/apt1
+    attributing_org: vendor consensus (post-hoc)
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2011-06-01
+    attribution_source_id: mandiant/2013-02-19_apt1-report
+    notes: |
+      Some analysts assign APT12; treat as overlapping cluster
+      attribution rather than identity.
+doctrine_links:
+  - doctrine_id: cn/mcf
+    pillar_id: cn/mcf/dual-use-research
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Targeting Lockheed via the two-factor token supplier is the
+      classic MCF-aligned defense-aerospace collection pattern.
+    attesting_source_id: null
+    counter_explanation: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/rsa-emc
+    role: staging
+  - target_id: orgs/lockheed-martin
+    role: primary
+sources:
+  - mandiant/2013-02-19_apt1-report

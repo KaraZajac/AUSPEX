@@ -1,0 +1,77 @@
+id: 2021-08/inkysquid-daily-nk
+name: InkySquid browser-exploit campaign (Daily NK watering-hole)
+start_date: 2021-04-01  # earliest tracked compromise of Daily NK site
+disclosure_date: 2021-08-17
+end_date: 2021-06-30
+incident_type:
+  - intrusion
+  - data-theft
+initial_vector: 0-day
+outcome_summary: |
+  Watering-hole compromise of the Daily NK (South Korean
+  DPRK-focused news outlet) website. IE/Edge zero-day chains
+  delivered BLUELIGHT and RokRAT to targeted visitors:
+  defectors, journalists covering the DPRK, and policy
+  researchers. Targeted surveillance compromise.
+false_flag_risk: none
+summary: |
+  Canonical Juche-internal-security operation: APT37 sub-cluster
+  (InkySquid per Volexity) using zero-day browser exploits to
+  compromise the precise audience of a defector-focused news
+  outlet. The watering-hole compromise injected obfuscated
+  JavaScript into the Daily NK site that exploited Internet
+  Explorer / Edge zero-days (CVE-2020-1380 and a then-unpatched
+  Internet Explorer vulnerability), then dropped the BLUELIGHT
+  remote-access trojan (a custom Microsoft Graph API / OneDrive
+  C2-channel implant) and the RokRAT backdoor — both established
+  members of the APT37 / ScarCruft toolset alongside DOGCALL,
+  CARROTBALL, and KARAE. Post-compromise tradecraft included
+  credential dumping, scheduled tasks for persistence, and use
+  of valid OneDrive credentials for low-noise data exfiltration.
+  Volexity attribution explicitly notes the defector /
+  journalist targeting.
+attributions:
+  - actor_id: kp/mss/inkysquid
+    attributing_org: Volexity
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-08-17
+    attribution_source_id: volexity/2021-08-17_inkysquid
+  - actor_id: kp/mss/apt37
+    attributing_org: Volexity
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2021-08-17
+    attribution_source_id: volexity/2021-08-17_inkysquid
+doctrine_links:
+  - doctrine_id: kp/juche
+    pillar_id: kp/juche/internal-security
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Volexity's disclosure explicitly identifies the targeted
+      audience as defectors and journalists covering the DPRK —
+      gold-standard regime-political-security target set under
+      the Juche internal-security pillar.
+    attesting_source_id: volexity/2021-08-17_inkysquid
+    contested: false
+    analyst: claude
+  - doctrine_id: kp/strategic-information
+    pillar_id: kp/strategic-information/policy-collection
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Adjacent target set: DPRK policy researchers and
+      journalists shaping adversary positions on the regime.
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/daily-nk
+    role: primary
+    outcome: Watering-hole compromise; targeted RAT delivery to defector / journalist visitors.
+  - target_id: sectors/media/journalism
+    role: primary
+  - target_id: sectors/civil-society/dissident
+    role: primary
+sources:
+  - volexity/2021-08-17_inkysquid

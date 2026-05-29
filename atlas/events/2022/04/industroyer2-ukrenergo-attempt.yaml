@@ -1,0 +1,70 @@
+id: 2022-04/industroyer2-ukrenergo-attempt
+name: Industroyer2 attempt against Ukrenergo (thwarted)
+start_date: 2022-04-08
+disclosure_date: 2022-04-12
+end_date: 2022-04-12
+incident_type:
+  - intrusion
+  - destructive
+initial_vector: unknown
+outcome_summary: |
+  Industroyer2 + CaddyWiper combo deployed against a Ukrainian
+  high-voltage electrical substation with IEC 60870-5-104
+  manipulation. Attempted blackout of ~2M customers thwarted by
+  ESET / Microsoft / CERT-UA collaboration before execution.
+quantified_impact:
+  customers_at_risk: 2000000
+  outage_hours: 0  # thwarted
+false_flag_risk: none
+campaign_id: sandworm-ukraine-grid-wave
+summary: |
+  Joint ESET / CERT-UA technical disclosure 12 April 2022. The
+  Industroyer2 codebase is a Sandworm-internal evolution of the
+  2016 Industroyer / CrashOverride framework, collapsed into a
+  single Windows executable that hard-codes the IEC 60870-5-104
+  configuration for the specific Ukrenergo substation rather than
+  loading it from a config file. Sandworm staged Industroyer2 on
+  the engineering workstation alongside CaddyWiper (to destroy
+  Windows hosts), ORCSHRED, SOLOSHRED and AWFULSHRED (to wipe
+  Linux servers and Solaris servers in the ICS environment), and
+  ArguePatch (a modified ESET HSLP component used as a launcher).
+  Lateral movement and persistence used valid credentials and
+  scheduled tasks; the operation was scheduled to fire and then
+  wipe the network behind it. ESET, Microsoft, and CERT-UA
+  intercepted execution before the IEC 60870-5-104 commands could
+  trip an estimated 2 million customers offline.
+attributions:
+  - actor_id: ru/gru/74455/sandworm
+    attributing_org: ESET / CERT-UA
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2022-04-12
+    attribution_source_id: eset/2022-04-12_industroyer2-ukrenergo
+doctrine_links:
+  - doctrine_id: ru/energy-weaponization
+    pillar_id: ru/energy-weaponization/grid-attack
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Sandworm's continued targeting of Ukrainian high-voltage
+      transmission for coercive blackout effect, paired with
+      kinetic missile strikes on the same grid. Continuous
+      energy-weaponization-via-cyber pattern.
+    attesting_source_id: eset/2022-04-12_industroyer2-ukrenergo
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/russkiy-mir
+    pillar_id: ru/russkiy-mir/ukraine-theater
+    program_id: null
+    confidence: attested
+    reasoning: |
+      Ukraine destabilization continuum.
+    attesting_source_id: null
+    contested: false
+    analyst: claude
+targets:
+  - target_id: orgs/ukrenergo
+    role: primary
+sources:
+  - eset/2022-04-12_industroyer2-ukrenergo
