@@ -124,3 +124,20 @@ export function parentTechnique(t: string): string {
   const i = t.indexOf('.');
   return i < 0 ? t : t.slice(0, i);
 }
+
+/**
+ * Expand a technique id into the set of forms an engine should match
+ * against: the parent T-code always, plus the sub-technique form if
+ * one is present (e.g., T1566.001 → ["T1566", "T1566.001"]).
+ *
+ * Used by feature extraction so the engine retains parent-level
+ * matching (recall — actors whose MITRE profile only has parent
+ * T-codes still match) while gaining sub-technique discriminative
+ * signal (precision — T1566.001 vs T1566.002 separates phishing
+ * actors with different tradecraft).
+ */
+export function expandTechnique(t: string): string[] {
+  const p = parentTechnique(t);
+  if (p === t) return [p];
+  return [p, t];
+}

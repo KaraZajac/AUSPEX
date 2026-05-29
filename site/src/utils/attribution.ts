@@ -131,6 +131,11 @@ export function extractFeatures(event: AuspexEvent, atlas: Atlas): EventFeatures
 
   // Roll inferred TTPs up to parent T-codes (e.g., T1566.001 → T1566)
   // so they match MITRE actor profiles that may use either form.
+  // Tried dual-expansion (keep both forms) on 2026-05-29 — was net
+  // negative across doctrine + pillar engines because of double-counting
+  // when both sides carry the sub-form. Parent-rollup is the safer
+  // default; sub-tech distinction would need hierarchical matching
+  // logic (event T1566.001 matches actor T1566 once, not twice).
   const ttps = new Set<string>();
   for (const t of inferEventTTPs(event)) ttps.add(parentTechnique(t));
 

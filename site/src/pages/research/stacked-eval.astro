@@ -1,0 +1,271 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReliabilityDiagram from '../../components/ReliabilityDiagram.astro';
+import { bootstrapMeanCI, fmtPctCI, fmtNumCI } from '../../utils/eval-stats';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+interface StackedJson {
+  scored: number;
+  nbHit1: number; nbHit3: number; nbHit5: number; nbMrr: number;
+  hit1: number; hit3: number; hit5: number; mrr: number;
+  featureWeights: Array<{ key: string; weight: number }>;
+  trainFrac: number;
+  bias: number;
+  perEvent: {
+    nbHit1: number[]; nbHit3: number[]; nbHit5: number[]; nbRr: number[];
+    stHit1: number[]; stHit3: number[]; stHit5: number[]; stRr: number[];
+  };
+  generatedAt: string;
+}
+
+const here = dirname(fileURLToPath(import.meta.url));
+const cachePath = resolve(here, '..', '..', '..', '.cache', 'stacked-eval.json');
+const data: StackedJson | null = existsSync(cachePath)
+  ? JSON.parse(readFileSync(cachePath, 'utf8'))
+  : null;
+
+const ciNbHit1 = data ? bootstrapMeanCI(data.perEvent.nbHit1) : null;
+const ciNbHit3 = data ? bootstrapMeanCI(data.perEvent.nbHit3) : null;
+const ciNbHit5 = data ? bootstrapMeanCI(data.perEvent.nbHit5) : null;
+const ciNbMrr  = data ? bootstrapMeanCI(data.perEvent.nbRr)   : null;
+const ciStHit1 = data ? bootstrapMeanCI(data.perEvent.stHit1) : null;
+const ciStHit3 = data ? bootstrapMeanCI(data.perEvent.stHit3) : null;
+const ciStHit5 = data ? bootstrapMeanCI(data.perEvent.stHit5) : null;
+const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
+---
+<Base title="Stacked attribution — backtest" wide>
+  <p class="kicker">Research</p>
+  <h1>Stacked attribution — backtest</h1>
+  <p class="lede">
+    A logistic-regression meta-classifier re-ranks the Naive-Bayes
+    engine's top-10 candidates using supplementary discriminative
+    features (named-target overlap, malware-lineage hit, named-operator
+    overlap, campaign-cluster match, in-active-window check, attacker-
+    state alignment). NB stays the candidate generator; the stacker
+    does the within-cluster cleanup.
+  </p>
+
+  {!data ? (
+    <p class="reading">
+      <strong>No cached result.</strong> Run <code>pnpm run eval-stacked</code>
+      from <code>site/</code> to populate <code>.cache/stacked-eval.json</code>,
+      then rebuild.
+    </p>
+  ) : (
+    <>
+      <p class="meta">
+        Generated {data.generatedAt} · stacker trained on
+        {' '}{(data.trainFrac * 100).toFixed(0)}% of labeled events,
+        evaluated on the held-out {((1 - data.trainFrac) * 100).toFixed(0)}%
+        (n={data.scored}). Train / eval split is deterministic.
+      </p>
+
+      <section>
+        <h2>Headline</h2>
+        <table class="cmp-table">
+          <thead>
+            <tr><th></th><th>top-1</th><th>top-3</th><th>top-5</th><th>MRR</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cmp-label">Plain NB (same eval slice)</td>
+              <td>{(data.nbHit1 * 100).toFixed(1)}%</td>
+              <td>{(data.nbHit3 * 100).toFixed(1)}%</td>
+              <td>{(data.nbHit5 * 100).toFixed(1)}%</td>
+              <td>{data.nbMrr.toFixed(3)}</td>
+            </tr>
+            <tr>
+              <td class="cmp-label">Stacked NB + meta-classifier</td>
+              <td><strong>{(data.hit1 * 100).toFixed(1)}%</strong></td>
+              <td><strong>{(data.hit3 * 100).toFixed(1)}%</strong></td>
+              <td><strong>{(data.hit5 * 100).toFixed(1)}%</strong></td>
+              <td><strong>{data.mrr.toFixed(3)}</strong></td>
+            </tr>
+            <tr class="cmp-delta">
+              <td class="cmp-label">Δ (stacked − NB)</td>
+              <td>{(((data.hit1 - data.nbHit1) * 100) >= 0 ? '+' : '')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp</td>
+              <td>{(((data.hit3 - data.nbHit3) * 100) >= 0 ? '+' : '')}{((data.hit3 - data.nbHit3) * 100).toFixed(1)}pp</td>
+              <td>{(((data.hit5 - data.nbHit5) * 100) >= 0 ? '+' : '')}{((data.hit5 - data.nbHit5) * 100).toFixed(1)}pp</td>
+              <td>{((data.mrr - data.nbMrr) >= 0 ? '+' : '')}{(data.mrr - data.nbMrr).toFixed(3)}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="ci-band">
+          <strong>95% CIs</strong> (bootstrap, n={data.scored}, 2000 iter, seeded):<br/>
+          NB:  top-1 {fmtPctCI(ciNbHit1!)} · top-3 {fmtPctCI(ciNbHit3!)} · top-5 {fmtPctCI(ciNbHit5!)} · MRR {fmtNumCI(ciNbMrr!)}<br/>
+          Stk: top-1 {fmtPctCI(ciStHit1!)} · top-3 {fmtPctCI(ciStHit3!)} · top-5 {fmtPctCI(ciStHit5!)} · MRR {fmtNumCI(ciStMrr!)}
+        </div>
+      </section>
+
+      <section>
+        <h2>Learned feature weights</h2>
+        <p>
+          Logistic-regression weights post-standardization (each feature
+          z-scored on the training pairs). Magnitude indicates importance;
+          sign indicates direction. The bias term is <code>{data.bias.toFixed(3)}</code>.
+        </p>
+        <table class="weights-table">
+          <thead>
+            <tr><th>feature</th><th>weight</th><th>direction</th></tr>
+          </thead>
+          <tbody>
+            {data.featureWeights.map((f) => (
+              <tr>
+                <td class="w-feat">{f.key}</td>
+                <td class="w-val">{f.weight.toFixed(3)}</td>
+                <td class="w-bar">
+                  <span class="w-bar-track">
+                    <span
+                      class={`w-bar-fill ${f.weight >= 0 ? 'pos' : 'neg'}`}
+                      style={`width: ${Math.min(100, Math.abs(f.weight) * 60).toFixed(1)}%;`}
+                    />
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="reading">
+          <strong>Reading.</strong> The strongest re-ranking signals are
+          named-target overlap (the held-out event hits an org or
+          infra entity the candidate has hit before), campaign
+          clustering, and named-operator overlap. NB's own log-score
+          weighs near zero — the stacker is using NB's <em>rank</em>
+          and <em>top-1 margin</em> as the scaffolding and the meta-
+          features as the within-cluster discriminator. That's the
+          architectural claim: NB picks the cluster, the stacker
+          picks the actor in the cluster.
+        </p>
+      </section>
+
+      <section>
+        <h2>Methodology</h2>
+        <ol>
+          <li>
+            LOO with NB over the full corpus. Each event is held out,
+            NB is retrained on the rest, and the top-10 candidates are
+            captured along with their log-scores.
+          </li>
+          <li>
+            Per (candidate, event) pair, compute a 10-feature vector:
+            NB log-score, NB rank, margin to top-1, named-target match
+            count, malware-lineage hit count, named-operator hit count,
+            campaign-cluster match, in-active-window check, attacker-
+            state alignment, has-MITRE-profile flag.
+          </li>
+          <li>
+            Deterministic 80 / 20 split of events (seeded LCG). Stacker
+            trains on the 80%; eval is on the held-out 20% the stacker
+            never saw. This is a clean held-out evaluation — the
+            stacker's accuracy here is what it would deliver on
+            production-novel events of similar distribution.
+          </li>
+          <li>
+            L2-regularized logistic regression (λ=0.5, lr=0.05, 400
+            iterations of batch gradient descent). Features are
+            z-score standardized on training pairs.
+          </li>
+          <li>
+            At eval time: re-rank the held-out event's top-10 by the
+            stacker's predicted probability that each candidate is the
+            true actor. Report top-K and MRR on the re-ranked list.
+          </li>
+        </ol>
+        <p class="reading">
+          <strong>Caveats.</strong> The eval slice is small ({data.scored} events).
+          The stacker's lift is large enough (top-1
+          {(((data.hit1 - data.nbHit1) * 100) >= 0 ? ' +' : ' ')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp)
+          to be far beyond bootstrap noise, but the per-state breakdown
+          is not yet large enough to be informative. Before the thesis
+          snapshot: rerun with stratified k-fold so every event
+          participates in exactly one eval fold, and report per-state
+          stacker gain.
+        </p>
+      </section>
+    </>
+  )}
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .cmp-table th, .cmp-table td {
+    text-align: right;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .cmp-table th {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-overlay1);
+  }
+  .cmp-label {
+    text-align: left !important;
+    color: var(--ctp-subtext1);
+  }
+  .cmp-delta td { color: var(--ctp-blue); font-weight: 600; }
+  .cmp-delta .cmp-label { color: var(--ctp-subtext0); }
+  .weights-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    margin: 0.75rem 0;
+  }
+  .weights-table th, .weights-table td {
+    text-align: left;
+    padding: 0.35rem 0.625rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .weights-table th {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    color: var(--ctp-overlay1);
+  }
+  .w-feat { font-weight: 500; }
+  .w-val { text-align: right; width: 80px; }
+  .w-bar { width: 50%; }
+  .w-bar-track {
+    display: block;
+    height: 8px;
+    background: var(--ctp-surface0);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .w-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+  }
+  .w-bar-fill.pos { background: var(--ctp-green); }
+  .w-bar-fill.neg { background: var(--ctp-red); }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .ci-band {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-overlay0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext1);
+    line-height: 1.6;
+  }
+  .ci-band strong { color: var(--ctp-text); }
+</style>

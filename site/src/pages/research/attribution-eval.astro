@@ -6,6 +6,7 @@ import { atlas } from '../../utils/atlas';
 import { runLeaveOneOut, runStability } from '../../utils/attribution-eval';
 import { calibratedProbs } from '../../utils/calibration';
 import { CALIBRATION } from '../../utils/calibration-constants';
+import { bootstrapMeanCI, fmtPctCI, fmtNumCI } from '../../utils/eval-stats';
 
 const a = atlas();
 const eval_ = runLeaveOneOut();
@@ -20,6 +21,17 @@ function actorName(id: string): string {
 }
 const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
 const generatedAt = eval_.generatedAt;
+
+// ─── bootstrap 95% CIs on the headline metrics (n=2000, seeded) ───
+const scoredEvents = eval_.events.filter((r) => r.bestRank !== null);
+const hit1Vals = scoredEvents.map((r) => (r.hit1 ? 1 : 0));
+const hit3Vals = scoredEvents.map((r) => (r.hit3 ? 1 : 0));
+const hit5Vals = scoredEvents.map((r) => (r.hit5 ? 1 : 0));
+const mrrVals  = scoredEvents.map((r) => (r.bestRank ? 1 / r.bestRank : 0));
+const ciHit1 = bootstrapMeanCI(hit1Vals);
+const ciHit3 = bootstrapMeanCI(hit3Vals);
+const ciHit5 = bootstrapMeanCI(hit5Vals);
+const ciMrr  = bootstrapMeanCI(mrrVals);
 
 // ─── reliability-diagram samples ───
 // For each scored event, softmax the top-5 logScores → rank-1 prob.
@@ -71,18 +83,23 @@ const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationS
   <section>
     <h2>Headline</h2>
     <div class="stat-grid">
-      <div class="stat"><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
-      <div class="stat"><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
-      <div class="stat"><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
+      <div class="stat" title={fmtPctCI(ciHit1)}><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
+      <div class="stat" title={fmtPctCI(ciHit3)}><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
+      <div class="stat" title={fmtPctCI(ciHit5)}><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
       <div class="stat"><strong>{pct(eval_.hit10, eval_.scored)}</strong>top-10 hit</div>
-      <div class="stat"><strong>{eval_.mrr.toFixed(3)}</strong>MRR</div>
+      <div class="stat" title={fmtNumCI(ciMrr)}><strong>{eval_.mrr.toFixed(3)}</strong>MRR</div>
       <div class="stat"><strong>{eval_.scored}</strong>events scored</div>
+    </div>
+    <div class="ci-band">
+      <strong>95% CIs</strong> (non-parametric bootstrap, 2000 iter, seeded):
+      top-1 {fmtPctCI(ciHit1)} · top-3 {fmtPctCI(ciHit3)} · top-5 {fmtPctCI(ciHit5)} · MRR {fmtNumCI(ciMrr)}
     </div>
     <p>
       Top-1 hit means the engine's most-likely candidate matched the
       actual public attribution. MRR is the mean reciprocal rank — the
       average of 1/rank across all events; higher is better, 1.0 is
-      perfect.
+      perfect. CIs are computed by resampling held-out events with
+      replacement; the seeded LCG keeps numbers reproducible.
     </p>
   </section>
 
@@ -298,4 +315,15 @@ const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationS
     gap: 1rem;
     margin: 0.75rem 0;
   }
+  .ci-band {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-overlay0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext1);
+  }
+  .ci-band strong { color: var(--ctp-text); }
 </style>

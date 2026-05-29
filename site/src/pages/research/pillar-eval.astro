@@ -6,6 +6,7 @@ import { atlas } from '../../utils/atlas';
 import { runPillarLOO } from '../../utils/pillar-prediction-eval';
 import { calibratedProbs } from '../../utils/calibration';
 import { CALIBRATION } from '../../utils/calibration-constants';
+import { bootstrapMeanCI, fmtPctCI, fmtNumCI } from '../../utils/eval-stats';
 
 const a = atlas();
 const eval_ = runPillarLOO();
@@ -28,6 +29,14 @@ function doctrineHref(id: string): string {
 }
 const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
 const generatedAt = eval_.generatedAt;
+
+// ─── bootstrap 95% CIs on the headline metrics ───
+const scoredEvents = eval_.events.filter((r) => r.bestRank !== null);
+const ciHit1 = bootstrapMeanCI(scoredEvents.map((r) => (r.hit1 ? 1 : 0)));
+const ciHit3 = bootstrapMeanCI(scoredEvents.map((r) => (r.hit3 ? 1 : 0)));
+const ciHit5 = bootstrapMeanCI(scoredEvents.map((r) => (r.hit5 ? 1 : 0)));
+const ciR3   = bootstrapMeanCI(scoredEvents.map((r) => r.recall3));
+const ciMap  = bootstrapMeanCI(scoredEvents.map((r) => r.avgPrecision));
 
 // ─── reliability-diagram samples ───
 const samplesUncal: Array<{ predicted: number; correct: boolean }> = [];
@@ -76,12 +85,16 @@ const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationS
   <section>
     <h2>Headline</h2>
     <div class="stat-grid">
-      <div class="stat"><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
-      <div class="stat"><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
-      <div class="stat"><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
-      <div class="stat"><strong>{(eval_.meanRecall3 * 100).toFixed(1)}%</strong>recall@3</div>
-      <div class="stat"><strong>{eval_.mAP.toFixed(3)}</strong>mAP</div>
+      <div class="stat" title={fmtPctCI(ciHit1)}><strong>{pct(eval_.hit1, eval_.scored)}</strong>top-1 hit</div>
+      <div class="stat" title={fmtPctCI(ciHit3)}><strong>{pct(eval_.hit3, eval_.scored)}</strong>top-3 hit</div>
+      <div class="stat" title={fmtPctCI(ciHit5)}><strong>{pct(eval_.hit5, eval_.scored)}</strong>top-5 hit</div>
+      <div class="stat" title={fmtPctCI(ciR3)}><strong>{(eval_.meanRecall3 * 100).toFixed(1)}%</strong>recall@3</div>
+      <div class="stat" title={fmtNumCI(ciMap)}><strong>{eval_.mAP.toFixed(3)}</strong>mAP</div>
       <div class="stat"><strong>{pct(eval_.doctrineRightPillarWrong, eval_.scored)}</strong>doctrine-right, pillar-wrong</div>
+    </div>
+    <div class="ci-band">
+      <strong>95% CIs</strong> (non-parametric bootstrap, 2000 iter, seeded):
+      top-1 {fmtPctCI(ciHit1)} · top-3 {fmtPctCI(ciHit3)} · recall@3 {fmtPctCI(ciR3)} · mAP {fmtNumCI(ciMap)}
     </div>
     <p class="reading">
       <strong>The pillar engine performs essentially as well as the
@@ -261,4 +274,15 @@ const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationS
     gap: 1rem;
     margin: 0.75rem 0;
   }
+  .ci-band {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-overlay0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext1);
+  }
+  .ci-band strong { color: var(--ctp-text); }
 </style>
