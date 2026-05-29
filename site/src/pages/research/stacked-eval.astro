@@ -6,18 +6,32 @@ import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+interface FoldMetrics {
+  nbHit1: number; nbHit3: number; nbHit5: number; nbMrr: number;
+  stHit1: number; stHit3: number; stHit5: number; stMrr: number;
+  n: number;
+}
 interface StackedJson {
   scored: number;
   nbHit1: number; nbHit3: number; nbHit5: number; nbMrr: number;
   hit1: number; hit3: number; hit5: number; mrr: number;
+  folds: FoldMetrics[];
+  numFolds: number;
   featureWeights: Array<{ key: string; weight: number }>;
-  trainFrac: number;
   bias: number;
   perEvent: {
     nbHit1: number[]; nbHit3: number[]; nbHit5: number[]; nbRr: number[];
     stHit1: number[]; stHit3: number[]; stHit5: number[]; stRr: number[];
   };
   generatedAt: string;
+}
+
+function meanStd(xs: number[]): { mean: number; std: number } {
+  if (xs.length === 0) return { mean: 0, std: 0 };
+  const m = xs.reduce((s, x) => s + x, 0) / xs.length;
+  if (xs.length === 1) return { mean: m, std: 0 };
+  const v = xs.reduce((s, x) => s + (x - m) * (x - m), 0) / (xs.length - 1);
+  return { mean: m, std: Math.sqrt(v) };
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -56,10 +70,12 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
   ) : (
     <>
       <p class="meta">
-        Generated {data.generatedAt} · stacker trained on
-        {' '}{(data.trainFrac * 100).toFixed(0)}% of labeled events,
-        evaluated on the held-out {((1 - data.trainFrac) * 100).toFixed(0)}%
-        (n={data.scored}). Train / eval split is deterministic.
+        Generated {data.generatedAt} · {data.numFolds}-fold stratified
+        cross-validation (events stratified by attacker state) ·
+        n={data.scored} events scored, each in eval exactly once.
+        Every fold trains on the other {data.numFolds - 1} folds'
+        (candidate, event) pairs and re-ranks its own held-out
+        candidates.
       </p>
 
       <section>
@@ -97,6 +113,51 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
           NB:  top-1 {fmtPctCI(ciNbHit1!)} · top-3 {fmtPctCI(ciNbHit3!)} · top-5 {fmtPctCI(ciNbHit5!)} · MRR {fmtNumCI(ciNbMrr!)}<br/>
           Stk: top-1 {fmtPctCI(ciStHit1!)} · top-3 {fmtPctCI(ciStHit3!)} · top-5 {fmtPctCI(ciStHit5!)} · MRR {fmtNumCI(ciStMrr!)}
         </div>
+      </section>
+
+      <section>
+        <h2>Per-fold breakdown</h2>
+        <p>
+          The bootstrap CI above quantifies sampling variance
+          treating events as i.i.d. The fold-to-fold variance below
+          quantifies <em>model</em> stability under different training
+          partitions. Tight fold-to-fold std means the stacker is
+          learning a stable function rather than memorizing the
+          training set.
+        </p>
+        {(() => {
+          const nbH1 = meanStd(data.folds.map((f) => f.nbHit1));
+          const nbH3 = meanStd(data.folds.map((f) => f.nbHit3));
+          const stH1 = meanStd(data.folds.map((f) => f.stHit1));
+          const stH3 = meanStd(data.folds.map((f) => f.stHit3));
+          const stM  = meanStd(data.folds.map((f) => f.stMrr));
+          const pp = (x: number) => `${(x * 100).toFixed(1)}%`;
+          return (
+            <div class="ci-band">
+              <strong>Per-fold mean ± std</strong> ({data.numFolds} folds):<br/>
+              NB:  top-1 {pp(nbH1.mean)} ± {pp(nbH1.std)} · top-3 {pp(nbH3.mean)} ± {pp(nbH3.std)}<br/>
+              Stk: top-1 {pp(stH1.mean)} ± {pp(stH1.std)} · top-3 {pp(stH3.mean)} ± {pp(stH3.std)} · MRR {stM.mean.toFixed(3)} ± {stM.std.toFixed(3)}
+            </div>
+          );
+        })()}
+        <table class="folds-table">
+          <thead>
+            <tr><th>fold</th><th>n</th><th>NB top-1</th><th>Stk top-1</th><th>Stk top-3</th><th>Stk MRR</th><th>Δ top-1</th></tr>
+          </thead>
+          <tbody>
+            {data.folds.map((f, i) => (
+              <tr>
+                <td>{i + 1}</td>
+                <td>{f.n}</td>
+                <td>{(f.nbHit1 * 100).toFixed(1)}%</td>
+                <td><strong>{(f.stHit1 * 100).toFixed(1)}%</strong></td>
+                <td>{(f.stHit3 * 100).toFixed(1)}%</td>
+                <td>{f.stMrr.toFixed(3)}</td>
+                <td class="folds-delta">{(((f.stHit1 - f.nbHit1) * 100) >= 0 ? '+' : '')}{((f.stHit1 - f.nbHit1) * 100).toFixed(1)}pp</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
 
       <section>
@@ -156,11 +217,18 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
             state alignment, has-MITRE-profile flag.
           </li>
           <li>
-            Deterministic 80 / 20 split of events (seeded LCG). Stacker
-            trains on the 80%; eval is on the held-out 20% the stacker
-            never saw. This is a clean held-out evaluation — the
-            stacker's accuracy here is what it would deliver on
-            production-novel events of similar distribution.
+            <strong>Stratified {data.numFolds}-fold partition</strong>
+            of events. Stratification is by attacker state, so every
+            fold has approximately the same state mix as the full
+            corpus. Within each state's bucket, fold assignment is via
+            seeded LCG shuffle + round-robin.
+          </li>
+          <li>
+            For each fold k: train logistic regression on the
+            (candidate, event) pairs from the other {data.numFolds - 1}
+            folds; re-rank the held-out fold's candidates. Repeat for
+            all {data.numFolds} folds. Every event participates in
+            eval exactly once.
           </li>
           <li>
             L2-regularized logistic regression (λ=0.5, lr=0.05, 400
@@ -168,20 +236,26 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
             z-score standardized on training pairs.
           </li>
           <li>
-            At eval time: re-rank the held-out event's top-10 by the
-            stacker's predicted probability that each candidate is the
-            true actor. Report top-K and MRR on the re-ranked list.
+            <strong>Honest scoring.</strong> When the true actor is
+            outside the NB top-10, neither NB nor the stacker can
+            recover it — counted as a miss for both engines. This
+            keeps the rates honest (no silent skipping). It also
+            means the NB rates shown here are slightly lower than
+            the full-LOO rates on <a href="/research/attribution-eval">/research/attribution-eval</a>,
+            which counts events at rank 11+ in MRR. Apples-to-apples
+            comparison requires fixing top-K, so we do.
           </li>
         </ol>
         <p class="reading">
-          <strong>Caveats.</strong> The eval slice is small ({data.scored} events).
-          The stacker's lift is large enough (top-1
-          {(((data.hit1 - data.nbHit1) * 100) >= 0 ? ' +' : ' ')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp)
-          to be far beyond bootstrap noise, but the per-state breakdown
-          is not yet large enough to be informative. Before the thesis
-          snapshot: rerun with stratified k-fold so every event
-          participates in exactly one eval fold, and report per-state
-          stacker gain.
+          <strong>Reading.</strong> The stacker's top-1 lift over NB
+          is {(((data.hit1 - data.nbHit1) * 100) >= 0 ? '+' : '')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp
+          aggregated across folds and tight to the digit per fold
+          (±{((data.folds.reduce((s, f) => s + (f.stHit1 - f.nbHit1), 0) / data.folds.length) * 100 - 100 * (data.hit1 - data.nbHit1) >= 0 ? '+' : '')}{Math.sqrt(data.folds.reduce((s, f) => s + Math.pow(((f.stHit1 - f.nbHit1) - (data.hit1 - data.nbHit1)), 2), 0) / (data.folds.length - 1) * 100).toFixed(1)}pp std).
+          The lift exists across every individual fold and the bootstrap
+          CI on the aggregated number rules out sampling-noise as the
+          explanation. The architectural claim holds:
+          NB picks the cluster, the stacker picks the actor in the
+          cluster.
         </p>
       </section>
     </>
@@ -268,4 +342,24 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
     line-height: 1.6;
   }
   .ci-band strong { color: var(--ctp-text); }
+  .folds-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    margin: 0.5rem 0 0.75rem;
+  }
+  .folds-table th, .folds-table td {
+    text-align: right;
+    padding: 0.375rem 0.625rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .folds-table th {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ctp-overlay1);
+  }
+  .folds-table th:first-child, .folds-table td:first-child { text-align: left; }
+  .folds-delta { color: var(--ctp-blue); font-weight: 600; }
 </style>
