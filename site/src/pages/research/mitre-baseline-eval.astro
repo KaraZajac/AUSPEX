@@ -1,0 +1,363 @@
+---
+import Base from '../../layouts/Base.astro';
+import AccuracyHeatmap from '../../components/AccuracyHeatmap.astro';
+import { bootstrapMeanCI, fmtPctCI, fmtNumCI } from '../../utils/eval-stats';
+import { atlas } from '../../utils/atlas';
+import { readFileSync, existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+interface MitreJson {
+  scored: number;
+  skipped: number;
+  hit1: number; hit3: number; hit5: number; hit10: number;
+  mrr: number;
+  groupCount: number;
+  generatedAt: string;
+  perState: Record<string, { scored: number; hit1: number; hit3: number; hit5: number; mrr: number }>;
+  perEvent: { hit1: number[]; hit3: number[]; hit5: number[]; hit10: number[]; rr: number[] };
+  worst: Array<{
+    eventId: string;
+    eventName: string;
+    startDate?: string;
+    trueState?: string;
+    trueActors: string[];
+    trueGroups: string[];
+    bestRank: number | null;
+    top5: Array<{ groupId: string; jaccard: number; rank: number }>;
+  }>;
+}
+
+interface StackedJson {
+  scored: number;
+  nbHit1: number; nbHit3: number; nbHit5: number; nbMrr: number;
+  hit1: number; hit3: number; hit5: number; mrr: number;
+}
+
+const here = dirname(fileURLToPath(import.meta.url));
+const mitrePath = resolve(here, '..', '..', '..', '.cache', 'mitre-baseline-eval.json');
+const stackedPath = resolve(here, '..', '..', '..', '.cache', 'stacked-eval.json');
+
+const data: MitreJson | null = existsSync(mitrePath)
+  ? JSON.parse(readFileSync(mitrePath, 'utf8'))
+  : null;
+const stacked: StackedJson | null = existsSync(stackedPath)
+  ? JSON.parse(readFileSync(stackedPath, 'utf8'))
+  : null;
+
+const a = atlas();
+const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationStates.get(s)?.name ?? (s === 'criminal' ? 'criminal' : s.toUpperCase());
+
+const heatmapRows = data
+  ? Object.entries(data.perState).map(([state, row]) => ({
+      state,
+      scored: row.scored,
+      hit1: row.hit1,
+      hit3: row.hit3,
+      hit5: row.hit5,
+      mrr: row.mrr,
+    }))
+  : [];
+const metrics = [
+  { key: 'hit1', label: 'top-1', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit1 },
+  { key: 'hit3', label: 'top-3', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit3 },
+  { key: 'hit5', label: 'top-5', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit5 },
+  { key: 'mrr',  label: 'MRR',   kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.mrr },
+];
+
+const ciHit1 = data ? bootstrapMeanCI(data.perEvent.hit1) : null;
+const ciHit3 = data ? bootstrapMeanCI(data.perEvent.hit3) : null;
+const ciHit5 = data ? bootstrapMeanCI(data.perEvent.hit5) : null;
+const ciMrr  = data ? bootstrapMeanCI(data.perEvent.rr)   : null;
+
+const randomTop1 = data ? 1 / data.groupCount : 0;
+
+const pct = (n: number, d: number) => d === 0 ? 'n/a' : `${((n / d) * 100).toFixed(1)}%`;
+---
+<Base title="MITRE Groups baseline — backtest" wide>
+  <p class="kicker">Research</p>
+  <h1>MITRE Groups baseline — backtest</h1>
+  <p class="lede">
+    The public-data attribution floor. For each labeled AUSPEX event,
+    we extract TTPs and compute Jaccard similarity against every MITRE
+    ATT&CK Group's TTP profile. Top-K is determined by the rank of any
+    of the event's true actors' MITRE G-codes in the similarity ranking.
+    No AUSPEX features beyond TTPs are used; this is "what an analyst
+    with just MITRE Groups data, no AUSPEX, can predict."
+  </p>
+
+  {!data ? (
+    <p class="reading">
+      <strong>No cached result.</strong> Run <code>pnpm run eval-mitre-baseline</code>
+      from <code>site/</code> to populate <code>.cache/mitre-baseline-eval.json</code>,
+      then rebuild.
+    </p>
+  ) : (
+    <>
+      <p class="meta">
+        Generated {data.generatedAt} ·
+        candidate space {data.groupCount} MITRE Groups ·
+        n={data.scored} events scored ·
+        {data.skipped} events skipped (true actor not in MITRE Groups; baseline
+        can't predict).
+      </p>
+
+      <section>
+        <h2>Headline</h2>
+        <div class="stat-grid">
+          <div class="stat" title={fmtPctCI(ciHit1!)}><strong>{pct(data.hit1, data.scored)}</strong>top-1 hit</div>
+          <div class="stat" title={fmtPctCI(ciHit3!)}><strong>{pct(data.hit3, data.scored)}</strong>top-3 hit</div>
+          <div class="stat" title={fmtPctCI(ciHit5!)}><strong>{pct(data.hit5, data.scored)}</strong>top-5 hit</div>
+          <div class="stat"><strong>{pct(data.hit10, data.scored)}</strong>top-10 hit</div>
+          <div class="stat" title={fmtNumCI(ciMrr!)}><strong>{data.mrr.toFixed(3)}</strong>MRR</div>
+          <div class="stat"><strong>{(randomTop1 * 100).toFixed(2)}%</strong>random top-1</div>
+        </div>
+        <div class="ci-band">
+          <strong>95% CIs</strong> (bootstrap, n={data.scored}, 2000 iter, seeded):
+          top-1 {fmtPctCI(ciHit1!)} · top-3 {fmtPctCI(ciHit3!)} · top-5 {fmtPctCI(ciHit5!)} · MRR {fmtNumCI(ciMrr!)}
+        </div>
+      </section>
+
+      <section>
+        <h2>Engine comparison</h2>
+        <p>
+          Same TTP feature substrate. The baseline uses ONLY TTPs +
+          Jaccard. The AUSPEX engines add 8 other feature families
+          (sectors, target orgs, malware lineage, attacker-state
+          markers, dyad reactivity, named operators, campaign clusters,
+          prose terms) plus a learned Bayesian classifier with IDF
+          and hierarchical service priors. The stacker adds a
+          logistic-regression re-ranker on top.
+        </p>
+        <table class="cmp-table">
+          <thead>
+            <tr><th></th><th>top-1</th><th>top-3</th><th>top-5</th><th>MRR</th><th>vs baseline</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cmp-label">Random (uniform over {data.groupCount} groups)</td>
+              <td>{(randomTop1 * 100).toFixed(2)}%</td>
+              <td>{(randomTop1 * 3 * 100).toFixed(2)}%</td>
+              <td>{(randomTop1 * 5 * 100).toFixed(2)}%</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td class="cmp-label">MITRE Groups baseline (TTP Jaccard)</td>
+              <td>{pct(data.hit1, data.scored)}</td>
+              <td>{pct(data.hit3, data.scored)}</td>
+              <td>{pct(data.hit5, data.scored)}</td>
+              <td>{data.mrr.toFixed(3)}</td>
+              <td>{((data.hit1 / data.scored) / randomTop1).toFixed(1)}× random</td>
+            </tr>
+            {stacked && (
+              <>
+                <tr>
+                  <td class="cmp-label">AUSPEX Plain NB (held-out 20%)</td>
+                  <td><strong>{(stacked.nbHit1 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{(stacked.nbHit3 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{(stacked.nbHit5 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{stacked.nbMrr.toFixed(3)}</strong></td>
+                  <td>{(stacked.nbHit1 / (data.hit1 / data.scored)).toFixed(0)}× baseline</td>
+                </tr>
+                <tr>
+                  <td class="cmp-label">AUSPEX Stacked (held-out 20%)</td>
+                  <td><strong>{(stacked.hit1 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{(stacked.hit3 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{(stacked.hit5 * 100).toFixed(1)}%</strong></td>
+                  <td><strong>{stacked.mrr.toFixed(3)}</strong></td>
+                  <td>{(stacked.hit1 / (data.hit1 / data.scored)).toFixed(0)}× baseline</td>
+                </tr>
+              </>
+            )}
+          </tbody>
+        </table>
+        <p class="reading">
+          <strong>Reading.</strong> MITRE Groups + Jaccard alone is
+          barely above random (top-1
+          {' '}{((data.hit1 / data.scored) / randomTop1).toFixed(1)}× the
+          chance of guessing one of {data.groupCount} groups uniformly).
+          That's not because MITRE is bad — it's because TTPs alone
+          are insufficient for attribution. Multiple actors share most
+          of the common TTPs (T1566 phishing, T1059 command-and-scripting,
+          T1078 valid accounts); discrimination requires the orthogonal
+          features AUSPEX layers on (target organizations, malware
+          lineage, named operators, campaign clusters, attacker-state
+          markers). The baseline gives the lower bound; the stacker
+          gives the upper bound; the gap measures what doctrine-tagged
+          intelligence buys you.
+        </p>
+      </section>
+
+      {heatmapRows.length > 0 && (
+        <section>
+          <h2>Per-state baseline performance</h2>
+          <AccuracyHeatmap
+            rows={heatmapRows}
+            metrics={metrics}
+            labelOf={stateLabel}
+            engineLabel="MITRE Groups baseline"
+            footnote="Per-state hit rates at the MITRE-Groups-only floor. RU and CN have non-zero MITRE coverage so the baseline at least sometimes lands; states with newer or less-documented clusters (UAE, FR, KP-Andariel-era) bottom out at zero."
+          />
+        </section>
+      )}
+
+      {data.worst.length > 0 && (
+        <section>
+          <h2>Worst baseline predictions</h2>
+          <p>
+            Events where the true MITRE G-code ranked furthest from
+            the top. Useful for showing where the baseline genuinely
+            fails — these are the events the AUSPEX engines need to
+            rescue.
+          </p>
+          <table class="worst-table">
+            <thead>
+              <tr><th>rank</th><th>date</th><th>event</th><th>true</th><th>baseline top-1 (Jaccard)</th></tr>
+            </thead>
+            <tbody>
+              {data.worst.slice(0, 12).map((w) => (
+                <tr>
+                  <td>{w.bestRank}</td>
+                  <td>{w.startDate ?? '????'}</td>
+                  <td><a href={`/event/${w.eventId}`}>{w.eventName}</a></td>
+                  <td>{w.trueGroups.join(', ')}</td>
+                  <td>{w.top5[0] ? `${w.top5[0].groupId} (${w.top5[0].jaccard.toFixed(2)})` : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      <section>
+        <h2>Methodology</h2>
+        <ol>
+          <li>
+            For each labeled AUSPEX event, extract TTPs via the same
+            extractor the NB engine uses (initial-vector mapping,
+            incident-type mapping, keyword-extraction from prose).
+            Roll to parent T-codes.
+          </li>
+          <li>
+            For each of {data.groupCount} MITRE Groups loaded from
+            <code>.cache/mitre-ttps.json</code>, compute
+            Jaccard(event-TTPs, group-TTPs) where group TTPs are also
+            rolled to parent. Sort groups by Jaccard descending; rank
+            the true actor's G-code in this list.
+          </li>
+          <li>
+            Multi-attribution events: if ANY true actor's G-code
+            appears in top-K, that's a top-K hit. Same rule as the
+            AUSPEX LOO evals.
+          </li>
+          <li>
+            Events whose true actors have no MITRE G-code mapping are
+            <strong>skipped</strong>. The baseline literally cannot
+            predict them; counting them as misses would unfairly
+            inflate the AUSPEX-vs-baseline delta. The skip rate
+            ({((data.skipped / (data.scored + data.skipped)) * 100).toFixed(0)}% of labeled events)
+            is itself a finding: MITRE Groups data covers only about
+            half of the AUSPEX actor corpus.
+          </li>
+          <li>
+            Bootstrap CIs via the same protocol as the AUSPEX engine
+            pages: 2000 iter, seeded LCG.
+          </li>
+        </ol>
+        <p class="reading">
+          <strong>Why this is the right baseline.</strong> MITRE ATT&CK
+          Groups is the canonical public TTP-attribution reference.
+          Vendors and government agencies routinely cite "tracked as
+          G####" framings when releasing attribution claims. The
+          baseline is what you get with this single public source plus
+          a standard similarity measure. Showing AUSPEX beats it by
+          {' '}{stacked ? Math.round(stacked.hit1 / (data.hit1 / data.scored)) : '—'}×
+          on top-1 quantifies the value the curated atlas provides
+          over the public substrate alone.
+        </p>
+      </section>
+    </>
+  )}
+</Base>
+
+<style>
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .stat {
+    display: flex; flex-direction: column; gap: 0.125rem;
+    padding: 0.75rem 1rem;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem; color: var(--ctp-subtext1);
+  }
+  .stat strong { font-size: 1.5rem; color: var(--ctp-text); font-weight: 600; }
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    margin: 0.75rem 0;
+  }
+  .cmp-table th, .cmp-table td {
+    text-align: right;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .cmp-table th {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-overlay1);
+  }
+  .cmp-label {
+    text-align: left !important;
+    color: var(--ctp-subtext1);
+  }
+  .worst-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin: 0.75rem 0;
+  }
+  .worst-table th, .worst-table td {
+    text-align: left;
+    padding: 0.375rem 0.625rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    vertical-align: top;
+  }
+  .worst-table th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--ctp-subtext0);
+  }
+  .worst-table td:first-child { font-weight: 700; color: var(--ctp-peach); font-family: var(--font-mono); }
+  .reading {
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-blue);
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .ci-band {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ctp-mantle);
+    border-left: 3px solid var(--ctp-overlay0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext1);
+  }
+  .ci-band strong { color: var(--ctp-text); }
+  ol li { margin: 0.4rem 0; }
+</style>
