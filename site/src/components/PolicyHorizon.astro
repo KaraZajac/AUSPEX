@@ -1,0 +1,308 @@
+---
+/**
+ * Policy-action horizon chart.
+ *
+ * Action types stacked as horizontal lanes; each action is a circle
+ * marker on the appropriate lane, positioned by date. Circle size
+ * encodes `significance`, opacity drops for `confidence: projected`.
+ * "Today" line marks the forward / past boundary.
+ *
+ * Designed to make pressure-event clustering visible at a glance —
+ * the doctoral-research version of "what is happening when".
+ */
+import type { Atlas, PolicyAction } from '../utils/atlas';
+
+interface Props {
+  atlas: Atlas;
+  actions: PolicyAction[];
+  /** Pixel height per action_type lane. Default 26. */
+  laneH?: number;
+  /** Total chart pixel width. Default 800. */
+  width?: number;
+}
+const { atlas, actions, laneH = 26, width = 800 } = Astro.props;
+
+// ─── filter to actions with parseable dates ───
+type WithT = PolicyAction & { _t: number };
+const dated: WithT[] = [];
+for (const a of actions) {
+  const t = Date.parse(a.date);
+  if (Number.isFinite(t)) dated.push({ ...a, _t: t });
+}
+dated.sort((a, b) => a._t - b._t);
+
+// ─── lane assignment by action_type ───
+const typeOrder: string[] = [];
+const typeSet = new Set<string>();
+for (const a of dated) {
+  if (!typeSet.has(a.action_type)) {
+    typeSet.add(a.action_type);
+    typeOrder.push(a.action_type);
+  }
+}
+
+// stable type → lane index
+const laneOf = new Map<string, number>();
+typeOrder.forEach((t, i) => laneOf.set(t, i));
+
+// ─── time axis ───
+const NOW = Date.now();
+const tMin = Math.min(NOW, ...dated.map((a) => a._t));
+const tMax = Math.max(NOW, ...dated.map((a) => a._t));
+const range = Math.max(1, tMax - tMin);
+
+// pad by 4% each side
+const padFrac = 0.04;
+const tStart = tMin - range * padFrac;
+const tEnd = tMax + range * padFrac;
+const tRange = tEnd - tStart;
+
+// ─── layout ───
+const LANE_LABEL_W = 130;
+const PAD_R = 14;
+const PAD_T = 12;
+const PAD_B = 32;
+const innerW = width - LANE_LABEL_W - PAD_R;
+const innerH = typeOrder.length * laneH;
+const height = innerH + PAD_T + PAD_B;
+const xOf = (t: number) => LANE_LABEL_W + ((t - tStart) / tRange) * innerW;
+const laneY = (i: number) => PAD_T + i * laneH + laneH / 2;
+
+// Year ticks across the range
+const tStartYear = new Date(tStart).getUTCFullYear();
+const tEndYear = new Date(tEnd).getUTCFullYear();
+const yearTicks: Array<{ y: number; t: number }> = [];
+for (let y = tStartYear; y <= tEndYear; y++) {
+  const t = Date.UTC(y, 0, 1);
+  if (t >= tStart && t <= tEnd) yearTicks.push({ y, t });
+}
+const tickEvery = yearTicks.length > 20 ? 2 : 1;
+
+// ─── markers ───
+function radius(sig?: string): number {
+  if (sig === 'high') return 6;
+  if (sig === 'medium') return 4.5;
+  if (sig === 'low') return 3;
+  return 3.5;
+}
+function fill(sig?: string): string {
+  if (sig === 'high') return 'var(--ctp-red)';
+  if (sig === 'medium') return 'var(--ctp-peach)';
+  if (sig === 'low') return 'var(--ctp-yellow)';
+  return 'var(--ctp-overlay1)';
+}
+function opacity(conf?: string): number {
+  if (conf === 'projected') return 0.45;
+  if (conf === 'scheduled') return 0.75;
+  return 1.0;
+}
+const todayX = xOf(NOW);
+
+function stateLabel(id: string): string {
+  if (id === 'multilateral') return 'Multilateral';
+  return atlas.nationStates.get(id)?.short_name ?? atlas.nationStates.get(id)?.name ?? id.toUpperCase();
+}
+
+// counts per type (for the lane label)
+const typeCounts = new Map<string, number>();
+for (const a of dated) typeCounts.set(a.action_type, (typeCounts.get(a.action_type) ?? 0) + 1);
+---
+{dated.length === 0 ? (
+  <p class="ph-empty">No dated policy actions to plot.</p>
+) : (
+  <figure class="ph-figure">
+    <figcaption class="ph-cap">
+      <strong>n = {dated.length}</strong> policy actions across {typeOrder.length}
+      type{typeOrder.length === 1 ? '' : 's'}, {tStartYear}–{tEndYear}.
+      Marker size encodes significance · opacity encodes confidence
+      (confirmed → scheduled → projected) · vertical line = today.
+    </figcaption>
+
+    <div class="ph-scroll">
+      <svg
+        class="ph-svg"
+        viewBox={`0 0 ${width} ${height}`}
+        width={width}
+        height={height}
+        role="img"
+        aria-label={`Policy-action horizon: ${dated.length} actions, ${typeOrder.length} action types`}
+      >
+        {/* lane separators */}
+        {typeOrder.map((t, i) => (
+          <g>
+            <line
+              x1={LANE_LABEL_W} x2={LANE_LABEL_W + innerW}
+              y1={PAD_T + i * laneH} y2={PAD_T + i * laneH}
+              stroke="var(--ctp-surface0)"
+              stroke-dasharray="2 3"
+            />
+            <text
+              x={LANE_LABEL_W - 8} y={laneY(i) + 3}
+              text-anchor="end"
+              class="ph-lane-label"
+            >{t}</text>
+            <text
+              x={LANE_LABEL_W - 8} y={laneY(i) + 14}
+              text-anchor="end"
+              class="ph-lane-n"
+            >{typeCounts.get(t)}</text>
+          </g>
+        ))}
+
+        {/* year tick gridlines + labels */}
+        {yearTicks.map(({ y, t }, i) => (
+          i % tickEvery === 0 ? (
+            <g>
+              <line
+                x1={xOf(t)} x2={xOf(t)}
+                y1={PAD_T} y2={PAD_T + innerH}
+                stroke="var(--ctp-surface0)"
+                stroke-dasharray="1 4"
+                opacity="0.6"
+              />
+              <text
+                x={xOf(t)} y={PAD_T + innerH + 14}
+                text-anchor="middle"
+                class="ph-year"
+              >{y}</text>
+            </g>
+          ) : null
+        ))}
+
+        {/* today line */}
+        {todayX >= LANE_LABEL_W && todayX <= LANE_LABEL_W + innerW && (
+          <g>
+            <line
+              x1={todayX} x2={todayX}
+              y1={PAD_T - 4} y2={PAD_T + innerH + 4}
+              stroke="var(--ctp-blue)"
+              stroke-width="1.5"
+            />
+            <text
+              x={todayX} y={PAD_T - 6}
+              text-anchor="middle"
+              class="ph-today"
+            >today</text>
+          </g>
+        )}
+
+        {/* markers */}
+        {dated.map((a) => {
+          const li = laneOf.get(a.action_type)!;
+          const cx = xOf(a._t);
+          const cy = laneY(li);
+          const r = radius(a.significance);
+          const o = opacity(a.confidence);
+          const title = [
+            `${a.date}: ${a.action_type}`,
+            `Issued by ${stateLabel(a.issued_by_state_id)}`,
+            a.targets_state_ids?.length ? `Targets ${a.targets_state_ids.map(stateLabel).join(', ')}` : null,
+            a.summary ? `\n${a.summary}` : null,
+          ].filter(Boolean).join('\n');
+          return (
+            <g class="ph-mark">
+              <title>{title}</title>
+              <circle
+                cx={cx} cy={cy} r={r}
+                fill={fill(a.significance)}
+                opacity={o}
+                stroke="var(--ctp-base)"
+                stroke-width="1.2"
+              />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+
+    <div class="ph-legend">
+      <span class="ph-leg-group">
+        Significance:
+        <span class="ph-leg-pip ph-sig-high">high</span>
+        <span class="ph-leg-pip ph-sig-medium">medium</span>
+        <span class="ph-leg-pip ph-sig-low">low</span>
+      </span>
+      <span class="ph-leg-group">
+        Confidence:
+        <span class="ph-leg-pip ph-conf-confirmed">confirmed</span>
+        <span class="ph-leg-pip ph-conf-scheduled">scheduled</span>
+        <span class="ph-leg-pip ph-conf-projected">projected</span>
+      </span>
+    </div>
+  </figure>
+)}
+
+<style>
+  .ph-empty {
+    color: var(--ctp-overlay0);
+    font-style: italic;
+  }
+  .ph-figure {
+    margin: 0;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem 1rem;
+  }
+  .ph-cap {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  .ph-cap strong { color: var(--ctp-text); }
+  .ph-scroll { overflow-x: auto; overflow-y: hidden; }
+  .ph-svg { display: block; max-width: 100%; }
+  .ph-lane-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--ctp-text);
+  }
+  .ph-lane-n {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay0);
+  }
+  .ph-year {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay1);
+  }
+  .ph-today {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-blue);
+    font-weight: 600;
+  }
+  .ph-mark:hover circle { stroke: var(--ctp-text); stroke-width: 1.5; }
+  .ph-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+  }
+  .ph-leg-group { display: inline-flex; gap: 0.5rem; align-items: center; }
+  .ph-leg-pip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--ctp-text);
+  }
+  .ph-leg-pip::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .ph-sig-high::before    { background: var(--ctp-red); }
+  .ph-sig-medium::before  { background: var(--ctp-peach); }
+  .ph-sig-low::before     { background: var(--ctp-yellow); }
+  .ph-conf-confirmed::before { background: var(--ctp-overlay1); opacity: 1; }
+  .ph-conf-scheduled::before { background: var(--ctp-overlay1); opacity: 0.75; }
+  .ph-conf-projected::before { background: var(--ctp-overlay1); opacity: 0.45; }
+</style>

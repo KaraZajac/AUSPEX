@@ -1,7 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import AccuracyHeatmap from '../../components/AccuracyHeatmap.astro';
+import ReliabilityDiagram from '../../components/ReliabilityDiagram.astro';
 import { atlas } from '../../utils/atlas';
 import { runPillarLOO } from '../../utils/pillar-prediction-eval';
+import { calibratedProbs } from '../../utils/calibration';
+import { CALIBRATION } from '../../utils/calibration-constants';
 
 const a = atlas();
 const eval_ = runPillarLOO();
@@ -24,6 +28,37 @@ function doctrineHref(id: string): string {
 }
 const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
 const generatedAt = eval_.generatedAt;
+
+// ─── reliability-diagram samples ───
+const samplesUncal: Array<{ predicted: number; correct: boolean }> = [];
+const samplesCal:   Array<{ predicted: number; correct: boolean }> = [];
+for (const r of eval_.events) {
+  if (r.top5.length === 0) continue;
+  const scores = r.top5.map((c) => c.logScore);
+  const pu = calibratedProbs(scores, 1.0);
+  const pc = calibratedProbs(scores, CALIBRATION.pillar.temperature);
+  const top1 = r.top5[0].pillarId;
+  const correct = r.truePillars.includes(top1);
+  if (Number.isFinite(pu[0])) samplesUncal.push({ predicted: pu[0], correct });
+  if (Number.isFinite(pc[0])) samplesCal.push({   predicted: pc[0], correct });
+}
+
+// ─── accuracy-heatmap rows + metrics ───
+const heatmapRows = perState.map(([state, row]) => ({
+  state,
+  scored: row.scored,
+  hit1: row.hit1,
+  hit3: row.hit3,
+  meanRecall3: row.meanRecall3,
+  mAP: row.mAP,
+}));
+const pillarMetrics = [
+  { key: 'hit1', label: 'top-1',    kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit1 },
+  { key: 'hit3', label: 'top-3',    kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit3 },
+  { key: 'r3',   label: 'recall@3', kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.meanRecall3 },
+  { key: 'mAP',  label: 'mAP',      kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.mAP },
+];
+const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationStates.get(s)?.name ?? s.toUpperCase();
 ---
 <Base title="Pillar prediction — backtest" wide>
   <p class="kicker">Research</p>
@@ -65,23 +100,13 @@ const generatedAt = eval_.generatedAt;
 
   <section>
     <h2>Per-state — where pillar resolution helps</h2>
-    <table class="state-table">
-      <thead>
-        <tr><th>state</th><th>n</th><th>pillar top-1</th><th>pillar top-3</th><th>recall@3</th><th>mAP</th></tr>
-      </thead>
-      <tbody>
-        {perState.map(([state, row]) => (
-          <tr>
-            <td><code>{state.toUpperCase()}</code></td>
-            <td>{row.scored}</td>
-            <td>{pct(row.hit1, row.scored)}</td>
-            <td>{pct(row.hit3, row.scored)}</td>
-            <td>{(row.meanRecall3 * 100).toFixed(1)}%</td>
-            <td>{row.mAP.toFixed(3)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <AccuracyHeatmap
+      rows={heatmapRows}
+      metrics={pillarMetrics}
+      labelOf={stateLabel}
+      engineLabel="pillar engine"
+      footnote="Same multi-label setup as the doctrine engine, but the candidate space is twice as large (pillars vs doctrines)."
+    />
     <p class="reading">
       <strong>US 81.0% pillar top-1</strong> — the engine almost
       always picks the right specific NCS-2023 pillar
@@ -92,6 +117,29 @@ const generatedAt = eval_.generatedAt;
       finance events go to one pillar, defense-contractor events to
       another, and the engine picks correctly. The pillar level
       <em>matches reality</em> for those programs.
+    </p>
+  </section>
+
+  <section>
+    <h2>Calibration</h2>
+    <p>
+      Pillar prediction has the highest calibration-improvement of
+      the three engines — the wider label space (199 pillars) makes
+      raw softmax most overconfident, and temperature scaling
+      (T={CALIBRATION.pillar.temperature.toFixed(1)}) does the most work.
+    </p>
+    <div class="cal-grid">
+      <ReliabilityDiagram samples={samplesUncal} title="Uncalibrated (raw softmax)" />
+      <ReliabilityDiagram samples={samplesCal}   title={`Calibrated (T=${CALIBRATION.pillar.temperature.toFixed(1)})`} />
+    </div>
+    <p class="reading" style="margin-top: 0.5rem;">
+      <strong>Method.</strong> Softmax over the retained top-5
+      pillar log-scores per held-out event. The rank-1 candidate's
+      probability is plotted against whether it matched any of the
+      event's actual pillar labels. Calibrated improvement vs
+      uncalibrated NLL on the full corpus:{' '}
+      <strong>{CALIBRATION.pillar.improvementPct.toFixed(1)}%</strong>
+      (n={CALIBRATION.pillar.sampleSize}).
     </p>
     <p class="reading">
       <strong>CN 46.3% (doctrine) → 21.6% (pillar)</strong> is the
@@ -207,4 +255,10 @@ const generatedAt = eval_.generatedAt;
     margin: 0.75rem 0;
   }
   ol li, ul li { margin: 0.4rem 0; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    margin: 0.75rem 0;
+  }
 </style>

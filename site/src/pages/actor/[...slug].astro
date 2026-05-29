@@ -4,8 +4,10 @@ import FlagChip from '../../components/FlagChip.astro';
 import EventRow from '../../components/EventRow.astro';
 import ExternalRefs from '../../components/ExternalRefs.astro';
 import DoctrineAlignmentDonut from '../../components/DoctrineAlignmentDonut.astro';
+import AttributionDonut from '../../components/AttributionDonut.astro';
 import AttributionMap from '../../components/AttributionMap.astro';
 import EventTimeline from '../../components/EventTimeline.astro';
+import ConfidenceMixBar from '../../components/ConfidenceMixBar.astro';
 import { atlas } from '../../utils/atlas';
 
 export function getStaticPaths() {
@@ -30,6 +32,17 @@ const alignedDoctrines = (actor.default_doctrine_alignment_ids ?? [])
   .filter(Boolean);
 const alignmentSlices = a.doctrineAlignmentForActor(actor.id);
 const alignmentTotal = alignmentSlices.reduce((s, x) => s + x.count, 0);
+
+// Editorial-confidence mix across this actor's doctrine-link records
+const confMix = { attested: 0, stronglyInferred: 0, plausible: 0 };
+for (const ev of events) {
+  for (const link of ev.doctrine_links ?? []) {
+    const c = (link.confidence ?? '').toLowerCase().replace(/-/g, '_');
+    if (c === 'attested') confMix.attested++;
+    else if (c === 'strongly_inferred') confMix.stronglyInferred++;
+    else if (c === 'plausible') confMix.plausible++;
+  }
+}
 
 // Activity timeline: this actor's events + policy actions involving
 // the actor's state (as issuer or target). Sorted chronologically.
@@ -130,6 +143,25 @@ const topMalware = [...malwareCounts.entries()]
     const entry = a.malwareLineage.get(fam);
     return { name: fam, count, lineage: entry?.lineage_group ?? null, canonical: entry?.name ?? fam.toUpperCase() };
   });
+
+// Aggregate malware families into lineage-group counts for the donut.
+// Families without a known lineage group fold into "uncategorized".
+const lineageCounts = new Map<string, number>();
+for (const [fam, count] of malwareCounts) {
+  const lg = a.malwareLineage.get(fam)?.lineage_group ?? null;
+  const key = lg ?? '__uncat__';
+  lineageCounts.set(key, (lineageCounts.get(key) ?? 0) + count);
+}
+const lineageTotal = [...lineageCounts.values()].reduce((s, n) => s + n, 0);
+const lineageSlices = [...lineageCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(([lg, count]) => ({
+    id: lg === '__uncat__' ? null : `lineage:${lg}`,
+    name: lg === '__uncat__' ? 'uncategorized' : lg,
+    count,
+    percent: lineageTotal > 0 ? (count / lineageTotal) * 100 : 0,
+  }));
 ---
 <Base title={actor.canonical_name} wide>
   <p class="kicker">Actor</p>
@@ -146,6 +178,17 @@ const topMalware = [...malwareCounts.entries()]
     )}
     {actor.active_since && <>Active since <strong>{actor.active_since}</strong></>}
     {actor.active_until && <> &mdash; until {actor.active_until}</>}
+  </p>
+
+  <p class="meta" style="margin-top: 0.25rem;">
+    <span class="cmb-inline-label">Editorial confidence:</span>
+    <ConfidenceMixBar
+      attested={confMix.attested}
+      stronglyInferred={confMix.stronglyInferred}
+      plausible={confMix.plausible}
+      unit="doctrine links"
+      width={220}
+    />
   </p>
 
   {events.length > 0 && (
@@ -216,6 +259,14 @@ const topMalware = [...malwareCounts.entries()]
           </span>
         ))}
       </div>
+      {lineageSlices.length > 1 && (
+        <div style="margin-top: 1rem;">
+          <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin: 0 0 0.5rem;">
+            By lineage group (each event-family observation counted once).
+          </p>
+          <AttributionDonut slices={lineageSlices} total={lineageTotal} unitLabel="observations" hrefBase="" />
+        </div>
+      )}
     </section>
   )}
 
@@ -389,6 +440,14 @@ const topMalware = [...malwareCounts.entries()]
     color: var(--ctp-subtext0);
     margin: 0 0 1rem;
     font-size: 0.9375rem;
+  }
+  .cmb-inline-label {
+    display: inline-block;
+    margin-right: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay1);
+    vertical-align: middle;
   }
   .alias-table {
     border-collapse: collapse;

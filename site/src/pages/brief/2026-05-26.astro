@@ -1,7 +1,19 @@
 ---
 import Base from '../../layouts/Base.astro';
+import AttributionMap from '../../components/AttributionMap.astro';
+import EventTimeline from '../../components/EventTimeline.astro';
+import { atlas } from '../../utils/atlas';
+
+const a = atlas();
 const title = 'Typhoon Bifurcation: two PRC pillars, one strategic window';
 const date = '2026-05-26';
+
+const voltEvents = a.eventsForActor('cn/mss/volt-typhoon');
+const saltEvents = a.eventsForActor('cn/mss/salt-typhoon');
+const allTyphoonEvents = [...voltEvents, ...saltEvents].sort(
+  (x, y) => (y.start_date ?? '').localeCompare(x.start_date ?? '')
+);
+const cnMarkers = [...a.timelineMarkers.values()].filter((m) => (m.id ?? '').startsWith('cn/'));
 ---
 <Base title={title}>
   <p class="kicker">Sunday Brief · {date}</p>
@@ -11,6 +23,11 @@ const date = '2026-05-26';
     different doctrinal mandates against the same victim country. The
     bifurcation matters — and it's been hiding in plain sight.
   </p>
+
+  <figure class="brief-chart">
+    <figcaption>Both clusters' attributed events, on one timeline.</figcaption>
+    <EventTimeline events={allTyphoonEvents} markers={cnMarkers} />
+  </figure>
 
   <h2>The setup</h2>
 
@@ -31,6 +48,11 @@ const date = '2026-05-26';
   </p>
 
   <h2>Volt — coercive pre-positioning</h2>
+
+  <figure class="brief-chart">
+    <figcaption>Volt Typhoon target footprint (n={voltEvents.length} events).</figcaption>
+    <AttributionMap events={voltEvents} selfIso2="cn" />
+  </figure>
 
   <p>
     The <a href="/event/2023-05/volt-typhoon-public-disclosure">May 2023
@@ -58,6 +80,11 @@ const date = '2026-05-26';
   </p>
 
   <h2>Salt — telecom intelligence collection</h2>
+
+  <figure class="brief-chart">
+    <figcaption>Salt Typhoon target footprint (n={saltEvents.length} events).</figcaption>
+    <AttributionMap events={saltEvents} selfIso2="cn" />
+  </figure>
 
   <p>
     <a href="/event/2024-09/salt-typhoon-us-telecom-compromise">Salt
@@ -178,4 +205,13 @@ const date = '2026-05-26';
 
 <style>
   ol li, ul li { margin: 0.5rem 0; }
+  .brief-chart {
+    margin: 1.25rem 0 1.5rem;
+  }
+  .brief-chart figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+  }
 </style>

@@ -6,6 +6,8 @@ import AttributionDonut from '../../components/AttributionDonut.astro';
 import PillarBreakdown from '../../components/PillarBreakdown.astro';
 import AttributionMap from '../../components/AttributionMap.astro';
 import EventTimeline from '../../components/EventTimeline.astro';
+import ConfidenceMixBar from '../../components/ConfidenceMixBar.astro';
+import DoctrineGenealogy from '../../components/DoctrineGenealogy.astro';
 import { atlas } from '../../utils/atlas';
 
 export function getStaticPaths() {
@@ -61,6 +63,21 @@ const inheritsFrom = (doctrine.inherits_from_ids ?? [])
 const inheritedBy = [...a.doctrines.values()].filter((d) =>
   (d.inherits_from_ids ?? []).includes(doctrine.id),
 );
+
+// Editorial-confidence mix across events tagged to this doctrine
+const confMix = { attested: 0, stronglyInferred: 0, plausible: 0 };
+for (const ev of events) {
+  for (const link of ev.doctrine_links ?? []) {
+    const linkDoctrineId = link.doctrine_id
+      ?? (link.pillar_id ? a.pillars.get(link.pillar_id)?.doctrineId : undefined)
+      ?? (link.program_id ? a.programs.get(link.program_id)?.doctrineId : undefined);
+    if (linkDoctrineId !== doctrine.id) continue;
+    const c = (link.confidence ?? '').toLowerCase().replace(/-/g, '_');
+    if (c === 'attested') confMix.attested++;
+    else if (c === 'strongly_inferred') confMix.stronglyInferred++;
+    else if (c === 'plausible') confMix.plausible++;
+  }
+}
 ---
 <Base title={doctrine.name} wide>
   <p class="kicker">Doctrine</p>
@@ -83,6 +100,17 @@ const inheritedBy = [...a.doctrines.values()].filter((d) =>
   {doctrine.official_text_url && (
     <p class="meta"><a href={doctrine.official_text_url} target="_blank" rel="noopener noreferrer">Official text →</a></p>
   )}
+
+  <p class="meta" style="margin-top: 0.25rem;">
+    <span class="cmb-inline-label">Editorial confidence:</span>
+    <ConfidenceMixBar
+      attested={confMix.attested}
+      stronglyInferred={confMix.stronglyInferred}
+      plausible={confMix.plausible}
+      unit="doctrine links"
+      width={220}
+    />
+  </p>
 
   {doctrine.summary && (
     <section>
@@ -128,17 +156,7 @@ const inheritedBy = [...a.doctrines.values()].filter((d) =>
     <section>
       <p class="kicker">Doctrine genealogy</p>
       <h2 style="margin-top: 0;">Relationships</h2>
-      <ul class="genealogy">
-        {inheritsFrom.map((d) => (
-          <li><strong>↑ Inherits from:</strong> <a href={`/doctrine/${d.id}`}>{d.short_name ?? d.name}</a></li>
-        ))}
-        {inheritedBy.map((d) => (
-          <li><strong>↓ Inherited by:</strong> <a href={`/doctrine/${d.id}`}>{d.short_name ?? d.name}</a></li>
-        ))}
-        {supersededBy && (
-          <li><strong>→ Superseded by:</strong> <a href={`/doctrine/${supersededBy.id}`}>{supersededBy.short_name ?? supersededBy.name}</a></li>
-        )}
-      </ul>
+      <DoctrineGenealogy atlas={a} focal={doctrine} />
     </section>
   )}
 
@@ -258,6 +276,14 @@ const inheritedBy = [...a.doctrines.values()].filter((d) =>
     color: var(--ctp-subtext0);
     margin: 0 0 0.5rem;
     font-size: 0.9375rem;
+  }
+  .cmb-inline-label {
+    display: inline-block;
+    margin-right: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay1);
+    vertical-align: middle;
   }
   .pillars {
     display: grid;

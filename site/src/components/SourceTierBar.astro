@@ -1,0 +1,108 @@
+---
+/**
+ * Tiny inline stacked bar showing the source-tier distribution of an
+ * event (or any list of source IDs).
+ *
+ *   - Tiers: primary, secondary, tertiary, unknown
+ *   - Color encodes evidentiary weight (deepest = primary)
+ *   - Hover title gives exact counts + n
+ *
+ * Used at event-page headers to communicate citation quality at a
+ * glance. Matches the visual idiom of ConfidenceMixBar so the two
+ * indicators sit naturally next to each other.
+ */
+import type { Atlas } from '../utils/atlas';
+
+interface Props {
+  atlas: Atlas;
+  sourceIds: string[];
+  /** Pixel width. Default 220. */
+  width?: number;
+}
+const { atlas, sourceIds, width = 220 } = Astro.props;
+
+const counts = { primary: 0, secondary: 0, tertiary: 0, unknown: 0 };
+for (const sid of sourceIds) {
+  const src = atlas.sources.get(sid);
+  const tier = (src?.tier ?? '').toLowerCase();
+  if (tier === 'primary') counts.primary++;
+  else if (tier === 'secondary') counts.secondary++;
+  else if (tier === 'tertiary') counts.tertiary++;
+  else counts.unknown++;
+}
+const total = counts.primary + counts.secondary + counts.tertiary + counts.unknown;
+const segs = total > 0
+  ? [
+      { label: 'primary',   n: counts.primary,   color: 'var(--ctp-green)' },
+      { label: 'secondary', n: counts.secondary, color: 'var(--ctp-blue)' },
+      { label: 'tertiary',  n: counts.tertiary,  color: 'var(--ctp-peach)' },
+      { label: 'unknown',   n: counts.unknown,   color: 'var(--ctp-overlay0)' },
+    ].filter((s) => s.n > 0)
+  : [];
+const title = total > 0
+  ? segs.map((s) => `${s.label}: ${s.n} (${((s.n / total) * 100).toFixed(0)}%)`).join('  ·  ')
+    + `\nn = ${total} source${total === 1 ? '' : 's'}`
+  : 'no sources';
+let cursor = 0;
+---
+{total > 0 ? (
+  <span class="stb" title={title} style={`width: ${width}px;`}>
+    <span class="stb-track">
+      {segs.map((s) => {
+        const w = (s.n / total) * 100;
+        const out = (
+          <span
+            class="stb-seg"
+            style={`left: ${cursor}%; width: ${w}%; background: ${s.color};`}
+            aria-label={`${s.label} ${s.n}`}
+          />
+        );
+        cursor += w;
+        return out;
+      })}
+    </span>
+    <span class="stb-legend">
+      <span class="stb-n">n={total}</span>
+      {segs.map((s) => (
+        <span class={`stb-pip stb-pip-${s.label}`}>{s.n}</span>
+      ))}
+    </span>
+  </span>
+) : (
+  <span class="stb stb-empty">no sources</span>
+)}
+
+<style>
+  .stb {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+  }
+  .stb-empty { color: var(--ctp-overlay0); font-style: italic; }
+  .stb-track {
+    position: relative;
+    display: block;
+    height: 8px;
+    background: var(--ctp-surface0);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .stb-seg { position: absolute; top: 0; bottom: 0; }
+  .stb-legend { display: inline-flex; gap: 0.5rem; align-items: center; }
+  .stb-n { color: var(--ctp-overlay0); }
+  .stb-pip { display: inline-flex; align-items: center; gap: 0.25rem; }
+  .stb-pip::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .stb-pip-primary::before   { background: var(--ctp-green); }
+  .stb-pip-secondary::before { background: var(--ctp-blue); }
+  .stb-pip-tertiary::before  { background: var(--ctp-peach); }
+  .stb-pip-unknown::before   { background: var(--ctp-overlay0); }
+</style>

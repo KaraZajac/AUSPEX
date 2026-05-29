@@ -1,0 +1,117 @@
+---
+/**
+ * Tiny inline stacked-bar showing the mix of doctrine-link confidence
+ * labels (attested / strongly_inferred / plausible) across a set.
+ * Used at event / actor / doctrine page headers to give an at-a-glance
+ * read on how much editorial weight backs the entity's doctrine claims.
+ *
+ * Designed for analyst readability:
+ *   - segments are proportional to count, never minimum-width fudged
+ *   - hover title carries exact n and percentages
+ *   - empty / null buckets just don't render (no zero-pixel slivers)
+ */
+interface Props {
+  /** Count of `attested` confidence labels. */
+  attested: number;
+  /** Count of `strongly_inferred` confidence labels. */
+  stronglyInferred: number;
+  /** Count of `plausible` confidence labels. */
+  plausible: number;
+  /** Optional descriptor used in the hover title, e.g. "doctrine links" or "attributions". */
+  unit?: string;
+  /** Pixel width. Default 200. */
+  width?: number;
+}
+const { attested, stronglyInferred, plausible, unit = 'doctrine links', width = 200 } = Astro.props;
+const total = attested + stronglyInferred + plausible;
+const segs = total > 0
+  ? [
+      { label: 'attested',          n: attested,         color: 'var(--ctp-green)' },
+      { label: 'strongly_inferred', n: stronglyInferred, color: 'var(--ctp-blue)' },
+      { label: 'plausible',         n: plausible,        color: 'var(--ctp-peach)' },
+    ].filter((s) => s.n > 0)
+  : [];
+const title = total > 0
+  ? segs.map((s) => `${s.label}: ${s.n} (${((s.n / total) * 100).toFixed(0)}%)`).join('  ·  ')
+    + `\nn = ${total} ${unit}`
+  : `no ${unit}`;
+let cursor = 0;
+---
+{total > 0 ? (
+  <span class="cmb" title={title} style={`width: ${width}px;`}>
+    <span class="cmb-track">
+      {segs.map((s) => {
+        const w = (s.n / total) * 100;
+        const out = (
+          <span
+            class="cmb-seg"
+            style={`left: ${cursor}%; width: ${w}%; background: ${s.color};`}
+            aria-label={`${s.label} ${s.n}`}
+          />
+        );
+        cursor += w;
+        return out;
+      })}
+    </span>
+    <span class="cmb-legend">
+      <span class="cmb-n">n={total}</span>
+      {segs.map((s) => (
+        <span class={`cmb-pip cmb-pip-${s.label}`}>
+          {s.n}
+        </span>
+      ))}
+    </span>
+  </span>
+) : (
+  <span class="cmb cmb-empty" title={title}>no {unit}</span>
+)}
+
+<style>
+  .cmb {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-subtext0);
+  }
+  .cmb-empty {
+    color: var(--ctp-overlay0);
+    font-style: italic;
+  }
+  .cmb-track {
+    position: relative;
+    display: block;
+    height: 8px;
+    background: var(--ctp-surface0);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cmb-seg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    transition: opacity 100ms;
+  }
+  .cmb-legend {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .cmb-n { color: var(--ctp-overlay0); }
+  .cmb-pip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .cmb-pip::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .cmb-pip-attested::before          { background: var(--ctp-green); }
+  .cmb-pip-strongly_inferred::before { background: var(--ctp-blue); }
+  .cmb-pip-plausible::before         { background: var(--ctp-peach); }
+</style>

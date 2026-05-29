@@ -1,7 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import AccuracyHeatmap from '../../components/AccuracyHeatmap.astro';
+import ReliabilityDiagram from '../../components/ReliabilityDiagram.astro';
 import { atlas } from '../../utils/atlas';
 import { runDoctrineLOO } from '../../utils/doctrine-prediction-eval';
+import { calibratedProbs } from '../../utils/calibration';
+import { CALIBRATION } from '../../utils/calibration-constants';
 
 const a = atlas();
 const eval_ = runDoctrineLOO();
@@ -15,6 +19,37 @@ function doctrineName(id: string): string {
 }
 const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
 const generatedAt = eval_.generatedAt;
+
+// ─── reliability-diagram samples (softmax over retained top-5) ───
+const samplesUncal: Array<{ predicted: number; correct: boolean }> = [];
+const samplesCal:   Array<{ predicted: number; correct: boolean }> = [];
+for (const r of eval_.events) {
+  if (r.top5.length === 0) continue;
+  const scores = r.top5.map((c) => c.logScore);
+  const pu = calibratedProbs(scores, 1.0);
+  const pc = calibratedProbs(scores, CALIBRATION.doctrine.temperature);
+  const top1 = r.top5[0].doctrineId;
+  const correct = r.trueDoctrines.includes(top1);
+  if (Number.isFinite(pu[0])) samplesUncal.push({ predicted: pu[0], correct });
+  if (Number.isFinite(pc[0])) samplesCal.push({   predicted: pc[0], correct });
+}
+
+// ─── accuracy-heatmap rows + metrics ───
+const heatmapRows = perState.map(([state, row]) => ({
+  state,
+  scored: row.scored,
+  hit1: row.hit1,
+  hit3: row.hit3,
+  meanRecall3: row.meanRecall3,
+  mAP: row.mAP,
+}));
+const doctrineMetrics = [
+  { key: 'hit1', label: 'top-1',    kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit1 },
+  { key: 'hit3', label: 'top-3',    kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit3 },
+  { key: 'r3',   label: 'recall@3', kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.meanRecall3 },
+  { key: 'mAP',  label: 'mAP',      kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.mAP },
+];
+const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationStates.get(s)?.name ?? s.toUpperCase();
 ---
 <Base title="Doctrine prediction — backtest" wide>
   <p class="kicker">Research</p>
@@ -72,23 +107,39 @@ const generatedAt = eval_.generatedAt;
       sample sizes too small to learn discriminative doctrine
       profiles — same limit as the attribution engine.
     </p>
-    <table class="state-table">
-      <thead>
-        <tr><th>state</th><th>n</th><th>top-1</th><th>top-3</th><th>recall@3</th><th>mAP</th></tr>
-      </thead>
-      <tbody>
-        {perState.map(([state, row]) => (
-          <tr>
-            <td><code>{state.toUpperCase()}</code></td>
-            <td>{row.scored}</td>
-            <td>{pct(row.hit1, row.scored)}</td>
-            <td>{pct(row.hit3, row.scored)}</td>
-            <td>{(row.meanRecall3 * 100).toFixed(1)}%</td>
-            <td>{row.mAP.toFixed(3)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <AccuracyHeatmap
+      rows={heatmapRows}
+      metrics={doctrineMetrics}
+      labelOf={stateLabel}
+      engineLabel="doctrine engine"
+      footnote="Multi-label setup: a top-1 hit means at least one of the event's true doctrines was the engine's #1 prediction. recall@3 is per-event averaged. mAP is mean Average Precision across events."
+    />
+  </section>
+
+  <section>
+    <h2>Calibration</h2>
+    <p>
+      A well-calibrated model that says "80% confident" should be
+      right 80% of the time. Reliability diagrams check this
+      directly — points above the diagonal mean <em>under</em>-confidence;
+      points below mean <em>over</em>-confidence. Temperature scaling
+      (T={CALIBRATION.doctrine.temperature.toFixed(1)}) pulls
+      overconfident predictions back toward the identity line
+      without re-ranking.
+    </p>
+    <div class="cal-grid">
+      <ReliabilityDiagram samples={samplesUncal} title="Uncalibrated (raw softmax)" />
+      <ReliabilityDiagram samples={samplesCal}   title={`Calibrated (T=${CALIBRATION.doctrine.temperature.toFixed(1)})`} />
+    </div>
+    <p class="reading" style="margin-top: 0.5rem;">
+      <strong>Method.</strong> For each held-out event, softmax is
+      computed over the retained top-5 doctrine log-scores. The
+      rank-1 candidate's probability is plotted against whether it
+      matched any of the event's actual labels. Calibrated
+      improvement vs uncalibrated NLL on the full corpus:{' '}
+      <strong>{CALIBRATION.doctrine.improvementPct.toFixed(1)}%</strong>
+      (n={CALIBRATION.doctrine.sampleSize}).
+    </p>
   </section>
 
   <section>
@@ -223,6 +274,12 @@ const generatedAt = eval_.generatedAt;
     padding: 0.75rem 1rem;
     border-radius: var(--radius-sm);
     font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
     margin: 0.75rem 0;
   }
 </style>

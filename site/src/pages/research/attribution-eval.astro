@@ -1,7 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import AccuracyHeatmap from '../../components/AccuracyHeatmap.astro';
+import ReliabilityDiagram from '../../components/ReliabilityDiagram.astro';
 import { atlas } from '../../utils/atlas';
 import { runLeaveOneOut, runStability } from '../../utils/attribution-eval';
+import { calibratedProbs } from '../../utils/calibration';
+import { CALIBRATION } from '../../utils/calibration-constants';
 
 const a = atlas();
 const eval_ = runLeaveOneOut();
@@ -16,6 +20,41 @@ function actorName(id: string): string {
 }
 const perState = [...eval_.perState.entries()].sort((a, b) => b[1].scored - a[1].scored);
 const generatedAt = eval_.generatedAt;
+
+// ─── reliability-diagram samples ───
+// For each scored event, softmax the top-5 logScores → rank-1 prob.
+// (We only retain top-5 from the eval, so this approximates rank-1
+// probability under the mild assumption that the held-out mass beyond
+// rank-5 is small. The post-calibration plot uses the fitted T.)
+const samplesUncal: Array<{ predicted: number; correct: boolean }> = [];
+const samplesCal: Array<{ predicted: number; correct: boolean }> = [];
+for (const r of eval_.events) {
+  if (r.top5.length === 0) continue;
+  const scores = r.top5.map((c) => c.logScore);
+  const probsUncal = calibratedProbs(scores, 1.0);
+  const probsCal = calibratedProbs(scores, CALIBRATION.attribution.temperature);
+  const top1Actor = r.top5[0].actorId;
+  const correct = r.trueActors.includes(top1Actor);
+  if (Number.isFinite(probsUncal[0])) samplesUncal.push({ predicted: probsUncal[0], correct });
+  if (Number.isFinite(probsCal[0]))   samplesCal.push({   predicted: probsCal[0],   correct });
+}
+
+// ─── accuracy-heatmap rows ───
+const heatmapRows = perState.map(([state, row]) => ({
+  state,
+  scored: row.scored,
+  hit1: row.hit1,
+  hit3: row.hit3,
+  hit5: row.hit5,
+  mrr: row.mrr,
+}));
+const attributionMetrics = [
+  { key: 'hit1', label: 'top-1', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit1 },
+  { key: 'hit3', label: 'top-3', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit3 },
+  { key: 'hit5', label: 'top-5', kind: 'pct' as const, get: (r: typeof heatmapRows[number]) => r.hit5 },
+  { key: 'mrr',  label: 'MRR',   kind: 'num' as const, get: (r: typeof heatmapRows[number]) => r.mrr },
+];
+const stateLabel = (s: string) => a.nationStates.get(s)?.short_name ?? a.nationStates.get(s)?.name ?? s.toUpperCase();
 ---
 <Base title="Attribution engine — backtest" wide>
   <p class="kicker">Research</p>
@@ -56,23 +95,7 @@ const generatedAt = eval_.generatedAt;
       narrowing the candidate set even when it's not nailing the
       single right answer.
     </p>
-    <table class="state-table">
-      <thead>
-        <tr><th>state</th><th>n</th><th>top-1</th><th>top-3</th><th>top-5</th><th>MRR</th></tr>
-      </thead>
-      <tbody>
-        {perState.map(([state, row]) => (
-          <tr>
-            <td><code>{state.toUpperCase()}</code></td>
-            <td>{row.scored}</td>
-            <td>{pct(row.hit1, row.scored)}</td>
-            <td>{pct(row.hit3, row.scored)}</td>
-            <td>{pct(row.hit5, row.scored)}</td>
-            <td>{row.mrr.toFixed(3)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <AccuracyHeatmap rows={heatmapRows} metrics={attributionMetrics} labelOf={stateLabel} engineLabel="attribution engine" />
     <p class="reading">
       <strong>Reading.</strong> US scores high because its actor pool
       is small and operationally distinct. CN scores low at top-1
@@ -82,6 +105,35 @@ const generatedAt = eval_.generatedAt;
       <em>data-richness</em> finding: closing the CN top-1 gap
       requires per-actor TTP / malware-family / tradecraft features,
       not more events.
+    </p>
+  </section>
+
+  <section>
+    <h2>Calibration</h2>
+    <p>
+      A model that says "80% confident" should be right 80% of the
+      time. Reliability diagrams check this directly — points above
+      the diagonal mean <em>under</em>-confidence; points below mean
+      <em>over</em>-confidence. ECE (expected calibration error) is
+      the n-weighted average gap; MCE is the worst single bin.
+      Temperature scaling (T={CALIBRATION.attribution.temperature.toFixed(1)})
+      pulls overconfident predictions back toward the identity line
+      without re-ranking — accuracy is unchanged, the probabilities
+      become honest.
+    </p>
+    <div class="cal-grid">
+      <ReliabilityDiagram samples={samplesUncal} title="Uncalibrated (raw softmax)" />
+      <ReliabilityDiagram samples={samplesCal}   title={`Calibrated (T=${CALIBRATION.attribution.temperature.toFixed(1)})`} />
+    </div>
+    <p class="reading" style="margin-top: 0.5rem;">
+      <strong>Method.</strong> Each sample is one held-out event:
+      X = post-softmax probability assigned by the engine to its
+      rank-1 candidate, Y = whether that rank-1 candidate matched
+      the actual public attribution. Softmax is computed over the
+      retained top-5 log-scores. Bins are equal-width (10 of them).
+      Calibrated improvement vs uncalibrated NLL on the full corpus:{' '}
+      <strong>{CALIBRATION.attribution.improvementPct.toFixed(1)}%</strong>
+      (n={CALIBRATION.attribution.sampleSize}).
     </p>
   </section>
 
@@ -238,6 +290,12 @@ const generatedAt = eval_.generatedAt;
     padding: 0.625rem 0.875rem;
     border-radius: var(--radius-sm);
     font-size: 0.9375rem;
+    margin: 0.75rem 0;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
     margin: 0.75rem 0;
   }
 </style>

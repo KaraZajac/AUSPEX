@@ -1,9 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import SankeyFlow from '../components/SankeyFlow.astro';
 import { atlas } from '../utils/atlas';
 
 const a = atlas();
 const { sectors, years, counts } = a.sectorYearMatrix();
+const allEvents = a.allEventsSorted();
 
 const maxCount = Math.max(
   1,
@@ -44,6 +46,18 @@ const grandTotal = [...rowTotals.values()].reduce((a, b) => a + b, 0);
     sectors and {years.length} years. Max in a single cell:{' '}
     <strong>{maxCount}</strong>.
   </p>
+
+  <section style="margin: 1rem 0 2rem;">
+    <h2 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Flow: attacker state → target sector</h2>
+    <p style="color: var(--ctp-subtext0); font-size: 0.875rem; margin: 0 0 0.5rem;">
+      Cross-tabulation as a Sankey. Flow width = event count; flows
+      colored by attacker state. The same data the matrix below
+      contains, oriented along the attacker dimension.
+    </p>
+    <SankeyFlow events={allEvents} atlas={a} />
+  </section>
+
+  <h2 style="font-size: 1.125rem; margin-top: 2rem; margin-bottom: 0.5rem;">Sector × year intensity</h2>
 
   <div class="heatmap" style={`grid-template-columns: 13rem repeat(${years.length}, minmax(2rem, 1fr)) 4rem;`}>
     <div class="cell-empty"></div>

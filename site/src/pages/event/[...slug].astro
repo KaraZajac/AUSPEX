@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import FlagChip from '../../components/FlagChip.astro';
 import ConfidenceChip from '../../components/ConfidenceChip.astro';
 import DoctrineLinkPanel from '../../components/DoctrineLinkPanel.astro';
+import ConfidenceMixBar from '../../components/ConfidenceMixBar.astro';
+import SourceTierBar from '../../components/SourceTierBar.astro';
 import { atlas, eventStateId } from '../../utils/atlas';
 
 export function getStaticPaths() {
@@ -70,6 +72,15 @@ for (const attr of event.attributions ?? []) {
   }
 }
 attribStops.sort((a, b) => a.date.localeCompare(b.date));
+
+// Editorial-confidence mix across this event's doctrine_links
+const eventConfMix = { attested: 0, stronglyInferred: 0, plausible: 0 };
+for (const link of event.doctrine_links ?? []) {
+  const c = (link.confidence ?? '').toLowerCase().replace(/-/g, '_');
+  if (c === 'attested') eventConfMix.attested++;
+  else if (c === 'strongly_inferred') eventConfMix.stronglyInferred++;
+  else if (c === 'plausible') eventConfMix.plausible++;
+}
 ---
 <Base title={event.name} wide>
   <p class="kicker">Event · {event.id}</p>
@@ -82,6 +93,27 @@ attribStops.sort((a, b) => a.date.localeCompare(b.date));
     {event.end_date && <> &mdash; ended {event.end_date}</>}
     {event.disclosure_date && <> · <strong>Disclosed</strong> {event.disclosure_date}</>}
   </p>
+
+  <div class="event-quality-bars">
+    {(eventConfMix.attested + eventConfMix.stronglyInferred + eventConfMix.plausible) > 0 && (
+      <span class="eqb-row">
+        <span class="eqb-label">Doctrine confidence:</span>
+        <ConfidenceMixBar
+          attested={eventConfMix.attested}
+          stronglyInferred={eventConfMix.stronglyInferred}
+          plausible={eventConfMix.plausible}
+          unit="doctrine links"
+          width={200}
+        />
+      </span>
+    )}
+    {event.sources && event.sources.length > 0 && (
+      <span class="eqb-row">
+        <span class="eqb-label">Source tier:</span>
+        <SourceTierBar atlas={a} sourceIds={event.sources} width={200} />
+      </span>
+    )}
+  </div>
 
   {(event.incident_type && event.incident_type.length > 0) && (
     <div class="chip-row" style="margin-bottom: 1.5rem;">
@@ -363,6 +395,22 @@ attribStops.sort((a, b) => a.date.localeCompare(b.date));
 </Base>
 
 <style>
+  .event-quality-bars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin: 0.25rem 0 1.25rem;
+  }
+  .eqb-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .eqb-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay1);
+  }
   .event-header {
     display: flex;
     align-items: center;

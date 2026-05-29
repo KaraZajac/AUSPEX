@@ -1,17 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import FlagChip from '../components/FlagChip.astro';
+import StateSparkline from '../components/StateSparkline.astro';
 import { atlas } from '../utils/atlas';
 
 const a = atlas();
 const states = [...a.nationStates.values()].sort((x, y) => x.short_name?.localeCompare(y.short_name ?? '') ?? 0);
-const rows = states.map((s) => ({
-  state: s,
-  doctrines: a.doctrinesForState(s.id).length,
-  services: a.servicesForState(s.id).length,
-  actors: a.actorsForState(s.id).length,
-  events: a.eventsForState(s.id).length,
-}));
+const rows = states.map((s) => {
+  const events = a.eventsForState(s.id);
+  return {
+    state: s,
+    doctrines: a.doctrinesForState(s.id).length,
+    services: a.servicesForState(s.id).length,
+    actors: a.actorsForState(s.id).length,
+    events,
+    eventCount: events.length,
+  };
+});
 ---
 <Base title="States" wide>
   <p class="kicker">Atlas</p>
@@ -23,7 +28,7 @@ const rows = states.map((s) => ({
   </p>
 
   <div class="state-grid">
-    {rows.map(({ state, doctrines, services, actors, events }) => (
+    {rows.map(({ state, doctrines, services, actors, events, eventCount }) => (
       <a class="state-card" href={`/state/${state.id}`}>
         <div class="state-head">
           <FlagChip state={state.id} />
@@ -33,7 +38,11 @@ const rows = states.map((s) => ({
           <span><strong>{doctrines}</strong> doctrines</span>
           <span><strong>{services}</strong> services</span>
           <span><strong>{actors}</strong> actors</span>
-          <span><strong>{events}</strong> events</span>
+          <span><strong>{eventCount}</strong> events</span>
+        </div>
+        <div class="state-spark-wrap" aria-hidden="true">
+          <span class="state-spark-label">last 60 mo</span>
+          <StateSparkline events={events} width={140} height={20} />
         </div>
       </a>
     ))}
@@ -81,5 +90,21 @@ const rows = states.map((s) => ({
     color: var(--ctp-text);
     font-weight: 600;
     margin-right: 0.25rem;
+  }
+  .state-spark-wrap {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--ctp-surface0);
+  }
+  .state-spark-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 </style>

@@ -1,0 +1,413 @@
+---
+/**
+ * Sankey diagram — state (attacker) → target sector.
+ *
+ * The "where do the attacks actually go" chart. Each flow's width
+ * encodes event count; flows are colored by source state.
+ *
+ * Conservative analyst design:
+ *   - Top-N states + top-N sectors get explicit nodes
+ *   - The "other" rollup for both sides keeps the chart honest
+ *     about what's omitted (n surfaced in caption)
+ *   - "Unattributed" attacker bucket renders as a muted node so
+ *     editorial gaps are visible, not hidden
+ *   - Hover title gives exact (state, sector, n) on each flow
+ *   - No floating numbers inside flows — analysts hover for precision
+ *
+ * Implementation note: this is hand-rolled (no d3-sankey dep). The
+ * layout uses a single forward pass:
+ *   1. Compute per-state and per-sector totals; sort desc
+ *   2. Allocate node y-extents proportional to totals
+ *   3. Each flow is a cubic bezier connecting source-right-edge to
+ *      target-left-edge at the appropriate y bands
+ *   4. Within a node, flows are stacked in rank order so the
+ *      chart is reproducible (no random ordering)
+ */
+import type { AuspexEvent, Atlas } from '../utils/atlas';
+
+interface Props {
+  events: AuspexEvent[];
+  atlas: Atlas;
+  /** Top-N states. Rest fold to "other states". Default 8. */
+  topStates?: number;
+  /** Top-N sectors. Rest fold to "other sectors". Default 10. */
+  topSectors?: number;
+  /** Pixel width. Default 720. */
+  width?: number;
+  /** Pixel height. Default 480. */
+  height?: number;
+}
+const { events, atlas, topStates = 8, topSectors = 10, width = 720, height = 480 } = Astro.props;
+
+// ─── derive attacker state (mirrors atlas.eventStateId logic) ───
+function attackerState(ev: AuspexEvent): string {
+  for (const attr of ev.attributions ?? []) {
+    if (attr.actor_id) {
+      const head = attr.actor_id.split('/')[0];
+      if (head === 'criminal') return 'criminal';
+      if (head && head.length === 2) return head;
+      const svc = atlas.actors.get(attr.actor_id)?.primary_service_id;
+      if (svc) return svc.split('/')[0];
+    }
+    if (attr.service_id) return attr.service_id.split('/')[0];
+  }
+  return '__unattr__';
+}
+
+// ─── derive top-level sector for each event target ───
+function topSectorsOf(ev: AuspexEvent): Set<string> {
+  const out = new Set<string>();
+  for (const t of ev.targets ?? []) {
+    if (!t.target_id?.startsWith('sectors/')) continue;
+    const raw = t.target_id.replace(/^sectors\//, '');
+    let slug = raw;
+    while (slug && !atlas.sectors.has(slug)) {
+      const i = slug.lastIndexOf('/');
+      if (i < 0) { slug = ''; break; }
+      slug = slug.slice(0, i);
+    }
+    if (!slug) continue;
+    const top = atlas.sectorAncestors(slug)[0];
+    if (top) out.add(top.id);
+  }
+  return out;
+}
+
+// ─── aggregate (state, sector) pairs ───
+const pairCounts = new Map<string, Map<string, number>>(); // state → sector → count
+const stateTotals = new Map<string, number>();
+const sectorTotals = new Map<string, number>();
+let totalLinks = 0;
+let droppedNoSector = 0;
+
+for (const ev of events) {
+  const s = attackerState(ev);
+  const sectors = topSectorsOf(ev);
+  if (sectors.size === 0) { droppedNoSector++; continue; }
+  for (const sec of sectors) {
+    let inner = pairCounts.get(s);
+    if (!inner) { inner = new Map(); pairCounts.set(s, inner); }
+    inner.set(sec, (inner.get(sec) ?? 0) + 1);
+    stateTotals.set(s, (stateTotals.get(s) ?? 0) + 1);
+    sectorTotals.set(sec, (sectorTotals.get(sec) ?? 0) + 1);
+    totalLinks++;
+  }
+}
+
+// ─── pick top nodes ───
+const STATE_OTHER = '__state_other__';
+const SECTOR_OTHER = '__sector_other__';
+const stateRank = [...stateTotals.entries()].sort((a, b) => b[1] - a[1]);
+const sectorRank = [...sectorTotals.entries()].sort((a, b) => b[1] - a[1]);
+const keepStates = new Set(stateRank.slice(0, topStates).map(([s]) => s));
+const keepSectors = new Set(sectorRank.slice(0, topSectors).map(([s]) => s));
+const otherStateTotal = stateRank.slice(topStates).reduce((s, [, n]) => s + n, 0);
+const otherSectorTotal = sectorRank.slice(topSectors).reduce((s, [, n]) => s + n, 0);
+
+// Collapse non-kept buckets
+type Pair = { from: string; to: string; n: number };
+const collapsed: Pair[] = [];
+for (const [s, inner] of pairCounts) {
+  for (const [sec, n] of inner) {
+    const from = keepStates.has(s) ? s : STATE_OTHER;
+    const to = keepSectors.has(sec) ? sec : SECTOR_OTHER;
+    collapsed.push({ from, to, n });
+  }
+}
+// Merge duplicates from collapse
+const merged = new Map<string, number>();
+for (const p of collapsed) {
+  const k = `${p.from}|${p.to}`;
+  merged.set(k, (merged.get(k) ?? 0) + p.n);
+}
+const pairs: Pair[] = [...merged.entries()].map(([k, n]) => {
+  const [from, to] = k.split('|');
+  return { from, to, n };
+});
+
+// Re-tally per-node totals after collapse
+const leftTotals = new Map<string, number>();
+const rightTotals = new Map<string, number>();
+for (const p of pairs) {
+  leftTotals.set(p.from, (leftTotals.get(p.from) ?? 0) + p.n);
+  rightTotals.set(p.to, (rightTotals.get(p.to) ?? 0) + p.n);
+}
+
+// Order nodes by total desc, with "__unattr__" and "__*_other__" forced to bottom
+function rankNodes(totals: Map<string, number>): string[] {
+  const main: Array<[string, number]> = [];
+  const tail: Array<[string, number]> = [];
+  for (const [k, v] of totals) {
+    if (k.startsWith('__')) tail.push([k, v]);
+    else main.push([k, v]);
+  }
+  main.sort((a, b) => b[1] - a[1]);
+  tail.sort((a, b) => b[1] - a[1]);
+  return [...main, ...tail].map(([k]) => k);
+}
+const leftOrder = rankNodes(leftTotals);
+const rightOrder = rankNodes(rightTotals);
+
+// ─── layout ───
+const PAD_T = 12;
+const PAD_B = 28;
+const innerH = height - PAD_T - PAD_B;
+const NODE_W = 14;
+const NODE_GAP = 4;
+const N_LEFT = leftOrder.length;
+const N_RIGHT = rightOrder.length;
+const flowedTotalLeft = [...leftTotals.values()].reduce((a, b) => a + b, 0);
+const flowedTotalRight = [...rightTotals.values()].reduce((a, b) => a + b, 0);
+// Both totals are equal by construction; use either.
+const flowedTotal = Math.max(1, flowedTotalLeft);
+
+// Each "1 unit count" maps to this many vertical pixels (each side
+// gets its own scale so node columns fill the chart height fully).
+function nodeYExtents(order: string[], totals: Map<string, number>): Map<string, { y0: number; y1: number }> {
+  const gapTotal = NODE_GAP * Math.max(0, order.length - 1);
+  const usableH = innerH - gapTotal;
+  const unitH = usableH / flowedTotal;
+  const out = new Map<string, { y0: number; y1: number }>();
+  let cursor = PAD_T;
+  for (const k of order) {
+    const h = (totals.get(k) ?? 0) * unitH;
+    out.set(k, { y0: cursor, y1: cursor + h });
+    cursor += h + NODE_GAP;
+  }
+  return out;
+}
+const leftExtents = nodeYExtents(leftOrder, leftTotals);
+const rightExtents = nodeYExtents(rightOrder, rightTotals);
+
+const LEFT_X = 110;
+const RIGHT_X = width - 110 - NODE_W;
+
+// For each node, stack the flows by counterparty rank.
+function flowsLeavingNode(node: string, isLeft: boolean): Pair[] {
+  const out = pairs.filter((p) => (isLeft ? p.from : p.to) === node);
+  const order = isLeft ? rightOrder : leftOrder;
+  const orderIdx = new Map<string, number>();
+  order.forEach((k, i) => orderIdx.set(k, i));
+  out.sort((a, b) => (orderIdx.get(isLeft ? a.to : a.from) ?? 0) - (orderIdx.get(isLeft ? b.to : b.from) ?? 0));
+  return out;
+}
+
+const unitHLeft = (() => {
+  const gapTotal = NODE_GAP * Math.max(0, N_LEFT - 1);
+  return (innerH - gapTotal) / flowedTotal;
+})();
+const unitHRight = (() => {
+  const gapTotal = NODE_GAP * Math.max(0, N_RIGHT - 1);
+  return (innerH - gapTotal) / flowedTotal;
+})();
+
+// Compute per-flow y-band on each side
+type FlowGeom = Pair & { srcY0: number; srcY1: number; dstY0: number; dstY1: number };
+function computeFlows(): FlowGeom[] {
+  const out: FlowGeom[] = [];
+  // Per source: stack flows top-down inside the source-node y range
+  const srcCursor = new Map<string, number>();
+  for (const k of leftOrder) srcCursor.set(k, leftExtents.get(k)!.y0);
+  for (const k of leftOrder) {
+    for (const f of flowsLeavingNode(k, true)) {
+      const c = srcCursor.get(k)!;
+      const h = f.n * unitHLeft;
+      out.push({ ...f, srcY0: c, srcY1: c + h, dstY0: 0, dstY1: 0 });
+      srcCursor.set(k, c + h);
+    }
+  }
+  // Per destination: stack incoming flows top-down inside dst-node range
+  const dstCursor = new Map<string, number>();
+  for (const k of rightOrder) dstCursor.set(k, rightExtents.get(k)!.y0);
+  // Process flows in target-side stacking order
+  const targetOrderedIdx = new Map<string, number>();
+  rightOrder.forEach((k, i) => targetOrderedIdx.set(k, i));
+  out.sort((a, b) => {
+    const ti = (targetOrderedIdx.get(a.to) ?? 0) - (targetOrderedIdx.get(b.to) ?? 0);
+    if (ti !== 0) return ti;
+    return a.srcY0 - b.srcY0;
+  });
+  for (const f of out) {
+    const c = dstCursor.get(f.to)!;
+    const h = f.n * unitHRight;
+    f.dstY0 = c;
+    f.dstY1 = c + h;
+    dstCursor.set(f.to, c + h);
+  }
+  return out;
+}
+const flows = computeFlows();
+
+// ─── colors ───
+const palette = [
+  'var(--ctp-red)', 'var(--ctp-mauve)', 'var(--ctp-peach)', 'var(--ctp-yellow)',
+  'var(--ctp-blue)', 'var(--ctp-teal)', 'var(--ctp-green)', 'var(--ctp-pink)',
+  'var(--ctp-lavender)', 'var(--ctp-sapphire)',
+];
+const stateColor = new Map<string, string>();
+let pIdx = 0;
+for (const k of leftOrder) {
+  if (k.startsWith('__')) stateColor.set(k, 'var(--ctp-overlay0)');
+  else stateColor.set(k, palette[(pIdx++) % palette.length]);
+}
+
+function labelOf(node: string, isLeft: boolean): string {
+  if (node === '__state_other__') return `${stateRank.length - topStates} other state${stateRank.length - topStates === 1 ? '' : 's'}`;
+  if (node === '__sector_other__') return `${sectorRank.length - topSectors} other sector${sectorRank.length - topSectors === 1 ? '' : 's'}`;
+  if (node === '__unattr__') return 'unattributed';
+  if (isLeft) {
+    return atlas.nationStates.get(node)?.short_name ?? atlas.nationStates.get(node)?.name ?? node.toUpperCase();
+  }
+  return atlas.sectors.get(node)?.name ?? node;
+}
+
+// Cubic bezier path from (x0,y0,y1) to (x1,y0',y1')
+function flowPath(x0: number, y0a: number, y0b: number, x1: number, y1a: number, y1b: number): string {
+  const cx0 = x0 + (x1 - x0) * 0.4;
+  const cx1 = x0 + (x1 - x0) * 0.6;
+  return [
+    `M ${x0.toFixed(2)} ${y0a.toFixed(2)}`,
+    `C ${cx0.toFixed(2)} ${y0a.toFixed(2)} ${cx1.toFixed(2)} ${y1a.toFixed(2)} ${x1.toFixed(2)} ${y1a.toFixed(2)}`,
+    `L ${x1.toFixed(2)} ${y1b.toFixed(2)}`,
+    `C ${cx1.toFixed(2)} ${y1b.toFixed(2)} ${cx0.toFixed(2)} ${y0b.toFixed(2)} ${x0.toFixed(2)} ${y0b.toFixed(2)}`,
+    'Z',
+  ].join(' ');
+}
+---
+<figure class="sk-figure">
+  <figcaption class="sk-cap">
+    <strong>n = {totalLinks}</strong> (state, sector) link
+    {totalLinks === 1 ? '' : 's'} from {events.length} events.
+    {droppedNoSector > 0 && (
+      <> {droppedNoSector} events without a tagged target sector omitted.</>
+    )}
+    {otherStateTotal > 0 && (
+      <> {stateRank.length - topStates} attacker state{stateRank.length - topStates === 1 ? '' : 's'} folded into "other".</>
+    )}
+    {otherSectorTotal > 0 && (
+      <> {sectorRank.length - topSectors} target sector{sectorRank.length - topSectors === 1 ? '' : 's'} folded into "other".</>
+    )}
+  </figcaption>
+
+  <div class="sk-scroll">
+    <svg
+      class="sk-svg"
+      viewBox={`0 0 ${width} ${height}`}
+      width={width}
+      height={height}
+      role="img"
+      aria-label={`Sankey: ${totalLinks} state-to-sector links across ${events.length} events`}
+    >
+      {/* flows */}
+      {flows.map((f) => (
+        <g class="sk-flow">
+          <title>{`${labelOf(f.from, true)} → ${labelOf(f.to, false)}: ${f.n} event${f.n === 1 ? '' : 's'}`}</title>
+          <path
+            d={flowPath(LEFT_X + NODE_W, f.srcY0, f.srcY1, RIGHT_X, f.dstY0, f.dstY1)}
+            fill={stateColor.get(f.from) ?? 'var(--ctp-overlay0)'}
+            opacity="0.45"
+          />
+        </g>
+      ))}
+
+      {/* left nodes */}
+      {leftOrder.map((k) => {
+        const e = leftExtents.get(k)!;
+        return (
+          <g class="sk-node">
+            <title>{`${labelOf(k, true)}: ${leftTotals.get(k) ?? 0} links`}</title>
+            <rect
+              x={LEFT_X} y={e.y0}
+              width={NODE_W} height={Math.max(1, e.y1 - e.y0)}
+              fill={stateColor.get(k) ?? 'var(--ctp-overlay0)'}
+            />
+            <text
+              x={LEFT_X - 6} y={(e.y0 + e.y1) / 2 + 3}
+              text-anchor="end"
+              class={k.startsWith('__') ? 'sk-label sk-label-other' : 'sk-label'}
+            >
+              {labelOf(k, true)}
+            </text>
+            <text
+              x={LEFT_X - 6} y={(e.y0 + e.y1) / 2 + 15}
+              text-anchor="end"
+              class="sk-label-n"
+            >{leftTotals.get(k)}</text>
+          </g>
+        );
+      })}
+
+      {/* right nodes */}
+      {rightOrder.map((k) => {
+        const e = rightExtents.get(k)!;
+        return (
+          <g class="sk-node">
+            <title>{`${labelOf(k, false)}: ${rightTotals.get(k) ?? 0} links`}</title>
+            <rect
+              x={RIGHT_X} y={e.y0}
+              width={NODE_W} height={Math.max(1, e.y1 - e.y0)}
+              fill="var(--ctp-text)"
+              opacity="0.7"
+            />
+            <text
+              x={RIGHT_X + NODE_W + 6} y={(e.y0 + e.y1) / 2 + 3}
+              class={k.startsWith('__') ? 'sk-label sk-label-other' : 'sk-label'}
+            >
+              {labelOf(k, false)}
+            </text>
+            <text
+              x={RIGHT_X + NODE_W + 6} y={(e.y0 + e.y1) / 2 + 15}
+              class="sk-label-n"
+            >{rightTotals.get(k)}</text>
+          </g>
+        );
+      })}
+
+      {/* column headers */}
+      <text x={LEFT_X + NODE_W / 2} y={height - 6} text-anchor="middle" class="sk-axis">attacker state</text>
+      <text x={RIGHT_X + NODE_W / 2} y={height - 6} text-anchor="middle" class="sk-axis">target sector</text>
+    </svg>
+  </div>
+</figure>
+
+<style>
+  .sk-figure {
+    margin: 0;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem 1rem;
+  }
+  .sk-cap {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+  .sk-cap strong { color: var(--ctp-text); }
+  .sk-scroll { overflow-x: auto; overflow-y: hidden; }
+  .sk-svg { display: block; max-width: 100%; }
+  .sk-flow:hover path { opacity: 0.75 !important; }
+  .sk-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--ctp-text);
+  }
+  .sk-label-other {
+    fill: var(--ctp-overlay1);
+    font-style: italic;
+  }
+  .sk-label-n {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay0);
+  }
+  .sk-axis {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ctp-subtext0);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+</style>

@@ -1,0 +1,228 @@
+---
+/**
+ * Doctrine genealogy tree.
+ *
+ * Shows the multi-generational structure of doctrines around a focal
+ * doctrine: ancestors above, the focal doctrine in the center,
+ * descendants below, and supersession arrows as horizontal overlays.
+ *
+ * Rendered as HTML rather than SVG so each node is a real anchor
+ * and labels reflow on narrow viewports. Edges between rows use a
+ * single SVG overlay positioned absolutely.
+ */
+import type { Atlas, Doctrine } from '../utils/atlas';
+
+interface Props {
+  atlas: Atlas;
+  focal: Doctrine;
+  /** Maximum levels of ancestors to walk. Default 2. */
+  ancestorDepth?: number;
+  /** Maximum levels of descendants to walk. Default 2. */
+  descendantDepth?: number;
+}
+const { atlas, focal, ancestorDepth = 2, descendantDepth = 2 } = Astro.props;
+
+// ─── walk ancestors (inherits_from chains) ───
+function ancestorsOf(d: Doctrine, depth: number, visited: Set<string>): Doctrine[][] {
+  const levels: Doctrine[][] = [];
+  let frontier: Doctrine[] = [d];
+  for (let i = 0; i < depth; i++) {
+    const next: Doctrine[] = [];
+    for (const cur of frontier) {
+      for (const pid of cur.inherits_from_ids ?? []) {
+        if (visited.has(pid)) continue;
+        const p = atlas.doctrines.get(pid);
+        if (!p) continue;
+        visited.add(pid);
+        next.push(p);
+      }
+    }
+    if (next.length === 0) break;
+    levels.push(next);
+    frontier = next;
+  }
+  return levels; // levels[0] = parents, levels[1] = grandparents, ...
+}
+
+// ─── walk descendants (inherited_by + superseded_by_id pointing here) ───
+function descendantsOf(d: Doctrine, depth: number, visited: Set<string>): Doctrine[][] {
+  const levels: Doctrine[][] = [];
+  let frontier: Doctrine[] = [d];
+  for (let i = 0; i < depth; i++) {
+    const next: Doctrine[] = [];
+    for (const cur of frontier) {
+      for (const other of atlas.doctrines.values()) {
+        if (visited.has(other.id)) continue;
+        if ((other.inherits_from_ids ?? []).includes(cur.id)) {
+          visited.add(other.id);
+          next.push(other);
+        }
+      }
+    }
+    if (next.length === 0) break;
+    levels.push(next);
+    frontier = next;
+  }
+  return levels;
+}
+
+const visited = new Set<string>([focal.id]);
+const ancestorLevels = ancestorsOf(focal, ancestorDepth, visited);
+const descendantLevels = descendantsOf(focal, descendantDepth, visited);
+
+// Stack rows top-down: oldest ancestors at the top, descendants at bottom.
+type Row = { kind: 'ancestor' | 'focal' | 'descendant'; nodes: Doctrine[] };
+const rows: Row[] = [];
+for (let i = ancestorLevels.length - 1; i >= 0; i--) {
+  rows.push({ kind: 'ancestor', nodes: ancestorLevels[i] });
+}
+rows.push({ kind: 'focal', nodes: [focal] });
+for (const lvl of descendantLevels) {
+  rows.push({ kind: 'descendant', nodes: lvl });
+}
+
+// Find supersession arrows among ALL doctrines on this tree
+const onTree = new Set<string>(rows.flatMap((r) => r.nodes.map((d) => d.id)));
+type Edge = { from: string; to: string };
+const supersedes: Edge[] = [];
+for (const d of rows.flatMap((r) => r.nodes)) {
+  if (d.superseded_by_id && onTree.has(d.superseded_by_id) && d.id !== d.superseded_by_id) {
+    supersedes.push({ from: d.id, to: d.superseded_by_id });
+  }
+}
+
+// inheritance edges (parent → child) restricted to consecutive rows
+const inheritEdges: Edge[] = [];
+for (const row of rows) {
+  for (const d of row.nodes) {
+    for (const pid of d.inherits_from_ids ?? []) {
+      if (onTree.has(pid)) inheritEdges.push({ from: pid, to: d.id });
+    }
+  }
+}
+
+function flagSlug(d: Doctrine): string {
+  return d.nation_state_id?.toUpperCase() ?? '??';
+}
+function shortName(d: Doctrine): string {
+  return d.short_name ?? d.name;
+}
+const showEmpty = rows.length === 1;
+---
+{!showEmpty && (
+  <figure class="dg-figure">
+    <figcaption class="dg-cap">
+      Doctrine genealogy around <strong>{focal.short_name ?? focal.name}</strong>.
+      Solid lines = inheritance ({inheritEdges.length}).
+      {supersedes.length > 0 && <> Dashed arrows = supersession ({supersedes.length}).</>}
+      {' '}{ancestorLevels.length} level{ancestorLevels.length === 1 ? '' : 's'} of ancestors,
+      {' '}{descendantLevels.length} of descendants on tree.
+    </figcaption>
+
+    <div class="dg-tree">
+      {rows.map((row, ri) => (
+        <div class={`dg-row dg-row-${row.kind}`} data-row={ri}>
+          {row.nodes.map((d) => (
+            <a
+              class={d.id === focal.id ? 'dg-node dg-node-focal' : 'dg-node'}
+              href={`/doctrine/${d.id}`}
+              data-id={d.id}
+              title={d.name}
+            >
+              <span class="dg-flag">{flagSlug(d)}</span>
+              <span class="dg-name">{shortName(d)}</span>
+              {d.status && d.status !== 'active' && (
+                <span class="dg-status">{d.status}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </figure>
+)}
+
+<style>
+  .dg-figure {
+    margin: 0;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem 1rem;
+  }
+  .dg-cap {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+  .dg-cap strong { color: var(--ctp-text); }
+  .dg-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .dg-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0;
+    position: relative;
+  }
+  .dg-row-ancestor { opacity: 0.85; }
+  .dg-row-focal {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
+    border-top: 1px dashed var(--ctp-surface0);
+    border-bottom: 1px dashed var(--ctp-surface0);
+  }
+  .dg-row-descendant { opacity: 0.85; }
+
+  .dg-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.7rem;
+    background: var(--ctp-base);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ctp-text);
+    font-size: 0.8125rem;
+    min-width: 0;
+    transition: border-color 0.12s;
+  }
+  .dg-node:hover { border-color: var(--ctp-blue); }
+  .dg-node-focal {
+    border-color: var(--ctp-blue);
+    background: var(--ctp-mantle);
+    box-shadow: 0 0 0 1px var(--ctp-blue) inset;
+  }
+  .dg-flag {
+    display: inline-block;
+    padding: 0.05rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    background: var(--ctp-surface0);
+    color: var(--ctp-overlay1);
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+  .dg-name {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dg-status {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--ctp-peach);
+    background: color-mix(in srgb, var(--ctp-peach) 12%, transparent);
+    padding: 0.05rem 0.35rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+</style>

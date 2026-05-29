@@ -1,0 +1,307 @@
+---
+/**
+ * Annual heat ribbon — events per year, stacked by attacker state.
+ *
+ * The "shape of state-sponsored cyber conflict over time" chart.
+ * Used on /events and embeddable elsewhere. Designed to be
+ * defensible at a thesis defense:
+ *
+ *   - X axis: discrete years, evenly spaced, current year flagged
+ *   - Y axis: linear event count (with implicit log option below)
+ *   - Stacks colored by attacker state, top N kept as own color
+ *   - "Unattributed" bucket rendered in surface0 so it doesn't
+ *     compete visually with attributed states
+ *   - Recent-year disclosure-lag caveat surfaced in the legend
+ *     (so the reader knows the right-edge taper is partly artifact)
+ */
+import type { AuspexEvent, Atlas } from '../utils/atlas';
+
+interface Props {
+  events: AuspexEvent[];
+  atlas: Atlas;
+  /** Top N states get their own color. Rest fold into "other". */
+  topN?: number;
+  /** Height of the chart area (excluding legend). Default 220. */
+  height?: number;
+}
+const { events, atlas, topN = 8, height = 220 } = Astro.props;
+
+// ─── attacker-state derivation (mirrors eventStateId logic) ───
+function attackerState(ev: AuspexEvent): string {
+  for (const attr of ev.attributions ?? []) {
+    if (attr.actor_id) {
+      const head = attr.actor_id.split('/')[0];
+      if (head && head.length === 2) return head;
+      if (head === 'criminal') return 'criminal';
+      const svc = atlas.actors.get(attr.actor_id)?.primary_service_id;
+      if (svc) return svc.split('/')[0];
+    }
+    if (attr.service_id) return attr.service_id.split('/')[0];
+  }
+  return '__unattr__';
+}
+
+// ─── aggregate ───
+type YearBucket = Map<string, number>;
+const perYear = new Map<string, YearBucket>();
+const totalByState = new Map<string, number>();
+
+for (const ev of events) {
+  const y = (ev.start_date ?? ev.disclosure_date ?? '').slice(0, 4);
+  if (!/^\d{4}$/.test(y)) continue;
+  const s = attackerState(ev);
+  let bucket = perYear.get(y);
+  if (!bucket) { bucket = new Map(); perYear.set(y, bucket); }
+  bucket.set(s, (bucket.get(s) ?? 0) + 1);
+  totalByState.set(s, (totalByState.get(s) ?? 0) + 1);
+}
+
+const years = [...perYear.keys()].sort();
+const yearCounts = years.map((y) => {
+  let total = 0;
+  for (const n of perYear.get(y)!.values()) total += n;
+  return total;
+});
+const grandTotal = yearCounts.reduce((a, b) => a + b, 0);
+const maxYear = Math.max(1, ...yearCounts);
+
+// ─── top-N state palette ───
+const stateRank = [...totalByState.entries()]
+  .filter(([s]) => s !== '__unattr__')
+  .sort((a, b) => b[1] - a[1]);
+const topStates = stateRank.slice(0, topN).map(([s]) => s);
+const topSet = new Set(topStates);
+
+const palette = [
+  'var(--ctp-red)',     // ru historically — keep ordering stable for reader memory
+  'var(--ctp-mauve)',   // cn
+  'var(--ctp-peach)',   // ir
+  'var(--ctp-yellow)',  // kp
+  'var(--ctp-blue)',    // us
+  'var(--ctp-teal)',    // criminal
+  'var(--ctp-green)',
+  'var(--ctp-pink)',
+  'var(--ctp-lavender)',
+  'var(--ctp-sapphire)',
+];
+const stateColor = new Map<string, string>();
+topStates.forEach((s, i) => stateColor.set(s, palette[i % palette.length]));
+const OTHER_COLOR = 'var(--ctp-overlay0)';
+const UNATTR_COLOR = 'var(--ctp-surface1)';
+
+// stack order: top states (in rank order, biggest at bottom), then "other", then unattributed at top
+const stackOrder = (b: YearBucket): Array<[string, number, string]> => {
+  const segs: Array<[string, number, string]> = [];
+  // top states in rank order
+  for (const s of topStates) {
+    const n = b.get(s) ?? 0;
+    if (n > 0) segs.push([s, n, stateColor.get(s)!]);
+  }
+  // other-attributed
+  let other = 0;
+  for (const [s, n] of b) {
+    if (s === '__unattr__' || topSet.has(s)) continue;
+    other += n;
+  }
+  if (other > 0) segs.push(['other', other, OTHER_COLOR]);
+  // unattributed last (top of stack)
+  const unattr = b.get('__unattr__') ?? 0;
+  if (unattr > 0) segs.push(['__unattr__', unattr, UNATTR_COLOR]);
+  return segs;
+};
+
+// ─── layout ───
+const PAD_L = 28;
+const PAD_R = 12;
+const PAD_T = 8;
+const PAD_B = 24;
+const innerH = height - PAD_T - PAD_B;
+const innerW = Math.max(360, years.length * 18);
+const totalW = innerW + PAD_L + PAD_R;
+const barW = innerW / years.length * 0.78;
+const barGap = innerW / years.length * 0.22;
+const xOf = (i: number) => PAD_L + i * (barW + barGap) + barGap / 2;
+const yOf = (c: number) => PAD_T + innerH * (1 - c / maxYear);
+
+// y-axis ticks: 0, max/2, max (rounded sensibly)
+function tickLabels(): number[] {
+  if (maxYear < 5) return [0, Math.ceil(maxYear / 2), maxYear];
+  // round max up to a nice number
+  const e = Math.pow(10, Math.floor(Math.log10(maxYear)));
+  const niceMax = Math.ceil(maxYear / e) * e;
+  return [0, Math.round(niceMax / 2), niceMax];
+}
+const ticks = tickLabels();
+const tickMax = Math.max(...ticks);
+const yOfNice = (c: number) => PAD_T + innerH * (1 - c / tickMax);
+
+// Year labels — show every 2nd year if dense, every year otherwise
+const labelEvery = years.length > 24 ? 2 : 1;
+
+const currentYear = String(new Date().getUTCFullYear());
+const ymin = years[0];
+const ymax = years[years.length - 1];
+
+// Legend rows
+const legendRows: Array<{ label: string; n: number; color: string }> = topStates.map((s) => ({
+  label: atlas.nationStates.get(s)?.short_name ?? atlas.nationStates.get(s)?.name ?? s.toUpperCase(),
+  n: totalByState.get(s) ?? 0,
+  color: stateColor.get(s)!,
+}));
+const otherTotal = stateRank.slice(topN).reduce((sum, [, n]) => sum + n, 0);
+if (otherTotal > 0) legendRows.push({ label: `${stateRank.length - topN} other state${stateRank.length - topN === 1 ? '' : 's'}`, n: otherTotal, color: OTHER_COLOR });
+const unattrTotal = totalByState.get('__unattr__') ?? 0;
+if (unattrTotal > 0) legendRows.push({ label: 'unattributed', n: unattrTotal, color: UNATTR_COLOR });
+---
+<figure class="er-figure">
+  <figcaption class="er-cap">
+    <strong>n = {grandTotal}</strong> events · {ymin}–{ymax} ·
+    stacked by attacker state · current-year bar partial (disclosure lag)
+  </figcaption>
+
+  <div class="er-scroll">
+    <svg
+      class="er-svg"
+      viewBox={`0 0 ${totalW} ${height}`}
+      width={totalW}
+      height={height}
+      role="img"
+      aria-label={`Annual event count, ${ymin} to ${ymax}, stacked by attacker state. ${grandTotal} events total.`}
+    >
+      {/* y-axis ticks */}
+      {ticks.map((t) => (
+        <g>
+          <line
+            x1={PAD_L} x2={PAD_L + innerW}
+            y1={yOfNice(t)} y2={yOfNice(t)}
+            stroke="var(--ctp-surface0)"
+            stroke-dasharray={t === 0 ? '' : '2 2'}
+          />
+          <text
+            x={PAD_L - 4} y={yOfNice(t) + 3}
+            text-anchor="end"
+            class="er-tick"
+          >{t}</text>
+        </g>
+      ))}
+
+      {/* stacked bars */}
+      {years.map((y, i) => {
+        const bucket = perYear.get(y)!;
+        const segs = stackOrder(bucket);
+        const x = xOf(i);
+        let yStack = yOfNice(0); // start at bottom
+        const total = yearCounts[i];
+        const titleParts: string[] = [`${y}: ${total} events`];
+        for (const [s, n] of segs) {
+          const label = s === '__unattr__' ? 'unattributed'
+                      : s === 'other'      ? 'other'
+                      : (atlas.nationStates.get(s)?.short_name ?? s.toUpperCase());
+          titleParts.push(`  ${label}: ${n}`);
+        }
+        return (
+          <g class={y === currentYear ? 'er-bar er-bar-current' : 'er-bar'}>
+            <title>{titleParts.join('\n')}</title>
+            {segs.map(([, n, color]) => {
+              const segH = innerH * (n / tickMax);
+              yStack -= segH;
+              return (
+                <rect
+                  x={x.toFixed(2)}
+                  y={yStack.toFixed(2)}
+                  width={barW.toFixed(2)}
+                  height={Math.max(0.6, segH).toFixed(2)}
+                  fill={color}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+
+      {/* x-axis labels */}
+      {years.map((y, i) => (
+        i % labelEvery === 0 ? (
+          <text
+            x={(xOf(i) + barW / 2).toFixed(2)}
+            y={height - PAD_B + 14}
+            text-anchor="middle"
+            class={y === currentYear ? 'er-xlabel er-xlabel-current' : 'er-xlabel'}
+          >{y}</text>
+        ) : null
+      ))}
+
+      {/* x-axis baseline */}
+      <line
+        x1={PAD_L} x2={PAD_L + innerW}
+        y1={yOfNice(0)} y2={yOfNice(0)}
+        stroke="var(--ctp-overlay0)"
+      />
+    </svg>
+  </div>
+
+  <div class="er-legend">
+    {legendRows.map((row) => (
+      <span class="er-leg">
+        <span class="er-swatch" style={`background: ${row.color};`} />
+        <span class="er-leg-label">{row.label}</span>
+        <span class="er-leg-n">{row.n}</span>
+      </span>
+    ))}
+  </div>
+</figure>
+
+<style>
+  .er-figure {
+    margin: 0;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem 1rem;
+  }
+  .er-cap {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+  }
+  .er-cap strong { color: var(--ctp-text); }
+  .er-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .er-svg {
+    display: block;
+    max-width: 100%;
+  }
+  .er-tick, .er-xlabel {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay1);
+  }
+  .er-xlabel-current { fill: var(--ctp-text); font-weight: 600; }
+  .er-bar:hover rect { opacity: 0.85; }
+  .er-bar-current rect { stroke: var(--ctp-text); stroke-width: 0.5; }
+  .er-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.875rem;
+    margin-top: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+  }
+  .er-leg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .er-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+  .er-leg-label { color: var(--ctp-text); }
+  .er-leg-n { color: var(--ctp-overlay0); }
+</style>

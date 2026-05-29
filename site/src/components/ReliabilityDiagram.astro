@@ -1,0 +1,191 @@
+---
+/**
+ * Reliability diagram — the gold-standard ML calibration plot.
+ *
+ *   - X axis: predicted probability (mean within bin)
+ *   - Y axis: observed accuracy (within bin)
+ *   - Identity diagonal y = x marks perfect calibration
+ *   - Point size = log of n in bin (so empty bins disappear, dense
+ *     bins stand out)
+ *   - Vertical drop-lines from point to identity = signed gap
+ *   - ECE printed in the caption
+ *
+ * Inputs are the model's predicted probability for the eventually-
+ * observed-true label, paired with whether the rank-1 prediction
+ * was actually correct (the standard top-1 reliability framing).
+ *
+ * For multi-label outputs, the caller should pass the probability
+ * assigned to the actually-correct class (i.e., not just argmax).
+ *
+ * If predictions are pre/post-calibration, render twice with
+ * different titles to show the calibration improvement directly.
+ */
+interface Sample {
+  /** Predicted probability the rank-1 candidate is correct, in [0,1]. */
+  predicted: number;
+  /** Whether the rank-1 prediction was actually correct. */
+  correct: boolean;
+}
+interface Props {
+  samples: Sample[];
+  /** Number of equal-width bins (default 10). */
+  bins?: number;
+  /** Plot side length (square). Default 320. */
+  size?: number;
+  /** Title shown above the plot, e.g. "Attribution engine — uncalibrated". */
+  title?: string;
+}
+const { samples, bins = 10, size = 320, title = 'Reliability diagram' } = Astro.props;
+
+// Bin the samples.
+type Bin = { lo: number; hi: number; n: number; sumPred: number; correct: number };
+const buckets: Bin[] = [];
+for (let i = 0; i < bins; i++) {
+  buckets.push({ lo: i / bins, hi: (i + 1) / bins, n: 0, sumPred: 0, correct: 0 });
+}
+for (const s of samples) {
+  if (!Number.isFinite(s.predicted)) continue;
+  const p = Math.min(0.999999, Math.max(0, s.predicted));
+  const idx = Math.min(bins - 1, Math.floor(p * bins));
+  const b = buckets[idx];
+  b.n++;
+  b.sumPred += p;
+  if (s.correct) b.correct++;
+}
+const totalN = samples.length;
+let ece = 0;
+let mce = 0;
+for (const b of buckets) {
+  if (b.n === 0) continue;
+  const meanPred = b.sumPred / b.n;
+  const acc = b.correct / b.n;
+  const gap = Math.abs(meanPred - acc);
+  ece += (b.n / totalN) * gap;
+  if (gap > mce) mce = gap;
+}
+
+// Layout
+const PAD_L = 36;
+const PAD_R = 14;
+const PAD_T = 14;
+const PAD_B = 30;
+const innerW = size - PAD_L - PAD_R;
+const innerH = size - PAD_T - PAD_B;
+const xOf = (p: number) => PAD_L + p * innerW;
+const yOf = (p: number) => PAD_T + (1 - p) * innerH;
+
+const points = buckets
+  .map((b) => {
+    if (b.n === 0) return null;
+    const pred = b.sumPred / b.n;
+    const acc = b.correct / b.n;
+    const r = Math.max(2.5, Math.min(8, 2 + Math.log(1 + b.n) * 1.4));
+    return { pred, acc, n: b.n, r };
+  })
+  .filter((x): x is NonNullable<typeof x> => x !== null);
+
+const ticks = [0, 0.25, 0.5, 0.75, 1];
+---
+<figure class="rd-figure">
+  <figcaption class="rd-cap">
+    <strong>{title}</strong> · n = {totalN} predictions ·
+    ECE = <strong>{ece.toFixed(3)}</strong> · MCE = {mce.toFixed(3)}
+    <br/>
+    <span class="rd-cap-meta">
+      X = predicted probability of correct class · Y = observed
+      accuracy in bin · diagonal = perfect calibration · point
+      diameter ∝ log(n in bin)
+    </span>
+  </figcaption>
+
+  <svg
+    class="rd-svg"
+    viewBox={`0 0 ${size} ${size}`}
+    width={size}
+    height={size}
+    role="img"
+    aria-label={`Reliability diagram: ECE ${ece.toFixed(3)}, n=${totalN}`}
+  >
+    {/* gridlines */}
+    {ticks.map((t) => (
+      <g>
+        <line x1={xOf(t)} x2={xOf(t)} y1={yOf(0)} y2={yOf(1)} stroke="var(--ctp-surface0)" stroke-dasharray="2 2" />
+        <line x1={xOf(0)} x2={xOf(1)} y1={yOf(t)} y2={yOf(t)} stroke="var(--ctp-surface0)" stroke-dasharray="2 2" />
+        <text x={xOf(t)} y={size - PAD_B + 14} text-anchor="middle" class="rd-tick">{t.toFixed(2)}</text>
+        <text x={PAD_L - 6} y={yOf(t) + 3} text-anchor="end" class="rd-tick">{t.toFixed(2)}</text>
+      </g>
+    ))}
+
+    {/* identity diagonal */}
+    <line
+      x1={xOf(0)} y1={yOf(0)}
+      x2={xOf(1)} y2={yOf(1)}
+      stroke="var(--ctp-overlay0)"
+      stroke-width="1"
+    />
+
+    {/* drop-lines from point to identity, showing signed gap */}
+    {points.map((p) => (
+      <line
+        x1={xOf(p.pred)} y1={yOf(p.acc)}
+        x2={xOf(p.pred)} y2={yOf(p.pred)}
+        stroke={p.acc < p.pred ? 'var(--ctp-red)' : 'var(--ctp-blue)'}
+        stroke-width="1"
+        opacity="0.5"
+      />
+    ))}
+
+    {/* points */}
+    {points.map((p) => (
+      <g>
+        <title>{`predicted ${p.pred.toFixed(3)} → observed ${p.acc.toFixed(3)} (n=${p.n})`}</title>
+        <circle
+          cx={xOf(p.pred)} cy={yOf(p.acc)}
+          r={p.r}
+          fill="var(--ctp-text)"
+          stroke="var(--ctp-base)"
+          stroke-width="1.5"
+        />
+      </g>
+    ))}
+
+    {/* axis labels */}
+    <text x={PAD_L + innerW / 2} y={size - 6} text-anchor="middle" class="rd-axis">predicted probability</text>
+    <text
+      x={10} y={PAD_T + innerH / 2}
+      text-anchor="middle"
+      class="rd-axis"
+      transform={`rotate(-90 10 ${PAD_T + innerH / 2})`}
+    >observed accuracy</text>
+  </svg>
+</figure>
+
+<style>
+  .rd-figure {
+    margin: 0;
+    background: var(--ctp-mantle);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem 1rem;
+  }
+  .rd-cap {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  .rd-cap strong { color: var(--ctp-text); }
+  .rd-cap-meta { color: var(--ctp-overlay1); font-size: 0.6875rem; }
+  .rd-svg { display: block; max-width: 100%; }
+  .rd-tick {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ctp-overlay1);
+  }
+  .rd-axis {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ctp-subtext0);
+  }
+</style>

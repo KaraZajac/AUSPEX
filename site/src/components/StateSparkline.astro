@@ -1,0 +1,107 @@
+---
+/**
+ * 60-month activity sparkline for a state card.
+ *
+ * Methodology-honest design:
+ *   - bins events into 60 trailing months (5 years to current month)
+ *   - bar height = event count in that month, log-dampened so a
+ *     single-event month still registers visually
+ *   - empty bins render as gaps, not zero-width fudges
+ *   - hover title states the n + month range + last-month count
+ *
+ * This is a frame to give the reader an "is this state heating up
+ * or cooling down" read at a glance, NOT a precise quantitative
+ * chart. The state page itself carries the rigorous EventTimeline.
+ */
+import type { AuspexEvent } from '../utils/atlas';
+
+interface Props {
+  events: AuspexEvent[];
+  /** Pixel width.  Default 96. */
+  width?: number;
+  /** Pixel height. Default 18. */
+  height?: number;
+  /** Months of trailing window. Default 60. */
+  months?: number;
+}
+const { events, width = 96, height = 18, months = 60 } = Astro.props;
+
+// Anchor the window to the current month (build time). This means
+// the chart is reproducible as of build date — note this in the
+// title for the reader's benefit.
+const now = new Date();
+const anchorY = now.getUTCFullYear();
+const anchorM = now.getUTCMonth(); // 0-indexed
+function monthIndex(y: number, m: number): number {
+  return y * 12 + m;
+}
+const anchorIndex = monthIndex(anchorY, anchorM);
+const startIndex = anchorIndex - (months - 1);
+
+const bins: number[] = new Array(months).fill(0);
+for (const ev of events) {
+  const d = (ev.start_date ?? ev.disclosure_date ?? '');
+  if (d.length < 7) continue;
+  const y = parseInt(d.slice(0, 4), 10);
+  const m = parseInt(d.slice(5, 7), 10) - 1;
+  if (!Number.isFinite(y) || !Number.isFinite(m)) continue;
+  const idx = monthIndex(y, m);
+  const offset = idx - startIndex;
+  if (offset < 0 || offset >= months) continue;
+  bins[offset]++;
+}
+
+const n = bins.reduce((a, b) => a + b, 0);
+const max = Math.max(1, ...bins);
+const last = bins[months - 1];
+const barW = width / months;
+const padTop = 2;
+
+function ym(offset: number): string {
+  const idx = startIndex + offset;
+  const y = Math.floor(idx / 12);
+  const m = (idx % 12) + 1;
+  return `${y}-${m.toString().padStart(2, '0')}`;
+}
+const firstYM = ym(0);
+const lastYM = ym(months - 1);
+const title = `${n} events in trailing ${months} months (${firstYM} → ${lastYM}); ${last} this month`;
+---
+<svg
+  class="state-spark"
+  viewBox={`0 0 ${width} ${height}`}
+  width={width}
+  height={height}
+  role="img"
+  aria-label={title}
+>
+  <title>{title}</title>
+  {bins.map((c, i) => {
+    if (c === 0) return null;
+    // log-dampened scaling: log(1+c) / log(1+max). Single-event months
+    // still register at ~min readable height (~3px).
+    const h = Math.max(2, Math.round((Math.log(1 + c) / Math.log(1 + max)) * (height - padTop)));
+    const x = i * barW;
+    const y = height - h;
+    return (
+      <rect
+        x={x.toFixed(2)}
+        y={y.toFixed(2)}
+        width={Math.max(0.6, barW - 0.3).toFixed(2)}
+        height={h}
+        rx="0.5"
+      />
+    );
+  })}
+</svg>
+
+<style>
+  .state-spark rect {
+    fill: var(--ctp-blue);
+    opacity: 0.85;
+  }
+  .state-spark {
+    display: block;
+    overflow: visible;
+  }
+</style>
