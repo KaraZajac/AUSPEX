@@ -19,7 +19,7 @@
  * because it only requires the event to look like SOMETHING
  * familiar — outliers fail every comparison.
  */
-import { Atlas, type AuspexEvent } from './atlas-core';
+import { Atlas, isMetaEvent, type AuspexEvent } from './atlas-core';
 import {
   extractFeatures,
   type EventFeatures,
@@ -212,7 +212,7 @@ export function runOODBaselineEval(atlas: Atlas): {
   generatedAt: string;
 } {
   const allEvents = [...atlas.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
   const events: ReturnType<typeof runOODBaselineEval>['events'] = [];
   for (const heldOut of labeled) {
@@ -221,7 +221,7 @@ export function runOODBaselineEval(atlas: Atlas): {
     const profiles = buildProfiles(training, atlas, { servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, atlas);
     const idf = buildIDF(profiles);
-    const features = extractFeatures(heldOut, atlas);
+    const features = extractFeatures(heldOut, atlas, { excludeSelfFromProseDF: true });
     const ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: atlas.malwareLineageGroup });
     const topK = ranked.slice(0, 10).map((r) => r.logScore);
     const probs = calibratedProbs(topK, CALIBRATION.attribution.temperature);

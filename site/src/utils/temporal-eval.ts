@@ -13,7 +13,7 @@
  *  - Which engine degrades least?
  *  - Which states / years degrade most?
  */
-import { atlas, eventStateId, type AuspexEvent } from './atlas';
+import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -120,7 +120,7 @@ export function runAttributionTemporal(trainEnd: string, opts: ScoringOptions = 
   const a = atlas();
   const all = [...a.events.values()];
   const train = all.filter((e) => isInTrain(e, trainEnd));
-  const test = all.filter((e) => !isInTrain(e, trainEnd) && actorsOfEvent(e).size > 0);
+  const test = all.filter((e) => !isInTrain(e, trainEnd) && actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
   const vocab = buildVocab(train, a);
 
@@ -129,7 +129,7 @@ export function runAttributionTemporal(trainEnd: string, opts: ScoringOptions = 
     const refDate = ev.start_date ?? ev.disclosure_date;
     const profiles = buildProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildIDF(profiles);
-    const features = extractFeatures(ev, a);
+    const features = extractFeatures(ev, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29), consistent with the LOO evals
     const ranked = rankActors(features, profiles, vocab, { ...opts, idf });
     const trueActors = [...actorsOfEvent(ev)];
@@ -182,7 +182,7 @@ export function runDoctrineTemporal(trainEnd: string, opts: ScoringOptions = {})
   const a = atlas();
   const all = [...a.events.values()];
   const train = all.filter((e) => isInTrain(e, trainEnd));
-  const test = all.filter((e) => !isInTrain(e, trainEnd) && doctrinesOfEvent(e, a).size > 0);
+  const test = all.filter((e) => !isInTrain(e, trainEnd) && doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e));
 
   const vocab = buildVocab(train, a);
 
@@ -191,7 +191,7 @@ export function runDoctrineTemporal(trainEnd: string, opts: ScoringOptions = {})
     const refDate = ev.start_date ?? ev.disclosure_date;
     const profiles = buildDoctrineProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildDoctrineIDF(profiles);
-    const features = extractFeatures(ev, a);
+    const features = extractFeatures(ev, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankDoctrines(features, profiles, vocab, { ...opts, idf });
     const trueDoctrines = [...doctrinesOfEvent(ev, a)];
@@ -233,7 +233,7 @@ export function runPillarTemporal(trainEnd: string, opts: ScoringOptions = {}): 
   const a = atlas();
   const all = [...a.events.values()];
   const train = all.filter((e) => isInTrain(e, trainEnd));
-  const test = all.filter((e) => !isInTrain(e, trainEnd) && pillarsOfEvent(e, a).size > 0);
+  const test = all.filter((e) => !isInTrain(e, trainEnd) && pillarsOfEvent(e, a).size > 0 && !isMetaEvent(e));
 
   const vocab = buildVocab(train, a);
 
@@ -242,7 +242,7 @@ export function runPillarTemporal(trainEnd: string, opts: ScoringOptions = {}): 
     const refDate = ev.start_date ?? ev.disclosure_date;
     const profiles = buildPillarProfiles(train, a, refDate ? { referenceDate: refDate } : {});
     const idf = buildPillarIDF(profiles);
-    const features = extractFeatures(ev, a);
+    const features = extractFeatures(ev, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankPillars(features, profiles, vocab, { ...opts, idf });
     const truePillars = [...pillarsOfEvent(ev, a)];
@@ -290,7 +290,7 @@ export function runJointTemporal(trainEnd: string, opts: JointScoringOptions = {
 
   const results: TemporalTestResult[] = [];
   for (const ev of test) {
-    const features = extractFeatures(ev, a);
+    const features = extractFeatures(ev, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // holdout hygiene (AUDIT-2026-05-29)
     const ranked = rankPairs(features, train, a, opts);
     const trueActors = [...actorsOfEvent(ev)];

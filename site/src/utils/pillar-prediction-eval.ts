@@ -2,7 +2,7 @@
  * Leave-one-out cross-validation for the pillar-prediction engine.
  * Multi-label evaluation on the ~129-pillar label space.
  */
-import { atlas, eventStateId, type AuspexEvent } from './atlas';
+import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import { extractFeatures, buildVocab, type Vocab } from './attribution';
 import {
   buildPillarProfiles,
@@ -77,7 +77,7 @@ function pillarToDoctrine(pillarId: string, a: ReturnType<typeof atlas>): string
 export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0);
+  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0 && !isMetaEvent(e));
 
   const results: PillarEventResult[] = [];
   const confusionRaw = new Map<string, number>();
@@ -88,7 +88,7 @@ export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary
     const profiles = buildPillarProfiles(training, a, refDate ? { referenceDate: refDate } : {});
     const vocab: Vocab = buildVocab(training, a);
     const idf = buildPillarIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     // LOO hygiene (AUDIT-2026-05-29): suppress held-out event's own inferred-campaign id
     // (cluster formed with it present; verified equivalent to per-fold recompute).
     features.inferredCampaign = null;

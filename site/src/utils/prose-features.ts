@@ -129,10 +129,24 @@ function buildCorpusDF(atlas: Atlas): { df: Map<string, number>; N: number } {
  * K=15 by default — captures the strongest signal without polluting
  * with low-information terms.
  */
-export function extractProseTerms(event: AuspexEvent, atlas: Atlas, K = 15): Set<string> {
+export function extractProseTerms(
+  event: AuspexEvent,
+  atlas: Atlas,
+  K = 15,
+  opts: { excludeSelf?: boolean } = {},
+): Set<string> {
   const tokens = eventProseTokens(event);
   if (tokens.length === 0) return new Set();
   const { df, N } = buildCorpusDF(atlas);
+
+  // LOO hygiene (AUDIT-2026-05-29): when extracting the HELD-OUT event's own
+  // prose feature in an eval, exclude it from the corpus document-frequency so
+  // its terms are weighted by TRAINING-only DF (the held-out event is otherwise
+  // counted in the global DF). Every term in the tf loop below is one of this
+  // event's own terms, so its self-contribution to DF is exactly +1 → subtract
+  // 1 from each, and 1 from N. No map copy needed.
+  const selfAdj = opts.excludeSelf ? 1 : 0;
+  const Neff = N - selfAdj;
 
   // Term frequency for this event.
   const tf = new Map<string, number>();
@@ -142,10 +156,10 @@ export function extractProseTerms(event: AuspexEvent, atlas: Atlas, K = 15): Set
   // (so single-event hapaxes don't dominate the top-K with random words).
   const scored: Array<{ term: string; score: number }> = [];
   for (const [term, tfCount] of tf) {
-    const dfCount = df.get(term) ?? 0;
+    const dfCount = (df.get(term) ?? 0) - selfAdj;
     if (dfCount < 2) continue;
-    if (dfCount > N * 0.5) continue; // also drop hyper-common terms (in > 50% of corpus)
-    const idf = Math.log(N / dfCount);
+    if (dfCount > Neff * 0.5) continue; // also drop hyper-common terms (in > 50% of corpus)
+    const idf = Math.log(Neff / dfCount);
     scored.push({ term, score: tfCount * idf });
   }
   scored.sort((a, b) => b.score - a.score);

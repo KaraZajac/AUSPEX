@@ -26,7 +26,7 @@
  *   - Multi-attribution events count a hit if ANY of the true actors'
  *     G-codes appears in top-K, same as the AUSPEX LOO eval.
  */
-import { atlas, type AuspexEvent } from './atlas';
+import { atlas, isMetaEvent, type AuspexEvent } from './atlas';
 import { actorsOfEvent } from './attribution';
 import { inferEventTTPs, parentTechnique } from './ttp-extract';
 import { readFileSync, existsSync } from 'node:fs';
@@ -155,6 +155,7 @@ export function runMitreBaseline(): MitreBaselineSummary {
   for (const event of a.events.values()) {
     const truA = actorsOfEvent(event);
     if (truA.size === 0) continue;
+    if (isMetaEvent(event)) continue;
 
     // Map true AUSPEX actors → true G-codes (skip nulls).
     const trueGroups: string[] = [];

@@ -57,29 +57,33 @@ Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empiric
 
 ### Current accuracy (leave-one-out)
 
-Reported under the **null = miss** convention: every labeled event is scored, and an event whose
-sole true label has no other example in the corpus (structurally unrankable under leave-one-out)
-counts as a miss — it is *not* excluded from the denominator. See
-[`docs/AUDIT-2026-05-29.md`](docs/AUDIT-2026-05-29.md) for the methodology and the prior→current
-delta (the earlier 59.4% attribution figure excluded 41 unrankable singletons). Counter-operations
-(state takedowns / sanctions / bounties) carry a null actor and are excluded from the
-attribution and joint label spaces — they are state actions, not threat-actor puzzles — which is
-why those engines' `n` is below the doctrine/pillar counts.
+Each engine reports two numbers: **operations-only** (the headline — the engine's task is to infer
+the strategic frame / actor of actual cyber *operations*) and *all-events* (the same eval also
+scoring the ~85 meta/announcement events — doctrine publications, sanctions notices, attribution
+advisories — which are a *different* prediction task). Meta events are excluded from eval but kept
+in training and in the atlas. Reported under the **null = miss** convention (an event whose sole
+true label is a corpus singleton, unrankable under LOO, counts as a miss, not an exclusion);
+counter-operations (state takedowns / sanctions / bounties) carry a null actor and are excluded
+from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/AUDIT-2026-05-29.md).
 
-| Engine | top-1 | top-3 | mAP / MRR | n |
+| Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
-| Attribution | 56.8% | 74.6% | 0.665 MRR | 519 |
-| Doctrine | 71.7% | 88.8% | 0.696 mAP | 555 |
-| Pillar | 64.8% | 81.0% | 0.683 mAP | 489 |
-| Joint (actor × doctrine) | 48.9% | 68.9% | 0.599 MRR | 450 |
+| Attribution | **57.4%** / 56.8% | **74.9%** / 74.6% | **0.669** / 0.665 MRR | 470 / 519 |
+| Doctrine | **73.8%** / 71.7% | **89.6%** / 88.8% | **0.717** / 0.696 mAP | 480 / 555 |
+| Pillar | **64.5%** / 64.8% | **82.0%** / 81.0% | **0.687** / 0.683 mAP | 428 / 489 |
+| Joint (actor × doctrine) | **50.5%** / 48.9% | **67.3%** / 68.9% | **0.604** / 0.599 MRR | 410 / 450 |
 
-With the editorial `campaign_id` "known-linkage" feature ablated, attribution top-1 / top-3 falls
-to 50.3% / 71.5% (−6.5pp / −3.1pp) — published as a sensitivity bound, since `campaign_id` is
-analyst-assigned and can encode the attribution for single-actor campaigns.
+Excluding meta events *raises* the headline (doctrine +2.1pp): they are off-task for an
+operation-trained engine, not easy wins. The **stacked** re-ranker lifts operations-only attribution
+top-1 to **69.6%** (+12.1pp over plain NB). With the editorial `campaign_id` "known-linkage" feature
+ablated, operations-only attribution top-1 / top-3 falls to 50.9% / 71.9% (−6.6pp) — a sensitivity
+bound, since `campaign_id` is analyst-assigned and can encode the attribution for single-actor
+campaigns. (The all-events column is the prior baseline; operations-only additionally applies the
+prose-DF LOO-hygiene fix, a <0.2pp effect.)
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
 diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.7%, with top-3 set-stability 98.9% (seeded resampler,
+stability under 10% corpus dropout: 91.8%, with top-3 set-stability 98.9% (seeded resampler,
 reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
 false-flag handling.
 

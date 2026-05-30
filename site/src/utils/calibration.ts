@@ -15,7 +15,7 @@
  * Fit by grid search; the underlying loss is convex in 1/T so
  * a coarse grid finds the minimum cleanly.
  */
-import { atlas } from './atlas';
+import { atlas, isMetaEvent } from './atlas';
 // calibratedProbs lives in calibration-constants (pure, fs-free) so the
 // browser/OOD graph never pulls in the fs-bound atlas() singleton. Re-export
 // it here for existing callers (research/*-eval.astro).
@@ -90,7 +90,7 @@ export function fitTemperature(predictions: PredictionRecord[]): CalibrationFit 
 function attributionPredictions(): PredictionRecord[] {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
   const recs: PredictionRecord[] = [];
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
@@ -101,7 +101,7 @@ function attributionPredictions(): PredictionRecord[] {
     const profiles = buildProfiles(training, a, refDate ? { referenceDate: refDate, servicePriorLambda: 0.2 } : { servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, a);
     const idf = buildIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null;
     const ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: a.malwareLineageGroup });
     const scores = ranked.map((r) => r.logScore);
@@ -122,7 +122,7 @@ function attributionPredictions(): PredictionRecord[] {
 function doctrinePredictions(): PredictionRecord[] {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0);
+  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e));
   const recs: PredictionRecord[] = [];
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
@@ -130,7 +130,7 @@ function doctrinePredictions(): PredictionRecord[] {
     const profiles = buildDoctrineProfiles(training, a, refDate ? { referenceDate: refDate } : {});
     const vocab = buildVocab(training, a);
     const idf = buildDoctrineIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // match deployed eval (AUDIT-2026-05-29)
     const ranked = rankDoctrines(features, profiles, vocab, { idf });
     const scores = ranked.map((r) => r.logScore);
@@ -150,7 +150,7 @@ function doctrinePredictions(): PredictionRecord[] {
 function pillarPredictions(): PredictionRecord[] {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0);
+  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0 && !isMetaEvent(e));
   const recs: PredictionRecord[] = [];
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
@@ -158,7 +158,7 @@ function pillarPredictions(): PredictionRecord[] {
     const profiles = buildPillarProfiles(training, a, refDate ? { referenceDate: refDate } : {});
     const vocab = buildVocab(training, a);
     const idf = buildPillarIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     features.inferredCampaign = null; // match deployed eval (AUDIT-2026-05-29)
     const ranked = rankPillars(features, profiles, vocab, { idf });
     const scores = ranked.map((r) => r.logScore);

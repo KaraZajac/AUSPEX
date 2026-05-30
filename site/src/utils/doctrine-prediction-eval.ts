@@ -3,7 +3,7 @@
  * Multi-label evaluation: every event has 1+ true doctrines and we
  * score the ranking against the whole set.
  */
-import { atlas, eventStateId, type AuspexEvent } from './atlas';
+import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import { extractFeatures, buildVocab, type Vocab } from './attribution';
 import {
   buildDoctrineProfiles,
@@ -76,7 +76,7 @@ function averagePrecisionForEvent(true_: Set<string>, ranked: RankedDoctrine[]):
 export function runDoctrineLOO(opts: DoctrineScoringOptions = {}): DoctrineEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0);
+  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e));
 
   const results: DoctrineEventEvalResult[] = [];
   const confusionRaw = new Map<string, number>();
@@ -87,7 +87,7 @@ export function runDoctrineLOO(opts: DoctrineScoringOptions = {}): DoctrineEvalS
     const profiles = buildDoctrineProfiles(training, a, refDate ? { referenceDate: refDate } : {});
     const vocab = eventToVocab(training, a);
     const idf = buildDoctrineIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     // LOO hygiene (AUDIT-2026-05-29): suppress held-out event's own inferred-campaign id
     // (cluster formed with it present; verified equivalent to per-fold recompute).
     features.inferredCampaign = null;

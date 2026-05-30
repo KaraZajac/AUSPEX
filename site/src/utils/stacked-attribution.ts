@@ -23,7 +23,7 @@
  * Output is comparable to the plain LOO attribution numbers — same event
  * set, same null=miss denominator, same per-state breakdown.
  */
-import { atlas, type AuspexEvent, type Atlas, type Actor } from './atlas';
+import { atlas, isMetaEvent, type AuspexEvent, type Atlas, type Actor } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -341,7 +341,7 @@ function eventState(event: AuspexEvent, a: Atlas): string {
 export function runStackedAttributionLOO(numFolds: number = DEFAULT_K_FOLDS): StackedEvalResult {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
   // Pre-compute per-actor campaign sets for the campaign-match feature.
   const knownCampaigns = new Map<string, Set<string>>();
@@ -364,7 +364,7 @@ export function runStackedAttributionLOO(numFolds: number = DEFAULT_K_FOLDS): St
     const profiles = buildProfiles(training, a, opts);
     const vocab = buildVocab(training, a);
     const idf = buildIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     const ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: a.malwareLineageGroup });
     const topK = ranked.slice(0, TOP_K);
     const topScore = topK[0]?.logScore ?? 0;

@@ -104,7 +104,7 @@ export interface ActorProfile {
 }
 
 /** Compose an EventFeatures vector from an event. */
-export function extractFeatures(event: AuspexEvent, atlas: Atlas): EventFeatures {
+export function extractFeatures(event: AuspexEvent, atlas: Atlas, opts: { excludeSelfFromProseDF?: boolean } = {}): EventFeatures {
   const sectors = new Set<string>();
   const countries = new Set<string>();
   const incidentTypes = new Set<string>();
@@ -261,7 +261,7 @@ export function extractFeatures(event: AuspexEvent, atlas: Atlas): EventFeatures
     markers,
     campaign: event.campaign_id ?? null,
     inferredCampaign: event.campaign_id ? null : (atlas.inferredCampaignByEvent.get(event.id) ?? null),
-    proseTerms: extractProseTerms(event, atlas),
+    proseTerms: extractProseTerms(event, atlas, 15, { excludeSelf: opts.excludeSelfFromProseDF }),
     operators: new Set(event.operators_named ?? []),
   };
 }

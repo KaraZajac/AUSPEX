@@ -2,7 +2,7 @@
  * Leave-one-out cross-validation for the attribution engine,
  * plus Monte Carlo corpus-stability resampling.
  */
-import { atlas, type AuspexEvent } from './atlas';
+import { atlas, isMetaEvent, type AuspexEvent } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -73,7 +73,7 @@ function trueStateFor(event: AuspexEvent, a: ReturnType<typeof atlas>): string |
 export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
   const results: EventEvalResult[] = [];
   const confusionRaw = new Map<string, number>(); // key: predicted|actual
@@ -86,7 +86,7 @@ export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
     const profiles = buildProfiles(training, a, { referenceDate: refDate, servicePriorLambda: 0.2 });
     const vocab = buildVocab(training, a);
     const idf = buildIDF(profiles);
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     // LOO hygiene (AUDIT-2026-05-29): suppress the held-out event's own inferred-campaign
     // membership — the cluster was formed with this event present, so scoring against it
     // leaks label-correlated structure. Verified equivalent to recomputing clusters on N-1.
@@ -200,7 +200,7 @@ export interface StabilityResult {
 export function runStability(n: number = 10, dropFraction: number = 0.1, opts: ScoringOptions = {}, seed: number = 0xc0ffee): StabilityResult {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0);
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
   // Baseline rank-1 prediction for each labeled event using full-corpus LOO.
   const baselineRank1 = new Map<string, string | null>();

@@ -2,7 +2,7 @@
  * Leave-one-out cross-validation for the joint (actor × doctrine) engine.
  * Pair-level multi-label evaluation.
  */
-import { atlas, eventStateId, type AuspexEvent } from './atlas';
+import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import { actorsOfEvent, extractFeatures } from './attribution';
 import { doctrinesOfEvent } from './doctrine-prediction';
 import { rankPairs, type JointPair, type JointScoringOptions } from './joint-prediction';
@@ -46,7 +46,7 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter(
-    (e) => actorsOfEvent(e).size > 0 && doctrinesOfEvent(e, a).size > 0,
+    (e) => actorsOfEvent(e).size > 0 && doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e),
   );
 
   const results: JointEventResult[] = [];
@@ -54,7 +54,7 @@ export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
-    const features = extractFeatures(heldOut, a);
+    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
     // LOO hygiene (AUDIT-2026-05-29): suppress held-out event's own inferred-campaign id
     // (cluster formed with it present; verified equivalent to per-fold recompute).
     features.inferredCampaign = null;

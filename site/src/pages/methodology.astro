@@ -547,10 +547,32 @@ import Base from '../layouts/Base.astro';
       actors toward their service's shape under leave-one-out;
       presence-only TTP and malware signals are deliberately not smoothed
       (each actor keeps only its own observed tradecraft). TF-IDF prose
-      weighting uses a corpus-global document frequency — a fixed,
-      label-free vocabulary statistic, consistent with standard practice.
-      Corpus-stability resampling uses a seeded generator so the figure
-      is reproducible build-to-build.
+      weighting uses a corpus-global document frequency (a fixed,
+      label-free vocabulary statistic) — and in leave-one-out the held-out
+      event is excluded from its own document-frequency, so its prose terms
+      are weighted by training-only DF. Corpus-stability resampling uses a
+      seeded generator so the figure is reproducible build-to-build.
+    </p>
+
+    <h3>Operations vs. meta events</h3>
+    <p>
+      The atlas logs two kinds of entry: cyber <em>operations</em>
+      (intrusions, theft, disruption, influence, pre-positioning, …) and
+      <em>meta / announcement</em> events (doctrine publications, sanctions
+      and attribution notices, policy / law-enforcement actions). The
+      prediction engines exist to infer the strategic frame and actor of
+      <em>operations</em>; predicting the doctrine of a doctrine-publication
+      is a different — and largely circular — task. So the ~85 pure-meta
+      events (every <code>incident_type</code> a meta type) are
+      <strong>excluded from the eval label sets</strong> but kept in the
+      <strong>training</strong> corpus (a doctrine publication is the
+      doctrine's defining text) and in the atlas (timeline, provenance,
+      narrative). An event with any operational <code>incident_type</code>
+      counts as an operation even if it is also documented. Excluding meta
+      events <em>raises</em> the headline (doctrine top-1
+      71.7%&nbsp;→&nbsp;73.8%) — they are off-task for an operation-trained
+      engine, not easy wins — so we publish both the operations-only and
+      all-events numbers.
     </p>
   </section>
 

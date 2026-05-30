@@ -1202,6 +1202,25 @@ export function eventStateId(ev: AuspexEvent, a: Atlas): string | undefined {
   return undefined;
 }
 
+/** incident_type values that mark an event as a meta / announcement (doctrine
+ *  publication, attribution/disclosure, policy or law-enforcement action)
+ *  rather than a cyber operation. */
+export const META_INCIDENT_TYPES = new Set([
+  'documentary', 'doctrine-publication', 'disclosure', 'attribution-publication', 'policy', 'law-enforcement',
+]);
+
+/** True if EVERY incident_type is a meta type — i.e. the event documents /
+ *  announces rather than being a cyber operation. Such events stay in the
+ *  atlas and the training corpus (a doctrine-publication is the doctrine's
+ *  defining text) but are excluded from the engine EVAL label sets, because
+ *  scoring the doctrine of a doctrine-publication is circular. An event with
+ *  ANY operational type (intrusion / data-theft / …) is NOT meta even if it is
+ *  also documented. See docs/AUDIT-2026-05-29.md. */
+export function isMetaEvent(ev: AuspexEvent): boolean {
+  const its = ev.incident_type ?? [];
+  return its.length > 0 && its.every((t) => META_INCIDENT_TYPES.has(t));
+}
+
 export function confidenceClass(conf: string | undefined): string {
   if (!conf) return 'confidence';
   const normalized = conf.toLowerCase().replace(/_/g, '-');
