@@ -80,7 +80,8 @@ operation-trained engine, not easy wins.
 top-1 is now **74.5%** (top-3 80.4%, MRR 0.776; 5-fold CV, operations-only): a **ComplementNB** base
 (Rennie et al. 2003 — built for the severe class imbalance of the 68-actor long tail) at **62.8%**,
 re-ranked by the L2 logistic stacker (**+11.7pp**). That is **+5.6pp over the previous NB + stacked
-re-ranker (68.9%)** and +17.9pp over the previous raw-NB headline (56.6%). ComplementNB was validated
+re-ranker (68.9%)** — significant: paired 95% CI [2.6, 8.3]pp, McNemar χ²=12.0, p<0.001 — and
++17.9pp over the previous raw-NB headline (56.6%). ComplementNB was validated
 against scikit-learn to the decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
 browser-vs-server. Doctrine / pillar / joint remain the NB engine (table above). Ablating the

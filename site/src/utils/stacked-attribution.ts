@@ -84,6 +84,7 @@ export interface StackedEvalResult {
   numFolds: number;
   /** Per-event {0,1} hit arrays for bootstrap CI computation downstream. */
   perEvent: {
+    eventIds: string[];
     nbHit1: number[];
     nbHit3: number[];
     nbHit5: number[];
@@ -216,6 +217,7 @@ export function runStackedAttributionLOO(
 
   // Per-event accumulators (each event scored exactly once).
   const perEvent = {
+    eventIds: [] as string[],
     nbHit1: [] as number[], nbHit3: [] as number[], nbHit5: [] as number[], nbRr: [] as number[],
     stHit1: [] as number[], stHit3: [] as number[], stHit5: [] as number[], stRr: [] as number[],
   };
@@ -276,6 +278,7 @@ export function runStackedAttributionLOO(
       fStH1 += stH1; fStH3 += stH3; fStH5 += stH5; fStRr += stRr;
       aggNbHit1 += nbH1; aggNbHit3 += nbH3; aggNbHit5 += nbH5; aggNbMrr += nbRr;
       aggStHit1 += stH1; aggStHit3 += stH3; aggStHit5 += stH5; aggStMrr += stRr;
+      perEvent.eventIds.push(r.event.id);
       perEvent.nbHit1.push(nbH1); perEvent.nbHit3.push(nbH3); perEvent.nbHit5.push(nbH5); perEvent.nbRr.push(nbRr);
       perEvent.stHit1.push(stH1); perEvent.stHit3.push(stH3); perEvent.stHit5.push(stH5); perEvent.stRr.push(stRr);
     }

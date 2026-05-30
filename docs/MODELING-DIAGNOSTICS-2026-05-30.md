@@ -212,7 +212,10 @@ learner) was decisive — 5-fold CV, leak-free, de-leaked features, engine-consi
 
 CNB+stack beats the previous NB+stack by **+5.6pp top-1 / +3.4 top-3 / +0.043 MRR**, and the raw
 CNB base beats raw NB by +6.2pp — the complement weighting (Rennie et al. 2003) handles the
-68-actor long-tail imbalance the bespoke NB did not. The native TS scorer (`complement-nb.ts`)
+68-actor long-tail imbalance the bespoke NB did not. The gain is **statistically significant**
+(`tools/eval-cnb-significance.ts`, paired by event over the same seeded folds): bootstrap 95% CI on
+the per-event delta **[+2.6, +8.3]pp** (excludes 0); McNemar χ²=12.0, **p<0.001** (CNB-only-right
+39 vs NB-only-right 13). The native TS scorer (`complement-nb.ts`)
 reproduces scikit-learn `ComplementNB(norm=False)` to the decimal on identical features.
 
 **Live deployment, browser-verified:**
