@@ -196,5 +196,37 @@ All-events column likewise (attribution 56.8→56.1, doctrine 71.7→71.0, pilla
 **Conclusion.** Every head moved <1pp top-1 except joint (−2.2). The engine was **not** riding the
 name-leak — its published numbers were essentially honest and are now leak-free too — so the fix
 retires the "does it just read the actor's name from the summary?" objection at sub-1pp cost.
-README + methodology disclosure updated. Recommendation #2 (adopt ComplementNB on the *de-leaked*
-features — name-scrubbed 61.9 vs the engine's 56.6) remains the open, higher-value lead.
+README + methodology disclosure updated.
+
+## Deployed — ComplementNB + stacked re-ranker (2026-05-30)
+
+Recommendation #2 done, end to end. The deciding experiment (ComplementNB as the stacker's base
+learner) was decisive — 5-fold CV, leak-free, de-leaked features, engine-consistent training:
+
+| attribution (ops-only) | top-1 | top-3 | top-5 | MRR |
+|---|---|---|---|---|
+| NB base (old) | 56.6 | 74.7 | 77.9 | 0.663 |
+| ComplementNB base | 62.8 | 75.1 | 78.1 | 0.698 |
+| NB + stack (old deployed) | 68.9 | 77.0 | 78.5 | 0.733 |
+| **ComplementNB + stack (new deployed)** | **74.5** | **80.4** | **81.3** | **0.776** |
+
+CNB+stack beats the previous NB+stack by **+5.6pp top-1 / +3.4 top-3 / +0.043 MRR**, and the raw
+CNB base beats raw NB by +6.2pp — the complement weighting (Rennie et al. 2003) handles the
+68-actor long-tail imbalance the bespoke NB did not. The native TS scorer (`complement-nb.ts`)
+reproduces scikit-learn `ComplementNB(norm=False)` to the decimal on identical features.
+
+**Live deployment, browser-verified:**
+- `stacked-core.ts` — pure (fs-free) meta-features + z-score standardizer + L2 logreg, shared by
+  the eval and the isomorphic `/predict`.
+- `buildDeployedAttributionModel()` trains the all-corpus logreg on out-of-fold CNB candidates at
+  build; the weights ship in `/api/atlas.json`.
+- `/predict` builds ComplementNB in-browser from the payload events, re-ranks the query's top-10
+  via the shipped logreg, and shows the logreg probability as per-actor confidence (no temperature
+  refit — it's already a probability). `/predict` OOD is Jaccard-over-features → unaffected.
+- `verify-predict-parity.ts` gained an `actor-cnb+stack` assertion: **PARITY OK over 30 events**
+  (deployed re-ranker byte-identical browser↔server).
+
+Doctrine / pillar / joint stay on the NB engine (ComplementNB is single-label multiclass; those
+heads are multi-label). A config-sensitivity caveat remains documented above: the CNB number moves
+with the feature-vocabulary construction, so the deployed config (engine-consistent training, df≥2,
+out-of-fold logreg) is fixed and reproducible.

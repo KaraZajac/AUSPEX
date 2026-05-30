@@ -41,7 +41,7 @@ Each subdirectory has its own README where useful. The atlas is the product; the
 
 ## Engine
 
-Bayesian Naive Bayes with multi-hot features and Laplace smoothing. Feature families:
+Multi-hot Naive Bayes with Laplace smoothing (doctrine / pillar / joint); **attribution** is served by **ComplementNB + a stacked logistic re-ranker** (2026-05-30). Feature families:
 
 - Target sectors, target countries, initial vectors, incident types, event year
 - MITRE ATT&CK techniques (parent T-codes) + co-occurrence pairs
@@ -53,9 +53,9 @@ Bayesian Naive Bayes with multi-hot features and Laplace smoothing. Feature fami
 - TF-IDF prose terms (extracted from event summary/outcome)
 - Indictment-named individual operators
 
-Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes, λ = 0.2), out-of-distribution detection (Jaccard nearest-neighbour + calibrated-entropy), and temperature-scaling calibration (T = 2.0 / 3.0 / 3.0 for attribution / doctrine / pillar).
+Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes, λ = 0.2), out-of-distribution detection (Jaccard nearest-neighbour + calibrated-entropy), and temperature-scaling calibration (T = 3.0 / 3.0 for doctrine / pillar; the attribution re-ranker emits calibrated probabilities directly).
 
-### Current accuracy (leave-one-out)
+### Current accuracy (leave-one-out; attribution via 5-fold CV)
 
 Each engine reports two numbers: **operations-only** (the headline — the engine's task is to infer
 the strategic frame / actor of actual cyber *operations*) and *all-events* (the same eval also
@@ -68,16 +68,23 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
-| Attribution | **56.6%** / 56.1% | **74.7%** / 74.2% | **0.663** / 0.658 MRR | 470 / 519 |
+| Attribution (ComplementNB + stacked re-ranker) | **74.5%** | **80.4%** | **0.776** MRR | 470 |
 | Doctrine | **72.9%** / 71.0% | **87.7%** / 86.7% | **0.704** / 0.683 mAP | 480 / 555 |
 | Pillar | **63.8%** / 61.6% | **80.8%** / 79.3% | **0.681** / 0.664 mAP | 428 / 489 |
 | Joint (actor × doctrine) | **48.3%** / 48.4% | **66.1%** / 66.7% | **0.586** / 0.590 MRR | 410 / 450 |
 
 Excluding meta events *raises* the doctrine headline (+1.9pp): they are off-task for an
-operation-trained engine, not easy wins. The **stacked** re-ranker lifts operations-only attribution
-top-1 to **68.9%** (+12.3pp over plain NB). Ablating the analyst-assigned `campaign_id`
-"known-linkage" feature drops operations-only attribution by ~6–7pp — a sensitivity bound, since
-`campaign_id` can encode the attribution for single-actor campaigns.
+operation-trained engine, not easy wins.
+
+**Attribution engine — ComplementNB + stacked re-ranker (2026-05-30, deployed live).** Attribution
+top-1 is now **74.5%** (top-3 80.4%, MRR 0.776; 5-fold CV, operations-only): a **ComplementNB** base
+(Rennie et al. 2003 — built for the severe class imbalance of the 68-actor long tail) at **62.8%**,
+re-ranked by the L2 logistic stacker (**+11.7pp**). That is **+5.6pp over the previous NB + stacked
+re-ranker (68.9%)** and +17.9pp over the previous raw-NB headline (56.6%). ComplementNB was validated
+against scikit-learn to the decimal; the deployed model (CNB base + an all-corpus logreg) runs in
+[`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
+browser-vs-server. Doctrine / pillar / joint remain the NB engine (table above). Ablating the
+analyst-assigned `campaign_id` is a ~6–7pp sensitivity bound.
 
 **Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is now scrubbed of actor
 names/aliases. Previously **74.5% of events carried their own actor's name as a prose token** — an
