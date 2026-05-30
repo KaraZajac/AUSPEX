@@ -74,6 +74,10 @@ export interface JointScoringOptions {
    *  training events are weighted exp(-|yearsDiff|/tau) toward this
    *  date). Pass the predicted event's date for LOO. */
   referenceDate?: string | null;
+  /** Optional alternative actor ranker (e.g. ComplementNB) returning ranked
+   *  actors with a comparable log-score. Default is the NB rankActors; when set,
+   *  the NB actor profiles are skipped. Tune actorWeight for the new score scale. */
+  actorRanker?: (features: EventFeatures, trainingEvents: AuspexEvent[], atlas: Atlas) => Array<{ actorId: string; logScore: number }>;
 }
 
 export function rankPairs(
@@ -89,17 +93,22 @@ export function rankPairs(
   const dW = opts.doctrineWeight ?? 1.0;
 
   const buildOpts = opts.referenceDate ? { referenceDate: opts.referenceDate } : {};
-  const actorProfiles = buildProfiles(trainingEvents, atlas, buildOpts);
   const actorVocab = buildVocab(trainingEvents, atlas);
   const doctrineProfiles = buildDoctrineProfiles(trainingEvents, atlas, buildOpts);
   // Re-use vocab — same feature space.
   const doctrineVocab: Vocab = actorVocab;
 
-  const aIDF = buildIDF(actorProfiles);
   const dIDF = buildDoctrineIDF(doctrineProfiles);
   const co = buildCooccurrence(trainingEvents, atlas);
 
-  const actors = rankActors(features, actorProfiles, actorVocab, { ...(opts.actor ?? {}), idf: aIDF }).slice(0, aN);
+  let actors: Array<{ actorId: string; logScore: number }>;
+  if (opts.actorRanker) {
+    actors = opts.actorRanker(features, trainingEvents, atlas).slice(0, aN);
+  } else {
+    const actorProfiles = buildProfiles(trainingEvents, atlas, buildOpts);
+    const aIDF = buildIDF(actorProfiles);
+    actors = rankActors(features, actorProfiles, actorVocab, { ...(opts.actor ?? {}), idf: aIDF }).slice(0, aN);
+  }
   const doctrines = rankDoctrines(features, doctrineProfiles, doctrineVocab, { ...(opts.doctrine ?? {}), idf: dIDF }).slice(0, dN);
 
   const pairs: Array<Omit<JointPair, 'rank'>> = [];

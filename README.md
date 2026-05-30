@@ -71,7 +71,7 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 | Attribution (ComplementNB + stacked re-ranker) | **74.5%** | **80.4%** | **0.776** MRR | 470 |
 | Doctrine | **72.9%** / 71.0% | **87.7%** / 86.7% | **0.704** / 0.683 mAP | 480 / 555 |
 | Pillar | **63.8%** / 61.6% | **80.8%** / 79.3% | **0.681** / 0.664 mAP | 428 / 489 |
-| Joint (actor × doctrine) | **48.3%** / 48.4% | **66.1%** / 66.7% | **0.586** / 0.590 MRR | 410 / 450 |
+| Joint (CNB actor × NB doctrine) | **54.1%** | **66.8%** | **0.615** MRR | 410 |
 
 Excluding meta events *raises* the doctrine headline (+1.9pp): they are off-task for an
 operation-trained engine, not easy wins.
@@ -86,7 +86,8 @@ against scikit-learn to the decimal; the deployed model (CNB base + an all-corpu
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
 browser-vs-server. On a **cold temporal holdout** (train ≤ 2023-12-31, score 2024+, matched
 denominator) it reaches top-1 **54.6%** vs raw NB 41.7% (**+13pp**) — the gain generalizes out of
-sample, not just in cross-validation. Doctrine / pillar / joint remain the NB engine (table above). Ablating the
+sample, not just in cross-validation. Doctrine and pillar remain the NB engine; the **joint** actor
+side now also uses ComplementNB (actorWeight 2.0, LOO-selected — top-1 48.3%&nbsp;→&nbsp;54.1%). Ablating the
 analyst-assigned `campaign_id` is a ~6–7pp sensitivity bound.
 
 **Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is now scrubbed of actor

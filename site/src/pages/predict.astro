@@ -362,11 +362,15 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
       .map((x) => ({ id: x.doctrineId, score: x.logScore }));
     const pillars: Scored[] = rankPillars(features, PILLAR_PROFILES, VOCAB, { idf: PILLAR_IDF })
       .map((x) => ({ id: x.pillarId, score: x.logScore }));
-    // Joint engine: shared rankPairs rebuilds its own (no-prior) profiles +
-    // co-occurrence internally — the canonical joint behavior the eval uses.
+    // Joint engine: shared rankPairs with the ComplementNB actor side (matching
+    // the attribution shortlist), blended with the NB doctrine side + co-occurrence.
+    // actorWeight=2.0 retunes the blend for the CNB score scale (LOO-selected).
     const referenceDate = Number.isFinite(refYear) ? String(refYear) : null;
-    const pairs: ScoredPair[] = rankPairs(features, ALL_EVENTS, ATLAS, referenceDate ? { referenceDate } : {})
-      .map((x) => ({ actorId: x.actorId, doctrineId: x.doctrineId, co: x.coOccurrence, jointScore: x.jointScore }));
+    const pairs: ScoredPair[] = rankPairs(features, ALL_EVENTS, ATLAS, {
+      ...(referenceDate ? { referenceDate } : {}),
+      actorRanker: (f) => rankCNB(eventTokens(f), CNB_MODEL).map((r) => ({ actorId: r.actorId, logScore: r.score })),
+      actorWeight: 2.0,
+    }).map((x) => ({ actorId: x.actorId, doctrineId: x.doctrineId, co: x.coOccurrence, jointScore: x.jointScore }));
 
     // Calibrated probabilities — temperature-scaled softmax over the top-20
     // pool. Calibration constants fit against LOO log-loss; see

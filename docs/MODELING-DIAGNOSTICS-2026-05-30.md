@@ -240,7 +240,11 @@ deployed logreg + meta-features held fixed, so it measures the CNB base's contri
 directly comparable to the NB engine's 91.4% (which resampled the whole model). The high value
 reflects the re-ranker leaning on dropout-robust per-actor metadata (operators, campaign, targets).
 
-Doctrine / pillar / joint stay on the NB engine (ComplementNB is single-label multiclass; those
-heads are multi-label). A config-sensitivity caveat remains documented above: the CNB number moves
+**Joint (actor × doctrine).** The joint actor side also adopts ComplementNB (`tools/eval-joint-cnb.ts`,
+the NB doctrine side + co-occurrence unchanged). Re-tuning the blend for the CNB score scale
+(actorWeight swept on the joint LOO; 2.0 selected — top-1 plateaus 1.5→2.0): **top-1 48.3→54.1
+(+5.8pp), MRR 0.586→0.615.** Doctrine and pillar stay on the NB engine (ComplementNB is single-label
+multiclass; those heads are multi-label). A config-sensitivity caveat remains documented above: the
+CNB number moves
 with the feature-vocabulary construction, so the deployed config (engine-consistent training, df≥2,
 out-of-fold logreg) is fixed and reproducible.
