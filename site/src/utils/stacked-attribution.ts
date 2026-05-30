@@ -338,7 +338,10 @@ function eventState(event: AuspexEvent, a: Atlas): string {
  *   - Report per-fold + aggregated + feature weights from an
  *     all-events training (interpretability only, never used in eval)
  */
-export function runStackedAttributionLOO(numFolds: number = DEFAULT_K_FOLDS): StackedEvalResult {
+export function runStackedAttributionLOO(
+  numFolds: number = DEFAULT_K_FOLDS,
+  baseRanker?: (heldOut: AuspexEvent, training: AuspexEvent[], a: Atlas) => RankedCandidate[],
+): StackedEvalResult {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
@@ -359,13 +362,18 @@ export function runStackedAttributionLOO(numFolds: number = DEFAULT_K_FOLDS): St
   for (const heldOut of labeled) {
     const training = allEvents.filter((e) => e.id !== heldOut.id);
     const refDate = heldOut.start_date ?? heldOut.disclosure_date;
-    const opts: ProfileBuildOptions = { servicePriorLambda: 0.2 }; // λ=0.2, matches headline engine (AUDIT-2026-05-29 B1)
-    if (refDate) opts.referenceDate = refDate;
-    const profiles = buildProfiles(training, a, opts);
-    const vocab = buildVocab(training, a);
-    const idf = buildIDF(profiles);
-    const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
-    const ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: a.malwareLineageGroup });
+    let ranked: RankedCandidate[];
+    if (baseRanker) {
+      ranked = baseRanker(heldOut, training, a); // alternative base learner (e.g. ComplementNB)
+    } else {
+      const opts: ProfileBuildOptions = { servicePriorLambda: 0.2 }; // λ=0.2, matches headline engine (AUDIT-2026-05-29 B1)
+      if (refDate) opts.referenceDate = refDate;
+      const profiles = buildProfiles(training, a, opts);
+      const vocab = buildVocab(training, a);
+      const idf = buildIDF(profiles);
+      const features = extractFeatures(heldOut, a, { excludeSelfFromProseDF: true });
+      ranked = rankActors(features, profiles, vocab, { idf, malwareLineageGroup: a.malwareLineageGroup });
+    }
     const topK = ranked.slice(0, TOP_K);
     const topScore = topK[0]?.logScore ?? 0;
     const cands = topK.map((c) => {
