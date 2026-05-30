@@ -90,6 +90,43 @@ un-QC'd events. The engine did **not** degrade on what it already knew.
    `doctrine_links: []`, so they enter neither doctrine training nor the doctrine eval.
    The **joint** engine's actor side drops in step with attribution.
 
+## Follow-up — QC feature-enrichment of the 70 fills (the real test)
+
+The 24.3% on the fills was a *feature-poverty* number, not a verdict on corpus growth.
+We tested the corrected hypothesis: **does source-grounded feature enrichment lift the
+fills?** Six parallel agents re-read each fill's source and promoted facts *already
+supported by the source* into the structured fields the engine reads — `targets[]`
+(sectors + country), `initial_vector`, `campaign_id` (reused from existing clusters
+only), `operators_named`, and a real summary for the 27 events imported with none.
+Strict guardrail enforced and spot-checked: **only this-operation facts, never the
+actor's signature TTPs/victims** (that would leak the label — e.g. the Noah Urban
+sentencing kept `targets: []` rather than inherit Scattered Spider's victim list). All
+71 patches passed an independent vocab-validation gate (`tools/apply-enrichment.ts`);
+atlas still validates clean. Re-baseline (deployed CNB+stack):
+
+| subset | n | top-1 (pre-enrich → post-enrich) |
+|---|---|---|
+| **Headline** | 595 | **61.7% → 63.9%** (+2.2pp) |
+| (A) original 470 events (untouched) | 470 | 74.5% → 75.5% (+1.0pp spillover) |
+| **(B) 70 fills (enriched)** | 70 | **24.3% → 35.7%** (+11.4pp; 11 miss→hit, 3 hit→miss) |
+| (C) 55 new-only (not enriched) | 55 | 0.0% → 0.0% |
+
+**Feature enrichment is a real lever (+11.4pp on the enriched subset), and the lift lands
+exactly where the cohort mechanism predicts:** the rescued events are the multi-fill
+*cohorts* — Winter Vivern ×2 (Roundcube/n-day), Flax Typhoon ×2 (Taiwan gov/academic
+n-day), APT37 ×3 (1→4 events) — plus rich-actor single fills (Stealth Falcon,
+CyberAv3ngers, Transparent Tribe). Enriching an actor's fills *coherently* makes them
+mutually CV-rankable; it even spilled +1pp onto the untouched originals (a sharper actor
+profile helps that actor's old events too). The 55 new-only events stayed at 0.0% —
+enrichment cannot rescue an actor with no training depth.
+
+**Conclusion — two necessary levers, neither sufficient alone:** (1) **depth per actor**
+above the CV-rankability threshold, and (2) **feature richness** (source-grounded
+targets/vector/campaign + a real summary). Naive event *count* moves neither. The fills'
+ceiling (35.7%, still well below the originals' 75.5%) is set by the many mid/thin actors
+that need *more events*, not more features — that is the next collection round. New thin
+actors need both.
+
 ## Provenance / reproduce
 
 ```sh
