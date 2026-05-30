@@ -5,53 +5,203 @@ import Base from '../layouts/Base.astro';
   <p class="kicker">Atlas</p>
   <h1>Search</h1>
   <p class="lede">
-    Full-text search across the atlas — doctrines, actors, events,
-    services, sectors. Search index is built at site-build time. In
-    dev mode, the index is unavailable.
+    Search across the atlas — events, actors, doctrines, pillars, services,
+    sectors, and states. Matches names, aliases, dates, and event summaries.
+    Runs entirely in the browser against a prebuilt index.
   </p>
 
-  <div id="search" class="search-container"></div>
+  <div class="search-box">
+    <svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="6.5"></circle>
+      <line x1="20" y1="20" x2="15.2" y2="15.2"></line>
+    </svg>
+    <input id="q" type="search" autocomplete="off" autofocus
+      placeholder="Search the atlas…" aria-label="Search the atlas" />
+  </div>
+  <p id="search-status" class="search-status">Loading index…</p>
+  <div id="search-results" class="search-results"></div>
 
-  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-  <script src="/pagefind/pagefind-ui.js" is:inline></script>
-  <script is:inline>
-    window.addEventListener('DOMContentLoaded', () => {
-      if (typeof PagefindUI !== 'undefined') {
-        new PagefindUI({
-          element: '#search',
-          showImages: false,
-          excerptLength: 24,
-          autofocus: true,
-          resetStyles: false,
-        });
-      } else {
-        document.getElementById('search').innerHTML =
-          '<p style="color: var(--ctp-subtext0);"><em>Search index not built. Run <code>pnpm build</code> and serve via <code>pnpm preview</code> to use search.</em></p>';
+  <script>
+    interface Rec { t: string; id: string; title: string; sub?: string; url: string; hay: string; }
+
+    const TYPE_ORDER = ['event', 'actor', 'doctrine', 'pillar', 'service', 'sector', 'state'];
+    const TYPE_LABEL: Record<string, string> = {
+      event: 'Events', actor: 'Actors', doctrine: 'Doctrines', pillar: 'Pillars',
+      service: 'Services', sector: 'Sectors', state: 'States',
+    };
+    const MAX_PER_TYPE = 30;
+
+    const qEl = document.getElementById('q') as HTMLInputElement;
+    const statusEl = document.getElementById('search-status')!;
+    const resultsEl = document.getElementById('search-results')!;
+    let records: Rec[] = [];
+
+    function el(tag: string, attrs: Record<string, string> = {}, ...kids: (string | Node)[]): HTMLElement {
+      const n = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        if (k === 'class') n.className = v;
+        else n.setAttribute(k, v);
       }
-    });
+      for (const c of kids) n.append(c);
+      return n;
+    }
+
+    // AND match: every term must appear; rank by title prefix/substring hits.
+    function score(rec: Rec, terms: string[]): number {
+      const title = rec.title.toLowerCase();
+      let s = 0;
+      for (const term of terms) {
+        if (!rec.hay.includes(term)) return -1;
+        if (title.startsWith(term)) s += 10;
+        else if (title.includes(term)) s += 5;
+        else s += 1;
+      }
+      return s;
+    }
+
+    function render(): void {
+      const raw = qEl.value.trim().toLowerCase();
+      resultsEl.innerHTML = '';
+      if (raw.length < 2) {
+        statusEl.textContent = records.length ? `Type to search ${records.length} atlas entries.` : '';
+        return;
+      }
+      const terms = raw.split(/\s+/).filter(Boolean);
+      const scored = records
+        .map((r) => ({ r, s: score(r, terms) }))
+        .filter((x) => x.s >= 0)
+        .sort((a, b) => b.s - a.s || a.r.title.length - b.r.title.length);
+
+      if (scored.length === 0) {
+        statusEl.textContent = `No matches for “${raw}”.`;
+        return;
+      }
+      statusEl.textContent = `${scored.length} match${scored.length === 1 ? '' : 'es'}.`;
+
+      const byType = new Map<string, typeof scored>();
+      for (const x of scored) {
+        const g = byType.get(x.r.t) ?? [];
+        g.push(x);
+        byType.set(x.r.t, g);
+      }
+      for (const t of TYPE_ORDER) {
+        const group = byType.get(t);
+        if (!group || group.length === 0) continue;
+        const sec = el('section', { class: 'sr-group' });
+        sec.append(el('h2', {}, `${TYPE_LABEL[t] ?? t} (${group.length})`));
+        const list = el('div', { class: 'sr-list' });
+        for (const { r } of group.slice(0, MAX_PER_TYPE)) {
+          const a = el('a', { class: 'sr-item', href: r.url });
+          a.append(el('span', { class: 'sr-title' }, r.title));
+          if (r.sub) a.append(el('span', { class: 'sr-sub' }, r.sub));
+          list.append(a);
+        }
+        if (group.length > MAX_PER_TYPE) {
+          list.append(el('p', { class: 'sr-more' }, `+${group.length - MAX_PER_TYPE} more — refine your query`));
+        }
+        sec.append(list);
+        resultsEl.append(sec);
+      }
+    }
+
+    // Deep-link support: /search?q=lazarus
+    const initial = new URLSearchParams(location.search).get('q');
+    if (initial) qEl.value = initial;
+    qEl.addEventListener('input', render);
+
+    fetch('/api/search-index.json')
+      .then((r) => r.json())
+      .then((data) => {
+        records = (data.records as Rec[]) ?? [];
+        statusEl.textContent = `Type to search ${records.length} atlas entries.`;
+        render();
+      })
+      .catch(() => {
+        statusEl.textContent = 'Could not load the search index.';
+      });
   </script>
 </Base>
 
 <style is:global>
-  /* Pagefind UI uses CSS variables — override with our Catppuccin palette. */
-  .pagefind-ui {
-    --pagefind-ui-primary: var(--ctp-blue);
-    --pagefind-ui-text: var(--ctp-text);
-    --pagefind-ui-background: var(--ctp-base);
-    --pagefind-ui-border: var(--ctp-surface0);
-    --pagefind-ui-tag: var(--ctp-mantle);
-    --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: 8px;
-    --pagefind-ui-font: var(--font-sans);
+  /* Results are built at runtime, so these are global; this stylesheet only
+     loads on /search and the class names are search-specific. */
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    background: var(--ctp-mantle);
+    padding: 0.6rem 0.9rem;
+    margin: 1.25rem 0 0.75rem;
   }
-  .pagefind-ui__search-input {
-    background: var(--ctp-mantle) !important;
+  .search-box:focus-within { border-color: var(--ctp-blue); }
+  .search-ico {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: var(--ctp-overlay0);
+    stroke-width: 2;
+    stroke-linecap: round;
   }
-  .pagefind-ui__result {
-    border-color: var(--ctp-surface0) !important;
+  #q {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ctp-text);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
   }
-</style>
-
-<style>
-  .search-container { margin-top: 1rem; }
+  .search-status {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--ctp-subtext0);
+    margin: 0 0 1.25rem;
+  }
+  .search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .sr-group h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ctp-subtext0);
+    font-family: var(--font-mono);
+    margin: 0 0 0.5rem;
+  }
+  .sr-list {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .sr-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.5rem 0.85rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    text-decoration: none;
+    color: var(--ctp-text);
+  }
+  .sr-item:last-child { border-bottom: none; }
+  .sr-item:hover { background: var(--ctp-mantle); }
+  .sr-title { font-size: 0.9375rem; }
+  .sr-sub {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+    white-space: nowrap;
+  }
+  .sr-more {
+    padding: 0.5rem 0.85rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-overlay0);
+  }
 </style>

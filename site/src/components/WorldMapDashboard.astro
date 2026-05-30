@@ -6,13 +6,14 @@
  * - Click → side panel slides in with per-state dossier
  * - Toggle: "as attacker" vs "as target" recolors the map
  */
-import { atlas } from '../utils/atlas';
+import { atlas, eventStateId } from '../utils/atlas';
 import FlagChip from './FlagChip.astro';
 import { COUNTRIES, MAP_W, MAP_H } from '../utils/world-map-paths';
 
 const a = atlas();
 
-// Atlas state palette (catppuccin tokens)
+// The five primary doctrine states keep their signature colors; every other
+// state with attacker events is colored as a "tracked" actor.
 const STATE_COLOR: Record<string, string> = {
   ru: 'var(--ctp-red)',
   cn: 'var(--ctp-yellow)',
@@ -20,20 +21,40 @@ const STATE_COLOR: Record<string, string> = {
   kp: 'var(--ctp-mauve)',
   us: 'var(--ctp-blue)',
 };
+const TRACKED_COLOR = 'var(--ctp-sapphire)';
+const PRIMARY = ['ru', 'cn', 'ir', 'kp', 'us'] as const;
+const PRIMARY_SET = new Set<string>(PRIMARY);
+
+// A few atlas state ids differ from the map's ISO-3166 alpha-2 codes.
+const STATE_TO_ISO: Record<string, string> = { uk: 'gb' };
+const isoForState = (id: string): string => STATE_TO_ISO[id] ?? id;
+
+// ─── Which states attack? (derived from the atlas, not hard-coded) ───────
+// Tally attacker events per derived state, keep those that have a country
+// path on the map, ordered by volume.
+const stateCounts = new Map<string, number>();
+for (const ev of a.events.values()) {
+  const sid = eventStateId(ev, a);
+  if (sid) stateCounts.set(sid, (stateCounts.get(sid) ?? 0) + 1);
+}
+const isoOnMap = new Set<string>(COUNTRIES.map((c) => c.iso2).filter(Boolean) as string[]);
+const ACTOR_STATES = [...stateCounts.entries()]
+  .filter(([id]) => a.nationStates.has(id) && isoOnMap.has(isoForState(id)))
+  .sort((x, y) => y[1] - x[1])
+  .map(([id]) => id);
+// Map-ISO codes that should be colored, and the count of non-primary ones.
+const attackerIsoSet = new Set<string>(ACTOR_STATES.map(isoForState));
+const secondaryCount = ACTOR_STATES.filter((id) => !PRIMARY_SET.has(id)).length;
 
 // ─── Project the world ──────────────────────────────────────────────────
 // Paths come from the shared world-map-paths module (computed once at
 // module load, reused across this dashboard and per-state attribution maps).
 const W = MAP_W;
 const H = MAP_H;
-const ACTOR_SET = new Set<string>(['ru', 'cn', 'ir', 'kp', 'us']);
 const countries = COUNTRIES.map((c) => ({
   ...c,
-  isActor: c.iso2 ? ACTOR_SET.has(c.iso2) : false,
+  isActor: c.iso2 ? attackerIsoSet.has(c.iso2) : false,
 }));
-
-// ─── Build the per-state dossier (5 states) ─────────────────────────────
-const ACTOR_STATES = ['ru', 'cn', 'ir', 'kp', 'us'] as const;
 
 function topTargetSectors(state: string, limit = 6) {
   // sectorAttributionForState returns top-level sectors with name+count+percent
@@ -51,7 +72,7 @@ const dossiers = ACTOR_STATES.map((sid) => {
   return {
     id: sid,
     name: a.nationStates.get(sid)?.name ?? sid.toUpperCase(),
-    color: STATE_COLOR[sid],
+    color: STATE_COLOR[sid] ?? TRACKED_COLOR,
     eventCount: events.length,
     recent90Count: recent90.length,
     recent5: events.slice(0, 5),
@@ -68,7 +89,7 @@ const targetCounts = a.targetCountryCounts();
 const maxTarget = Math.max(...targetCounts.values(), 1);
 const targetCountryClass = new Map<string, string>(); // iso2 → tier label
 for (const [iso2, n] of targetCounts) {
-  if (ACTOR_STATES.includes(iso2 as any)) continue; // attacker states have their own color
+  if (attackerIsoSet.has(iso2)) continue; // attacker states have their own color
   if (n >= maxTarget * 0.6) targetCountryClass.set(iso2, 'target-tier-high');
   else if (n >= maxTarget * 0.25) targetCountryClass.set(iso2, 'target-tier-mid');
   else if (n >= 2) targetCountryClass.set(iso2, 'target-tier-low');
@@ -78,7 +99,8 @@ for (const [iso2, n] of targetCounts) {
 function classForCountry(c: typeof countries[number]): string {
   const a2 = c.iso2;
   const cls = ['country'];
-  if (a2 && ACTOR_STATES.includes(a2 as any)) cls.push(`actor-${a2}`);
+  if (a2 && PRIMARY_SET.has(a2)) cls.push(`actor-${a2}`);
+  else if (a2 && attackerIsoSet.has(a2)) cls.push('actor-tracked');
   if (a2 && targetCountryClass.has(a2)) cls.push(targetCountryClass.get(a2)!);
   return cls.join(' ');
 }
@@ -117,9 +139,12 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
     </div>
 
     <div class="legend legend-attacker">
-      {ACTOR_STATES.map((s) => (
+      {PRIMARY.map((s) => (
         <span class={`leg leg-${s}`}><span class="leg-dot"></span>{s.toUpperCase()}</span>
       ))}
+      {secondaryCount > 0 && (
+        <span class="leg leg-tracked"><span class="leg-dot"></span>+{secondaryCount} tracked</span>
+      )}
     </div>
     <div class="legend legend-target" hidden={true}>
       <span class="leg leg-tt-high"><span class="leg-dot"></span>most-targeted</span>
@@ -155,7 +180,7 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
   {/* Hidden dossier blocks (one per actor state). JS swaps these into the panel. */}
   <div id="dossier-templates" hidden={true}>
     {dossiers.map((d) => (
-      <div class="dossier-tpl" data-iso={d.id}>
+      <div class="dossier-tpl" data-iso={isoForState(d.id)}>
         <header class="dh">
           <FlagChip state={d.id} />
           <h2>{d.name}</h2>
@@ -242,6 +267,7 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
 <style>
   .dash-root {
     width: 100%;
+    margin-bottom: 1.75rem;
   }
   .dash-top {
     display: flex;
@@ -374,6 +400,7 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
   .leg-ir .leg-dot { background: var(--ctp-green); }
   .leg-kp .leg-dot { background: var(--ctp-mauve); }
   .leg-us .leg-dot { background: var(--ctp-blue); }
+  .leg-tracked .leg-dot { background: var(--ctp-sapphire); }
   .leg-tt-high .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 90%, transparent); }
   .leg-tt-mid  .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 55%, transparent); }
   .leg-tt-low  .leg-dot { background: color-mix(in srgb, var(--ctp-peach) 25%, transparent); }
@@ -398,6 +425,7 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
   .dash-root[data-mode='attacker'] .actor-ir { fill: var(--ctp-green); }
   .dash-root[data-mode='attacker'] .actor-kp { fill: var(--ctp-mauve); }
   .dash-root[data-mode='attacker'] .actor-us { fill: var(--ctp-blue); }
+  .dash-root[data-mode='attacker'] .actor-tracked { fill: var(--ctp-sapphire); }
 
   /* Target mode: peach-graded by times-targeted */
   .dash-root[data-mode='target'] .country { fill: var(--ctp-surface0); }
@@ -415,7 +443,8 @@ const recent90Total = a.allEventsSorted().filter((ev) => {
   .dash-root[data-mode='target'] .actor-cn,
   .dash-root[data-mode='target'] .actor-ir,
   .dash-root[data-mode='target'] .actor-kp,
-  .dash-root[data-mode='target'] .actor-us {
+  .dash-root[data-mode='target'] .actor-us,
+  .dash-root[data-mode='target'] .actor-tracked {
     stroke: var(--ctp-text);
     stroke-width: 0.75;
   }

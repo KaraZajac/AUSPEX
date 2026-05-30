@@ -7,7 +7,9 @@
     const body = document.getElementById('panel-body');
     const closeBtn = document.getElementById('panel-close');
     const templates = document.getElementById('dossier-templates');
-    const ACTORS = ['ru','cn','ir','kp','us'];
+    // A country is clickable iff a dossier template exists for it (data-driven,
+    // so adding/removing tracked states needs no change here).
+    const hasDossier = (iso) => !!iso && !!templates.querySelector('.dossier-tpl[data-iso="' + iso + '"]');
 
     // ---- Tooltip ----
     function showTip(target, text) {
@@ -26,7 +28,7 @@
       const iso = t.getAttribute('data-iso');
       const name = t.getAttribute('data-name') || '';
       if (!iso) return showTip(t, name);
-      showTip(t, name + (ACTORS.includes(iso) ? ' · click for dossier' : ''));
+      showTip(t, name + (hasDossier(iso) ? ' · click for dossier' : ''));
     });
     svg.addEventListener('mouseleave', hideTip);
 
@@ -51,14 +53,14 @@
       const t = e.target;
       if (t.tagName !== 'path') return;
       const iso = t.getAttribute('data-iso');
-      if (iso && ACTORS.includes(iso)) openPanel(iso);
+      if (hasDossier(iso)) openPanel(iso);
     });
     svg.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       const t = e.target;
       if (t.tagName !== 'path') return;
       const iso = t.getAttribute('data-iso');
-      if (iso && ACTORS.includes(iso)) { e.preventDefault(); openPanel(iso); }
+      if (hasDossier(iso)) { e.preventDefault(); openPanel(iso); }
     });
 
     // ---- Mode toggle ----

@@ -59,7 +59,8 @@ const grandTotal = [...rowTotals.values()].reduce((a, b) => a + b, 0);
 
   <h2 style="font-size: 1.125rem; margin-top: 2rem; margin-bottom: 0.5rem;">Sector × year intensity</h2>
 
-  <div class="heatmap" style={`grid-template-columns: 13rem repeat(${years.length}, minmax(2rem, 1fr)) 4rem;`}>
+  <div class="heatmap-scroll">
+  <div class="heatmap" style={`grid-template-columns: 13rem repeat(${years.length}, 2.25rem) 4rem;`}>
     <div class="cell-empty"></div>
     {years.map((y) => (
       <a class="cell-year" href={`/year/${y}`}>{y}</a>
@@ -93,6 +94,9 @@ const grandTotal = [...rowTotals.values()].reduce((a, b) => a + b, 0);
     ))}
     <div class="cell-grand-total">{grandTotal}</div>
   </div>
+  </div>
+
+  <p class="scroll-hint">Scroll horizontally to see all years →</p>
 
   <p style="margin-top: 1.5rem; color: var(--ctp-subtext0); font-size: 0.8125rem;">
     A cell's count is the number of events with a target tagged
@@ -103,16 +107,27 @@ const grandTotal = [...rowTotals.values()].reduce((a, b) => a + b, 0);
 
 <style>
   .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .heatmap-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    background: var(--ctp-surface0);
+  }
   .heatmap {
     display: grid;
     grid-auto-rows: 2.25rem;
     gap: 1px;
     background: var(--ctp-surface0);
-    border: 1px solid var(--ctp-surface0);
-    border-radius: var(--radius-md);
-    overflow: hidden;
+    min-width: max-content;
     font-family: var(--font-mono);
     font-size: 0.75rem;
+  }
+  .scroll-hint {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--ctp-overlay0);
+    text-align: right;
   }
   .cell-empty {
     background: var(--ctp-mantle);

@@ -242,13 +242,26 @@ import Base from '../layouts/Base.astro';
       root.append(el('p', { class: 'empty' }, 'No events match. Try removing a filter.'));
       return;
     }
+    const dateOf = (ev: EventRec): string => ev.start_date ?? ev.disclosure_date ?? '';
+    // Newest-first; undated events sink to the bottom.
+    const sorted = [...events].sort((a, b) => {
+      const da = dateOf(a), db = dateOf(b);
+      if (!da) return 1;
+      if (!db) return -1;
+      return db.localeCompare(da);
+    });
     const list = el('div', { class: 'event-list' });
-    for (const ev of events) {
+    let curKey: string | null = null;
+    for (const ev of sorted) {
+      const date = dateOf(ev).slice(0, 10);
+      const key = date || 'undated';
+      if (key !== curKey) {
+        curKey = key;
+        list.append(el('div', { class: 'date-head' }, date || 'Undated'));
+      }
       const row = el('a', { class: 'ev', href: `/event/${ev.id}` });
-      const date = ev.start_date ?? ev.disclosure_date ?? '';
       const state = eventAttackerState(ev);
       const targets = eventTargetCountries(ev);
-      row.append(el('span', { class: 'ev-date' }, date));
       if (state) row.append(el('span', { class: 'ev-state' }, state.toUpperCase()));
       else row.append(el('span', { class: 'ev-state ev-state-empty' }, '??'));
       row.append(el('span', { class: 'ev-name' }, ev.name));
@@ -389,7 +402,11 @@ import Base from '../layouts/Base.astro';
   boot();
 </script>
 
-<style>
+<style is:global>
+  /* Results + facets are built at runtime by the script above. Astro scopes
+     styles via a build-time data-attribute that runtime-created nodes never
+     receive, so these rules must be global. This stylesheet is only loaded on
+     /explore, and none of these class names collide with the shared chrome. */
   .active-filters {
     display: flex;
     flex-wrap: wrap;
@@ -471,7 +488,7 @@ import Base from '../layouts/Base.astro';
   }
   .ev {
     display: grid;
-    grid-template-columns: 6.5rem 2rem 1fr auto;
+    grid-template-columns: 2.25rem 1fr auto;
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
@@ -481,7 +498,15 @@ import Base from '../layouts/Base.astro';
   }
   .ev:last-child { border-bottom: none; }
   .ev:hover { background: var(--ctp-mantle); }
-  .ev-date { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ctp-subtext0); }
+  .date-head {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ctp-subtext0);
+    background: var(--ctp-mantle);
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+    letter-spacing: 0.04em;
+  }
   .ev-state {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
