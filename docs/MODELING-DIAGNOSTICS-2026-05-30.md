@@ -234,6 +234,12 @@ reproduces scikit-learn `ComplementNB(norm=False)` to the decimal on identical f
 **+13.0pp** on genuinely unseen-time events (top-3 59.3 vs 50.0, top-5 62.0 vs 55.6). The gain is not
 a CV artifact; it holds out of sample.
 
+**Stability (`tools/eval-cnb-stability.ts`).** Rank-1 stability under 10% corpus dropout (10 seeded
+resamples) is **99.6%** (top-3 set-stability 98.8%) — but with the CNB base resampled and the
+deployed logreg + meta-features held fixed, so it measures the CNB base's contribution and is *not*
+directly comparable to the NB engine's 91.4% (which resampled the whole model). The high value
+reflects the re-ranker leaning on dropout-robust per-actor metadata (operators, campaign, targets).
+
 Doctrine / pillar / joint stay on the NB engine (ComplementNB is single-label multiclass; those
 heads are multi-label). A config-sensitivity caveat remains documented above: the CNB number moves
 with the feature-vocabulary construction, so the deployed config (engine-consistent training, df≥2,

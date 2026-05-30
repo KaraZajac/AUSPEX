@@ -98,8 +98,9 @@ unchanged. See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOS
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
 diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.4%, with top-3 set-stability 98.9% (seeded resampler,
-reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
+stability under 10% corpus dropout: 91.4% (NB base), with top-3 set-stability 98.9% (seeded
+resampler, reproducible build-to-build); the deployed CNB + stack attribution is rank-1-stable at
+99.6% under CNB-base dropout (deployed re-ranker held fixed). NotPetya counterfactual carried as a standing adversarial test for
 false-flag handling.
 
 ## Quick start
