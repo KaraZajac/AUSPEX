@@ -127,6 +127,54 @@ ceiling (35.7%, still well below the originals' 75.5%) is set by the many mid/th
 that need *more events*, not more features — that is the next collection round. New thin
 actors need both.
 
+## Depth round — targeted thin-actor deepening (the depth lever, isolated)
+
+The fills' 35.7% ceiling pointed at *depth*, not features. We tested it directly:
+picked 10 **prolific, distinctive, thin** actors (k=1–2) and collected 3 real,
+source-verified events each (5 agents; all 30 URLs independently curl-verified — 29×200,
+1×403 bot-block on a real publisher; 20 attested / 10 strongly_inferred, conservatively
+downgraded where sources hedged). Each actor deepened to k=4–5. Atlas 785→815 events.
+Re-baseline (deployed CNB+stack):
+
+| subset | n | top-1 |
+|---|---|---|
+| **Headline** | 625 | **63.9% → 65.1%** |
+| **(A) 10 target actors** | 12→42 | **0.0% → 61.9%** |
+| (B) all non-target (untouched) | 583 | 65.2% → 65.4% (flat) |
+
+**Depth is the decisive lever: the target actors went from all-miss (0/12, singletons)
+to 61.9% — and deepening rescued their *original* singleton events too** (Arid Viper
+4/4, Imperial Kitten 4/4, Evasive Panda 5/5, DarkHotel 3/4, Molerats 3/4, UNC3886 3/4,
+Bitter 3/5). Non-target events stayed flat (65.2→65.4), confirming no collateral effect.
+
+**Third lever — discriminability.** Two of the ten stayed at 0/4 despite reaching k=4:
+**Gamaredon** and **Confucius**. Their nearest CNB competitors are *high-volume same-state
+neighbors* — Gamaredon vs Sandworm (28 ev) / Turla / Star Blizzard on the RU→Ukraine-gov-
+phishing niche; Confucius vs SideWinder (12 ev) / DoNot / Bitter on the South-Asia
+espionage niche. When a low-volume actor shares a crowded niche with a populous neighbor,
+depth alone doesn't separate them under CV — the neighbor's larger profile wins. These
+need **discriminative features** (unique malware, named operators, a distinct campaign id)
+that the neighbors lack, not more events.
+
+### Full arc — the corpus-growth question, answered
+
+| stage | events | CNB+stack top-1 |
+|---|---|---|
+| QC'd baseline | 658 | 74.5% (n=470) |
+| + 127 un-QC'd import (naive count) | 785 | 61.7% (n=595) |
+| + feature-enrich the 70 fills | 785 | 63.9% (n=595) |
+| + targeted depth (10 actors ×3) | 815 | 65.1% (n=625) |
+
+**Three necessary levers, none sufficient alone:** (1) **depth** per actor above the
+CV-rankability threshold (0%→61.9% on the deepened actors), (2) **feature richness**
+(+11.4pp on the enriched fills), (3) **discriminability** from same-niche neighbors.
+**Naive event count moves none of them** — it lowered the headline by adding unrankable
+breadth. The headline is still below the 74.5% QC'd number because the corpus now carries
+51 new actors + a deep long tail; closing that gap is *more of the same targeted depth*
+(the 65.1% climbs ~1.2pp per 10 actors deepened), not bulk collection. The published
+74.5% remains the QC'd-corpus headline; this experiment's numbers are the provisional
+larger-corpus track, fully decomposed above.
+
 ## Provenance / reproduce
 
 ```sh
