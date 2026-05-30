@@ -23,7 +23,7 @@
  * Output is comparable to the plain LOO attribution numbers — same event
  * set, same null=miss denominator, same per-state breakdown.
  */
-import { atlas, isMetaEvent, type AuspexEvent, type Atlas, type Actor } from './atlas';
+import { atlas, isMetaEvent, type AuspexEvent, type Atlas } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -34,6 +34,15 @@ import {
   type RankedCandidate,
   type ProfileBuildOptions,
 } from './attribution';
+import {
+  type PairFeatures,
+  type PairRow,
+  type LogReg,
+  FEATURE_KEYS,
+  pairFeatures,
+  trainLogReg,
+  predictLogReg,
+} from './stacked-core';
 
 /** Number of NB candidates the stacker considers per event. */
 const TOP_K = 10;
@@ -41,217 +50,6 @@ const TOP_K = 10;
 const SPLIT_SEED = 0xAB13C0DE;
 /** Default number of stratified k-folds for the stacker evaluation. */
 const DEFAULT_K_FOLDS = 5;
-/** L2 regularization. */
-const L2 = 0.5;
-/** Learning rate. */
-const LR = 0.05;
-/** Gradient-descent iterations. */
-const ITERATIONS = 400;
-
-interface PairFeatures {
-  nbLogScore: number;        // raw NB log-score
-  nbRank: number;            // 1-indexed
-  nbMarginToTop: number;     // (nb top-1 logscore) - (this logscore); 0 for rank-1
-  targetOrgMatches: number;  // count of event.targets[*].target_id that appear in actor profile
-  malwareLineageHit: number; // count of matches across malware-lineage groups
-  operatorHit: number;       // count of matches over event.operators_named
-  campaignMatch: number;     // 1 if event.campaign_id is in actor's known campaigns, else 0
-  inActiveWindow: number;    // 1 if event date is within [active_since, active_until], else 0
-  sameStateAsTarget: number; // 1 if actor's state == event target's country, else 0
-  hasMitreProfile: number;   // 1 if actor has MITRE-derived TTPs
-}
-
-const FEATURE_KEYS: Array<keyof PairFeatures> = [
-  'nbLogScore', 'nbRank', 'nbMarginToTop',
-  'targetOrgMatches', 'malwareLineageHit', 'operatorHit',
-  'campaignMatch', 'inActiveWindow', 'sameStateAsTarget', 'hasMitreProfile',
-];
-
-interface PairRow extends PairFeatures {
-  eventId: string;
-  actorId: string;
-  label: number;  // 1 if true actor, 0 otherwise
-}
-
-function pairFeatures(
-  event: AuspexEvent,
-  candidate: RankedCandidate,
-  topLogScore: number,
-  atlas: Atlas,
-  knownCampaignsByActor: Map<string, Set<string>>,
-): PairFeatures {
-  const actor: Actor | undefined = atlas.actors.get(candidate.actorId);
-  const evDate = (event.start_date ?? event.disclosure_date ?? '').slice(0, 10);
-  const evYear = parseInt(evDate.slice(0, 4), 10);
-
-  // Target-org matches: how many of this event's named targets appear
-  // in any past event attributed to this actor?
-  const actorEvents = atlas.eventsForActor(candidate.actorId);
-  const actorTargets = new Set<string>();
-  for (const e of actorEvents) {
-    for (const t of e.targets ?? []) {
-      if (!t.target_id) continue;
-      if (t.target_id.startsWith('orgs/') || t.target_id.startsWith('infra/')) {
-        actorTargets.add(t.target_id);
-      }
-    }
-  }
-  let targetOrgMatches = 0;
-  for (const t of event.targets ?? []) {
-    if (!t.target_id) continue;
-    if (t.target_id.startsWith('orgs/') || t.target_id.startsWith('infra/')) {
-      if (actorTargets.has(t.target_id)) targetOrgMatches++;
-    }
-  }
-
-  // Malware-lineage hit: any lineage-group overlap between event prose
-  // and actor's known malware?
-  const actorMalware = new Set<string>(actor?.mitre_malware ?? []);
-  const actorLineageGroups = new Set<string>();
-  for (const m of actorMalware) {
-    const lg = atlas.malwareLineageGroup.get(m.toLowerCase());
-    if (lg) actorLineageGroups.add(lg);
-  }
-  const text = ((event.summary ?? '') + ' ' + (event.outcome_summary ?? '')).toLowerCase();
-  let malwareLineageHit = 0;
-  for (const fam of atlas.malwareLineage.keys()) {
-    // Word-boundary match (AUDIT-2026-05-29): raw substring let 2-3 char lineage keys
-    // like 'cs' (a Cobalt Strike alias) match inside ordinary words — 'politics',
-    // 'logistics', 'jwics' — firing a spurious lineage hit on ~119 events. \b...\b
-    // mirrors the engine's own inferEventMalware regex.
-    const esc = fam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    if (!new RegExp(`\\b${esc}\\b`).test(text)) continue;
-    if (actorMalware.has(fam)) {
-      malwareLineageHit += 2; // exact match
-      continue;
-    }
-    const lg = atlas.malwareLineageGroup.get(fam);
-    if (lg && actorLineageGroups.has(lg)) malwareLineageHit += 1; // lineage match
-  }
-
-  // Operator hit: count event.operators_named in actor's known operators
-  const actorOps = new Set<string>();
-  for (const e of actorEvents) {
-    for (const op of e.operators_named ?? []) actorOps.add(op);
-  }
-  let operatorHit = 0;
-  for (const op of event.operators_named ?? []) {
-    if (actorOps.has(op)) operatorHit++;
-  }
-
-  // Campaign match: event campaign_id appears in actor's known campaigns
-  const campaignMatch = event.campaign_id && knownCampaignsByActor.get(candidate.actorId)?.has(event.campaign_id) ? 1 : 0;
-
-  // In active window
-  let inActiveWindow = 1;
-  if (actor?.active_since) {
-    const since = parseInt(actor.active_since.slice(0, 4), 10);
-    if (Number.isFinite(since) && Number.isFinite(evYear) && evYear < since) inActiveWindow = 0;
-  }
-  if (actor?.active_until) {
-    const until = parseInt(actor.active_until.slice(0, 4), 10);
-    if (Number.isFinite(until) && Number.isFinite(evYear) && evYear > until) inActiveWindow = 0;
-  }
-
-  // Same state as target?
-  const actorState = (actor?.primary_service_id ?? '').split('/')[0];
-  let sameStateAsTarget = 0;
-  for (const t of event.targets ?? []) {
-    if ((t.country ?? '').toLowerCase() === actorState) { sameStateAsTarget = 1; break; }
-  }
-
-  return {
-    nbLogScore: candidate.logScore,
-    nbRank: candidate.rank,
-    nbMarginToTop: topLogScore - candidate.logScore,
-    targetOrgMatches,
-    malwareLineageHit,
-    operatorHit,
-    campaignMatch,
-    inActiveWindow,
-    sameStateAsTarget,
-    hasMitreProfile: actor && (actor.mitre_techniques?.length ?? 0) > 0 ? 1 : 0,
-  };
-}
-
-function vectorize(p: PairFeatures): number[] {
-  return FEATURE_KEYS.map((k) => p[k]);
-}
-
-/** Z-score normalization computed from the training pairs. */
-interface Standardizer {
-  mean: number[];
-  std: number[];
-}
-
-function fitStandardizer(rows: PairFeatures[]): Standardizer {
-  const D = FEATURE_KEYS.length;
-  const n = rows.length;
-  const mean = new Array(D).fill(0);
-  const sq = new Array(D).fill(0);
-  for (const r of rows) {
-    const v = vectorize(r);
-    for (let i = 0; i < D; i++) {
-      mean[i] += v[i] / n;
-      sq[i] += (v[i] * v[i]) / n;
-    }
-  }
-  const std = mean.map((m, i) => Math.sqrt(Math.max(1e-6, sq[i] - m * m)));
-  return { mean, std };
-}
-
-function standardize(v: number[], s: Standardizer): number[] {
-  return v.map((x, i) => (x - s.mean[i]) / s.std[i]);
-}
-
-/** L2-regularized logistic regression via batch gradient descent. */
-interface LogReg {
-  w: number[];
-  b: number;
-  standardizer: Standardizer;
-}
-
-function sigmoid(z: number): number {
-  if (z >= 0) {
-    const ez = Math.exp(-z);
-    return 1 / (1 + ez);
-  }
-  const ez = Math.exp(z);
-  return ez / (1 + ez);
-}
-
-function trainLogReg(rows: PairRow[]): LogReg {
-  const standardizer = fitStandardizer(rows);
-  const D = FEATURE_KEYS.length;
-  const N = rows.length;
-  const w = new Array(D).fill(0);
-  let b = 0;
-  const X: number[][] = rows.map((r) => standardize(vectorize(r), standardizer));
-  const y: number[] = rows.map((r) => r.label);
-  for (let it = 0; it < ITERATIONS; it++) {
-    let gradB = 0;
-    const gradW = new Array(D).fill(0);
-    for (let i = 0; i < N; i++) {
-      let z = b;
-      for (let j = 0; j < D; j++) z += w[j] * X[i][j];
-      const p = sigmoid(z);
-      const err = p - y[i];
-      gradB += err / N;
-      for (let j = 0; j < D; j++) gradW[j] += (err * X[i][j]) / N;
-    }
-    b -= LR * gradB;
-    for (let j = 0; j < D; j++) w[j] -= LR * (gradW[j] + (L2 * w[j]) / N);
-  }
-  return { w, b, standardizer };
-}
-
-function predictLogReg(model: LogReg, p: PairFeatures): number {
-  const v = standardize(vectorize(p), model.standardizer);
-  let z = model.b;
-  for (let j = 0; j < model.w.length; j++) z += model.w[j] * v[j];
-  return sigmoid(z);
-}
-
 export interface FoldMetrics {
   nbHit1: number; nbHit3: number; nbHit5: number; nbMrr: number;
   stHit1: number; stHit3: number; stHit5: number; stMrr: number;
