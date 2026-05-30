@@ -70,6 +70,12 @@ for (const p of patches) {
     post.push('operators_named:\n' + p.operators_named.map((o: string) => `  - ${yamlStr(o)}`).join('\n'));
   }
 
+  // ---- claim-QC: update attribution confidence + assessment from the verdict ----
+  const CONF: Record<string, string> = { attested: 'high', strongly_inferred: 'moderate', plausible: 'low' };
+  const ASSESS: Record<string, string> = { supported: 'concur', weak: 'concur-with-caveat', unsupported: 'partial' };
+  if (p.confidence && CONF[p.confidence]) text = text.replace(/(attributing_org_confidence:\s*)\S+/, `$1${CONF[p.confidence]}`);
+  if (p.attribution_verdict && ASSESS[p.attribution_verdict]) text = text.replace(/(auspex_assessment:\s*)\S+/, `$1${ASSESS[p.attribution_verdict]}`);
+
   // ---- replace empty summary ----
   if (p.summary && /\(no summary captured\)/.test(text)) {
     const body = String(p.summary).trim().split('\n').map((l: string) => '  ' + l.trim()).join('\n');
