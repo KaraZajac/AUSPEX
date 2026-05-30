@@ -121,11 +121,55 @@ simplicity as a feature"). If it collapses, document why (the weighting earns it
 
 ---
 
+## ComplementNB matched re-test + a prose-feature leak (follow-up)
+
+Steps 1–2 of the ComplementNB lead, run under **LOO** on the **full** exported matrix
+(3871 cols — same `EventFeatures` the engine uses, no df≥3 prune; n=470 ops-only;
+labels = ≥2-event actors; null=miss). Tools: `complementnb_retest.py`,
+`dump-actor-name-tokens.ts`, `prose_leak_check.py`.
+
+| model | features | top-1 | top-3 |
+|---|---|---|---|
+| ComplementNB | full | **71.7** | 83.6 |
+| ComplementNB | name-scrubbed | 61.9 | 77.2 |
+| ComplementNB | prose-ablated | 52.3 | 68.1 |
+| MultinomialNB | full | 54.3 | 69.6 |
+| MultinomialNB | prose-ablated | 38.9 | 54.7 |
+| *engine plain-NB (ref, TS LOO)* | — | 57.4 | 74.9 |
+| *engine stacked (ref, TS)* | — | 69.6 | — |
+
+**Finding A — ComplementNB beats the bespoke engine, and it's the complement trick.**
+71.7 top-1 beats plain-NB (57.4, +14.3) and the stacked re-ranker (69.6, +2.1), with much
+higher top-3 (83.6). MultinomialNB on identical features is only 54.3 → the win is
+specifically Rennie's complement weighting, which is designed for severe class imbalance
+(AUSPEX: 68 classes, long tail). Per-tier accuracy tracks actor frequency: singletons 4%,
+2–4 events 59%, 5–9 85%, 10+ 89%.
+
+**Finding B — the prose feature leaks actor identity (the bigger result).** The
+summary-derived TF-IDF prose terms frequently contain the actor's own name:
+**350/470 (74.5%) of events carry their own actor's name/alias as a prose feature** — a
+property of the engine's feature extraction, not the model. Impact (ComplementNB):
+full 71.7 → name-scrubbed 61.9 → prose-ablated 52.3, so **actor-name leak = 9.8 of the
+19.4 pp** prose lift (~half; the rest is other prose terms — tradecraft/victim/operation,
+a mix of legit signal and possible operation-name leak). This inflates **all** attribution
+numbers, the production engine included (prose weight 0.4). The honest "attribute a
+genuinely unknown event, no actor-naming summary" accuracy is materially lower than
+headline: ~62% (names scrubbed) to ~52% (no prose) for ComplementNB; **quantifying the
+engine's own prose-leak sensitivity (ablate prose in the TS harness) is a required
+follow-up.**
+
 ## Bottom line
 
-1. **Collect data — for attribution.** Backfill thin actors / under-covered states
-   (the overnight `corpus-backfill-research` workflow targets exactly this). Doctrine
-   won't benefit much from volume.
-2. **Don't use GBT.** It loses by 36 pp; the long tail starves it. NB-family is correct.
-3. **Chase the ComplementNB lead.** A matched-protocol re-test could buy ~10 pp of
-   attribution accuracy at zero data cost — verify before adopting.
+1. **Fix the prose actor-name leak first — it's a defensibility issue, not an optimization.**
+   Scrub actor names/aliases from prose tokens in `extractProseTerms`, keep the legit
+   tradecraft terms, then re-baseline every head (flag → measure → document per the audit
+   mandate). Headline attribution will drop to honest numbers; better we find this than a
+   committee does.
+2. **Adopt/confirm ComplementNB on the de-leaked features.** Name-scrubbed ComplementNB
+   (61.9) already beats engine-with-leak (57.4), so it very likely wins once both are
+   de-leaked; it also roughly matches or beats the entire stacked pipeline with none of the
+   machinery. Confirm head-to-head on de-leaked features, then adopt as base learner /
+   simplify the stack, re-calibrate, re-check OOD.
+3. **Collect data — for attribution.** Backfill thin actors / under-covered states (the
+   `corpus-backfill-research` queue targets this). Doctrine won't benefit much from volume.
+4. **Don't use GBT.** It loses by 36 pp; the long tail starves it. NB-family is correct.
