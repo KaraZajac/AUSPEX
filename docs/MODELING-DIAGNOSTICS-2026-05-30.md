@@ -173,3 +173,28 @@ follow-up.**
 3. **Collect data — for attribution.** Backfill thin actors / under-covered states (the
    `corpus-backfill-research` queue targets this). Doctrine won't benefit much from volume.
 4. **Don't use GBT.** It loses by 36 pp; the long tail starves it. NB-family is correct.
+
+## Resolution — prose de-leak applied (2026-05-30)
+
+Recommendation #1 done. `extractProseTerms` now scrubs actor-name/alias tokens (a fixed,
+label-free vocabulary, tokenized identically to prose) from **both** the per-event terms and the
+corpus DF; a backward-compatible `includeMeta` flag on the four LOO functions regenerates the
+all-events column. Full re-baseline, operations-only LOO (before → after):
+
+| head | top-1 | top-3 | mAP·MRR |
+|---|---|---|---|
+| Attribution | 57.4 → **56.6** (−0.8) | 74.9 → 74.7 | 0.669 → 0.663 MRR |
+| Doctrine | 73.8 → **72.9** (−0.9) | 89.6 → 87.7 | 0.717 → 0.704 mAP |
+| Pillar | 64.5 → **63.8** (−0.7) | 82.0 → 80.8 | 0.687 → 0.681 mAP |
+| Joint | 50.5 → **48.3** (−2.2) | 67.3 → 66.1 | 0.604 → 0.586 MRR |
+| Stacked | 69.6 → **68.9** (−0.7) | 77.0 (≈) | 0.739 → 0.733 MRR |
+
+All-events column likewise (attribution 56.8→56.1, doctrine 71.7→71.0, pillar 64.8→61.6, joint
+48.9→48.4). Temporal-holdout top-1 essentially unchanged (attribution/doctrine/pillar flat, joint
+−2.6). Rank-1 stability under 10% dropout: 91.8% → 91.4% (top-3 set-stability 98.9%, unchanged).
+
+**Conclusion.** Every head moved <1pp top-1 except joint (−2.2). The engine was **not** riding the
+name-leak — its published numbers were essentially honest and are now leak-free too — so the fix
+retires the "does it just read the actor's name from the summary?" objection at sub-1pp cost.
+README + methodology disclosure updated. Recommendation #2 (adopt ComplementNB on the *de-leaked*
+features — name-scrubbed 61.9 vs the engine's 56.6) remains the open, higher-value lead.

@@ -73,10 +73,10 @@ function averagePrecisionForEvent(true_: Set<string>, ranked: RankedDoctrine[]):
   return sum / true_.size;
 }
 
-export function runDoctrineLOO(opts: DoctrineScoringOptions = {}): DoctrineEvalSummary {
+export function runDoctrineLOO(opts: DoctrineScoringOptions = {}, includeMeta = false): DoctrineEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e));
+  const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0 && (includeMeta || !isMetaEvent(e)));
 
   const results: DoctrineEventEvalResult[] = [];
   const confusionRaw = new Map<string, number>();

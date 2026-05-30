@@ -83,12 +83,15 @@ function tokenize(text: string): string[] {
   return out;
 }
 
-function eventProseTokens(event: AuspexEvent): string[] {
+function eventProseTokens(event: AuspexEvent, nameStop?: Set<string>): string[] {
   const parts: string[] = [];
   if (event.summary) parts.push(event.summary);
   if (event.outcome_summary) parts.push(event.outcome_summary);
   if (parts.length === 0) return [];
-  return tokenize(parts.join(' '));
+  const toks = tokenize(parts.join(' '));
+  // Scrub actor name/alias tokens so a summary naming the actor can't leak the
+  // attribution label through the prose feature (AUDIT-2026-05-30).
+  return nameStop ? toks.filter((t) => !nameStop.has(t)) : toks;
 }
 
 // Module-level cache for corpus DF. Recomputed when atlas size changes
@@ -99,14 +102,34 @@ let _cachedDF: Map<string, number> | null = null;
 let _cachedDFAtlasSize: number = -1;
 let _cachedCorpusSize: number = 0;
 
+// Actor name/alias tokens to scrub from prose — tokenized identically to prose
+// terms. AUDIT-2026-05-30: 74.5% of events named their own actor in prose, a
+// label leak that inflated attribution accuracy. This is a label-free scrub
+// (a fixed vocabulary of known actor names), not a per-fold/test statistic.
+// Cached on actor count (stable across LOO folds).
+let _nameStop: Set<string> | null = null;
+let _nameStopCount = -1;
+function actorNameTokens(atlas: Atlas): Set<string> {
+  if (_nameStop && _nameStopCount === atlas.actors.size) return _nameStop;
+  const s = new Set<string>();
+  for (const actor of atlas.actors.values()) {
+    const names = [actor.canonical_name, ...(actor.aliases ?? []).map((x) => x.alias)];
+    for (const nm of names) for (const t of tokenize(nm)) s.add(t);
+  }
+  _nameStop = s;
+  _nameStopCount = atlas.actors.size;
+  return s;
+}
+
 function buildCorpusDF(atlas: Atlas): { df: Map<string, number>; N: number } {
   if (_cachedDF && _cachedDFAtlasSize === atlas.events.size) {
     return { df: _cachedDF, N: _cachedCorpusSize };
   }
   const df = new Map<string, number>();
   let N = 0;
+  const names = actorNameTokens(atlas);
   for (const ev of atlas.events.values()) {
-    const toks = eventProseTokens(ev);
+    const toks = eventProseTokens(ev, names);
     if (toks.length === 0) continue;
     N++;
     const seen = new Set<string>();
@@ -135,7 +158,7 @@ export function extractProseTerms(
   K = 15,
   opts: { excludeSelf?: boolean } = {},
 ): Set<string> {
-  const tokens = eventProseTokens(event);
+  const tokens = eventProseTokens(event, actorNameTokens(atlas));
   if (tokens.length === 0) return new Set();
   const { df, N } = buildCorpusDF(atlas);
 

@@ -70,10 +70,10 @@ function trueStateFor(event: AuspexEvent, a: ReturnType<typeof atlas>): string |
  * Leave-one-out evaluation. For each labeled event, rebuild profiles
  * on the remaining N-1, score, find the rank of the true actor.
  */
-export function runLeaveOneOut(opts: ScoringOptions = {}): EvalSummary {
+export function runLeaveOneOut(opts: ScoringOptions = {}, includeMeta = false): EvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
+  const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && (includeMeta || !isMetaEvent(e)));
 
   const results: EventEvalResult[] = [];
   const confusionRaw = new Map<string, number>(); // key: predicted|actual

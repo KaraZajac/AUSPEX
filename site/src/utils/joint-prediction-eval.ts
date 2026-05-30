@@ -42,11 +42,11 @@ export interface JointEvalSummary {
   generatedAt: string;
 }
 
-export function runJointLOO(opts: JointScoringOptions = {}): JointEvalSummary {
+export function runJointLOO(opts: JointScoringOptions = {}, includeMeta = false): JointEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter(
-    (e) => actorsOfEvent(e).size > 0 && doctrinesOfEvent(e, a).size > 0 && !isMetaEvent(e),
+    (e) => actorsOfEvent(e).size > 0 && doctrinesOfEvent(e, a).size > 0 && (includeMeta || !isMetaEvent(e)),
   );
 
   const results: JointEventResult[] = [];

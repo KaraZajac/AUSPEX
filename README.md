@@ -68,22 +68,27 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
-| Attribution | **57.4%** / 56.8% | **74.9%** / 74.6% | **0.669** / 0.665 MRR | 470 / 519 |
-| Doctrine | **73.8%** / 71.7% | **89.6%** / 88.8% | **0.717** / 0.696 mAP | 480 / 555 |
-| Pillar | **64.5%** / 64.8% | **82.0%** / 81.0% | **0.687** / 0.683 mAP | 428 / 489 |
-| Joint (actor × doctrine) | **50.5%** / 48.9% | **67.3%** / 68.9% | **0.604** / 0.599 MRR | 410 / 450 |
+| Attribution | **56.6%** / 56.1% | **74.7%** / 74.2% | **0.663** / 0.658 MRR | 470 / 519 |
+| Doctrine | **72.9%** / 71.0% | **87.7%** / 86.7% | **0.704** / 0.683 mAP | 480 / 555 |
+| Pillar | **63.8%** / 61.6% | **80.8%** / 79.3% | **0.681** / 0.664 mAP | 428 / 489 |
+| Joint (actor × doctrine) | **48.3%** / 48.4% | **66.1%** / 66.7% | **0.586** / 0.590 MRR | 410 / 450 |
 
-Excluding meta events *raises* the headline (doctrine +2.1pp): they are off-task for an
+Excluding meta events *raises* the doctrine headline (+1.9pp): they are off-task for an
 operation-trained engine, not easy wins. The **stacked** re-ranker lifts operations-only attribution
-top-1 to **69.6%** (+12.1pp over plain NB). With the editorial `campaign_id` "known-linkage" feature
-ablated, operations-only attribution top-1 / top-3 falls to 50.9% / 71.9% (−6.6pp) — a sensitivity
-bound, since `campaign_id` is analyst-assigned and can encode the attribution for single-actor
-campaigns. (The all-events column is the prior baseline; operations-only additionally applies the
-prose-DF LOO-hygiene fix, a <0.2pp effect.)
+top-1 to **68.9%** (+12.3pp over plain NB). Ablating the analyst-assigned `campaign_id`
+"known-linkage" feature drops operations-only attribution by ~6–7pp — a sensitivity bound, since
+`campaign_id` can encode the attribution for single-actor campaigns.
+
+**Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is now scrubbed of actor
+names/aliases. Previously **74.5% of events carried their own actor's name as a prose token** — an
+analyst summary naming the actor leaked the attribution label. Scrubbing it lowered the headline only
+slightly (attribution −0.8pp, doctrine −0.9pp), because the engine weights prose at just 0.4 and
+leans on operators / campaign / malware; the numbers above are therefore both leak-free *and* nearly
+unchanged. See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
 diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.8%, with top-3 set-stability 98.9% (seeded resampler,
+stability under 10% corpus dropout: 91.4%, with top-3 set-stability 98.9% (seeded resampler,
 reproducible build-to-build). NotPetya counterfactual carried as a standing adversarial test for
 false-flag handling.
 

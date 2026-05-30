@@ -74,10 +74,10 @@ function pillarToDoctrine(pillarId: string, a: ReturnType<typeof atlas>): string
   return a.pillars.get(pillarId)?.doctrineId;
 }
 
-export function runPillarLOO(opts: PillarScoringOptions = {}): PillarEvalSummary {
+export function runPillarLOO(opts: PillarScoringOptions = {}, includeMeta = false): PillarEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
-  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0 && !isMetaEvent(e));
+  const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0 && (includeMeta || !isMetaEvent(e)));
 
   const results: PillarEventResult[] = [];
   const confusionRaw = new Map<string, number>();
