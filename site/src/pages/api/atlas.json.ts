@@ -8,6 +8,7 @@
  */
 import type { APIRoute } from 'astro';
 import { atlas } from '../../utils/atlas';
+import { buildDeployedAttributionModel } from '../../utils/stacked-attribution';
 
 export const GET: APIRoute = () => {
   const a = atlas();
@@ -41,6 +42,10 @@ export const GET: APIRoute = () => {
     // campaign_id. Required by the isomorphic engine so the browser builds
     // the same inferredCampaigns profile family the server eval does.
     inferredCampaignByEvent: Object.fromEntries(a.inferredCampaignByEvent),
+    // Deployed attribution re-ranker: ComplementNB base (rebuilt in-browser) +
+    // this all-corpus logistic re-ranker (w + b + standardizer). /predict applies
+    // it via stacked-core.predictLogReg. See docs/MODELING-DIAGNOSTICS-2026-05-30.md.
+    stackedAttributionModel: buildDeployedAttributionModel(),
   };
   return new Response(JSON.stringify(payload, null, 2), {
     headers: {

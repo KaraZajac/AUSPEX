@@ -43,6 +43,7 @@ import {
   trainLogReg,
   predictLogReg,
 } from './stacked-core';
+import { eventTokens, trainCNB, rankCNB } from './complement-nb';
 
 /** Number of NB candidates the stacker considers per event. */
 const TOP_K = 10;
@@ -77,6 +78,8 @@ export interface StackedEvalResult {
   featureWeights: Array<{ key: string; weight: number }>;
   /** Bias term from the all-events training. */
   bias: number;
+  /** Full all-events logreg (w + b + standardizer) — the DEPLOYABLE re-ranker. */
+  finalModel: LogReg;
   /** Number of folds used. */
   numFolds: number;
   /** Per-event {0,1} hit arrays for bootstrap CI computation downstream. */
@@ -321,7 +324,36 @@ export function runStackedAttributionLOO(
     numFolds,
     featureWeights,
     bias: finalModel.b,
+    finalModel,
     perEvent,
     generatedAt: new Date().toISOString(),
   };
+}
+
+/**
+ * Build the DEPLOYABLE stacked-attribution model: ComplementNB base + the
+ * all-corpus logistic re-ranker. The CNB base is rebuilt in-browser from the
+ * payload events; only the (small) logreg — weights + bias + standardizer —
+ * needs to ship. Trained on out-of-fold (LOO) CNB candidates, the standard
+ * stacking discipline. Server-side (build time); the result is serialized into
+ * /api/atlas.json for the isomorphic /predict to apply via stacked-core.
+ */
+export function buildDeployedAttributionModel(): LogReg {
+  const a = atlas();
+  const allEvents = [...a.events.values()];
+  const tokensByEvent = new Map<string, string[]>();
+  const actorsByEvent = new Map<string, string[]>();
+  for (const ev of allEvents) {
+    tokensByEvent.set(ev.id, eventTokens(extractFeatures(ev, a)));
+    actorsByEvent.set(ev.id, [...actorsOfEvent(ev)]);
+  }
+  const cnbRanker = (heldOut: AuspexEvent, training: AuspexEvent[], atl: Atlas): RankedCandidate[] => {
+    const docs = training
+      .map((ev) => ({ tokens: tokensByEvent.get(ev.id)!, actors: actorsByEvent.get(ev.id)! }))
+      .filter((d) => d.actors.length > 0);
+    const model = trainCNB(docs, { alpha: 1, minDf: 2 });
+    const qf = extractFeatures(heldOut, atl, { excludeSelfFromProseDF: true });
+    return rankCNB(eventTokens(qf), model).map((r, i) => ({ actorId: r.actorId, logScore: r.score, rank: i + 1 }));
+  };
+  return runStackedAttributionLOO(5, cnbRanker).finalModel;
 }
