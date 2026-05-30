@@ -84,7 +84,9 @@ re-ranker (68.9%)** — significant: paired 95% CI [2.6, 8.3]pp, McNemar χ²=12
 +17.9pp over the previous raw-NB headline (56.6%). ComplementNB was validated
 against scikit-learn to the decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
-browser-vs-server. Doctrine / pillar / joint remain the NB engine (table above). Ablating the
+browser-vs-server. On a **cold temporal holdout** (train ≤ 2023-12-31, score 2024+, matched
+denominator) it reaches top-1 **54.6%** vs raw NB 41.7% (**+13pp**) — the gain generalizes out of
+sample, not just in cross-validation. Doctrine / pillar / joint remain the NB engine (table above). Ablating the
 analyst-assigned `campaign_id` is a ~6–7pp sensitivity bound.
 
 **Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is now scrubbed of actor

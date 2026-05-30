@@ -229,6 +229,11 @@ reproduces scikit-learn `ComplementNB(norm=False)` to the decimal on identical f
 - `verify-predict-parity.ts` gained an `actor-cnb+stack` assertion: **PARITY OK over 30 events**
   (deployed re-ranker byte-identical browser↔server).
 
+**Generalization (cold temporal holdout, `tools/eval-cnb-temporal.ts`).** Train ≤ 2023-12-31, score
+2024+ cold (n=108, matched denominator, null=miss): **CNB+stack top-1 54.6%** vs raw-NB **41.7%** —
+**+13.0pp** on genuinely unseen-time events (top-3 59.3 vs 50.0, top-5 62.0 vs 55.6). The gain is not
+a CV artifact; it holds out of sample.
+
 Doctrine / pillar / joint stay on the NB engine (ComplementNB is single-label multiclass; those
 heads are multi-label). A config-sensitivity caveat remains documented above: the CNB number moves
 with the feature-vocabulary construction, so the deployed config (engine-consistent training, df≥2,
