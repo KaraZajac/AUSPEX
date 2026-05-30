@@ -38,6 +38,9 @@ import {
   rankActors,
   type EventFeatures,
 } from '../src/utils/attribution.ts';
+import { eventTokens, trainCNB, rankCNB, type CNBModel } from '../src/utils/complement-nb.ts';
+import { pairFeatures, predictLogReg, buildKnownCampaigns } from '../src/utils/stacked-core.ts';
+import { buildDeployedAttributionModel } from '../src/utils/stacked-attribution.ts';
 import {
   buildDoctrineProfiles,
   buildDoctrineIDF,
@@ -226,6 +229,22 @@ function main(): void {
   const bPilP = buildPillarProfiles(allBrowser, aBrowser);
   const bPilIdf = buildPillarIDF(bPilP);
 
+  // Deployed attribution = ComplementNB base + stacked logreg re-ranker; verify
+  // it is also identical browser-vs-server (CNB built on each atlas; one shared
+  // server-trained logreg).
+  const stackModel = buildDeployedAttributionModel();
+  const mkCNB = (a: Atlas, evs: AuspexEvent[]): CNBModel =>
+    trainCNB(evs.map((ev) => ({ tokens: eventTokens(extractFeatures(ev, a)), actors: [...actorsOfEvent(ev)] })).filter((d) => d.actors.length > 0), { alpha: 1, minDf: 2 });
+  const sCNB = mkCNB(aServer, allServer);
+  const bCNB = mkCNB(aBrowser, allBrowser);
+  const sKC = buildKnownCampaigns(allServer, (e) => actorsOfEvent(e));
+  const bKC = buildKnownCampaigns(allBrowser, (e) => actorsOfEvent(e));
+  const stackRank = (f: EventFeatures, ev: AuspexEvent, a: Atlas, cnb: CNBModel, kc: Map<string, Set<string>>) => {
+    const top = rankCNB(eventTokens(f), cnb).slice(0, 10).map((c, i) => ({ actorId: c.actorId, logScore: c.score, rank: i + 1 }));
+    const ts = top[0]?.logScore ?? 0;
+    return top.map((c) => ({ id: c.actorId, score: predictLogReg(stackModel, pairFeatures(ev, c, ts, a, kc)) })).sort((x, y) => y.score - x.score);
+  };
+
   const sample = pickSample(allServer, aServer, SAMPLE_SIZE);
   if (sample.length < 20) fail(`only ${sample.length} fully-labeled sample events available (need >= 20)`);
   console.log(`Scoring ${sample.length} sample events through BOTH atlases…\n`);
@@ -244,6 +263,7 @@ function main(): void {
     const bActors = rankActors(bf, bActorP, bVocab, { idf: bActorIdf, malwareLineageGroup: aBrowser.malwareLineageGroup })
       .map((x) => ({ id: x.actorId, score: x.logScore }));
     assertRankingParity(ev.id, 'actor', sActors, bActors, 10);
+    assertRankingParity(ev.id, 'actor-cnb+stack', stackRank(sf, ev, aServer, sCNB, sKC), stackRank(bf, evB as AuspexEvent, aBrowser, bCNB, bKC), 5);
 
     const sDoc = rankDoctrines(sf, sDocP, sVocab, { idf: sDocIdf }).map((x) => ({ id: x.doctrineId, score: x.logScore }));
     const bDoc = rankDoctrines(bf, bDocP, bVocab, { idf: bDocIdf }).map((x) => ({ id: x.doctrineId, score: x.logScore }));

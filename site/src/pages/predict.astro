@@ -104,12 +104,14 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
     buildProfiles,
     buildVocab,
     buildIDF,
-    rankActors,
+    actorsOfEvent,
     type EventFeatures,
     type ActorProfile,
     type Vocab,
     type IDFMap,
   } from '../utils/attribution';
+  import { eventTokens, trainCNB, rankCNB, type CNBModel } from '../utils/complement-nb';
+  import { pairFeatures, predictLogReg, buildKnownCampaigns, type LogReg } from '../utils/stacked-core';
   import {
     buildDoctrineProfiles,
     buildDoctrineIDF,
@@ -142,6 +144,10 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
   let DOCTRINE_IDF: IDFMap;
   let PILLAR_IDF: IDFMap;
   let LAST_BUILD_REF_YEAR: number | null = null;
+  // Deployed attribution = ComplementNB base + stacked logreg re-ranker.
+  let CNB_MODEL: CNBModel;                   // count-based; built once (no temporal decay)
+  let KNOWN_CAMPAIGNS: Map<string, Set<string>>;
+  let STACK_MODEL: LogReg;                    // all-corpus re-ranker, shipped in the payload
 
   // ── load atlas ─────────────────────────────────────────────────────
   async function loadAtlas() {
@@ -152,6 +158,17 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
     // indices, knownMalware, malware-lineage, inferredCampaignByEvent).
     ATLAS = atlasFromPayload(payload);
     ALL_EVENTS = [...ATLAS.events.values()];
+
+    // Deployed attribution: ComplementNB base (rebuilt here from the same events
+    // the server trains on) + the all-corpus logreg re-ranker shipped in the payload.
+    STACK_MODEL = payload.stackedAttributionModel as LogReg;
+    CNB_MODEL = trainCNB(
+      ALL_EVENTS
+        .map((ev) => ({ tokens: eventTokens(extractFeatures(ev, ATLAS)), actors: [...actorsOfEvent(ev)] }))
+        .filter((d) => d.actors.length > 0),
+      { alpha: 1, minDf: 2 },
+    );
+    KNOWN_CAMPAIGNS = buildKnownCampaigns(ALL_EVENTS, (e) => actorsOfEvent(e));
 
     PILLAR_INDEX = new Map();
     for (const d of ATLAS.doctrines.values()) {
@@ -331,8 +348,16 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
 
     // Run the SHARED ranking engines. Normalize outputs to {id, score} so
     // the rendering layer stays engine-agnostic.
-    const actors: Scored[] = rankActors(features, ACTOR_PROFILES, VOCAB, { idf: ACTOR_IDF, malwareLineageGroup: ATLAS.malwareLineageGroup })
-      .map((x) => ({ id: x.actorId, score: x.logScore }));
+    // Attribution: ComplementNB base → top-10 → deployed stacked logreg re-rank.
+    // The query is out-of-corpus, so CNB scores it against the full-corpus model;
+    // each candidate's logreg probability is the displayed per-actor confidence.
+    const cnbTop = rankCNB(eventTokens(features), CNB_MODEL)
+      .slice(0, 10)
+      .map((c, i) => ({ actorId: c.actorId, logScore: c.score, rank: i + 1 }));
+    const cnbTopScore = cnbTop[0]?.logScore ?? 0;
+    const rerankedActors: Array<{ id: string; prob: number; reasons?: MatchReasons }> = cnbTop
+      .map((c) => ({ id: c.actorId, prob: predictLogReg(STACK_MODEL, pairFeatures(queryEvent, c, cnbTopScore, ATLAS, KNOWN_CAMPAIGNS)) }))
+      .sort((a, b) => b.prob - a.prob);
     const doctrines: Scored[] = rankDoctrines(features, DOCTRINE_PROFILES, VOCAB, { idf: DOCTRINE_IDF })
       .map((x) => ({ id: x.doctrineId, score: x.logScore }));
     const pillars: Scored[] = rankPillars(features, PILLAR_PROFILES, VOCAB, { idf: PILLAR_IDF })
@@ -346,7 +371,7 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
     // Calibrated probabilities — temperature-scaled softmax over the top-20
     // pool. Calibration constants fit against LOO log-loss; see
     // src/utils/calibration-constants.ts.
-    const actorTop = softmaxTop(actors, (x) => x.score, 5, CALIBRATION.attribution.temperature);
+    const actorTop = rerankedActors.slice(0, 5);
     const doctrineTop = softmaxTop(doctrines, (x) => x.score, 3, CALIBRATION.doctrine.temperature);
     const pillarTop = softmaxTop(pillars, (x) => x.score, 3, CALIBRATION.pillar.temperature);
     const pairTop = softmaxTop(pairs, (x) => x.jointScore, 3, CALIBRATION.attribution.temperature);
