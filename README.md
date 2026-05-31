@@ -104,9 +104,9 @@ one-and-few-event actors) at **55.8%**, re-ranked by the L2 logistic stacker (**
 decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
 browser-vs-server. The **joint** actor side also uses ComplementNB (actorWeight 2.0 — top-1
-**53.9%**). Doctrine, pillar, and joint are **unchanged** by the expansion (the added events carry no
-doctrine links, so they enter neither those training sets nor their eval label sets). Ablating the
-analyst-assigned `campaign_id` is a ~6–7pp sensitivity bound.
+**46.7%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
+moved the doctrine / pillar / joint figures (see the table note above). Ablating the analyst-assigned
+`campaign_id` is a ~6–7pp sensitivity bound.
 
 **Corpus growth (2026-05-30).** This corpus was deliberately grown from 658→815 events (159→204
 actors) to widen coverage. The attribution headline fell from the previous **74.5%** (658-event
@@ -135,6 +135,20 @@ on the research pages show calibration quality on the deployed engine. Rank-1 st
 corpus dropout (seeded resampler, reproducible build-to-build) is recomputed and reported live on
 those pages. NotPetya counterfactual carried as a standing adversarial test for false-flag handling.
 
+### Forecasting (experimental)
+
+Beyond retrodicting observed events, AUSPEX **forecasts prospective attacks**: given a target profile
+(sector / country / org), [`/forecast`](https://auspex.blackflagintel.com/forecast) ranks the likely
+actors, names the **doctrine each would be advancing** (the who×why join), and gives a relative-risk
+indication with comparable historical operations. It uses only forecast-available features — target
+side + state-level dyad + recency, **no** post-hoc tradecraft (TTPs / malware / prose). Forward-
+validated (train ≤ 2023-12-31, score 2024+ cold): the true actor is in the **top-5 ~40%** of the time
+from target profile alone — **2.6× the usual-suspects base rate**. Relative risk is a corpus-frequency
+percentile, **not** an absolute probability (the corpus records attacks, not the population of
+targets, so absolute likelihood is not identifiable). Shares one isomorphic engine module
+(`forecast-core.ts`) across the server eval and the browser page. See
+[`docs/FORECASTING-2026-05-31.md`](docs/FORECASTING-2026-05-31.md).
+
 ## Quick start
 
 ```sh
@@ -142,11 +156,13 @@ cd site
 pnpm install
 pnpm validate              # validate the atlas (must be clean)
 pnpm dev                   # local dev at http://localhost:4321
-pnpm build                 # full static build (~60 min — runs LOO eval at build time)
-pnpm eval-attribution      # standalone attribution LOO + Monte Carlo stability
+pnpm build                 # full static build (~90 min — runs LOO eval at build time)
+pnpm eval-attribution      # standalone attribution LOO (raw NB) + Monte Carlo stability
+pnpm exec tsx tools/eval-stacked-cnb.ts   # deployed attribution headline (ComplementNB + stacked, 5-fold CV)
 pnpm eval-doctrine         # standalone doctrine LOO
 pnpm eval-pillar           # standalone pillar LOO
 pnpm eval-temporal         # temporal holdout (train ≤ 2023-12-31, test 2024+)
+pnpm exec tsx tools/eval-forecast.ts      # forecasting forward-validation (vs popularity/affinity baselines)
 ```
 
 The atlas is the source of truth. Run `pnpm validate` after any edit; it must return clean before committing.
