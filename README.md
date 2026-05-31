@@ -24,8 +24,9 @@ Doctrine states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, K
 AUSPEX/
 ├── atlas/        # the canonical YAML dataset — read atlas/README.md
 ├── site/         # Astro 6 static site that renders the atlas + engine
-├── docs/         # DATA_MODEL.md, QA reports, URL-verification logs
-├── research/     # reference notes per state / actor / doctrine
+├── docs/         # SCHEMA.md (authoritative field schema), methodology + QA reports
+├── audit/        # independent Python verification harness (verify_atlas.py, introspect_schema.py)
+├── research/     # reference notes per state / actor / doctrine + decision-log audits
 └── examples/     # (reserved)
 ```
 

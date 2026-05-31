@@ -1,5 +1,10 @@
 # AUSPEX data model (v0 draft, 2026-05-25)
 
+> **⚠ Authoritative field-level schema is now [`SCHEMA.md`](SCHEMA.md)** — every YAML
+> type, field, value type, enum, and FK, *data-derived* from the live corpus
+> (`audit/introspect_schema.py`). This document is the earlier conceptual/design
+> narrative and is partly stale; where they differ, SCHEMA.md (and the data) win.
+>
 > Status: draft, awaiting Kara review. Not load-bearing until research
 > dossiers land and we sanity-check the model against real events.
 
