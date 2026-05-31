@@ -1,38 +1,26 @@
-# AUSPEX — DSc thesis (working drafts)
+# thesis/ — research scaffold (not a draft)
 
-Doctoral (DSc, cybersecurity) thesis built on the AUSPEX project. Working title:
+Forward-planning aids for a future DSc (cybersecurity) dissertation built on AUSPEX.
 
-> **Beyond Attribution: Doctrine-Aware Tagging, Attribution, and Forecasting of
-> State-Sponsored Cyber Operations**
+**The dissertation must be authored, and all data independently verified, by the
+candidate.** Nothing here is dissertation prose or to be lifted as written text. This
+folder holds *planning + verification* aids only.
 
 ## Files
+- **`outline-and-evidence.md`** — a structural skeleton (suggested framing / RQs /
+  chapter headings, to adopt/adapt/reject) **plus a verification index** mapping every
+  empirical claim to the exact command that reproduces it, so you can re-run and confirm
+  each number yourself before writing.
 
-- **`thesis-draft.md`** — the master draft: title, abstract, thesis statement, the four
-  research questions, the contributions, a full chapter-by-chapter draft, discussion,
-  limitations, and conclusion. Read this top-to-bottom; split into per-chapter files
-  when you move to formatting.
+## How to use it
+1. Treat the framing as a starting point, not a given — it's your argument to make.
+2. For each number you'd cite, run the command in the verification index, read the
+   underlying source, and confirm it independently.
+3. Write every section in your own words; do the literature review yourself.
+4. Work the "open verification / rigor tasks" list (inter-rater reliability, CIs/McNemar,
+   face-validity, exposure model) — those are the committee-facing gaps.
 
-## Source material (already written — the thesis synthesizes these)
+The methods + results substrate lives in the repo (`docs/`, `tools/`, `research/`); this
+folder just indexes it for verification.
 
-The methods + results are largely done; the thesis assembles and frames them.
-
-| thesis chapter | backed by |
-|---|---|
-| Corpus + doctrine-tagging methodology | `atlas/`, `docs/AUDIT-2026-05-29.md` |
-| Attribution under class imbalance / long tail | `docs/MODELING-DIAGNOSTICS-2026-05-30.md`, `docs/CORPUS-GROWTH-EXPERIMENT-2026-05-30.md` |
-| Who × why join (doctrine / pillar / joint) | `docs/AUDIT-2026-05-29.md`, engine eval pages |
-| Doctrine-aware forecasting | `docs/FORECASTING-2026-05-31.md`, `tools/eval-forecast.ts` |
-
-## Status
-
-- ✅ Abstract, thesis statement, RQs, contributions — drafted.
-- ✅ Core chapters (corpus, attribution/long-tail, who×why, forecasting) — drafted from
-  real results; every quantitative claim traces to a committed experiment.
-- 🟡 Background / related work — structured with the argument; **`[TODO]` formal
-  citations** (the literature survey is the main writing still owed).
-- 🟡 Discussion / limitations / conclusion — drafted; expand for the committee.
-- ⬜ Front matter (acknowledgements, etc.), formatting to program template, any required
-  IRB/ethics statement (likely N/A — public-source OSINT only; confirm with program).
-
-All numbers are as of the 2026-05-31 815-event corpus build. Re-pull from the eval
-tools before final submission in case the corpus has grown since.
+*Numbers reflect the 2026-05-31 815-event corpus; re-pull before relying on any figure.*
