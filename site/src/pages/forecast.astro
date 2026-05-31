@@ -15,16 +15,15 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
     indication, and comparable historical operations.
   </p>
   <p class="meta">
-    Forward-validated (train&nbsp;≤&nbsp;2023-12-31, test&nbsp;2024+): the true actor is in the top-5
-    ~40% of the time from target profile alone — 2.6× the usual-suspects base rate.
-    <strong>Relative risk is a
-    corpus-frequency percentile, not an absolute probability</strong> — the corpus records attacks,
-    not the population of targets, so absolute likelihood is not identifiable.
+    Forward-validated (train&nbsp;≤&nbsp;2023-12-31, score 2024+&nbsp;cold): the true actor is in the
+    top-5 ~40% of the time from target profile alone — 2.6× the usual-suspects base rate.
+    <strong>Relative risk is a corpus-frequency percentile, not an absolute probability</strong> —
+    the corpus records attacks, not the population of targets, so absolute likelihood is not identifiable.
   </p>
 
   <div id="loading" class="loading">Loading atlas…</div>
 
-  <form id="forecast-form" class="fc-form" style="display: none;">
+  <form id="forecast-form" class="predict-form" style="display: none;">
     <div class="grid">
       <div class="field">
         <label>Target sector(s) <span class="hint">multi-select</span></label>
@@ -42,7 +41,7 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
         </select>
         <label style="margin-top: 0.875rem;">Named org <span class="hint">optional — e.g. ukrenergo</span></label>
         <input type="text" name="org" placeholder="optional" />
-        <p class="note">Pick at least one sector and a country for a grounded forecast.</p>
+        <p class="field-note">Pick at least one sector and a country for a grounded forecast.</p>
       </div>
     </div>
     <div class="actions">
@@ -76,32 +75,35 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
 
   const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!));
 
-  function render(res: ForecastResult, label: string) {
-    const bandClass = 'band-' + res.riskBand.toLowerCase();
+  function render(res: ForecastResult) {
     const actors = res.actors.map((ac, i) => `
-      <li>
+      <div class="row fc-actor">
         <span class="rank">${i + 1}</span>
-        <span class="actor">${esc(ac.name)}</span>
+        <span class="lbl">${esc(ac.name)}</span>
         ${ac.doctrine
-          ? `<span class="why">→ <strong>${esc(ac.doctrine.name)}</strong> <code>${esc(ac.doctrine.id)}</code></span>`
-          : `<span class="why none">→ no doctrine on record (criminal / unattributed)</span>`}
-      </li>`).join('');
+          ? `<span class="why">→ ${esc(ac.doctrine.name)} <code>${esc(ac.doctrine.id)}</code></span>`
+          : `<span class="why why-none">→ no doctrine on record (criminal / unattributed)</span>`}
+      </div>`).join('');
     const comps = res.comparables.length
-      ? res.comparables.map((c) => `<li><span class="cdate">${c.date}</span> <span class="cactor">${esc(c.name)}</span> ${esc(c.title)}</li>`).join('')
-      : '<li class="none">no closely comparable events in the corpus</li>';
+      ? res.comparables.map((c) => `<li><span class="cdate">${c.date}</span><span class="cactor">${esc(c.name)}</span><span class="ctitle">${esc(c.title)}</span></li>`).join('')
+      : '<li class="why-none">no closely comparable events in the corpus</li>';
     $('results').innerHTML = `
-      <div class="fc-result">
-        <div class="risk ${bandClass}">
-          <span class="risk-band">${res.riskBand}</span>
-          <span class="risk-detail">relative risk · ${res.riskPercentile}th percentile of corpus attack frequency · ${res.comparableCount} comparable events</span>
+      <div class="fc-risk risk-${res.riskBand.toLowerCase()}">
+        <p class="fc-risk-title">Relative risk: <strong>${res.riskBand}</strong>
+          <span class="fc-risk-num">${res.riskPercentile}th percentile of corpus attack frequency · ${res.comparableCount} comparable events</span></p>
+        <p class="fc-risk-body">A corpus-frequency percentile, not an absolute probability.${res.basis === 'insufficient' ? ' <strong>Insufficient corpus basis — low-confidence (cold-start).</strong>' : ''}</p>
+      </div>
+      <div class="results-grid">
+        <div class="rcard rcard-wide">
+          <h3>Likely actors <span class="cal">by whom → why (doctrine advanced)</span></h3>
+          ${actors}
         </div>
-        ${res.basis === 'insufficient' ? '<p class="warn">⚠ Insufficient corpus basis for this profile — the ranking below is low-confidence (cold-start).</p>' : ''}
-        <h2>Likely actors <span class="sub">— and the doctrine each would advance</span></h2>
-        <ol class="actors">${actors}</ol>
-        <h3>Comparable historical operations</h3>
-        <ul class="comps">${comps}</ul>
-        <p class="disclaimer">Forecast from target profile only (sector / country / org) + state-level dyad + recency — no post-hoc tradecraft. Relative risk, not absolute probability.</p>
-      </div>`;
+        <div class="rcard rcard-wide">
+          <h3>Comparable historical operations</h3>
+          <ul class="fc-comps">${comps}</ul>
+        </div>
+      </div>
+      <p class="reading">Forecast from target profile only (sector / country / org) + state-level dyad + recency — no post-hoc tradecraft. Relative risk, not absolute probability.</p>`;
     $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -114,45 +116,96 @@ const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 't
     const org = String(fd.get('org') || '').trim();
     if (!sectors.length && !country) { $('status').textContent = 'pick a sector and/or country'; return; }
     $('status').textContent = '';
-    const label = [...sectors, country].filter(Boolean).join(' / ');
-    render(fc.forecast({ sectors, countries: country ? [country] : [], orgs: org ? [org] : [] }, 8), label);
+    render(fc.forecast({ sectors, countries: country ? [country] : [], orgs: org ? [org] : [] }, 8));
   });
 
   init();
 </script>
 
 <style>
-  .loading { color: var(--muted, #888); padding: 1rem 0; }
-  .fc-form .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin: 1rem 0; }
-  .fc-form .field label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
-  .fc-form .hint { font-weight: 400; color: var(--muted, #888); font-size: 0.85em; }
-  .fc-form .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.25rem 0.75rem; max-height: 260px; overflow-y: auto; border: 1px solid var(--border, #333); border-radius: 6px; padding: 0.6rem; }
-  .fc-form .check { font-weight: 400; display: flex; align-items: center; gap: 0.35rem; }
-  .fc-form select, .fc-form input[type=text] { width: 100%; padding: 0.45rem; border-radius: 6px; border: 1px solid var(--border, #333); background: var(--bg, #111); color: inherit; }
-  .fc-form .note { color: var(--muted, #888); font-size: 0.85em; margin-top: 0.75rem; }
-  .fc-form .actions { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; }
-  .fc-form .primary { padding: 0.55rem 1.4rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
-  .fc-form .status { color: var(--muted, #888); }
-  .fc-result { margin-top: 1.5rem; }
-  .risk { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; border-left: 5px solid; }
-  .risk-band { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.04em; }
-  .risk-detail { color: var(--muted, #aaa); font-size: 0.9em; }
-  .band-low { background: rgba(60,160,90,0.12); border-color: #3ca05a; }
-  .band-moderate { background: rgba(210,170,40,0.12); border-color: #d2aa28; }
-  .band-high { background: rgba(220,130,40,0.14); border-color: #dc8228; }
-  .band-critical { background: rgba(210,60,60,0.15); border-color: #d23c3c; }
-  .warn { color: #d2aa28; margin: 0.75rem 0; }
-  .actors { list-style: none; padding: 0; margin: 0.5rem 0 1.25rem; }
-  .actors li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border, #2a2a2a); }
-  .actors .rank { font-weight: 700; color: var(--muted, #888); min-width: 1.2rem; }
-  .actors .actor { font-weight: 600; min-width: 200px; }
-  .actors .why { color: var(--muted, #aaa); font-size: 0.92em; }
-  .actors .why code { font-size: 0.85em; opacity: 0.8; }
-  .actors .why.none { font-style: italic; }
-  .comps { font-size: 0.9em; color: var(--muted, #bbb); }
-  .comps .cdate { font-variant-numeric: tabular-nums; color: var(--muted, #888); margin-right: 0.4rem; }
-  .comps .cactor { font-weight: 600; margin-right: 0.4rem; }
-  .comps .none, .actors .none { font-style: italic; color: var(--muted, #888); }
-  .disclaimer { color: var(--muted, #888); font-size: 0.82em; margin-top: 1rem; font-style: italic; }
-  @media (max-width: 720px) { .fc-form .grid { grid-template-columns: 1fr; } }
+  .meta { color: var(--ctp-subtext0); font-size: 0.9375rem; margin: 0 0 1.5rem; }
+  .loading { padding: 2rem; text-align: center; color: var(--ctp-subtext0); font-family: var(--font-mono); }
+  /* Result + risk-banner styles live in the is:global block below: results are
+     injected at runtime via innerHTML and Astro's scoped attribute can't reach them. */
+  .predict-form { margin: 1.5rem 0 2rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .field {
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: var(--ctp-mantle);
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ctp-subtext0);
+    margin-bottom: 0.4rem;
+  }
+  .field .hint { color: var(--ctp-overlay0); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: 0.5rem; }
+  .field-note { color: var(--ctp-overlay0); font-size: 0.8125rem; margin: 0.75rem 0 0; }
+  input[type="text"], select {
+    width: 100%;
+    padding: 0.4rem 0.55rem;
+    background: var(--ctp-base);
+    color: var(--ctp-text);
+    border: 1px solid var(--ctp-surface0);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.25rem 0.5rem; max-height: 18rem; overflow-y: auto; }
+  .check { text-transform: none; letter-spacing: 0; font-family: var(--font-sans); font-size: 0.8125rem; color: var(--ctp-text); display: flex; gap: 0.4rem; align-items: center; margin: 0; }
+  .actions { margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center; }
+  button.primary { background: var(--ctp-blue); color: var(--ctp-base); border: none; border-radius: var(--radius-sm); padding: 0.5rem 1.25rem; font-family: var(--font-mono); font-weight: 600; cursor: pointer; }
+  button.secondary { background: transparent; border: 1px solid var(--ctp-surface0); color: var(--ctp-subtext1); border-radius: var(--radius-sm); padding: 0.5rem 1rem; font-family: var(--font-mono); cursor: pointer; }
+  .status { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ctp-overlay0); }
+  .results { margin-top: 2rem; }
+</style>
+
+<style is:global>
+  #results .fc-risk {
+    margin: 1.25rem 0 1.5rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--ctp-overlay0);
+    background: var(--ctp-mantle);
+  }
+  #results .fc-risk.risk-low { border-left-color: var(--ctp-green); background: color-mix(in srgb, var(--ctp-green) 7%, var(--ctp-mantle)); }
+  #results .fc-risk.risk-moderate { border-left-color: var(--ctp-yellow); background: color-mix(in srgb, var(--ctp-yellow) 7%, var(--ctp-mantle)); }
+  #results .fc-risk.risk-high { border-left-color: var(--ctp-peach); background: color-mix(in srgb, var(--ctp-peach) 9%, var(--ctp-mantle)); }
+  #results .fc-risk.risk-critical { border-left-color: var(--ctp-red); background: color-mix(in srgb, var(--ctp-red) 10%, var(--ctp-mantle)); }
+  #results .fc-risk-title { margin: 0 0 0.25rem; font-weight: 600; color: var(--ctp-text); }
+  #results .fc-risk-title strong { font-family: var(--font-mono); letter-spacing: 0.04em; }
+  #results .fc-risk-num { margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-subtext0); font-weight: 400; }
+  #results .fc-risk-body { margin: 0.25rem 0 0; font-size: 0.8125rem; color: var(--ctp-subtext1); }
+
+  #results .results-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1rem 0; }
+  #results .rcard { border: 1px solid var(--ctp-surface0); border-radius: var(--radius-md); padding: 0.875rem 1rem; background: var(--ctp-mantle); }
+  #results .rcard h3 { font-size: 0.875rem; margin: 0 0 0.5rem; font-family: var(--font-mono); display: flex; justify-content: space-between; align-items: baseline; }
+  #results .cal { font-size: 0.6875rem; color: var(--ctp-overlay0); font-weight: 400; }
+  #results .fc-actor {
+    display: grid;
+    grid-template-columns: 1.5rem auto 1fr;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--ctp-surface0);
+    font-size: 0.9375rem;
+  }
+  #results .fc-actor:last-child { border-bottom: none; }
+  #results .fc-actor .rank { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-overlay0); }
+  #results .fc-actor .lbl { color: var(--ctp-text); font-weight: 600; white-space: nowrap; }
+  #results .fc-actor .why { color: var(--ctp-subtext0); font-size: 0.8125rem; }
+  #results .fc-actor .why code { font-family: var(--font-mono); font-size: 0.9em; color: var(--ctp-overlay1, var(--ctp-overlay0)); }
+  #results .fc-actor .why-none { font-style: italic; }
+  #results .fc-comps { list-style: none; padding: 0; margin: 0; }
+  #results .fc-comps li { padding: 0.25rem 0; border-bottom: 1px solid var(--ctp-surface0); font-size: 0.875rem; color: var(--ctp-subtext1); }
+  #results .fc-comps li:last-child { border-bottom: none; }
+  #results .fc-comps .cdate { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ctp-overlay0); margin-right: 0.5rem; }
+  #results .fc-comps .cactor { font-weight: 600; color: var(--ctp-text); margin-right: 0.5rem; }
+  #results .reading { background: var(--ctp-base); border-left: 3px solid var(--ctp-blue); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.8125rem; margin: 0.75rem 0 0; color: var(--ctp-subtext1); }
 </style>
