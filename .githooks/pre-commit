@@ -1,0 +1,8 @@
+#!/bin/sh
+# AUSPEX pre-commit gate. Runs the verification stack only when atlas data or the schema is
+# staged, so non-data commits stay fast. Activate per-clone with: make install-hooks
+# Override a single commit (e.g. an intentional WIP) with: git commit --no-verify
+if git diff --cached --name-only | grep -qE '^(atlas/|audit/schemas/)'; then
+  exec "$(git rev-parse --show-toplevel)/audit/gate.sh"
+fi
+exit 0

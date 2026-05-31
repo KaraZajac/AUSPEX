@@ -33,6 +33,26 @@ python3 audit/introspect_schema.py            # regenerate the empirical schema 
 > `target_entity.nation_state_id` was made optional rather than forcing a bogus value.
 > Re-run `introspect_schema.py` after schema changes to keep `docs/SCHEMA.md` in step.
 
+## Enforcement — the verification gate
+
+`audit/gate.sh` runs the three hard gates and exits non-zero if any fail (quiet on pass,
+verbose on the failing one): **schema conformance** (`check_conformance.py`), **atlas
+consistency** (`verify_atlas.py`, structural ERRORs only), and the **engine validator**
+(`pnpm validate`, skipped if pnpm isn't installed — the Python checks still gate FK + enums).
+
+```sh
+make verify          # run the gate manually
+make install-hooks   # enable it as a git pre-commit hook for this clone
+```
+
+`make install-hooks` sets `core.hooksPath=.githooks`. The committed `.githooks/pre-commit`
+runs the gate **only when `atlas/` or `audit/schemas/` files are staged** (non-data commits
+stay instant), and **blocks the commit** on failure. Bypass a single intentional commit with
+`git commit --no-verify`. WARN/REVIEW findings never block — they're worklists, not gates.
+
+(Each clone runs `make install-hooks` once; the hook + gate are version-controlled, the
+`core.hooksPath` setting is local.)
+
 ## What it checks
 
 | check | severity | what / why |
