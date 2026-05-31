@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import { atlas } from '../utils/atlas';
+
+const a = atlas();
+const sectorOptions = [...a.sectors.values()].filter((s) => !s.parent_id).sort((x, y) => x.name.localeCompare(y.name));
+const countryOptions = ['us', 'uk', 'fr', 'de', 'il', 'sa', 'ae', 'qa', 'ua', 'tw', 'kr', 'jp', 'au', 'ca', 'in', 'pk', 'ir', 'ru', 'cn', 'kp', 'tr', 'vn', 'by', 'ng', 'ke'];
+---
+<Base title="Forecast" wide>
+  <p class="kicker">Live engine · experimental</p>
+  <h1>Forecast</h1>
+  <p class="lede">
+    Pick a prospective target. AUSPEX forecasts the likely threat actors, the strategic
+    <strong>doctrine each would be advancing</strong> (the who&nbsp;×&nbsp;why join), a relative-risk
+    indication, and comparable historical operations.
+  </p>
+  <p class="meta">
+    Forward-validated (train&nbsp;≤&nbsp;2023-12-31, test&nbsp;2024+): the true actor is in the top-5
+    ~40% of the time from target profile alone — 2.6× the usual-suspects base rate.
+    <strong>Relative risk is a
+    corpus-frequency percentile, not an absolute probability</strong> — the corpus records attacks,
+    not the population of targets, so absolute likelihood is not identifiable.
+  </p>
+
+  <div id="loading" class="loading">Loading atlas…</div>
+
+  <form id="forecast-form" class="fc-form" style="display: none;">
+    <div class="grid">
+      <div class="field">
+        <label>Target sector(s) <span class="hint">multi-select</span></label>
+        <div class="checks">
+          {sectorOptions.map((s) => (
+            <label class="check"><input type="checkbox" name="sector" value={s.id} /> <span>{s.name}</span></label>
+          ))}
+        </div>
+      </div>
+      <div class="field">
+        <label>Target country</label>
+        <select name="country">
+          <option value="">— any —</option>
+          {countryOptions.map((c) => <option value={c}>{c.toUpperCase()}</option>)}
+        </select>
+        <label style="margin-top: 0.875rem;">Named org <span class="hint">optional — e.g. ukrenergo</span></label>
+        <input type="text" name="org" placeholder="optional" />
+        <p class="note">Pick at least one sector and a country for a grounded forecast.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary">Forecast</button>
+      <button type="reset" class="secondary">Reset</button>
+      <span id="status" class="status"></span>
+    </div>
+  </form>
+
+  <div id="results" class="results"></div>
+</Base>
+
+<script>
+  import { atlasFromPayload } from '../utils/atlas-core';
+  import { buildForecaster, type Forecaster, type ForecastResult } from '../utils/forecast-core';
+
+  let fc: Forecaster | null = null;
+  const $ = (id: string) => document.getElementById(id)!;
+
+  async function init() {
+    try {
+      const r = await fetch('/api/atlas.json');
+      const payload = await r.json();
+      fc = buildForecaster(atlasFromPayload(payload), { nowYear: 2026 });
+      $('loading').style.display = 'none';
+      ($('forecast-form') as HTMLElement).style.display = '';
+    } catch (e) {
+      $('loading').textContent = 'Failed to load atlas: ' + (e as Error).message;
+    }
+  }
+
+  const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!));
+
+  function render(res: ForecastResult, label: string) {
+    const bandClass = 'band-' + res.riskBand.toLowerCase();
+    const actors = res.actors.map((ac, i) => `
+      <li>
+        <span class="rank">${i + 1}</span>
+        <span class="actor">${esc(ac.name)}</span>
+        ${ac.doctrine
+          ? `<span class="why">→ <strong>${esc(ac.doctrine.name)}</strong> <code>${esc(ac.doctrine.id)}</code></span>`
+          : `<span class="why none">→ no doctrine on record (criminal / unattributed)</span>`}
+      </li>`).join('');
+    const comps = res.comparables.length
+      ? res.comparables.map((c) => `<li><span class="cdate">${c.date}</span> <span class="cactor">${esc(c.name)}</span> ${esc(c.title)}</li>`).join('')
+      : '<li class="none">no closely comparable events in the corpus</li>';
+    $('results').innerHTML = `
+      <div class="fc-result">
+        <div class="risk ${bandClass}">
+          <span class="risk-band">${res.riskBand}</span>
+          <span class="risk-detail">relative risk · ${res.riskPercentile}th percentile of corpus attack frequency · ${res.comparableCount} comparable events</span>
+        </div>
+        ${res.basis === 'insufficient' ? '<p class="warn">⚠ Insufficient corpus basis for this profile — the ranking below is low-confidence (cold-start).</p>' : ''}
+        <h2>Likely actors <span class="sub">— and the doctrine each would advance</span></h2>
+        <ol class="actors">${actors}</ol>
+        <h3>Comparable historical operations</h3>
+        <ul class="comps">${comps}</ul>
+        <p class="disclaimer">Forecast from target profile only (sector / country / org) + state-level dyad + recency — no post-hoc tradecraft. Relative risk, not absolute probability.</p>
+      </div>`;
+    $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $('forecast-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!fc) return;
+    const fd = new FormData(e.target as HTMLFormElement);
+    const sectors = (fd.getAll('sector') as string[]).map((s) => s.replace(/^sectors\//, ''));
+    const country = String(fd.get('country') || '').trim();
+    const org = String(fd.get('org') || '').trim();
+    if (!sectors.length && !country) { $('status').textContent = 'pick a sector and/or country'; return; }
+    $('status').textContent = '';
+    const label = [...sectors, country].filter(Boolean).join(' / ');
+    render(fc.forecast({ sectors, countries: country ? [country] : [], orgs: org ? [org] : [] }, 8), label);
+  });
+
+  init();
+</script>
+
+<style>
+  .loading { color: var(--muted, #888); padding: 1rem 0; }
+  .fc-form .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin: 1rem 0; }
+  .fc-form .field label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+  .fc-form .hint { font-weight: 400; color: var(--muted, #888); font-size: 0.85em; }
+  .fc-form .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.25rem 0.75rem; max-height: 260px; overflow-y: auto; border: 1px solid var(--border, #333); border-radius: 6px; padding: 0.6rem; }
+  .fc-form .check { font-weight: 400; display: flex; align-items: center; gap: 0.35rem; }
+  .fc-form select, .fc-form input[type=text] { width: 100%; padding: 0.45rem; border-radius: 6px; border: 1px solid var(--border, #333); background: var(--bg, #111); color: inherit; }
+  .fc-form .note { color: var(--muted, #888); font-size: 0.85em; margin-top: 0.75rem; }
+  .fc-form .actions { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .fc-form .primary { padding: 0.55rem 1.4rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
+  .fc-form .status { color: var(--muted, #888); }
+  .fc-result { margin-top: 1.5rem; }
+  .risk { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; border-left: 5px solid; }
+  .risk-band { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.04em; }
+  .risk-detail { color: var(--muted, #aaa); font-size: 0.9em; }
+  .band-low { background: rgba(60,160,90,0.12); border-color: #3ca05a; }
+  .band-moderate { background: rgba(210,170,40,0.12); border-color: #d2aa28; }
+  .band-high { background: rgba(220,130,40,0.14); border-color: #dc8228; }
+  .band-critical { background: rgba(210,60,60,0.15); border-color: #d23c3c; }
+  .warn { color: #d2aa28; margin: 0.75rem 0; }
+  .actors { list-style: none; padding: 0; margin: 0.5rem 0 1.25rem; }
+  .actors li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border, #2a2a2a); }
+  .actors .rank { font-weight: 700; color: var(--muted, #888); min-width: 1.2rem; }
+  .actors .actor { font-weight: 600; min-width: 200px; }
+  .actors .why { color: var(--muted, #aaa); font-size: 0.92em; }
+  .actors .why code { font-size: 0.85em; opacity: 0.8; }
+  .actors .why.none { font-style: italic; }
+  .comps { font-size: 0.9em; color: var(--muted, #bbb); }
+  .comps .cdate { font-variant-numeric: tabular-nums; color: var(--muted, #888); margin-right: 0.4rem; }
+  .comps .cactor { font-weight: 600; margin-right: 0.4rem; }
+  .comps .none, .actors .none { font-style: italic; color: var(--muted, #888); }
+  .disclaimer { color: var(--muted, #888); font-size: 0.82em; margin-top: 1rem; font-style: italic; }
+  @media (max-width: 720px) { .fc-form .grid { grid-template-columns: 1fr; } }
+</style>
