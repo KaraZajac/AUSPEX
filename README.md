@@ -69,12 +69,32 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
 | Attribution (ComplementNB + stacked re-ranker) | **65.1%** | **73.8%** | **0.698** MRR | 625 |
-| Doctrine | **72.9%** / 71.0% | **87.7%** / 86.7% | **0.704** / 0.683 mAP | 480 / 555 |
-| Pillar | **63.8%** / 61.6% | **80.8%** / 79.3% | **0.681** / 0.664 mAP | 428 / 489 |
-| Joint (CNB actor × NB doctrine) | **53.9%** | **67.3%** | **0.619** MRR | 410 |
+| Doctrine | **69.2%** / 68.1% | **87.0%** / 86.5% | **0.697** / 0.682 mAP | 608 / 683 |
+| Pillar | **61.4%** / 60.0% | **80.9%** / 79.8% | **0.678** / 0.666 mAP | 529 / 590 |
+| Joint (CNB actor × NB doctrine) | **46.7%** | **59.3%** | **0.545** MRR | 538 |
 
-Excluding meta events *raises* the doctrine headline (+1.9pp): they are off-task for an
-operation-trained engine, not easy wins.
+Doctrine, pillar, and joint fell from their pre‑expansion figures (72.9 / 63.8 / 53.9) once the
+backfilled operations were **doctrine‑tagged** — those events then entered these eval label sets, and
+they are harder (thin actors, long‑tail doctrines). The drop is composition, not regression — the
+same effect documented for attribution. Joint moves most because it must get *both* a long‑tail actor
+and its doctrine right. Excluding meta events still *raises* the doctrine headline (+1.1pp): meta
+events are off‑task for an operation‑trained engine, not easy wins.
+
+**Attribution accuracy is data‑bound, not capability‑bound.** The 65.1% headline is a weighted
+average over a deliberately long‑tailed corpus. Stratified by how much training data each true actor
+has, the engine is strong wherever evidence exists and unrankable only on the singleton tail:
+
+| true actor has… | attribution top‑1 | events |
+|---|---|---|
+| **≥10 events** | **87.5%** | 216 |
+| **5–9 events** | **76.8%** | 185 |
+| 3–4 events | 55.8% | 113 |
+| 2 events | 23.8% | 42 |
+| 1 event (singleton) | 4.3% | 69 |
+
+Half the actor *roster* (98 of 177) is thin (≤2 events) — but only ~17% of events. The headline is
+therefore an honest map of the data‑availability frontier, not a capability ceiling: deepening thin
+actors is the proven lever (a targeted depth round moved 10 of them from 0% to 61.9%).
 
 **Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **815-event**
 corpus, attribution top-1 is **65.1%** (top-3 73.8%, MRR 0.698; 5-fold CV, operations-only): a
