@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AUSPEX atlas schema",
+  "description": "Authoritative machine-checkable schema for every atlas YAML entity. Dates are normalised to ISO strings before validation. additionalProperties:false catches stray/typo'd fields. See docs/SCHEMA.md. Enforced by audit/check_conformance.py; portable to any JSON Schema validator (ajv, jsonschema).",
+  "$defs": {
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","name","start_date","incident_type","false_flag_risk","summary","attributions","doctrine_links","sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "start_date": {"type": "string"},
+        "incident_type": {"type": "array", "minItems": 1, "items": {"enum": ["intrusion","data-theft","destructive","wiper","ransomware","financial-theft","extortion","supply-chain","pre-positioning","disruption","espionage","surveillance","bulk-collection","reconnaissance","influence-operation","hack-and-leak","leak","insider","cyber-physical","documentary","disclosure","doctrine-publication","attribution-publication","policy","law-enforcement"]}},
+        "false_flag_risk": {"enum": ["none","suspected","confirmed"]},
+        "summary": {"type": "string"},
+        "attributions": {"type": "array", "items": {"$ref": "#/$defs/attribution"}},
+        "doctrine_links": {"type": "array", "items": {"$ref": "#/$defs/doctrine_link"}},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "targets": {"type": "array", "items": {"$ref": "#/$defs/target"}},
+        "initial_vector": {"enum": ["phishing","n-day","0-day","supply-chain","valid-creds","insider","physical","unknown"]},
+        "disclosure_date": {"type": ["string","null"]},
+        "end_date": {"type": ["string","null"]},
+        "outcome_summary": {"type": ["string","null"]},
+        "campaign_id": {"type": ["string","null"]},
+        "quantified_impact": {"type": "object"},
+        "operators_named": {"type": "array", "items": {"type": "string"}},
+        "anticipated_timeline_markers": {"type": "array", "items": {"$ref": "#/$defs/anticipated_marker"}},
+        "notes": {"type": ["string","null"]}
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id","attributing_org","attributing_org_confidence","auspex_assessment","attribution_date","attribution_source_id"],
+      "properties": {
+        "actor_id": {"type": ["string","null"]},
+        "attributing_org": {"type": "string"},
+        "attributing_org_confidence": {"enum": ["high","moderate","low"]},
+        "auspex_assessment": {"enum": ["concur","concur-with-caveat","partial","contested"]},
+        "attribution_date": {"type": ["string","null"]},
+        "attribution_source_id": {"type": ["string","null"]},
+        "service_id": {"type": ["string","null"]},
+        "notes": {"type": ["string","null"]}
+      }
+    },
+    "doctrine_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["doctrine_id","pillar_id","program_id","confidence","reasoning","contested","analyst"],
+      "properties": {
+        "doctrine_id": {"type": "string"},
+        "pillar_id": {"type": ["string","null"]},
+        "program_id": {"type": ["string","null"]},
+        "confidence": {"enum": ["attested","strongly_inferred","plausible"]},
+        "reasoning": {"type": "string"},
+        "contested": {"type": "boolean"},
+        "analyst": {"type": "string"},
+        "attesting_source_id": {"type": ["string","null"]},
+        "counter_explanation": {"type": ["string","null"]}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id","role"],
+      "properties": {
+        "target_id": {"type": "string"},
+        "role": {"enum": ["primary","collateral","staging","transit"]},
+        "country": {"type": ["string","null"]},
+        "outcome": {"type": ["string","null"]}
+      }
+    },
+    "anticipated_marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marker_id","confidence"],
+      "properties": {
+        "marker_id": {"type": "string"},
+        "confidence": {"enum": ["attested","strongly_inferred","plausible"]},
+        "reasoning": {"type": ["string","null"]}
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","primary_service_id","additional_service_ids","canonical_name","aliases","status","mission","ttp_summary","default_doctrine_alignment_ids","sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "primary_service_id": {"type": ["string","null"]},
+        "additional_service_ids": {"type": "array", "items": {"type": "string"}},
+        "canonical_name": {"type": "string"},
+        "aliases": {"type": "array", "items": {"$ref": "#/$defs/alias"}},
+        "status": {"enum": ["active","dormant","indicted","sanctioned","disbanded"]},
+        "mission": {"type": "array", "items": {"type": "string"}},
+        "ttp_summary": {"type": "string"},
+        "default_doctrine_alignment_ids": {"type": "array", "items": {"type": "string"}},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "active_since": {"type": ["string","null"]},
+        "active_until": {"type": ["string","null"]},
+        "target_sector_ids": {"type": "array", "items": {"type": "string"}},
+        "external_refs": {"type": "object"},
+        "notes": {"type": ["string","null"]},
+        "auspex_assessment": {"type": ["string","null"]}
+      }
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alias","assigning_org","confidence"],
+      "properties": {
+        "alias": {"type": "string"},
+        "assigning_org": {"type": "string"},
+        "confidence": {"enum": ["equivalent","overlapping","disputed"]},
+        "note": {"type": ["string","null"]}
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","nation_state_id","name","parent_service_id"],
+      "properties": {
+        "id": {"type": "string"},
+        "nation_state_id": {"type": "string"},
+        "name": {"type": "string"},
+        "parent_service_id": {"type": ["string","null"]},
+        "short_name": {"type": ["string","null"]},
+        "summary": {"type": ["string","null"]},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "active_since": {"type": ["string","null"]},
+        "active_until": {"type": ["string","null"]},
+        "mission": {"type": ["string","null"]},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "contested": {"type": "boolean"},
+        "contested_notes": {"type": ["string","null"]}
+      }
+    },
+    "nation_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","name","short_name","summary"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "short_name": {"type": "string"},
+        "summary": {"type": "string"}
+      }
+    },
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","nation_state_id","name","short_name","issued_by","issued_on","status","superseded_by_id","inherits_from_ids","official_text_url","summary","cyber_relevance","sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "nation_state_id": {"type": "string"},
+        "name": {"type": "string"},
+        "short_name": {"type": "string"},
+        "issued_by": {"type": ["string","null"]},
+        "issued_on": {"type": ["string","null"]},
+        "status": {"enum": ["active","inferred","superseded"]},
+        "superseded_by_id": {"type": ["string","null"]},
+        "inherits_from_ids": {"type": "array", "items": {"type": "string"}},
+        "official_text_url": {"type": ["string","null"]},
+        "summary": {"type": "string"},
+        "cyber_relevance": {"type": "string"},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "pillars": {"type": "array", "items": {"$ref": "#/$defs/pillar"}}
+      }
+    },
+    "pillar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","name"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "summary": {"type": ["string","null"]},
+        "target_sectors": {"type": "array"},
+        "key_terms": {"type": "array"},
+        "programs": {"type": "array"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","kind","publisher","title","url","published_on","retrieved_on","tier"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"type": "string"},
+        "publisher": {"type": "string"},
+        "title": {"type": "string"},
+        "url": {"type": ["string","null"]},
+        "published_on": {"type": ["string","null"]},
+        "retrieved_on": {"type": ["string","null"]},
+        "tier": {"enum": ["primary","secondary","tertiary"]},
+        "archive_url": {"type": ["string","null"]},
+        "notes": {"type": ["string","null"]},
+        "note": {"type": ["string","null"]}
+      }
+    },
+    "target_entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","name","sector_id","tech_focus","criticality","summary","sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "sector_id": {"type": "string"},
+        "nation_state_id": {"type": "string"},
+        "criticality": {"enum": ["national-cii","regional-cii","commercial","civil-society"]},
+        "tech_focus": {"type": "array", "items": {"type": "string"}},
+        "summary": {"type": "string"},
+        "sources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "timeline_marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","doctrine_id","date","description","cited_by"],
+      "properties": {
+        "id": {"type": "string"},
+        "doctrine_id": {"type": ["string","null"]},
+        "date": {"type": ["string","object"]},
+        "description": {"type": "string"},
+        "cited_by": {"type": "array", "items": {"type": "string"}},
+        "date_range": {"type": "object"}
+      }
+    },
+    "policy_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","issued_by_state_id","targets_state_ids","action_type","date","summary","official_url","sources"],
+      "properties": {
+        "id": {"type": "string"},
+        "issued_by_state_id": {"type": "string"},
+        "targets_state_ids": {"type": "array", "items": {"type": "string"}},
+        "action_type": {"enum": ["sanction","indictment","diplomatic-statement","export-control","asset-seizure","legislative-action","treaty","vote","election","summit","military-exercise","weapons-test","troop-movement","political-transition","mega-event"]},
+        "date": {"type": "string"},
+        "summary": {"type": "string"},
+        "official_url": {"type": ["string","null"]},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "significance": {"enum": ["high","medium"]},
+        "confidence": {"enum": ["confirmed","projected","scheduled"]},
+        "date_range": {"type": "object"},
+        "notes": {"type": ["string","null"]}
+      }
+    },
+    "sector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id","name","parent_id"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "parent_id": {"type": ["string","null"]},
+        "summary": {"type": ["string","null"]}
+      }
+    }
+  }
+}

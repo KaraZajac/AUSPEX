@@ -1,23 +1,37 @@
 # audit/ — independent atlas verification harness
 
-`verify_atlas.py` reads the **raw atlas YAML directly** (Python + pyyaml, *not* the AUSPEX
-TS engine) and reports, with reasons, the events / sources / tags a human must verify. It
-is an *independent* check by design: a reviewer (or examiner) can trust it without trusting
-AUSPEX's own code, and it turns "verify 1,000+ sources and tags by hand" into "review the
-flagged subset."
+Three **independent** tools that read the **raw atlas YAML directly** (Python + pyyaml,
+*not* the AUSPEX TS engine), so a reviewer or examiner can trust them without trusting
+AUSPEX's own code:
 
-It does **not** decide truth. `ERROR` = structural breakage (fails the run). `WARN`,
-`REVIEW`, `INFO` are *worklists for you*, not failures.
+| tool | answers | dependency |
+|---|---|---|
+| `check_conformance.py` | **Does every record fit the formal schema?** (required fields, types, enums, no stray fields) | stdlib + pyyaml |
+| `verify_atlas.py` | **What's inconsistent or needs human review?** (referential integrity, source hygiene, tagging conventions, directionality) | stdlib + pyyaml |
+| `introspect_schema.py` | **What IS the schema, empirically?** (field presence/types/enums per entity — feeds `docs/SCHEMA.md`) | stdlib + pyyaml |
+
+`schemas/atlas.schema.json` is the **formal, standard JSON Schema** the data is checked
+against (re-validatable with `ajv` / `jsonschema` too — it is not AUSPEX-specific).
 
 ## Run
 
 ```sh
-python3 audit/verify_atlas.py                 # fast: structural + consistency checks
+python3 audit/check_conformance.py            # all-data-fits-the-schema check (PASS/FAIL)
+python3 audit/check_conformance.py --self-test # validate the validator on known good/bad cases
+python3 audit/verify_atlas.py                 # consistency + referential audit
 python3 audit/verify_atlas.py --check-urls    # also curl-probes every source URL (slow, 1,000+)
+python3 audit/introspect_schema.py            # regenerate the empirical schema profile
 ```
 
-Output: a grouped console report + a full `audit/audit-report.json` (diffable across runs to
-track verification progress). Exit non-zero only on `ERROR`.
+`check_conformance.py` exits non-zero if any record fails to conform; current run:
+**PASS — 2,934/2,934 records conform.** `verify_atlas.py` writes a diffable
+`audit/audit-report.json` and exits non-zero only on structural `ERROR`.
+
+> **Keeping the schema honest.** If `check_conformance` fails, either the data has a defect
+> (fix it) or the schema is wrong/over-constrained (fix `schemas/atlas.schema.json` and note
+> why). Example: `orgs/asean-governments` is a deliberate multi-national aggregate, so
+> `target_entity.nation_state_id` was made optional rather than forcing a bogus value.
+> Re-run `introspect_schema.py` after schema changes to keep `docs/SCHEMA.md` in step.
 
 ## What it checks
 

@@ -6,12 +6,18 @@ read from all records, not hand-maintained) and cross-checked against the enforc
 `site/tools/validate.ts`. Project rule: **trust the on-disk YAML** — if this doc and the
 data disagree, the data wins; re-run the introspector.
 
-Current as of the 815-event corpus (2026-05-31). Regenerate:
+This document is the human-readable form; the **machine-checkable form** is
+[`audit/schemas/atlas.schema.json`](../audit/schemas/atlas.schema.json) (standard JSON
+Schema), enforced over every record by `audit/check_conformance.py` — currently
+**PASS, 2,934/2,934 records conform**. Keep the two in step.
+
+Current as of the 815-event corpus (2026-05-31). Regenerate / verify:
 
 ```sh
-python3 audit/introspect_schema.py        # field/type/presence/enums per entity
+python3 audit/check_conformance.py        # validate every record against the JSON Schema (PASS/FAIL)
+python3 audit/introspect_schema.py        # re-derive field/type/presence/enums per entity
 python3 audit/verify_atlas.py             # consistency + referential audit
-pnpm --dir site validate                  # the enforced validator (FKs + feature enums)
+pnpm --dir site validate                  # the engine's own validator (FKs + feature enums)
 ```
 
 Entity counts: events 815 · actors 204 · services 88 · nation-states 17 · doctrines 86
