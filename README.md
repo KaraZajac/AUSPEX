@@ -8,12 +8,12 @@ AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events
 
 | | |
 |---|---|
-| Events | 658 |
+| Events | 815 |
 | Doctrine states | 15 |
 | Doctrines | 86 (across 199 pillars, 7 programs) |
-| Actors | 159 (state + criminal) |
-| Services | 74 |
-| Sources | 1,109 |
+| Actors | 204 (state + criminal) |
+| Services | 88 |
+| Sources | 1,269 |
 | Timeline markers | 73 |
 
 Doctrine states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, KR, AE.**
@@ -68,41 +68,52 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
-| Attribution (ComplementNB + stacked re-ranker) | **74.5%** | **80.4%** | **0.776** MRR | 470 |
+| Attribution (ComplementNB + stacked re-ranker) | **65.1%** | **73.8%** | **0.698** MRR | 625 |
 | Doctrine | **72.9%** / 71.0% | **87.7%** / 86.7% | **0.704** / 0.683 mAP | 480 / 555 |
 | Pillar | **63.8%** / 61.6% | **80.8%** / 79.3% | **0.681** / 0.664 mAP | 428 / 489 |
-| Joint (CNB actor × NB doctrine) | **54.1%** | **66.8%** | **0.615** MRR | 410 |
+| Joint (CNB actor × NB doctrine) | **53.9%** | **67.3%** | **0.619** MRR | 410 |
 
 Excluding meta events *raises* the doctrine headline (+1.9pp): they are off-task for an
 operation-trained engine, not easy wins.
 
-**Attribution engine — ComplementNB + stacked re-ranker (2026-05-30, deployed live).** Attribution
-top-1 is now **74.5%** (top-3 80.4%, MRR 0.776; 5-fold CV, operations-only): a **ComplementNB** base
-(Rennie et al. 2003 — built for the severe class imbalance of the 68-actor long tail) at **62.8%**,
-re-ranked by the L2 logistic stacker (**+11.7pp**). That is **+5.6pp over the previous NB + stacked
-re-ranker (68.9%)** — significant: paired 95% CI [2.6, 8.3]pp, McNemar χ²=12.0, p<0.001 — and
-+17.9pp over the previous raw-NB headline (56.6%). ComplementNB was validated
-against scikit-learn to the decimal; the deployed model (CNB base + an all-corpus logreg) runs in
+**Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **815-event**
+corpus, attribution top-1 is **65.1%** (top-3 73.8%, MRR 0.698; 5-fold CV, operations-only): a
+**ComplementNB** base (Rennie et al. 2003 — built for the severe class imbalance of the long tail of
+one-and-few-event actors) at **55.8%**, re-ranked by the L2 logistic stacker (**+9.3pp**), and
+**+16.3pp over the raw-NB baseline (48.8%)**. ComplementNB was validated against scikit-learn to the
+decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
-browser-vs-server. On a **cold temporal holdout** (train ≤ 2023-12-31, score 2024+, matched
-denominator) it reaches top-1 **54.6%** vs raw NB 41.7% (**+13pp**) — the gain generalizes out of
-sample, not just in cross-validation. Doctrine and pillar remain the NB engine; the **joint** actor
-side now also uses ComplementNB (actorWeight 2.0, LOO-selected — top-1 48.3%&nbsp;→&nbsp;54.1%). Ablating the
+browser-vs-server. The **joint** actor side also uses ComplementNB (actorWeight 2.0 — top-1
+**53.9%**). Doctrine, pillar, and joint are **unchanged** by the expansion (the added events carry no
+doctrine links, so they enter neither those training sets nor their eval label sets). Ablating the
 analyst-assigned `campaign_id` is a ~6–7pp sensitivity bound.
 
-**Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is now scrubbed of actor
-names/aliases. Previously **74.5% of events carried their own actor's name as a prose token** — an
-analyst summary naming the actor leaked the attribution label. Scrubbing it lowered the headline only
-slightly (attribution −0.8pp, doctrine −0.9pp), because the engine weights prose at just 0.4 and
-leans on operators / campaign / malware; the numbers above are therefore both leak-free *and* nearly
-unchanged. See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
+**Corpus growth (2026-05-30).** This corpus was deliberately grown from 658→815 events (159→204
+actors) to widen coverage. The attribution headline fell from the previous **74.5%** (658-event
+corpus) to 65.1% — and the
+[corpus-growth experiment](docs/CORPUS-GROWTH-EXPERIMENT-2026-05-30.md) shows the drop is
+**composition, not regression**: the original 470 events still score **74.5%** under the expanded
+model (net-zero change), while the added long tail of thin/new-actor events is harder under the
+**null = miss** + CV-rankability conventions. Lifting the tail back up takes three levers — event
+**depth** per actor above the CV threshold (deepening 10 thin actors moved them 0%→61.9%),
+source-grounded **feature richness** (+11.4pp on enriched events), and **discriminability** from
+same-niche neighbors; raw event *count* moves none. On a cold temporal holdout (train ≤ 2023-12-31,
+score 2024+) raw-NB attribution is **36.1%** — lower than on the smaller corpus because the backfill
+is heavily 2024–2025, so the holdout is now dominated by recent events on actors with little
+pre-2024 history (the hardest tail).
 
-Temperature scaling (T = 2.0 / 3.0 / 3.0) reduces softmax overconfidence; per-engine reliability
-diagrams (with ECE) on the research pages show calibration quality on the deployed engine. Rank-1
-stability under 10% corpus dropout: 91.4% (NB base), with top-3 set-stability 98.9% (seeded
-resampler, reproducible build-to-build); the deployed CNB + stack attribution is rank-1-stable at
-99.6% under CNB-base dropout (deployed re-ranker held fixed). NotPetya counterfactual carried as a standing adversarial test for
-false-flag handling.
+**Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is scrubbed of actor
+names/aliases. Previously **a large majority of events carried their own actor's name as a prose
+token** — an analyst summary naming the actor leaked the attribution label. Scrubbing it lowered the
+headline only slightly (attribution −0.8pp, doctrine −0.9pp), because the engine weights prose at
+just 0.4 and leans on operators / campaign / malware; the numbers above are therefore both leak-free
+*and* nearly unchanged. See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
+
+Temperature scaling (T = 2.0 / 3.0 / 3.0, refit on the 815-event corpus — temperatures unchanged,
+robust to the expansion) reduces softmax overconfidence; per-engine reliability diagrams (with ECE)
+on the research pages show calibration quality on the deployed engine. Rank-1 stability under 10%
+corpus dropout (seeded resampler, reproducible build-to-build) is recomputed and reported live on
+those pages. NotPetya counterfactual carried as a standing adversarial test for false-flag handling.
 
 ## Quick start
 

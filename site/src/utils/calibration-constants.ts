@@ -7,18 +7,15 @@
  * Refit whenever the corpus changes substantially, or the engine
  * configuration changes.
  */
-// Refit 2026-05-29 (AUDIT-2026-05-29) on the DEPLOYED config — the same
-// settings the eval/OOD paths use: null=miss LOO, λ=0.2 service prior +
-// malware-lineage grouping (attribution), and inferred-campaign LOO
-// suppression. Temperatures are unchanged at T = 2.0 / 3.0 / 3.0 (robust
-// across config variants). Attribution's improvement-pct fell 27.8 → 17.9
-// once fit on the deployed distribution — the prior figure was fit WITHOUT
-// the service prior / lineage and overstated the NLL gain. Doctrine and
-// pillar are essentially unchanged (those engines use no service prior).
+// Refit 2026-05-30 on the QC'd 815-event corpus (grown from 658 via the backfill
+// + targeted depth + actor-wiring QC). Temperatures are UNCHANGED at
+// T = 2.0 / 3.0 / 3.0 — robust to the corpus expansion, as in every prior refit
+// (null=miss LOO, λ=0.2 service prior + malware-lineage grouping, inferred-campaign
+// LOO suppression). Only the eval sample sizes and NLL-improvement percentages moved.
 export const CALIBRATION = {
-  attribution: { temperature: 2.0, improvementPct: 17.9, sampleSize: 497 },
-  doctrine:    { temperature: 3.0, improvementPct: 38.9, sampleSize: 554 },
-  pillar:      { temperature: 3.0, improvementPct: 43.2, sampleSize: 484 },
+  attribution: { temperature: 2.0, improvementPct: 19.6, sampleSize: 564 },
+  doctrine:    { temperature: 3.0, improvementPct: 38.1, sampleSize: 480 },
+  pillar:      { temperature: 3.0, improvementPct: 42.8, sampleSize: 426 },
 } as const;
 
 export type EngineKind = keyof typeof CALIBRATION;

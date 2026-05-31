@@ -531,17 +531,30 @@ import Base from '../layouts/Base.astro';
     <p>
       <strong>Attribution engine.</strong> Attribution is served by a
       <strong>ComplementNB</strong> base (Rennie et&nbsp;al. 2003 — designed for
-      severe class imbalance, which the 68-actor long tail exhibits) re-ranked by an
-      L2 logistic stacker over discriminative meta-features (named-operator and
-      target-org overlap, malware-lineage hit, campaign match, active-window).
-      Operations-only top-1 is <strong>74.5%</strong> (ComplementNB base
-      62.8%&nbsp;→ +11.7&nbsp;pp from the re-ranker; 5-fold CV) — +5.6&nbsp;pp over
-      the previous Naive-Bayes&nbsp;+ stacker. The native scorer is validated against
-      scikit-learn to the decimal, and the deployed model runs in
+      severe class imbalance, which the long tail of one-and-few-event actors
+      exhibits) re-ranked by an L2 logistic stacker over discriminative
+      meta-features (named-operator and target-org overlap, malware-lineage hit,
+      campaign match, active-window). Operations-only top-1 is
+      <strong>65.1%</strong> (ComplementNB base 55.8%&nbsp;→ +9.3&nbsp;pp from the
+      re-ranker; 5-fold CV) on the 815-event corpus. The native scorer is validated
+      against scikit-learn to the decimal, and the deployed model runs in
       <a href="/predict">/predict</a>, verified byte-identical browser-vs-server.
       The joint (actor&nbsp;×&nbsp;doctrine) actor side also uses ComplementNB
-      (actorWeight&nbsp;2.0, top-1 48.3%&nbsp;→&nbsp;54.1%); doctrine and pillar
+      (actorWeight&nbsp;2.0, top-1 <strong>53.9%</strong>); doctrine and pillar
       remain the multi-hot Naive-Bayes engine.
+    </p>
+    <p>
+      The corpus was deliberately grown from 658 to 815 events (159&nbsp;→&nbsp;204
+      actors) to widen coverage, so the headline now reflects a <em>harder,
+      longer-tailed</em> label space. A corpus-growth experiment decomposes the
+      trade-off and finds the previous 74.5% (658-event corpus) is preserved exactly
+      on the original events — the drop is composition, not regression. Lifting the
+      tail back up takes three levers (event <em>depth</em> per actor above the
+      cross-validation threshold, source-grounded <em>feature richness</em>, and
+      <em>discriminability</em> from same-niche neighbors); raw event count moves
+      none of them. Doctrine, pillar, and joint are unchanged by the expansion (the
+      added events carry no doctrine links, so they enter neither those training sets
+      nor their eval label sets).
     </p>
     <p>
       The attribution engine includes an editorial
@@ -567,9 +580,9 @@ import Base from '../layouts/Base.astro';
       event is excluded from its own document-frequency, so its prose terms
       are weighted by training-only DF. Actor names and aliases are scrubbed
       from the prose vocabulary, so an analyst summary naming the actor cannot
-      leak the attribution label (this had affected 74.5% of events; removing it
-      moved the operations-only headline by under 1&nbsp;pp, the engine leaning
-      instead on operators, campaign, and malware). Corpus-stability resampling
+      leak the attribution label (this had affected a large majority of events;
+      removing it moved the operations-only headline by under 1&nbsp;pp, the engine
+      leaning instead on operators, campaign, and malware). Corpus-stability resampling
       uses a seeded generator so the figure is reproducible build-to-build.
     </p>
 
