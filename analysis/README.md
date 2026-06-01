@@ -15,6 +15,20 @@ attribution can't do). Independent of the TS engine; run on system `python3` + p
   Stuxnet case. **Cannot prove generation** — carries the reverse-codification / analyst-tagging
   / common-cause confounds explicitly.
 
+- **`mo_narrowing.py`** — ★ **does doctrine → target → outcome progressively narrow the actor?**
+  (the "each nation-state has its own MO" theory). Two parts: **(A)** a per-state MO fingerprint
+  table — outcome buckets data / denial / money / influence — which confirms the signatures
+  qualitatively (**KP=money 44% is the sharpest fingerprint in the corpus**; RU/IR=denial;
+  CN=data); **(B)** an information-theoretic incremental chain on the actor. **The key
+  methodological result:** the *naive* chain looks like doctrine+target+MO cuts the suspect
+  pool 106→2, but a **label-permutation null** shows 60% of the deepest cells are singletons —
+  the deep drop is **overfitting, not signal**. Null-corrected, **doctrine does the real work**
+  (1.4 bits, pool 106→40); target and MO carry real info *alone* (~0.5 bits each) but are
+  **largely redundant with doctrine** and add nothing verifiable beyond it at 547 events. So the
+  theory holds **at the tails** (distinctive MOs like KP-money), not the espionage-saturated bulk.
+  Runs on `false_flag_risk=none` only (honouring "if not a false flag"). Carries the
+  **circularity** caveat (analysts *use* MO to attribute → partly definitional).
+
 - **`doctrine_trends.py`** — doctrine activity over time, per-state op-tempo, **strategic
   pivots** (a state's dominant doctrine shifting early→late), leading-vs-lagging (do ops
   precede or follow the doctrine's publication), and doctrine co-occurrence.
@@ -38,6 +52,7 @@ attribution can't do). Independent of the TS engine; run on system `python3` + p
 
 ```sh
 python3 analysis/doctrine_to_operations.py
+python3 analysis/mo_narrowing.py
 python3 analysis/doctrine_trends.py
 python3 analysis/deterrence.py
 python3 analysis/actor_deterrence.py
