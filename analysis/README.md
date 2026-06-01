@@ -3,6 +3,10 @@
 Read-only, source-derived analyses that exploit the doctrine dimension (the thing pure
 attribution can't do). Independent of the TS engine; run on system `python3` + pyyaml.
 
+> **`FINDINGS.md`** is the reproducible numeric ledger — every figure these scripts produce, with
+> its reproduce command and method caveats, and a blank interpretation slot per finding. The
+> readings below are tool documentation; the dissertation interpretation is the candidate's.
+
 - **`doctrine_to_operations.py`** — ★ **the core-theory test: do cyber operations come out of
   strategic documents?** Three observable legs, each computed on ALL links *and* on
   ATTESTED-only links (where a cited source — not the analyst — names the strategic goal):
