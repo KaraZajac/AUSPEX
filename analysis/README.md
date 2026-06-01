@@ -3,6 +3,18 @@
 Read-only, source-derived analyses that exploit the doctrine dimension (the thing pure
 attribution can't do). Independent of the TS engine; run on system `python3` + pyyaml.
 
+- **`doctrine_to_operations.py`** — ★ **the core-theory test: do cyber operations come out of
+  strategic documents?** Three observable legs, each computed on ALL links *and* on
+  ATTESTED-only links (where a cited source — not the analyst — names the strategic goal):
+  **(1) legibility** — 83% of operations carry a doctrine link (29% attested); **(2) precedence**
+  — 73–75% of ops *follow* the document, median +3yr (the temporal arrow); **(3) information**
+  — knowing the doctrine resolves **65% of actor-uncertainty** (70% attested), shrinking the
+  effective suspect pool from **91→5 actors** (42→3 attested). The relationship is *stronger*
+  on the attested cut, so it is not an artifact of AUSPEX's own tagging. Surfaces the most
+  actor-determining vs. most generic doctrines, exemplar document→op chains, and the founding
+  Stuxnet case. **Cannot prove generation** — carries the reverse-codification / analyst-tagging
+  / common-cause confounds explicitly.
+
 - **`doctrine_trends.py`** — doctrine activity over time, per-state op-tempo, **strategic
   pivots** (a state's dominant doctrine shifting early→late), leading-vs-lagging (do ops
   precede or follow the doctrine's publication), and doctrine co-occurrence.
@@ -25,6 +37,7 @@ attribution can't do). Independent of the TS engine; run on system `python3` + p
   and too endogenous for a causal read here.
 
 ```sh
+python3 analysis/doctrine_to_operations.py
 python3 analysis/doctrine_trends.py
 python3 analysis/deterrence.py
 python3 analysis/actor_deterrence.py
