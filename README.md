@@ -69,10 +69,20 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
-| Attribution (ComplementNB + stacked re-ranker) | **64.9%** | **73.7%** | **0.697** MRR | 627 |
-| Doctrine | **68.9%** / 67.7% | **86.9%** / 86.4% | **0.696** / 0.681 mAP | 610 / 685 |
-| Pillar | **62.1%** / 60.6% | **80.8%** / 79.7% | **0.680** / 0.668 mAP | 531 / 592 |
-| Joint (CNB actor × NB doctrine) | **46.6%** | **58.6%** | **0.544** MRR | 539 |
+| Attribution (ComplementNB + stacked re-ranker) | **64.9%** | **73.0%** | **0.693** MRR | 627 |
+| Doctrine | **68.5%** / 67.0% | **86.9%** / 85.4% | **0.698** / 0.679 mAP | 594 / 666 |
+| Pillar | **61.6%** / 60.5% | **81.2%** / 80.0% | **0.678** / 0.668 mAP | 516 / 574 |
+| Joint (CNB actor × NB doctrine) | **47.9%** / 42.6% | **60.5%** / 59.0% | **0.556** / 0.526 MRR | 526 / 563 |
+
+> **2026-06-09 correction re-baseline** (see [`docs/MODELING-AUDIT-2026-06-09.md`](docs/MODELING-AUDIT-2026-06-09.md)):
+> these figures follow two integrity fixes. **(1) who×why semantics** — doctrine links that named
+> the *victim's* or the *discloser's* doctrine (e.g. Stuxnet tagged with Iran's asymmetric-warfare
+> doctrine; UK NCS on a Sandworm advisory) are now `perspective`-tagged and excluded from engine
+> labels: doctrine/pillar/joint n shrank by ~15 events each and accuracy **rose** (joint +1.3pp) —
+> the removed labels were wrong-side noise. **(2) leak scrubs** — doctrine-name tokens are scrubbed
+> from prose features (the WHY-side twin of the actor-name scrub; −0.5pp doctrine) and the stacked
+> re-ranker's campaign-match feature no longer sees the held-out event's own campaign (stack lift
+> 9.3→8.6pp). Headline top-1 is unchanged at 64.9%; top-3/MRR moved within noise. Lower-but-true.
 
 Doctrine, pillar, and joint fell from their pre‑expansion figures (72.9 / 63.8 / 53.9) once the
 backfilled operations were **doctrine‑tagged** — those events then entered these eval label sets, and
@@ -98,14 +108,14 @@ therefore an honest map of the data‑availability frontier, not a capability ce
 actors is the proven lever (a targeted depth round moved 10 of them from 0% to 61.9%).
 
 **Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **818-event**
-corpus, attribution top-1 is **64.9%** (top-3 73.7%, MRR 0.697; 5-fold CV, operations-only): a
+corpus, attribution top-1 is **64.9%** (top-3 73.0%, MRR 0.693; 5-fold CV, operations-only): a
 **ComplementNB** base (Rennie et al. 2003 — built for the severe class imbalance of the long tail of
-one-and-few-event actors) at **55.7%**, re-ranked by the L2 logistic stacker (**+9.3pp**), and
-**+16.4pp over the raw-NB baseline (48.5%)**. ComplementNB was validated against scikit-learn to the
+one-and-few-event actors) at **56.3%**, re-ranked by the L2 logistic stacker (**+8.6pp**), and
+**+16.1pp over the raw-NB baseline (48.8%)**. ComplementNB was validated against scikit-learn to the
 decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
 browser-vs-server. The **joint** actor side also uses ComplementNB (actorWeight 2.0 — top-1
-**46.6%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
+**47.9%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
 moved the doctrine / pillar / joint figures (see the table note above). Ablating the analyst-assigned
 `campaign_id` is a ~6–7pp sensitivity bound.
 
@@ -119,16 +129,23 @@ model (net-zero change), while the added long tail of thin/new-actor events is h
 **depth** per actor above the CV threshold (deepening 10 thin actors moved them 0%→61.9%),
 source-grounded **feature richness** (+11.4pp on enriched events), and **discriminability** from
 same-niche neighbors; raw event *count* moves none. On a cold temporal holdout (train ≤ 2023-12-31,
-score 2024+) raw-NB attribution is **36.1%** — lower than on the smaller corpus because the backfill
-is heavily 2024–2025, so the holdout is now dominated by recent events on actors with little
-pre-2024 history (the hardest tail).
+score 2024+) raw-NB attribution is **26.5% top-1 / 39.3% top-5** under **null = miss** — cold-start
+events whose actor has no pre-2024 history stay in the denominator as misses (the convention every
+other table uses; the earlier 36.1% figure silently dropped them). This is the **retrodictive vs
+prospective gap stated plainly**: the LOO headline measures attribution of events whose actors have
+corpus history; the temporal number is what forward prediction on a fast-moving corpus actually
+yields, cold-start tail included.
 
-**Prose actor-name de-leak (2026-05-30).** The TF-IDF prose feature is scrubbed of actor
-names/aliases. Previously **a large majority of events carried their own actor's name as a prose
-token** — an analyst summary naming the actor leaked the attribution label. Scrubbing it lowered the
-headline only slightly (attribution −0.8pp, doctrine −0.9pp), because the engine weights prose at
-just 0.4 and leans on operators / campaign / malware; the numbers above are therefore both leak-free
-*and* nearly unchanged. See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
+**Prose de-leak (2026-05-30 actors; 2026-06-09 doctrines).** The TF-IDF prose feature is scrubbed of
+actor names/aliases **and** of doctrine-identifying tokens. Previously a large majority of events
+carried their own actor's name as a prose token, and ~11% of doctrine-labeled events carried their
+doctrine's identifier (`mcf`, `mic2025`, `intelligentized`…) — analyst summaries naming the label
+leaked it into the features. The doctrine scrub is a deterministic, label-free rule (a token is
+scrubbed iff it appears in ≤2 doctrines' names — generic vocabulary like "national"/"strategy"
+stays). Each scrub lowered its headline well under 1pp (attribution −0.8pp actors; doctrine −0.5pp
+doctrines), because the engines weight prose at just 0.4 and lean on operators / campaign / malware;
+the numbers above are therefore leak-free *and* nearly unchanged.
+See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
 
 Temperature scaling (T = 2.0 / 3.0 / 3.0, refit on the 815-event corpus — temperatures unchanged,
 robust to the expansion) reduces softmax overconfidence; per-engine reliability diagrams (with ECE)
@@ -143,8 +160,10 @@ Beyond retrodicting observed events, AUSPEX **forecasts prospective attacks**: g
 actors, names the **doctrine each would be advancing** (the who×why join), and gives a relative-risk
 indication with comparable historical operations. It uses only forecast-available features — target
 side + state-level dyad + recency, **no** post-hoc tradecraft (TTPs / malware / prose). Forward-
-validated (train ≤ 2023-12-31, score 2024+ cold): the true actor is in the **top-5 ~40%** of the time
-from target profile alone — **2.6× the usual-suspects base rate**. Relative risk is a corpus-frequency
+validated (train ≤ 2023-12-31, score 2024+ cold): for actors seen pre-split (74% of test events), the
+true actor is in the **top-5 ~40%** of the time from target profile alone — **2.6× the usual-suspects
+base rate**; counting the ~26% cold-start new-actor events as misses, the all-test figure is
+**28.9%**. Relative risk is a corpus-frequency
 percentile, **not** an absolute probability (the corpus records attacks, not the population of
 targets, so absolute likelihood is not identifiable). Shares one isomorphic engine module
 (`forecast-core.ts`) across the server eval and the browser page. See
