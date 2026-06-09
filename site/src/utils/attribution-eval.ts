@@ -2,7 +2,7 @@
  * Leave-one-out cross-validation for the attribution engine,
  * plus Monte Carlo corpus-stability resampling.
  */
-import { atlas, isMetaEvent, type AuspexEvent } from './atlas';
+import { atlas, eventActorStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -55,15 +55,11 @@ export interface EvalSummary {
   generatedAt: string;
 }
 
+// Canonical derivation (audit H3 unification): criminal-actor events now land
+// in an explicit 'criminal' bucket and null-service <state>/proxies/* actors
+// resolve via their id head, instead of both falling into '??'.
 function trueStateFor(event: AuspexEvent, a: ReturnType<typeof atlas>): string | undefined {
-  for (const actorId of actorsOfEvent(event)) {
-    const svc = a.actors.get(actorId)?.primary_service_id;
-    if (svc) return svc.split('/')[0];
-  }
-  for (const attr of event.attributions ?? []) {
-    if (attr.service_id) return attr.service_id.split('/')[0];
-  }
-  return undefined;
+  return eventActorStateId(event, a);
 }
 
 /**

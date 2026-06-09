@@ -112,6 +112,10 @@ cd site && pnpm exec tsx tools/eval-criminal-gate.ts
 
 - **Deploy** the criminal↔state gate (E4) — clear, well-behaved win for state classification.
   (Re-run with a bootstrap CI on the +6.9pp before promoting, per the eval-first discipline.)
+  **CI DELIVERED 2026-06-09** on the corrected corpus (post perspective-fix + leak-scrubs +
+  canonical state derivation): θ=0.5 → criminal recall 75% @ 100% precision, state top-1
+  82.8→90.3% — lift **+7.5pp, paired bootstrap 95% CI [+5.4, +9.6], excludes 0 →
+  promotion-ready** (`eval-criminal-gate.ts` now computes the CI on every run).
 - **Keep** the dedicated state classifier as the backbone for any future joint cross-state gate or
   doctrine state-gating; **don't** use it as an attribution prior (E3 Part B).
 - **Don't promote** the joint pair-stacker (E1) — inconclusive.

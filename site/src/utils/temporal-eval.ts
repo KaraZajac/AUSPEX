@@ -13,7 +13,7 @@
  *  - Which engine degrades least?
  *  - Which states / years degrade most?
  */
-import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { atlas, eventActorStateId, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -146,16 +146,9 @@ export function runAttributionTemporal(trainEnd: string, opts: ScoringOptions = 
     const ranks = trueActors.map((t) => ranked.findIndex((c) => c.actorId === t) + 1).filter((r) => r > 0);
     const bestRank = ranks.length > 0 ? Math.min(...ranks) : null;
 
-    // Get state from the actual atlas (events held out from training still know their own actors)
-    let trueState: string | undefined;
-    for (const aid of trueActors) {
-      const svc = a.actors.get(aid)?.primary_service_id;
-      if (svc) {
-        trueState = svc.split('/')[0];
-        break;
-      }
-    }
-    if (!trueState) trueState = eventStateId(ev, a);
+    // Canonical actor-truth derivation (audit H3 unification); held-out events
+    // still know their own actors.
+    const trueState = eventActorStateId(ev, a);
 
     results.push({
       eventId: ev.id,

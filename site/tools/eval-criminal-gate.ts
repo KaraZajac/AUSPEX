@@ -76,3 +76,26 @@ if (best.top1 > mcStateTop1 + 3) {
   console.log(`  ${(100 * mcStateTop1 / n).toFixed(1)}%→${(100 * best.top1 / n).toFixed(1)}% (+${(100 * (best.top1 - mcStateTop1) / n).toFixed(1)}pp). Real but small; the criminal/state boundary is intrinsically fuzzy.`);
 }
 console.log(`  (binary detector argmax = θ=0 row; the criminal class is rare so the PR tradeoff is the whole story.)`);
+
+// ── paired bootstrap 95% CI on the state-top-1 lift at the chosen operating point ──
+// (the pre-promotion requirement from docs/ENGINE-STRUCTURE-EXPERIMENTS-2026-06-04 / MODELING-AUDIT-2026-06-09)
+const TH_DEPLOY = 0.5;
+const perEvent = recs.map((r) => {
+  const basHit = r.trueStates.has(r.mcTop1) ? 1 : 0;
+  const gateHit = r.trueStates.has(r.crimMargin > TH_DEPLOY ? 'criminal' : r.mcTop1) ? 1 : 0;
+  return { basHit, gateHit };
+});
+let lcg = 0x5eedc0de >>> 0;
+const rnd = () => { lcg = (Math.imul(lcg, 1664525) + 1013904223) >>> 0; return lcg / 0x100000000; };
+const B = 3000; const deltas: number[] = [];
+for (let b = 0; b < B; b++) {
+  let bs = 0, gs = 0;
+  for (let i = 0; i < n; i++) { const r = perEvent[Math.floor(rnd() * n)]; bs += r.basHit; gs += r.gateHit; }
+  deltas.push(((gs - bs) / n) * 100);
+}
+deltas.sort((x, y) => x - y);
+const lo = deltas[Math.floor(0.025 * B)], hi = deltas[Math.floor(0.975 * B)];
+const mean = deltas.reduce((s, x) => s + x, 0) / B;
+console.log(`\n── BOOTSTRAP CI (θ=${TH_DEPLOY}, paired, ${B} iter, seeded) ──`);
+console.log(`  state-top-1 lift: mean ${mean >= 0 ? '+' : ''}${mean.toFixed(1)}pp · 95% CI [${lo >= 0 ? '+' : ''}${lo.toFixed(1)}, ${hi >= 0 ? '+' : ''}${hi.toFixed(1)}]pp`);
+console.log(`  ${lo > 0 ? 'CI EXCLUDES 0 → promotion-ready (statistically robust lift)' : 'CI spans 0 → NOT promotion-ready'}`);

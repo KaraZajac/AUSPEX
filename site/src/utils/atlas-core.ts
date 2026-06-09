@@ -503,8 +503,12 @@ export class Atlas {
   }
   actorsForState(stateId: string): Actor[] {
     return [...this.actors.values()].filter((a) => {
-      const svc = a.primary_service_id ?? '';
-      return svc.split('/')[0] === stateId;
+      const svc = a.primary_service_id;
+      if (svc) return svc.split('/')[0] === stateId;
+      // No service: fall back to the actor id's head (so null-service
+      // <state>/proxies/* actors appear on their state's page — previously the
+      // Russia page omitted LockBit/ALPHV while evals counted them as RU).
+      return a.id.split('/')[0] === stateId;
     });
   }
   servicesForState(stateId: string): Service[] {
@@ -1193,20 +1197,51 @@ export function formatDate(d: string | undefined): string {
   return d;
 }
 
-export function eventStateId(ev: AuspexEvent, a: Atlas): string | undefined {
-  // 1) Prefer the first attributed actor's primary_service_id.
+/** CANONICAL actor→state derivation (MODELING-AUDIT-2026-06-09 H3 — this
+ *  replaces six divergent reimplementations). Policy:
+ *   1) the actor's primary_service_id head (cn/mss → cn);
+ *   2) else the actor id's head segment: `criminal` is an explicit
+ *      pseudo-state (criminal/shinyhunters → 'criminal'); a 2-letter head is
+ *      a nation-state — including `<state>/proxies/*` BY DESIGN (ru/proxies/
+ *      lockbit → 'ru': the proxies/ namespace asserts source-documented state
+ *      harboring/tolerance, see docs/SCHEMA.md);
+ *   3) else undefined (placeholder/unresolvable). */
+export function actorStateId(actorId: string, a: Atlas): string | undefined {
+  const svc = a.actors.get(actorId)?.primary_service_id;
+  if (svc) return svc.split('/')[0];
+  const head = actorId.split('/')[0];
+  if (head === 'criminal') return 'criminal';
+  if (head && head.length === 2) return head;
+  return undefined;
+}
+
+/** CANONICAL event→state for EVAL TRUTH / stratification: derived from the
+ *  attributed actors only (never from doctrine links — doctrine is another
+ *  engine's label space). Returns 'criminal' for criminal-actor events so
+ *  per-state tables get an explicit criminal bucket instead of '??'. */
+export function eventActorStateId(ev: AuspexEvent, a: Atlas): string | undefined {
   for (const attr of ev.attributions ?? []) {
     if (attr.actor_id) {
-      const actor = a.actors.get(attr.actor_id);
-      const svc = actor?.primary_service_id;
-      if (svc) return svc.split('/')[0];
+      const s = actorStateId(attr.actor_id, a);
+      if (s) return s;
     }
   }
-  // 2) Fall back to service-level attribution.
   for (const attr of ev.attributions ?? []) {
     if (attr.service_id) return attr.service_id.split('/')[0];
   }
-  // 3) Last resort: derive from the first ATTACKER-RATIONALE doctrine link's
+  return undefined;
+}
+
+/** Event→NATION-STATE mapping for display / markers / null-actor analyses.
+ *  Like eventActorStateId but maps only to nation-states ('criminal' is not
+ *  one), and may fall back to an attacker-rationale doctrine's state for
+ *  null-actor events (a doctrinally-legible op with no named cluster). */
+export function eventStateId(ev: AuspexEvent, a: Atlas): string | undefined {
+  // 1) The attributed actors' canonical state ('criminal' → not a nation-state).
+  const actorState = eventActorStateId(ev, a);
+  if (actorState && actorState !== 'criminal') return actorState;
+  if (actorState === 'criminal') return undefined;
+  // 2) Last resort: derive from the first ATTACKER-RATIONALE doctrine link's
   // nation-state. Doctrine slugs start with the nation-state id (e.g.,
   // cn/mic2025). victim-response / defender-response links are skipped —
   // their state is the victim's or discloser's, NOT the operator's (the old

@@ -13,7 +13,7 @@
  * This module is intentionally framework-free so it can run in
  * Astro build, tsx CLI, and a browser bundle interchangeably.
  */
-import { Atlas, type AuspexEvent } from './atlas-core';
+import { Atlas, eventActorStateId, type AuspexEvent } from './atlas-core';
 import { inferEventTTPs, parentTechnique } from './ttp-extract';
 import { inferEventMalware } from './malware-extract';
 import { extractProseTerms } from './prose-features';
@@ -266,24 +266,12 @@ export function extractFeatures(event: AuspexEvent, atlas: Atlas, opts: { exclud
   };
 }
 
-/** Lightweight state lookup for marker filtering — avoids circular
- *  dep with atlas.eventStateId by reproducing the same logic locally
- *  (actor's primary_service_id top segment, then attribution service_id,
- *  then any explicit attacker hint). */
+/** State lookup for marker filtering — canonical derivation (audit H3
+ *  unification, see atlas-core.eventActorStateId). Markers are nation-state
+ *  geopolitical context, so the criminal pseudo-state maps to undefined. */
 function computeEventStateForMarkers(event: AuspexEvent, atlas: Atlas): string | undefined {
-  for (const attr of event.attributions ?? []) {
-    if (attr.actor_id) {
-      const svc = atlas.actors.get(attr.actor_id)?.primary_service_id;
-      if (svc) return svc.split('/')[0];
-      // Otherwise infer state from actor id prefix (e.g. ru/gru/...)
-      const head = attr.actor_id.split('/')[0];
-      if (head && head.length === 2 && head !== 'criminal') return head;
-    }
-    if (attr.service_id) {
-      return attr.service_id.split('/')[0];
-    }
-  }
-  return undefined;
+  const s = eventActorStateId(event, atlas);
+  return s === 'criminal' ? undefined : s;
 }
 
 /** Set of actor ids that appear in this event's attributions. */

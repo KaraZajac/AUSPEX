@@ -19,7 +19,7 @@
  * because it only requires the event to look like SOMETHING
  * familiar — outliers fail every comparison.
  */
-import { Atlas, isMetaEvent, type AuspexEvent } from './atlas-core';
+import { Atlas, eventActorStateId, isMetaEvent, type AuspexEvent } from './atlas-core';
 import {
   extractFeatures,
   type EventFeatures,
@@ -236,15 +236,8 @@ export function runOODBaselineEval(atlas: Atlas): {
     const trueRanks = [...trueActorSet].map((aid) => ranked.findIndex((c) => c.actorId === aid) + 1).filter((r) => r > 0);
     const bestRank = trueRanks.length > 0 ? Math.min(...trueRanks) : null;
 
-    // Derive trueState
-    let trueState: string | undefined;
-    for (const aid of trueActorSet) {
-      const svc = atlas.actors.get(aid)?.primary_service_id;
-      if (svc) { trueState = svc.split('/')[0]; break; }
-      const head = aid.split('/')[0];
-      if (head === 'criminal') { trueState = 'criminal'; break; }
-      if (head && head.length === 2) { trueState = head; break; }
-    }
+    // Derive trueState — canonical (audit H3 unification).
+    const trueState = eventActorStateId(heldOut, atlas);
 
     events.push({
       eventId: heldOut.id,

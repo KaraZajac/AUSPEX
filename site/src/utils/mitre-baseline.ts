@@ -26,7 +26,7 @@
  *   - Multi-attribution events count a hit if ANY of the true actors'
  *     G-codes appears in top-K, same as the AUSPEX LOO eval.
  */
-import { atlas, isMetaEvent, type AuspexEvent } from './atlas';
+import { atlas, eventActorStateId, isMetaEvent, type AuspexEvent } from './atlas';
 import { actorsOfEvent } from './attribution';
 import { inferEventTTPs, parentTechnique } from './ttp-extract';
 import { readFileSync, existsSync } from 'node:fs';
@@ -112,17 +112,9 @@ function jaccard(a: Set<string>, b: Set<string>): number {
   return inter / union;
 }
 
+// Canonical derivation (audit H3 unification).
 function trueStateFor(event: AuspexEvent, a: ReturnType<typeof atlas>): string | undefined {
-  for (const actorId of actorsOfEvent(event)) {
-    const svc = a.actors.get(actorId)?.primary_service_id;
-    if (svc) return svc.split('/')[0];
-    const head = actorId.split('/')[0];
-    if (head === 'criminal' || (head && head.length === 2)) return head;
-  }
-  for (const attr of event.attributions ?? []) {
-    if (attr.service_id) return attr.service_id.split('/')[0];
-  }
-  return undefined;
+  return eventActorStateId(event, a);
 }
 
 export function runMitreBaseline(): MitreBaselineSummary {

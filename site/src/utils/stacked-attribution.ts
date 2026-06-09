@@ -23,7 +23,7 @@
  * Output is comparable to the plain LOO attribution numbers — same event
  * set, same null=miss denominator, same per-state breakdown.
  */
-import { atlas, isMetaEvent, type AuspexEvent, type Atlas } from './atlas';
+import { atlas, eventActorStateId, isMetaEvent, type AuspexEvent, type Atlas } from './atlas';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -115,17 +115,8 @@ interface EventTopK {
 }
 
 function eventState(event: AuspexEvent, a: Atlas): string {
-  for (const aid of actorsOfEvent(event)) {
-    const svc = a.actors.get(aid)?.primary_service_id;
-    if (svc) return svc.split('/')[0];
-    const head = aid.split('/')[0];
-    if (head === 'criminal') return 'criminal';
-    if (head && head.length === 2) return head;
-  }
-  for (const attr of event.attributions ?? []) {
-    if (attr.service_id) return attr.service_id.split('/')[0];
-  }
-  return '??';
+  // Canonical derivation (audit H3 unification) — '??' = unresolvable.
+  return eventActorStateId(event, a) ?? '??';
 }
 
 /**

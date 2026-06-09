@@ -132,6 +132,29 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `external_refs` | dict | optional (58%) | e.g. `mitre_attack: G0007`, `misp_galaxy: …` |
 | `notes`, `auspex_assessment` | str | optional | editorial |
 
+### Actor placement rule — `<state>/proxies/` vs `criminal/` (and what "state" an actor has)
+
+The actor id's namespace is a **claim**, and the placement rule is:
+
+- **`<state>/proxies/<slug>`** (e.g. `ru/proxies/lockbit`): a financially-motivated crew with
+  **source-documented state nexus** — safe-harbor/non-prosecution in that state, documented
+  service tasking-overlap (e.g. ContiLeaks FSB liaison), or formal designation of the group as
+  state-aligned. The evidence must be cited in the actor record's `sources`/`notes`. These actors
+  count toward the harboring state in every state-derived statistic **by design** — the proxies
+  namespace models the state's criminal-proxy ecosystem (cf. `ru/sanctions-response-2022`'s
+  criminal-proxy-mobilization pillar). Sensitivity note: ~31% of RU-bucket operations come from
+  `ru/proxies/*`; analyses that need state-organ-only tempo must exclude the proxies subtree.
+- **`criminal/<slug>`**: no documented state nexus. `criminal` is an explicit **pseudo-state**
+  bucket in per-state evaluation tables (not `??`).
+- **`<state>/unscoped/<slug>`**: state assessed, service placement unresolved (QC frontier).
+
+**Canonical state derivation** (`site/src/utils/atlas-core.ts` — the ONLY implementations;
+do not reimplement): `actorStateId()` = primary service's state, else `criminal`, else a
+2-letter id head, else undefined. `eventActorStateId()` = actor-truth for eval stratification
+(returns `criminal`). `eventStateId()` = nation-state mapping for display/markers/null-actor
+analyses (criminal → undefined; may fall back to an **attacker-rationale** doctrine's state).
+Python analyses replicating state derivation must follow the same policy.
+
 ---
 
 ## services  (`atlas/services/<state>/<slug>.yaml`, id `<state>/<unit>[/<sub>]`)
