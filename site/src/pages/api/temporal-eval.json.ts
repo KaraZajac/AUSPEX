@@ -14,6 +14,7 @@ export const GET: APIRoute = () => {
       train_size: s.trainSize,
       test_size: s.testSize,
       scored: s.scored,
+      unrankable: s.unrankable, // cold-start events counted as misses (null=miss)
       hit1: s.hit1,
       hit3: s.hit3,
       hit5: s.hit5,

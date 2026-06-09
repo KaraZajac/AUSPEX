@@ -136,7 +136,7 @@ model (net-zero change), while the added long tail of thin/new-actor events is h
 **depth** per actor above the CV threshold (deepening 10 thin actors moved them 0%→61.9%),
 source-grounded **feature richness** (+11.4pp on enriched events), and **discriminability** from
 same-niche neighbors; raw event *count* moves none. On a cold temporal holdout (train ≤ 2023-12-31,
-score 2024+) raw-NB attribution is **26.5% top-1 / 39.3% top-5** under **null = miss** — cold-start
+score 2024+) raw-NB attribution is **26.5% top-1 / 38.9% top-5** under **null = miss** — cold-start
 events whose actor has no pre-2024 history stay in the denominator as misses (the convention every
 other table uses; the earlier 36.1% figure silently dropped them). This is the **retrodictive vs
 prospective gap stated plainly**: the LOO headline measures attribution of events whose actors have
