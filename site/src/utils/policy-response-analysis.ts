@@ -10,7 +10,7 @@
  * days after BIS export-control announcements (n=N instances, 2.7x
  * baseline)" — falsifiable, backtestable.
  */
-import { atlas, eventStateId, type AuspexEvent, type PolicyAction } from './atlas';
+import { atlas, eventStateId, isAttackerRationale, type AuspexEvent, type PolicyAction } from './atlas';
 
 export interface ClassKey {
   action_type: string;
@@ -120,6 +120,7 @@ function analyzeClass(
     for (const ev of uniqueEvents) {
       const seen = new Set<string>();
       for (const link of ev.doctrine_links ?? []) {
+        if (!isAttackerRationale(link)) continue; // who×why semantics only
         const did =
           link.doctrine_id ??
           (link.pillar_id ? a.pillars.get(link.pillar_id)?.doctrineId : undefined) ??

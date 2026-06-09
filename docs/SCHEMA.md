@@ -100,6 +100,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `analyst` | str | REQUIRED | currently `claude` (machine-authored under human review) |
 | `attesting_source_id` | str\|null | optional (81%) | FK → sources; **required when `confidence: attested`** |
 | `counter_explanation` | str\|null | optional (23%) | rationale when the link is contested/counter-intuitive |
+| `perspective` | str | optional (~2.5%) | `attacker-rationale` (default when absent) \| `victim-response` \| `defender-response` — **whose doctrine the link names**, relative to the operation it explains. `defender-response` = the discloser/prosecutor's doctrine on an event documenting someone else's operation (UK NCS on a Sandworm advisory; NCS-2023 on an indictment of an attributed actor). `victim-response` = the victim state's doctrine (the event's effect on / mirror of it — Stuxnet → Iran's asymmetric-warfare doctrine). **Only attacker-rationale links feed engine training, eval label sets, the who×why join, and attacker-state derivation**; the others are atlas context. Cross-state links *without* a tag are flagged by `verify_atlas.py doctrine-state-mismatch`. |
 
 **`targets[]`** (1,382 across the corpus):
 

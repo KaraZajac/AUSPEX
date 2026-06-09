@@ -220,11 +220,23 @@ def check_doctrine_consistency():
             # doctrine" signal (e.g. a RU actor carrying a CN doctrine). Null-actor events are exempt
             # and counted separately: AUSPEX deliberately allows doctrine on null-actor events (an op
             # can be doctrinally legible without a named cluster — the perpetrator's state doctrine).
+            persp = dl.get("perspective")  # absent == attacker-rationale (default who×why semantics)
+            if persp not in (None, "attacker-rationale", "victim-response", "defender-response"):
+                add("enum","ERROR",f"events/{eid}",f"doctrine_link perspective not in vocab: {persp}")
             if did and dst:
                 if actor_states and dst not in actor_states:
-                    add("doctrine-state-mismatch","REVIEW",f"events/{eid}",
-                        f"doctrine {did} (state {dst}) on event attributed to {sorted(actor_states)} — "
-                        f"state mismatch (mis-tagged doctrine, or a cross-state/counter-op case?)")
+                    if persp is not None:
+                        # Cross-state WITH a perspective tag = reviewed-and-intentional:
+                        # victim-response / defender-response record whose doctrine it is;
+                        # an EXPLICIT attacker-rationale marks a genuine cross-state rationale
+                        # (joint op like Olympic Games US+IL; a proxy executing the sponsor's
+                        # strategy like Ghostwriter/BY under RU doctrine).
+                        pass
+                    else:
+                        add("doctrine-state-mismatch","REVIEW",f"events/{eid}",
+                            f"doctrine {did} (state {dst}) on event attributed to {sorted(actor_states)} — "
+                            f"state mismatch with NO perspective tag (mis-tagged doctrine, a genuine cross-state "
+                            f"attacker-rationale case like a joint op/proxy, or missing victim-response/defender-response?)")
                 elif not actor_states:
                     nullactor_doctrine += 1
             # ICD-203: attested requires a source naming the strategic goal

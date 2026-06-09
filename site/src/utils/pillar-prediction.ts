@@ -11,7 +11,7 @@
  * doctrine_id (without a pillar_id or program_id) contribute no
  * pillar label and don't train the engine.
  */
-import { Atlas, type AuspexEvent } from './atlas-core';
+import { Atlas, isAttackerRationale, type AuspexEvent } from './atlas-core';
 import { extractFeatures, type EventFeatures, type Vocab, type ProfileBuildOptions, type IDFMap } from './attribution';
 import { parentTechnique } from './ttp-extract';
 
@@ -45,10 +45,12 @@ export interface PillarProfile {
   operators: Map<string, number>;
 }
 
-/** Extract the set of pillar ids labeled on an event (rolls programs up to pillars). */
+/** Extract the set of pillar ids labeled on an event (rolls programs up to pillars).
+ *  Attacker-rationale links only — see doctrinesOfEvent for the rationale. */
 export function pillarsOfEvent(event: AuspexEvent, atlas: Atlas): Set<string> {
   const out = new Set<string>();
   for (const link of event.doctrine_links ?? []) {
+    if (!isAttackerRationale(link)) continue;
     let pid = link.pillar_id;
     if (!pid && link.program_id) {
       pid = atlas.programs.get(link.program_id)?.pillarId;

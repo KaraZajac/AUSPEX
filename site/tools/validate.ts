@@ -222,6 +222,7 @@ for (const tgt of a.targets.values()) {
 
 // events
 const CONF_LINK = new Set(['attested', 'strongly_inferred', 'plausible']);
+const PERSPECTIVES = new Set(['attacker-rationale', 'victim-response', 'defender-response']);
 const CONF_ORG = new Set(['high', 'moderate', 'low']);
 const ASSESS = new Set(['concur', 'concur-with-caveat', 'partial', 'contested']);
 // Controlled feature vocabularies (AUDIT-2026-05-29). initial_vector + incident_type
@@ -289,6 +290,14 @@ for (const ev of a.events.values()) {
         'enum',
         `events/${ev.id}`,
         `doctrine link confidence not in {attested,strongly_inferred,plausible}: ${link.confidence}`,
+      );
+    }
+    if (link.perspective && !PERSPECTIVES.has(link.perspective)) {
+      add(
+        'error',
+        'enum',
+        `events/${ev.id}`,
+        `doctrine link perspective not in {attacker-rationale,victim-response,defender-response}: ${link.perspective}`,
       );
     }
     if (link.doctrine_id && fkMissing(a.doctrines as Map<string, unknown>, link.doctrine_id)) {

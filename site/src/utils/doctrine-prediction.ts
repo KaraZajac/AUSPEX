@@ -8,7 +8,7 @@
  * input is the same; only the label space (doctrines, not actors)
  * and aggregation differ.
  */
-import { Atlas, type AuspexEvent } from './atlas-core';
+import { Atlas, isAttackerRationale, type AuspexEvent } from './atlas-core';
 import { extractFeatures, type EventFeatures, type Vocab, type ProfileBuildOptions, type IDFMap } from './attribution';
 import { parentTechnique } from './ttp-extract';
 
@@ -47,10 +47,15 @@ export interface DoctrineProfile {
   operators: Map<string, number>;
 }
 
-/** Extract the set of top-level doctrine ids labeled on an event. */
+/** Extract the set of top-level doctrine ids labeled on an event.
+ *  Only ATTACKER-RATIONALE links count as who×why labels: victim-response /
+ *  defender-response links (e.g. UK NCS on a Sandworm advisory, Iran's
+ *  doctrine on Stuxnet) would train the doctrine's profile on the wrong
+ *  side's operations. */
 export function doctrinesOfEvent(event: AuspexEvent, atlas: Atlas): Set<string> {
   const out = new Set<string>();
   for (const link of event.doctrine_links ?? []) {
+    if (!isAttackerRationale(link)) continue;
     let did = link.doctrine_id;
     if (!did && link.pillar_id) did = atlas.pillars.get(link.pillar_id)?.doctrineId;
     if (!did && link.program_id) did = atlas.programs.get(link.program_id)?.doctrineId;

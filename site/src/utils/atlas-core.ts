@@ -135,6 +135,22 @@ export interface DoctrineLink {
   counter_explanation?: string | null;
   contested?: boolean;
   analyst?: string;
+  /** Whose doctrine the link names, relative to the operation it explains.
+   *  Absent = 'attacker-rationale' (the conducting party's why — the default
+   *  who×why semantics). 'defender-response' = the discloser/prosecutor's
+   *  doctrine on an event documenting someone else's operation (e.g. UK NCS
+   *  on a Sandworm advisory). 'victim-response' = the victim state's doctrine
+   *  (the event's effect on / mirror of it, e.g. Stuxnet → Iran's asymmetric
+   *  doctrine). Only attacker-rationale links participate in engine training,
+   *  eval label sets, and attacker-state derivation. */
+  perspective?: 'attacker-rationale' | 'victim-response' | 'defender-response';
+}
+
+/** True iff a doctrine link carries the default who×why semantics (the
+ *  conducting party's strategic rationale). Engine training, eval labels,
+ *  and state derivation must filter on this. */
+export function isAttackerRationale(link: DoctrineLink): boolean {
+  return !link.perspective || link.perspective === 'attacker-rationale';
 }
 
 export interface Attribution {
@@ -1190,9 +1206,13 @@ export function eventStateId(ev: AuspexEvent, a: Atlas): string | undefined {
   for (const attr of ev.attributions ?? []) {
     if (attr.service_id) return attr.service_id.split('/')[0];
   }
-  // 3) Last resort: derive from the first doctrine link's nation-state.
-  // Doctrine slugs start with the nation-state id (e.g., cn/mic2025).
+  // 3) Last resort: derive from the first ATTACKER-RATIONALE doctrine link's
+  // nation-state. Doctrine slugs start with the nation-state id (e.g.,
+  // cn/mic2025). victim-response / defender-response links are skipped —
+  // their state is the victim's or discloser's, NOT the operator's (the old
+  // unfiltered fallback labeled Stuxnet as an Iranian operation).
   for (const link of ev.doctrine_links ?? []) {
+    if (!isAttackerRationale(link)) continue;
     const did = link.doctrine_id ?? link.pillar_id ?? link.program_id;
     if (did) {
       const head = did.split('/')[0];

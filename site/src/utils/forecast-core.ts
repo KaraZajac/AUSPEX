@@ -6,7 +6,7 @@
  * See docs/FORECASTING-2026-05-31.md. Validated temporally in tools/eval-forecast.ts.
  */
 import type { Atlas, AuspexEvent } from './atlas-core';
-import { isMetaEvent } from './atlas-core';
+import { isMetaEvent, isAttackerRationale } from './atlas-core';
 import { actorsOfEvent } from './attribution';
 
 const HALF_LIFE = 2, ALPHA = 0.5, BETA_DYAD = 1.0;
@@ -58,7 +58,7 @@ export function buildForecaster(atlas: Atlas, opts: { asOf?: string; nowYear?: n
     .map((e) => ({
       id: e.id, name: e.name, date: (e.start_date || e.disclosure_date || '').slice(0, 10),
       actors: [...actorsOfEvent(e)], feats: eventFeats(atlas, e),
-      doctrines: (e.doctrine_links ?? []).map((d: any) => ({ id: d.doctrine_id, pillar: d.pillar_id })),
+      doctrines: (e.doctrine_links ?? []).filter(isAttackerRationale).map((d: any) => ({ id: d.doctrine_id, pillar: d.pillar_id })),
     }))
     .filter((e) => e.actors.length && e.feats.length && e.date && (!opts.asOf || e.date <= opts.asOf));
 
