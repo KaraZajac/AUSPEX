@@ -11,6 +11,8 @@ import { actorsOfEvent, extractFeatures, type RankedCandidate } from '../src/uti
 import { eventTokens, trainCNB, rankCNB } from '../src/utils/complement-nb.ts';
 import { runStackedAttributionLOO } from '../src/utils/stacked-attribution.ts';
 import type { AuspexEvent, Atlas } from '../src/utils/atlas.ts';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 
 const a = atlas();
 const allEvents = [...a.events.values()];
@@ -43,3 +45,10 @@ console.log(`CNB+stack   ${pct(r.hit1)}  ${pct(r.hit3)}  ${pct(r.hit5)}  ${r.mrr
 console.log(`Δ stack-base ${((r.hit1 - r.nbHit1) * 100).toFixed(1)}pp top-1`);
 console.log(`\nREFERENCE (current, de-leaked features):`);
 console.log(`  NB base 56.6 / 74.7 / 0.663   ·   NB+stack 68.9 / 77.0 / 0.733  ← the number to beat`);
+
+// Write the DEPLOYED-engine result to the research/stacked-eval page cache so the page shows the
+// headline (ComplementNB base), not the NB-base demo. base/baseShort drive the page's labels.
+const OUT_PATH = resolve(import.meta.dirname, '..', '.cache', 'stacked-eval.json');
+if (!existsSync(dirname(OUT_PATH))) mkdirSync(dirname(OUT_PATH), { recursive: true });
+writeFileSync(OUT_PATH, JSON.stringify({ ...r, base: 'ComplementNB', baseShort: 'CNB' }, null, 2));
+console.log(`\nWrote ${OUT_PATH} (base: ComplementNB)`);

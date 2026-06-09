@@ -8,12 +8,12 @@ AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events
 
 | | |
 |---|---|
-| Events | 815 |
+| Events | 818 |
 | Doctrine states | 15 |
 | Doctrines | 86 (across 199 pillars, 7 programs) |
-| Actors | 204 (state + criminal) |
+| Actors | 205 (state + criminal) |
 | Services | 88 |
-| Sources | 1,269 |
+| Sources | 1,272 |
 | Timeline markers | 73 |
 
 Doctrine states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, KR, AE.**
@@ -70,9 +70,9 @@ from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/A
 | Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
 |---|---|---|---|---|
 | Attribution (ComplementNB + stacked re-ranker) | **64.9%** | **73.7%** | **0.697** MRR | 627 |
-| Doctrine | **69.2%** / 68.1% | **87.0%** / 86.5% | **0.697** / 0.682 mAP | 608 / 683 |
-| Pillar | **61.4%** / 60.0% | **80.9%** / 79.8% | **0.678** / 0.666 mAP | 529 / 590 |
-| Joint (CNB actor × NB doctrine) | **46.7%** | **59.3%** | **0.545** MRR | 538 |
+| Doctrine | **68.9%** / 67.7% | **86.9%** / 86.4% | **0.696** / 0.681 mAP | 610 / 685 |
+| Pillar | **62.1%** / 60.6% | **80.8%** / 79.7% | **0.680** / 0.668 mAP | 531 / 592 |
+| Joint (CNB actor × NB doctrine) | **46.6%** | **58.6%** | **0.544** MRR | 539 |
 
 Doctrine, pillar, and joint fell from their pre‑expansion figures (72.9 / 63.8 / 53.9) once the
 backfilled operations were **doctrine‑tagged** — those events then entered these eval label sets, and
@@ -97,7 +97,7 @@ Half the actor *roster* (98 of 177) is thin (≤2 events) — but only ~17% of e
 therefore an honest map of the data‑availability frontier, not a capability ceiling: deepening thin
 actors is the proven lever (a targeted depth round moved 10 of them from 0% to 61.9%).
 
-**Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **819-event**
+**Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **818-event**
 corpus, attribution top-1 is **64.9%** (top-3 73.7%, MRR 0.697; 5-fold CV, operations-only): a
 **ComplementNB** base (Rennie et al. 2003 — built for the severe class imbalance of the long tail of
 one-and-few-event actors) at **55.7%**, re-ranked by the L2 logistic stacker (**+9.3pp**), and
@@ -105,7 +105,7 @@ one-and-few-event actors) at **55.7%**, re-ranked by the L2 logistic stacker (**
 decimal; the deployed model (CNB base + an all-corpus logreg) runs in
 [`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
 browser-vs-server. The **joint** actor side also uses ComplementNB (actorWeight 2.0 — top-1
-**46.7%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
+**46.6%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
 moved the doctrine / pillar / joint figures (see the table note above). Ablating the analyst-assigned
 `campaign_id` is a ~6–7pp sensitivity bound.
 

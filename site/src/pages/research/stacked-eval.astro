@@ -23,6 +23,8 @@ interface StackedJson {
     nbHit1: number[]; nbHit3: number[]; nbHit5: number[]; nbRr: number[];
     stHit1: number[]; stHit3: number[]; stHit5: number[]; stRr: number[];
   };
+  base?: string;
+  baseShort?: string;
   generatedAt: string;
 }
 
@@ -39,6 +41,8 @@ const cachePath = resolve(here, '..', '..', '..', '.cache', 'stacked-eval.json')
 const data: StackedJson | null = existsSync(cachePath)
   ? JSON.parse(readFileSync(cachePath, 'utf8'))
   : null;
+const baseName = data?.base ?? 'Naive-Bayes';
+const baseShort = data?.baseShort ?? 'NB';
 
 const ciNbHit1 = data ? bootstrapMeanCI(data.perEvent.nbHit1) : null;
 const ciNbHit3 = data ? bootstrapMeanCI(data.perEvent.nbHit3) : null;
@@ -53,19 +57,19 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
   <p class="kicker">Research</p>
   <h1>Stacked attribution — backtest</h1>
   <p class="lede">
-    A logistic-regression meta-classifier re-ranks the Naive-Bayes
+    A logistic-regression meta-classifier re-ranks the {baseName}
     engine's top-10 candidates using supplementary discriminative
     features (named-target overlap, malware-lineage hit, named-operator
     overlap, campaign-cluster match, in-active-window check, attacker-
-    state alignment). NB stays the candidate generator; the stacker
+    state alignment). {baseShort} stays the candidate generator; the stacker
     does the within-cluster cleanup.
   </p>
 
   {!data ? (
     <p class="reading">
-      <strong>No cached result.</strong> Run <code>pnpm run eval-stacked</code>
-      from <code>site/</code> to populate <code>.cache/stacked-eval.json</code>,
-      then rebuild.
+      <strong>No cached result.</strong> Run <code>pnpm exec tsx tools/eval-stacked-cnb.ts</code>
+      from <code>site/</code> to populate <code>.cache/stacked-eval.json</code> with the
+      deployed ComplementNB headline, then rebuild.
     </p>
   ) : (
     <>
@@ -86,21 +90,21 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
           </thead>
           <tbody>
             <tr>
-              <td class="cmp-label">Plain NB (same eval slice)</td>
+              <td class="cmp-label">Plain {baseShort} (same eval slice)</td>
               <td>{(data.nbHit1 * 100).toFixed(1)}%</td>
               <td>{(data.nbHit3 * 100).toFixed(1)}%</td>
               <td>{(data.nbHit5 * 100).toFixed(1)}%</td>
               <td>{data.nbMrr.toFixed(3)}</td>
             </tr>
             <tr>
-              <td class="cmp-label">Stacked NB + meta-classifier</td>
+              <td class="cmp-label">Stacked {baseShort} + meta-classifier</td>
               <td><strong>{(data.hit1 * 100).toFixed(1)}%</strong></td>
               <td><strong>{(data.hit3 * 100).toFixed(1)}%</strong></td>
               <td><strong>{(data.hit5 * 100).toFixed(1)}%</strong></td>
               <td><strong>{data.mrr.toFixed(3)}</strong></td>
             </tr>
             <tr class="cmp-delta">
-              <td class="cmp-label">Δ (stacked − NB)</td>
+              <td class="cmp-label">Δ (stacked − {baseShort})</td>
               <td>{(((data.hit1 - data.nbHit1) * 100) >= 0 ? '+' : '')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp</td>
               <td>{(((data.hit3 - data.nbHit3) * 100) >= 0 ? '+' : '')}{((data.hit3 - data.nbHit3) * 100).toFixed(1)}pp</td>
               <td>{(((data.hit5 - data.nbHit5) * 100) >= 0 ? '+' : '')}{((data.hit5 - data.nbHit5) * 100).toFixed(1)}pp</td>
@@ -110,7 +114,7 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
         </table>
         <div class="ci-band">
           <strong>95% CIs</strong> (bootstrap, n={data.scored}, 2000 iter, seeded):<br/>
-          NB:  top-1 {fmtPctCI(ciNbHit1!)} · top-3 {fmtPctCI(ciNbHit3!)} · top-5 {fmtPctCI(ciNbHit5!)} · MRR {fmtNumCI(ciNbMrr!)}<br/>
+          {baseShort}:  top-1 {fmtPctCI(ciNbHit1!)} · top-3 {fmtPctCI(ciNbHit3!)} · top-5 {fmtPctCI(ciNbHit5!)} · MRR {fmtNumCI(ciNbMrr!)}<br/>
           Stk: top-1 {fmtPctCI(ciStHit1!)} · top-3 {fmtPctCI(ciStHit3!)} · top-5 {fmtPctCI(ciStHit5!)} · MRR {fmtNumCI(ciStMrr!)}
         </div>
       </section>
@@ -135,14 +139,14 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
           return (
             <div class="ci-band">
               <strong>Per-fold mean ± std</strong> ({data.numFolds} folds):<br/>
-              NB:  top-1 {pp(nbH1.mean)} ± {pp(nbH1.std)} · top-3 {pp(nbH3.mean)} ± {pp(nbH3.std)}<br/>
+              {baseShort}:  top-1 {pp(nbH1.mean)} ± {pp(nbH1.std)} · top-3 {pp(nbH3.mean)} ± {pp(nbH3.std)}<br/>
               Stk: top-1 {pp(stH1.mean)} ± {pp(stH1.std)} · top-3 {pp(stH3.mean)} ± {pp(stH3.std)} · MRR {stM.mean.toFixed(3)} ± {stM.std.toFixed(3)}
             </div>
           );
         })()}
         <table class="folds-table">
           <thead>
-            <tr><th>fold</th><th>n</th><th>NB top-1</th><th>Stk top-1</th><th>Stk top-3</th><th>Stk MRR</th><th>Δ top-1</th></tr>
+            <tr><th>fold</th><th>n</th><th>{baseShort} top-1</th><th>Stk top-1</th><th>Stk top-3</th><th>Stk MRR</th><th>Δ top-1</th></tr>
           </thead>
           <tbody>
             {data.folds.map((f, i) => (
@@ -192,11 +196,11 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
           <strong>Reading.</strong> The strongest re-ranking signals are
           named-target overlap (the held-out event hits an org or
           infra entity the candidate has hit before), campaign
-          clustering, and named-operator overlap. NB's own log-score
-          weighs near zero — the stacker is using NB's <em>rank</em>
+          clustering, and named-operator overlap. {baseShort}'s own log-score
+          weighs near zero — the stacker is using {baseShort}'s <em>rank</em>
           and <em>top-1 margin</em> as the scaffolding and the meta-
           features as the within-cluster discriminator. That's the
-          architectural claim: NB picks the cluster, the stacker
+          architectural claim: {baseShort} picks the cluster, the stacker
           picks the actor in the cluster.
         </p>
       </section>
@@ -205,13 +209,13 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
         <h2>Methodology</h2>
         <ol>
           <li>
-            LOO with NB over the full corpus. Each event is held out,
-            NB is retrained on the rest, and the top-10 candidates are
+            LOO with {baseShort} over the full corpus. Each event is held out,
+            {baseShort} is retrained on the rest, and the top-10 candidates are
             captured along with their log-scores.
           </li>
           <li>
             Per (candidate, event) pair, compute a 10-feature vector:
-            NB log-score, NB rank, margin to top-1, named-target match
+            {baseShort} log-score, {baseShort} rank, margin to top-1, named-target match
             count, malware-lineage hit count, named-operator hit count,
             campaign-cluster match, in-active-window check, attacker-
             state alignment, has-MITRE-profile flag.
@@ -237,24 +241,24 @@ const ciStMrr  = data ? bootstrapMeanCI(data.perEvent.stRr)   : null;
           </li>
           <li>
             <strong>Honest scoring.</strong> When the true actor is
-            outside the NB top-10, neither NB nor the stacker can
+            outside the {baseShort} top-10, neither {baseShort} nor the stacker can
             recover it — counted as a miss for both engines. This
             keeps the rates honest (no silent skipping). It also
-            means the NB rates shown here are slightly lower than
+            means the {baseShort} rates shown here are slightly lower than
             the full-LOO rates on <a href="/research/attribution-eval">/research/attribution-eval</a>,
             which counts events at rank 11+ in MRR. Apples-to-apples
             comparison requires fixing top-K, so we do.
           </li>
         </ol>
         <p class="reading">
-          <strong>Reading.</strong> The stacker's top-1 lift over NB
+          <strong>Reading.</strong> The stacker's top-1 lift over {baseShort}
           is {(((data.hit1 - data.nbHit1) * 100) >= 0 ? '+' : '')}{((data.hit1 - data.nbHit1) * 100).toFixed(1)}pp
           aggregated across folds and tight to the digit per fold
           (±{((data.folds.reduce((s, f) => s + (f.stHit1 - f.nbHit1), 0) / data.folds.length) * 100 - 100 * (data.hit1 - data.nbHit1) >= 0 ? '+' : '')}{Math.sqrt(data.folds.reduce((s, f) => s + Math.pow(((f.stHit1 - f.nbHit1) - (data.hit1 - data.nbHit1)), 2), 0) / (data.folds.length - 1) * 100).toFixed(1)}pp std).
           The lift exists across every individual fold and the bootstrap
           CI on the aggregated number rules out sampling-noise as the
           explanation. The architectural claim holds:
-          NB picks the cluster, the stacker picks the actor in the
+          {baseShort} picks the cluster, the stacker picks the actor in the
           cluster.
         </p>
       </section>

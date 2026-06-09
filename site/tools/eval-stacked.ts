@@ -49,5 +49,5 @@ console.log(`\nbias = ${result.bias.toFixed(3)}`);
 
 const outDir = dirname(OUT_PATH);
 if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
-writeFileSync(OUT_PATH, JSON.stringify(result, null, 2));
+writeFileSync(OUT_PATH, JSON.stringify({ ...result, base: 'Naive-Bayes', baseShort: 'NB' }, null, 2));
 console.log(`\nWrote ${OUT_PATH}`);
