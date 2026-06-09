@@ -35,10 +35,14 @@ sectors 96 (one aggregate file). `campaigns/` is empty — campaigns are editori
   instead. `null` is allowed where noted.
 - **Foreign keys** are id strings; the validator errors on dangling references. The FK map
   is at the end.
-- **Confidence is ICD-203-disciplined** and never upgraded: doctrine links use
-  `attested` / `strongly_inferred` / `plausible`; attributing-org confidence uses
-  `high` / `moderate` / `low`; both are distinct from `auspex_assessment` (our editorial
-  stance).
+- **Confidence is never upgraded.** Two scales, named precisely (audit H6): the
+  attributing-org confidence `high` / `moderate` / `low` follows **ICD-203's confidence
+  dimension** (ODNI Analytic Standards); the doctrine-link scale `attested` /
+  `strongly_inferred` / `plausible` is the **AUSPEX evidentiary scale** — *inspired by but
+  distinct from ICD-203* (ICD-203 has no "attested" concept; `attested` here is an evidential
+  claim that a cited source explicitly names the strategic goal, and **requires**
+  `attesting_source_id` — enforced as a gate ERROR). Both are distinct from
+  `auspex_assessment` (our editorial stance).
 - **Sources are mandatory.** A claim without a source does not ship. Unverifiable URLs use
   `url: null` **plus an explanatory `note`** — never a fabricated URL.
 - **Actor → state** is derived from the id's first segment (`cn/mss/apt40` → `cn`;

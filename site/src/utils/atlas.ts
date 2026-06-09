@@ -154,6 +154,12 @@ function injectMitreCaches(actors: Map<string, Actor>): void {
     ];
     return candidates.find((p) => existsSync(p)) ?? null;
   }
+  // Missing caches degrade the engines SILENTLY (actor TTP/malware features become
+  // empty and every published eval number shifts) — fail LOUDLY instead of warn-only
+  // (MODELING-AUDIT-2026-06-09: clean-clone reproducibility).
+  const CACHE_HELP =
+    'actor TTP/malware features will be EMPTY and eval numbers will NOT match the published ones. ' +
+    'Run: pnpm exec tsx tools/extract-mitre-ttps.ts (once per clone).';
   try {
     const ttpPath = findCache('mitre-ttps.json');
     if (ttpPath) {
@@ -162,9 +168,11 @@ function injectMitreCaches(actors: Map<string, Actor>): void {
         const g = actor.external_refs?.mitre_attack;
         if (g && ttps[g]) actor.mitre_techniques = ttps[g];
       }
+    } else {
+      console.error(`[atlas] ✗ MISSING .cache/mitre-ttps.json — ${CACHE_HELP}`);
     }
   } catch (err) {
-    console.warn(`[atlas] failed to load mitre-ttps cache: ${(err as Error).message}`);
+    console.error(`[atlas] ✗ failed to load mitre-ttps cache (${(err as Error).message}) — ${CACHE_HELP}`);
   }
   try {
     const malPath = findCache('mitre-malware.json');
@@ -174,9 +182,11 @@ function injectMitreCaches(actors: Map<string, Actor>): void {
         const g = actor.external_refs?.mitre_attack;
         if (g && mal[g]) actor.mitre_malware = mal[g];
       }
+    } else {
+      console.error(`[atlas] ✗ MISSING .cache/mitre-malware.json — ${CACHE_HELP}`);
     }
   } catch (err) {
-    console.warn(`[atlas] failed to load mitre-malware cache: ${(err as Error).message}`);
+    console.error(`[atlas] ✗ failed to load mitre-malware cache (${(err as Error).message}) — ${CACHE_HELP}`);
   }
 }
 

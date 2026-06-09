@@ -56,7 +56,14 @@ Multi-hot Naive Bayes with Laplace smoothing (doctrine / pillar / joint); **attr
 
 Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes, λ = 0.2), out-of-distribution detection (Jaccard nearest-neighbour + calibrated-entropy), and temperature-scaling calibration (T = 3.0 / 3.0 for doctrine / pillar; the attribution re-ranker emits calibrated probabilities directly).
 
-### Current accuracy (leave-one-out; attribution via 5-fold CV)
+### Current accuracy (retrodictive: leave-one-out; attribution via 5-fold CV)
+
+**Two framing facts before the numbers.** *(1) Ground truth:* labels are analyst-concurred
+**vendor attributions**, not a verified oracle — every figure below measures agreement with that
+consensus, which itself carries an unknown error rate. *(2) Retrodiction:* LOO/CV trains on
+events before *and after* each held-out event; these numbers measure attribution of operations
+whose actors have corpus history, **not** forward-prediction skill — for that, see the temporal
+holdout below (26.5% top-1), which is the honest prospective figure.
 
 Each engine reports two numbers: **operations-only** (the headline — the engine's task is to infer
 the strategic frame / actor of actual cyber *operations*) and *all-events* (the same eval also
@@ -174,6 +181,9 @@ targets, so absolute likelihood is not identifiable). Shares one isomorphic engi
 ```sh
 cd site
 pnpm install
+pnpm exec tsx tools/extract-mitre-ttps.ts   # REQUIRED once per clone: builds .cache/mitre-*.json —
+                                            # without it actor TTP/malware features are silently empty
+                                            # and the eval numbers will NOT match the published ones
 pnpm validate              # validate the atlas (must be clean)
 pnpm dev                   # local dev at http://localhost:4321
 pnpm build                 # full static build (~90 min — runs LOO eval at build time)

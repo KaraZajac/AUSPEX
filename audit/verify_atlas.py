@@ -239,9 +239,11 @@ def check_doctrine_consistency():
                             f"attacker-rationale case like a joint op/proxy, or missing victim-response/defender-response?)")
                 elif not actor_states:
                     nullactor_doctrine += 1
-            # ICD-203: attested requires a source naming the strategic goal
+            # Evidentiary rule: 'attested' requires a source naming the strategic goal.
+            # ERROR (was WARN) since 2026-06-09 (audit H6) — the 16 legacy violations were
+            # downgraded to strongly_inferred; new ones must not ship.
             if dl.get("confidence") == "attested" and not dl.get("attesting_source_id"):
-                add("icd203-attested","WARN",f"events/{eid}",f"doctrine_link to {did} is 'attested' but has no attesting_source_id")
+                add("attested-no-source","ERROR",f"events/{eid}",f"doctrine_link to {did} is 'attested' but has no attesting_source_id (downgrade to strongly_inferred or cite the attesting source)")
     if nullactor_doctrine:
         add("doctrine-nullactor","INFO","events",
             f"{nullactor_doctrine} doctrine_links sit on null-actor events — by design (doctrine is independent of "
