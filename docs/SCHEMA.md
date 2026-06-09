@@ -198,6 +198,7 @@ The strategic frameworks — the moat. Pillars nest inside; programs nest inside
 | field | type | req | notes |
 |---|---|---|---|
 | `id` | str | REQUIRED | `ru/military-doctrine-2014` |
+| `kind` | str | REQUIRED | **construct class** (audit H4): `statute` (enacted law/constitution/binding resolution) \| `strategy` (formal published strategy/plan/doctrine document) \| `posture` (inferred-or-declared behavioral posture, no governing text — most have `issued_on: null`) \| `treaty` (international agreement/pledge) \| `event-anchor` (a dated geopolitical event used as a doctrinal anchor). The "doctrine" class deliberately spans these; **temporal claims (op-follows-publication) are only meaningful for dated `statute`/`strategy`/`treaty` records**, and analyses must say which subset they use. |
 | `nation_state_id` | str | REQUIRED | FK → nation-states |
 | `name`, `short_name` | str | REQUIRED | |
 | `issued_by` | str\|null | REQUIRED | issuing body |

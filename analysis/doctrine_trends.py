@@ -42,7 +42,7 @@ for e in events.values():
     if its and its <= META: continue                       # skip pure-meta
     y = yr(e.get("start_date") or e.get("disclosure_date"))
     actors = [a.get("actor_id") for a in (e.get("attributions") or []) if a.get("actor_id")]
-    dls = [(dl.get("doctrine_id")) for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id")]
+    dls = [(dl.get("doctrine_id")) for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id") and dl.get("perspective") in (None,"attacker-rationale")]
     for did in dls:
         rows.append({"y": y, "actors": actors, "did": did, "state": dstate.get(did)})
 
@@ -56,24 +56,42 @@ def spark(counter):
 print(f"\n===== AUSPEX who×why trends =====")
 print(f"{len(rows)} doctrine-links across operations, {Y0}–{Y1} ({len(doctrines)} doctrines, {len({r['state'] for r in rows})} states)\n")
 
+# Collection-bias control (2026-06-09): within-year normalization — each link weighted
+# 1/(that year's total links), so a year's corpus density cannot dominate. Where the RAW
+# and NORMALIZED views disagree, the raw ranking is collection-bias-sensitive.
+year_total = Counter(r["y"] for r in rows if r["y"])
+def wnorm(y): return 1.0/year_total[y] if year_total.get(y) else 0.0
+
 # 1. doctrine activity over time
-print("── 1. Most-active doctrines (total ops · trajectory {} · recent-3yr share) ──".format(f"{Y0}→{Y1}"))
-by_doc = defaultdict(Counter); doc_total = Counter()
-for r in rows:
-    if r["y"]: by_doc[r["did"]][r["y"]] += 1; doc_total[r["did"]] += 1
+print("── 1. Most-active doctrines (total ops · trajectory {} · recent-3yr share raw|NORM) ──".format(f"{Y0}→{Y1}"))
+by_doc = defaultdict(Counter); doc_total = Counter(); doc_w = defaultdict(float); doc_w_rec = defaultdict(float)
 recent = {Y1, Y1-1, Y1-2}
+for r in rows:
+    if r["y"]:
+        by_doc[r["did"]][r["y"]] += 1; doc_total[r["did"]] += 1
+        doc_w[r["did"]] += wnorm(r["y"])
+        if r["y"] in recent: doc_w_rec[r["did"]] += wnorm(r["y"])
 for did, tot in doc_total.most_common(15):
     rec = sum(v for y,v in by_doc[did].items() if y in recent)
-    print(f"  {tot:3}  {spark(by_doc[did])}  {(100*rec//tot):3}%rec  {did}")
+    nrec = 100*doc_w_rec[did]/doc_w[did] if doc_w[did] else 0
+    flag = "  ⚠norm-divergent" if abs(100*rec/tot - nrec) >= 20 else ""
+    print(f"  {tot:3}  {spark(by_doc[did])}  {(100*rec//tot):3}%rec|{nrec:3.0f}%n  {did}{flag}")
 
-# 2. state activity by year (recent window)
-print("\n── 2. State op-tempo by year (doctrine-tagged ops) ──")
-by_state = defaultdict(Counter)
+# 2. state activity by year (recent window) — raw rank + within-year-normalized rank
+print("\n── 2. State op-tempo (doctrine-tagged ops) — raw count · NORMALIZED rank shift ──")
+by_state = defaultdict(Counter); state_w = defaultdict(float)
 for r in rows:
-    if r["state"] and r["y"]: by_state[r["state"]][r["y"]] += 1
+    if r["state"] and r["y"]:
+        by_state[r["state"]][r["y"]] += 1
+        state_w[r["state"]] += wnorm(r["y"])
+raw_rank = {st:i for i,st in enumerate(sorted(by_state, key=lambda s:-sum(by_state[s].values())),1)}
+norm_rank = {st:i for i,st in enumerate(sorted(state_w, key=lambda s:-state_w[s]),1)}
 for st in sorted(by_state, key=lambda s: -sum(by_state[s].values()))[:10]:
     tot = sum(by_state[st].values())
-    print(f"  {st:4} {tot:3}  {spark(by_state[st])}")
+    shift = raw_rank[st]-norm_rank[st]
+    sh = f"  (norm rank {norm_rank[st]}, {'+' if shift>0 else ''}{shift})" if shift else ""
+    print(f"  {st:4} {tot:3}  {spark(by_state[st])}{sh}")
+print("  (a large raw→norm rank shift = that state's tempo ranking is collection-density-driven)")
 
 # 3. doctrine pivots — states whose dominant doctrine shifted first-half→second-half
 print("\n── 3. Strategic pivots (state's #1 doctrine: earlier half → later half of its ops) ──")
@@ -98,7 +116,7 @@ if gaps:
 print("\n── 5. Doctrine co-occurrence (top pairs tagged on the same op) ──")
 pair = Counter()
 for e in events.values():
-    dls = sorted({dl.get("doctrine_id") for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id")})
+    dls = sorted({dl.get("doctrine_id") for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id") and dl.get("perspective") in (None,"attacker-rationale")})
     for i in range(len(dls)):
         for j in range(i+1, len(dls)):
             if dstate.get(dls[i]) == dstate.get(dls[j]):  # same-state pairs (cross-state are usually counter-ops)

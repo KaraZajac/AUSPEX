@@ -18,7 +18,7 @@ the attested-only cut, it is not merely an artifact of how we chose to tag.
 
 Read-only, source-derived, no modelling.  python3 analysis/doctrine_to_operations.py
 """
-import glob, math, os
+import glob, math, os, random
 from collections import Counter, defaultdict
 import yaml
 
@@ -43,15 +43,23 @@ aname={i:a.get("canonical_name",i) for i,a in actors.items()}
 def is_op(e):
     its=set(e.get("incident_type") or []); return not(its and its<=META)
 
-# rows: per operational event, its actors and its (doctrine, attested?) links
+# rows: per operational event, its actors and its (doctrine, attested?) links.
+# perspective filter (2026-06-09): only ATTACKER-RATIONALE links are who×why labels —
+# victim-response / defender-response links name the other side's doctrine.
+def is_attacker_rationale(dl):
+    return dl.get("perspective") in (None, "attacker-rationale")
 ops=[]
 for e in events.values():
     if not is_op(e): continue
     A=[a.get("actor_id") for a in (e.get("attributions") or []) if a.get("actor_id")]
     D=[(dl.get("doctrine_id"), dl.get("confidence")=="attested")
-       for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id")]
+       for dl in (e.get("doctrine_links") or [])
+       if dl.get("doctrine_id") and is_attacker_rationale(dl)]
     ops.append({"e":e, "A":A, "D":D, "y":yr(e.get("start_date") or e.get("disclosure_date"))})
 NOP=len(ops)
+dkind={i:d.get("kind") for i,d in doctrines.items()}
+FORMAL_KINDS={"statute","strategy","treaty"}   # dated, publishable constructs — the only ones
+                                               # for which "op follows publication" is meaningful
 
 def entropy(probs):  # probs: iterable of probabilities summing ~1
     return -sum(p*math.log2(p) for p in probs if p>0)
@@ -60,40 +68,64 @@ def legibility(attested_only):
     tagged=sum(1 for o in ops if any((not attested_only) or att for _,att in o["D"]))
     return tagged, NOP
 
-def precedence(attested_only):
-    gaps=[]
+def precedence(attested_only, formal_only=False):
+    """Returns (gaps, dropped) — dropped = links to UNDATED doctrines that the temporal
+    leg cannot use (mostly `posture`-kind records; ~30% of pairs — disclosed, not silent)."""
+    gaps=[]; dropped=0
     for o in ops:
         if not o["y"]: continue
         for did,att in o["D"]:
             if attested_only and not att: continue
+            if formal_only and dkind.get(did) not in FORMAL_KINDS: continue
             iy=dissued.get(did)
-            if iy is not None: gaps.append(o["y"]-iy)
-    return gaps
+            if iy is None: dropped+=1
+            else: gaps.append(o["y"]-iy)
+    return gaps, dropped
 
-def information(attested_only):
-    # event-normalised weighted co-occurrence p(actor, doctrine) on ops that have BOTH
+def _condH(pairs):
+    """H(actor) and H(actor|doctrine) from a list of (actor, doctrine) weighted pairs."""
     co=defaultdict(float)
-    for o in ops:
-        A=o["A"]; D=[d for d,att in o["D"] if (not attested_only) or att]
-        if not A or not D: continue
-        w=1.0/(len(A)*len(D))
-        for a in A:
-            for d in D: co[(a,d)]+=w
+    for a,d,w in pairs: co[(a,d)]+=w
     Z=sum(co.values())
     if Z==0: return None
     p_ad={k:v/Z for k,v in co.items()}
     p_a=defaultdict(float); p_d=defaultdict(float)
     for (a,d),p in p_ad.items(): p_a[a]+=p; p_d[d]+=p
     Ha=entropy(p_a.values())
-    # H(actor | doctrine) = Σ_d p(d) H(actor|d)
     Had=0.0; per_d={}
     for d,pd in p_d.items():
         cond=[p_ad[(a,d)]/pd for a in p_a if (a,d) in p_ad]
         hd=entropy(cond); Had+=pd*hd
         top=max(((a,p_ad[(a,d)]/pd) for a in p_a if (a,d) in p_ad), key=lambda x:x[1])
-        per_d[d]=(hd, top[0], top[1])   # H(actor|d), dominant actor, its share
-    return {"Ha":Ha,"Had":Had,"MI":Ha-Had,"per_d":per_d,
-            "n_actors":len(p_a),"n_doc":len(p_d),"mass":Z}
+        per_d[d]=(hd, top[0], top[1])
+    return {"Ha":Ha,"Had":Had,"per_d":per_d,"n_actors":len(p_a),"n_doc":len(p_d)}
+
+def information(attested_only, K_null=40):
+    """Naive AND permutation-null-corrected conditional entropy (the correction
+    mo_narrowing.py introduced — the naive drop includes sparsity overfitting that
+    the audit measured at ~6x for this analysis; 2026-06-09 C2 fix)."""
+    rows=[]
+    for o in ops:
+        A=o["A"]; D=[d for d,att in o["D"] if (not attested_only) or att]
+        if not A or not D: continue
+        w=1.0/(len(A)*len(D))
+        for a in A:
+            for d in D: rows.append((a,d,w))
+    base=_condH(rows)
+    if base is None: return None
+    # permutation null: shuffle the actor column — any apparent narrowing that
+    # survives label shuffling is cell-sparsity, not signal
+    rng=random.Random(0)
+    actors_col=[r[0] for r in rows]
+    null_Had=0.0
+    for _ in range(K_null):
+        rng.shuffle(actors_col)
+        null_Had+=_condH([(actors_col[i], rows[i][1], rows[i][2]) for i in range(len(rows))])["Had"]
+    null_Had/=K_null
+    real_MI=null_Had-base["Had"]              # info beyond what sparsity alone produces
+    H_corr=base["Ha"]-real_MI                 # null-corrected residual entropy
+    return {**base, "MI_naive":base["Ha"]-base["Had"], "null_Had":null_Had,
+            "MI_real":real_MI, "H_corr":H_corr}
 
 print(f"\n===== DO CYBER OPERATIONS COME OUT OF STRATEGIC DOCUMENTS? =====")
 print(f"operational events: {NOP}   (doctrines: {len(doctrines)}, actors in corpus: {len(actors)})")
@@ -103,23 +135,34 @@ for tag, att in (("ALL doctrine_links", False), ("ATTESTED-only (source names th
     t,n=legibility(att)
     print(f"── LEG 1 · LEGIBILITY ──  {t}/{n} operations ({100*t//n}%) carry a doctrine link "
           f"→ they can be read as an expression of a strategic frame")
+    print(f"     (a TAGGING-COVERAGE measure, not independent doctrinal coverage — see the")
+    print(f"      selection-on-dependent-variable caveat below)")
 
-    g=precedence(att)
+    g,dropped=precedence(att)
     if g:
         g.sort(); med=g[len(g)//2]
         pre=sum(1 for x in g if x<0); same=sum(1 for x in g if x==0); post=sum(1 for x in g if x>0)
-        print(f"── LEG 2 · PRECEDENCE ──  n={len(g)} op↔dated-doctrine pairs · median gap {med:+d}yr · "
-              f"{100*post//len(g)}% of ops FOLLOW the document, {100*same//len(g)}% same-year, {100*pre//len(g)}% precede")
-        print(f"     (ops following the document is the temporal arrow the generative theory needs)")
+        tot=len(g)+dropped
+        print(f"── LEG 2 · PRECEDENCE ──  n={len(g)} (op, dated-doctrine) PAIRS · median gap {med:+d}yr · "
+              f"{100*post//len(g)}% of pairs FOLLOW the document, {100*same//len(g)}% same-year, {100*pre//len(g)}% precede")
+        print(f"     EXCLUDED: {dropped}/{tot} pairs ({100*dropped//tot}%) link an UNDATED doctrine (mostly kind=posture)")
+        print(f"     — the temporal leg is undefined for those, by construction, not silently clean.")
+        gf,df=precedence(att, formal_only=True)
+        if gf:
+            gf.sort(); medf=gf[len(gf)//2]; postf=sum(1 for x in gf if x>0)
+            print(f"     FORMAL-ONLY (kind ∈ statute/strategy/treaty): n={len(gf)} pairs · median {medf:+d}yr · "
+                  f"{100*postf//len(gf)}% follow — the construct-clean version of this claim")
+        print(f"     (multi-doctrine ops contribute multiple pairs; the unit is the PAIR, not the op)")
 
     info=information(att)
     if info:
-        Ha,Had,MI=info["Ha"],info["Had"],info["MI"]
-        ppl_before, ppl_after = 2**Ha, 2**Had
-        print(f"── LEG 3 · INFORMATION ──  H(actor)={Ha:.2f} bits → H(actor|doctrine)={Had:.2f} bits")
-        print(f"     mutual information {MI:.2f} bits · {100*MI/Ha:.0f}% of the actor-uncertainty is resolved by the doctrine")
-        print(f"     effective suspect pool shrinks {ppl_before:.0f} → {ppl_after:.0f} actors once you know the strategic frame "
-              f"(over {info['n_doc']} doctrines, {info['n_actors']} actors)")
+        Ha=info["Ha"]
+        print(f"── LEG 3 · INFORMATION ──  H(actor)={Ha:.2f} bits (≈{2**Ha:.0f} effective actors)")
+        print(f"     NAIVE:          H(actor|doctrine)={info['Had']:.2f} → MI {info['MI_naive']:.2f} bits, pool →{2**info['Had']:.0f}"
+              f"  (includes sparsity overfitting — do NOT cite alone)")
+        print(f"     NULL-CORRECTED: real MI {info['MI_real']:.2f} bits ({100*info['MI_real']/Ha:.0f}% of actor-uncertainty), "
+              f"pool →{2**info['H_corr']:.0f} actors  (permutation null K=40, the F2/mo_narrowing method)")
+        print(f"     (over {info['n_doc']} doctrines, {info['n_actors']} actors — cite the NULL-CORRECTED figures)")
 
 # ── most vs least actor-determining doctrines (attested where possible, else all) ──
 info=information(False)
@@ -155,17 +198,23 @@ sx=[e for k,e in events.items() if "stuxnet" in k.lower() or "stuxnet" in (e.get
 if sx:
     for e in sx:
         A=[a.get("actor_id") for a in (e.get("attributions") or [])]
-        D=[(dl.get("doctrine_id"),dl.get("confidence")) for dl in (e.get("doctrine_links") or [])]
+        D=[(dl.get("doctrine_id"),dl.get("confidence"),dl.get("perspective")) for dl in (e.get("doctrine_links") or [])]
         print(f"  {e.get('name')}  ({yr(e.get('start_date'))})  actor={A}")
-        for did,conf in D:
-            print(f"     doctrine: {dname.get(did,did)} [{conf}] state={dstate.get(did)} issued={dissued.get(did)}")
+        for did,conf,persp in D:
+            ptag=f" perspective={persp}" if persp else ""
+            print(f"     doctrine: {dname.get(did,did)} [{conf}]{ptag} state={dstate.get(did)} issued={dissued.get(did)}")
         if not D: print("     (no doctrine link tagged — a candidate to add if a US strategic-intent doc fits)")
 else:
     print("  not in corpus under 'stuxnet' — check id/name; the theory's namesake case may be worth adding.")
 
 print(f"\n── CAVEATS (carry into any claim) ── this shows doctrinal LEGIBILITY + temporal PRECEDENCE +")
-print("   INFORMATION, not proven generation. Three confounds: (1) REVERSE CODIFICATION — a state may")
+print("   INFORMATION, not proven generation. Confounds: (1) REVERSE CODIFICATION — a state may")
 print("   write doctrine to describe what it already does (precedence partly guards against this);")
 print("   (2) ANALYST-MEDIATED TAGGING — links are AUSPEX assessments, so the attested-only cut is the")
 print("   honest one (a source, not us, names the goal); (3) COMMON-CAUSE geopolitics drives both doc")
-print("   and op. Year-granular; legibility partly reflects corpus coverage. Association, not effect.")
+print("   and op; (4) SELECTION ON THE DEPENDENT VARIABLE — doctrines are often added to the atlas")
+print("   BECAUSE ops were observed, and ops that resist a doctrinal reading may simply not get a")
+print("   link, so LEG 1 legibility measures tagging coverage, not the world's doctrinal saturation")
+print("   (the corpus also selects attributable state operations in the first place); (5) SPARSITY —")
+print("   cite only the NULL-CORRECTED LEG 3 figures (the naive drop overstates narrowing ~6x).")
+print("   Year-granular; victim/defender-perspective links excluded throughout. Association, not effect.")

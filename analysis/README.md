@@ -8,16 +8,20 @@ attribution can't do). Independent of the TS engine; run on system `python3` + p
 > readings below are tool documentation; the dissertation interpretation is the candidate's.
 
 - **`doctrine_to_operations.py`** — ★ **the core-theory test: do cyber operations come out of
-  strategic documents?** Three observable legs, each computed on ALL links *and* on
-  ATTESTED-only links (where a cited source — not the analyst — names the strategic goal):
-  **(1) legibility** — 83% of operations carry a doctrine link (29% attested); **(2) precedence**
-  — 73–75% of ops *follow* the document, median +3yr (the temporal arrow); **(3) information**
-  — knowing the doctrine resolves **65% of actor-uncertainty** (70% attested), shrinking the
-  effective suspect pool from **91→5 actors** (42→3 attested). The relationship is *stronger*
-  on the attested cut, so it is not an artifact of AUSPEX's own tagging. Surfaces the most
-  actor-determining vs. most generic doctrines, exemplar document→op chains, and the founding
-  Stuxnet case. **Cannot prove generation** — carries the reverse-codification / analyst-tagging
-  / common-cause confounds explicitly.
+  strategic documents?** Three observable legs, each computed on ALL attacker-rationale links
+  *and* on ATTESTED-only links (a cited source — not the analyst — names the strategic goal):
+  **(1) legibility** — 81% of operations carry a doctrine link (27% attested) — explicitly a
+  *tagging-coverage* measure (selection-on-dependent-variable caveat built in); **(2) precedence**
+  — 73–76% of (op, dated-doctrine) *pairs* follow the document, median +3yr, **robust on the
+  construct-clean formal subset** (kind ∈ statute/strategy/treaty: 71–76%), with the 21–32% of
+  pairs linking undated postures disclosed as excluded; **(3) information** — **null-corrected**
+  (permutation null, the mo_narrowing method): doctrine resolves **~27% of actor-uncertainty**
+  (1.76 bits; pool 91→**27** actors; attested 26%, pool 41→16). *Correction 2026-06-09:* the
+  previously-reported naive figures (65–70% resolved, pool 91→5) contained ~6× sparsity
+  overfitting, and the "attested cut is stronger" claim was an artifact of that sparsity —
+  null-corrected, the two cuts are statistically indistinguishable (27% vs 26%). The script
+  prints naive AND corrected, labeled; cite the corrected. **Cannot prove generation** —
+  carries reverse-codification / analyst-tagging / common-cause / selection confounds explicitly.
 
 - **`mo_narrowing.py`** — ★ **does doctrine → target → outcome progressively narrow the actor?**
   (the "each nation-state has its own MO" theory). Two parts: **(A)** a per-state MO fingerprint
@@ -38,11 +42,16 @@ attribution can't do). Independent of the TS engine; run on system `python3` + p
   precede or follow the doctrine's publication), and doctrine co-occurrence.
 
 - **`deterrence.py`** — does naming-and-shaming change behaviour? An **event-study with a
-  difference-in-differences** control: for each punitive policy-action (sanction / indictment
-  / export-control / asset-seizure) against a TARGET STATE, the state's op tempo in the ±2yr
-  windows is differenced against the rest-of-world trend. Finding: mean DiD **+0.17** — no
-  detectable deterrence (mild acceleration); endogeneity biases *toward* false deterrence, so
-  the observed acceleration only strengthens the no-deterrence reading. State-level only.
+  difference-in-differences** control: punitive policy-actions (sanction / indictment /
+  export-control / asset-seizure) against a TARGET STATE vs the state's ±2yr op tempo,
+  differenced against the rest-of-world. *Corrected 2026-06-09 (audit C4):* right-censoring
+  guard (16 truncated 2025 actions dropped — they had inflated "defiance"), window-CLUSTERING
+  for effective-N (overlapping windows were pseudo-replication: 66 raw actions = only **4**
+  independent (state, window) observations), and the contaminated-control + proxies-in-RU
+  caveats made explicit. Honest summary: per-action mean DiD **+0.08** (≈ nothing); clustered
+  mean **−0.29** on n=4 with endogeneity biased *toward* exactly that sign — **the deterrence
+  question is not identifiable from this corpus design**; the analysis's value is demonstrating
+  why (a finding in itself). State-level only.
 
 - **`actor_deterrence.py`** — the sharper, ACTOR-level version (does naming a *specific* actor
   change *its* tempo?). Bridges call-outs/indictments to actors via meta events carrying an

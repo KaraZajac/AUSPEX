@@ -65,7 +65,7 @@ for e in events:
     if e.get("false_flag_risk") not in (None,"none"): excl_ff+=1; continue
     A=sorted({a.get("actor_id") for a in (e.get("attributions") or []) if a.get("actor_id")})
     if len(A)!=1: excl_multi+=1; continue
-    dls=[dl.get("doctrine_id") for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id")]
+    dls=[dl.get("doctrine_id") for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id") and dl.get("perspective") in (None,"attacker-rationale")]
     rows.append((A[0],
                  {"doc": dls[0] if dls else "none", "sec": prim_sector(e), "mo": mo_of(e.get("incident_type") or [])},
                  A[0].split("/")[0]))
