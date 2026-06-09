@@ -39,6 +39,10 @@ import { rankPairs, type JointScoringOptions } from './joint-prediction';
 
 export interface EngineMetrics {
   scored: number;
+  /** Test events whose true label was unrankable (cold-start: label absent from
+   *  the pre-split training set). Counted as MISSES in every rate (null=miss,
+   *  matching the LOO convention — MODELING-AUDIT-2026-06-09 H5). */
+  unrankable: number;
   hit1: number;
   hit3: number;
   hit5: number;
@@ -65,6 +69,7 @@ export interface EngineTemporalSummary {
   trainSize: number;
   testSize: number;
   scored: number;
+  unrankable: number;
   hit1: number;
   hit3: number;
   hit5: number;
@@ -84,13 +89,18 @@ function isInTrain(ev: AuspexEvent, trainEnd: string): boolean {
   return d !== '' && d <= trainEnd;
 }
 
-function aggregate(events: TemporalTestResult[], scored: TemporalTestResult[]): EngineMetrics {
-  const hit1 = scored.filter((r) => r.hit1).length;
-  const hit3 = scored.filter((r) => r.hit3).length;
-  const hit5 = scored.filter((r) => r.hit5).length;
-  const hit10 = scored.filter((r) => r.bestRank !== null && r.bestRank <= 10).length;
-  const mrr = scored.reduce((s, r) => s + 1 / (r.bestRank ?? 1e9), 0) / Math.max(scored.length, 1);
-  return { scored: scored.length, hit1, hit3, hit5, hit10, mrr };
+// null=miss (MODELING-AUDIT-2026-06-09 H5): ALL test events stay in the
+// denominator; an unrankable (cold-start) true label is a miss for every
+// metric — the same convention as the LOO evals. Previously unrankables were
+// filtered out, inflating the temporal numbers relative to every other table.
+function aggregate(results: TemporalTestResult[]): EngineMetrics {
+  const hit1 = results.filter((r) => r.hit1).length;
+  const hit3 = results.filter((r) => r.hit3).length;
+  const hit5 = results.filter((r) => r.hit5).length;
+  const hit10 = results.filter((r) => r.bestRank !== null && r.bestRank <= 10).length;
+  const mrr = results.reduce((s, r) => s + (r.bestRank !== null ? 1 / r.bestRank : 0), 0) / Math.max(results.length, 1);
+  const unrankable = results.filter((r) => r.bestRank === null).length;
+  return { scored: results.length, unrankable, hit1, hit3, hit5, hit10, mrr };
 }
 
 function bucketize(results: TemporalTestResult[]): {
@@ -109,9 +119,9 @@ function bucketize(results: TemporalTestResult[]): {
     byState.get(s)!.push(r);
   }
   const perYear = new Map<string, EngineMetrics>();
-  for (const [k, v] of byYear) perYear.set(k, aggregate(v, v));
+  for (const [k, v] of byYear) perYear.set(k, aggregate(v));
   const perState = new Map<string, EngineMetrics>();
-  for (const [k, v] of byState) perState.set(k, aggregate(v, v));
+  for (const [k, v] of byState) perState.set(k, aggregate(v));
   return { perYear, perState };
 }
 
@@ -161,16 +171,16 @@ export function runAttributionTemporal(trainEnd: string, opts: ScoringOptions = 
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  const ranked = results.filter((r) => r.bestRank !== null); // display-only (worst-rank list)
   const { perYear, perState } = bucketize(results);
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
+  const worst = [...ranked].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
 
   return {
     engine: 'attribution',
     trainEnd,
     trainSize: train.length,
     testSize: test.length,
-    ...aggregate(results, scored),
+    ...aggregate(results),
     perYear,
     perState,
     worst,
@@ -212,16 +222,16 @@ export function runDoctrineTemporal(trainEnd: string, opts: ScoringOptions = {})
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  const ranked = results.filter((r) => r.bestRank !== null); // display-only (worst-rank list)
   const { perYear, perState } = bucketize(results);
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
+  const worst = [...ranked].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
 
   return {
     engine: 'doctrine',
     trainEnd,
     trainSize: train.length,
     testSize: test.length,
-    ...aggregate(results, scored),
+    ...aggregate(results),
     perYear,
     perState,
     worst,
@@ -263,16 +273,16 @@ export function runPillarTemporal(trainEnd: string, opts: ScoringOptions = {}): 
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  const ranked = results.filter((r) => r.bestRank !== null); // display-only (worst-rank list)
   const { perYear, perState } = bucketize(results);
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
+  const worst = [...ranked].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
 
   return {
     engine: 'pillar',
     trainEnd,
     trainSize: train.length,
     testSize: test.length,
-    ...aggregate(results, scored),
+    ...aggregate(results),
     perYear,
     perState,
     worst,
@@ -326,16 +336,16 @@ export function runJointTemporal(trainEnd: string, opts: JointScoringOptions = {
     });
   }
 
-  const scored = results.filter((r) => r.bestRank !== null);
+  const ranked = results.filter((r) => r.bestRank !== null); // display-only (worst-rank list)
   const { perYear, perState } = bucketize(results);
-  const worst = [...scored].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
+  const worst = [...ranked].sort((a, b) => (b.bestRank ?? 0) - (a.bestRank ?? 0)).slice(0, 12);
 
   return {
     engine: 'joint',
     trainEnd,
     trainSize: train.length,
     testSize: test.length,
-    ...aggregate(results, scored),
+    ...aggregate(results),
     perYear,
     perState,
     worst,

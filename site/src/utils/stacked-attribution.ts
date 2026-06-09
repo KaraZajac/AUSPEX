@@ -148,15 +148,38 @@ export function runStackedAttributionLOO(
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));
 
-  // Pre-compute per-actor campaign sets for the campaign-match feature.
+  // Pre-compute per-actor campaign sets for the campaign-match feature,
+  // tracking per-(actor, campaign) event COUNTS so the LOO loop can subtract
+  // the held-out event's own contribution (MODELING-AUDIT-2026-06-09 H2: the
+  // old all-events map let campaignMatch fire for the true actor BECAUSE OF
+  // the held-out event itself — decisive for singleton campaigns).
   const knownCampaigns = new Map<string, Set<string>>();
+  const campaignCounts = new Map<string, Map<string, number>>(); // actorId -> campaignId -> #events
   for (const e of allEvents) {
     if (!e.campaign_id) continue;
     for (const aid of actorsOfEvent(e)) {
       let s = knownCampaigns.get(aid);
       if (!s) { s = new Set(); knownCampaigns.set(aid, s); }
       s.add(e.campaign_id);
+      let m = campaignCounts.get(aid);
+      if (!m) { m = new Map(); campaignCounts.set(aid, m); }
+      m.set(e.campaign_id, (m.get(e.campaign_id) ?? 0) + 1);
     }
+  }
+  /** Campaign map with the held-out event's own contribution removed: an
+   *  (actor, campaign) pair supported ONLY by the held-out event is dropped. */
+  function knownCampaignsExcluding(heldOut: AuspexEvent): Map<string, Set<string>> {
+    if (!heldOut.campaign_id) return knownCampaigns;
+    let adjusted: Map<string, Set<string>> | null = null;
+    for (const aid of actorsOfEvent(heldOut)) {
+      if ((campaignCounts.get(aid)?.get(heldOut.campaign_id) ?? 0) <= 1) {
+        if (!adjusted) adjusted = new Map(knownCampaigns);
+        const s = new Set(knownCampaigns.get(aid) ?? []);
+        s.delete(heldOut.campaign_id);
+        adjusted.set(aid, s);
+      }
+    }
+    return adjusted ?? knownCampaigns;
   }
 
   // LOO NB → top-K candidates + meta-features per labeled event.
@@ -178,8 +201,9 @@ export function runStackedAttributionLOO(
     }
     const topK = ranked.slice(0, TOP_K);
     const topScore = topK[0]?.logScore ?? 0;
+    const kcView = knownCampaignsExcluding(heldOut); // LOO hygiene for campaignMatch
     const cands = topK.map((c) => {
-      const pf = pairFeatures(heldOut, c, topScore, a, knownCampaigns);
+      const pf = pairFeatures(heldOut, c, topScore, a, kcView);
       return { ...c, features: pf };
     });
     eventRows.push({

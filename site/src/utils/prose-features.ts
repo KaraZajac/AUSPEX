@@ -121,13 +121,63 @@ function actorNameTokens(atlas: Atlas): Set<string> {
   return s;
 }
 
+// Doctrine name/slug tokens to scrub from prose — the WHY-side twin of the
+// actor-name scrub (MODELING-AUDIT-2026-06-09 H1: ~11% of doctrine-labeled
+// events carried an escapable doctrine token like "mcf"/"mic2025"/
+// "intelligentized" in their summaries, leaking the doctrine label into the
+// doctrine/pillar engines' prose features). Scrub rule is label-free and
+// deterministic: a token is scrubbed only if it appears in the name/short_name/
+// leaf-slug of AT MOST TWO doctrines — tokens shared across many doctrine names
+// ("national", "strategy", "warfare") are generic analytic vocabulary that
+// cannot identify a specific doctrine label and stay. Cached on doctrine count.
+let _doctrineStop: Set<string> | null = null;
+let _doctrineStopCount = -1;
+function doctrineNameTokens(atlas: Atlas): Set<string> {
+  if (_doctrineStop && _doctrineStopCount === atlas.doctrines.size) return _doctrineStop;
+  const tokDocs = new Map<string, Set<string>>();
+  for (const d of atlas.doctrines.values()) {
+    const toks = new Set<string>();
+    for (const t of tokenize(d.name ?? '')) toks.add(t);
+    if ((d as { short_name?: string }).short_name) {
+      for (const t of tokenize((d as { short_name?: string }).short_name!)) toks.add(t);
+    }
+    // Whole leaf slug (e.g. "mcf", "mic2025", "russkiy-mir") — an identifier by construction.
+    const leaf = (d.id ?? '').split('/').slice(1).join('/');
+    if (leaf && leaf.length >= 3 && !STOPWORDS.has(leaf)) toks.add(leaf);
+    for (const t of toks) {
+      let set = tokDocs.get(t);
+      if (!set) { set = new Set(); tokDocs.set(t, set); }
+      set.add(d.id);
+    }
+  }
+  const s = new Set<string>();
+  for (const [t, docs] of tokDocs) if (docs.size <= 2) s.add(t);
+  _doctrineStop = s;
+  _doctrineStopCount = atlas.doctrines.size;
+  return s;
+}
+
+// Combined prose scrub: actor names (WHO leak) ∪ distinctive doctrine tokens
+// (WHY leak). One shared set because prose features are shared by all engines.
+let _scrub: Set<string> | null = null;
+let _scrubKey = '';
+function proseScrubTokens(atlas: Atlas): Set<string> {
+  const key = `${atlas.actors.size}|${atlas.doctrines.size}`;
+  if (_scrub && _scrubKey === key) return _scrub;
+  const s = new Set<string>(actorNameTokens(atlas));
+  for (const t of doctrineNameTokens(atlas)) s.add(t);
+  _scrub = s;
+  _scrubKey = key;
+  return s;
+}
+
 function buildCorpusDF(atlas: Atlas): { df: Map<string, number>; N: number } {
   if (_cachedDF && _cachedDFAtlasSize === atlas.events.size) {
     return { df: _cachedDF, N: _cachedCorpusSize };
   }
   const df = new Map<string, number>();
   let N = 0;
-  const names = actorNameTokens(atlas);
+  const names = proseScrubTokens(atlas);
   for (const ev of atlas.events.values()) {
     const toks = eventProseTokens(ev, names);
     if (toks.length === 0) continue;
@@ -158,7 +208,7 @@ export function extractProseTerms(
   K = 15,
   opts: { excludeSelf?: boolean } = {},
 ): Set<string> {
-  const tokens = eventProseTokens(event, actorNameTokens(atlas));
+  const tokens = eventProseTokens(event, proseScrubTokens(atlas));
   if (tokens.length === 0) return new Set();
   const { df, N } = buildCorpusDF(atlas);
 
