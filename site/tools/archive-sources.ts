@@ -30,12 +30,20 @@ function curlJson(url: string): any {
   const out = execFileSync('curl', ['-s', '--max-time', '30', '-A', UA, url], { encoding: 'utf8' });
   return JSON.parse(out);
 }
-function curlSave(url: string): { code: number; location: string | null } {
-  // -i to capture headers; SPN responds 200/302 with the snapshot in content-location/location
-  const out = execFileSync('curl', ['-s', '-i', '--max-time', '90', '-A', UA, `https://web.archive.org/save/${url}`], { encoding: 'utf8' });
-  const code = parseInt(out.match(/^HTTP\/[\d.]+ (\d{3})/m)?.[1] ?? '0', 10);
-  const loc = out.match(/^(?:content-location|location):\s*(\S+)/im)?.[1] ?? null;
-  return { code, location: loc };
+function curlSave(url: string): { code: number; location: string | null; timedOut: boolean } {
+  // -i to capture headers; SPN responds 200/302 with the snapshot in content-location/location.
+  // NOTE: SPN keeps capturing SERVER-SIDE even if our client times out — a timeout means
+  // "requested, unverified", not "failed". The next availability pass writes those back
+  // (the loop is availability-first and resumable), so re-running converges.
+  try {
+    const out = execFileSync('curl', ['-s', '-i', '--max-time', '180', '-A', UA, `https://web.archive.org/save/${url}`], { encoding: 'utf8' });
+    const code = parseInt(out.match(/^HTTP\/[\d.]+ (\d{3})/m)?.[1] ?? '0', 10);
+    const loc = out.match(/^(?:content-location|location):\s*(\S+)/im)?.[1] ?? null;
+    return { code, location: loc, timedOut: false };
+  } catch (err: any) {
+    if (err?.status === 28) return { code: 0, location: null, timedOut: true }; // curl timeout
+    throw err;
+  }
 }
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
@@ -102,6 +110,12 @@ for (const s of candidates) {
     }
     // 2) capture (SAVE mode only, throttled)
     const save = curlSave(s.url);
+    if (save.timedOut) {
+      missing++; // counts as still-missing this run; the next availability pass picks it up
+      console.log(`  ⏳ requested ${s.id} (client timeout; SPN continues server-side — re-run to verify)`);
+      await sleep(SAVE_DELAY_MS);
+      continue;
+    }
     if (save.code === 200 || save.code === 302) {
       const loc = save.location;
       const archiveUrl = loc?.startsWith('/web/')
