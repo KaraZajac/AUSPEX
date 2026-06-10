@@ -132,9 +132,10 @@ strategic doctrines under which they were tasked, with per-claim sourcing.
 - One JSONL file per entity type; formal schema in `atlas.schema.json` (JSON Schema; every
   record validates). Corpus statistics in `stats.json`. Documentation in `DATASHEET.md`.
 - Integrity: verify with `shasum -a 256 -c SHA256SUMS`.
-- LICENSE: [TO BE SET — see publish/PUBLICATION-PLAN.md Decision 0]
-- Cite: see CITATION.cff in the source repository.
+- License: **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/) — reuse freely with
+  attribution to Kara Zajac / Black Flag Intelligence (see CITATION.cff).
 - A continuously maintained version exists; this snapshot is frozen for reproducibility.
+  Questions, corrections, or consulting: Black Flag Intelligence (blackflagintel.com).
 """)
 
     # ---- checksums (last) ----

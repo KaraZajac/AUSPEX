@@ -30,9 +30,14 @@ License options for the research snapshot, in order of venue-compatibility:
    acceptable to Journal of Cybersecurity (data-availability statement, repository link).
 3. **CC BY-NC-ND or custom** — protects most, publishes least; some venues reject.
 
-If protecting the product matters, **CC BY-NC on the frozen snapshot + Journal of
-Cybersecurity** is the coherent combination. If maximal academic uptake matters more,
-**CC BY + Scientific Data**. Decide here: ______
+**DECIDED 2026-06-09 (Kara): CC BY 4.0.** Rationale: reputation and widest audience over
+product-protection — the atlas as the open gold standard, with Black Flag Intelligence
+building reputation → consulting on top of it, rather than gating the data. Implications:
+**both venues are open; Scientific Data becomes the primary target** (maximal visibility,
+which is the point of the decision), Journal of Cybersecurity the field-native fallback.
+Attribution (the BY) means every reuse cites Kara/BFI — the license itself does the
+name-spreading. The repo gains a LICENSE at the freeze; bundle README and CITATION.cff
+carry CC-BY-4.0 as of this decision.
 
 ## Venue strategy (in recommended order)
 
