@@ -266,6 +266,12 @@ def check_backlog():
     todo = sum(1 for e in events.values() if "TODO(QC)" in e["_raw"] or "QC pending" in e["_raw"])
     if prov: add("backlog-provisional","INFO","events",f"{prov} events still carry a PROVISIONAL header comment")
     if todo: add("backlog-todo","INFO","events",f"{todo} events still carry a TODO(QC)/QC-pending marker")
+    # Human-verification coverage (docs/CORPUS-VERIFICATION-PLAN.md): the qc: stamp burn-down.
+    qc_full = sum(1 for e in events.values() if (e.get("qc") or {}).get("level") == "full")
+    qc_src  = sum(1 for e in events.values() if (e.get("qc") or {}).get("level") == "sources-only")
+    add("qc-coverage","INFO","events",
+        f"human-verified: {qc_full} full + {qc_src} sources-only of {len(events)} events "
+        f"({100*(qc_full+qc_src)//max(len(events),1)}%) — see docs/CORPUS-VERIFICATION-PLAN.md")
     unscoped = [aid for aid in actors if "/unscoped/" in aid or aid.split("/")[-2:-1] == ["unscoped"]]
     if unscoped: add("backlog-unscoped","INFO","actors",f"{len(unscoped)} actors under placeholder /unscoped services (service placement QC): {', '.join(sorted(unscoped)[:6])} …")
     # operational, state-attributed events with no doctrine link (the WHY-tagging frontier)

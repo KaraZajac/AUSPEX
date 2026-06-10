@@ -68,6 +68,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `doctrine_links` | list\<dict\> | REQUIRED | the *why* (may be empty `[]`) — see below |
 | `sources` | list\<str\> | REQUIRED | FK → sources |
 | `targets` | list\<dict\> | optional (98%) | the victims — see below |
+| `qc` | dict | optional | **human-verification stamp** (`{verified_by, on, level: full\|sources-only, notes?}`) — presence = the record passed the per-event protocol in `docs/CORPUS-VERIFICATION-PLAN.md`; absence = machine-checked only. Coverage reported by `verify_atlas.py` (`qc-coverage`). |
 | `initial_vector` | str | optional (94%) | initial-access vocab (below) |
 | `disclosure_date` | date | optional (80%) | public disclosure |
 | `end_date` | date\|null | optional (80%) | op end if bounded |

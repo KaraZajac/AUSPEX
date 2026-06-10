@@ -45,9 +45,13 @@ A record is **human-verified** when the candidate has confirmed, against the cit
    the thesis scaffold (exemplar chains, Stuxnet records, KP-money events). If a number in the
    dissertation traces to a specific event, that event must be census-verified.
 
-**Effort honestly estimated:** T2 ≈ 360 events × ~15 min ≈ **90–120 hours** — ~4 focused
-hours/week for 6 months, finishing well before writing starts. T3 adds ~25 hours. This is the
-realistic, finishable version of "verify the entire corpus."
+**Effort honestly estimated:** the measured census pool is **488 events** (P1: 127 provisional ·
+P2: 269 attested-link · P3: 92 single-source/high-conf — run `tools/qc-verify-worklist.ts` for
+the live burn-down) ≈ 488 × ~15 min ≈ **120–160 hours** — ~5 focused hours/week for ~6 months,
+finishing before writing starts. T3 adds ~25 hours. If that budget proves too heavy, the
+defensible trim is P2: census the attested links on *load-bearing* doctrines (those cited in
+findings) and sample the rest of P2 at n=60 with a reported error rate — document the choice
+here before making it.
 
 ## Why sampling the tail is defensible (the viva answer)
 
