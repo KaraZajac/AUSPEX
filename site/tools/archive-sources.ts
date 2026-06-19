@@ -27,8 +27,18 @@ import yaml from 'js-yaml';
 // HTTP via curl (not node fetch): robust to proxy/sandbox environments.
 const UA = 'AUSPEX-archiver/1.0 (research corpus preservation)';
 function curlJson(url: string): any {
-  const out = execFileSync('curl', ['-s', '--max-time', '30', '-A', UA, url], { encoding: 'utf8' });
-  return JSON.parse(out);
+  // -w appends the HTTP status after the body so we can detect 429s (which return an HTML
+  // throttle page, not JSON). archive.org rate-limits even the availability API on bursts.
+  const out = execFileSync('curl', ['-s', '-w', '\n%{http_code}', '--max-time', '30', '-A', UA, url], { encoding: 'utf8' });
+  const nl = out.lastIndexOf('\n');
+  const body = nl >= 0 ? out.slice(0, nl) : out;
+  const code = parseInt((nl >= 0 ? out.slice(nl + 1) : '').trim(), 10);
+  if (code === 429 || /^\s*</.test(body)) {
+    const e = new Error(`rate-limited (HTTP ${code || '?'})`) as any;
+    e.rateLimited = true;
+    throw e;
+  }
+  return JSON.parse(body);
 }
 function curlSave(url: string): { code: number; location: string | null; timedOut: boolean } {
   // -i to capture headers; SPN responds 200/302 with the snapshot in content-location/location.
@@ -52,6 +62,8 @@ const SAVE_MODE = process.argv.includes('--save');
 const limIdx = process.argv.indexOf('--limit');
 const LIMIT = limIdx >= 0 ? parseInt(process.argv[limIdx + 1], 10) : Infinity;
 const SAVE_DELAY_MS = 15_000;
+const adIdx = process.argv.indexOf('--avail-delay');
+const AVAIL_DELAY_MS = adIdx >= 0 ? parseInt(process.argv[adIdx + 1], 10) : 2_500;
 
 function walk(dir: string): string[] {
   const out: string[] = [];
@@ -88,13 +100,14 @@ function writeBack(s: Src, archiveUrl: string) {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-let found = 0, captured = 0, missing = 0, errors = 0, n = 0;
+let found = 0, captured = 0, missing = 0, errors = 0, n = 0, rateLimited = false;
 for (const s of candidates) {
   if (n >= LIMIT) break;
   n++;
   try {
     // 1) availability check (both modes — never re-capture what exists)
     const avail = curlJson(`https://archive.org/wayback/available?url=${encodeURIComponent(s.url)}`);
+    await sleep(AVAIL_DELAY_MS); // throttle availability queries — archive.org 429s on bursts
     const snap = avail?.archived_snapshots?.closest;
     if (snap?.available && snap?.url) {
       const archiveUrl = String(snap.url).replace(/^http:/, 'https:');
@@ -132,10 +145,17 @@ for (const s of candidates) {
     }
     await sleep(SAVE_DELAY_MS);
   } catch (err) {
+    if ((err as any)?.rateLimited) {
+      rateLimited = true;
+      console.log(`\n⛔ archive.org rate-limited us (429) at ${s.id} — stopping to avoid a longer block.`);
+      console.log(`   Wait for the cooldown (often 5–60 min), then re-run. Raise spacing with`);
+      console.log(`   --avail-delay <ms> (current ${AVAIL_DELAY_MS}ms) if it recurs. Progress so far is saved.`);
+      break;
+    }
     errors++;
     console.log(`  ✗ error    ${s.id}: ${(err as Error).message.slice(0, 90)}`);
     if (SAVE_MODE) await sleep(SAVE_DELAY_MS);
   }
 }
-console.log(`\ndone: ${found} existing snapshots written back · ${captured} newly captured · ${missing} missing (need --save) · ${errors} errors`);
+console.log(`\ndone: ${found} existing snapshots written back · ${captured} newly captured · ${missing} missing (need --save) · ${errors} errors${rateLimited ? ' · STOPPED (rate-limited)' : ''}`);
 console.log(`re-run any time — already-archived sources are skipped. Then run the gate (make verify).`);
