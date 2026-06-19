@@ -39,10 +39,16 @@ sectors 96 (one aggregate file). `campaigns/` is empty — campaigns are editori
   attributing-org confidence `high` / `moderate` / `low` follows **ICD-203's confidence
   dimension** (ODNI Analytic Standards); the doctrine-link scale `attested` /
   `strongly_inferred` / `plausible` is the **AUSPEX evidentiary scale** — *inspired by but
-  distinct from ICD-203* (ICD-203 has no "attested" concept; `attested` here is an evidential
-  claim that a cited source explicitly names the strategic goal, and **requires**
-  `attesting_source_id` — enforced as a gate ERROR). Both are distinct from
-  `auspex_assessment` (our editorial stance).
+  distinct from ICD-203* (ICD-203 has no "attested" concept). The WHY is an **inference by
+  construction** — the source names the *who*, the doctrine link names the *why* AUSPEX adds —
+  so the scale grades **how strongly an authoritative source corroborates that inference**, never
+  whether the perpetrator confessed or a source named the AUSPEX doctrine slug. `attested` =
+  an authoritative attributing source (govt / tier-1 vendor) **explicitly states the strategic
+  purpose at the goal level** (the goal the doctrine encodes; the slug need not appear), and
+  **requires** `attesting_source_id` — enforced as a gate ERROR. See the full ladder under
+  **doctrine_links** below and the calibration rationale in
+  [`OVER-ATTESTATION-FINDING-2026-06-19.md`](OVER-ATTESTATION-FINDING-2026-06-19.md). Both scales
+  are distinct from `auspex_assessment` (our editorial stance).
 - **Sources are mandatory.** A claim without a source does not ship. Unverifiable URLs use
   `url: null` **plus an explanatory `note`** — never a fabricated URL.
 - **Actor → state** is derived from the id's first segment (`cn/mss/apt40` → `cn`;
@@ -99,13 +105,32 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `doctrine_id` | str | REQUIRED | FK → doctrines |
 | `pillar_id` | str\|null | REQUIRED | FK → a pillar under that doctrine |
 | `program_id` | str\|null | REQUIRED | FK → a program under that pillar |
-| `confidence` | str | REQUIRED | `attested` \| `strongly_inferred` \| `plausible` |
+| `confidence` | str | REQUIRED | `attested` \| `strongly_inferred` \| `plausible` — grades AUSPEX's intent-inference; see the ladder below |
 | `reasoning` | str | REQUIRED | why this op serves this doctrine |
 | `contested` | bool | REQUIRED | |
 | `analyst` | str | REQUIRED | currently `claude` (machine-authored under human review) |
-| `attesting_source_id` | str\|null | optional (81%) | FK → sources; **required when `confidence: attested`** |
+| `attesting_source_id` | str\|null | optional (81%) | FK → sources; **required when `confidence: attested`** — the source whose own words state the strategic purpose |
+| `inference_basis` | dict\|null | optional | structured, auditable grounds for the WHY-inference (see ladder). `attested` → `{source_quote, source_id}`; `strongly_inferred` → `{signals[], ruled_out}`; `plausible` → `{alternatives[]}`. Backfilled over time |
 | `counter_explanation` | str\|null | optional (23%) | rationale when the link is contested/counter-intuitive |
 | `perspective` | str | optional (~2.5%) | `attacker-rationale` (default when absent) \| `victim-response` \| `defender-response` — **whose doctrine the link names**, relative to the operation it explains. `defender-response` = the discloser/prosecutor's doctrine on an event documenting someone else's operation (UK NCS on a Sandworm advisory; NCS-2023 on an indictment of an attributed actor). `victim-response` = the victim state's doctrine (the event's effect on / mirror of it — Stuxnet → Iran's asymmetric-warfare doctrine). **Only attacker-rationale links feed engine training, eval label sets, the who×why join, and attacker-state derivation**; the others are atlas context. Cross-state links *without* a tag are flagged by `verify_atlas.py doctrine-state-mismatch`. |
+
+**Doctrine-link confidence — the WHY ladder.** The doctrine link is the inference AUSPEX adds
+on top of attribution (the source names the *who*; the link names the *why*). The label grades
+**how far an authoritative source corroborates that inference** — it is *not* a claim that the
+perpetrator confessed intent, nor that any source used the AUSPEX doctrine slug. Calibration
+rationale and the re-grade procedure: [`OVER-ATTESTATION-FINDING-2026-06-19.md`](OVER-ATTESTATION-FINDING-2026-06-19.md).
+
+| label | the bar | `inference_basis` |
+|---|---|---|
+| **`attested`** | an authoritative attributing source (govt / tier-1 vendor) **explicitly states the strategic purpose** of the operation, at the level of the goal the doctrine encodes (the *attributing authority's* assessment — not the actor's admission; the doctrine **slug need not appear**). Requires `attesting_source_id`. *Test: quote one sentence from the source naming the end the op serves.* | `source_quote` + `source_id` |
+| **`strongly_inferred`** | no source states the purpose, **but** target + timing + actor-mission + doctrine-fit triangulate to **one strategic reading with no serious competitor** (an implicit ACH); **or** a source names only a *proximate* purpose (revenue, sanctions evasion) the doctrine specializes. *Test: would a second analyst, given the event + doctrine menu, land here?* (= the inter-rater study) | `signals[]` + `ruled_out` (the competing doctrine considered and rejected) |
+| **`plausible`** | the op fits the doctrine, but no source states a purpose and **more than one strategic reading survives**. | `alternatives[]` |
+
+Boundary that the 2026-06 re-grade turns on: a source naming the **goal in substance**
+("…to fund its WMD and ballistic-missile programs") earns `attested` for the doctrine that
+encodes that goal even if it never says "8th Congress defense plan"; a source naming only the
+**behaviour or a weaker/adjacent goal** ("circumvent sanctions", "generate revenue for the
+regime", or nothing) does **not** — that is `strongly_inferred`/`plausible`.
 
 **`targets[]`** (1,382 across the corpus):
 

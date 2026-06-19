@@ -61,9 +61,22 @@ research/<country>/
 
 ## Confidence labels — be strict
 
-- **attested** — the attributing government or vendor explicitly names the strategic goal (e.g. Treasury sanctions cite "support DPRK WMD program")
-- **strongly inferred** — target sector + timing + actor mission align with a named doctrine pillar with no major alternative explanation
-- **plausible** — fits the doctrine but other explanations exist; flag for analyst review
+The WHY is an inference by construction (the source names the *who*; we add the *why*). The label
+grades how far an authoritative source **corroborates** that inference — never whether the actor
+confessed, nor whether the source used the AUSPEX doctrine slug. Authoritative rubric:
+[`../docs/SCHEMA.md`](../docs/SCHEMA.md) (the WHY ladder) + the calibration rationale in
+[`../docs/OVER-ATTESTATION-FINDING-2026-06-19.md`](../docs/OVER-ATTESTATION-FINDING-2026-06-19.md).
+
+- **attested** — an authoritative attributing source (govt / tier-1 vendor) explicitly states the
+  strategic **goal in substance** (e.g. Treasury: "to generate revenue for its unlawful weapons of
+  mass destruction (WMD) and ballistic missile programs"). The goal the doctrine encodes must be
+  named; the doctrine slug ("8th Congress defense plan") need not appear. A source naming only the
+  **behaviour** or a weaker/adjacent goal ("circumvent sanctions", "revenue for the regime") is
+  **not** attested — that is `strongly inferred` at most. Requires a non-null attesting source.
+- **strongly inferred** — no source states the purpose, but target sector + timing + actor mission
+  triangulate to one named doctrine pillar with no serious alternative; **or** the source names
+  only a proximate goal the doctrine specializes.
+- **plausible** — fits the doctrine but other strategic readings survive; flag for analyst review.
 
 ## Sourcing priority
 
