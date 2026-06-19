@@ -1,13 +1,25 @@
 # Attested-link re-grade worklist (2026-06-19)
 
-> **STATUS (2026-06-19): the `a` bucket is DONE.** All 74 `a`-bucket events (94 attested links)
-> were downgraded `attested → strongly_inferred`/`plausible`, each with an `inference_basis`
-> (proximate signal + the goal the source does not name); 5 links found to genuinely name their
-> goal were kept attested. Corpus attested links 350 → 256. Committed in 6 cluster commits
-> (`4b632d9` kp · `ab08aa6` ncs · `df7042c` ru · `65aa7cf` ir · `14be5ad` cn · `c676c93` other);
-> gate green throughout; **no `qc:` stamp written**. Still open: **R** (re-fetch first — several
-> `a`/`ir`/`cn` links were downgraded *pending re-fetch* and can be restored once their source
-> text is confirmed), **b**/**M** (keep + add source quote), **C**/**F**/**Z**.
+> **STATUS (2026-06-19): all buckets DONE except R (fetch-gated).** Every flagged event except the
+> 64 fetch-gated **R** events was re-graded against the WHY-ladder. **Corpus attested links
+> 350 → 226** (124 corrected); **140 doctrine_links now carry an `inference_basis`**; **no `qc:`
+> stamp written**; gate green throughout. Per bucket:
+> - **a** (74 events): 94 downgraded + 5 kept — `4b632d9` kp · `ab08aa6` ncs · `df7042c` ru ·
+>   `65aa7cf` ir · `14be5ad` cn · `c676c93` other.
+> - **b/C/F** (19 events): 19 downgraded + 1 kept (volt-typhoon, a README exemplar — Wray names the
+>   Taiwan contingency) — `c6bb815`.
+> - **M** (11 events, split per-link): 11 downgraded + 4 kept-with-`source_quote` (treasury-blender,
+>   treasury-dprk-bankers, state-msmt — Treasury/State name WMD verbatim; kv-botnet odni-ata) — `bc02b44`.
+> - **Z** (10 events): reasoning-honesty fixes, strongly_inferred→plausible softens, and a machine-
+>   visible **PREDICATE GAP** flag (`contested: true`) on 4 "tolerated criminal-proxy" links whose
+>   Russia/China attribution the source never establishes — `c2cbc97`.
+>
+> **Open — R bucket (64 events), fetch-gated.** Re-fetch the dead/wrong-URL sources (blocked on the
+> same archive.org 429 throttling; DOJ press pages are JS-gated and don't curl-fetch; some URLs are
+> wrong, e.g. zedcex → a generic `treasury.gov/news/` landing page, albania `jy0941` → the 2020
+> APT39 release). Several links across the done buckets were also downgraded **pending re-fetch**
+> (log4shell L2, apt45 L1, maui, zedcex, olympic-destroyer, aria-sepehr L2, hunt-forward-montenegro,
+> ofac-zedcex) and can be **restored to attested** once their source text is confirmed.
 
 _**Assistive triage, not verdicts.** Auto-bucketed from the census pre-pass `overclaimed` notes against the new WHY-ladder (`docs/SCHEMA.md` → doctrine-link confidence). **No labels were edited and no `qc:` stamp was written** — every disposition is Kara's to confirm per the per-event protocol. Buckets are heuristic from note text; read the note before acting. Order of operations: re-fetch **R** first (archive.org throttling permitting — several will resolve to genuine attestations and leave the pool), then work **b**/**M** (keep, add quote), then **a** (downgrade), then **C**/**F**._
 
