@@ -267,7 +267,7 @@ The strategic frameworks — the moat. Pillars nest inside; programs nest inside
 | `retrieved_on` | date | REQUIRED | when curl-verified |
 | `tier` | str | REQUIRED | `primary` \| `secondary` \| `tertiary` |
 | `archive_url` | str\|null | optional (87%) | wayback/archive copy |
-| `notes` / `note` | str | optional | **both spellings occur — normalize to `notes`** |
+| `notes` | str | optional | normalized to `notes` (2026-06-20; the legacy singular `note` was retired from the data and the schema) |
 
 ---
 
