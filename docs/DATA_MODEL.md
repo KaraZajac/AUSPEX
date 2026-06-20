@@ -293,7 +293,8 @@ disputes a cluster in 2023.
 | `doctrine_ref_id` | FK | resolves to `Doctrine.id`, `DoctrinePillar.id`, or `DoctrineProgram.id` |
 | `confidence` | enum | `attested`, `strongly_inferred`, `plausible` |
 | `reasoning` | markdown | 1–3 sentences. *Why* we believe this link holds. |
-| `attesting_source_id` | FK → Source? | populated when `confidence = attested` — the source explicitly names the strategic goal |
+| `attesting_source_id` | FK → Source? | required when `confidence = attested` (the source names the strategic goal); on inferred links it denotes the primary supporting source |
+| `inference_basis` | dict? | structured, auditable grounds for the WHY-inference (see SCHEMA.md): `attested` → `{source_quote, source_id}`; `strongly_inferred` → `{signals[], ruled_out}`; `plausible` → `{alternatives[]}` |
 | `counter_explanation` | markdown? | what other doctrine could plausibly explain this event |
 | `contested` | bool | true if a published counter-argument exists |
 | `analyst` | string | internal — who authored this tag |
