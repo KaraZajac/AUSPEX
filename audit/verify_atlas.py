@@ -166,7 +166,7 @@ def check_sources():
         if sid not in referenced: add("source-orphan","WARN",f"sources/{sid}","referenced by no event/actor/doctrine/service/marker")
         url, arc = s.get("url"), s.get("archive_url")
         has_url = url not in (None, "null", "")
-        if not has_url and arc in (None,"null","") and not s.get("note"):
+        if not has_url and arc in (None,"null","") and not s.get("note") and not s.get("notes"):
             add("source-url","WARN",f"sources/{sid}","no url, no archive_url, and no explanatory note")
         if has_url:
             url_to_ids[re.sub(r'[#?].*$','',str(url).rstrip('/')).lower()].append(sid)
