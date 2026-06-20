@@ -159,6 +159,42 @@ re-grade from other intervening corpus edits. The diff-based proof isolates exac
 Confidence is metadata about evidentiary strength; it is deliberately **not** an engine label or
 feature, which is what makes the honesty-correction safe to apply to the published corpus.
 
+## Engine corroboration — the inference is as learnable as the attestation (2026-06-19)
+
+Now that the confidence labels are honest, a complementary run answers the deeper question: does
+the engine actually predict `attested` doctrine links better than `strongly_inferred` / `plausible`
+ones? `site/tools/eval-doctrine-by-confidence.ts` re-scores the standard doctrine LOO (identical
+folds + null=miss + supersession-equivalence conventions) **partitioned** by the true link's
+confidence — per-(event,doctrine) instance, max confidence per doctrine. Two results:
+
+**1. The headline is unmoved — empirical confirmation of the integrity proof above.** The
+event-level doctrine **top-1 is 68.7%** (top-3 86.7%, mAP 0.699) — within rounding of the README's
+68.5% / 86.9% / 0.698 (computed on the 2026-06-09 snapshot). The 124 confidence relabels left the
+engine identical, as predicted, and the corpus has not drifted from the published figures.
+
+**2. Inferred links are as learnable as attested ones.** Per-(event,doctrine) recall by tier:
+
+| tier | n | top-1 | top-3 | top-5 |
+|---|--:|--:|--:|--:|
+| `attested` | 145 | 54.5% | 73.8% | 81.4% |
+| `strongly_inferred` | 529 | 47.4% | 75.2% | 85.3% |
+| `plausible` | 173 | 46.8% | 71.1% | 79.8% |
+
+`attested` is sharper at rank-1 (+7pp), but by top-3/top-5 `strongly_inferred` **matches or exceeds**
+it (75.2 vs 73.8; 85.3 vs 81.4); `plausible` is weakest throughout (thin/contested evidence). The
+engine is **confidence-blind**, so the rank-1 edge is *not* the label carrying predictive power — it
+is the evidence-richness confound: attested events are DOJ/OFAC, feature-dense (named operators,
+TTPs, clean targets), so the engine nails their single best doctrine more often; the advantage washes
+out by top-3. (NB: this per-(event,doctrine) recall ≈ 48.5% overall is a different, stricter metric
+than the 68.7% per-event hit — each true label must individually rank, so multi-label events are
+penalised.)
+
+**Read for the viva:** the WHY-*inference* is a real, predictable signal, not analyst noise — the
+`strongly_inferred` bulk (which the re-grade made the corpus's dominant tier, n=529 vs 145 attested)
+is at parity with the attested core. That is the empirical complement to the honesty correction: we
+relabelled most claims from "attested" to "inferred", and the engine shows those inferred claims are
+just as sound.
+
 ## Resolution adopted (2026-06-19)
 
 The `attested` definition is **redefined in place** to the WHY-ladder above — `attested` =
