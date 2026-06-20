@@ -45,8 +45,8 @@ Owners: **[K]** = Kara (judgment / human verification) · **[auto]** = tooled, I
 
 ## 5 · Metadata & publication mechanics (FAIR / DOI / ORCID)
 - ⬜ **[K]** `CITATION.cff`: bump `version` → `1.0.0`, set `date-released` = freeze date, confirm `repository-code` URL, add the DOI post-Zenodo. (ORCID + CC-BY-4.0 already present. ✅)
-- ⬜ **[auto] Add a `LICENSE` file** (CC BY 4.0 legalcode) — currently missing; the plan calls for it at freeze.
-- ⬜ **[K/auto]** `DATASHEET.md` audited against current state (counts, the over-attestation correction, verification %, biases, version).
+- ✅ **[auto]** `LICENSE` file added (CC BY 4.0 legalcode, canonical text from creativecommons.org). [2026-06-20]
+- ◐ **[K/auto]** `DATASHEET.md` audited [2026-06-20]: counts confirmed current (818/205/1272/86/88); fixed the `attested` framing (structural-gate vs semantic-census, not "machine-enforced"), added the 2026-06-19 over-attestation correction to the history, and the uniform-verification-status note. **Remaining [K] blanks:** inter-rater κ, verification %, the motivation / ethics / AI-disclosure paragraphs, version.
 - ⬜ **[auto]** README counts/accuracy current (event/actor/source totals; accuracy caveats intact).
 - ⬜ **[K]** Version assigned (`v1.0.0`) + CHANGELOG / release notes.
 - ⬜ **[auto]** `publish/export_release.py` produces the distributable bundle; run it and sanity-check the artifact.

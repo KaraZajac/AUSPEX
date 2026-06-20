@@ -26,8 +26,12 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   organization + confidence + AUSPEX editorial assessment), `doctrine_links[]` (doctrine /
   pillar FK + evidentiary confidence + a `perspective` field separating the attacker's
   rationale from victim/defender doctrine), and per-claim source FKs.
-- **Label semantics:** only `attacker-rationale` doctrine links constitute the who×why join;
-  `attested` confidence requires a cited source naming the strategic goal (machine-enforced).
+- **Label semantics:** only `attacker-rationale` doctrine links constitute the who×why join.
+  `attested` requires a cited source that names the strategic goal *in substance* (the doctrine
+  slug itself need not appear — see the WHY-ladder, `docs/SCHEMA.md`). The gate enforces the
+  *structural* rule (`attested` ⇒ `attesting_source_id` present); the *semantic* claim — that the
+  source actually names the goal — is the human census's job, and the gap between the two is what
+  the 2026-06-19 over-attestation correction measured (below).
 - **Is anything missing?** Yes, by construction: the corpus contains *disclosed* operations
   only; collection density varies by year and reporting ecosystem (see Limitations).
 
@@ -54,9 +58,15 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 - **Verification coverage:** ____% of events human-verified under a published per-event
   protocol; the remainder machine-validated (JSON Schema + referential integrity, enforced by
   a pre-commit gate) and sampled with a measured error rate of ____%. **[from the T2/T3 plan]**
-- **Known label corrections:** the corpus carries a public correction history (e.g. the
-  2026-06-09 re-baseline: perspective semantics, leak scrubs, withdrawn over-claims) — git
-  history is the audit trail.
+  All records share this *uniform* status — including 157 backfill-imported events promoted to
+  first-class on 2026-06-20; no record is represented as "verified" absent a `qc:` stamp.
+- **Known label corrections:** the corpus carries a public correction history — git history is
+  the audit trail. Major passes: the **2026-06-09 re-baseline** (perspective semantics; prose
+  leak scrubs; withdrawn over-claims); and the **2026-06-19 over-attestation re-grade**
+  (`docs/OVER-ATTESTATION-FINDING-2026-06-19.md`) — a systematic audit that found `attested`
+  over-applied, corrected ~120 doctrine links (350→~226) to `strongly_inferred`/`plausible`,
+  redefined the confidence rubric to the WHY-ladder, and attached an auditable `inference_basis`
+  to each re-graded link. Verified engine-neutral: doctrine top-1 unchanged at 68.7%.
 
 ## Uses
 
