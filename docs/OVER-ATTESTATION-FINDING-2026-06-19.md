@@ -132,6 +132,33 @@ the cited source says, dominated by a goal-gradient inflation on DPRK WMD-financ
 verb-to-strategy mapping on the US National Cybersecurity Strategy — corrected as follows."_ That is
 a calibration story, and it is stronger than an unverifiable claim of having eyeballed everything.
 
+## Engine integrity — the re-grade is provably input-neutral (2026-06-19)
+
+A reviewer's first worry: *did re-labelling 124 confidence values and adding `inference_basis`
+move the published accuracy numbers?* No — and this is provable from the code, not just asserted:
+
+- **The engine reads doctrine links by `doctrine_id` + `pillar_id` + `perspective` only.**
+  `site/src/utils/atlas-core.ts` filters with `!link.perspective || link.perspective ===
+  'attacker-rationale'` and never references `confidence`, `contested`, `reasoning`, or
+  `inference_basis` (those appear only in UI components and authoring tools). `contested` exists
+  solely as a TypeScript field declaration; `inference_basis` appears **nowhere** in `site/`.
+- **No label-bearing field changed this session.** `git diff b20a01b..HEAD` over `atlas/events/`
+  shows **zero** added/removed `doctrine_id` / `pillar_id` / `program_id` / `perspective` /
+  `actor_id` lines. The doctrine / pillar / attribution / joint eval **label sets are byte-identical**
+  → those headline figures (doctrine 68.5% top-1, attribution 64.9%, etc.) are unchanged.
+- **Only feature touched: TF-IDF prose, on 10 of 116 events.** The deliberate summary-prose softens
+  (swapping "attested"/"gold-standard"/"canonical" for "documented"/"candidate") changed
+  `summary`/`outcome_summary` on exactly 10 events; all are generic-vocabulary edits — no doctrine
+  name, actor alias, malware family, or sector token added or removed. The prose feature is weighted
+  0.4 and doctrine/actor-token-scrubbed, so the bounded effect is sub-noise and cannot flip the
+  deterministic label set.
+
+Method note: this *analytical* isolation is the right instrument here — re-running the LOO eval
+now would compare against the README's 2026-06-09 snapshot and so could not separate this session's
+re-grade from other intervening corpus edits. The diff-based proof isolates exactly the re-grade.
+Confidence is metadata about evidentiary strength; it is deliberately **not** an engine label or
+feature, which is what makes the honesty-correction safe to apply to the published corpus.
+
 ## Resolution adopted (2026-06-19)
 
 The `attested` definition is **redefined in place** to the WHY-ladder above — `attested` =
