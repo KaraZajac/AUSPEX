@@ -11,10 +11,12 @@ summary: |
 attributions:
   - actor_id: cn/mss/flax-typhoon
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: nation   # Microsoft attributes to "Flax Typhoon ... based out of China" — names a nation-state actor (China) but NO service (no MSS named); state-organ stays nation-level despite the cn/mss actor id
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-08-24
     attribution_source_id: microsoft/2023-08_flax-typhoon-prc-living-off-the-land-esp
+    notes: "Microsoft names the campaign actor (Flax Typhoon, overlaps ETHEREAL PANDA) and locates it in China ('a nation-state actor based out of China'), but does NOT name the MSS or any specific Chinese service. Attribution is nation-level (China); the cn/mss actor placement is NOT supported by this source — see qc.notes."
 doctrine_links:
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/taiwan-island-collection
@@ -40,3 +42,29 @@ targets:
     role: primary
 sources:
   - microsoft/2023-08_flax-typhoon-prc-living-off-the-land-esp
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Microsoft MSTIC blog (raw snapshot captured + sha256). Publish date 2023-08-24
+    confirmed (article:published_time 2023-08-24T16:30Z). FACTS ALL VERIFIED against the raw:
+    living-off-the-land + LOLBins ✓; near-exclusive Taiwan targeting of government, education,
+    critical-manufacturing, IT, with some victims in SE Asia / North America / Africa ✓; initial
+    access via known vulns in public-facing VPN/web/Java/SQL servers + China Chopper web shell ✓;
+    Metasploit, Juicy/BadPotato, Mimikatz, SoftEther VPN, RDP (NLA-disabled) + Sticky Keys
+    (sethc.exe), WMIC/PowerShell ✓; "credential and intelligence collection rather than data
+    theft" ✓ ("discovery and credential access activities do not appear to enable further
+    data-collection and exfiltration objectives ... Microsoft has not observed [exfiltration]").
+    ATTRIBUTION: Microsoft names ONLY "China" — "a nation-state actor based out of China" /
+    "based in China"; it does NOT name the MSS, Ministry of State Security, or any service (the
+    only "MSS" string in the page is the MSSQLSERVER service account). Set attribution_level:
+    nation accordingly. Doctrine link kept strongly_inferred (Microsoft states only the proximate
+    "likely intention of performing espionage"; the cn/taiwan-reunification/taiwan-island-collection
+    reading triangulates from exclusive Taiwan targeting + actor mission, not a stated purpose —
+    so attesting_source_id stays null, NOT attested). No corrections to facts/targets were needed.
+    ACTOR CONSISTENCY — FLAGGED: the shared actor cn/mss/flax-typhoon asserts a cn/mss (MSS)
+    placement, but THIS source supports only China-nexus, not the MSS. The actor record's own
+    sources are Treasury (2025) + FBI (2024), not Microsoft; the cn/mss placement is unsourced from
+    this event's evidence. Did NOT re-home the shared actor; routed to a follow-up actor-audit.

@@ -11,10 +11,16 @@ summary: |
 attributions:
   - actor_id: ae/darkmatter/stealth-falcon
     attributing_org: "ESET Research"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high   # ESET's own words: "we attribute Deadglyph with high confidence to the Stealth Falcon APT group"
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-09-22
     attribution_source_id: welivesecurity/2023-09_stealth-falcon-uae-deadglyph-backdoor-es
+    notes: |
+      ESET attributes DeadGlyph -> Stealth Falcon at HIGH confidence (named-actor) on
+      targeting + additional evidence. The Stealth Falcon -> UAE leg is ESET citing MITRE
+      ("a threat group linked to the United Arab Emirates according to MITRE"), not an
+      independent ESET nation-level assertion — hence concur-with-caveat.
 doctrine_links:
   - doctrine_id: ae/regional-influence-realigned
     pillar_id: null
@@ -26,8 +32,33 @@ doctrine_links:
     contested: false
     analyst: claude
 targets:
+  # ESET states only "a governmental entity in the Middle East"; country left unset
+  # (NOT qa — Qatar is merely where a *related* VirusTotal sample was uploaded from, not
+  # the stated victim's country). Do not over-specify.
   - target_id: sectors/government
-    country: qa
     role: primary
 sources:
   - welivesecurity/2023-09_stealth-falcon-uae-deadglyph-backdoor-es
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs ESET/WeLiveSecurity (raw snapshot captured + sha256). Facts all verbatim:
+    DeadGlyph modular backdoor (native x64 Executor + .NET Orchestrator, registry-shellcode
+    loaded), three obtained modules = process creator / file reader / info collector, Microsoft
+    homoglyph in VERSIONINFO, victim "a governmental entity in the Middle East", related VT
+    sample uploaded from Qatar, initial vector undetermined (installer suspected for persistence),
+    publish date 2023-09-22. CORRECTIONS: (1) attributing_org_confidence moderate -> HIGH — ESET's
+    own words "we attribute Deadglyph with high confidence to the Stealth Falcon APT group"; the
+    prior "mapped from ICD strongly_inferred" comment conflated the org-confidence axis with the
+    doctrine-link axis (all 4 sibling Stealth Falcon events use high). (2) SET attribution_level:
+    named-actor (Stealth Falcon is a named APT). (3) Removed target country: qa — ESET states the
+    victim only as Middle Eastern; Qatar is solely the upload origin of a *related* sample, so qa
+    over-specified the victim's country (now unset). attribution_level/auspex rationale: ESET ties
+    DeadGlyph->Stealth Falcon directly (high); Stealth Falcon->UAE is ESET citing MITRE G0038
+    ("linked to the UAE according to MITRE"), not an independent ESET nation claim -> concur-with-
+    caveat retained. Doctrine: plausible kept honest (ESET names no strategic purpose beyond
+    espionage; pillar unfixable as victim state unstated). Actor ae/darkmatter/stealth-falcon =
+    DONE actor (UAE; Project Raven/FruityArmor lineage), consistent; NOT re-homed.

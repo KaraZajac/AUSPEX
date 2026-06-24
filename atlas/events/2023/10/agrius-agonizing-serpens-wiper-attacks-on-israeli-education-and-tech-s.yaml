@@ -1,6 +1,6 @@
 id: 2023-10/agrius-agonizing-serpens-wiper-attacks-on-israeli-education-and-tech-s
 name: "Agrius / Agonizing Serpens wiper attacks on Israeli education and tech sectors"
-start_date: 2023-10-01
+start_date: 2023-01-01   # source: campaign "beginning in January 2023 ... as recently as October 2023"
 incident_type:
   - wiper
   - destructive
@@ -8,14 +8,16 @@ incident_type:
 initial_vector: n-day
 false_flag_risk: none
 summary: |
-  Palo Alto Unit 42 detailed destructive attacks (Jan-Oct 2023) by Agonizing Serpens (aka Agrius, Pink Sandstorm/AMERICIUM, BlackShadow, DEV-0022, SPECTRAL KITTEN) against Israeli higher-education and technology organizations. The group stole PII and IP, then deployed novel wipers MultiLayer, PartialWasher and BFG Agonizer (with anti-EDR DLL/IAT unhooking) to destroy evidence and brick endpoints. Agrius is the long-running Iranian wiper-masquerading-as-ransomware actor (linked to Apostle/DEADWOOD/SharpBoys). The inventory lists Black Shadow as a separate actor but does NOT contain the Agrius/Agonizing Serpens wiper lineage or this 2023 campaign.
+  Palo Alto Unit 42 detailed destructive attacks (Jan-Oct 2023) by Agonizing Serpens (aka Agrius, BlackShadow, Pink Sandstorm, DEV-0022) against Israeli higher-education and technology organizations. The group stole PII and IP, then deployed three novel wipers — MultiLayer, PartialWasher and BFG Agonizer (the last with anti-EDR DLL and IAT unhooking) — to cover its tracks and render endpoints unusable. Unit 42 assesses with high confidence that the attacks were carried out by the Iranian-linked Agonizing Serpens APT group, which it characterizes as Iranian-backed but names no specific Iranian service. Agrius is the long-running Iranian wiper-masquerading-as-ransomware actor; Unit 42 ties this campaign's wipers to the group's earlier Apostle, IPsec Helper and Fantasy tooling by code overlap.
 attributions:
   - actor_id: ir/unscoped/agrius
     attributing_org: "unit42paloaltonetworks"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-10-01
+    attribution_date: 2023-11-06
     attribution_source_id: unit42paloaltonetworks/2023-10_agrius-agonizing-serpens-wiper-attacks-o
+    notes: "Unit 42 (exact wording): 'we assess with a high level of confidence that the attacks ... were carried out by the Iranian-linked Agonizing Serpens APT group' and ties it to an 'Iranian-backed APT group ... Agonizing Serpens (aka Agrius, BlackShadow, Pink Sandstorm, DEV-0022)'. Nation-level (Iran) at HIGH confidence with a named cluster ('Agonizing Serpens'/'Agrius') but NO Iranian service (no MOIS/IRGC) — hence attribution_level: named-actor and actor ir/unscoped/agrius."
 doctrine_links:
   - doctrine_id: ir/resistance-axis
     pillar_id: ir/resistance-axis/anti-israel-coercion
@@ -35,3 +37,41 @@ targets:
     role: primary
 sources:
   - unit42paloaltonetworks/2023-10_agrius-agonizing-serpens-wiper-attacks-o
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the sole cited source — Palo Alto Unit 42 "Agonizing Serpens (Aka Agrius)
+    Targeting the Israeli Higher Education and Tech Sectors" (raw snapshot captured + sha256
+    d25b16c0...). FACTS all verbatim-supported: destructive attacks "beginning in January 2023 and
+    continuing as recently as October 2023" against "the education and technology sectors in Israel";
+    steal PII + intellectual property, then deploy wipers "to cover the attackers' tracks and to
+    render the infected endpoints unusable"; three NOVEL wipers — MultiLayer, PartialWasher, BFG
+    Agonizer (+ Sqlextractor); anti-EDR = "DLL Unhooking" and "Import Address Table (IAT) Unhooking"
+    run by BFG; initial access "exploiting vulnerable internet facing web servers" / web shells
+    (= n-day); lineage "multiple code overlaps with Apostle, IPsec Helper and Fantasy".
+    CORRECTIONS: (1) attribution_date 2023-10-01 -> 2023-11-06 and source.published_on likewise — the
+    report's datePublished is Nov 6 2023; the Jan–Oct 2023 window is attack activity, not the report
+    date. start_date 2023-10-01 -> 2023-01-01 to match the source-stated campaign start (the 2023-10
+    slug is stable, unchanged). (2) Added attribution_level: named-actor (was absent) — orthogonal to
+    the HIGH org-confidence; mirrors the sibling Agrius events. (3) Removed misleading inline
+    "# mapped from ICD link-confidence: attested" comment — the doctrine link is strongly_inferred, not
+    attested. (4) Summary de-overclaimed: dropped aliases "AMERICIUM" and "SPECTRAL KITTEN" (MISP-only,
+    NOT in this Unit 42 source) and the unsupported "DEADWOOD/SharpBoys" lineage (this source states
+    only Apostle/IPsec Helper/Fantasy code overlap); removed the stale "inventory lists Black Shadow as
+    a separate actor" line (Black Shadow has since been merged into ir/unscoped/agrius).
+    ATTRIBUTION (exact wording): "we assess with a high level of confidence that the attacks ... were
+    carried out by the Iranian-linked Agonizing Serpens APT group"; "strong connections to an
+    Iranian-backed APT group ... Agonizing Serpens (aka Agrius, BlackShadow, Pink Sandstorm, DEV-0022)".
+    attribution_level = named-actor: NATION-level (Iran) at HIGH confidence with a named cluster, but NO
+    Iranian service (no MOIS/IRGC) — NOT named-unit. DOCTRINE ir/resistance-axis/anti-israel-coercion
+    kept strongly_inferred (honest): Unit 42 describes the destructive anti-Israel behaviour ("sow fear",
+    "inflict reputational damage", endpoint destruction) but states no Axis-of-Resistance strategic
+    purpose, so not attested; attesting_source_id null. Targets/sectors (Israeli academic/university +
+    ict) match the source, no inflation. ACTOR ir/unscoped/agrius CONSISTENT: this is the very Unit 42
+    report that equates the cluster (Agrius = Agonizing Serpens = Pink Sandstorm = BlackShadow =
+    DEV-0022) and attributes it to Iran at HIGH confidence while naming no service — corroborates the
+    de-provisionalized, de-MOIS'd ir/unscoped placement at named-actor; no re-home. Event was in the
+    backfill cohort (P1) with no in-file PROVISIONAL header (stripped at promotion); no header to delete.

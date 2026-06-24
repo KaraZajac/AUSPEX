@@ -11,11 +11,13 @@ summary: |
   Check Point Research (with Sygnia) disclosed Scarred Manticore, an Iranian MOIS-affiliated actor (overlapping OilRig/APT34 and the DEV-0861 cluster behind the 2021 Albania attack), running a stealthy long-dwell espionage campaign against government, military, telecommunications, financial and IT-services targets across Saudi Arabia, UAE, Jordan, Kuwait, Oman, Iraq and Israel. The campaign used the custom LIONTAIL passive-implant framework, which abuses undocumented HTTP.sys driver functionality to extract memory-resident payloads from inbound HTTP traffic. NOT currently in the inventory; this is the upstream espionage half of the Scarred Manticore/Void Manticore handoff pair.
 attributions:
   - actor_id: ir/mois/scarred-manticore
-    attributing_org: "researchcheckpoint"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org: "Check Point Research"
+    attributing_org_confidence: high
+    attribution_level: named-unit   # Check Point Key Findings name the MOIS as the affiliating service, not merely "Iranian"
     auspex_assessment: concur
-    attribution_date: 2023-10-01
+    attribution_date: 2023-10-31
     attribution_source_id: researchcheckpoint/2023-10_scarred-manticore-liontail-espionage-cam
+    notes: "Check Point (with Sygnia) names the service in its Key Findings: 'an actor affiliated with the Ministry of Intelligence and Security (MOIS)' — hence named-unit. Per-country sector assignments below are an editorial allocation; the source lists the affected countries and the affected sectors separately, not a country→sector mapping."
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
@@ -47,3 +49,28 @@ targets:
     role: primary
 sources:
   - researchcheckpoint/2023-10_scarred-manticore-liontail-espionage-cam
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the sole cited Check Point Research source (with Sygnia), raw snapshot captured +
+    hash re-verified (sha256 81b0ccd…84c). FACTS ✓: LIONTAIL passive framework abusing undocumented
+    HTTP.sys driver IOCTLs to run memory-resident shellcode; FOXSHELL/SDD/WINTAPIX/LIONHEAD families;
+    long-dwell espionage peaking mid-2023, actor active since ≥2019; victims across Saudi Arabia,
+    UAE, Jordan, Kuwait, Oman, Iraq and Israel in government/military/telecom/finance/IT-services
+    plus an NGO. ATTRIBUTION: Check Point explicitly names the service in its Key Findings — "an
+    actor affiliated with the Ministry of Intelligence and Security (MOIS)" (also "the MOIS-sponsored
+    destructive attack against Albanian government infrastructure (DEV-0861)"; "the typical victim
+    profile that MOIS-affiliated clusters usually target") — so attribution_level SET to named-unit
+    (MOIS named, not merely "Iranian"); attributing_org_confidence high (asserted directly, unhedged
+    on the MOIS affiliation). CORRECTIONS: attributing_org normalized "researchcheckpoint"→"Check
+    Point Research"; attribution_date 2023-10-01→2023-10-31 (real publish date, JSON-LD datePublished
+    2023-10-31; source published_on corrected to match). doctrine_link ir/forward-defense kept at
+    plausible — the source ties targeting to "Iranian interests"/"Iranian long-term interests" but
+    states no strategic purpose at the doctrine-goal level, so attested is not warranted and
+    attesting_source_id stays null. Per-country sector assignments are an editorial allocation (the
+    source lists countries and sectors separately) — flagged in the attribution note, not source-stated.
+    ACTOR ir/mois/scarred-manticore: consistent — id, MOIS service placement and ttp all match this
+    same source; a prior actor-audit verified the MOIS quote and KEPT ir/mois.

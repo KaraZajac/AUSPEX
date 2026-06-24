@@ -6,22 +6,31 @@ incident_type:
   - espionage
 false_flag_risk: none
 summary: |
-  Elastic Security Labs disclosed intrusion set REF2754 targeting a large Vietnamese agribusiness of national food-production importance with previously-undocumented tooling: the SPECTRALVIPER x64 backdoor plus the P8LOADER loader and POWERSEAL PowerShell runner. Elastic linked the activity to APT32/OceanLotus/Canvas Cyclone and a Vietnamese state-affiliated threat, evidencing domestic strategic-sector collection. New event (inventory APT32 record ends 2021).
+  Elastic Security Labs disclosed intrusion set REF2754 targeting a large Vietnam-based agribusiness "systemically important in the food production and distribution supply chains of Vietnam," using previously-undocumented tooling: the SPECTRALVIPER x64 backdoor plus the P8LOADER loader and POWERSEAL PowerShell runner (alongside DONUTLOADER). Elastic concluded with moderate confidence that REF2754 was a campaign "planned and executed by a Vietnamese state-affiliated threat," and that the activity "overlaps with prior reporting of Canvas Cyclone, APT32, and OCEANLOTUS" — i.e. it aligned the cluster with APT32/OceanLotus rather than issuing a hard group ID, and named no specific Vietnamese service. The motive assessment (hedged as "speculative") points to intelligence collection against a strategic domestic sector that intersects Vietnam's national food-security policy. New event (inventory APT32 record ends 2021).
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: "elastic"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-06-09
     attribution_source_id: elastic/2023-06_elastic-discloses-apt32-spectralviper-ba
+    notes: "Elastic gives MODERATE confidence (its own word) to the state-affiliation claim and names APT32 only by overlap (\"overlaps with prior reporting of Canvas Cyclone, APT32, and OCEANLOTUS\" / \"aligning with\" the APT32/OceanLotus actor), not a flat ID — hence named-actor specificity but concur-with-caveat. The state attribution is nation-only (\"a Vietnamese state-affiliated threat\"); no Vietnamese service (TC2/MPS/etc.) is named, consistent with the vn/unscoped/apt32 placement."
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      APT32 targeted a large Vietnamese agribusiness of national food-production importance with bespoke SPECTRALVIPER tooling — domestic strategic-sector collection in service of industrial/economic upgrading. Pillar left null — agribusiness/food production matches neither the automotive nor aerospace sub-pillars.
-    attesting_source_id: null
+      A Vietnamese state-affiliated actor (Elastic, moderate confidence; cluster aligned with APT32/OceanLotus) deployed bespoke SPECTRALVIPER tooling against a domestic agribusiness "systemically important in the food production and distribution supply chains of Vietnam" — a strategic-sector collection operation, not foreign-IP theft. Elastic itself ties the target to national policy: "food security has been a point of national policy emphasis, which also makes the victims of REF2754 an attractive target ... because of their intersection with Vietnam's strategic objectives," and assesses the implants are for "intelligence gathering." This reads as cyber collection in service of steering a strategically-prioritised domestic sector, the goal this (inferred, posture-class) doctrine encodes. Pillar left null: the doctrine's two sub-pillars are automotive and aerospace; food/agribusiness matches neither, so the link is to the doctrine head, not a pillar. Held at strongly_inferred (not attested): the doctrine has no Vietnamese-source attestation (the doctrine file itself caps event links at strongly_inferred/plausible), Elastic's motive read is explicitly "speculative," and the named target sector sits outside the doctrine's documented (foreign automotive/aerospace) spine.
+    attesting_source_id: elastic/2023-06_elastic-discloses-apt32-spectralviper-ba
+    inference_basis:
+      signals:
+        - "Victim is a domestic agribusiness 'systemically important in the food production and distribution supply chains of Vietnam' (Elastic) — a strategic, not commercially-random, target."
+        - "Elastic explicitly links the target to Vietnamese state strategy: food security as 'a point of national policy emphasis' and the victims' 'intersection with Vietnam's strategic objectives.'"
+        - "Motive assessed as intelligence collection ('operating as a backdoor for intelligence gathering purposes'); value framed as insight into 'competency of management, corruption, foreign influence, or price manipulations otherwise unavailable through regulatory reporting' — strategic-sector intelligence, the doctrine's logic."
+        - "Bespoke, previously-undocumented tooling (SPECTRALVIPER/P8LOADER/POWERSEAL) and a Vietnamese state-affiliated attribution rule out commodity-crime opportunism."
+      ruled_out: "Financially-motivated cybercrime — ruled out by Elastic's state-affiliation attribution, the bespoke non-commodity toolset, and a collection (not extortion/theft) motive; the regime-stability/surveillance doctrine (vn/resolution-29-nqtw) is the rejected doctrinal competitor, but the victim is a strategic economic enterprise rather than a dissident/diaspora/civil-society target, so the industrial/economic-collection reading dominates."
     contested: false
     analyst: claude
 targets:
@@ -30,3 +39,14 @@ targets:
     role: primary
 sources:
   - elastic/2023-06_elastic-discloses-apt32-spectralviper-ba
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Elastic "Elastic charms SPECTRALVIPER" (raw snapshot captured, sha256 9b6755cc...; HTTP 200; published_on 2023-06-09 verified). FACTS ✓: REF2754; SPECTRALVIPER x64 backdoor + P8LOADER + POWERSEAL (+DONUTLOADER); victim = a large Vietnam-based agribusiness "systemically important in the food production and distribution supply chains of Vietnam."
+    ATTRIBUTION: set attribution_level=named-actor (Elastic aligns the cluster with APT32/OceanLotus/Canvas Cyclone) but kept attributing_org_confidence=moderate — Elastic's OWN word, attaching to the state-affiliation claim ("moderate confidence that ... REF2754 [is a campaign] planned and executed by a Vietnamese state-affiliated threat"). Crucially Elastic does NOT issue a hard group ID; it says the activity "overlaps with prior reporting of" APT32 — so concur-with-caveat is right. On the orthogonal state axis the attribution is NATION-ONLY: "a Vietnamese state-affiliated threat," and NO service is named (zero raw hits for TC2 / Tổng cục II / Ministry of Public Security / military intelligence / MPS / A05). Removed the misleading "# mapped from ICD link-confidence" comment — moderate is now directly source-grounded.
+    ACTOR CONSISTENCY: fully consistent with vn/unscoped/apt32 (demoted 2026-06-24 because no cited source names a Vietnamese service). This event's source likewise names APT32 at most at nation level and names no service — it does NOT support re-homing to TC2/MPS. No re-home.
+    DOCTRINE: kept vn/industrial-upgrading-cyber-collection at strongly_inferred (pillar null — agribusiness fits neither the automotive nor aerospace sub-pillar). Strengthened reasoning + added inference_basis (signals + ruled_out). NOT attested: the doctrine is an inferred posture with no Vietnamese-source attestation (its own file caps links at strongly_inferred/plausible) and Elastic's motive read is explicitly "speculative"; but Elastic does name the strategic relevance (national food-security policy, "intersection with Vietnam's strategic objectives", intelligence-gathering motive), which clears the strongly_inferred bar over the plausible floor.
+    SOURCE: removed PROVISIONAL backfill header; added raw_snapshot + content_sha256 + AUDIT note with verbatim quotes; normalized kind industry->vendor-research and title to true page title "Elastic charms SPECTRALVIPER."

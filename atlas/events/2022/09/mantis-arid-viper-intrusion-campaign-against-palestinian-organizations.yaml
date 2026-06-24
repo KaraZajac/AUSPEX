@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2022-09/mantis-arid-viper-intrusion-campaign-against-palestinian-organizations
 name: "Mantis (Arid Viper) intrusion campaign against Palestinian organizations using Micropsia and Arid Gopher backdoors"
 start_date: 2022-09-01
@@ -6,27 +5,56 @@ incident_type:
   - intrusion
   - espionage
   - data-theft
-initial_vector: phishing
+initial_vector: unknown
 false_flag_risk: none
 summary: |
-  Symantec reported that Mantis (Arid Viper / APT-C-23) ran an intrusion campaign against organizations in the Palestinian territories beginning in September 2022 and continuing to at least February 2023. The attackers used updated versions of their custom Micropsia (Delphi-based) and Arid Gopher (Go-based) backdoors, along with a Reverse SOCKS tunneler (Revsocks), PuTTY, and a custom exfiltration tool (WindowsUpServ.exe). The group deployed multiple tool variants across compartmentalized network segments, conducted extensive credential theft, archived data with WinRAR, and exfiltrated stolen files over HTTP POST. Symantec noted the group typically lures victims via spear-phishing emails and fake social media profiles.
+  Symantec (Broadcom) reported (4 Apr 2023) that Mantis (Arid Viper / APT-C-23) ran an intrusion campaign against organizations in the Palestinian territories beginning in September 2022 and continuing to at least February 2023. The initial infection vector for this campaign is unknown; Symantec noted the group typically lures victims via spear-phishing emails and fake social media profiles, but did not establish the vector for these intrusions. The attackers used updated versions of their custom Micropsia (Delphi-based) and Arid Gopher (Go-based) backdoors, along with a Reverse SOCKS tunneler (Revsocks), PuTTY, and a custom exfiltration tool (WindowsUpServ.exe). The group deployed multiple tool variants across compartmentalized network segments, conducted extensive credential theft, archived data with WinRAR, and exfiltrated stolen files over HTTP POST. Symantec describes the victims only as "organizations within the Palestinian territories" and names no specific sector; the listed sectors below reflect Mantis/Arid Viper's documented general targeting, not victims Symantec identified for this campaign.
 attributions:
   - actor_id: ps/unscoped/arid-viper
     attributing_org: "Symantec"
-    attributing_org_confidence: moderate   # ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2022-09-01
+    attribution_date: 2023-04-04
     attribution_source_id: security/2022-09_mantis-arid-viper-intrusion-campaign-aga
+    notes: "Symantec names the actor (Mantis = Arid Viper / APT-C-23, 'a threat actor believed to be operating out of the Palestinian territories') — named-actor level — but explicitly does NOT reach nation/sponsor: 'While other vendors have linked the group to Hamas, Symantec cannot make a definitive attribution to any Palestinian organization.' Hence ps/unscoped + concur-with-caveat. Attribution date set to the report's publication (4 Apr 2023); 2022-09 is the campaign start."
 doctrine_links: []
+# Symantec names no sector for this campaign's victims ("organizations within the Palestinian
+# territories"). The defense + finance sector tags were general-history carryover (the article's
+# Background sector list — government/military/financial/media/education/energy/think-tanks — covers
+# Mantis's targeting across Israel and the wider Middle East, not these Palestinian victims) and were
+# removed as sector inflation. Government is retained as the single, best-supported primary: it is in
+# the source's sector list AND is the actor record's best-documented Palestinian-territory target.
 targets:
   - target_id: sectors/government
     country: ps
     role: primary
-  - target_id: sectors/defense
-    country: ps
-    role: primary
-  - target_id: sectors/finance
-    country: ps
-    role: primary
 sources:
   - security/2022-09_mantis-arid-viper-intrusion-campaign-aga
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the sole source (Symantec/Broadcom security.com, raw snapshot captured + SHA-256d).
+    FACTS ✓: Mantis = Arid Viper / APT-C-23; campaign Sep 2022 -> at least Feb 2023; updated
+    Micropsia (Delphi) + Arid Gopher (Go) backdoors; Revsocks (Reverse SOCKS tunneler), PuTTY,
+    custom exfil tool WindowsUpServ.exe; compartmentalized multi-variant toolsets; credential
+    theft; WinRAR archiving; HTTP POST exfiltration — all verbatim-confirmed in the raw.
+    CORRECTIONS: (1) initial_vector phishing -> unknown — the article states "The initial infection
+    vector for this campaign remains unknown"; spear-phishing is only the group's general MO.
+    (2) Sector inflation removed: dropped sectors/defense + sectors/finance (role primary) — these
+    came from the article's Background sector list (government/military/financial/media/education/
+    energy/think-tanks), which describes Mantis's GENERAL targeting across Israel + the Middle East,
+    not this campaign's victims. Symantec names the victims only as "organizations within the
+    Palestinian territories" with no sector. Kept sectors/government as the single defensible primary.
+    (3) attribution_date 2022-09-01 -> 2023-04-04 (actual report publication; 2022-09 is campaign start).
+    (4) Added attribution_level: named-actor.
+    ATTRIBUTION: Symantec reaches named-actor (names Mantis/Arid Viper) but explicitly NOT
+    nation/sponsor: "While other vendors have linked the group to Hamas, Symantec cannot make a
+    definitive attribution to any Palestinian organization." Confidence moderate; auspex
+    concur-with-caveat (caveat = no sponsor established). doctrine_links [] left empty — appropriate;
+    no source states a strategic purpose and the actor carries no default doctrine alignment.
+    ACTOR: consistent — actor_id ps/unscoped/arid-viper matches the actor record; "Mantis" is a
+    Symantec alias there; Hamas nexus suspected-not-established -> ps/unscoped is correct. NOT re-homed.

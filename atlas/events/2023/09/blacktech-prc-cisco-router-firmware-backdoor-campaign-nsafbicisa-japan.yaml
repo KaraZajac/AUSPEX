@@ -12,19 +12,46 @@ summary: |
 attributions:
   - actor_id: cn/mss/blacktech
     attributing_org: "NSA, FBI, CISA, Japan National Police Agency (NPA), Japan NISC (joint advisory AA23-270A)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor   # advisory names the actor "BlackTech" and "PRC-linked"; it does NOT name the MSS or any PRC service
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-09-27
-    attribution_source_id: seccloudappscisco/2023-09_blacktech-prc-cisco-router-firmware-back
+    attribution_source_id: cisa/2023-09-27_aa23-270a-blacktech-router-firmware
+    notes: "Joint advisory AA23-270A attributes to 'PRC-linked cyber actors known as BlackTech'; it does NOT name the MSS (cf. AA24-190A, which names 'PRC Ministry of State Security APT40'). The actor's cn/mss placement is therefore not supported by this source — flagged, not re-homed (shared actor)."
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/dual-use-research
     program_id: null
     confidence: plausible
     reasoning: |
-      BlackTech's modified-firmware router implants used to pivot from subsidiaries into corporate headquarters networks (Japan/East Asia focus) is sustained corporate-technology collection consistent with Military-Civil Fusion dual-use technology acquisition; the specific sector is not named in this advisory, hence plausible.
+      BlackTech's modified-firmware router implants used to pivot from international subsidiaries into corporate headquarters in the U.S. and Japan are sustained collection against corporate/technology targets. The joint advisory names a broad sector list ("government, industrial, technology, media, electronics, and telecommunication ... including entities that support the militaries of the U.S. and Japan"), which is consistent with — but does not state — a Military-Civil Fusion dual-use technology-acquisition purpose; an espionage/military-collection reading survives equally, so the link stays plausible. The advisory states no strategic acquisition goal, so this is an AUSPEX inference, not an attested purpose.
     attesting_source_id: null
     contested: false
     analyst: claude
+targets:
+  # AA23-270A names U.S. and Japan HQs as "the primary targets," reached by pivoting through
+  # international subsidiaries; sectors listed: government, industrial, technology, media,
+  # electronics, telecommunication, incl. entities that support the U.S. and Japan militaries.
+  - target_id: sectors/government
+    country: us
+    role: primary
+  - target_id: sectors/government
+    country: jp
+    role: primary
+  - target_id: sectors/defense
+    role: primary
+  - target_id: sectors/ict
+    role: primary
+  - target_id: sectors/ict/telecom
+    role: primary
+  - target_id: sectors/media
+    role: collateral
 sources:
+  - cisa/2023-09-27_aa23-270a-blacktech-router-firmware
   - seccloudappscisco/2023-09_blacktech-prc-cisco-router-firmware-back
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: "Audited vs the primary joint advisory AA23-270A (authoritative TLP:CLEAR PDF read in full, raw captured + sha256; the CISA HTML and media.defense.gov PDF 403 to curl/WebFetch, so the byte-identical FBI/IC3 mirror ic3.gov/CSA/2023/230927.pdf was used) and the cited Cisco Security Response (raw HTML captured; note: it is a JS-rendered shell, body verified via WebFetch). FACTS ✓: modified Cisco IOS firmware/unsigned bootloader implants, SSH backdoor persistence, stolen non-Cisco code-signing certs, pivot from international subsidiaries to U.S./Japan HQs via trusted-domain relationships, active since 2010. CORRECTIONS: (1) added the primary advisory cisa/2023-09-27_aa23-270a-blacktech-router-firmware as a source + the attribution_source_id — the subsidiary->HQ pivot and sector list are in the joint CSA, NOT the cited Cisco response (Cisco carries the credential-vector/no-Cisco-vuln/code-signing points); (2) set attribution_level: named-actor; (3) corrected the Cisco source's publisher (it is a Cisco Security Response, not the advisory itself) + de-provisionalized both source records; (4) added source-faithful targets (gov US+JP, defense, ict, ict/telecom, media). ATTRIBUTION: 'PRC-linked cyber actors known as BlackTech' — named-actor; the advisory does NOT name the MSS or any PRC service (cf. AA24-190A which names 'PRC Ministry of State Security APT40'); attributing_org_confidence high is supported. ACTOR cn/mss/blacktech: the cn/mss placement is NOT supported by this source — FLAGGED for follow-up (shared actor, not re-homed); the cited evidence establishes PRC nexus only, no MSS. doctrine_link cn/mcf/dual-use-research kept plausible (no strategic acquisition purpose stated; espionage/military-collection reading survives equally) — attesting_source_id remains null, correct."

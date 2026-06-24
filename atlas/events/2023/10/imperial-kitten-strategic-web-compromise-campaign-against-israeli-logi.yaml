@@ -8,36 +8,70 @@ incident_type:
   - reconnaissance
 false_flag_risk: none
 summary: |
-  CrowdStrike Counter Adversary Operations attributed an October 2023 wave of strategic web compromise (watering-hole) operations against Israeli transportation, maritime, logistics and technology organizations to IMPERIAL KITTEN (aka Tortoiseshell, TA456, Crimson Sandstorm, Yellow Liderc), an IRGC-suspected Iran-nexus actor active since 2017. Compromised Israeli sites profiled visitors and delivered the IMAPLoader .NET implant (email-based C2 via Yandex accounts); initial access also used job-recruitment social engineering, one-day exploits and stolen VPN credentials. This actor and campaign are NOT in the inventory and add IRGC web-compromise tradecraft to the post-Oct-7 Israel picture.
+  CrowdStrike Counter Adversary Operations (publishing 9 Nov 2023) attributed, at moderate confidence, an October 2023 wave of strategic web compromise (watering-hole) operations against Israeli transportation, logistics and technology organizations to IMPERIAL KITTEN (aka Tortoiseshell, TA456, Crimson Sandstorm, Yellow Liderc), an Iran-nexus actor active since at least 2017 whose connection to the IRGC is suspected, not established. Compromised (primarily Israeli) sites profiled visitors and delivered the IMAPLoader .NET implant (email-based C2 via Yandex accounts), alongside StandardKeyboard, a Discord-C2 RAT and a Python reverse shell dropped by a macro-enabled Excel lure; CrowdStrike additionally attributes (at low confidence, from uncorroborated single-source reporting) initial access via job-recruitment social engineering, one-day exploits, SQL injection and stolen VPN credentials. CrowdStrike's broader targeting scope for the actor also names the Israeli maritime sector; "defense" appears only in the actor's generic historical industry list, not in the Israeli/Oct-2023 activity. This actor and campaign add Iran-nexus web-compromise tradecraft to the post-Oct-7 Israel picture, though CrowdStrike frames the Oct-2023 wave as a continuation of SWC activity it tracked across 2022-2023 rather than as a Gaza-war-triggered operation.
 attributions:
   - actor_id: ir/unscoped/imperial-kitten
-    attributing_org: "crowdstrike"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: attested
+    attributing_org: "CrowdStrike"
+    attributing_org_confidence: moderate   # CrowdStrike states "moderate confidence" verbatim
+    attribution_level: named-actor          # names IMPERIAL KITTEN (Iran-nexus); IRGC only SUSPECTED -> nation-level Iran, ir/unscoped
     auspex_assessment: concur
-    attribution_date: 2023-10-01
+    attribution_date: 2023-11-09
     attribution_source_id: crowdstrike/2023-10_imperial-kitten-strategic-web-compromise
+    notes: "Iran-nexus with a SUSPECTED IRGC connection (not established); no specific service firmly named, hence actor ir/unscoped. CrowdStrike's own confidence on the attribution is moderate."
 doctrine_links:
   - doctrine_id: ir/resistance-axis
     pillar_id: ir/resistance-axis/anti-israel-coercion
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      IRGC-nexus watering-hole operations profiling and implanting Israeli transportation, maritime, logistics and tech organizations in October 2023 are coordinated anti-Israel cyber pressure timed to the Gaza war, the core coercive logic of Iran's Axis-of-Resistance posture against Israel.
+      Iran-nexus (IRGC-suspected) watering-hole operations profiling and implanting Israeli transportation, logistics and technology organizations are sustained intelligence-collection pressure against Israel — CrowdStrike assesses the actor "likely fulfills Iranian strategic intelligence requirements associated with IRGC operations" and notes a "continued focus on targeting Israeli organizations." That standing anti-Israel collection-and-access posture is the operational expression of Iran's Axis-of-Resistance logic against Israel. Note: CrowdStrike frames the October 2023 wave as a continuation of SWC activity it observed across 2022-2023 against the same Israeli sectors, not as an operation it ties to the Gaza war; the doctrine link rests on the standing anti-Israel targeting pattern, not on source-stated Oct-7 reactivity. attesting_source_id is null because the source states an intelligence-requirement purpose, not an anti-Israel-coercion goal in the doctrine's terms.
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
+  # Oct-2023 SWC wave firmly named by CrowdStrike: transportation/logistics + technology.
   - target_id: sectors/transport/logistics
-    country: il
-    role: primary
-  - target_id: sectors/transport/maritime
     country: il
     role: primary
   - target_id: sectors/ict
     country: il
     role: primary
-  - target_id: sectors/defense
+  # Maritime: not named for the Oct-2023 wave specifically, but CrowdStrike's moderate-confidence
+  # assessment basis cites a "continued focus on targeting Israeli organizations in the
+  # transportation, maritime and technology sectors" and "previously reported activity targeted...
+  # the Israeli maritime, transportation and technology sectors" -> kept as collateral/scope.
+  - target_id: sectors/transport/maritime
     country: il
-    role: primary
+    role: collateral
+  # REMOVED 2026-06-24: sectors/defense was sector inflation — "defense" appears only in CrowdStrike's
+  # generic historical industry list ("Historically... defense, technology, telecommunications,
+  # maritime, energy..."), never tied to Israel or the October 2023 SWC activity.
 sources:
   - crowdstrike/2023-10_imperial-kitten-strategic-web-compromise
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited against the single cited source (CrowdStrike, "IMPERIAL KITTEN Deploys Novel Malware
+    Families"), raw snapshot captured + hashed (sha256 9ff58c1a...; matches source record).
+    FACTS confirmed: Oct-2023 strategic-web-compromise wave; IMAPLoader .NET implant w/ email C2 over
+    imap.yandex.com; StandardKeyboard, Discord-C2 RAT, Python reverse shell via macro Excel; actor
+    active since at least 2017. CORRECTIONS: (1) source published_on 2023-10-01 -> 2023-11-09 (byline
+    is 9 Nov 2023; Oct-2023 is the operation window — event start_date 2023-10-01 correct, attribution_date
+    aligned to 2023-11-09). (2) Added attribution_level: named-actor (was absent). (3) Removed sectors/defense
+    target — sector inflation (defense appears only in CrowdStrike's generic historical industry list, never
+    tied to Israel or the Oct-2023 activity). (4) sectors/transport/maritime demoted primary -> collateral
+    (named for the actor's broader Israeli targeting scope / "previously reported" activity, not the Oct-2023
+    wave specifically). (5) Doctrine reasoning tightened — removed the unsourced "timed to the Gaza war"
+    causal claim; CrowdStrike frames Oct-2023 as a continuation of 2022-2023 SWC against the same sectors and
+    assesses the actor "likely fulfills Iranian strategic intelligence requirements associated with IRGC
+    operations." ATTRIBUTION: Iran-nexus, IRGC connection SUSPECTED (not established), CrowdStrike's own
+    confidence MODERATE (verbatim) -> attributing_org_confidence: moderate retained; no service firmly named.
+    attribution_level rationale: named-actor at nation level (Iran); service unresolved -> ir/unscoped is
+    CORRECT, not re-homed. Doctrine link stays strongly_inferred (source states an intelligence-requirement
+    purpose, not anti-Israel-coercion in the doctrine's terms -> attested bar not met, attesting_source_id null).
+    ACTOR consistency: ir/unscoped/imperial-kitten — Iran-nexus established, IRGC only suspected; consistent
+    with the actor record and the mirror Tortoiseshell event's 2-stage attribution model. Event was in the
+    qc-backfill-cohort.json list; no in-file backfill header was present to remove.
