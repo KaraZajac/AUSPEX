@@ -1,15 +1,54 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/lapdogs-orb-operator
-primary_service_id: cn/mss
+id: cn/unscoped/lapdogs-orb-operator
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "LapDogs ORB operator"
-aliases: []
+aliases:
+  - alias: "LapDogs"
+    assigning_org: "SecurityScorecard STRIKE"
+    confidence: equivalent
+    note: "SecurityScorecard's name for the ORB network; coined from a self-signed TLS certificate spoofing the City of Los Angeles Police Department (LAPD) metadata."
 status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: LapDogs ORB operator (China-nexus)
-default_doctrine_alignment_ids: []
+  Operator of "LapDogs," a suspected China-Nexus Operational Relay Box (ORB) network first
+  documented by SecurityScorecard's STRIKE team (June 2025). The network comprises 1,000+
+  actively-infected, primarily Linux-based Small Office/Home Office (SOHO) and edge devices
+  (heavily Ruckus Wireless access points and Buffalo AirStation routers, plus IP cameras, IoT,
+  and some Windows hosts), built up methodically since September 2023 and concentrated in the
+  United States and Southeast Asia (Japan, South Korea, Taiwan, Hong Kong — ~90% of nodes).
+  Infects devices via N-day exploitation of unpatched, end-of-life embedded web/SSH services
+  (e.g. CVE-2015-1548 / CVE-2017-17663 in old ACME mini_httpd, EmbedThis GoAhead on Ruckus,
+  DropBearSSH). Each node runs a custom backdoor, ShortLeash, dropped into the systemd directory
+  as an "ff-agent-pi.service" unit for root-level persistence across reboots; ShortLeash stands
+  up a fake versionless Nginx web service and generates a unique, locally-issued self-signed TLS
+  certificate sharing fixed LAPD-spoofing subject/issuer metadata and a common JARM fingerprint
+  (3fd3fd16d3fd3fd22c3fd3fd3fd3fdf20014c17cd0943e6d9e2fb9cd59862b) — the pivot SecurityScorecard
+  used to enumerate the network. The ORB provides covert relay infrastructure to obscure
+  espionage operations; SecurityScorecard assesses Cisco Talos' UAT-5918 used LapDogs at least
+  once against Taiwan but could not confirm whether UAT-5918 is the operator or merely a client,
+  nor whether other actors share access. Shares some traits with the PolarEdge ORB (Sekoia) but
+  is assessed a distinct, independent network.
+default_doctrine_alignment_ids:
+  - cn/intelligentized-warfare
+target_sector_ids:
+  - sectors/ict
+  - sectors/ict/networking
+  - sectors/real-estate
+  - sectors/media
+notes: |
+  Former id cn/mss/lapdogs-orb-operator (PROVISIONAL backfill stub, 2026-05-30, whose only basis
+  for the MSS placement was the analyst hint "LapDogs ORB operator (China-nexus)"). Demoted to
+  cn/unscoped on 2026-06-24: the sole cited source (SecurityScorecard STRIKE, June 2025) names NO
+  specific Chinese intelligence service. Its dedicated Attribution section concludes only "We
+  therefore assess with moderate confidence that LapDogs is an Operational Relay Box Network that
+  China-Nexus threat actors use," and states "it can be difficult to determine the exact threat
+  actor operating the network... We cannot yet confirm whether UAT-5918 is the operator or just a
+  client of the network." Throughout the report the attribution is uniformly "suspected
+  China-Nexus" / "China-Nexus APTs," supported by Mandarin developer notes in the ShortLeash
+  startup script and U.S./Southeast-Asia victimology — never MSS, MPS, the PLA/SSF, or any named
+  unit. China nexus is supported at moderate confidence; the service placement is not — hence
+  cn/unscoped. Keep cn/unscoped until a cited source names a service. FK-propagated id change to
+  the 1 referencing event on 2026-06-24.
 sources:
   - securityscorecard/2025-06_lapdogs-china-nexus-operational-relay-bo

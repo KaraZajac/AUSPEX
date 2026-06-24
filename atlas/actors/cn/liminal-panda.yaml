@@ -1,15 +1,56 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/liminal-panda
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: the sole cited source (CrowdStrike, 2024-11)
+# names only a "China-nexus state-sponsored actor" and assesses even that China-nexus alignment with
+# LOW confidence ("do not strongly indicate attribution on their own due to their non-exclusive nature").
+# It never names the MSS, the PLA, or any specific Chinese service. CrowdStrike's "PANDA" cryptonym
+# denotes China-nexus, not a particular service.
+id: cn/unscoped/liminal-panda
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "LIMINAL PANDA"
-aliases: []
+aliases:
+  # CrowdStrike (2024-11) re-attributed SOME telecom intrusions previously tracked under the LightBasin
+  # activity cluster to LIMINAL PANDA, but "continues to track all other LightBasin activity and associated
+  # malware families under the established activity cluster name" — hence overlapping, not equivalent.
+  - alias: "LightBasin"
+    assigning_org: "CrowdStrike"
+    confidence: overlapping
+    note: >-
+      CrowdStrike (2024-11) carved LIMINAL PANDA out of the LightBasin telecom activity cluster
+      (tracked since at least 2016): "An extensive review of this intrusion activity has determined
+      some of the events documented under LightBasin should be reattributed." Other LightBasin
+      activity is still tracked separately under the cluster name, so the relationship is partial.
 status: active
 mission:
   - espionage
+  - surveillance
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: LIMINAL PANDA
+  Suspected China-nexus actor that has targeted telecommunications providers since at least 2020,
+  with observed victims in Southern Asia and Africa (CrowdStrike, 2024-11). Abuses interoperational
+  trust relationships between telecom networks and weak/default SSH credentials on externally
+  accessible infrastructure to gain access and pivot between providers. Tooling is oriented toward
+  GSM/SIGTRAN telecom protocols and the retrieval of subscriber data, call metadata and SMS —
+  CrowdStrike assesses the actor "highly likely engages in targeted intrusion activity to support
+  intelligence collection" (high confidence on the SIGINT mission, distinct from the low-confidence
+  China-nexus assessment). Custom toolset includes CordScan, PingPong and SIGTRANslator; the actor
+  also uses publicly available tools (TinyShell, Fast Reverse Proxy, Cobalt Strike) and proxy
+  software (Microsocks, ProxyChains) routed through VPS infrastructure. Partially carved out of the
+  LightBasin telecom activity cluster.
 default_doctrine_alignment_ids: []
+notes: |
+  Former id cn/mss/liminal-panda (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced
+  MSS placement). Demoted to cn/unscoped on 2026-06-24: the sole cited source (CrowdStrike Counter
+  Adversary Operations, 2024-11-19 — the report tied to Adam Meyers' US Senate Judiciary Subcommittee
+  testimony on Chinese cyber threats) attributes only "a China-nexus state-sponsored actor that
+  CrowdStrike Counter Adversary Operations tracks as LIMINAL PANDA," and states: "CrowdStrike
+  Intelligence assesses LIMINAL PANDA's activity aligns with China-nexus cyber operations. This
+  assessment is made with low confidence based on the following factors, which do not strongly
+  indicate attribution on their own due to their non-exclusive nature" (BRI-aligned targeting,
+  Pinyin/Mandarin strings such as wuxianpinggu507, tooling shared with other Chinese adversaries
+  including SUNRISE PANDA and HORDE PANDA, and commonly-China-used VPS infrastructure). The source
+  never names the MSS, the PLA, or any specific Chinese service — and even the bare China-nexus link
+  is low confidence. CrowdStrike's "-PANDA" cryptonym denotes China-nexus, not a service. China nexus
+  is suspected (low confidence); the service placement is unsupported — hence cn/unscoped. Keep
+  cn/unscoped until a cited source names a service. FK-propagated id change to the 1 referencing event
+  on 2026-06-24.
 sources:
   - crowdstrike/2024-11_liminal-panda-multi-year-china-nexus-esp

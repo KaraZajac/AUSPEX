@@ -1,6 +1,9 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/warp-panda
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: the sole cited source (CrowdStrike,
+# 2025-12) attributes only a "China-nexus adversary" whose operations are "likely motivated by
+# intelligence-collection requirements aligned with the strategic interests of the People's
+# Republic of China (PRC)" — it names NO Chinese service (MSS/Ministry of State Security/PLA).
+id: cn/unscoped/warp-panda
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "WARP PANDA"
 aliases: []
@@ -8,8 +11,34 @@ status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: WARP PANDA
+  China-nexus targeted-intrusion adversary first publicly named by CrowdStrike Intelligence in
+  December 2025, active since at least 2022 against US legal, technology and manufacturing
+  entities. A cloud-conscious, high-OPSEC operator focused on persistent, long-term covert access:
+  gains initial access by exploiting internet-facing edge devices (Ivanti Connect Secure VPN —
+  CVE-2024-21887/CVE-2023-46805; F5 BIG-IP — CVE-2023-46747) and pivots into VMware vCenter
+  environments via valid credentials or vCenter exploitation (CVE-2024-38812, CVE-2023-34048,
+  CVE-2021-22005). Deploys JSP web shells and custom Golang malware — the BRICKSTORM backdoor
+  (masquerading as legitimate vCenter processes, tunneling C2 over WebSocket/TLS using DNS-over-HTTPS
+  and public cloud relays such as Cloudflare Workers and Heroku) plus two ESXi implants, Junction and
+  GuestConduit. Tradecraft includes log clearing, file timestomping, creating and destroying
+  unregistered VMs, cloning domain-controller VMs to harvest Active Directory data, and ESXi-compatible
+  7-Zip staging. In the cloud, exfiltrates Microsoft 365 data (OneDrive/SharePoint/Exchange) via
+  stolen Azure session tokens and Graph API enumeration, and registers attacker MFA devices for
+  persistence. One intrusion was used for rudimentary reconnaissance against an Asia-Pacific
+  government entity (CrowdStrike, 2025).
 default_doctrine_alignment_ids: []
+notes: |
+  Former id cn/mss/warp-panda (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced MSS
+  placement). Demoted to cn/unscoped on 2026-06-24: the only cited source (CrowdStrike Counter
+  Adversary Operations, 2025-12) characterises WARP PANDA solely as a "China-nexus adversary" /
+  "China-nexus targeted intrusion adversary" whose "operations are likely motivated by
+  intelligence-collection requirements aligned with the strategic interests of the People's Republic
+  of China (PRC)"; its strongest organizational claim is the moderate-confidence assessment that the
+  group is "associated with a well-resourced organization that has heavily invested in cyberespionage
+  capabilities" — naming no specific service. The source contains no occurrence of "MSS", "Ministry of
+  State Security", the Guoanbu, the PLA, or any named unit. PRC/China nexus is well-supported
+  (named-actor level), the service placement is not — hence cn/unscoped. NB CrowdStrike's "PANDA"
+  suffix denotes a China-nexus adversary, not an MSS attribution. Keep cn/unscoped until a cited
+  source names a service. FK-propagated id change to the 1 referencing event on 2026-06-24.
 sources:
   - crowdstrike/2025-12_warp-panda-china-nexus-espionage-against

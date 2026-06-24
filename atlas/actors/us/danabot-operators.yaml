@@ -1,15 +1,58 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
 id: ru/proxies/danabot-operators
 primary_service_id: null
 additional_service_ids: []
 canonical_name: "DanaBot operators"
-aliases: []
-status: active
+aliases:
+  # CrowdStrike's cluster name for the DanaBot operators, per the cited CyberScoop reporting of
+  # CrowdStrike's 2025-05-22 blog ("which CrowdStrike tracks as Scully Spider").
+  - alias: "Scully Spider"
+    assigning_org: "CrowdStrike"
+    confidence: equivalent
+    note: "CrowdStrike's tracked-cluster name for the DanaBot operators (per CyberScoop, 2025-05-22)."
+status: indicted
 mission:
+  - financial
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: DanaBot operators / Scully Spider
-default_doctrine_alignment_ids: []
+  Russia-based cybercrime crew (CrowdStrike: "Scully Spider") behind DanaBot, a malware-as-a-service
+  family first developed as a banking trojan in 2018 and later extended into an information stealer and
+  loader for follow-on malware. DanaBot hijacks banking sessions and steals account credentials, device
+  information, browsing histories and cryptocurrency-wallet data, and can achieve full remote access to
+  record keystrokes and video of victim activity. At takedown the botnet had infected 300,000+ machines
+  worldwide, causing 300,000+ infections and at least USD 50M in fraud/ransomware damage (DOJ, via
+  CyberScoop, 2025-05-22). Distinctively, the operators ran a SECOND DanaBot variant dedicated to
+  espionage — targeting military, government and diplomatic personnel across North America and Europe and
+  exfiltrating to a separate server from the fraud build. CrowdStrike assesses this "direct use of
+  criminal infrastructure for intelligence-gathering" as evidence the operators were "acting on behalf of
+  Russian government interests," and SVP Adam Meyers told CyberScoop "the Russian government had access
+  and was tasking this botnet and using it for espionage purposes." On 22 May 2025, under Operation
+  Endgame, DOJ/FBI(Anchorage)/DCIS seized DanaBot's command-and-control servers and unsealed a 16-defendant
+  grand-jury indictment + criminal complaint; two operators are publicly named — Aleksandr Stepanov (39)
+  and Artem Aleksandrovich Kalinkin (34), both of Novosibirsk, Russia, neither in custody.
+default_doctrine_alignment_ids:
+  - ru/sanctions-response-2022/criminal-proxy-mobilization
+target_sector_ids:
+  - sectors/defense
+  - sectors/government
+  - sectors/finance
+notes: |
+  Placement KEPT at ru/proxies (LLM audit 2026-06-24, claude-opus-4.8/max). Unlike a bare Russia-based
+  criminal crew, the cited source documents a STATE-TASKING / proxy nexus: CrowdStrike (named tier-1
+  vendor) assessed that DanaBot's operators "were acting on behalf of Russian government interests" and
+  that "the Russian government had access and was tasking this botnet and using it for espionage purposes"
+  (Adam Meyers, SVP Counter Adversary Operations), with the DOJ disclosing a dedicated second variant that
+  targeted military, government and diplomatic personnel and exfiltrated to separate infrastructure. That
+  documented state intelligence-tasking overlap satisfies the docs/SCHEMA.md `<state>/proxies/` bar
+  (source-documented state nexus / service tasking-overlap), so the actor stays in the Russian
+  criminal-proxy ecosystem rather than stateless criminal/. primary_service_id is left null — the
+  established convention for ru/proxies/* actors with no named SINGLE service organ (cf. lockbit, revil,
+  conti's sibling crews); CrowdStrike names the government as tasker but not a specific service unit, so a
+  null service + the ru/proxies id (which derives state = ru via actorStateId's 2-letter id-head fallback)
+  is the correct, consistent representation. De-provisionalized from the 2026-05-30 backfill stub; the
+  prior stub carried mission: [espionage] only and a placeholder ttp_summary.
+  FILE-PATH/ID MISMATCH (flagged for human): this record's id is `ru/proxies/danabot-operators` but the
+  file lives at atlas/actors/us/danabot-operators.yaml; all 24 other ru/proxies/* actors are filed under
+  atlas/actors/ru/. State derivation is unaffected (keys off the id, not the path), but the file should be
+  moved to atlas/actors/ru/danabot-operators.yaml for consistency. Not moved by this audit (scope).
 sources:
   - cyberscoop/2025-05_dojfbidcis-danabot-takedown-operation-en

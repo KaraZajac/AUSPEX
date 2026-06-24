@@ -1,15 +1,66 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
+# De-provisionalized + ir/mois placement VERIFIED 2026-06-24: the cited Check Point source
+# explicitly names the MOIS as the affiliating service (not merely "Iranian"). Key Findings:
+# "an actor affiliated with the Ministry of Intelligence and Security (MOIS)"; tooling tied to
+# "the MOIS-sponsored destructive attack against Albanian government infrastructure (DEV-0861)".
 id: ir/mois/scarred-manticore
 primary_service_id: ir/mois
 additional_service_ids: []
 canonical_name: "Scarred Manticore"
-aliases: []
+aliases:
+  # Check Point (2023) tracks this activity as "most closely aligned with DEV-0861" (the
+  # Microsoft cluster behind the 2021/2022 Albania attack) — recorded as overlapping, not
+  # equivalent, per the source's own hedged "aligns with" language.
+  - alias: "DEV-0861"
+    assigning_org: "Microsoft"
+    confidence: overlapping
+    note: "Check Point: Scarred Manticore is the actor 'most closely aligned with DEV-0861'; the source equates the activity cluster, not a strict identity."
+  # Check Point links Scarred Manticore to OilRig (a.k.a APT34, EUROPIUM, Hazel Sandstorm) but
+  # explicitly states: "we do not have sufficient data to properly attribute the Scarred
+  # Manticore to OilRig, even though we do believe they're likely related." Hence disputed.
+  - alias: "OilRig"
+    assigning_org: "Check Point Research"
+    confidence: disputed
+    note: "Check Point believes Scarred Manticore is 'likely related' to OilRig/APT34 but states it does 'not have sufficient data to properly attribute' it to OilRig."
 status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: Scarred Manticore
-default_doctrine_alignment_ids: []
+  Iranian MOIS-affiliated espionage actor that Check Point Research (with Sygnia, 2023)
+  attributes to "an actor affiliated with the Ministry of Intelligence and Security (MOIS)."
+  Active against Internet-facing Windows servers in the Middle East since at least 2019, with
+  the latest LIONTAIL campaign peaking in mid-2023 after going undetected for at least a year.
+  Targets high-profile government, military, telecommunications and financial organizations,
+  plus IT-service providers and NGOs, across Saudi Arabia, the UAE, Jordan, Kuwait, Oman, Iraq
+  and Israel — a victim profile Check Point notes is "in line with the typical victim profile
+  that MOIS-affiliated clusters usually target." Tradecraft centers on stealthy, long-dwell
+  passive implants on Windows web servers: the custom LIONTAIL framework abuses undocumented
+  functionality of the Windows HTTP.sys driver (via IOCTLs rather than the HTTP API) to extract
+  memory-resident shellcode payloads from inbound HTTP traffic, generating a tailor-made implant
+  per compromised server to blend into legitimate traffic. Earlier and overlapping tooling
+  includes the FOXSHELL and SDD .NET web-shell/backdoor families and the WINTAPIX kernel-mode
+  driver. Some tools overlap with historic OilRig/APT34 activity (Check Point assesses the
+  groups are "likely related" but lacks data to fully attribute Scarred Manticore to OilRig),
+  and some are tied to the MOIS-sponsored destructive attack on Albanian government
+  infrastructure tracked as DEV-0861. Cisco Talos published a parallel analysis of part of this
+  activity.
+default_doctrine_alignment_ids:
+  - ir/forward-defense
+target_sector_ids:
+  - sectors/government
+  - sectors/defense
+  - sectors/ict/telecom
+  - sectors/finance
+notes: |
+  Imported as a PROVISIONAL backfill stub (2026-05-30) asserting an unsourced ir/mois placement.
+  AUDIT (2026-06-24, claude-opus-4.8/max): ir/mois placement VERIFIED against the actor's sole
+  cited source. Check Point Research's "From Albania to the Middle East: The Scarred Manticore is
+  Listening" (2023-10-31, with Sygnia) names the MOIS specifically — not merely "Iranian" — in its
+  Key Findings ("an actor affiliated with the Ministry of Intelligence and Security (MOIS)") and
+  repeatedly thereafter ("the MOIS-sponsored destructive attack against Albanian government
+  infrastructure (DEV-0861)"; "the typical victim profile that MOIS-affiliated clusters usually
+  target"). The service attribution is therefore source-supported at the named-actor level; the
+  link to OilRig/APT34 is explicitly hedged by the source ("likely related" but insufficient data
+  to attribute), so OilRig is recorded only as a disputed alias and the placement rests on the
+  direct MOIS-affiliation statement. De-provisionalized; ttp_summary rewritten from the source.
 sources:
   - researchcheckpoint/2023-10_scarred-manticore-liontail-espionage-cam

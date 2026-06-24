@@ -1,15 +1,53 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/houken
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: the sole cited source (ANSSI/CERT-FR
+# CERTFR-2025-CTI-009) attributes Houken to a China-nexus, for-profit *initial-access broker* and
+# does NOT name the MSS as its operator. ANSSI's only MSS reference reports GTIG's hedged
+# characterization of UNC5174 as "a potential access broker FOR the MSS" — a vendor selling TO the
+# MSS, not the MSS itself, and explicitly Google's claim, not ANSSI's own assessment.
+id: cn/unscoped/houken
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "Houken"
-aliases: []
+aliases:
+  # ANSSI: "ANSSI suspects that the Houken intrusion set is operated by the same threat actor as the
+  # intrusion set previously described by MANDIANT as UNC5174." UNC5174 is Mandiant/GTIG's cluster name.
+  - alias: "UNC5174"
+    assigning_org: "Mandiant / Google Threat Intelligence Group"
+    confidence: equivalent
+    note: "ANSSI assesses Houken and UNC5174 are operated by a common threat actor (CERTFR-2025-CTI-009, sec. 4.2)."
 status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: Houken / UNC5174 cluster (MSS-linked initial-access broker)
-default_doctrine_alignment_ids: []
+  China-nexus, moderately sophisticated intrusion set that ANSSI named "Houken" and assesses is
+  operated by the same threat actor Mandiant/GTIG tracks as UNC5174. ANSSI characterizes it as
+  "plausibly operated by an initial access broker": its operators gain footholds on internet-facing
+  edge devices, harvest credentials and establish persistence, and "are likely primarily looking for
+  valuable initial accesses to sell to a state-linked actor seeking insightful intelligence" — i.e.
+  a for-profit access vendor, not a service organ. In the September 2024 campaign ANSSI documented it
+  chained three Ivanti Cloud Service Appliance zero-days (CVE-2024-8190, CVE-2024-8963, CVE-2024-9380)
+  against French governmental, telecom, media, finance and transport entities, deploying PHP webshells
+  and a kernel-module rootkit and self-patching the exploited resources to lock out other actors.
+  Tooling is heavily open-source and "mostly crafted by Chinese-speaking developers" (GOREVERSE, VShell,
+  fscan, ffuf, suo5); operator time zone is UTC+8 (China Standard Time). ANSSI also observed
+  straight-forward profit-driven behaviour — bulk email exfiltration from a South American MFA and the
+  installation of a Monero (XMR) cryptominer — and posits the operator "might correspond to a private
+  entity, selling accesses and worthwhile data to several state-linked bodies while seeking its own
+  interests," comparing it to APT41-galaxy private-sector contractors.
+default_doctrine_alignment_ids:
+  - cn/national-intelligence-law-2017
+notes: |
+  Former id cn/mss/houken (PROVISIONAL backfill stub, 2026-05-30, whose analyst hint asserted an
+  unsourced "MSS-linked initial-access broker" placement). Demoted to cn/unscoped on 2026-06-24: the
+  only cited source, ANSSI/CERT-FR CERTFR-2025-CTI-009 (1 July 2025), does NOT name the MSS as Houken's
+  operator. ANSSI's own assessment is that Houken is "plausibly operated by an initial access broker"
+  and "might correspond to a private entity, selling accesses and worthwhile data to several state-linked
+  bodies while seeking its own interests" — for-profit, selling TO services rather than being one. The
+  report's single "MSS" mention is ANSSI relaying GTIG's hedged claim that UNC5174 is "a potential access
+  broker for the MSS (Ministry of State Security of the People's Republic of China)" — second-hand,
+  attributed to Google, hedged with "potential," and framing the actor as a vendor FOR the MSS, not as
+  the MSS. The China nexus is well-supported (UTC+8/CST, Chinese-speaking tooling, China-proximate
+  targeting); the specific service is not — hence cn/unscoped. Keep cn/unscoped until a cited source
+  names a Chinese service as Houken's operator. FK-propagated id change to the 1 referencing event on
+  2026-06-24.
 sources:
   - certssigouv/2025-07_anssicert-fr-exposes-houken-unc5174-ivan

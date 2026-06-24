@@ -1,6 +1,10 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/unc2814
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: the single cited GTIG/Mandiant source
+# establishes a China-nexus but NO service. "UNC" in Mandiant's taxonomy = UNCATEGORIZED — and the
+# report attributes only "a suspected People's Republic of China (PRC)-nexus cyber espionage group."
+# It does not name the MSS, the PLA, or any specific Chinese service, and uses no confidence verb
+# beyond "suspected." (Cf. the cn/unscoped/unc3886 precedent, same UNCATEGORIZED reasoning.)
+id: cn/unscoped/unc2814
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "UNC2814"
 aliases: []
@@ -8,8 +12,37 @@ status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: UNC2814 (GRIDTIDE) — suspected PRC-nexus espionage cluster (GTIG/Mandiant)
-default_doctrine_alignment_ids: []
+  Suspected PRC-nexus cyber-espionage cluster tracked by GTIG/Mandiant since 2017, with a long
+  history of targeting international governments and global telecommunications providers across
+  Africa, Asia and the Americas. Its recent campaign deployed GRIDTIDE, a novel C-based backdoor
+  that abuses the Google Sheets API as a high-availability command-and-control channel — polling and
+  writing specific spreadsheet cells, URL-safe-Base64-encoding its traffic, and disguising C2 as
+  benign cloud API requests to evade network detection (the abuse is of legitimate Sheets
+  functionality, not a Google product vulnerability). On-host, GRIDTIDE executes arbitrary shell
+  commands, uploads/downloads files, uses living-off-the-land binaries for recon and privilege
+  escalation, and persists via a malicious systemd service. GTIG confirmed 53 intrusions across 42
+  countries (suspected activity in 20+ more), including dropping GRIDTIDE on an endpoint holding
+  voter-ID/national-ID PII — assessed by GTIG as consistent with telecom-sector espionage to track
+  persons of interest. The specific initial-access vector for the GRIDTIDE campaign was not
+  determined, though UNC2814 historically gains entry by exploiting and compromising web servers and
+  edge systems. In February 2026 GTIG and partners disrupted the operation by terminating the
+  attacker's Google Cloud Projects, disabling its accounts/Service Account, and releasing IOCs.
+default_doctrine_alignment_ids:
+  - cn/intelligentized-warfare/sigint-c4isr-collection
+target_sector_ids:
+  - sectors/ict/telecom/carrier
+  - sectors/government
+notes: |
+  Former id cn/mss/unc2814 (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced MSS
+  placement). Demoted to cn/unscoped on 2026-06-24: "UNC" in Mandiant's taxonomy denotes an
+  UNCATEGORIZED activity cluster — Mandiant/GTIG deliberately did NOT attribute UNC2814 to any nation
+  or service organ at this disclosure. The single cited source (GTIG/Mandiant, 2026-02-25) attributes
+  it only as "a suspected People's Republic of China (PRC)-nexus cyber espionage group that GTIG has
+  tracked since 2017" / "a suspected PRC-nexus threat actor that has conducted global operations since
+  at least 2017." The China nexus is therefore supported at the "suspected" level, but NO cited source
+  names the MSS, the Ministry of State Security, the PLA, or any specific Chinese service (the words
+  "MSS"/"Ministry" do not appear in the report, nor does any confidence verb beyond "suspected") —
+  hence cn/unscoped, not cn/mss. Keep cn/unscoped until a cited source names a service.
+  FK-propagated id change to the 1 referencing event on 2026-06-24.
 sources:
   - cloudgoogle/2026-02_gtigmandiant-disrupt-gridtide-unc2814-pr

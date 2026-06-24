@@ -1,18 +1,77 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/lotus-blossom
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: the actor's sole cited source (Cisco
+# Talos, 2025) names NO service and, in fact, no nation for Lotus Blossom — it attributes the
+# Sagerunex campaigns to "the Lotus Blossom group with high confidence" purely on TTPs, the
+# Sagerunex backdoor, and victimology. NATION-SUPPORT FLAG: the `cn` bucket is NOT established by
+# this actor's own cited source (Talos says only "Lotus Blossom"/"Spring Dragon"/"Billbug"/
+# "Thrip", no "China"/"Chinese"/"state-sponsored"). It rests on the editorially-aliased MSTIC
+# "Raspberry Typhoon" attribution ("nation-state activity group based out of China"), which MSTIC
+# itself does NOT equate to Lotus Blossom (see event 2024-04/mstic-names-raspberry-typhoon...).
+id: cn/unscoped/lotus-blossom
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "Lotus Blossom"
 aliases:
+  # AUSPEX-internal equivalence (assigning_org: vendor-consensus). NB the cited Talos source does
+  # NOT mention Raspberry Typhoon; the Raspberry Typhoon name comes from MSTIC (2024-04), which
+  # does NOT equate it to Lotus Blossom in that report — hence the equivalence is contested in the
+  # cited evidence and is retained here only as an AUSPEX editorial cross-walk.
   - alias: "Raspberry Typhoon"
     assigning_org: vendor-consensus
+    confidence: disputed
+    note: "Microsoft (MSTIC) names Raspberry Typhoon as a China-based nation-state group but does NOT equate it to Lotus Blossom in the cited 2024-04 report; the cited Talos source does not use this name."
+  # Names Talos uses for this actor in the cited source.
+  - alias: "Spring Dragon"
+    assigning_org: "Cisco Talos"
     confidence: equivalent
+    note: "Per Talos's own alias list in the cited source ('also referred to as Spring Dragon, Billbug, Thrip'); originating vendor not stated in the cited source."
+  - alias: "Billbug"
+    assigning_org: "Cisco Talos"
+    confidence: equivalent
+    note: "Per Talos's own alias list in the cited source; originating vendor not stated in the cited source."
+  - alias: "Thrip"
+    assigning_org: "Cisco Talos"
+    confidence: equivalent
+    note: "Per Talos's own alias list in the cited source; originating vendor not stated in the cited source."
 status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: Lotus Blossom / Billbug / Thrip / Spring Dragon
+  Long-running cyber-espionage group that Cisco Talos (2025) attributes "with high confidence" to
+  the Sagerunex campaigns based on TTPs, the Sagerunex backdoor (a RAT assessed to be an evolution
+  of the older Billbug tool "Evora", DLL-injected and run in memory), and victimology; Talos states
+  the group has "actively conducted cyber espionage operations since at least 2012." Operates in
+  multiple stages over long dwell times (often undetected for months): post-compromise reconnaissance
+  via built-in commands ("net", "tasklist", "quser", "ipconfig", "netstat", "dir"), Impacket for
+  remote execution/lateral movement, and a Chrome cookie-stealer for credential harvesting. Installs
+  Sagerunex into the system registry "configuring it to run as a service" for persistence; newer
+  Sagerunex variants abuse legitimate third-party cloud services — Dropbox, Twitter, and Zimbra
+  open-source webmail — as C2 channels, and use web-proxy autodiscovery plus hardcoded proxy
+  servers/credentials (or the Venom proxy tool) to reach C2 from restricted networks. Per the cited
+  source the campaigns targeted government, manufacturing, telecommunications and media sectors in
+  the Philippines, Vietnam, Hong Kong and Taiwan. NB: the cited Talos report names neither a nation
+  nor an intelligence service for the group (see header FLAG).
 default_doctrine_alignment_ids: []
+target_sector_ids:
+  - sectors/government
+  - sectors/manufacturing
+  - sectors/ict/telecom
+  - sectors/media
+notes: |
+  Former id cn/mss/lotus-blossom (PROVISIONAL backfill stub, 2026-05-30, which asserted an
+  unsourced MSS placement). Demoted to cn/unscoped on 2026-06-24 (independent LLM audit,
+  claude-opus-4.8/max): the actor's sole cited source — Cisco Talos, "Lotus Blossom espionage
+  group...", 2025 — attributes the Sagerunex campaigns to "the Lotus Blossom group with high
+  confidence" on the basis of TTPs, the Sagerunex backdoor and victimology, and names NO
+  intelligence service (no "MSS"/"Ministry of State Security"/"state-sponsored"). It does not even
+  name China/Chinese for Lotus Blossom (the only "China-nexus"/"Chinese-speaking" strings in the
+  fetched page belong to unrelated Recommended/Related footer posts about UAT-8302 and a BadIIS
+  MaaS cluster). NATION-SUPPORT FLAG: the retained `cn` bucket is therefore NOT established by this
+  actor's own cited source; it rests on the AUSPEX editorial alias to Microsoft MSTIC's "Raspberry
+  Typhoon" ("nation-state activity group based out of China", 2024-04), which MSTIC itself does NOT
+  equate to Lotus Blossom in that report. Lotus Blossom / Billbug is widely treated as China-nexus
+  in the broader public record (not verified in this audit), but to keep the `cn` bucket
+  source-backed it should be re-grounded by adding a source that both (a) names China and (b) ties
+  the name to Lotus Blossom/Billbug. Service placement unresolved → cn/unscoped until a
+  cited source names a service. FK-propagated id change to the 2 referencing events on 2026-06-24.
 sources:
   - blogtalosintelligence/2025-02_cisco-talos-attributes-2025-sagerunex-es
