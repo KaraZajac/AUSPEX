@@ -1,5 +1,10 @@
-id: ru/proxies/medusa
-primary_service_id: null
+# Demoted ru/proxies/medusa -> ru/unscoped/medusa on 2026-06-24 (claude-opus-4.8/max audit). The actor's
+# sole cited source (CISA/FBI/MS-ISAC AA25-071A) establishes NEITHER a Russian state-proxy nexus NOR even
+# the Russia nation: it characterizes Medusa purely as a financially-motivated cybercriminal RaaS of
+# unstated operator origin. The ru/ nation itself is therefore UNSOURCED and is FLAGGED for human review
+# (Medusa may belong in the stateless criminal/ namespace with no nation — cf. the Emotet precedent). See notes.
+id: ru/unscoped/medusa
+primary_service_id: ru/unscoped
 additional_service_ids: []
 canonical_name: Medusa
 aliases:
@@ -22,14 +27,46 @@ target_sector_ids:
   - finance/banking
   - critical-infrastructure
 ttp_summary: |
-  Ransomware-as-a-service active since 2021; double-extortion via
-  the "Medusa Blog" leak site. Russian-speaking affiliate cluster.
-  CISA AA25-071A (March 2025) estimated 300+ critical-infrastructure
-  victims. Initial access through phishing, ScreenConnect (CVE-2024-
-  1709), and stolen creds. Notable victims: Minneapolis Public
-  Schools (Feb 2023), Toyota Financial Services Europe (Nov 2023).
-default_doctrine_alignment_ids:
-  - ru/sanctions-response-2022/criminal-proxy-mobilization
+  Ransomware-as-a-service first identified June 2021; double-extortion
+  via the "Medusa Blog" leak site. Began as a closed variant, later
+  moving to an affiliate model with ransom negotiation still centrally
+  controlled by the developers ("Medusa actors"); initial access via
+  recruited initial-access brokers in cybercriminal forums, plus
+  phishing and ScreenConnect (CVE-2024-1709). CISA AA25-071A (March
+  2025) estimated 300+ critical-infrastructure victims. The cited
+  advisory states NO operator origin — the prior "Russian-speaking
+  affiliate cluster" descriptor is NOT supported by AA25-071A and the
+  source assigns Medusa no nation or state nexus (see notes).
+default_doctrine_alignment_ids: []  # dropped ru/sanctions-response-2022/criminal-proxy-mobilization: its criminal-proxy roster never named Medusa, and the cited source documents no Russia nexus
+notes: |
+  Former id ru/proxies/medusa (asserted Medusa operates as a Russian state-tolerated PROXY).
+  Demoted to ru/unscoped/medusa on 2026-06-24 (claude-opus-4.8/max audit). The ru/proxies/ namespace
+  requires a SOURCE-DOCUMENTED state nexus in the actor's own sources/notes (SCHEMA "Actor placement
+  rule"); the actor's SOLE cited source establishes none — and, more severely, does not establish even
+  the RUSSIA nation.
+  WHAT THE SOLE SOURCE SAYS — CISA/FBI/MS-ISAC AA25-071A (#StopRansomware: Medusa Ransomware, 2025-03-12):
+  it characterizes Medusa purely as a financially-motivated cybercriminal RaaS of UNSTATED operator origin.
+  "Medusa is a ransomware-as-a-service (RaaS) variant first identified in June 2021." "Medusa originally
+  operated as a closed ransomware variant, meaning all development and associated operations were controlled
+  by the same group of cyber threat actors." "Medusa developers typically recruit initial access brokers
+  (IABs) in cybercriminal forums and marketplaces to obtain initial access." Operators are referred to only
+  as "Medusa actors." A full-text scan of the captured raw advisory found ZERO instances of Russian / FSB /
+  GRU / SVR / Kremlin / Moscow / state-sponsored / nation-state / safe-harbor / tolerated. The only "Russia"
+  token on the page is an unrelated related-content sidebar link ("Pro-Russia Hacktivists Conduct
+  Opportunistic Attacks…"); the only "proxy" token is "3128 (HTTP web proxy)" in an IOC/port table. Neither
+  concerns Medusa's operators.
+  CONSEQUENCE — RU NATION IS UNSOURCED (FLAG FOR HUMAN REVIEW): unlike the Emotet case (which at least had an
+  inherited TrickBot/Conti coupling to lean on), there is NO cited basis here for the Russia nation at all.
+  The earlier ttp_summary descriptor "Russian-speaking affiliate cluster" is widely reported in vendor
+  commentary but is NOT in AA25-071A, the only source on this record. Medusa therefore likely belongs in the
+  stateless criminal/medusa namespace (no nation), NOT the ru/ bucket. That taxonomy move is FLAGGED for the
+  human and deliberately NOT made here (mirrors the Emotet arc ru/proxies -> ru/unscoped); demoted only WITHIN
+  the ru nation to ru/unscoped pending either (a) a cited source naming a Russian service/nexus, or (b) a
+  human decision to re-home to stateless criminal/medusa. Dropped the ru/sanctions-response-2022 doctrine
+  alignment (its criminal-proxy-mobilization roster never named Medusa) and set primary_service_id to the
+  placeholder ru/unscoped service.
+  FK-propagated id change to the 1 referencing event (2025-03/medusa-cisa-advisory) on 2026-06-24.
+  No MISP galaxy entry on this record (misp_galaxy: null) — no MISP corroboration of any state nexus available.
 sources:
   - cisa/2025-03-12_aa25-071a-medusa-advisory
 
