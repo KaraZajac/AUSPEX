@@ -1,5 +1,5 @@
-id: kr/kisa/krcert-actor
-primary_service_id: kr/kisa
+id: kr/unscoped/krcert-actor
+primary_service_id: kr/unscoped
 additional_service_ids: []
 canonical_name: KrCERT/CC defensive coordinator
 aliases:
@@ -62,3 +62,57 @@ external_refs:
     - https://www.venustech.com.cn/uploads/2018/08/231401512426.pdf
     - https://hitcon.org/2016/pacific/0composition/pdf/1202/1202%20R0%200930%20an%20intelligance-driven%20approach%20to%20cyber%20defense.pdf
     - https://public.gdatasoftware.com/Presse/Publikationen/Whitepaper/EN/GDATA_TooHash_CaseStudy_102014_EN_v1.pdf
+
+notes: |
+  AUDIT (2026-06-24, claude-opus-4.8 / LLM service-placement audit):
+  DEMOTED kr/kisa/krcert-actor -> kr/unscoped/krcert-actor (and
+  primary_service_id kr/kisa -> kr/unscoped) and FLAGGED as a
+  MIS-MODELED / RETIRE-CANDIDATE. KISA/KrCERT is South Korea's
+  DEFENSIVE national CERT, not an offensive threat actor. The record
+  itself already concedes this ("KrCERT is not an offensive cluster";
+  "'actor' framing is editorial convenience for AA-style events"),
+  which makes the kr/kisa service placement self-contradictory: a
+  defensive-only body has not conducted any offensive operation that a
+  source could place under a service-as-operator.
+
+  Cited-source verification (both captured + hashed below):
+    * cisa/2024-07-25_aa24-207a (AA24-207A, primary) attributes the
+      OFFENSIVE espionage operation to the DPRK Reconnaissance General
+      Bureau (RGB) 3rd Bureau group Andariel / Onyx Sleet — i.e. to
+      NORTH KOREA, not to any ROK body. Verbatim: "The RGB 3rd Bureau
+      includes a DPRK (aka North Korean) state-sponsored cyber group
+      known publicly as Andariel, Onyx Sleet ... The group primarily
+      targets defense, aerospace, nuclear, and engineering entities
+      ... to advance the regime's military and nuclear programs."
+      KISA / KrCERT does NOT appear anywhere in the advisory text
+      (the ROK authoring/attribution bodies named are NIS, the Defense
+      Counterintelligence Command, and the Korea National Police
+      Agency — KISA is not among them). So this source attributes an
+      offensive op to DPRK and does not even cite KISA, let alone as
+      an operator.
+    * wikipedia/kisa (tertiary) describes KISA purely as a defensive
+      coordinator that "runs the Korea Computer Emergency Response
+      Team Coordination Center, a.k.a. KrCERT/CC, for the private
+      sector." No offensive / attack / espionage / threat-actor /
+      perpetrator framing is present.
+
+  CONCLUSION: no cited source attributes an offensive cyber operation
+  to KISA/KrCERT (or to any ROK service via this record); both sources
+  describe its defensive/CERT role, and the offensive operation in the
+  one primary source is North Korea's. Conservative placement is
+  kr/unscoped pending human disposition.
+
+  RETIREMENT CANDIDATE (flagged for Kara; NOT deleted): this actor is
+  referenced by ZERO events (grep 'actor_id: kr/kisa/krcert-actor' and
+  'actor_id: kr/unscoped/krcert-actor' over atlas/events/ -> no hits)
+  and appears nowhere else in the corpus, so no FK propagation was
+  required. The kr/kisa service already exists as the proper home for
+  KISA-as-defensive-coordinator; an "actor" that is admittedly only an
+  editorial convenience for AA-style attestation events is a strong
+  candidate for retirement. Recommend Kara decide between (a) retiring
+  it (model KISA defensive-attestation events at service level
+  kr/kisa with actor_id null per the doctrine-without-attribution
+  convention), or (b) retaining it as a kr/unscoped stub. The
+  misp_galaxy external_ref pointing at "Gelsemium" (a China-nexus
+  espionage actor) is also incongruous for a Korean defensive CERT and
+  was left untouched but is noted as further evidence of mis-modeling.

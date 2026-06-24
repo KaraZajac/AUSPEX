@@ -1,5 +1,14 @@
+# AUDIT 2026-06-24 (claude-opus-4.8/max): RGB placement KEPT — the actor's own cited source
+# (Microsoft MSTIC, 2024-08-30) names the service verbatim: "Citrine Sleet ... has been attributed
+# to Bureau 121 of North Korea's Reconnaissance General Bureau." This is the decisive contrast with
+# the sibling kp/unscoped/moonstone-sleet (where Microsoft named only "North Korean state-aligned").
+# Sub-bureau CORRECTED kp/rgb/3rd-bureau → kp/rgb/bureau-121 to match what the cited source actually
+# says: Microsoft names "Bureau 121", which the AUSPEX service taxonomy treats as DISTINCT from the
+# 3rd Bureau (the 3rd-bureau placement derives from the FBI Bybit PSA — cited on kp/rgb/tradertraitor,
+# NOT in this actor's sources — and pertains to the TraderTraitor cluster). Actor id unchanged
+# (sub-bureau lives only in primary_service_id), so no event FK propagation. See notes.
 id: kp/rgb/citrine-sleet
-primary_service_id: kp/rgb/3rd-bureau
+primary_service_id: kp/rgb/bureau-121
 additional_service_ids:
   - kp/rgb
 canonical_name: Citrine Sleet
@@ -55,6 +64,40 @@ ttp_summary: |
 default_doctrine_alignment_ids:
   - kp/8th-congress-defense-plan/revenue-aggregation
   - kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+notes: |
+  SERVICE-PLACEMENT AUDIT 2026-06-24 (claude-opus-4.8/max). Verdict: KEEP under the RGB; sub-bureau
+  corrected kp/rgb/3rd-bureau → kp/rgb/bureau-121.
+
+  Per-source findings (each source's raw HTML captured to atlas/sources/raw/ and SHA-256 stamped):
+  - Microsoft MSTIC (2024-08-30, msft/2024-08-30_citrine-sleet-chrome-zero-day) — NAMES THE SERVICE:
+    "Citrine Sleet is tracked by other security companies as AppleJeus, Labyrinth Chollima, UNC4736,
+    and Hidden Cobra, and has been attributed to Bureau 121 of North Korea's Reconnaissance General
+    Bureau." (The body separately calls it "based in North Korea" and "North Korean threat actor"; the
+    activity is attributed to Citrine Sleet at medium confidence.) The strings "Reconnaissance General
+    Bureau" and "Bureau 121" each occur once and refer directly to Citrine Sleet.
+  - CISA/FBI/Treasury AA21-048A (2021-02-17, cisa/2021-02-17_aa21-048a-applejeus) — nation-level only:
+    attributes AppleJeus to "Lazarus Group—which these agencies attribute to North Korean
+    state-sponsored advanced persistent threat (APT) actors" / "HIDDEN COBRA" / "the North Korean
+    government". Zero hits for RGB / Reconnaissance General Bureau / Bureau 121 / 3rd Bureau; the only
+    "Bureau" is "Federal Bureau of Investigation".
+  - Mandiant 3CX (2023-04-20, mandiant/2023-04-20_3cx-supply-chain) — nation-level only: "Mandiant
+    tracks this activity as UNC4736, a suspected North Korean nexus cluster"; links UNC4736 to CISA's
+    "AppleJeus" at moderate confidence. Names NO DPRK service (zero RGB / Bureau hits).
+
+  Why KEEP (not demote to kp/unscoped): the actor's OWN cited tier-1 source (Microsoft) explicitly
+  names the RGB and Bureau 121 — so the service nexus is sourced. This is the material difference from
+  the sibling kp/unscoped/moonstone-sleet, demoted the same day because Microsoft named only "North
+  Korean state-aligned" there.
+
+  Why bureau-121, not 3rd-bureau: the cited source says "Bureau 121", and AUSPEX's service taxonomy
+  treats kp/rgb/bureau-121 (historic principal offensive cyber unit / Lazarus-core parent, subsumed by
+  Lab 110) as DISTINCT from kp/rgb/3rd-bureau (the post-2018 crypto-theft / TraderTraitor home, named
+  by the FBI Bybit PSA). The former 3rd-bureau placement rested on the porous Citrine Sleet ≈
+  TraderTraitor equivalence, but the FBI Bybit PSA that anchors 3rd-bureau is cited on
+  kp/rgb/tradertraitor, NOT in this actor's sources, and concerns the TraderTraitor cluster — so it
+  cannot carry this actor's placement. kp/rgb (parent) is retained in additional_service_ids (also
+  named by Microsoft). Actor id kp/rgb/citrine-sleet is unchanged (the sub-bureau is carried only by
+  primary_service_id, not the id path), so no event actor_id FK propagation was required.
 sources:
   - cisa/2021-02-17_aa21-048a-applejeus
   - msft/2024-08-30_citrine-sleet-chrome-zero-day
