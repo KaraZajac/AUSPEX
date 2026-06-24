@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2023-06/shuckworm-2023-pterodogammasteel-espionage-against-ukrainian-military-
 name: "Shuckworm 2023 Pterodo/GammaSteel espionage against Ukrainian military and security organizations"
 start_date: 2023-06-01
@@ -12,9 +11,10 @@ summary: |
 attributions:
   - actor_id: ru/fsb/center-18/gamaredon
     attributing_org: "Symantec Threat Hunter Team"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: nation   # THIS source: Symantec calls Shuckworm "a Russia-linked group"; the FSB link it reports as a third-party ("Ukrainian officials have publicly stated..."), and it never names Center 18. The named-unit FSB Center-18 placement rests on the actor's own sources (SBU 2021-11-04; Microsoft ACTINIUM), not this event source.
     auspex_assessment: concur-with-caveat
-    attribution_date: 2023-06-01
+    attribution_date: 2023-06-15
     attribution_source_id: security/2023-06_shuckworm-2023-pterodogammasteel-espiona
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
@@ -35,3 +35,34 @@ targets:
     role: primary
 sources:
   - security/2023-06_shuckworm-2023-pterodogammasteel-espiona
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the cited Symantec/Broadcom source (raw snapshot captured + sha256:
+    cb53c158c7e954a00a659e9b318ca36bcf0e61849a94b73829f723c7760a93aa).
+    FACTS ✓: Pterodo backdoor, USB propagation, Giddome infostealer, phishing
+    attachments (.docx/.rar/.sfx/.lnk/.hta), PowerShell scripts, and the
+    military/security/research/government targeting — all verbatim-supported. The
+    "support Russian kinetic war efforts" framing is a direct source quote.
+    DATE FIX: real publish date is 2023-06-15 (JSON metadata createdYmd 2023-06-15),
+    not 2023-06-01 — attribution_date corrected to 2023-06-15. The campaign itself,
+    per the source, mostly began Feb/March 2023 with presence until May; start_date
+    is kept at the publication-month placeholder 2023-06-01.
+    ATTRIBUTION_LEVEL set to `nation`: THIS source calls Shuckworm "a Russia-linked
+    group" (Symantec's own assessment) and reports the FSB tie as a third-party
+    statement — "Ukrainian officials have publicly stated that the group operates on
+    behalf of the Russian Federal Security Service (FSB)" — and NEVER names Center 18
+    (0 occurrences of "Center 18"/"Center-18"; "GammaSteel" also 0 — the source's
+    stealer is Giddome, so the name-slug's "GammaSteel" is unsupported by this source,
+    though it is a genuine Gamaredon tool documented elsewhere; id is stable/unchanged).
+    The named-unit FSB Center-18 placement is therefore NOT carried by this event
+    source; it rests on the actor's own sources (SBU 2021-11-04 FSB-officer ID;
+    Microsoft ACTINIUM). ACTOR: ru/fsb/center-18/gamaredon left unchanged and is
+    consistent with this source (Russia-linked + Ukrainian-officials-say-FSB is a
+    less-specific subset of the actor's Center-18 placement; no contradiction).
+    DOCTRINE: ru/russkiy-mir/ukraine-theater strongly_inferred is honest — source
+    states a proximate kinetic-support purpose; the Russkiy Mir strategic frame is the
+    AUSPEX inference, so not attested (attesting_source_id correctly null).

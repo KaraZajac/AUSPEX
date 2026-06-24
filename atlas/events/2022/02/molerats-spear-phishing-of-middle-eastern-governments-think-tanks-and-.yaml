@@ -1,21 +1,24 @@
 id: 2022-02/molerats-spear-phishing-of-middle-eastern-governments-think-tanks-and-
 name: "Molerats spear-phishing of Middle Eastern governments, think tanks, and a state airline"
-start_date: 2022-02-01
+start_date: 2021-11-01
+disclosure_date: 2022-02-08
 incident_type:
   - espionage
   - intrusion
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  CFR records a February 2022 campaign by the Palestinian threat actor Molerats (Proofpoint's TA402 / Gaza Cybergang) that spear-phished Middle Eastern governments, foreign-policy think tanks, and a state-affiliated airline with geofenced delivery of a remote-access trojan.
+  In late 2021 (a November 2021 campaign), the Palestinian-aligned threat actor Molerats (Proofpoint's TA402 / Gaza Cybergang) ran a geofenced spear-phishing operation against Middle Eastern governments, foreign-policy think tanks, and a state-affiliated airline, using URL redirects to legitimate sites and a Quora masquerade to deliver a remote-access trojan (Proofpoint's NimbleMamba implant). Proofpoint disclosed the activity in February 2022; the campaign is recorded by CFR's Cyber Operations Tracker citing that Proofpoint report.
 attributions:
   - actor_id: ps/unscoped/molerats
     attributing_org: "CFR Cyber Operations Tracker (citing Proofpoint)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2022-02-01
     attribution_source_id: cfr/2022-02_molerats-spear-phishing-of-middle-easter
-doctrine_links: [] # TODO(QC): assign doctrine link
+    notes: "named-actor: CFR/Proofpoint name a specific tracked group (Molerats / TA402), so the attribution is named-actor-specific even though the NATION sponsorship is only suspected. Confidence capped at moderate: CFR labels it 'Suspected state sponsor: Palestine, State of' / 'Believed to be the work of Palestine's government', but the cited Proofpoint primary only hedges to 'a likely Palestinian-aligned' APT 'believed to be operating in the interest of the Palestinian Territories' (no hard government attribution) — hence concur-with-caveat: CFR's govt framing overstates the underlying primary, and the Palestinian nexus is naming-convention/interest-alignment-derived, not established service/state tasking."
+doctrine_links: []  # No doctrine link: the corpus has no Palestinian (ps) cyber-doctrine taxonomy to anchor one (confirmed 2026-06-24), and no cited source states a strategic purpose beyond generic Middle-East regional espionage. Left empty by design, not pending.
 targets:
   - target_id: sectors/government
     role: primary
@@ -25,3 +28,9 @@ targets:
     role: primary
 sources:
   - cfr/2022-02_molerats-spear-phishing-of-middle-easter
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: "Audited vs the sole cited source CFR Cyber Operations Tracker (raw snapshot + sha256 captured); CFR cites one reference, Proofpoint 'Ugg Boots 4 Sale' (2022-02-08), which I also read to verify CFR's relay was honest. FACTS ✓: targeting (ME governments + foreign-policy think tanks + state-affiliated airline) and TTPs (geofencing, URL redirects, Quora masquerade, RAT) match both sources. DATE CORRECTION: start_date was 2022-02-01 (the CFR/Proofpoint report date); Proofpoint dates the activity to 'late 2021' / a 'November 2021 campaign', so start_date -> 2021-11-01 and disclosure_date -> 2022-02-08. ATTRIBUTION: set attribution_level=named-actor (Molerats/TA402 is a specific tracked group) but kept attributing_org_confidence=moderate and changed auspex_assessment concur -> concur-with-caveat because CFR's 'Suspected state sponsor: Palestine, State of' / 'work of Palestine's government' framing OVERSTATES the cited Proofpoint primary, which only says 'a likely Palestinian-aligned' APT 'operating in the interest of the Palestinian Territories' (no hard govt attribution; Proofpoint claims no high confidence on the nation tie). DOCTRINE: doctrine_links intentionally [] — no ps cyber-doctrine exists in the corpus and no source states a strategic purpose; resolved the stale TODO. ACTOR ps/unscoped/molerats: CONSISTENT — actor record's 'Palestinian nexus is naming-convention-derived, not hard govt attribution; service unestablished -> unscoped' matches Proofpoint's hedged language; not re-placed. Targets are the VICTIMS (ME, unspecified countries), not the Palestinian actor — left without country since neither source names specific victim states."

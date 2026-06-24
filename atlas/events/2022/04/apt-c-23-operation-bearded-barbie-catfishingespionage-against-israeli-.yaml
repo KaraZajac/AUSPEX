@@ -12,11 +12,16 @@ summary: |
 attributions:
   - actor_id: ps/unscoped/arid-viper
     attributing_org: "CFR Cyber Operations Tracker (citing Cybereason 'Operation Bearded Barbie' and Bloomberg)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-01
     attribution_source_id: cfr/2022-04_apt-c-23-operation-bearded-barbie-catfis
-doctrine_links: [] # TODO(QC): assign doctrine link
+    notes: "CFR names the actor APT-C-23 (= Arid Viper) and a 'Suspected state sponsor: Palestine, State of'; the 'Hamas-linked' framing is CFR's labelling, not established service tasking — hence ps/unscoped. named-actor: the cluster (APT-C-23) is named; the nation is assessed only as 'Suspected'."
+# ps has no doctrine corpus (Palestine is actor-only in AUSPEX; see SCHEMA.md), so there is no
+# valid doctrine to link — empty [] is the honest state, mirroring the actor's empty
+# default_doctrine_alignment_ids.
+doctrine_links: []
 targets:
   - target_id: sectors/defense
     country: il
@@ -26,3 +31,33 @@ targets:
     role: primary
 sources:
   - cfr/2022-04_apt-c-23-operation-bearded-barbie-catfis
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the sole cited source, CFR Cyber Operations Tracker (raw snapshot captured +
+    hashed; live HTTP 200). Facts ✓: CFR's entry — date "Apr 2022", "Type of incident:
+    Espionage", description "Hamas-linked actor APT-C-23 targeted Israelis with an espionage
+    campaign to exfiltrate sensitive information from individuals working in law enforcement, the
+    military, and emergency services. The attackers used fabricated Facebook profiles to lure
+    targets to install trojanized direct message applications." — supports the summary (Bearded
+    Barbie, fabricated personas/Facebook, defense+law-enforcement+emergency-services Israeli
+    targets, espionage/exfiltration). CORRECTIONS: (1) set attribution_level: named-actor — CFR
+    names the cluster (APT-C-23 = Arid Viper) but assesses the nation only as "Suspected state
+    sponsor: Palestine, State of"; (2) removed the misleading inline comment that mapped
+    attributing_org_confidence from a doctrine-link "strongly_inferred" (two distinct scales;
+    moderate is correct as attribution confidence given CFR's "Suspected" sponsor flag);
+    (3) removed the doctrine_links TODO — ps/Palestine has NO doctrine corpus in AUSPEX
+    (actor-only), so empty [] is the honest state, mirroring the actor's empty
+    default_doctrine_alignment_ids; (4) source: de-provisionalized header, added raw_snapshot +
+    content_sha256 + AUDIT line. ATTRIBUTION RATIONALE: named-actor/moderate — APT-C-23/Arid
+    Viper is named at vendor consensus; the Palestinian nexus is "Suspected" per CFR and the
+    Hamas service tasking is alleged not established, consistent with the actor at ps/unscoped.
+    ACTOR CONSISTENCY: consistent with ps/unscoped/arid-viper (APT-C-23 is an equivalent alias;
+    Hamas suspected-not-established; ps nexus attested). No false-flag indicators. Single
+    secondary-tier source (CFR reference, itself citing Cybereason + Bloomberg) — a known P3
+    single-source/circularity-cohort record; tier kept "secondary" per uniform corpus CFR
+    convention. Primary uplift would be adding the Cybereason "Operation Bearded Barbie" report
+    as a direct source.

@@ -1,5 +1,14 @@
-id: kp/mss/apt37
-primary_service_id: kp/mss
+# Demoted kp/mss/apt37 -> kp/unscoped/apt37 on 2026-06-24 (claude-opus-4.8/max): of the actor's
+# four cited sources, NONE names the MSS (Ministry of State Security) or any DPRK service. Mandiant
+# 2018 attributes APT37 only "on behalf of the North Korean government" (high confidence); Kaspersky
+# 2016 (Operation Daybreak) names no nation at all ("unknown attackers" / "ScarCruft APT group");
+# Cisco Talos 2018 (Group123) declines nation-state attribution ("origin of this group is from the
+# Korean peninsula"); Volexity 2021 (InkySquid) says only "North Korean APT" and defers its
+# attribution method to a follow-up post. Nation nexus (North Korea) is sourced; the MSS service
+# placement is not. The MSS-vs-RGB question for APT37 is debated in the wider literature; keep
+# kp/unscoped until a cited source names a service. See notes + per-source AUDIT quotes below.
+id: kp/unscoped/apt37
+primary_service_id: kp/unscoped
 additional_service_ids: []
 canonical_name: APT37
 aliases:
@@ -51,11 +60,14 @@ target_sector_ids:
   - government/foreign-ministry
   - civil-society/ngo
 ttp_summary: |
-  MSS-attributed espionage cluster focused on individuals and
-  entities that threaten regime political security: defectors,
-  dissidents, journalists, ROK/JP policy entities. Operationally
-  distinct from RGB-Kimsuky despite target overlap — less
-  financial motivation, more individual-targeting tradecraft.
+  North-Korean-government-backed espionage cluster (Mandiant 2018:
+  "carried out on behalf of the North Korean government") focused on
+  individuals and entities that threaten regime political security:
+  defectors, dissidents, journalists, ROK/JP policy entities.
+  Operationally distinct from Kimsuky despite target overlap — less
+  financial motivation, more individual-targeting tradecraft. (The
+  cited sources do not name a specific DPRK service for APT37 — see
+  notes; hence kp/unscoped, not kp/mss or kp/rgb.)
 
   Tradecraft: Hangul Word Processor (HWP) zero-days and weaponized
   documents; ROKRAT, Chinotto, GoldBackdoor malware families;
@@ -66,6 +78,34 @@ ttp_summary: |
 default_doctrine_alignment_ids:
   - kp/juche/internal-security
   - kp/strategic-information/policy-collection
+notes: |
+  Former id kp/mss/apt37 (asserted an MSS — Ministry of State Security — placement). Demoted to
+  kp/unscoped/apt37 on 2026-06-24 (claude-opus-4.8/max) after auditing the actor's service placement
+  against its OWN four cited sources. None names the MSS, the RGB, or any specific North Korean
+  intelligence service. Verbatim, the strongest attribution each source actually makes:
+    - Mandiant/FireEye 2018 ("APT37 (Reaper): The Overlooked North Korean Actor", via Wayback —
+      the live URL now 301-redirects to a Google Cloud marketing shell with the article gone):
+      "We assess with high confidence that this activity is carried out on behalf of the North
+      Korean government given malware development artifacts and targeting that aligns with North
+      Korean state interests." Nation-level only; the strings MSS / Ministry of State Security /
+      RGB / Reconnaissance General Bureau are absent from the report.
+    - Kaspersky 2016 (Operation Daybreak): attributes the activity to "the ScarCruft APT group" /
+      "unknown attackers", with victims across Russia, Nepal, South Korea, China, India, Kuwait
+      and Romania. NO nation-state and NO service named.
+    - Cisco Talos 2018 (Group123, "Korea In The Crosshairs"): declines DPRK-government
+      attribution — only "the origin of this group is from the Korean peninsula" (a language /
+      tradecraft inference). The many "North Korea(n)" mentions are decoy-lure themes and the
+      South-Korean victim set, not sponsor attribution.
+    - Volexity 2021 (InkySquid, the APT37 sub-cluster): titles the actor a "North Korean APT" and
+      equates InkySquid with "ScarCruft and APT37", but states the attribution method is deferred
+      ("How is this activity attributed to InkySquid (aka ScarCruft, APT37)? This will be explained
+      further in a follow-up post"). Nation-level only; no service named.
+  North Korea (nation) is well-supported at named-actor level; the MSS service placement is not —
+  hence kp/unscoped. This also resolves the standing orchestrator FLAG carried in the 2022-12 Google
+  TAG event's qc.notes (Google TAG's own wording is "a group of North Korean government-backed actors
+  known as APT37" — likewise nation-level, no service). The MSS-vs-RGB attribution of APT37 is
+  genuinely debated in the wider literature; keep kp/unscoped until a cited source names a service.
+  FK-propagated this id change to the 4 referencing events on 2026-06-24.
 sources:
   - mandiant/2018-02-20_apt37-reaper-report
   - kaspersky/2016-06-01_scarcruft-research
