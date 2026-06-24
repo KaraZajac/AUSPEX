@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2022-05/bitter-adds-bangladesh-deploying-the-zxxz-trojan-against-the-rapid-act
 name: "Bitter adds Bangladesh, deploying the ZxxZ trojan against the Rapid Action Battalion"
 start_date: 2022-05-11
@@ -11,12 +10,14 @@ false_flag_risk: none
 summary: |
   Cisco Talos reported a Bitter APT campaign running since August 2021 that expanded the group's usual South Asian targeting to an elite unit of the Bangladeshi government, sending spear-phishing emails to high-ranking officials of the Rapid Action Battalion (RAB). The maldoc lures (RTF and Excel files) exploited CVE-2017-11882, CVE-2018-0798 and CVE-2018-0802 and asked recipients to review operational documents such as call data records and registered-case lists. The payload was a previously undocumented downloader trojan named ZxxZ, which masquerades as a Windows Security update service and supports remote file execution. Talos attributed the campaign to Bitter with moderate confidence based on shared C2 infrastructure and payload-string overlaps with prior Bitter operations.
 attributions:
-  - actor_id: in/ntro/bitter
+  - actor_id: in/unscoped/bitter
     attributing_org: "Cisco Talos"
-    attributing_org_confidence: moderate   # ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2022-05-11
     attribution_source_id: blogtalosintelligence/2022-05_bitter-adds-bangladesh-deploying-the-zxx
+    notes: "Talos named the actor 'Bitter' (a.k.a. T-APT-17) at moderate confidence but pinned NO nation — it calls Bitter only 'a suspected South Asian threat actor.' The India nexus rests on the later Proofpoint/Threatray (2025) attribution, not this source; this source establishes neither India nor any Indian service (NTRO)."
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
@@ -33,3 +34,22 @@ targets:
     role: primary
 sources:
   - blogtalosintelligence/2022-05_bitter-adds-bangladesh-deploying-the-zxx
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: >-
+    Audited vs Cisco Talos 'Bitter APT adds Bangladesh to their targets' (raw snapshot captured,
+    sha256 b8dcef76…). Facts all confirmed: campaign since Aug 2021, RAB (Rapid Action Battalion)
+    of Bangladesh police as target, RTF/Excel maldocs exploiting CVE-2017-11882/CVE-2018-0798/
+    CVE-2018-0802, ZxxZ downloader masquerading as a Windows Security update, CDR/registered-cases
+    lures, moderate-confidence attribution via shared C2 + payload-string overlap. ATTRIBUTION: the
+    source names 'Bitter' (= T-APT-17) at moderate confidence but pins NO nation — verbatim 'a
+    suspected South Asian threat actor'; it never says India or NTRO (0 hits for 'India'/'National
+    Technical'). attribution_level=named-actor (specific named cluster) with a note that the nation
+    is unestablished here. doctrine_link kept strongly_inferred (target+actor-mission triangulate;
+    India nexus itself rests on the later Proofpoint/Threatray 2025 report, not this Talos source).
+    ACTOR: de-provisionalized in/ntro/bitter and DEMOTED in/ntro/bitter→in/unscoped/bitter — no
+    cited source names NTRO; India nexus is sourced (Proofpoint 2025) but service placement is not.
+    FK-propagated the id change to all 5 referencing events. Removed the DEPTH-backfill header.

@@ -1,7 +1,6 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2022-09/unc3886-deploys-virtualpita-and-virtualpie-backdoors-on-vmware-esxi-hy
 name: "UNC3886 deploys VIRTUALPITA and VIRTUALPIE backdoors on VMware ESXi hypervisors via malicious VIB packages"
-start_date: 2022-09-01
+start_date: 2022-09-29
 incident_type:
   - espionage
   - intrusion
@@ -9,30 +8,55 @@ incident_type:
 initial_vector: valid-creds
 false_flag_risk: none
 summary: |
-  Mandiant disclosed a novel attack technique in which UNC3886 abused malicious vSphere Installation Bundles (VIBs) to install two persistent backdoors, VIRTUALPITA and VIRTUALPIE, directly on VMware ESXi hypervisors, then used them to maintain access and run commands across guest virtual machines while evading EDR. Mandiant noted this was not a remote code-execution flaw — the actor required admin-level privileges to the hypervisor to deploy the VIBs. Mandiant assessed the highly targeted and evasive intrusion was cyber-espionage motivated and, with low confidence, that UNC3886 has a China-nexus.
+  Mandiant disclosed a novel attack technique in which UNC3886 abused malicious vSphere Installation Bundles (VIBs) to install two persistent backdoors, VIRTUALPITA and VIRTUALPIE, directly on VMware ESXi hypervisors, then used them to maintain access and run commands across guest virtual machines while evading EDR. Mandiant noted this was not a remote code-execution flaw — the actor required admin-level privileges to the hypervisor to deploy the VIBs. Mandiant suspected the highly targeted and evasive intrusion was cyber-espionage motivated and assessed, with low confidence, that UNC3886 has a China-nexus. "UNC" denotes an uncategorized cluster in Mandiant's taxonomy: at this 2022 disclosure Mandiant did not attribute the activity to any nation-state at confidence or to any specific service, and named no victim sectors or countries in this report.
 attributions:
-  - actor_id: cn/mss/unc3886
+  # 2022 — Mandiant coined the "UNC3886" UNCATEGORIZED cluster. The only origin claim in this report
+  # is "we assess with LOW CONFIDENCE that UNC3886 has a China-nexus" — a nation hint, no service.
+  - actor_id: cn/unscoped/unc3886
     attributing_org: "Mandiant"
-    attributing_org_confidence: moderate   # ICD link-confidence: strongly_inferred
+    attributing_org_confidence: low
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
-    attribution_date: 2022-09-01
+    attribution_date: 2022-09-29
     attribution_source_id: cloudgoogle/2022-09_unc3886-deploys-virtualpita-and-virtualp
+    notes: "Mandiant assessed verbatim 'with low confidence that UNC3886 has a China-nexus'. 'UNC' = uncategorized — Mandiant deliberately did not attribute UNC3886 to a nation at confidence or to any service in this report; China-nexus is a low-confidence nation hint, not a service attribution. Hence cn/unscoped, attribution_level nation, confidence low."
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Mandiant assesses the highly targeted, evasive hypervisor implantation as cyber-espionage against defense, technology and telecommunications targets. Stealthy persistent collection on adversary strategic infrastructure (virtualization fabric underpinning C4ISR-relevant networks) maps to intelligentized-warfare's strategic SIGINT/C4ISR collection.
+      Mandiant suspected this highly targeted, evasive hypervisor implantation was cyber-espionage motivated. Stealthy, persistent collection on virtualization fabric maps in substance to intelligentized-warfare's strategic SIGINT/C4ISR collection — BUT the China-nexus attribution this doctrine presupposes is only LOW confidence in this 2022 source (UNC3886 was an UNCATEGORIZED cluster), and this report names no victim sectors or countries, so the strategic-collection reading is one plausible fit among others rather than a strongly-triangulated one. The defense/technology/telecommunications victimology and the firmer "Chinese cyber espionage group" framing come from later (2023+) Mandiant reporting, not this disclosure.
     attesting_source_id: null
     contested: false
     analyst: claude
-targets:
-  - target_id: sectors/ict
-    country: us
-    role: primary
-  - target_id: sectors/defense
-    country: us
-    role: primary
+    inference_basis:
+      alternatives:
+        - "Strategic SIGINT/C4ISR collection on adversary virtualization infrastructure (this link) — but predicated on a China-nexus that is only low-confidence here."
+        - "Generic, opportunistic cyber-espionage with no demonstrated state-strategic target set — this report names no victims and attributes the actor only at low confidence."
+targets: []
 sources:
   - cloudgoogle/2022-09_unc3886-deploys-virtualpita-and-virtualp
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Mandiant 2022-09 ESXi/VIB blog (raw snapshot captured, sha256 in source record).
+    FACTS ✓: VIRTUALPITA/VIRTUALPIE backdoors, malicious vSphere Installation Bundles (VIBs),
+    persistence on VMware ESXi hypervisors, command execution across guest VMs, EDR evasion,
+    admin-privilege prerequisite (not an RCE) — all verbatim in the raw. DATE CORRECTED: real
+    publish date is 2022-09-29 (was 2022-09-01 backfill placeholder); start_date + published_on
+    updated. ATTRIBUTION: source says verbatim "we assess with low confidence that UNC3886 has a
+    China-nexus"; "UNC" = UNCATEGORIZED (the report itself links Mandiant's "DebUNCing Attribution:
+    How Mandiant Tracks Uncategorized Threat Actors"). So NOT a named-unit and NOT a service —
+    nation-level at best, and only low confidence. Corrected attributing_org_confidence moderate->low
+    and set attribution_level: nation. TARGETS CORRECTED: removed sectors/ict + sectors/defense
+    (both country:us) — this 2022 report names NO victim sectors or countries (the only "targeted"
+    usage is "highly targeted and evasive nature of this intrusion", describing tradecraft); that
+    victimology is from later 2023+ reports. DOCTRINE: downgraded strongly_inferred -> plausible
+    (the China-nexus the cn/ doctrine presupposes is low-confidence here and no victims are named;
+    added inference_basis.alternatives) and removed the victimology over-claim from the reasoning.
+    ACTOR: de-provisionalized + DEMOTED cn/mss/unc3886 -> cn/unscoped/unc3886 (MSS unsourced; no
+    cited Mandiant report names a service). FK-propagated to 4 referencing events.

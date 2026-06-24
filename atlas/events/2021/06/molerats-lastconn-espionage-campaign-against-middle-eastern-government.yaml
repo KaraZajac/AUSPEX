@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2021-06/molerats-lastconn-espionage-campaign-against-middle-eastern-government
 name: "Molerats 'LastConn' espionage campaign against Middle Eastern governments (June 2021)"
 start_date: 2021-06-01
@@ -8,14 +7,16 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Proofpoint reported that TA402 (Molerats / GazaHackerTeam) resumed email threat campaigns in June 2021 using a custom malware implant it dubbed LastConn. The actor delivered Arabic-language spear-phishing emails with PDF attachments containing geofenced URLs that led to password-protected archives carrying the malware, enabling reconnaissance on the target host and data exfiltration. Lures used geopolitical themes tied to the Gaza conflict, including subjects such as a Hamas delegation meeting the Syrian regime. Proofpoint assessed the targets as government institutions in the Middle East, particularly entities in Israel and Palestine.
+  Proofpoint reported (16 June 2021) that TA402 (Molerats / GazaHackerTeam) resumed email threat campaigns in early June 2021 using a custom malware implant it dubbed LastConn — assessed with high confidence to be an updated version of the SharpStage malware Cybereason analyzed in December 2020. The actor delivered Arabic-language spear-phishing emails with PDF attachments containing geofenced URLs that led to password-protected archives carrying the malware, enabling reconnaissance on the target host and data exfiltration; an earlier February 2021 vector used Google Apps Script URLs. Lures used Middle Eastern geopolitical themes tied to the Gaza conflict, including a subject purporting to be a Hamas delegation meeting the Syrian regime. Proofpoint assessed the malware as targeting government institutions in the Middle East and global government organizations associated with regional geopolitics, noting that TA402 "often targets entities in Israel and Palestine." Proofpoint assessed with moderate confidence — based on lure topics, targeting, and historic campaigns — that the activity likely supports military or Palestinian state objectives.
 attributions:
   - actor_id: ps/unscoped/molerats
     attributing_org: "Proofpoint"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2021-06-01
+    attribution_date: 2021-06-16
     attribution_source_id: proofpoint/2021-06_molerats-lastconn-espionage-campaign-aga
+    notes: "Proofpoint names the actor (TA402 / Molerats) as fact but assesses the state nexus only at MODERATE confidence: 'Proofpoint assesses with moderate confidence based on lure topics, targeting, and historic campaigns the activity likely supports military or Palestinian state objectives.' The 'high confidence' in the report is the malware-lineage claim (LastConn = SharpStage), not the attribution. attribution_level=named-actor: a named threat actor is reached, but no Palestinian service is established (cf. ps/unscoped/molerats)."
 doctrine_links: []
 targets:
   - target_id: sectors/government
@@ -26,3 +27,24 @@ targets:
     role: primary
 sources:
   - proofpoint/2021-06_molerats-lastconn-espionage-campaign-aga
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Proofpoint blog (raw snapshot captured, sha256 999f54ff...). FACTS ✓: TA402/Molerats/GazaHackerTeam,
+    LastConn = updated SharpStage (Cybereason Dec 2020, stated at HIGH confidence — malware-lineage claim only),
+    Arabic spear-phishing, geofenced PDF→password-RAR, recon+exfil, 'Hamas delegation meets the Syrian regime' lure
+    — all verbatim-supported. DATE CORRECTION: article's real publish date is 2021-06-16 (meta article:published_time),
+    not 2021-06-01; fixed published_on (source) and attribution_date to 2021-06-16. start_date kept 2021-06-01
+    (campaign observed 'early June 2021' / '02 June 2021 campaign'). ATTRIBUTION CORRECTION: confidence high→moderate —
+    Proofpoint's state-nexus assessment is explicitly 'moderate confidence ... likely supports military or Palestinian
+    state objectives'; the actor identity (TA402=Molerats) is stated as fact. Removed misleading inline
+    '# ICD link-confidence: attested' comment (no doctrine_links exist). attribution_level set to named-actor (named
+    threat actor reached; no service established). TARGETS: sectors/government ✓; the article generalizes to
+    'government institutions in the Middle East' and notes TA402 'often targets entities in Israel and Palestine' — the
+    il+ps split represents the documented targeting footprint, not specific named victims of this June campaign (kept).
+    ACTOR consistency: ps/unscoped/molerats — Palestinian/Gaza nexus is alias-derived (Gaza Cybergang/GazaHackerTeam),
+    state nexus only moderate, no service named; fully consistent with the unscoped placement. Did NOT re-place the
+    shared actor. Removed DEPTH-backfill header.

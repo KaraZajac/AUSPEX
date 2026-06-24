@@ -7,11 +7,12 @@ incident_type:
 initial_vector: physical
 false_flag_risk: none
 summary: |
-  CFR's tracker records that the widow of murdered Saudi dissident Jamal Khashoggi, Hanan Elatr, was targeted with NSO Group's Pegasus spyware 'at the request of the United Arab Emirates' (December 2021).
+  CFR's Cyber Operations Tracker records (report dated Dec 2021, citing The Washington Post / The Verge) that Hanan Elatr — the wife of murdered Saudi journalist Jamal Khashoggi — was targeted with NSO Group's Pegasus spyware 'at the request of the United Arab Emirates,' with the malware allegedly installed while she was detained at Dubai airport. CFR labels the UAE a 'Suspected state sponsor' and categorises the incident as civil-society espionage. (CFR's free-text 'Affiliations' line conflictingly says 'Believed to be the work of the Saudi Arabian government,' but its structured sponsor field, the headline of its cited WaPo source, and the Verge piece all name the UAE as the requesting party.)
 attributions:
-  - actor_id: ae/state-security/uae-pegasus
+  - actor_id: ae/unscoped/uae-pegasus
     attributing_org: "CFR Cyber Operations Tracker (citing The Washington Post / The Verge)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CFR labels the state sponsor "Suspected"
+    attribution_level: nation              # CFR names the UAE (a state); no specific Emirati service named
     auspex_assessment: concur
     attribution_date: 2021-12-01
     attribution_source_id: cfr/2021-12_uae-targeting-of-jamal-khashoggis-widow-
@@ -21,13 +22,19 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pegasus targeting of the widow of murdered dissident journalist Jamal Khashoggi is surveillance of the exiled-dissident/journalist milieu the regime treats as a security threat; the op advances regime-protection surveillance of diaspora critics rather than any state-collection objective.
+      Pegasus targeting of the wife of murdered dissident journalist Jamal Khashoggi is surveillance of the exiled-dissident/journalist milieu the regime treats as a security threat; CFR categorises the incident as civil-society espionage, and the op advances regime-protection surveillance of diaspora critics rather than any state-collection objective. strongly_inferred (not attested): the cited CFR record states the WHO (UAE, suspected) and the target category (civil society) but does not state the strategic purpose in its own words.
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/civil-society/dissident
-    country: ae
+    country: ae   # documented intrusion locus per the source (phone infected while detained at Dubai airport); Elatr's residence country is not established by the cited CFR record
     role: primary
 sources:
   - cfr/2021-12_uae-targeting-of-jamal-khashoggis-widow-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: "Audited vs CFR Cyber Operations Tracker (raw captured, sha256 755f35c9...). Source is unambiguous: structured 'Suspected state sponsor: United Arab Emirates', 'at the request of the United Arab Emirates', 'Type of incident: Espionage', 'Target category: Civil society'; 'Read more' = WaPo ('A UAE agency put Pegasus...') + The Verge (both 403/blocked, not separate corpus sources). CORRECTIONS: (1) attributing_org_confidence high->moderate — CFR labels the sponsor 'Suspected', not confirmed (matches the mirror Saudi/KINGDOM event). (2) Added attribution_level: nation — CFR names the UAE (a state) and only 'a UAE agency'; no specific Emirati service named -> nation, NOT named-unit. (3) Summary rewritten to the source: 'wife' (CFR's word) not 'widow', Dubai-airport detention added, and CFR's internal contradiction flagged (free-text 'Affiliations' says Saudi govt while the structured sponsor field + WaPo/Verge say UAE; AUSPEX follows the structured UAE field). doctrine_link kept strongly_inferred (CFR states WHO+target-category but not the purpose in its own words); pillar journalists-in-exile FK verified. ACTOR: de-provisionalized ae/state-security/uae-pegasus and DEMOTED ae/state-security/uae-pegasus -> ae/unscoped/uae-pegasus (no cited source names a UAE service; ae/state-security.yaml itself says open-source attribution to it as a named operator is rare); id+primary_service_id changed, former id recorded in actor notes, #FK=1 (this event). ae/unscoped service verified to exist."

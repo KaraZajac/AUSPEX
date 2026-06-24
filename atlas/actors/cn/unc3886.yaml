@@ -1,6 +1,10 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: cn/mss/unc3886
-primary_service_id: cn/mss
+# De-provisionalized + demoted to cn/unscoped 2026-06-24: cited Mandiant sources establish a
+# China-nexus but NO service. "UNC" in Mandiant's taxonomy = UNCATEGORIZED — at first disclosure
+# (Sep 2022) Mandiant assessed only "with low confidence that UNC3886 has a China-nexus"; later
+# reporting hardened to "suspect ... China-nexus" (Mar 2023) and "Chinese cyber espionage group"
+# (Jun 2023). None of the cited sources names the MSS, the PLA, or any specific Chinese service.
+id: cn/unscoped/unc3886
+primary_service_id: cn/unscoped
 additional_service_ids: []
 canonical_name: "UNC3886"
 aliases: []
@@ -8,8 +12,33 @@ status: active
 mission:
   - espionage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: UNC3886 — China-nexus router/virtualization espionage group (Mandiant)
-default_doctrine_alignment_ids: []
+  China-nexus cyber-espionage cluster tracked by Mandiant since September 2022. Specializes in
+  stealthy, persistent compromise of network-edge and virtualization infrastructure that does not
+  support EDR — VMware ESXi hypervisors (malicious vSphere Installation Bundles deploying the
+  VIRTUALPITA and VIRTUALPIE backdoors), Fortinet FortiOS appliances (THINCRUST/CASTLETAP), and
+  Juniper Junos OS routers (customized TINYSHELL variants). Repeatedly exploits zero-day
+  vulnerabilities (CVE-2022-41328, CVE-2023-20867, CVE-2025-21590), harvests credentials, and uses
+  custom implants tuned to disable logging and evade forensics during hands-on-keyboard operations.
+  Per Mandiant's later (2023) reporting, primarily targets defense, technology, and
+  telecommunication organizations in the US and Asia-Pacific/Japan regions.
+default_doctrine_alignment_ids:
+  - cn/intelligentized-warfare/sigint-c4isr-collection
+target_sector_ids:
+  - sectors/defense
+  - sectors/ict
+notes: |
+  Former id cn/mss/unc3886 (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced MSS
+  placement). Demoted to cn/unscoped on 2026-06-24: "UNC" in Mandiant's taxonomy denotes an
+  UNCATEGORIZED activity cluster — Mandiant deliberately did NOT attribute UNC3886 to any nation or
+  service at first disclosure. Of the cited sources, Mandiant (2022-09) assesses only "with low
+  confidence that UNC3886 has a China-nexus"; (2023-03) "a group we suspect has a China-nexus";
+  (2023-06) calls it "a highly adept Chinese cyber espionage group"; the 2025-03 report's title
+  reads "China-nexus UNC3886." The China nexus is thus supported (hardening from low-confidence in
+  2022 to asserted in 2023), but NO cited source names the MSS, the PLA, or any specific Chinese
+  service — hence cn/unscoped, not cn/mss. Keep cn/unscoped until a cited source names a service.
+  FK-propagated id change to the 4 referencing events on 2026-06-24.
 sources:
+  - cloudgoogle/2022-09_unc3886-deploys-virtualpita-and-virtualp
+  - cloudgoogle/2023-03_unc3886-exploits-fortinet-fortios-zero-d
+  - cloudgoogle/2023-06_unc3886-exploits-vmware-esxi-zero-day-cv
   - cloudgoogle/2025-03_mandiant-attributes-juniper-junos-os-rou

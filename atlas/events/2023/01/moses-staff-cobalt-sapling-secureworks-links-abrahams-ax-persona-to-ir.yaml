@@ -12,17 +12,19 @@ summary: |
 attributions:
   - actor_id: ir/moses-staff
     attributing_org: "Secureworks Counter Threat Unit (CTU)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # Secureworks CTU: personas "likely operated by the same entity"
+    attribution_level: named-actor   # names the actor (COBALT SAPLING / Moses Staff) + nation ("Iranian"); NO Iranian service named (no IRGC/MOIS) -> not named-unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-01-26
     attribution_source_id: secureworks/2023-01_moses-staff-cobalt-sapling-secureworks-l
+    notes: "Secureworks CTU verbatim: 'Abraham's Ax is another hacktivist group persona operated by the Iranian COBALT SAPLING threat group' and the personas are 'likely operated by the same entity.' The source names the group as Iranian and links Abraham's Ax to Moses Staff / COBALT SAPLING, but does NOT name an Iranian intelligence service and does NOT assert state sponsorship."
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Secureworks links the Abraham's Ax and Moses Staff hacktivist personas to the Iranian COBALT SAPLING group that publishes stolen data — exactly the IRGC/MOIS practice of laundering state operations through deniable named personas that this doctrine describes.
+      Secureworks attributes both the Abraham's Ax and Moses Staff "hacktivist group personas" to one Iranian group (COBALT SAPLING) that runs leak sites and publishes stolen data behind biblically-themed, false-affiliation fronts (Abraham's Ax even claims "Hezbollah Ummah", which Secureworks found no evidence for). One state-aligned actor operating multiple deniable hacktivist personas is exactly the persona-laundering practice this pillar describes. AUSPEX-inference note: Secureworks names the group as "Iranian" but does NOT name IRGC/MOIS or assert state sponsorship, so the laundering-of-state-operations reading is AUSPEX's strongly-inferred WHY (one strategic reading, no serious competitor given the actor's anti-Israel mission and Iranian nexus), not a claim attested by the source — hence strongly_inferred, not attested.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -44,3 +46,26 @@ targets:
     role: primary
 sources:
   - secureworks/2023-01_moses-staff-cobalt-sapling-secureworks-l
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Secureworks CTU (raw snapshot captured via WebFetch; curl 301->sophos.com, sophos.com HTTP 000,
+    archive.org blocked). FACTS ✓: Abraham's Ax = Iranian COBALT SAPLING (= Moses Staff) persona; Abraham's Ax hits
+    Saudi government ministries (Ministry of the Interior sample data); Moses Staff leaks from Israeli companies and
+    doxxes Unit 8200-affiliated individuals; tooling PyDCrypt/DCSrv/StrifeWater/DriveGuard all named by source.
+    ATTRIBUTION: source verbatim "Abraham's Ax is another hacktivist group persona operated by the Iranian COBALT
+    SAPLING threat group", personas "likely operated by the same entity" -> set attribution_level: named-actor (names
+    the actor + the nation "Iranian"; NO Iranian service named, NO state-sponsorship asserted -> not named-unit);
+    attributing_org_confidence: moderate retained (maps from "likely"). CORRECTIONS: added missing attribution_level
+    (named-actor) + verbatim attribution note; rewrote the persona-laundering doctrine reasoning to stop implying the
+    source attributes the laundering to "IRGC/MOIS" (it does not) and to mark the deniable-state-laundering reading as
+    AUSPEX's strongly_inferred WHY, not source-attested (attested correctly NOT used; attesting_source_id stays null).
+    ACTOR ir/moses-staff: id has NO service/unscoped segment yet primary_service_id: ir/irgc (FK valid; service file
+    exists). FLAG (not renamed per instructions, actor is DONE): no cited source — neither this Secureworks report nor
+    the actor's own sources — names IRGC/MOIS; this audited source calls the group only "Iranian". The IRGC placement
+    is therefore weaker than the named-actor evidence supports, paralleling the Agrius ir/mois->ir/unscoped demotion;
+    recommend a future review consider ir/unscoped/moses-staff unless an actor-source names a service.
+

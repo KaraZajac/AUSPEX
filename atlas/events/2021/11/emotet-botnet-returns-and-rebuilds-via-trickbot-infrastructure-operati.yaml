@@ -7,14 +7,42 @@ incident_type:
 initial_vector: unknown
 false_flag_risk: none
 summary: |
-  In November 2021 researchers (Cryptolaemus, GData, AdvIntel) observed the Emotet botnet returning roughly ten months after its January 2021 law-enforcement takedown, rebuilt through existing TrickBot infrastructure in a process Cryptolaemus dubbed 'Operation Reacharound'. Rather than Emotet installing TrickBot as in the past, TrickBot was now dropping an Emotet loader (compiled 14 November 2021) onto already-infected devices, with over 240 compromised systems acting as command-and-control servers. The new Emotet build expanded its command set (about seven commands) with additional execution options for downloaded binaries, and abuse.ch published C2 server lists. The source describes botnet rebuilding and infrastructure but names no specific victim sectors, organizations, or countries for this event.
+  In November 2021 researchers (Cryptolaemus, GData, AdvIntel) observed the Emotet botnet returning roughly ten months after its January 2021 law-enforcement takedown, rebuilt through existing TrickBot infrastructure in a process Cryptolaemus dubbed 'Operation Reacharound'. Rather than Emotet installing TrickBot as in the past, TrickBot was now dropping an Emotet loader (compilation timestamp Sun Nov 14 2021) onto already-infected devices, with over 246 compromised systems acting as command-and-control servers. The new Emotet build expanded its command set (7 commands, up from 3-4) with additional execution options for downloaded binaries, and abuse.ch published C2 server lists. The source describes botnet rebuilding and infrastructure but names no specific victim sectors, organizations, or countries for this event — and names no state, nation, or Russia nexus: it is a purely criminal botnet-rebuild report.
 attributions:
   - actor_id: ru/proxies/emotet
     attributing_org: "Cryptolaemus research group, GData, Advanced Intel"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor   # source identifies the named criminal botnet "Emotet"; it names NO state/nation/unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2021-11-14
     attribution_source_id: bleepingcomputer/2021-11_emotet-botnet-returns-and-rebuilds-via-t
-doctrine_links: [] # TODO(QC): assign doctrine link
+    notes: "Caveat: the cited source establishes only that the Emotet criminal botnet was rebuilding via TrickBot infrastructure; it asserts NO Russia/state nexus. The ru/proxies/ namespace rests on Emotet's documented coupling to TrickBot/Conti/Wizard Spider (FSB Center 18 liaison, ContiLeaks 2022; Treasury 2023 TrickBot-Conti sanctions), evidenced in the actor record — not in this source."
+# doctrine_links intentionally empty: (1) the cited source states no strategic state purpose, and
+# (2) the actor's only candidate doctrine (ru/sanctions-response-2022, issued_on 2022-02-24) postdates
+# this 2021-11 event, so linking it would be anachronistic. No defensible attacker-rationale link exists.
+doctrine_links: []
 sources:
   - bleepingcomputer/2021-11_emotet-botnet-returns-and-rebuilds-via-t
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs the sole source (BleepingComputer 2021-11-14, raw snapshot captured + sha256). Facts ✓:
+    'Operation Reacharound' (Cryptolaemus); TrickBot now drops the Emotet loader (reversal); loader compile
+    ts 'Sun Nov 14 20:50:34 2021'; 7 commands up from 3-4 + execution options for downloaded binaries;
+    abuse.ch C2 lists; over 246 C2 devices. CORRECTIONS: '240'->'246' (exact); added attribution_level:
+    named-actor; removed the misleading 'mapped from ICD link-confidence' comment on org-confidence; removed
+    the doctrine-link TODO and documented why it stays empty.
+    KEY FINDING (state-vs-criminal): the cited source carries ZERO state/Russia nexus — the only 'Russia'
+    strings on the page are an unrelated 'Related Articles' link (Kazuar). It is a purely CRIMINAL botnet-
+    rebuild report; the only actor named is the Emotet/TA542 crew (jokingly 'Ivan' in a Cryptolaemus tweet).
+    attribution_level therefore = named-actor (NOT nation/named-unit); confidence kept moderate; assessment
+    concur-with-caveat. doctrine_links left [] : source states no strategic purpose AND the actor's only
+    candidate doctrine (ru/sanctions-response-2022) postdates this event (issued 2022-02-24) -> anachronism.
+    ACTOR CONSISTENCY (ru/proxies/emotet, marked DONE, NOT modified): the ru/proxies/ placement is loose — it
+    rides on Emotet's coupling to TrickBot/Conti/Wizard Spider (FSB Center 18 / ContiLeaks 2022; Treasury 2023
+    TrickBot-Conti sanctions, cited in the actor + ru/sanctions-response-2022). The sanctions-response pillar's
+    proxy roster names TrickBot/Conti, Killnet, NoName, CARR — NOT Emotet by name. FLAG for human review:
+    no source ties Emotet itself directly to a Russian service at any confidence; the nexus is derived/inherited.

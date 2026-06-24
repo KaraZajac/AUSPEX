@@ -6,22 +6,30 @@ incident_type:
   - espionage
 false_flag_risk: none
 summary: |
-  Elastic Security Labs (intrusion set REF4322) detailed an APT32/OceanLotus operation deploying the PHOREAL/RIZZO backdoor against a Vietnamese financial-services institution, loading it into memory for defense evasion. Extends the inventory's APT32 record (which stops at 2021) into 2023 and into the domestic financial sector, consistent with Vietnam's industrial/economic cyber-collection posture.
+  Elastic Security Labs identified an ongoing campaign (tracked as activity group REF4322) deploying the PHOREAL/RIZZO backdoor against a Vietnamese financial-services institution, loading the implant into memory for defense evasion. Elastic assessed "with high confidence" that REF4322 is APT32/OceanLotus — on the basis of PHOREAL being reported as used exclusively by APT32, and the victim matching APT32's geographic and industry-vertical profile. The report names the group (APT32/OceanLotus) but does not assert a Vietnamese-state sponsor or a specific service; the Vietnam-state nexus and the tc2 service placement rest on the wider corpus consensus, not this source. Extends the inventory's APT32 record (which stops at 2021) into 2023 and into the domestic financial sector.
+disclosure_date: 2023-03-02
 attributions:
   - actor_id: vn/tc2/apt32
-    attributing_org: "elastic"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org: "Elastic Security Labs"
+    attributing_org_confidence: high   # Elastic: "We assess with high confidence ... that REF4322 is APT32/OceanLotus"
+    attribution_level: named-actor      # names the GROUP (APT32) only; no nation-state sponsor or service named in this source
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-03-02
     attribution_source_id: elastic/2023-03_elastic-discloses-apt32-phoreal-backdoor
+    notes: "Elastic names the group (APT32/OceanLotus) at high confidence but does NOT name Vietnam as the sponsoring state, nor any service (no 'state-sponsored'/'nation-state'/'aligned'/TC2 language in the report). The vn-state nexus and the tc2 placement on the actor record derive from other corpus sources (FireEye 2017 et al.), not this disclosure."
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      APT32/OceanLotus deployed the PHOREAL backdoor against a domestic Vietnamese financial-services institution, consistent with state-aligned collection on strategic economic sectors that supports Vietnam's industrial/economic upgrading posture. Pillar left null — the financial sector matches neither the automotive nor aerospace sub-pillars.
+      APT32/OceanLotus deployed the PHOREAL backdoor against a DOMESTIC Vietnamese financial-services institution. This is a weak fit for the industrial-upgrading doctrine, which is reconstructed from APT32's collection on FOREIGN automotive/aerospace OEMs for IP indigenization (Toyota, VW, BMW, Daimler) — a domestic financial victim matches neither the automotive nor the aerospace sub-pillar (pillar left null), and Elastic states no strategic purpose for the operation. Multiple strategic readings survive, so the link is graded `plausible` rather than `strongly_inferred`. Downgraded on audit 2026-06-24: the prior `strongly_inferred` failed the "one strategic reading, no serious competitor" test.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Industrial/economic cyber-collection in service of Vietnam's industrial-upgrading posture (this link) — but the victim is domestic finance, not a foreign IP-rich manufacturer, weakening the fit."
+        - "Regime-stability / financial-intelligence collection on a domestic institution (cf. APT32's other default alignment, vn/resolution-29-nqtw regime-stability-surveillance) — a domestic financial target fits internal-monitoring at least as well."
+        - "Generic state-aligned espionage with no specific strategic-economic motive — Elastic states no purpose; APT32's mission spans espionage and influence."
     contested: false
     analyst: claude
 targets:
@@ -30,3 +38,13 @@ targets:
     role: primary
 sources:
   - elastic/2023-03_elastic-discloses-apt32-phoreal-backdoor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-24
+  level: full
+  notes: |
+    Audited vs Elastic Security Labs raw snapshot (sha256 0e70ae67...). FACTS ✓: ongoing campaign vs a Vietnamese financial-services institution; PHOREAL/RIZZO in-memory backdoor; activity group REF4322; publish date 2023-03-02 verified (structured datePublished + byline). VICTIM ✓ unusual-but-confirmed: Elastic's preamble and meta description both state a Vietnamese financial-services institution (page title is the broader "Southeast Asian Financial Sector").
+    CORRECTIONS: (1) attributing_org_confidence moderate->high — Elastic explicitly: "We assess with high confidence ... that REF4322 is APT32/OceanLotus" (the prior `moderate` was an erroneous down-map of the doctrine-link scale). (2) Added attribution_level: named-actor — Elastic names the GROUP only. (3) Added disclosure_date 2023-03-02. (4) Doctrine link strongly_inferred->plausible with inference_basis.alternatives — a DOMESTIC financial victim is a weak fit for an industrial-upgrading/foreign-IP-collection doctrine; competing readings (regime-stability/financial-intel, generic espionage) survive, failing the no-serious-competitor test. attesting_source_id stays null (Elastic states no strategic purpose). Pillar null retained (neither automotive nor aerospace).
+    ATTRIBUTION LEVEL RATIONALE: named-actor, NOT nation/named-unit. The source contains NO state-sponsorship language ("state-sponsored"/"nation-state"/"aligned"/"nexus"/"on behalf"/MPS/TC2 all absent); its only "Vietnam" mentions describe the victim and APT32's typical targeting ("interests in ... Vietnam"), not a Vietnamese sponsor.
+    ACTOR FLAG (DONE shared actor vn/tc2/apt32 — NOT re-placed): this single source supports neither the Vietnam-STATE nexus nor the tc2 SERVICE placement; it only equates REF4322 to the named group APT32. The vn-state + tc2 placement on the actor record must rest on the actor's other corpus sources (FireEye 2017 et al. / vendor consensus), not this disclosure. Flagging that the Vietnam/tc2 attribution is unsupported by THIS event's only citation; left actor file untouched.
