@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2021-06/ta456-marcella-flores-social-engineering-campaign-deploying-lempo-agai
 name: "TA456 'Marcella Flores' social-engineering campaign deploying LEMPO against a US aerospace defense contractor"
 start_date: 2021-06-01
@@ -9,21 +8,27 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Proofpoint detailed a years-long social-engineering and targeted-malware campaign by the Iranian-state aligned actor TA456 (aka Tortoiseshell, Imperial Kitten). Using the fake social-media persona 'Marcella (Marcy) Flores,' TA456 cultivated a relationship with an employee at a small subsidiary of an aerospace defense contractor across corporate and personal platforms over many months. In early June 2021 the actor sent the target malware via the ongoing email chain, delivering a .rar archive containing a malicious .xlsm document that, when macros were enabled, deployed malware Proofpoint named LEMPO. LEMPO established persistence, conducted reconnaissance and exfiltrated sensitive information to an actor-controlled email account over SMTPS before deleting host artifacts. Proofpoint linked TA456 to the IRGC via association with the Iranian company Mahak Rayan Afraz.
+  Proofpoint detailed a years-long social-engineering and targeted-malware campaign by the actor it calls "the Iranian-state aligned threat actor TA456" (aka Tortoiseshell, Imperial Kitten). Using the fake social-media persona 'Marcella (Marcy) Flores,' TA456 cultivated a relationship with an employee at a small subsidiary of an aerospace defense contractor across corporate and personal platforms over many months. In early June 2021 the actor sent the target malware via the ongoing email chain, delivering a .rar archive containing a malicious .xlsm document that, when macros were enabled, deployed malware Proofpoint named LEMPO (an updated version of Tortoiseshell's Liderc). LEMPO established persistence, conducted reconnaissance and exfiltrated sensitive information to an actor-controlled email account over SMTPS (port 465) before deleting that day's host artifacts. On the actor's affiliation, Proofpoint relays — and states it "concurs with" — Facebook's 15 July 2021 attribution of a portion of Tortoiseshell's activity to the Iranian IT company Mahak Rayan Afraz (MRA), which Facebook assessed has ties to the IRGC; Proofpoint characterises TA456 as "believed to be loosely aligned with the Islamic Revolutionary Guard Corps (IRGC) ... according to Facebook's analysis." The IRGC link is thus a hedged, second-hand attribution Proofpoint endorses, not its own primary finding.
 attributions:
+  # Proofpoint (2021) named Iran ("Iranian-state aligned threat actor TA456") -> named-actor / nation = Iran.
+  # The IRGC (named-unit) link is FACEBOOK's, relayed and endorsed by Proofpoint, and explicitly hedged
+  # ("loosely aligned", MRA "ties to" IRGC); the shared actor stays ir/unscoped because that IRGC nexus is
+  # only suspected. So attribution_level is held at named-actor, with the IRGC/Facebook nuance in notes.
   - actor_id: ir/unscoped/imperial-kitten
     attributing_org: "Proofpoint"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2021-06-01
+    attribution_date: 2021-07-28
     attribution_source_id: proofpoint/2021-06_ta456-marcella-flores-social-engineering
+    notes: "Proofpoint attributes the campaign to Iran ('the Iranian-state aligned threat actor TA456'). It does NOT independently name the IRGC: it relays Facebook's 15 Jul 2021 MRA->IRGC attribution and says 'Proofpoint concurs with this attribution,' describing TA456 as 'believed to be loosely aligned with the IRGC ... according to Facebook's analysis.' Held at named-actor (not named-unit) because the IRGC nexus is second-hand and hedged, and the shared actor was demoted to ir/unscoped for exactly that reason. attribution_date is the article's real datePublished (2021-07-28), not the 2021-06-01 campaign-month placeholder."
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      A years-long IRGC-aligned social-engineering operation ('Marcella Flores') culminating in LEMPO malware against an employee of a US aerospace defense contractor is targeted collection against the principal adversary's defense-industrial base, the forward-defense logic of contesting the US asymmetrically.
+      A years-long Iran-nexus social-engineering operation ('Marcella Flores') culminating in LEMPO malware against an employee of a US aerospace defense contractor is targeted collection against the principal adversary's defense-industrial base, consistent with the forward-defense logic of contesting the US asymmetrically. Held at plausible: Proofpoint states only that the targeting is 'consistent with historical Iranian cyber activity' (a behavioural pattern, not a stated strategic end), and a generic espionage/IP-collection reading survives alongside the forward-defense one. The Iran identity rests on Proofpoint's 'Iranian-state aligned' framing; the IRGC nexus is Facebook's hedged attribution, which Proofpoint concurs with.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -36,3 +41,9 @@ targets:
     role: primary
 sources:
   - proofpoint/2021-06_ta456-marcella-flores-social-engineering
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs Proofpoint (raw snapshot captured + hashed). Facts ✓: 'Marcella (Marcy) Flores' persona, employee of a small subsidiary of an aerospace defense contractor, early-June-2021 .rar->.xlsm macro delivery, LEMPO (updated Liderc) persistence/recon/SMTPS:465 exfil/artifact-deletion. KEY CORRECTION: the IRGC link is FACEBOOK's (15 Jul 2021, MRA 'ties to' IRGC; 'loosely aligned'), which Proofpoint relays and 'concurs with' — the record had framed it as Proofpoint's own finding; summary + attribution notes now reflect the hedge. attribution_level SET to named-actor (Iran, per Proofpoint's 'Iranian-state aligned'); NOT named-unit, because the IRGC nexus is second-hand/hedged and the shared actor is ir/unscoped (suspected-only). Dates fixed: source published_on and attribution_date 2021-06-01 (campaign-month placeholder) -> 2021-07-28 (article datePublished). Doctrine link kept plausible (Proofpoint states only 'consistent with historical Iranian cyber activity'; no stated strategic end). Removed DEPTH backfill header. Actor not re-placed."

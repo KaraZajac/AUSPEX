@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2021-08/agrius-apostle-ransomware-attack-on-bar-ilan-university
 name: "Agrius Apostle ransomware attack on Bar-Ilan University"
 start_date: 2021-08-01
@@ -9,12 +8,18 @@ false_flag_risk: none
 summary: |
   SentinelLabs reported that Agrius, a suspected Iranian threat actor, launched a ransomware attack against the Israeli higher-education institution Bar-Ilan University using a new variant of the group's custom Apostle ransomware compiled on 15 August 2021. The Apostle payload was delivered by a .NET loader SentinelLabs named Jennlog, which deobfuscated and decrypted the ransomware from embedded resources while attempting to blend in with legitimate log files. This activity continued Agrius's pattern of destructive, ransomware-styled operations against Israeli targets that began in 2020.
 attributions:
+  # SentinelLabs (2021-08) names the actor cluster ("Agrius") and a suspected Iran nexus
+  # at NATION level, NO service. Source wording: "Agrius, a suspected Iranian threat actor"
+  # and the attack itself only "likely initiated" — softer than the May-2021 report's
+  # "medium confidence ... affiliated with Iran". confidence=moderate; no MOIS/IRGC named.
   - actor_id: ir/unscoped/agrius
     attributing_org: "SentinelLabs"
-    attributing_org_confidence: moderate   # ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2021-08-01
     attribution_source_id: sentinelone/2021-08_agrius-apostle-ransomware-attack-on-bar-
+    notes: "SentinelLabs calls Agrius 'a suspected Iranian threat actor operating in the Middle East' and says the actor 'likely initiated a ransomware attack on the Israeli university Bar-Ilan'. Nation-level (Iran, suspected), named cluster 'Agrius'; NO MOIS/IRGC/service named anywhere — hence ir/unscoped and attribution_level named-actor."
 doctrine_links:
   - doctrine_id: ir/resistance-axis
     pillar_id: ir/resistance-axis/anti-israel-coercion
@@ -23,6 +28,10 @@ doctrine_links:
     reasoning: |
       A suspected Iranian actor deploying its custom Apostle ransomware against an Israeli higher-education institution continues a pattern of destructive, ransomware-styled operations against Israeli targets, an anti-Israel coercive act consistent with the Axis-of-Resistance posture.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Anti-Israel coercion under the Axis-of-Resistance posture (this link): a destructive op on an Israeli institution as deniable regime pressure."
+        - "Disruptive/sabotage capability demonstration: SentinelLabs states 'the original intent was sabotage' and is uncertain whether Agrius is financially motivated — the op may be a generic destructive-tradecraft display rather than a coercive signal tied to a specific strategic goal."
     contested: false
     analyst: claude
 targets:
@@ -31,3 +40,9 @@ targets:
     role: primary
 sources:
   - sentinelone/2021-08_agrius-apostle-ransomware-attack-on-bar-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs SentinelLabs Bar-Ilan report (raw snapshot captured + sha256). FACTS all verbatim-supported: Bar-Ilan University / Israel / higher-education ✓; Apostle 'compiled on August 15, 2021, the day of the attack' ✓; Jennlog '.NET loader that deobfuscates, decompresses and decrypts a .NET executable from a resource ... resources ... appear to look like log files' ✓; pattern since 2020 ('tracking ... throughout 2020 and 2021 following ... destructive attacks starting December 2020') ✓; SentinelLabs only 'likely initiated' the attack. ATTRIBUTION (exact wording): 'Agrius, a suspected Iranian threat actor operating in the Middle East' — NATION-level (Iran, suspected), named cluster, NO MOIS/IRGC/service. CORRECTIONS: removed the confusing inline 'ICD link-confidence: strongly_inferred' note; SET attribution_level=named-actor (was absent); kept confidence=moderate ('suspected'/'likely' supports moderate, not high); added attribution notes with the verbatim quote; added doctrine inference_basis.alternatives; deleted DEPTH backfill header. DOCTRINE kept plausible (honest) — source states no strategic purpose; sabotage-display reading survives alongside anti-Israel coercion. ACTOR ir/unscoped/agrius CONSISTENT — this source corroborates Iran-nexus-but-no-service; no re-placement."

@@ -11,7 +11,8 @@ summary: |
 attributions:
   - actor_id: il/unscoped/israeli-state-cyber-operator
     attributing_org: "CFR Cyber Operations Tracker (citing The Washington Post and Israeli/regional press)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CFR labels the field "Suspected state sponsor: Israel" (not confirmed); WaPo headline "officials: Israel LINKED to" — hedged
+    attribution_level: nation   # CFR names the nation (Israel) only; no named service/unit. Set 2026-06-23 audit.
     auspex_assessment: concur-with-caveat
     attribution_date: 2020-05-01
     attribution_source_id: cfr/2020-05_israel-destructive-cyberattack-disruptin
@@ -19,10 +20,16 @@ doctrine_links:
   - doctrine_id: il/counter-iran-posture
     pillar_id: il/counter-iran-posture/retaliatory-cyber-strike
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+    confidence: strongly_inferred  # held at strongly_inferred (NOT attested) 2026-06-23 audit: CFR states the retaliatory purpose, but the actor itself is only SUSPECTED Israel — purpose-statement is conditional on a hedged attribution, so confidence is not upgraded (H6: never upgrade).
     reasoning: |
-      The summary states Israel launched the Shahid Rajaee Port disruption in retaliation for Iran's attempted poisoning of Israeli water/sewage facilities — an explicit tit-for-tat cyber strike against Iran, which is precisely the retaliatory-cyber-strike pillar.
-    attesting_source_id: null
+      CFR's own description states Israel "retaliated against Iran for targeting of Israeli water treatment and sewage facilities by launching a cyberattack against Iran's Shahid Rajaee Port" — an explicit tit-for-tat cyber strike against Iran, which is precisely the retaliatory-cyber-strike pillar. The strategic reading is stated by the attributing source; it is held at strongly_inferred rather than attested only because the sponsor attribution is "Suspected" (CFR) / "linked" (WaPo), not confirmed.
+    attesting_source_id: cfr/2020-05_israel-destructive-cyberattack-disruptin   # primary supporting source (states the retaliatory goal); see inference_basis.signals
+    inference_basis:
+      signals:
+        - "CFR description states the retaliatory motive verbatim: Israel 'retaliated against Iran for targeting of Israeli water treatment and sewage facilities'."
+        - "CFR classifies the incident type as 'Sabotage'; target is 'Shahid Rajaee Port in Iran' — Iranian civilian/dual-use infrastructure, the class the retaliatory-cyber-strike pillar covers."
+        - "Timing (May 2020) directly follows the late-April/early-May 2020 attempted intrusion into Israeli water-treatment SCADA, attributed to Iran — the tit-for-tat sequence the pillar encodes."
+      ruled_out: "il/counter-iran-posture/counter-nuclear-program — the target is a commercial container port, not enrichment/weapons or supply-chain industry, so the counter-WMD reading does not fit; the source frames it as retaliation, not counter-program disruption."
     contested: false
     analyst: claude
 targets:
@@ -31,3 +38,21 @@ targets:
     role: primary
 sources:
   - cfr/2020-05_israel-destructive-cyberattack-disruptin
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: |
+    Audited vs CFR Cyber Operations Tracker (raw snapshot captured + sha256). Facts ✓: CFR description
+    matches the summary verbatim ("Israel retaliated against Iran for targeting of Israeli water treatment
+    and sewage facilities by launching a cyberattack against Iran's Shahid Rajaee Port"); CFR fields —
+    Type of incident: Sabotage; Suspected victims: Shahid Rajaee Port in Iran; Date of report: May 2020.
+    ATTRIBUTION is HEDGED: CFR labels it "Suspected state sponsor: Israel" (not confirmed) and its cited WaPo
+    source is headlined "officials: Israel LINKED to a disruptive cyberattack" — so attributing_org_confidence
+    held at moderate (CFR "Suspected" => <= moderate) and attribution_level SET to nation (CFR names the nation
+    only, no service/unit). Doctrine link held at strongly_inferred (NOT upgraded to attested): CFR states the
+    retaliatory purpose, but conditional on a suspected attribution; added inference_basis (signals + ruled_out)
+    and attesting_source_id (supporting). ACTOR FLAG: il/unscoped/israeli-state-cyber-operator is a known generic
+    multi-op placeholder (also carries the 2017 Kaspersky op) — this destructive Iranian-port OT-sabotage op is a
+    candidate to split into Predatory Sparrow / IDF-8200-class lineage (see report); flagged, NOT split here.

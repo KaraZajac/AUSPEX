@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2020-12/molerats-cloud-abusing-espionage-campaign-with-sharpstage-dropbook-and
 name: "Molerats cloud-abusing espionage campaign with SharpStage, DropBook, and MoleNet backdoors"
 start_date: 2020-12-01
@@ -8,14 +7,16 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  The Cybereason Nocturnus Team reported in December 2020 a Molerats (Gaza Cybergang) espionage campaign using two previously unidentified backdoors, SharpStage (a .NET backdoor) and DropBook (a Python backdoor), plus a downloader called MoleNet. The attack chain began with politically themed phishing documents, and the malware abused cloud and social platforms including Dropbox and Google Drive for payload delivery and Dropbox and Facebook for command and control, with DropBook operators using fake Facebook accounts to issue commands. Cybereason observed targeting of high-ranking political figures and government officials, with victims in the Palestinian Territories, UAE, Egypt, and Turkey.
+  The Cybereason Nocturnus Team reported in December 2020 a Molerats (Gaza Cybergang) espionage campaign using two previously unidentified backdoors, SharpStage (a .NET backdoor) and DropBook (a Python backdoor), plus a downloader called MoleNet. The attack chain began with politically themed phishing documents (lures referencing Israeli-Arab relations, Hamas elections, and Palestinian politics), and the malware abused legitimate cloud and social platforms — DropBook used fake Facebook accounts or Simplenote for command and control, while both SharpStage and DropBook abused a Dropbox client to store the espionage tools and exfiltrate stolen data (Google Docs was also abused). Cybereason assessed the operators sought to target high-ranking political figures and government officials, with victims primarily observed in the Palestinian Territories, UAE, Egypt, and (non-Arabic-speaking) Turkey. Cybereason attributed the activity to Molerats — described as an Arabic-speaking, politically-motivated APT group active in the Middle East since 2012 — and named no sponsoring government.
 attributions:
   - actor_id: ps/unscoped/molerats
     attributing_org: "Cybereason"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2020-12-01
     attribution_source_id: cybereason/2020-12_molerats-cloud-abusing-espionage-campaig
+    notes: "Cybereason names the actor (Molerats / Gaza Cybergang) with high confidence but NO sponsoring government -- the Palestinian/Gaza nexus is the established alias-cluster label, not a hard state attribution; hence actor remains ps/unscoped and auspex_assessment is concur-with-caveat."
 doctrine_links: []
 targets:
   - target_id: sectors/government
@@ -27,5 +28,14 @@ targets:
   - target_id: sectors/government
     country: eg
     role: primary
+  - target_id: sectors/government
+    country: tr
+    role: primary
 sources:
   - cybereason/2020-12_molerats-cloud-abusing-espionage-campaig
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs Cybereason blog + ungated 25-page report (both raw-captured + hashed). Facts OK: SharpStage (.NET) / DropBook (Python) / MoleNet, Dropbox+Facebook+Simplenote+GoogleDocs abuse, political phishing lures -- all confirmed (.NET/Python and the 4th country are in the full report, not the blog). CORRECTIONS: (1) added Turkey (tr) to targets[] -- source explicitly names PS/UAE/EG/TR, record had omitted TR; (2) summary said 'Google Drive', source says Google Docs/Simplenote -- corrected; (3) added attribution_level: named-actor (Cybereason named the actor but NO government); (4) removed stray '# ICD link-confidence: attested' comment (no doctrine links exist). ATTRIBUTION: Cybereason high-confidence on the Molerats/Gaza-Cybergang cluster, no state named -> Palestinian nexus is alias-derived, consistent with ps/unscoped/molerats; actor record NOT re-placed. doctrine_links empty -- corpus has no ps (Palestinian) doctrine taxonomy. Source re-tiered industry/secondary -> vendor-research/primary (first-party original research)."
