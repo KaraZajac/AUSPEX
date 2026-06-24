@@ -1,6 +1,5 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2021-04/arid-viper-phenakite-ios-surveillanceware-operation-via-trojanized-mag
-name: "Arid Viper 'Phenakite' iOS surveillanceware operation via trojanized MagicSmile chat app"
+name: "Arid Viper 'Phenakite' iOS surveillanceware operation via a trojanized RealtimeChat-based chat app"
 start_date: 2021-04-01
 incident_type:
   - surveillance
@@ -8,20 +7,22 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  In April 2021 Meta (Facebook) disrupted an Arid Viper espionage operation that deployed a custom iOS surveillanceware named Phenakite, trojanized inside a functional chat application built on the open-source RealtimeChat code and distributed through third-party app sites. Phenakite required victims to install a mobile configuration profile, then used the publicly available Osiris jailbreak with the Sock Port exploit to escalate privileges and exfiltrate sensitive data, and could redirect users to phishing pages harvesting Facebook and iCloud credentials. The operation relied on social engineering, fake personas, and over 100 websites hosting malware, phishing, and command-and-control infrastructure. Targets included government officials, Fatah party members, student groups, and security forces in the Palestinian territories. Meta attributed the activity to Arid Viper and disrupted it through developer-certificate revocation with industry partners.
+  On 21 April 2021 Meta (Facebook) disclosed and disrupted an Arid Viper espionage operation that deployed a custom iOS surveillanceware Meta named "Phenakite," trojanized inside a fully functional chat application built on the open-source RealtimeChat code. Installation required tricking victims into installing a mobile configuration profile (which allowed a device-specific signed build to be installed without a pre-jailbroken device); post-installation, the malware used the publicly available Osiris jailbreak with the Sock Port exploit — both bundled in the malicious IPAs — to elevate privileges and retrieve sensitive data, and could redirect victims to phishing pages harvesting Facebook and iCloud credentials. The operation relied on social engineering, fake personas, and "over a hundred websites" that hosted iOS/Android malware, attempted credential phishing, or acted as command-and-control servers. Per Meta, this Arid Viper activity "originated in Palestine and targeted individuals in the same region, including government officials, members of the Fatah political party, student groups and security forces." Meta linked the campaign to Arid Viper ("a known advanced persistent threat actor") and disrupted distribution by sharing findings with industry partners, leading to revocation of multiple developer certificates. (Note: Meta's post documents a SECOND, "unconnected" cluster linked to the Palestinian Authority's Preventive Security Service (PSS) that targeted journalists, Fatah opponents, human-rights activists, and Syrian/Iraqi military targets — that PSS cluster is a DIFFERENT actor and is not this event.)
 attributions:
   - actor_id: ps/unscoped/arid-viper
     attributing_org: "Meta (Facebook)"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2021-04-01
+    attribution_date: 2021-04-21
     attribution_source_id: aboutfb/2021-04_arid-viper-phenakite-ios-surveillancewar
+    notes: "Meta names the actor 'Arid Viper' explicitly ('our investigation linked this campaign to Arid Viper') -> named-actor at high confidence. Meta states the activity 'originated in Palestine' but does NOT name a state sponsor in this post; Hamas sponsorship is suspected/alleged elsewhere (Sekoia, multiple vendors), not established, so the actor stays ps/unscoped. Distinct from the separate PSS-linked cluster in the same Meta post."
 doctrine_links: []
 targets:
   - target_id: sectors/government
     country: ps
     role: primary
-  - target_id: sectors/civil-society/dissident
+  - target_id: sectors/civil-society
     country: ps
     role: primary
   - target_id: sectors/defense
@@ -29,3 +30,9 @@ targets:
     role: primary
 sources:
   - aboutfb/2021-04_arid-viper-phenakite-ios-surveillancewar
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs the cited Meta/Facebook post (raw snapshot captured + sha256). FACTS verified verbatim: Phenakite naming, RealtimeChat-based trojanized chat app, mobile config-profile install, Osiris jailbreak + Sock Port post-install privilege escalation, Facebook/iCloud phishing, 'over a hundred websites', targets (government officials / Fatah members / student groups / security forces), developer-certificate revocation. KEY CORRECTIONS: (1) event name/summary previously asserted the chat app was 'MagicSmile' — that name appears NOWHERE in the cited Meta source (it comes from secondary reporting, e.g. SecureMac/the FB technical PDF); renamed to the source-supported 'RealtimeChat-based chat app' and dropped the unsourced product name. (2) Added attribution_level: named-actor (Meta names 'Arid Viper'); confidence stays high. (3) Clarified the summary distinguishes this Arid Viper cluster from the SEPARATE, 'unconnected' PSS-linked cluster Meta documents in the same post (avoids conflating the two). (4) Demoted target sectors/civil-society/dissident -> sectors/civil-society (Meta names students/Fatah members, not 'dissidents'). No doctrine_links (none asserted; ps has no doctrines). Actor de-provisionalized in atlas/actors/ps/arid-viper.yaml; kept ps/unscoped (Hamas nexus suspected, not established)."

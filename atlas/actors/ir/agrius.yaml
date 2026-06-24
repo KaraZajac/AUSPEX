@@ -1,15 +1,61 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
-id: ir/mois/agrius
-primary_service_id: ir/mois
+# De-provisionalized + demoted to ir/unscoped 2026-06-23: cited sources establish Iran but NO service
+# (SentinelLabs 2021: "affiliated with Iran", medium confidence, "no solid links to any known threat
+#  groups"; Unit 42 2023: "Iranian-linked/Iranian-backed APT", high confidence — neither names MOIS/IRGC).
+id: ir/unscoped/agrius
+primary_service_id: ir/unscoped
 additional_service_ids: []
 canonical_name: "Agrius"
-aliases: []
+aliases:
+  # Equated by Palo Alto Unit 42 (2023): "Agonizing Serpens (aka Agrius, BlackShadow, Pink Sandstorm,
+  # DEV-0022)". The originating vendor of each name is not stated in the cited source, so assigning_org
+  # records Unit 42 as the source of the equivalence claim, not the name's coiner.
+  - alias: "Agonizing Serpens"
+    assigning_org: "Palo Alto Unit 42"
+    confidence: equivalent
+  - alias: "BlackShadow"
+    assigning_org: "Palo Alto Unit 42"
+    confidence: equivalent
+    note: "Per Unit 42's alias list; originating vendor not stated in the cited source."
+  - alias: "Pink Sandstorm"
+    assigning_org: "Palo Alto Unit 42"
+    confidence: equivalent
+    note: "Per Unit 42's alias list; originating vendor not stated in the cited source."
+  - alias: "DEV-0022"
+    assigning_org: "Palo Alto Unit 42"
+    confidence: equivalent
+    note: "Per Unit 42's alias list; originating vendor not stated in the cited source."
 status: active
 mission:
   - espionage
+  - sabotage
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: Agrius / Agonizing Serpens
-default_doctrine_alignment_ids: []
+  Iran-nexus destructive actor first surfaced by SentinelLabs in 2021, operating against Israeli
+  targets since 2020. Conducts espionage, then deploys destructive wipers masqueraded as ransomware
+  for deniable disruptive effect (SentinelLabs: "we find it unlikely that Agrius is a financially
+  motivated threat actor"). Custom toolset includes the Apostle wiper (later reworked into functional
+  ransomware), the IPsec Helper .NET backdoor, and the reused DEADWOOD/Detbosit wiper; later campaigns
+  added the Fantasy, MultiLayer, PartialWasher and BFG Agonizer wipers. Gains access by exploiting
+  public-facing applications and anonymizes via public VPNs (primarily ProtonVPN); has also abused an
+  Israeli software vendor's update mechanism for a supply-chain wiper attack (ESET, 2022). Beyond
+  Israel, one Apostle ransomware sample carried a message indicating use against a critical,
+  nation-owned facility in the United Arab Emirates (SentinelLabs, 2021).
+default_doctrine_alignment_ids:
+  - ir/resistance-axis/anti-israel-coercion
+target_sector_ids:
+  - sectors/academic/university
+  - sectors/ict
+  - sectors/critical-infrastructure
+notes: |
+  Former id ir/mois/agrius (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced MOIS
+  placement). Demoted to ir/unscoped on 2026-06-23: of the cited Agrius sources, SentinelLabs (2021)
+  attributes only "a threat group affiliated with Iran" / "of Iranian origin" at MEDIUM confidence and
+  explicitly found "no solid links to any known threat groups"; Unit 42 (2023) calls it an
+  "Iranian-linked"/"Iranian-backed" APT at HIGH confidence; ESET (2022) says only "Agrius operators."
+  None names MOIS, the IRGC, or any specific Iranian service. Iran nexus is well-supported (named-actor
+  level), the service placement is not — hence ir/unscoped. Agrius's specific service attribution is
+  debated in the wider literature; keep ir/unscoped until a cited source names a service.
+  FK-propagated id change to the 4 referencing events on 2026-06-23.
 sources:
+  - sentinelone/2021-05_agrius-apostle-wiper-ipsec-helper-campai
   - unit42paloaltonetworks/2023-10_agrius-agonizing-serpens-wiper-attacks-o
+  - welivesecurity/2022-03_agrius-fantasy-wiper-supply-chain-attack

@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2021-05/agrius-apostle-wiper-ipsec-helper-campaign-against-israel-and-a-uae-na
 name: "Agrius Apostle wiper / IPsec Helper campaign against Israel and a UAE nation-owned facility"
 start_date: 2021-05-01
@@ -9,22 +8,28 @@ incident_type:
 initial_vector: n-day
 false_flag_risk: none
 summary: |
-  SentinelLabs detailed the emergence of Agrius, a then-new Iran-affiliated threat actor active in Israel since 2020 that conducted espionage before deploying destructive attacks disguised as ransomware. Agrius dropped a custom .NET backdoor (IPsec Helper) and a novel wiper named Apostle, which was later reworked into functional ransomware; the older Deadwood/Detbosit wiper was also used. The actor gained access by exploiting public-facing applications and anonymized its operations through VPN services (primarily ProtonVPN). One Apostle sample carried a message indicating it was used against a critical, nation-owned facility in the United Arab Emirates. SentinelLabs assessed with medium confidence that the activity was carried out by an Iran-affiliated group.
+  SentinelLabs detailed the emergence of Agrius, a then-new Iran-affiliated threat actor active in Israel since 2020 that conducted espionage before deploying destructive attacks disguised as ransomware. Agrius dropped a custom .NET backdoor (IPsec Helper) and a novel wiper named Apostle, which was later reworked into functional ransomware; the older Deadwood/Detbosit wiper was also used. The actor gained access by exploiting public-facing applications and anonymized its operations through VPN services (primarily ProtonVPN). One Apostle sample carried a message indicating it was used against a critical, nation-owned facility in the United Arab Emirates. SentinelLabs assessed with medium confidence that the activity was carried out by a threat group affiliated with Iran, while noting it found "no solid links to any known threat groups" — i.e. no specific Iranian service or named group was identified.
 attributions:
-  - actor_id: ir/mois/agrius
+  - actor_id: ir/unscoped/agrius
     attributing_org: "SentinelLabs"
-    attributing_org_confidence: moderate   # ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2021-05-01
     attribution_source_id: sentinelone/2021-05_agrius-apostle-wiper-ipsec-helper-campai
+    notes: "SentinelLabs coined the named cluster 'Agrius' and assessed it 'with medium confidence to be of Iranian origin' / 'a threat group affiliated with Iran', but stated it 'found no solid links to any known threat groups'. Named-actor (group + nation), NOT named-unit: no MOIS/IRGC or other service is named — hence the actor is ir/unscoped, not ir/mois."
 doctrine_links:
   - doctrine_id: ir/resistance-axis
     pillar_id: ir/resistance-axis/anti-israel-coercion
     program_id: null
     confidence: plausible
     reasoning: |
-      An Iran-affiliated actor conducting espionage then destructive wiper attacks (disguised as ransomware) against Israeli targets and a UAE nation-owned facility is a destructive anti-Israel coercive campaign, the core of the Resistance-Axis posture; the ransomware disguise also reflects the doctrine's preference for deniable destructive effect.
+      An Iran-affiliated actor conducting espionage then destructive wiper attacks (disguised as ransomware) against Israeli targets — and, in this campaign, against a critical nation-owned facility in the UAE — is destructive, deniable coercive cyber against regional adversaries, the kind of activity the Resistance-Axis anti-Israel-coercion pillar encodes. The label is plausible rather than higher because SentinelLabs frames the activity as serving "the regime's interests" / "a larger, coordinated Iranian strategy" but does not state the specific anti-Israel-coercion goal, and the headline named victim here is in the UAE rather than Israel, so more than one strategic reading (anti-Israel coercion vs. broader anti-Gulf-rival pressure) survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Resistance-Axis anti-Israel coercion: the campaign's Israeli core and the ransomware-as-deniable-disruption pattern fit the pillar; SentinelLabs ties the timing to a 'coordinated Iranian strategy' against Israel (n3tw0rm, Pay2Key, Lab Dookhtegan)."
+        - "Broader Iranian coercion against Gulf rivals: the single named victim of the Apostle ransomware message is a critical nation-owned UAE facility, which reads as pressure on a Gulf adversary rather than strictly anti-Israel coercion."
     contested: false
     analyst: claude
 targets:
@@ -33,3 +38,9 @@ targets:
     role: primary
 sources:
   - sentinelone/2021-05_agrius-apostle-wiper-ipsec-helper-campai
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs SentinelLabs 'From Wiper to Ransomware: The Evolution of Agrius' (raw snapshot captured + sha256). FACTS ✓: Agrius active in Israel since 2020; espionage-then-wiper masqueraded as ransomware; IPsec Helper .NET backdoor; Apostle wiper later reworked into ransomware; DEADWOOD/Detbosit reuse; public-facing-app exploitation + ProtonVPN anonymization; Apostle ransomware message naming a critical nation-owned UAE facility — all verbatim-supported. ATTRIBUTION (exact wording): 'we assess with medium confidence that the attacks were carried out by a threat group affiliated with Iran' / 'medium confidence to be of Iranian origin'; and decisively 'Throughout our analysis ... we found no solid links to any known threat groups' — nation named (moderate), service NOT named. Set attribution_level=named-actor (SentinelLabs' own named cluster 'Agrius' + Iran), confidence moderate. KEY CORRECTION: actor DEMOTED ir/mois/agrius -> ir/unscoped/agrius — neither this source nor the actor's other cited sources (Unit 42 2023 'Iranian-linked/Iranian-backed' high conf; ESET 2022 'Agrius operators') name MOIS, IRGC or any service; the MOIS placement was an unsourced provisional-backfill assertion. Actor also de-provisionalized (real ttp_summary, sourced aliases). DOCTRINE: kept plausible (honest) — source gives Iranian-strategic framing but not the specific goal, and the named victim here is in the UAE, so anti-Israel-coercion vs. broader anti-Gulf-rival pressure both survive; added inference_basis.alternatives. FK-propagated ir/mois->ir/unscoped to all 4 referencing events."

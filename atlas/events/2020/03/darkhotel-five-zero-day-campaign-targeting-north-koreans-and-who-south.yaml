@@ -1,5 +1,5 @@
 id: 2020-03/darkhotel-five-zero-day-campaign-targeting-north-koreans-and-who-south
-name: "DarkHotel five-zero-day campaign targeting North Koreans and WHO (South Korea-linked)"
+name: "DarkHotel five-zero-day campaign targeting North Koreans (South Korea-linked)"
 start_date: 2020-03-01
 incident_type:
   - espionage
@@ -8,27 +8,40 @@ incident_type:
 initial_vector: 0-day
 false_flag_risk: none
 summary: |
-  CFR records a March 2020 campaign attributed to DarkHotel (CFR: 'South Korea-linked') that burned five zero-days in a single campaign against North Koreans and North-Korea-focused professionals; CFR lists Korea (Republic of) as suspected sponsor.
+  CFR records a campaign (publicly disclosed March 2020, exploitation observed over 2019) characterized by CFR as "DarkHotel, a South Korea–linked threat actor," in which a single actor burned five zero-days against North Koreans and North-Korea-focused professionals. The underlying Google Threat Analysis Group reporting (one of CFR's two cited primaries) states "a single threat actor was capitalizing on five zero-day vulnerabilities" and that "the majority of targets we observed were from North Korea or individuals who worked on North Korea-related issues"; the DarkHotel/South-Korea identification is Kaspersky's characterization (Raiu: "quite likely") relayed by Wired, not a Google TAG attribution.
 attributions:
   - actor_id: kr/unscoped/darkhotel
     attributing_org: "CFR Cyber Operations Tracker (citing Wired and Google Threat Analysis Group)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: plausible
-    auspex_assessment: concur
+    attributing_org_confidence: moderate   # CFR/Wired characterize the actor as "South Korea–linked" (a hedged, link-level nexus); Google TAG named no nation
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2020-03-01
     attribution_source_id: cfr/2020-03_darkhotel-five-zero-day-campaign-targeti
+    notes: "The named actor (DarkHotel) and the South-Korea nexus come from Kaspersky's read (relayed by Wired/CFR), not from the Google TAG primary, which attributed the five zero-days to 'a single threat actor' with no nation named — hence moderate, and the South-Korea identity is link-level, not a confirmed state attribution."
 doctrine_links:
   - doctrine_id: kr/nis-counter-dprk
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      A South-Korea-linked actor burning five zero-days against North Koreans and North-Korea-focused professionals is collection directed at the ROK's principal adversary, advancing the standing NIS counter-DPRK cyber posture; no listed pillar matches offensive collection so pillar is null.
+      If DarkHotel is the South-Korea-linked actor CFR/Wired describe, then burning five zero-days against North Koreans and North-Korea-focused professionals is collection directed at the ROK's principal adversary, fitting the standing NIS counter-DPRK posture; no listed pillar matches offensive collection so pillar is null. Graded plausible (not strongly_inferred) because the South-Korea nexus that the WHY rests on is itself only a hedged, link-level characterization — the cited primary (Google TAG) named no nation at all.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "ROK/NIS counter-DPRK intelligence collection (the natural reading if the South-Korea-linked DarkHotel attribution holds)."
+        - "An unaligned or third-party espionage actor: Google TAG attributed the five zero-days to 'a single threat actor' and named no nation; the DarkHotel/South-Korea identity is Kaspersky's 'quite likely' inference, so a non-ROK origin is not excluded by the cited sources."
     contested: false
     analyst: claude
+disclosure_date: 2020-03-01
 targets:
   - target_id: sectors/government
     country: kp
     role: primary
 sources:
   - cfr/2020-03_darkhotel-five-zero-day-campaign-targeti
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs CFR Cyber Operations Tracker (raw HTML captured + sha256; CFR's two cited primaries cross-checked: Google TAG post fetched, Wired blocked). FACTS: five zero-days ✓ and North-Korea(n) targeting ✓ — Google TAG primary verbatim 'a single threat actor was capitalizing on five zero-day vulnerabilities' / 'the majority of targets we observed were from North Korea or individuals who worked on North Korea-related issues'; 'South Korea–linked' ✓ in the CFR description. KEY CORRECTION: removed 'and WHO' from the name + summary — the cited CFR entry and BOTH its primaries (Google TAG, Wired) mention no WHO/World Health Organization; the March-2020 WHO spear-phishing was a SEPARATE incident not attributed to DarkHotel in this source (web-search corroboration: the DarkHotel↔WHO link was 'not definitively established'). This was a two-story conflation. Slug/id left stable (slugs never renamed). Also corrected the source title to CFR's own ('Targeting of North Koreans and North Korea–focused professionals'). ATTRIBUTION: kept moderate (CFR/Wired hedge 'South Korea–linked'; Kaspersky's Raiu only 'quite likely'; Google TAG named no nation) and set attribution_level: named-actor (DarkHotel is named, but the NATION nexus is link-level/contested), auspex_assessment concur->concur-with-caveat. No attribution timeline modeled — single contemporaneous CFR record. DOCTRINE: downgraded the kr/nis-counter-dprk link strongly_inferred -> plausible (consistent with the sibling 2017 DarkHotel/Inexsmar event) because the South-Korea nexus the WHY rests on is itself only a hedged characterization; added inference_basis.alternatives (ROK collection vs an unaligned actor, since TAG named no nation). ACTOR: kr/unscoped/darkhotel left as-is (already de-provisionalized 2026-06-23); softened its TTP line's WHO assertion to note the WHO link is unattributed/separate."
