@@ -6,6 +6,13 @@ the *wrong* allocation. Examiners don't expect a census; they expect a **defensi
 methodology**: census where risk concentrates, measured error rates where it doesn't, and a
 written definition of what "verified" means. This plan is that methodology.
 
+> **Decision (2026-06-23): FULL CENSUS.** The candidate elected to verify *every* record under
+> the full per-event protocol — not census-the-risk-pool-and-sample-the-tail. The risk tiers
+> below are retained purely as the verify-first **order** (P1 hardest → P5 last); the "T3
+> sampling" tier is **superseded** — every event receives the full protocol and a `qc:` stamp.
+> Live burn-down: `pnpm exec tsx tools/qc-verify-worklist.ts` (full-census mode, all 818).
+> The original risk-pool effort estimates below remain as context for why the order is what it is.
+
 ## What "verified" means (the per-event protocol)
 
 A record is **human-verified** when the candidate has confirmed, against the cited sources:
@@ -18,7 +25,7 @@ A record is **human-verified** when the candidate has confirmed, against the cit
 4. **Targets/sectors** — match the source (no sector inflation).
 5. **Doctrine link** — the reasoning holds; confidence label honest (`attested` only if the
    source names the goal — now gate-enforced); `perspective` correct.
-6. **Stamp it**: add `qc: {verified_by: kara, on: YYYY-MM-DD, level: full|sources-only}` to the
+6. **Stamp it**: add `qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full|sources-only}` to the
    record. The stamp is what makes verification *queryable* — coverage becomes a number
    (`X% of events human-verified`), reportable in the dissertation and checkable by the gate.
 
@@ -33,9 +40,10 @@ A record is **human-verified** when the candidate has confirmed, against the cit
 
 **The risk pool (T2 census), in priority order:**
 
-1. **127 events still carrying `PROVISIONAL` import headers** — flagged as un-QC'd *in the
-   file*. An examiner who opens one asks why it's in the published corpus. Highest priority;
-   finishing these also clears the embarrassing comments.
+1. **157 backfill-promoted events** (`research/qc-backfill-cohort.json`) — promoted to
+   first-class in commit `6508da5` with **no added verification**; the least-scrutinized records
+   in the corpus. (Originally flagged by in-file `PROVISIONAL` headers; promotion stripped those,
+   so the cohort is now tracked by the auditable JSON list the worklist reads.) Highest priority.
 2. **All `attested` doctrine links** (~200) — the strong evidentiary claims; the inter-rater
    study samples them but the census verifies the attesting source actually says it.
 3. **High-confidence single-source events on secondary/tertiary sources** (~310, overlapping

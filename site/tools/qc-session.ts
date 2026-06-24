@@ -81,7 +81,7 @@ for (const item of batch) {
   L.push('```yaml');
   L.push(`qc:`);
   L.push(`  verified_by: kara`);
-  L.push(`  on: ${today}`);
+  L.push(`  verified_on: ${today}`);
   L.push(`  level: full`);
   L.push(`  notes: null`);
   L.push('```');

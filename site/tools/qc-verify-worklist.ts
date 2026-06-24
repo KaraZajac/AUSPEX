@@ -2,13 +2,13 @@
  * qc-verify-worklist.ts — the risk-ranked human-verification worklist
  * (docs/CORPUS-VERIFICATION-PLAN.md, tier T2).
  *
- * Reads the raw YAML directly (comments matter: PROVISIONAL headers are comments)
- * and orders unverified events by risk:
- *   P1 PROVISIONAL header still present (flagged un-QC'd in the file itself)
+ * FULL-CENSUS MODE: every event is in scope (verify everything). Risk priority is the
+ * verification ORDER (hardest first), not an inclusion filter — the queue covers all 818.
+ *   P1 un-QC'd backfill import (research/qc-backfill-cohort.json — least-scrutinized records)
  *   P2 carries an `attested` doctrine link (the strong evidentiary claims)
  *   P3 single-source + high-confidence attribution on a secondary/tertiary source
  *   P4 load-bearing: event id cited by name in FINDINGS.md / README.md / thesis/
- *   P5 everything else (the T3 sampling pool — not part of the census)
+ *   P5 the lower-risk tail (still verified — just last)
  *
  * Usage:
  *   pnpm exec tsx tools/qc-verify-worklist.ts            # burn-down + next 25 census items
@@ -16,7 +16,7 @@
  *   pnpm exec tsx tools/qc-verify-worklist.ts --json     # also write research/qc-verify-worklist.json
  *
  * Stamp an event verified by adding to its YAML:
- *   qc: {verified_by: kara, on: 2026-06-15, level: full}
+ *   qc: {verified_by: kara, verified_on: 2026-06-15, level: full}
  */
 import { readFileSync, readdirSync, statSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -45,6 +45,15 @@ function loadAll(sub: string): Array<{ path: string; raw: string; doc: Rec }> {
 
 const events = loadAll('events');
 const sources = new Map(loadAll('sources').map((s) => [s.doc.id as string, s.doc]));
+
+// The backfill cohort (157 events promoted from provisional imports in 6508da5). Promotion
+// stripped the PROVISIONAL headers this tool used to detect them, but added NO verification —
+// they are the least-scrutinized records in the corpus, so they stay P1. Tracked, auditable
+// file; regenerate per its own _provenance note. Missing file → empty set (tool still runs).
+const cohortPath = join(ROOT, 'research', 'qc-backfill-cohort.json');
+const backfillCohort = new Set<string>(
+  existsSync(cohortPath) ? (JSON.parse(readFileSync(cohortPath, 'utf8')).ids ?? []) : [],
+);
 
 // P4: event ids cited in the load-bearing documents. The docs mostly cite events by NAME
 // (exemplar chains), and those are attested-link events already census'd under P2 — but the
@@ -77,7 +86,8 @@ interface Item {
 const items: Item[] = [];
 for (const { path, raw, doc } of events) {
   const reasons: string[] = [];
-  if (/PROVISIONAL/.test(raw)) reasons.push('P1 PROVISIONAL header');
+  if (/PROVISIONAL/.test(raw) || backfillCohort.has(doc.id))
+    reasons.push("P1 un-QC'd backfill import");
   if ((doc.doctrine_links ?? []).some((l: Rec) => l?.confidence === 'attested'))
     reasons.push('P2 attested doctrine link');
   const srcIds: string[] = doc.sources ?? [];
@@ -98,23 +108,25 @@ for (const { path, raw, doc } of events) {
   });
 }
 
-const census = items.filter((i) => i.priority <= 4);
+// FULL CENSUS: every event is in scope. Risk priority is the verification ORDER (hardest
+// first), not an inclusion filter — pending covers all 818, ranked.
 const verified = items.filter((i) => i.qc);
-const censusDone = census.filter((i) => i.qc);
-const pending = census
+const highRisk = items.filter((i) => i.priority <= 4);
+const pending = items
   .filter((i) => !i.qc)
   .sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id));
 
 const pct = (a: number, b: number) => ((100 * a) / Math.max(b, 1)).toFixed(1);
-console.log(`\n===== HUMAN-VERIFICATION BURN-DOWN (docs/CORPUS-VERIFICATION-PLAN.md) =====`);
-console.log(`corpus: ${items.length} events · human-verified: ${verified.length} (${pct(verified.length, items.length)}%)`);
-console.log(`T2 census pool: ${census.length} events · done ${censusDone.length} · REMAINING ${pending.length}`);
-for (const p of [1, 2, 3, 4]) {
-  const tot = census.filter((i) => i.priority === p).length;
-  const done = census.filter((i) => i.priority === p && i.qc).length;
-  console.log(`  P${p}: ${done}/${tot} verified`);
+console.log(`\n===== HUMAN-VERIFICATION BURN-DOWN — FULL CENSUS (verify every event) =====`);
+console.log(`corpus: ${items.length} events · human-verified: ${verified.length} (${pct(verified.length, items.length)}%) · REMAINING ${pending.length}`);
+console.log(`ranked hardest-first (P1 highest risk → P5 lowest); burn down top to bottom.`);
+for (const p of [1, 2, 3, 4, 5]) {
+  const tot = items.filter((i) => i.priority === p).length;
+  const done = items.filter((i) => i.priority === p && i.qc).length;
+  const tail = p === 5 ? '  (lowest-risk tail)' : '';
+  console.log(`  P${p}: ${done}/${tot} verified${tail}`);
 }
-console.log(`T3 sampling pool (not census): ${items.length - census.length} events\n`);
+console.log(`high-risk front (P1–P4): ${highRisk.filter((i) => i.qc).length}/${highRisk.length} verified\n`);
 
 const showAll = process.argv.includes('--all');
 const show = showAll ? pending : pending.slice(0, 25);
@@ -128,13 +140,14 @@ for (const i of show) {
 console.log(`\nprotocol per event (stamp when ALL pass — see the plan doc):`);
 console.log(`  1 source resolves (live or archive_url)   4 targets/sectors match source`);
 console.log(`  2 summary facts supported, dates match    5 doctrine reasoning + confidence honest`);
-console.log(`  3 attribution named at stated confidence  6 add qc: {verified_by: kara, on: YYYY-MM-DD, level: full}`);
+console.log(`  3 attribution named at stated confidence  6 add qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full}`);
 
 if (process.argv.includes('--json')) {
   const out = join(ROOT, 'research', 'qc-verify-worklist.json');
   writeFileSync(out, JSON.stringify({ generated: 'qc-verify-worklist.ts', stats: {
-    total: items.length, verified: verified.length, census: census.length,
-    censusDone: censusDone.length, pending: pending.length,
+    total: items.length, verified: verified.length,
+    census: items.length, censusDone: verified.length,
+    pending: pending.length, highRisk: highRisk.length,
   }, pending }, null, 2));
   console.log(`\nwrote ${out}`);
 }
