@@ -1,5 +1,11 @@
-id: ir/quds-force/lebanese-cedar
-primary_service_id: ir/quds-force
+# Re-homed Iran -> Lebanon 2026-06-24 (claude-opus-4.8/max audit). Per the PI's host-nation rule,
+# this Hezbollah-linked proxy actor is attributed to its HOST nation (Lebanon, lb), not its sponsor
+# (Iran). Former id ir/quds-force/lebanese-cedar. The IRGC-Quds-Force capability-building tie is
+# recorded as a nexus in `notes`, not as the placement. Matches MISP-galaxy (Volatile Cedar,
+# country LB). File path left under actors/ir/ unchanged (only the `id` slug is re-homed; this is
+# the same convention the agrius re-home used — the on-disk path is not the id).
+id: lb/unscoped/lebanese-cedar
+primary_service_id: lb/unscoped
 additional_service_ids: []
 canonical_name: Lebanese Cedar / Volatile Cedar
 aliases:
@@ -9,6 +15,10 @@ aliases:
   - alias: Lebanese Cedar
     assigning_org: Check Point (2021 update)
     confidence: equivalent
+  - alias: DeftTorero
+    assigning_org: MISP galaxy
+    confidence: equivalent
+    note: "MISP-galaxy synonym for Volatile Cedar (uuid cf421ce6-...); also tracked under this name by Kaspersky/Securelist."
 active_since: 2012-01-01
 active_until: null
 status: active
@@ -24,14 +34,52 @@ ttp_summary: |
   Explosive RAT; Caterpillar webshell; long dwell times.
   Telecom, ISP, and hosting-provider collection across US, UK,
   Israel, Egypt, Saudi Arabia, UAE, Lebanon, Jordan, and the
-  Palestinian Authority. Hezbollah-linked, with IRGC-Quds Force
+  Palestinian Authority. Hezbollah-linked (Lebanon), with IRGC-Quds Force
   capability-building support per Iran International / Check
   Point analysis; possible Iranian operator involvement on
   specific operations.
 default_doctrine_alignment_ids:
+  # These are IRAN-side doctrine alignments and encode the SPONSORSHIP NEXUS (Iran's
+  # capacity-building of Hezbollah's cyber arm), NOT the actor's host-nation placement.
+  # Retained as the documented Iran/Quds backing; Lebanon has no published cyber doctrine to map.
   - ir/resistance-axis
   - ir/resistance-axis/proxy-cyber-transfer
   - ir/forward-defense
+notes: |
+  Former id ir/quds-force/lebanese-cedar (primary_service_id ir/quds-force). Re-homed to
+  lb/unscoped/lebanese-cedar on 2026-06-24 under the PI's host-nation rule for proxy actors:
+  the actor is attributed to its HOST nation, not its sponsor.
+
+  Host-nation reasoning. The cited reporting ties the group to HEZBOLLAH — a Lebanese
+  political-militant organization — and only secondarily to Iran as a backer. Iran International
+  (2022, reporting The National Interest) states: "Iran has provided cyber technology to Lebanese
+  Hezbollah and helped group build its own counterintelligence cyber unit," that the unit "is said
+  to work under the direction of the elite Quds Force of Iran's Islamic Revolution Guard Corps
+  (IRGC)," and that "a Hezbollah-affiliated cyber unit, known as Lebanese Cedar APT, launched
+  attacks in January 2021 ... on telecommunications companies and internet providers in the United
+  States and many other countries." So the HOST is Hezbollah/Lebanon; the IRGC-Quds-Force tie is a
+  capability-building SPONSORSHIP NEXUS, recorded here and reflected in the retained Iran-doctrine
+  alignments (ir/resistance-axis*, ir/forward-defense), not in the placement.
+
+  Service placement: UNSCOPED. The reporting names Hezbollah (a political-militant org), not a
+  specific Lebanese STATE intelligence service, so primary_service_id is lb/unscoped (the
+  service-unresolved bucket) rather than a named Lebanese service. The lb nation-state and the
+  lb/unscoped service were created in this same audit (neither existed previously).
+
+  Canonical-reference corroboration: MISP-galaxy (our authoritative actor reference) records this
+  actor as "Volatile Cedar," uuid cf421ce6-ddfe-419a-bc65-6a9fc953232a, country LB, synonyms
+  ["Lebanese Cedar", "DeftTorero"] — independently supporting the Lebanon placement and the
+  DeftTorero alias.
+
+  FK propagation: 0 events reference this actor (grep of atlas/events/ for actor_id returned none),
+  so no event actor_id needed changing. Note that atlas/doctrines/ir/resistance-axis.yaml and
+  atlas/services/ir/quds-force.yaml mention "Lebanese Cedar / Volatile Cedar" in descriptive prose
+  (the Iran-side backing relationship); those are NOT actor_id FKs and are intentionally left
+  unchanged — they document the Iran/Quds nexus, not the actor's placement.
+
+  Source-capture note (2026-06-24 audit): the two Check Point source URLs are link-rotted
+  (homepage / HTTP 404) with no Wayback snapshot, so no raw_snapshot was captured for them
+  (unfetchable -> noted + skipped). The Iran International article was captured and hashed.
 sources:
   - checkpoint/2015_volatile-cedar
   - checkpoint/2021-01-28_lebanese-cedar

@@ -1,46 +1,99 @@
-# De-provisionalized + demoted to cn/unscoped 2026-06-24: the sole cited source (Cisco Talos, Jan
-# 2026) attributes UAT-7290 only to the "China-nexus of advanced persistent threat actors" at high
-# confidence and names NO Chinese service. "UAT" is Talos's deliberately-uncategorized/unattributed
-# cluster prefix. The only unit reference is to the PLA (a hedged victimology/infra/tooling overlap
-# with Recorded Future's "Red Foxtrot", which RF in 2021 linked to PLA Unit 69010) — i.e. military,
-# not MSS — so the prior cn/mss placement was unsupported in both directions.
-id: cn/unscoped/uat-7290
-primary_service_id: cn/unscoped
+# Re-promoted cn/unscoped -> cn/pla (PLA SSF) 2026-06-24: MISP-galaxy (our canonical actor reference)
+# equates UAT-7290 to Red Foxtrot and PLA Unit 69010 within one cluster — "DAGGER PANDA", uuid
+# 32c534b9-abec-4823-b223-a810f897b47b, country CN, synonyms IceFog / Trident / RedFoxtrot /
+# Red Wendigo / PLA Unit 69010 / UAT-7290 / Red Foxtrot. Recorded Future's 2021 Insikt report links
+# Red Foxtrot to PLA Unit 69010 (a Technical Reconnaissance Bureau, Ürümqi, Xinjiang). PLA Unit 69010
+# is military, NOT MSS — the prior cn/mss placement is correctly rejected. The unit's specific bureau
+# is not separately modeled in the corpus; per the in-corpus precedent for PLA actors whose exact
+# bureau is unnamed (cn/pla/apt26, cn/pla/su-bin-ring both -> cn/pla-ssf), and because Technical
+# Reconnaissance Bureaus were rooted in the SSF Network Systems Department (pre-2024 reorg; cf.
+# cn/pla-ssf), primary_service_id is set to cn/pla-ssf. Confidence is MODERATE: the chain is
+# overlap-based — Talos states only "significant amount of overlap in victimology, infrastructure,
+# and tooling" with Red Foxtrot (not a hard equation), and RF's Unit 69010 link is itself hedged
+# ("suspected", "we believe", "likely the MUCD").
+id: cn/pla/uat-7290
+primary_service_id: cn/pla-ssf
 additional_service_ids: []
 canonical_name: "UAT-7290"
-aliases: []
+aliases:
+  # MISP galaxy cluster "DAGGER PANDA" (uuid 32c534b9-abec-4823-b223-a810f897b47b) equates all of
+  # these within a single threat-actor cluster; confidence: equivalent reflects MISP's synonym-level
+  # treatment. The Talos source itself frames the UAT-7290<->Red Foxtrot relationship as a TTP/
+  # victimology/infrastructure *overlap* rather than a hard equation; MISP elevates it to a synonym.
+  - alias: "Red Foxtrot"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+    note: "MISP DAGGER PANDA synonym. Talos frames it as significant overlap (victimology/infra/tooling); MISP treats as equivalent."
+  - alias: "RedFoxtrot"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+  - alias: "PLA Unit 69010"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+    note: "Technical Reconnaissance Bureau, Ürümqi, Xinjiang — linked to Red Foxtrot by Recorded Future (2021, hedged: suspected/likely)."
+  - alias: "IceFog"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+  - alias: "Red Wendigo"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+  - alias: "Trident"
+    assigning_org: "MISP galaxy"
+    confidence: equivalent
+    note: "Cf. Temp.Trident in RF's RedFoxtrot reporting."
 status: active
 mission:
   - espionage
 ttp_summary: |
   China-nexus espionage and initial-access actor disclosed by Cisco Talos (January 2026), active
-  since at least 2022 and primarily targeting high-value telecommunications providers in South Asia.
-  Talos assesses with high confidence that UAT-7290 falls under the China-nexus of APTs; it shares
-  overlapping TTPs with known China-nexus adversaries and a significant overlap in victimology,
-  infrastructure and tooling with the group Recorded Future tracks as Red Foxtrot (which RF in 2021
-  linked to PLA Unit 69010). Gains access via one-day exploits and target-specific SSH brute force
-  against public-facing edge/networking devices, using publicly available proof-of-concept exploit
-  code. Operates a Linux malware suite (the RushDrop/DriveSwitch/SilentRaid implant family) and the
-  Bulbature implant (first disclosed by Sekoia in late 2024) to convert compromised devices into
-  Operational Relay Box (ORB) infrastructure that may then be reused by other China-nexus actors —
-  giving it a dual espionage / initial-access role. May also use Windows bespoke implants such as
-  RedLeaves (technical-indicator overlap with RedLeaves, attributed to APT10) or ShadowPad, both
-  commonly linked to China-nexus threat actors.
+  since at least 2022 and primarily targeting high-value telecommunications providers in South Asia,
+  with recent expansion into Southeastern Europe. Talos assesses with high confidence that UAT-7290
+  falls under the China-nexus of APTs; it shares overlapping TTPs with known China-nexus adversaries
+  and a significant overlap in victimology, infrastructure and tooling with the group Recorded Future
+  tracks as Red Foxtrot (which RF in 2021 linked to PLA Unit 69010). Gains access via one-day exploits
+  and target-specific SSH brute force against public-facing edge/networking devices, using publicly
+  available proof-of-concept exploit code. Operates a Linux malware suite (the RushDrop/DriveSwitch/
+  SilentRaid implant family) and the Bulbature implant (first disclosed by Sekoia in late 2024) to
+  convert compromised devices into Operational Relay Box (ORB) infrastructure that may then be reused
+  by other China-nexus actors — giving it a dual espionage / initial-access role. May also use Windows
+  bespoke implants such as RedLeaves (technical-indicator overlap with RedLeaves, attributed to APT10)
+  or ShadowPad, both commonly linked to China-nexus threat actors.
 default_doctrine_alignment_ids: []
 target_sector_ids:
   - sectors/ict/telecom
+external_refs:
+  misp_galaxy: 32c534b9-abec-4823-b223-a810f897b47b
+  misp_galaxy_name: 'DAGGER PANDA'
 notes: |
-  Former id cn/mss/uat-7290 (PROVISIONAL backfill stub, 2026-05-30, which asserted an unsourced MSS
-  placement — note the backfill stub's OWN analyst hint said "Red Foxtrot / PLA Unit 69010 overlap",
-  i.e. PLA/military, contradicting its own cn/mss field). Demoted to cn/unscoped on 2026-06-24: the
-  sole cited source (Cisco Talos, Jan 2026) names no Chinese service. Talos attributes the actor only
-  to the "China-nexus of advanced persistent threat actors (APTs)" at HIGH confidence; the single
-  unit reference in the source is to the PLA — a hedged overlap ("a significant amount of overlap in
-  victimology, infrastructure, and tooling with a group publicly reported by Recorded Future as Red
-  Foxtrot"; "In a 2021 report, Recorded Future linked Red Foxtrot to Chinese People's Liberation Army
-  (PLA) Unit 69010"). MSS / Ministry of State Security appears zero times in the source. China nexus
-  is well-supported (Talos high confidence); the service placement is not — and any future placement
-  is more likely PLA than MSS. Held at cn/unscoped until a cited source names a specific Chinese
-  service. FK-propagated id change to the 1 referencing event on 2026-06-24.
+  PLACEMENT HISTORY. Former id cn/mss/uat-7290 (PROVISIONAL backfill stub, 2026-05-30, which asserted
+  an unsourced MSS placement — the stub's OWN analyst hint already said "Red Foxtrot / PLA Unit 69010
+  overlap", i.e. PLA/military, contradicting its own cn/mss field). Demoted to cn/unscoped/uat-7290 on
+  2026-06-24 because the sole cited source (Cisco Talos, Jan 2026) names no Chinese service and MSS /
+  Ministry of State Security appears zero times in it.
+
+  RE-PROMOTED to cn/pla/uat-7290 (primary_service_id cn/pla-ssf) on 2026-06-24 on the strength of the
+  MISP equivalence chain rather than the Talos source alone. The equivalence chain (verified against
+  primary/canonical sources 2026-06-24, claude-opus-4.8/max):
+    1. MISP galaxy (AUSPEX's canonical actor reference) cluster "DAGGER PANDA" (uuid
+       32c534b9-abec-4823-b223-a810f897b47b, country CN) lists UAT-7290, Red Foxtrot, RedFoxtrot and
+       PLA Unit 69010 as synonyms of one cluster — i.e. MISP equates DAGGER PANDA = Red Foxtrot, and
+       UAT-7290 = that cluster.
+    2. Recorded Future's 2021 Insikt report "Threat Activity Group RedFoxtrot Linked to China's PLA
+       Unit 69010" attributes Red Foxtrot/RedFoxtrot to PLA Unit 69010, a Technical Reconnaissance
+       Bureau in Ürümqi, Xinjiang (via an operator's OpSec lapse exposing the unit HQ address).
+    3. Talos (2026) independently reports UAT-7290 shares "a significant amount of overlap in
+       victimology, infrastructure, and tooling" with Red Foxtrot.
+  Net: PLA Unit 69010 is MILITARY (PLA), definitively NOT MSS — so the prior cn/mss placement is
+  correctly rejected in both directions. Service set to cn/pla-ssf: Unit 69010's specific bureau is
+  not separately modeled in the corpus, the RF attribution predates the 2024 PLA reorg (SSF era), and
+  Technical Reconnaissance Bureaus were rooted in the SSF Network Systems Department — matching the
+  in-corpus precedent for PLA actors whose exact bureau is unnamed (cn/pla/apt26, cn/pla/su-bin-ring
+  both -> cn/pla-ssf).
+
+  CONFIDENCE: MODERATE (overlap-based, not a confessed/hard equation). Both links in the chain are
+  hedged: Talos says "overlap" not "is"; RF's Unit 69010 link uses "suspected", "we believe", "likely
+  the MUCD". The China nexus itself is well-supported (Talos high confidence). Were the MISP synonym
+  treatment to be revised, this actor would fall back to cn/unscoped, not cn/mss.
+  FK-propagated id change to the 1 referencing event on 2026-06-24.
 sources:
   - blogtalosintelligence/2026-01_cisco-talos-discloses-uat-7290-china-nex
