@@ -15,7 +15,9 @@ written definition of what "verified" means. This plan is that methodology.
 
 ## What "verified" means (the per-event protocol)
 
-A record is **human-verified** when the candidate has confirmed, against the cited sources:
+A record is **verified** when an auditor — the candidate (**human**), or an independent **LLM
+audit** (Claude Opus 4.8 at max effort, which also captures the raw source + a SHA-256 hash) —
+has confirmed, against the cited sources:
 
 1. **Source resolves** — URL live or archived (archive_url); content matches the citation.
 2. **Event support** — the source supports the summary's factual claims (what happened, when,
@@ -25,9 +27,12 @@ A record is **human-verified** when the candidate has confirmed, against the cit
 4. **Targets/sectors** — match the source (no sector inflation).
 5. **Doctrine link** — the reasoning holds; confidence label honest (`attested` only if the
    source names the goal — now gate-enforced); `perspective` correct.
-6. **Stamp it**: add `qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full|sources-only}` to the
-   record. The stamp is what makes verification *queryable* — coverage becomes a number
-   (`X% of events human-verified`), reportable in the dissertation and checkable by the gate.
+6. **Stamp it**: add a `qc:` stamp that names the auditor —
+   - human → `qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full|sources-only}`
+   - LLM audit → `qc: {verified_by: claude-opus-4.8, effort: max, verified_on: YYYY-MM-DD, level: full}`
+
+   The stamp makes verification *queryable* — coverage becomes a number **per tier**
+   (`X% LLM-audited, Y% human-verified`), reportable in the dissertation and checkable by the gate.
 
 ## The four tiers
 

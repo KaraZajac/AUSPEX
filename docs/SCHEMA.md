@@ -74,7 +74,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `doctrine_links` | list\<dict\> | REQUIRED | the *why* (may be empty `[]`) — see below |
 | `sources` | list\<str\> | REQUIRED | FK → sources |
 | `targets` | list\<dict\> | optional (98%) | the victims — see below |
-| `qc` | dict | optional | **human-verification stamp** (`{verified_by, on, level: full\|sources-only, notes?}`) — presence = the record passed the per-event protocol in `docs/CORPUS-VERIFICATION-PLAN.md`; absence = machine-checked only. Coverage reported by `verify_atlas.py` (`qc-coverage`). |
+| `qc` | dict | optional | **verification stamp** (`{verified_by, verified_on, level: full\|sources-only, effort?, notes?}`). `verified_by` names the auditor: a model id (e.g. `claude-opus-4.8`, paired with `effort`) = independent **LLM audit** against primary sources with raw evidence captured + hashed; `kara` = **human** verification by the candidate. Presence = passed the per-event protocol (`docs/CORPUS-VERIFICATION-PLAN.md`); absence = machine-checked only. *(Field is `verified_on`, never `on` — bare `on:` is a YAML 1.1 boolean key.)* Coverage reported by `verify_atlas.py` (`qc-coverage`). |
 | `initial_vector` | str | optional (94%) | initial-access vocab (below) |
 | `disclosure_date` | date | optional (80%) | public disclosure |
 | `end_date` | date\|null | optional (80%) | op end if bounded |
@@ -91,7 +91,8 @@ The central entity: a cyber operation (or a meta/announcement event).
 |---|---|---|---|
 | `actor_id` | str\|null | REQUIRED | FK → actors. **`null` = counter-action / unattributed** (see directionality below) |
 | `attributing_org` | str | REQUIRED | who made the attribution (vendor / govt / acting body) |
-| `attributing_org_confidence` | str | REQUIRED | `high` \| `moderate` \| `low` |
+| `attributing_org_confidence` | str | REQUIRED | `high` \| `moderate` \| `low` — how *sure* the org is |
+| `attribution_level` | str\|null | optional | how *specific* the org got, **orthogonal to confidence**: `activity-cluster` → `nation` → `named-actor` → `named-unit`. Several dated entries per event capture **attribution latency** — e.g. Tortoiseshell was an `activity-cluster` (Symantec/Talos, 2019, no nation) until CrowdStrike reached `named-actor` (Iran, 2023) |
 | `auspex_assessment` | str | REQUIRED | `concur` \| `concur-with-caveat` \| `partial` \| `contested` |
 | `attribution_date` | date | REQUIRED | when the attribution was made |
 | `attribution_source_id` | str\|null | REQUIRED | FK → sources |
@@ -267,7 +268,9 @@ The strategic frameworks — the moat. Pillars nest inside; programs nest inside
 | `retrieved_on` | date | REQUIRED | when curl-verified |
 | `tier` | str | REQUIRED | `primary` \| `secondary` \| `tertiary` |
 | `archive_url` | str\|null | optional (87%) | wayback/archive copy |
-| `notes` | str | optional | normalized to `notes` (2026-06-20; the legacy singular `note` was retired from the data and the schema) |
+| `raw_snapshot` | str\|null | optional | filename in `atlas/sources/raw/` (gitignored local archive) of the captured raw source content — reproducible verification against link-rot / archive.org blocks. Added by LLM-audit |
+| `content_sha256` | str\|null | optional | SHA-256 of the raw snapshot, committed so the local archive's integrity is independently checkable |
+| `notes` | str | optional | normalized to `notes` (2026-06-20; the legacy singular `note` was retired from the data and the schema). LLM audits add an `AUDIT (date, model/effort):` line + verbatim supporting quotes |
 
 ---
 
@@ -351,6 +354,8 @@ Malware lineage groups for the lineage-aware-credit feature (e.g. Trickbot↔Con
 - **initial_vector** (8): phishing, n-day, 0-day, supply-chain, valid-creds, insider, physical, unknown.
 - **false_flag_risk**: none, suspected, confirmed.
 - **attributing_org_confidence**: high, moderate, low.
+- **attribution_level**: activity-cluster, nation, named-actor, named-unit.
+- **qc.verified_by**: a model id (e.g. claude-opus-4.8, with qc.effort) = LLM audit · kara = human verification.
 - **auspex_assessment**: concur, concur-with-caveat, partial, contested.
 - **doctrine_link confidence / anticipated-marker confidence**: attested, strongly_inferred, plausible *(markers: attested, strongly_inferred)*.
 - **target role**: primary, collateral, staging, transit.

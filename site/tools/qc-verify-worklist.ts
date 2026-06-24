@@ -111,14 +111,16 @@ for (const { path, raw, doc } of events) {
 // FULL CENSUS: every event is in scope. Risk priority is the verification ORDER (hardest
 // first), not an inclusion filter — pending covers all 818, ranked.
 const verified = items.filter((i) => i.qc);
+const verifiedHuman = verified.filter((i) => i.qc?.verified_by === 'kara');
+const verifiedLLM = verified.filter((i) => i.qc && i.qc.verified_by !== 'kara');
 const highRisk = items.filter((i) => i.priority <= 4);
 const pending = items
   .filter((i) => !i.qc)
   .sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id));
 
 const pct = (a: number, b: number) => ((100 * a) / Math.max(b, 1)).toFixed(1);
-console.log(`\n===== HUMAN-VERIFICATION BURN-DOWN — FULL CENSUS (verify every event) =====`);
-console.log(`corpus: ${items.length} events · human-verified: ${verified.length} (${pct(verified.length, items.length)}%) · REMAINING ${pending.length}`);
+console.log(`\n===== VERIFICATION BURN-DOWN — FULL CENSUS (verify every event) =====`);
+console.log(`corpus: ${items.length} events · verified: ${verified.length} (${pct(verified.length, items.length)}%) — ${verifiedHuman.length} human, ${verifiedLLM.length} LLM-audit · REMAINING ${pending.length}`);
 console.log(`ranked hardest-first (P1 highest risk → P5 lowest); burn down top to bottom.`);
 for (const p of [1, 2, 3, 4, 5]) {
   const tot = items.filter((i) => i.priority === p).length;

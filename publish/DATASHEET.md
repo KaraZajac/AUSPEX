@@ -50,16 +50,24 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 
 ## Labeling & reliability  *(reviewers weight this section most)*
 
-- **Who assigned labels?** Doctrine links are machine-drafted and human-verified; every link
-  carries `analyst`, `confidence`, `reasoning`, and (where applicable) an attesting source.
+- **Who assigned labels?** Doctrine/attribution labels are machine-drafted and then verified —
+  by independent **LLM audit** against the primary sources (Claude Opus 4.8, max reasoning effort;
+  raw evidence captured + SHA-256-hashed) and/or by the candidate's **human** review. Every link
+  carries `analyst`, `confidence`, `reasoning`, and (where applicable) an attesting source; the
+  per-record `qc.verified_by` stamp names which tier verified it.
 - **Inter-rater reliability:** primary-link agreement ____%, Cohen's κ = ____ on a stratified
   blind sample of N=100 links (protocol: thesis/interrater/PROTOCOL.md). **[run the study;
   insert numbers + adjudicated error rate]**
-- **Verification coverage:** ____% of events human-verified under a published per-event
-  protocol; the remainder machine-validated (JSON Schema + referential integrity, enforced by
-  a pre-commit gate) and sampled with a measured error rate of ____%. **[from the T2/T3 plan]**
-  All records share this *uniform* status — including 157 backfill-imported events promoted to
-  first-class on 2026-06-20; no record is represented as "verified" absent a `qc:` stamp.
+- **Verification coverage (two tiers, recorded per-record in `qc.verified_by`):** every record is
+  machine-validated first (T0/T1: JSON Schema + referential integrity + URL/archival checks, all
+  pre-commit-enforced, 100%). On top of that, records receive a per-event verification stamp under
+  the published protocol (`docs/CORPUS-VERIFICATION-PLAN.md`): **LLM-audited** — an independent audit
+  by Claude Opus 4.8 (max effort) against the cited primary sources, correcting errors and capturing
+  the raw source + a content hash for reproducibility — and/or **human-verified** by the candidate.
+  At freeze: __% LLM-audited, __% human-verified (regenerate from stats.json). No record is
+  represented as "verified" absent a `qc:` stamp, and the stamp always names the auditor (audit model
+  + effort, or `kara`) so the tier is unambiguous. The 157 backfill-imported events promoted on
+  2026-06-20 carry no special status — they enter the same protocol.
 - **Known label corrections:** the corpus carries a public correction history — git history is
   the audit trail. Major passes: the **2026-06-09 re-baseline** (perspective semantics; prose
   leak scrubs; withdrawn over-claims); and the **2026-06-19 over-attestation re-grade**
@@ -98,6 +106,13 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   targets this pool); doctrine construct heterogeneity (made explicit via `kind`).
 - **Ethics:** all public-source; named individuals appear only where already named in public
   legal/sanctions documents; no private data. **[KARA — confirm + venue-specific statement.]**
-- **AI assistance disclosure:** **[KARA — per venue policy; the honest sentence is that
-  curation was machine-assisted under a human-verification protocol whose reliability is
-  measured above.]**
+- **AI assistance disclosure:** **[Draft — Kara to confirm wording per venue policy.]** Curation
+  and source-verification were substantially machine-assisted. Doctrine and attribution labels were
+  machine-drafted; the source-audit — checking each record's claims against its cited primary
+  sources, correcting errors, modelling attribution as a dated timeline, and capturing raw evidence
+  — was performed by **Claude Opus 4.8 (Anthropic), at maximum reasoning effort**, under the
+  candidate's design and direction. Each record's verification tier is recorded transparently in
+  `qc.verified_by` (the audit model id + `effort`, or `kara` for human verification), and raw source
+  snapshots with SHA-256 hashes make every LLM audit independently reproducible. The candidate
+  designed the schema, methodology, and tagging rubric, directs the audit, and performs human review;
+  no record is represented as human-verified unless a human stamp records it.

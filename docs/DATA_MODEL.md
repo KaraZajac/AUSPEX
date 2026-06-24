@@ -275,14 +275,22 @@ Each is a row with its own payload — confidence, reasoning, source.
 | `actor_id` | FK | |
 | `attributing_org` | string | `US DOJ`, `Mandiant`, `Microsoft MSTIC`, `CISA`, `UK NCSC` |
 | `attributing_org_confidence` | enum | `high`, `moderate`, `low` (per ICD-203 norms) — *their* confidence, as stated |
+| `attribution_level` | enum? | *how specific* they got, orthogonal to confidence: `activity-cluster` → `nation` → `named-actor` → `named-unit` |
 | `auspex_assessment` | enum | `concur`, `concur-with-caveat`, `partial`, `contested` — *our* take |
 | `attribution_date` | date | when this attribution was made public |
 | `attribution_source_id` | FK → Source | |
+| `service_id` | FK → Service? | overrides the actor's default service for this attribution |
 | `notes` | markdown? | |
 
 Multiple rows per (event, actor) pair are expected — DOJ says one
 thing in 2018, Microsoft adds detail in 2021, an independent vendor
-disputes a cluster in 2023.
+disputes a cluster in 2023. With `attribution_level`, that sequence
+**measures attribution latency** — the gap between an incident and when
+the field could name *who*. Worked example: Tortoiseshell was an
+`activity-cluster` with no nation (Symantec/Talos, 2019; Symantec
+*explicitly* declined attribution) until CrowdStrike reached
+`named-actor` (Iran, "Imperial Kitten") in 2023 — a four-year lag the
+record now shows instead of back-dating the 2023 attribution onto 2019.
 
 ### 2.2 `EventDoctrineLink` — **the heart of the product**
 
@@ -344,6 +352,8 @@ Every claim gets a citation.
 | `published_on` | date | |
 | `retrieved_on` | date | |
 | `tier` | enum | `primary`, `secondary`, `tertiary` (per SCHEMA sourcing priority) |
+| `raw_snapshot` | filename? | captured raw source content in `atlas/sources/raw/` (gitignored archive) — reproducible LLM-audit evidence against link rot / archive.org blocks |
+| `content_sha256` | hash? | SHA-256 of the raw snapshot, committed for integrity |
 
 ## 3. Polymorphic doctrine refs — how `EventDoctrineLink.doctrine_ref` works
 
