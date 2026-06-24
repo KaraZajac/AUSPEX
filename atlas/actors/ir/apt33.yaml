@@ -1,5 +1,11 @@
-id: ir/irgc/apt33
-primary_service_id: ir/irgc
+# DEMOTED to ir/unscoped 2026-06-24 (claude-opus-4.8/max audit): all three cited sources establish
+# an Iran nexus but NONE names the IRGC. FireEye 2017 says only "Iranian government" (14x) / "at the
+# behest of the Iranian government" / "government sponsored" (IRGC & "Revolutionary Guard": 0 hits);
+# Microsoft/MSTIC 2023 says only "an Iranian nation-state threat actor" / "Iranian state interests"
+# (IRGC: 0 hits); the CrowdStrike URL resolves to the generic /blog index (no APT33/Iran/IRGC content).
+# Former id ir/irgc/apt33. Service placement unresolved -> ir/unscoped. See notes for the audit detail.
+id: ir/unscoped/apt33
+primary_service_id: ir/unscoped
 additional_service_ids: []
 canonical_name: APT33
 aliases:
@@ -55,6 +61,30 @@ default_doctrine_alignment_ids:
   - ir/forward-defense/proxy-projection
   - ir/asymmetric-warfare
   - ir/sanctions-evasion/ip-import-substitution
+notes: |
+  SERVICE-PLACEMENT AUDIT (2026-06-24, claude-opus-4.8/max): demoted from ir/irgc/apt33 to
+  ir/unscoped/apt33. The IRGC placement was NOT supported by any of the actor's three cited
+  sources; raw snapshots of all three were captured and grepped:
+    - FireEye/Mandiant 2017 ("Insights into Iranian Cyber Espionage: APT33...") attributes the
+      group only to the "Iranian government" — "We assess APT33 works at the behest of the Iranian
+      government"; the aerospace/energy targeting "most closely aligns with nation-state interests,
+      implying that the threat actor is most likely government sponsored"; "APT33 may have operated
+      on behalf of the Iranian government." The words "IRGC" and "Revolutionary Guard" appear ZERO
+      times. (The report's "cyber army"/"Nasr Institute" passage also says only "controlled by the
+      Iranian government.") The prior source-note claiming this was the "foundational vendor
+      attribution of APT33 to IRGC" was inaccurate and has been corrected.
+    - Microsoft Threat Intelligence (MSTIC) 2023 (Peach Sandstorm) calls it only "an Iranian
+      nation-state threat actor" whose campaign is "likely used to facilitate intelligence
+      collection in support of Iranian state interests." "IRGC"/"Revolutionary Guard": ZERO hits.
+      (Matches the prior event-level audit finding.)
+    - CrowdStrike "Refined Kitten profile" — the cited URL (crowdstrike.com/blog) resolves to the
+      generic Cybersecurity Blog index with no APT33/Refined Kitten/Iran content (the adversary
+      profile is behind CrowdStrike's gated Adversary Universe); contributes no service evidence.
+  Iran nexus is well-supported at the named-actor/nation level; the specific service (IRGC vs MOIS
+  vs Artesh/contractor) is NOT named by any cited source. Per the placement rule, demoted to
+  ir/unscoped pending a cited source that explicitly names the affiliating Iranian service.
+  Aliases, MITRE G0064, and the MISP cluster id are unchanged. FK-propagated the id change to the
+  8 referencing events on 2026-06-24.
 sources:
   - fireeye/2017-09-20_apt33-report
   - microsoft/2023-09-14_peach-sandstorm
