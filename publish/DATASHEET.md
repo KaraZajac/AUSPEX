@@ -75,6 +75,27 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   over-applied, corrected ~120 doctrine links (350→~226) to `strongly_inferred`/`plausible`,
   redefined the confidence rubric to the WHY-ladder, and attached an auditable `inference_basis`
   to each re-graded link. Verified engine-neutral: doctrine top-1 unchanged at 68.7%.
+- **Threat-actor reference (MISP-galaxy cross-walk):** actor identity, naming, and nation
+  attribution are anchored to **MISP-galaxy** `clusters/threat-actor.json` — the open community
+  threat-actor registry (MISP Project; snapshot **v341, 2026-06-24**, UUID
+  `7cdff317-a673-4474-84ec-4f1754947823`). Each matched actor links to its MISP cluster via
+  `external_refs.misp_galaxy` (cluster UUID) + `misp_galaxy_name`; MISP synonyms are mirrored into
+  `aliases` (`assigning_org: "MISP galaxy"`) and MISP's reference URLs into `external_refs.misp_refs`
+  (131 of 181 non-criminal actors matched; refs mirrored onto 135 actors / 1,363 URLs). MISP
+  attribution is **adopted where present but reviewed — not auto-adopted — where it conflicts** with
+  better-sourced AUSPEX work: e.g. *Handala* is kept `ir/mois` (an Iranian MOIS false-flag persona)
+  despite MISP's `country=PS` cover identity, and proxy actors are placed by **host nation** (e.g.
+  *Lebanese Cedar* → `lb/`, Iran/Quds-Force backing noted). Unmatched actors (~50) are mostly
+  legitimately absent from MISP (2025 vendor cryptonyms not yet ingested, ransomware crews tracked in
+  MISP's separate galaxies, and AUSPEX-specific Western/operator-cluster placeholders).
+- **Actor-record service audit (2026-06-24):** separate from the event audits, each actor's *service*
+  placement (MSS / GRU / IRGC / RGB / …) was verified against its **own cited sources**. ~21 provisional
+  placements were demoted to `<nation>/unscoped` where no cited source named the service (vendor
+  "PANDA"/"UNC"/"UAT" clusters attribute only at the nation level); placements were **kept only where a
+  source named the service** (e.g. Scarred Manticore → MOIS, per Check Point), and a handful were
+  re-homed per MISP corroboration (XakNet → GRU; UAT-7290 → PLA Unit 69010). One mis-modeled record
+  (a policy-publishing body) was retired; two actors found to be one cluster were merged
+  (Black Shadow → Agrius / Pink Sandstorm).
 
 ## Uses
 
