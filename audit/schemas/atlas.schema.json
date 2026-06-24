@@ -162,7 +162,7 @@
           "properties": {
             "verified_by": {
               "type": "string",
-              "description": "who performed human verification (the candidate)"
+              "description": "who performed verification: 'claude' = independent LLM audit against primary sources (raw evidence captured in the source records); 'kara' = human verification by the candidate. Distinct tiers, both disclosed in the datasheet."
             },
             "verified_on": {
               "type": "string",
@@ -215,6 +215,20 @@
             "moderate",
             "low"
           ]
+        },
+        "attribution_level": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "activity-cluster",
+            "nation",
+            "named-actor",
+            "named-unit",
+            null
+          ],
+          "description": "Specificity this org's attribution reached, ORTHOGONAL to confidence: activity-cluster (coherent intrusion set, no actor/nation named) -> nation (country named) -> named-actor (named group + nation) -> named-unit (+ specific service/unit, e.g. IRGC). Multiple dated attribution entries on one event capture how attribution matured over time (attribution latency)."
         },
         "auspex_assessment": {
           "enum": [
@@ -839,6 +853,20 @@
             "string",
             "null"
           ]
+        },
+        "raw_snapshot": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Filename in atlas/sources/raw/ (gitignored local archive) of the captured raw source content — reproducible verification against link rot / archive.org blocks."
+        },
+        "content_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "SHA-256 of the raw snapshot, committed so the local raw archive's integrity is independently verifiable."
         },
         "notes": {
           "type": [

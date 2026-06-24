@@ -1,4 +1,3 @@
-# DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2019-09/tortoiseshell-fake-hire-military-heroes-website-targeting-us-military-
 name: "Tortoiseshell fake 'Hire Military Heroes' website targeting US military veterans"
 start_date: 2019-09-01
@@ -10,19 +9,31 @@ false_flag_risk: none
 summary: |
   Cisco Talos discovered that Tortoiseshell (the actor previously named by Symantec, now tracked as Imperial Kitten / TA456) stood up a fake website, hiremilitaryheroes[.]com, posing as a job-search resource for US military veterans, with a URL closely imitating the legitimate U.S. Chamber of Commerce service hiringourheroes.org. Visitors were prompted to download a desktop application that was in fact a malware downloader; once run, the fake installer fetched a reconnaissance binary and a remote-access tool that profiled the system and communicated via hard-coded credentials to actor-controlled email accounts. Talos linked the campaign to Tortoiseshell because it reused the same backdoor and TTPs seen in the group's earlier compromise of a Saudi Arabian IT provider.
 attributions:
-  - actor_id: ir/irgc/imperial-kitten
+  # 2019 — Talos identified the activity cluster but named no nation (linked it to Symantec's "Tortoiseshell")
+  - actor_id: ir/unscoped/imperial-kitten
     attributing_org: "Cisco Talos"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2019-09-01
     attribution_source_id: blogtalosintelligence/2019-09_tortoiseshell-fake-hire-military-heroes-
+    notes: "Talos attributed to the 'Tortoiseshell' cluster (Symantec's name) and named no nation; the Iran identity is the later CrowdStrike attribution below."
+  # 2023 — CrowdStrike attributed the Tortoiseshell cluster to Iran as 'Imperial Kitten' (IRGC suspected)
+  - actor_id: ir/unscoped/imperial-kitten
+    attributing_org: "CrowdStrike"
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-10-01
+    attribution_source_id: crowdstrike/2023-10_imperial-kitten-strategic-web-compromise
+    notes: "Iran-nexus ('Imperial Kitten'); IRGC connection suspected, not established — hence ir/unscoped."
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      An IRGC-nexus fake veterans' job site delivering reconnaissance and RAT malware to US military veterans is collection against the principal adversary's military community, consistent with the forward-defense logic of contesting the US through asymmetric intelligence operations.
+      An Iran-nexus fake veterans' job site delivering reconnaissance and RAT malware to US military veterans is collection against the principal adversary's military community, consistent with the forward-defense logic of contesting the US through asymmetric intelligence operations. The Iran nexus rests on CrowdStrike's later (2023) attribution, not the contemporaneous Talos reporting, which named no nation.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -32,3 +43,9 @@ targets:
     role: primary
 sources:
   - blogtalosintelligence/2019-09_tortoiseshell-fake-hire-military-heroes-
+  - crowdstrike/2023-10_imperial-kitten-strategic-web-compromise
+qc:
+  verified_by: claude
+  verified_on: 2026-06-23
+  level: full
+  notes: "Audited vs Talos (raw snapshot captured): facts ✓ (hiremilitaryheroes[.]com, veteran targeting, downloader+recon+RAT). KEY CORRECTION: Talos made NO Iran/IRGC attribution — record had claimed high/attested IRGC. Now modeled 2-stage (Talos 2019 activity-cluster; CrowdStrike 2023 named-actor, Iran/IRGC-suspected). Actor demoted ir/irgc -> ir/unscoped."
