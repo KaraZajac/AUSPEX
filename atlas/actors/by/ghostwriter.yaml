@@ -1,5 +1,13 @@
-id: by/kgb/ghostwriter
-primary_service_id: by/kgb
+# Demoted to by/unscoped 2026-06-24: NO cited source names the Belarusian KGB. Mandiant (the only
+# source attributing to Belarus) names "the Belarusian government" (high conf) and "the Belarusian
+# military" (moderate conf) — never the KGB. NB NATION CONTESTED: the two cited GOVT sources both
+# attribute Ghostwriter to RUSSIA, not Belarus — German Foreign Office (2021-09-06): "...attributed
+# to cyber actors of the Russian State and specifically to the Russian military intelligence service
+# GRU"; EU Council (2021-09-24): "...collectively designated as Ghostwriter, and associated these
+# with the Russian state." Nation left as `by` (Mandiant's high-conf Belarus link + MISP country=BY)
+# but the Russia/GRU contest is flagged, not re-homed. See notes.
+id: by/unscoped/ghostwriter
+primary_service_id: by/unscoped
 additional_service_ids: []
 canonical_name: Ghostwriter
 aliases:
@@ -34,22 +42,71 @@ target_sector_ids:
   - media/journalism
   - civil-society
 ttp_summary: |
-  Belarusian-aligned influence-and-credential-theft cluster
-  documented by Mandiant (UNC1151), Proofpoint (TA445), and EU
-  attribution actions (the Council of the EU named Belarus as
-  associated with Ghostwriter in 2021). Combined operations:
-  credential theft against Polish, Lithuanian, German, and
-  Ukrainian targets; subsequent leak-and-fabrication influence
-  operations seeding false content into hijacked social-media
-  and content-management accounts. The German federal government
-  attributed pre-September-2021-election operations against
-  Bundestag members to Ghostwriter; the EU's September 2021
-  statement attributed the broader campaign to "Belarus-linked
-  threat actors." Mandiant's UNC1151 attribution to Minsk was
-  the technical foundation for the EU action.
+  Influence-and-credential-theft cluster documented by Mandiant
+  (UNC1151), Proofpoint (TA445), Google TAG (PUSHCHA), and
+  government attribution actions. NATION ATTRIBUTION IS SPLIT
+  across the cited sources: Mandiant assesses UNC1151 is linked
+  with HIGH confidence to "the Belarusian government" and with
+  MODERATE confidence to "the Belarusian military" (and "cannot
+  rule out Russian contributions"), while the two cited government
+  statements name Russia — the German Federal Foreign Office
+  (2021-09-06) attributed the activities "to cyber actors of the
+  Russian State and specifically to the Russian military
+  intelligence service GRU," and the EU Council's September 2021
+  declaration "associated these with the Russian state." Combined
+  operations: credential theft against Polish, Lithuanian, German,
+  and Ukrainian targets; subsequent leak-and-fabrication influence
+  operations seeding false content into hijacked social-media and
+  content-management accounts. None of the cited sources names the
+  Belarusian KGB or any specific Belarusian service — hence the
+  by/unscoped placement (see notes).
 default_doctrine_alignment_ids:
   - by/concept-info-security-2019/information-sphere-defense
   - by/union-state-integration/ukraine-theater-support
+notes: |
+  Former id by/kgb/ghostwriter (asserted an unsourced Belarus-KGB placement).
+  AUDIT (2026-06-24, claude-opus-4.8/max): DEMOTED to by/unscoped and the
+  Belarus nation FLAGGED AS CONTESTED, both against the actor's own four cited
+  sources.
+
+  SERVICE (demote): No cited source names the Belarusian KGB / Committee for
+  State Security or any specific Belarusian service. The only source that
+  attributes Ghostwriter/UNC1151 to Belarus at all — Mandiant — names the
+  *government* and the *military*, not the KGB: "Mandiant assesses with high
+  confidence that UNC1151 is linked to the Belarusian government and with
+  moderate confidence is linked to the Belarusian military"; "Sensitive
+  technical information locates the operation in Minsk, Belarus and links it to
+  the Belarusian Military." If Mandiant's specific-unit lean points anywhere it
+  is the military, not the KGB. The by/kgb placement was therefore unsupported;
+  re-homed to the by/unscoped QC-frontier service (parallels MoustachedBouncer,
+  demoted from by/kgb earlier this sweep). FK-propagated the id change to the 12
+  by/kgb/ghostwriter references across 10 events on 2026-06-24.
+
+  NATION (FLAG, not re-homed): the actor's two cited GOVERNMENT sources both
+  attribute Ghostwriter to RUSSIA, not Belarus. German Federal Foreign Office
+  (2021-09-06, spokesperson A. Sasse): the activities "can be attributed to
+  cyber actors of the Russian State and specifically to the Russian military
+  intelligence service GRU." EU Council / High Representative (2021-09-24):
+  "Some EU Member States have observed malicious cyber activities, collectively
+  designated as Ghostwriter, and associated these with the Russian state... We
+  urge the Russian Federation to adhere to the norms of responsible state
+  behaviour in cyberspace." (The actor's prior ttp_summary and the council-eu
+  source note both wrongly claimed the EU attributed to "Belarus-linked threat
+  actors" — corrected; the EU named Russia.) Mandiant, by contrast, places the
+  technical cluster on Belarus but adds: "We cannot rule out Russian
+  contributions to either UNC1151 or Ghostwriter. However, at this time, we
+  have not uncovered direct evidence of such contributions." The Belarus
+  nation rests on Mandiant's high-confidence technical attribution and MISP
+  (country: BY; cfr-suspected-state-sponsor: Belarus); per audit protocol the
+  Russia/GRU contest is recorded here and NOT re-homed (the standard
+  Ghostwriter pattern is Belarusian technical operator UNC1151 supporting an
+  influence campaign that several Western governments politically attributed to
+  Russia). MISP also frames Ghostwriter as an "activity set... rather than as
+  an actor or group in itself," reinforcing the unscoped service placement.
+
+  Keep by/unscoped until a cited source names a specific Belarusian service;
+  if the Russia attribution is later adopted as AUSPEX's position, the whole
+  record (id namespace + nation) would need re-homing, not just the service.
 sources:
   - mandiant/2021-04-28_ghostwriter-unc1151
   - bundesregierung/2021-09-06_ghostwriter-attribution
