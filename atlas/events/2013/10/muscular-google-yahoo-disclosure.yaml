@@ -48,10 +48,14 @@ attributions:
     attribution_source_id: wapo/2013-10-30_muscular-google-yahoo
     notes: |
       MUSCULAR is jointly attributed to GCHQ and NSA in the
-      Snowden archive; AUSPEX models the primary attribution
-      to GCHQ here because the cable-access leg sat on GCHQ
-      bearers abroad. NSA is co-beneficiary and co-tasker.
-      UK government has not formally attested MUSCULAR by name.
+      WaPo article itself ("operated jointly with the agency's
+      British counterpart, GCHQ"; "NSA and GCHQ are copying entire
+      data flows ...") and across the Snowden archive; AUSPEX models
+      the primary attribution to GCHQ here because the cable-access
+      leg sat on GCHQ-supplied bearers abroad (DS-200B, an unnamed
+      2nd-party telecom operator providing GCHQ/NSA access). NSA is
+      co-beneficiary and co-tasker. UK government has not formally
+      attested MUSCULAR by name.
   - actor_id: us/nsa/equation-group
     attributing_org: The Washington Post (Snowden archive)
     attributing_org_confidence: moderate
@@ -69,17 +73,26 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      MUSCULAR is documented in the Snowden archive as a joint
-      GCHQ-NSA UKUSA programme, but the captured WaPo excerpt
-      attributes it solely to NSA and does not name GCHQ or 'Five
-      Eyes' — so as cited the Five-Eyes linkage is inferred (a
-      fuller WaPo capture may restore it).
+      The WaPo article names MUSCULAR as a joint NSA-GCHQ operation
+      ("MUSCULAR, operated jointly with the agency's British
+      counterpart, GCHQ"; "NSA and GCHQ are copying entire data
+      flows across fiber-optic cables ...") — i.e. it documents the
+      UKUSA / Five-Eyes partnership in operational substance (joint
+      2nd-party collection at scale, with GCHQ supplying the cable
+      access leg). Graded strongly_inferred rather than attested
+      only because WaPo documents the joint operation without using
+      the "Five Eyes"/UKUSA label or articulating the partnership at
+      the framework / strategic-purpose level. (Sibling GCHQ Snowden
+      disclosures TEMPORA / BULLRUN / KARMA POLICE carry attested
+      Five-Eyes links; this MUSCULAR link is kept conservative and
+      is NOT upgraded per the no-upgrade rule.)
     attesting_source_id: wapo/2013-10-30_muscular-google-yahoo
     inference_basis:
       source_id: wapo/2013-10-30_muscular-google-yahoo
       signals:
-        - "WaPo documents the MUSCULAR Google/Yahoo inter-datacenter cable tap (the programme)"
-      ruled_out: "joint GCHQ-NSA / 'Five Eyes' framing — not in the captured WaPo excerpt (attributes solely to NSA)"
+        - "WaPo documents the MUSCULAR Google/Yahoo inter-datacenter cable tap and names it a joint NSA-GCHQ operation ('operated jointly with the agency's British counterpart, GCHQ')"
+        - "WaPo: 'NSA and GCHQ are copying entire data flows across fiber-optic cables that carry information between the data centers' — joint 2nd-party (UKUSA) collection"
+      ruled_out: "NSA-unilateral framing — WaPo explicitly names GCHQ as joint operator, so a single-agency reading does not survive"
     contested: false
     analyst: claude
 targets:
@@ -93,3 +106,51 @@ targets:
 sources:
   - wapo/2013-10-30_muscular-google-yahoo
   - intercept/snowden-archive
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial   # WaPo primary URL un-snapshottable (curl 000 / WebFetch 403; archive.org blocked) — all claims corroborated via authoritative mirrors
+  notes: |
+    Canonical Snowden disclosure of MUSCULAR (DS-200B) — joint NSA/GCHQ tap
+    of Google/Yahoo private inter-data-center fibre, WaPo Gellman/Soltani
+    30 Oct 2013. FACTS verified against authoritative mirrors (CBS News
+    summary of the WaPo piece; Wikipedia MUSCULAR / "SSL added and removed
+    here"; electrospaces INCENSER/WINDSTOP analysis) — washingtonpost.com is
+    bot-blocked (curl HTTP 000, WebFetch HTTP 403; archive.org blocked per
+    policy), so NO raw_snapshot on the WaPo source → level: partial. Confirmed
+    verbatim/in-substance: 181M records in the 30 days to a secret accounting
+    dated 9 Jan 2013; collection inside Google/Yahoo inter-data-center fibre
+    upstream of SSL termination (Google Front End servers strip/add SSL — the
+    "SSL added and removed here ;-)" Google Cloud Exploitation slide); no
+    FISA/RIPA warrant; MUSCULAR ~2x PRISM selectors; access via DS-200B (an
+    unnamed 2nd-party telecom abroad); INCENSER (DS-300, 14.1B records, GCHQ
+    Cable&Wireless/GERONTIC access at Bude) is the related WINDSTOP cable-tap.
+    CORRECTIONS made: (1) doctrine_links (uk/five-eyes) reasoning was FACTUALLY
+    WRONG — it claimed "the captured WaPo excerpt attributes it solely to NSA
+    and does not name GCHQ". The WaPo article DOES name GCHQ jointly:
+    "MUSCULAR, operated jointly with the agency's British counterpart, GCHQ"
+    and "NSA and GCHQ are copying entire data flows across fiber-optic cables".
+    Rewrote reasoning + inference_basis (signals/ruled_out) to reflect that
+    WaPo documents the joint NSA-GCHQ (UKUSA) operation; KEPT confidence
+    strongly_inferred (NOT upgraded per the no-upgrade rule — WaPo names the
+    joint op but not the "Five Eyes"/UKUSA framework or its strategic purpose;
+    sibling TEMPORA/BULLRUN/KARMA-POLICE links are attested, this stays
+    conservative). (2) Strengthened the GCHQ attribution note: GCHQ is named
+    in the WaPo text itself (not only "the archive"); cable access via DS-200B
+    2nd-party bearer. ATTRIBUTION: MULTI-ACTOR verified — BOTH uk/gchq/cne-actor
+    AND us/nsa/equation-group are present in attributions[] (the multi-actor
+    requirement is satisfied); WaPo names BOTH agencies, GCHQ is the primary
+    operator/access-leg, NSA co-tasker via SSO. attribution_level deliberately
+    LEFT ABSENT on both entries (conservative): all 5 sibling GCHQ Snowden
+    events (TEMPORA/BULLRUN/HACIENDA/Cable&Wireless/KARMA POLICE) also set no
+    attribution_level for uk/gchq/cne-actor, and that actor's own 2026-06-25
+    audit explicitly cautions against named-unit over-specification on the
+    generic GCHQ bucket — WaPo names the ORGS (NSA, GCHQ) not a specific
+    operational sub-unit. attributing_org_confidence kept moderate (no upgrade;
+    matches the moderate sibling disclosures). ACTORS: both resolve and are
+    NOT stale — both freshly audited 2026-06-25 (KEEP verdicts);
+    uk/cne-actor.yaml even lists THIS event among its 6 referencing events. No
+    FK changes. disclosure_date 2013-10-30 correct (= WaPo publication date);
+    source published_on 2013-10-30 correct. intercept/snowden-archive raw
+    snapshot present + SHA-256 matches on re-hash (104a5607...).

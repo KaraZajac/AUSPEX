@@ -1,56 +1,78 @@
 id: 2014-06/opm-breach
 name: Office of Personnel Management (OPM) breach
-start_date: 2013-11-01  # earliest assessed compromise
-disclosure_date: 2015-06-04
+start_date: 2013-11-01  # assessed earliest "X1" compromise per the House OPM report / press timeline; NB the cited tertiary source says only that "it is unclear when the first attack occurred" (X1 discovered 20 Mar 2014) and does NOT support a Nov-2013 start — date retained as the widely-reported estimate, flagged pending a primary source
+disclosure_date: 2015-06-04  # OPM's June 2015 public announcement (cited source: WSJ/WaPo ~4–5 Jun 2015)
 end_date: 2014-06-30
 incident_type:
   - intrusion
   - data-theft
 initial_vector: valid-creds  # via KeyPoint contractor compromise
 outcome_summary: |
-  Theft of approximately 22.1 million SF-86 background-investigation
-  records — security-clearance applicants, family, and references —
-  from US OPM via compromise of contractor KeyPoint. Long dwell;
-  the most consequential single PII theft in US national-security
-  history. Subsequent cross-referencing with the Anthem (2015) and
-  Equifax (2017) thefts created a near-comprehensive MSS dataset
-  on cleared US persons.
+  Records on approximately 22.1 million people were affected —
+  security-clearance applicants, other background-check subjects,
+  and their family and friends — with the highly sensitive 127-page
+  SF-86 (Questionnaire for National Security Positions) and 5.6
+  million sets of fingerprints among the data exfiltrated from US
+  OPM; the second of the two linked intrusions came via an attacker
+  posing as a KeyPoint Government Solutions (contractor) employee.
+  Among the most consequential PII thefts in US national-security
+  history. (AUSPEX assessment, NOT in the cited tertiary source:
+  later analysts treat the OPM, Anthem and Equifax thefts as a
+  cumulative PRC bulk-PII dataset on US persons — see campaign_id.)
 quantified_impact:
   records_exfiltrated: 22100000
 false_flag_risk: none
 campaign_id: prc-bulk-pii-collection-wave
 summary: |
-  US IC public attribution to MSS Jiangsu State Security Department
-  (no DOJ indictment). The OPM event defines the bulk-PII-for-HUMINT
-  pattern and is the canonical anchor for the MCF bulk-PII-collection
-  pillar. Initial access came through the contractor KeyPoint
-  Government Solutions, where valid credentials were stolen and
-  reused to log into OPM systems. Post-intrusion tradecraft
-  included use of the Sakula remote-access trojan, the PlugX
-  modular backdoor, and the Hikit rootkit — all part of the Deep
-  Panda / Hurricane Panda toolset Symantec and CrowdStrike later
-  documented — along with credential dumping, lateral movement
-  across OPM's flat internal network, and exfiltration of the
-  e-QIP / SF-86 background investigation database including
-  fingerprint records for ~5.6 million federal cleared persons.
+  China-attributed bulk theft of US security-clearance data; no DOJ
+  indictment of a state actor (the only related US prosecution, of
+  Yu Pingan over the "Sakula" malware, charged conspiracy to commit
+  computer hacking, not state espionage). The cited (tertiary)
+  source attributes the attack to "an advanced persistent threat
+  based in China, widely believed to be the Jiangsu State Security
+  Department, a subsidiary of the [MSS]" and to "state-sponsored
+  attackers for the Chinese government" by "overwhelming consensus" —
+  the JSSD/MSS service naming is the source's hedged consensus
+  framing, not a cited US-government formal attribution. The OPM
+  event defines the bulk-PII-for-HUMINT pattern and is AUSPEX's
+  canonical anchor for the MCF bulk-PII-collection pillar. The breach
+  comprised two separate but linked intrusions (DHS-named "X1" and
+  "X2"); the second came via an attacker posing as a KeyPoint
+  Government Solutions employee, with valid user credentials gained
+  "likely through social engineering," after which attackers
+  escalated privileges across OPM's systems and exfiltrated the
+  SF-86 background-investigation data plus 5.6 million sets of
+  fingerprints. Reported tooling: the PlugX backdoor and the "Sakula"
+  malware. (Not in the cited source — vendor/press lore, retained
+  only as context: clustering with the Deep Panda / Hurricane Panda
+  toolset and the Hikit rootkit, attributed to Symantec/CrowdStrike.)
 attributions:
-  - actor_id: cn/unscoped/deep-panda  # demoted from cn/mss 2026-06-24 (unsourced service; see actor notes). Public IC attribution is to "China"; no cited source names a Chinese service for this cluster.
-    attributing_org: US Intelligence Community (public attribution)
-    attributing_org_confidence: high
+  - actor_id: cn/unscoped/deep-panda  # demoted from cn/mss 2026-06-24 (the ACTOR's sole source — the 2019 DOJ Anthem indictment — names no Chinese service; see actor notes). This event's cited source DOES name "the Jiangsu State Security Department, a subsidiary of the [MSS]" but only as what is "widely believed"/the "overwhelming consensus", not a cited primary attribution.
+    attributing_org: open-source consensus (Wikipedia, citing US press / DNI Clapper); not a US-government formal attribution
+    attributing_org_confidence: high  # firm on the China nexus ("overwhelming consensus...state-sponsored attackers for the Chinese government"); the JSSD/MSS service naming is hedged ("widely believed")
+    attribution_level: nation  # ADDED 2026-06-25: the cited source FIRMLY supports nation (China); its JSSD/MSS (named-unit) claim is hedged "widely believed"/"consensus" and the actor is deliberately cn/UNSCOPED (China nexus solid, service un-sourced) — so the source-supported level is nation, not named-unit
     auspex_assessment: concur
     attribution_date: 2015-09-01
     attribution_source_id: wikipedia/opm-data-breach
     notes: |
-      Public attribution to "China"; specific actor cluster
-      assignment is to the MSS Jiangsu SSD-linked operations
-      cluster that overlaps with Deep Panda / Black Vine. Not
-      tied to a DOJ indictment.
+      The cited source attributes firmly to China / the Chinese
+      government ("overwhelming consensus...state-sponsored attackers
+      for the Chinese government") and names the MSS Jiangsu State
+      Security Department only as "widely believed" / the consensus
+      view; it is not a US-government formal/indictment attribution
+      (the prior "US IC public attribution" framing overstated this
+      and was corrected 2026-06-25). The AUSPEX cluster assignment is
+      to the Deep Panda / Black Vine operations cluster.
 
-      Citation weakness flagged by the 2026-05-26 verification
-      sweep: Wikipedia is a tertiary attestation here. Primary
-      sources (DNI Clapper 2015 hill testimony, OPM-OIG report,
-      contemporary NYT/WaPo coverage) should be folded in when
-      source stubs are created.
+      Citation weakness (flagged 2026-05-26, re-confirmed in the
+      2026-06-25 LLM audit): Wikipedia is the SOLE, TERTIARY source
+      for this canonical event — the corpus-plan "OPM-cited-to-
+      Wikipedia" type specimen of the single-source/circularity
+      cohort. Primary/secondary sources (the House Oversight OPM
+      report (Chaffetz, 2016), DNI Clapper's remarks, the OPM-OIG
+      report, contemporary NYT/WaPo/WSJ coverage, the Yu Pingan
+      filings) should be folded in as proper source stubs to retire
+      the tertiary dependence.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
@@ -92,3 +114,54 @@ targets:
     role: staging
 sources:
   - wikipedia/opm-data-breach
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the SOLE cited source wikipedia/opm-data-breach (tertiary — this is the corpus
+    plan's "OPM-cited-to-Wikipedia" type specimen of the single-source/circularity cohort). Raw
+    HTML captured (atlas/sources/raw/wikipedia__opm-data-breach.html, sha256
+    56886d65cb017ced019eb016073b15c7ffbe109d695e798f8029094057a6b4f3; page last edited 26 May
+    2026, oldid 1356238118); archive.org blocked here, snapshot is the reproducible copy.
+    FACTS the cited source CONFIRMS: ~22.1M people affected (the source's figure — the often-
+    quoted 21.5M is the clearance-records subset; 22.1M is total persons); 127-page SF-86; 5.6M
+    sets of fingerprints; two separate-but-linked intrusions (DHS "X1" discovered 20 Mar 2014;
+    "X2" via an attacker posing as a KeyPoint Government Solutions employee, X2 act 7 May 2014,
+    discovered 15 Apr 2015); valid creds gained "likely through social engineering"; PlugX
+    backdoor; "Sakula" malware (Yu Pingan, 2017). ATTRIBUTION [b]: cited source attributes
+    firmly to China / "state-sponsored attackers for the Chinese government" ("overwhelming
+    consensus") and names "the Jiangsu State Security Department, a subsidiary of the [MSS]" only
+    as "widely believed"/consensus — NOT a US-government formal/indictment attribution, and no
+    DOJ indictment of a state actor exists (Yu Pingan was charged with conspiracy to commit
+    computer hacking). So: added attribution_level: nation (source firmly supports nation; the
+    JSSD/MSS named-unit claim is hedged and the actor is deliberately cn/UNSCOPED); rewrote
+    attributing_org from "US Intelligence Community (public attribution)" to "open-source
+    consensus...not a US-government formal attribution".
+    CORRECTIONS (claims that EXCEEDED the cited source, now removed/hedged/flagged): (1) summary
+    asserted the Hikit rootkit + a "Deep Panda / Hurricane Panda toolset Symantec and CrowdStrike
+    later documented" + "flat internal network" + "e-QIP" — NONE of these appear in the cited
+    source; only PlugX and Sakula do. Retained Hikit/Deep-Panda/Hurricane-Panda only as
+    explicitly-labelled vendor/press context. (2) outcome_summary asserted OPM↔Anthem(2015)↔
+    Equifax(2017) cross-referencing "created a near-comprehensive MSS dataset" — not a claim of
+    the cited source (Anthem/Equifax appear only in its navigation timeline); kept as an
+    explicitly-labelled AUSPEX assessment tied to campaign_id. (3) start_date 2013-11-01 retained
+    (House-report/press estimate) but re-annotated: the cited source says "it is unclear when the
+    first attack occurred" and does NOT support a Nov-2013 start. (4) fixed a duplicate
+    disclosure_date key introduced mid-edit. DOCTRINE LINKS [d]: both already conservatively
+    graded and correct — cn/mcf/bulk-pii-humint-enabling stays strongly_inferred (source documents
+    the SF-86 counterintelligence/biometric value: Comey "treasure trove...counterintelligence",
+    fingerprints→agent ID, "compile a database of Americans"; but does NOT name MCF/frame the
+    goal — correctly NOT attested); cn/national-intelligence-law-2017 stays plausible (event
+    predates the law). published_on [c]: source had an arbitrary 2024-01-01 placeholder that
+    tripped verify_atlas's attribution-date-gap flag → set to null (living wiki article, no single
+    pub date), which clears the spurious source-orphan. FKs [f]: doctrine cn/mcf(+pillar),
+    cn/national-intelligence-law-2017, actor cn/unscoped/deep-panda (correctly demoted from
+    cn/mss 2026-06-24 on the actor's own un-sourced-service grounds), and the source all resolve.
+    FLAG (not fixed — pre-existing, corpus-wide deferred normalization): target orgs/keypoint has
+    no registry file (only orgs/us-opm does); verify_atlas treats orgs/ gaps as informational, so
+    left as-is. UNCERTAINTY: a single tertiary source under-supports a canonical national-security
+    event; level: full reflects a complete audit of what IS cited, but the citation itself should
+    be upgraded to the primary record (House OPM report / OPM-OIG / contemporaneous press) per the
+    attribution notes.

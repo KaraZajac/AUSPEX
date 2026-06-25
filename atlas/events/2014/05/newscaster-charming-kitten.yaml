@@ -10,14 +10,18 @@ incident_type:
 initial_vector: phishing  # social-engineering via fake LinkedIn personas
 outcome_summary: |
   iSIGHT Partners (now part of Mandiant) disclosed a three-year
-  social-engineering campaign by an IRGC-attributed actor cluster
-  ("Newscaster") that established a network of at least 14
-  fictitious LinkedIn personas (purporting to be journalists,
-  defense contractors, and US military) to phish more than 2,000
-  targets — primarily senior US, UK, and Israeli defense, defense-
-  industrial, and policy figures. Subsequent vendor reporting
-  consolidated Newscaster with the broader Charming Kitten / APT35
-  cluster.
+  social-engineering campaign by Iran-based actors ("Newscaster")
+  that established a network of at least 14 fictitious personas
+  (purporting to be journalists, government, and defense
+  contractors) across LinkedIn, Facebook, Twitter, Google+ and a
+  fake journalism site (NewsOnAir.org) to connect with and phish
+  more than 2,000 targets — senior US military and diplomatic
+  personnel, members of Congress, DC-area journalists, think tanks,
+  and US/Israeli defense contractors, plus UK and Saudi figures.
+  iSIGHT could NOT confirm Iranian-government sponsorship in 2014
+  (it assessed the actors were located in Iran); the IRGC
+  attribution is from later vendor consolidation that folded
+  Newscaster into the broader Charming Kitten / APT35 cluster.
 false_flag_risk: none
 summary: |
   Newscaster is the canonical foundational case in Iranian
@@ -32,14 +36,23 @@ attributions:
   - actor_id: ir/irgc/apt35
     attributing_org: iSIGHT Partners (now Mandiant / Google Cloud)
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2014-05-29
     attribution_source_id: isight/2014-05-29_newscaster
     notes: |
-      iSIGHT attributed to "Iran-based actors." Subsequent vendor
-      consolidation (FireEye, ClearSky, Microsoft) folds the
-      cluster into APT35 / Charming Kitten with strong IRGC-IO
-      attribution.
+      iSIGHT 2014 reached only NATION level: it attributed to actors
+      "located in Iran" and stated it could not confirm whether the
+      hackers had ties to the Iranian government (verified against
+      SecurityWeek 2014-05-29 + the Operation Newscaster record).
+      It did NOT name the IRGC or any Iranian service. The
+      ir/irgc/apt35 actor_id is the later consolidated cluster
+      identity: subsequent vendor work (FireEye, ClearSky, CertFA,
+      Microsoft Mint Sandstorm CII) folds Newscaster into APT35 /
+      Charming Kitten with IRGC attribution; Newscaster is carried
+      as an `equivalent` alias on that actor. AUSPEX concurs with
+      the modern IRGC-cluster attribution, not with a 2014
+      service-level claim iSIGHT never made.
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: ir/asymmetric-warfare/cost-deniability-leverage
@@ -74,3 +87,50 @@ targets:
 sources:
   - isight/2014-05-29_newscaster
   - clearsky/charming-kitten-overview
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Canonical iSIGHT "Newscaster"/NEWSCASTER (29 May 2014). All core
+    facts CONFIRMED against three corroborating sources (SecurityWeek
+    2014-05-29; Operation Newscaster reference record; search-
+    triangulated report content) — the original iSIGHT PDF is
+    link-rotted (source url: null, no fabricated URL) and the ClearSky
+    PDF is Incapsula-blocked, so no fresh raw_snapshot; archive.org
+    fetch out of scope per protocol. Verified: ≥14 fake personas
+    (iSIGHT: "more than a dozen"), >2,000 targets, active since 2011,
+    NewsOnAir.org fake-journalism cover site, LinkedIn/FB/Twitter/
+    Google+ persona network, spear-phishing for email creds; targets =
+    senior US military/diplomatic, members of Congress, DC journalists,
+    think tanks, US+Israeli defense contractors, plus UK/Saudi.
+    ATTRIBUTION CORRECTION (key finding): iSIGHT 2014 reached only
+    NATION level — verbatim "there is no direct information showing
+    that the Iranian government is the ultimate sponsor ... but iSIGH[T]
+    researchers do believe the threat actors are located in Iran." It
+    named NO Iranian service. Fixed two over-statements: (1)
+    outcome_summary said "an IRGC-attributed actor cluster" — softened
+    to "Iran-based actors," with the IRGC clearly flagged as LATER
+    vendor consolidation; (2) added attribution_level: nation to record
+    the latency honestly. actor_id ir/irgc/apt35 KEPT — it is the modern
+    consolidated cluster (Newscaster is an `equivalent` alias on that
+    actor; its IRGC placement was independently QC-verified 2026-06-24
+    on Microsoft Mint Sandstorm + CertFA, not on iSIGHT). auspex_assessment
+    concur reflects concurrence with the modern IRGC-cluster ID.
+    Doctrine links both honest: asymmetric-warfare/cost-deniability-leverage
+    (strongly_inferred) and cyber-deniable-retaliation/diaspora-targeting
+    (plausible — weak; the 2011-14 window was primarily US/UK/IL defense/
+    policy, diaspora targeting is later CK) — neither attested, no
+    attesting_source_id, no over-attestation. FKs all resolve; both
+    doctrine pillars + both target sectors exist; event NOT in the
+    backfill cohort. FLAG for human review (left in place, not deleted):
+    incident_type includes `influence-operation` — sources frame
+    Newscaster as ESPIONAGE via social engineering (the fake-news/persona
+    infrastructure was cover for credential theft + collection), not a
+    narrative-shaping influence op; no source documents an influence
+    objective. `intrusion` + `data-theft` are solidly supported.
+    level: full — facts + attribution independently confirmed despite
+    the cited artifacts being unfetchable (cf. anssi-establishment
+    precedent: facts confirmed via independent record though the cited
+    page was itself thin).

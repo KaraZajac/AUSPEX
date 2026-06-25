@@ -2,7 +2,7 @@ id: 2013-08/bowman-dam-rye-brook
 name: Bowman Avenue Dam SCADA intrusion — Rye Brook, NY
 start_date: 2013-08-28
 disclosure_date: 2015-12-20  # WSJ reporting; formal DOJ unsealing 2016-03-24
-end_date: 2013-09-15
+end_date: 2013-09-18  # DOJ: unauthorized access "between August 28, 2013, and September 18, 2013"
 incident_type:
   - intrusion
   - pre-positioning
@@ -27,19 +27,34 @@ attributions:
     service_id: ir/irgc
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ names the IRGC + the affiliated company (ITSecTeam) + the individual operator (Hamid Firoozi)
     auspex_assessment: concur
     attribution_date: 2016-03-24
     attribution_source_id: doj/2016-03-24_ababil-bowman-dam-indictment
+    notes: |
+      DOJ March 24, 2016 indictment charges Hamid Firoozi
+      (ITSecTeam, IRGC-sponsored) for the Bowman Dam intrusion;
+      co-charged with the six other defendants for Operation Ababil.
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      DOJ indictment characterizes the intrusion in the context
-      of asymmetric pressure on US critical infrastructure;
-      demonstrative reconnaissance of sluice-gate controls.
+      The DOJ indictment attributes the dam-SCADA intrusion to an
+      IRGC-affiliated operator (ITSecTeam) and frames the wider
+      campaign as 'designed specifically to harm America and its
+      people'; it documents access to the sluice-gate controls but
+      does not state an asymmetric-warfare / CII-coercion strategic
+      goal, so the doctrine linkage is inferred from the
+      US-critical-infrastructure-reconnaissance pattern.
     attesting_source_id: doj/2016-03-24_ababil-bowman-dam-indictment
+    inference_basis:
+      source_id: doj/2016-03-24_ababil-bowman-dam-indictment
+      signals:
+        - "DOJ attributes the intrusion to an IRGC-affiliated operator who gained access that 'would normally have permitted [him] to remotely operate and manipulate the Bowman Dam's sluice gate' (US flood-control CII)"
+        - "AG Lynch: the broader campaign was 'designed specifically to harm America and its people' (asymmetric coercion behaviour)"
+      ruled_out: "an asymmetric-warfare / CII-coercion strategic goal by name — not stated in the DOJ text (the indictment describes the access factually and names no motive)"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -61,3 +76,38 @@ targets:
       maintenance); reconnaissance only.
 sources:
   - doj/2016-03-24_ababil-bowman-dam-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: |
+    Audited vs the single cited DOJ primary (shared with the Operation
+    Ababil event, audited the same day). The DOJ release is unfetchable
+    by tooling — live URL returns HTTP 403/400 (Akamai bot-wall) and
+    archive.org is blocked, so the only capture was the bot interstitial
+    (discarded, not retained as a snapshot); hence level: partial. Content
+    cross-checked against the DOJ domain, the SDNY companion release, and
+    contemporaneous reporting quoting the release verbatim. DAM-SCADA FACTS
+    ✓: defendant Hamid Firoozi (ITSecTeam, IRGC-sponsored); access "between
+    August 28, 2013, and September 18, 2013" (start_date matches; corrected
+    end_date 2013-09-15 → 2013-09-18 to the DOJ window); access "would
+    normally have permitted Firoozi to remotely operate and manipulate the
+    Bowman Dam's sluice gate" (confirms sluice-gate command access); "the
+    sluice gate had been manually disconnected for maintenance at the time
+    of his intrusion" (confirms manual disconnection); no operational
+    impact; ~$30k remediation. ATTRIBUTION: IRGC named via two IRGC-
+    sponsored companies (ITSecTeam/Mersad) + 7 individuals — named-unit
+    (service_id ir/irgc; actor_id null per corpus pattern). Added the
+    missing attribution_level: named-unit + an attribution note for parity
+    with the sibling. DOCTRINE: DOWNGRADED the civilian-cii-coercion link
+    `attested` → `strongly_inferred` (over-attestation) — the indictment
+    documents the sluice-gate access factually and states NO asymmetric-
+    warfare / CII-coercion strategic goal; AG Lynch's "designed
+    specifically to harm America and its people" is general harm, not the
+    goal the doctrine encodes (same boundary applied to the sibling Ababil
+    link). attesting_source_id retained as the supporting source +
+    inference_basis added. forward-defense link unchanged (strongly_inferred,
+    no attesting source — correct). FLAG (not in-scope, deferred-norm,
+    informational-only per validate.ts): target orgs/bowman-avenue-dam has
+    no targets-registry record.

@@ -19,20 +19,51 @@ summary: |
   McAfee's later "Operation Troy" tracking. McAfee's analysis ties
   the operation to the same DPRK toolset (the Trojan.Castov /
   HastatiWiper / Jokra family and the W32/Koredos DDoS module)
-  later operationalized in DarkSeoul: a DDoS tool delivered via
-  spear-phishing of ROK government and bank IT staff, an encrypted
-  configuration list of 40+ target URLs, a self-destruct routine
-  that wipes the compromised host's MBR after a configured
-  countdown, and a slow-burn reconnaissance phase that maps the
+  later operationalized in DarkSeoul: a DDoS tool seeded onto
+  victim hosts (the contemporaneous infection vector was malware
+  injected via two ROK peer-to-peer file-sharing sites, reaching
+  ~11,000 PCs; the precise initial access is not definitively
+  established, hence initial_vector: unknown), an encrypted
+  configuration list of ~40 target URLs (14 carried over from the
+  2009 target set; most US-based 2009 targets dropped), a
+  self-destruct routine that overwrites key files and zeroes the
+  compromised host's MBR after a configured countdown to render it
+  unbootable, and a slow-burn reconnaissance phase that maps the
   target estates before the attack window. The 10-day pattern
   prefigures DarkSeoul's 2013 coordinated 14:00 KST detonation.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: McAfee / ROK NIS
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2013-07-09
     attribution_source_id: mcafee/2013-07-09_operation-troy
+    notes: |
+      Attribution provenance is layered and the single cited source
+      (McAfee, 2013 "Dissecting Operation Troy") does NOT itself
+      name a nation. (1) McAfee labels the campaign-family actor the
+      "NewRomanic Cyber Army Team," assesses it ~95% likely the same
+      group behind the July 2009 DDoS and this March 2011 "Ten Days
+      of Rain" event (shared compiler / directory structure / crypto
+      key), and explicitly "did not go as far to point fingers at
+      any country" — its contemporaneous 2011 "10 Days of Rain"
+      briefing went only as far as "very clear anti-Korean and
+      anti-US political motivations" and framed the operation as a
+      "test run" / armed cyber-reconnaissance. McAfee names NO DPRK
+      service or unit (no RGB, no Bureau 121). (2) The hard "North
+      Korea" attribution is ROK NIS's (it publicly tied the 2009/2011
+      ROK DDoS to the DPRK), a primary attribution that is NOT
+      separately cited in this record. (3) actor_id kp/rgb/lazarus /
+      attribution_level named-actor reflect the later community
+      consensus (CISA, Treasury 2019, MITRE G0032, Mandiant) that
+      folds Troy / Ten Days of Rain / DarkSeoul into the Lazarus
+      umbrella under the RGB — that RGB-naming lives in the actor
+      record's own cited sources, NOT in this event's McAfee source.
+      The cited source alone reaches only a single un-nationed
+      activity cluster; high confidence here rests on the convergent
+      retrospective consensus, hence event-level qc level: partial.
+      (Mirrors the sibling Operation Troy audit, same source.)
 doctrine_links:
   - doctrine_id: kp/songun
     pillar_id: kp/songun/military-intel-cyber
@@ -50,3 +81,68 @@ targets:
     role: primary
 sources:
   - mcafee/2013-07-09_operation-troy
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: |
+    FACTS ✓ (corroborated against contemporaneous + secondary
+    reporting; both McAfee PDFs — the 2013 "Dissecting Operation
+    Troy" and the dedicated July-2011 "10 Days of Rain" — are
+    Akamai HTTP-403 bot-walled and archive.org is off-limits for
+    this audit, so verified indirectly). Dates: attack began
+    2011-03-04 and ran ~10 days then self-destructed → start_date
+    2011-03-04 / end_date 2011-03-14 ✓. Targets ✓: ~40 sites —
+    ROK Presidential Office (Blue House), Foreign Ministry, NIS,
+    major ROK financial institutions, ROK military, AND U.S.
+    Forces Korea + USAF Kunsan Air Base; 14 targets carried over
+    from the 2009 set, most US-based 2009 targets dropped. So the
+    outcome_summary's "ROK government, US Forces Korea, ROK
+    financial sector" is accurate. Self-destruct ✓: overwrite key
+    files with zeroes + zero the MBR to render hosts unbootable.
+    Encryption (AES/RC4/RSA) and ~11,000 infected PCs corroborated.
+    Sector targets (government/defense-ministry, finance/banking)
+    match; all FKs resolve.
+    SUMMARY — CORRECTED. The prior claim that the DDoS tool was
+    "delivered via spear-phishing of ROK government and bank IT
+    staff" is NOT supported by the sources: the documented
+    contemporaneous infection vector was malware injected via two
+    ROK peer-to-peer file-sharing sites (~11,000 PCs). Rewrote to
+    reflect that and to note the precise initial access is not
+    definitively established (initial_vector: unknown retained,
+    correctly). Also tightened "40+" → "~40" and added the 14/40
+    overlap + dropped-US-targets detail and the MBR/overwrite
+    mechanics, all source-grounded.
+    ATTRIBUTION — CORRECTED. Added attribution_level: named-actor
+    (was missing) and a notes field documenting that the SINGLE
+    cited source (McAfee) does NOT name a nation: it labels the
+    actor the "NewRomanic Cyber Army Team," assesses ~95% likely
+    the same group across 2009 DDoS / 2011 Ten Days of Rain / 2013
+    DarkSeoul, and "did not go as far to point fingers at any
+    country" — its 2011 briefing reached only "very clear
+    anti-Korean and anti-US political motivations" + "test run".
+    The hard DPRK call is ROK NIS's, NOT separately cited here.
+    actor_id kp/rgb/lazarus is the later community consensus
+    (CISA/Treasury-2019/MITRE G0032/Mandiant) supported in the
+    ACTOR record's own sources, not this event's source — hence
+    level: partial and the convergent-consensus caveat. Mirrors the
+    sibling Operation Troy audit (same source). attributing_org
+    "McAfee / ROK NIS" retained; confidence high retained (rests on
+    the retrospective consensus, not the cited secondary alone).
+    DOCTRINE LINK ✓ unchanged: kp/songun (plausible) correctly NOT
+    attested — no source names Songun as the operation's purpose
+    (McAfee names only anti-ROK/anti-US political motivation +
+    capability-test framing); no attesting_source_id, correct under
+    the attested gate. FK resolves.
+    actor_id kp/rgb/lazarus resolves, not stale (status sanctioned,
+    Treasury 2019; carries "NewRomanic Cyber Army Team" + "Operation
+    Troy" aliases + cites this same McAfee PDF). published_on of the
+    source (2013-07-09) is the report's actual release date,
+    unchanged. SOURCE: UNFETCHED — McAfee 2013 PDF HTTP 403 (Akamai)
+    + dedicated July-2011 PDF HTTP 403 + archive.org blocked; no
+    raw_snapshot/content_sha256 captured. The source record's notes
+    already carry the sibling's AUDIT line (it is shared by 3 events
+    — operation-troy, this event, darkseoul — and already documents
+    the Ten Days of Rain clustering + no-nation finding), so the
+    source file was NOT re-edited. Touched only this event.

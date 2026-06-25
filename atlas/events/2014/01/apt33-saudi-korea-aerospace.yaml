@@ -1,8 +1,8 @@
 id: 2014-01/apt33-saudi-korea-aerospace
 name: APT33 persistent intrusions against Saudi / South Korean aerospace and petrochemicals
-start_date: 2014-01-01
+start_date: 2013-01-01  # FireEye: APT33 espionage "since at least 2013" (slug retains legacy 2014-01)
 disclosure_date: 2017-09-20  # FireEye public report
-end_date: 2015-12-31
+end_date: 2017-05-31  # last dated activity in the report (May 2017 Saudi/SK petrochemical lure)
 incident_type:
   - intrusion
   - data-theft
@@ -25,15 +25,27 @@ summary: |
   publicly available ALFA Shell. Operational telemetry — Iran
   Daylight Time (UTC+4:30) work hours, a Saturday–Wednesday
   workweek, Iranian hosting / DNS infrastructure, Farsi artifacts,
-  and the "xman_1365_x" persona tied to the Nasr Institute —
-  anchors FireEye's IRGC-aligned attribution.
+  and the "xman_1365_x" persona linked to the Iranian
+  government — anchors FireEye's Iranian-government attribution.
+  FireEye attributes APT33 to the "Iranian government" generically
+  ("works at the behest of the Iranian government", "most likely
+  government sponsored"); it does NOT name the IRGC or any specific
+  service (0 occurrences of "IRGC"/"Revolutionary Guard"), which is
+  why the actor sits at ir/unscoped/apt33 (service unresolved).
 attributions:
   - actor_id: ir/unscoped/apt33
     attributing_org: FireEye / Mandiant
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2017-09-20
     attribution_source_id: fireeye/2017-09-20_apt33-report
+    notes: |
+      FireEye names the actor cluster (APT33) and a nation-state nexus
+      (Iran) but hedges throughout ("most likely government sponsored",
+      "may have operated on behalf of the Iranian government") and names
+      NO Iranian service — hence named-actor (not named-unit) and
+      attributing_org_confidence: moderate.
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
@@ -41,20 +53,57 @@ doctrine_links:
     confidence: strongly_inferred
     reasoning: |
       Saudi targets are canonical Gulf-rival forward-defense
-      adversaries; South Korean aerospace likely targeted for
-      defense-supplier IP relevant to import substitution.
-    attesting_source_id: null
+      adversaries; FireEye assesses the Saudi targeting "may have
+      been an attempt to gain insight into regional rivals" and "to
+      support Iran's military and strategic decision making vis a vis
+      Saudi Arabia." That names a regional-rivalry / strategic-
+      decision purpose adjacent to forward-defense, but not the
+      doctrine's defining logic (fight at maximum range, through
+      proxies, so conflict never reaches Iranian soil) — held at
+      strongly_inferred rather than attested.
+    attesting_source_id: fireeye/2017-09-20_apt33-report
+    inference_basis:
+      signals:
+        - 'FireEye: targeting Saudi org "may have been an attempt to gain insight into regional rivals"'
+        - 'FireEye: insight into "Saudi Arabia''s military aviation capabilities ... to support Iran''s military and strategic decision making vis a vis Saudi Arabia"'
+        - Saudi Arabia is Iran's principal Gulf forward-defense adversary; military-aviation collection serves the regional-rivalry posture forward-defense encodes
+      ruled_out: |
+        Pure import-substitution reading (ir/sanctions-evasion) is
+        captured by the separate link below for the petrochemical/
+        aviation-IP strand; the military-aviation / regional-rivalry
+        strand FireEye describes ("strategic decision making vis a vis
+        Saudi Arabia") is forward-defense's adversary-intelligence
+        rationale, not an economic one — so both links coexist.
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/sanctions-evasion
     pillar_id: ir/sanctions-evasion/ip-import-substitution
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Aerospace IP collection aligns with Resistance-Economy
-      import-substitution priorities.
-    attesting_source_id: null
+      FireEye states the import-substitution goal in substance: it
+      assesses APT33's petrochemical targeting was driven by "Iran's
+      desire to expand its own petrochemical production and improve
+      its competitiveness within the region" (in competition with
+      Saudi petrochemical companies), and its aviation targeting by a
+      desire to "enhance Iran's domestic aviation capabilities." That
+      is exactly the goal the ir/sanctions-evasion/ip-import-
+      substitution pillar encodes (IP theft to substitute for
+      sanctioned imports in aerospace/petrochemicals) — the goal is on
+      the page even though the source never says "Resistance Economy."
+      Per the WHY-ladder this is the case-(b) "goal named, slug absent"
+      pattern, so the link is attested (FireEye's assessment is hedged
+      with "may", reflected in attributing_org_confidence: moderate,
+      but it does state the strategic end the operation serves).
+    attesting_source_id: fireeye/2017-09-20_apt33-report
+    inference_basis:
+      source_quote: |
+        "APT33 may have targeted these organizations as a result of
+        Iran's desire to expand its own petrochemical production and
+        improve its competitiveness within the region." / "[targeting]
+        to enhance Iran's domestic aviation capabilities."
+      source_id: fireeye/2017-09-20_apt33-report
     counter_explanation: null
     contested: false
     analyst: claude
@@ -67,3 +116,63 @@ targets:
     role: primary
 sources:
   - fireeye/2017-09-20_apt33-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs FireEye/Mandiant "Insights into Iranian Cyber Espionage:
+    APT33..." (2017-09-20, raw HTML on disk, sha256 ec8fe72a…e595b27 —
+    hash re-verified, matches the source record; snapshot captured in the
+    2026-06-24 actor-demotion pass). Source fully fetchable.
+    FACTS OK (all verbatim in source): Saudi + South Korean targeting
+    ("organizations ... headquartered in the United States, Saudi Arabia
+    and South Korea"); aviation/aerospace (military + commercial) and
+    petrochemical/energy sectors; SK firm "involved in oil refining and
+    petrochemicals"; aerospace-themed .hta job-posting lures (Boeing,
+    Alsalam Aircraft, Northrop Grumman, Vinnell Arabia); DROPSHOT dropper
+    -> TURNEDUP backdoor, SHAPESHIFT wiper capability, NANOCORE + NETWIRE
+    RATs, ALFA Shell; operational telemetry (Iranian working hours,
+    Saturday-Wednesday, Iranian name servers, Farsi artifacts, "xman_1365_x"
+    persona, Nasr Institute); Shamoon-lineage ties.
+    ATTRIBUTION: FireEye attributes to the "Iranian government" generically
+    (14x; "works at the behest of the Iranian government", "most likely
+    government sponsored", "may have operated on behalf of the Iranian
+    government") and NEVER names the IRGC — "IRGC"/"Revolutionary Guard"
+    = 0 hits (the only "Guard" in the source is Saudi Arabia's "Ministry
+    of National Guard", a Vinnell-contract reference). The xman_1365_x
+    persona is "Linked to Iranian Government", not IRGC. Actor correctly
+    sits at ir/unscoped/apt33 (demoted from ir/irgc/apt33 on 2026-06-24);
+    this audit re-confirms the demotion against the raw source.
+    CORRECTIONS:
+    (1) DATES: start_date 2014-01-01 -> 2013-01-01 (FireEye: APT33
+    espionage "since at least 2013"); end_date 2015-12-31 -> 2017-05-31
+    (the report's last dated activity is the May 2017 Saudi/SK petrochemical
+    lure; the documented aerospace/petrochemical compromises run "mid-2016
+    through early 2017"). The 2014-2015 window was an unsupported
+    interpolation. The slug (2014-01) is stable-forever and retained; a
+    comment records the discrepancy.
+    (2) SUMMARY: "anchors FireEye's IRGC-aligned attribution" was contrary
+    to the source (FireEye says Iranian government, not IRGC) and to the
+    2026-06-24 demotion -> rewritten to "Iranian-government attribution"
+    with the no-IRGC fact stated explicitly.
+    (3) ATTRIBUTION: added attribution_level: named-actor (FireEye names the
+    APT33 cluster + Iran nexus, no service; hedged -> moderate confidence)
+    + an attribution note.
+    (4) DOCTRINE LINKS: ir/sanctions-evasion/ip-import-substitution UPGRADED
+    strongly_inferred -> attested: FireEye states the import-substitution
+    goal in substance ("Iran's desire to expand its own petrochemical
+    production and improve its competitiveness"; "enhance Iran's domestic
+    aviation capabilities") — the case-(b) "goal named, doctrine slug absent"
+    pattern that OVER-ATTESTATION-FINDING-2026-06-19 explicitly cites for
+    ir/sanctions-evasion. Added attesting_source_id + inference_basis.source_quote.
+    ir/forward-defense KEPT strongly_inferred (FireEye names a regional-
+    rivalry / "strategic decision making vis a vis Saudi Arabia" purpose,
+    adjacent to but not the forward-defense fight-at-range/proxy logic);
+    added attesting_source_id + inference_basis (signals + ruled_out).
+    UNCERTAINTY: FireEye is a single secondary-tier vendor source and hedges
+    its purpose assessments with "may"; that hedge is carried in
+    attributing_org_confidence: moderate, not in the doctrine-link label
+    (which grades whether the strategic end is stated, and it is). No
+    independent second source for this campaign exists in the corpus.

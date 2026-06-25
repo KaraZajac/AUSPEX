@@ -1,5 +1,5 @@
 id: 2013-05/operation-hangover-disclosure
-name: Norman Shark discloses "Operation Hangover" — first canonical Indian-aligned APT attribution
+name: Norman Shark discloses "Operation Hangover" — first canonical Indian-origin APT attribution
 start_date: 2010-01-01
 disclosure_date: 2013-05-20
 end_date: null
@@ -10,41 +10,86 @@ initial_vector: phishing
 outcome_summary: |
   Norwegian security firm Norman Shark, in coordination with
   the Shadowserver Foundation and others, published a report
-  attributing a multi-year cyber-espionage campaign to actors
-  in India. Targets included Pakistani military and government,
-  Telenor (Norwegian telecom; the trigger investigation),
-  Chinese targets, and South Asian regional governments. The
-  report is the antecedent of the Patchwork / Dropping Elephant
-  cluster naming in subsequent vendor work.
+  attributing a multi-year cyber-espionage infrastructure
+  (in operation for ~3-4 years, delivered by spear-phishing)
+  to actors of Indian origin — while explicitly disclaiming
+  any direct evidence of state sponsorship. Targets were
+  predominantly Pakistani national-security interests, plus
+  Telenor (Norwegian telecom; the trigger investigation, which
+  filed a police complaint), Chinese targets, and a long global
+  tail. The report is the antecedent of the Patchwork / Dropping
+  Elephant cluster naming in subsequent vendor work.
 false_flag_risk: none
 summary: |
-  The foundational public attribution of an Indian-aligned APT.
+  The foundational public attribution of an Indian-origin APT.
   Norman Shark's report was unusually candid for 2013 in naming
-  India as the assessed sponsor and tying operations to a
-  contractor-style footprint. Subsequent vendor work (Kaspersky's
-  Dropping Elephant 2016, Cymmetria's Patchwork 2016, Forcepoint's
-  Monsoon 2016) refined and renamed the cluster but did not
-  displace the Hangover attribution.
+  India as the country of origin and tying operations to a
+  contractor-style footprint — though it stopped short of state
+  attribution ("there is no direct evidence to link it to
+  state-sponsored players"; "no visibility into whether the
+  attacks were done on behalf of others"). It noted references to
+  the Indian firm Appin Security Group inside the malware but
+  flagged these as possibly circumstantial or a deliberate attempt
+  to implicate Appin (which denied involvement). Subsequent vendor
+  work (Kaspersky's Dropping Elephant 2016, Cymmetria's Patchwork
+  2016, Forcepoint's Monsoon 2016) refined and renamed the cluster
+  but did not displace the Hangover attribution.
 attributions:
   - actor_id: in/unscoped/patchwork
     attributing_org: Norman Shark / Shadowserver Foundation
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
     attribution_date: 2013-05-20
     attribution_source_id: normanshark/2013-05_operation-hangover
     notes: |
-      Norman Shark's report attributed the operation to "Indian
-      hackers" without naming a government service. Subsequent
-      vendor reporting treats the cluster as state-aligned
-      without resolving the precise sponsor.
+      Norman Shark attributed the operation to actors of Indian
+      origin ("attackers probably hailing from India"; "of Indian
+      origin") WITHOUT naming a government service, and explicitly
+      disclaimed state attribution: "there is no direct evidence to
+      link it to state-sponsored players" and "We have no visibility
+      into whether the attacks were done on behalf of others, and if
+      so who commissioned them." attribution_level is therefore
+      `nation` (India, by origin inference) — not `named-unit` and
+      not a state-sponsorship claim. References to the Indian firm
+      Appin Security Group appear inside the malware, but Norman
+      flagged these as circumstantial / a possible deliberate attempt
+      to implicate Appin ("may be attempts to implicate said
+      companies"); Appin denied any involvement and threatened legal
+      action, so AUSPEX does not adopt the Appin link. Subsequent
+      vendor reporting treats the cluster as Indian-aligned without
+      resolving the precise sponsor — hence the actor remains
+      in/unscoped/patchwork (state assessed, service unresolved).
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani-government and Chinese-target victim mix is
-      canonical for the regional-collection doctrine.
+      Pakistan-predominant ("national security interest (such as
+      Pakistan)") plus Chinese and South Asian victim mix is
+      canonical for the inferred Indian regional-collection
+      doctrine. Left at the doctrine level (pillar_id null) because
+      the targeting spans the pakistan-military, china-collection,
+      and diplomatic-collection pillars rather than one.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - Norman Shark assesses Indian origin and a predominant focus on Pakistani national-security targets — the core of the pakistan-military pillar.
+        - Secondary collection against Chinese targets and a South Asian / regional spread matches the china-collection and diplomatic-collection pillars.
+        - This is the antecedent cluster (Hangover -> Patchwork) whose later vendor reporting (Kaspersky, Forcepoint, Cymmetria) all confirms the same India-vs-Pakistan/China regional-collection pattern the doctrine encodes.
+      ruled_out: >
+        Not attested: Norman Shark names no strategic PURPOSE at the
+        goal level and explicitly disclaims state sponsorship ("no
+        direct evidence to link it to state-sponsored players"), so the
+        regional-collection END the doctrine encodes is AUSPEX's
+        inference, not the source's. Competing reading considered and
+        rejected as the sole explanation: private cyber-mercenary /
+        for-hire espionage with no India-strategic direction (the Appin
+        / contractor-footprint angle Norman raises) — rejected because
+        the predominant, sustained Pakistan national-security target
+        selection is exactly the regional-collection signature, but it
+        keeps the link at strongly_inferred rather than attested.
     contested: false
     analyst: claude
 targets:
@@ -54,3 +99,9 @@ targets:
     role: primary
 sources:
   - normanshark/2013-05_operation-hangover
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Canonical Norman Shark 'Operation Hangover' disclosure (May 2013) — the first large India-origin cyber-espionage attribution. Sole cited source resolves LIVE (HTTP 200, archive.org details page for the 'Unveiling an Indian Cyberattack Infrastructure Appendixes'); existing raw_snapshot re-hashed and MATCHES (sha256 d831e937...). The details page preserves only the IOC Appendixes (Telenor samples / installers / malware string indicators), so the attribution NARRATIVE was corroborated against the primary record (Norman's own published findings as quoted by The Register 2013-05-21, Infosecurity-Magazine, BusinessWire press release of 2013-05-20). FACTS verified: multi-year infrastructure (~3-4 years), spear-phishing delivery (no 0-days), predominant Pakistani national-security targeting, Telenor (Norway) as the trigger investigation (filed a police complaint), Chinese targets + a long global tail, HangOver malware / Operation Hangover naming, antecedent of the Patchwork/Dropping Elephant cluster. ATTRIBUTION (did NOT over-attest to the Indian state): Norman named actors 'of Indian origin' / 'attackers probably hailing from India' but EXPLICITLY disclaimed state sponsorship — 'there is no direct evidence to link it to state-sponsored players' and 'no visibility into whether the attacks were done on behalf of others'; no NTRO/R&AW or any Indian service named. Actor in/unscoped/patchwork is correct (India assessed, service unresolved; the actor was independently demoted from in/ntro on 2026-06-24 for exactly this reason). CORRECTIONS: (1) reframed name + summary + outcome_summary from 'Indian-aligned APT' / 'India as the assessed sponsor' to 'Indian-origin' + non-state language, matching Norman's actual disclaimer; (2) added attribution_level: nation (was missing) — India by origin inference, not named-unit, not a state-sponsorship claim; expanded the attribution note with Norman's verbatim non-state framing and the Appin nuance; (3) the 'Appin'/'Appin Security Group' link is CONTESTED (Norman flagged it as possibly a deliberate attempt to implicate Appin; Appin denied + threatened legal action) — recorded as contested, NOT adopted as fact (so the prompt's 'Appin-linked' framing is captured but not asserted); (4) doctrine_link in/regional-collection-pakistan-china kept strongly_inferred (NOT attested — Norman states no strategic purpose at goal level and disclaims state sponsorship), pillar left null (targeting spans pakistan-military + china-collection + diplomatic-collection), added inference_basis {signals, ruled_out} with the for-hire/Appin alternative ruled out; attesting_source_id stays null (correct). published_on/disclosure 2013-05-20 confirmed against the press release. false_flag_risk: none retained — the false-flag concern Norman raised targets the Appin contractor, not the India-origin assessment, and AUSPEX models neither Appin nor a named service. FK NOTE (out of single-event scope, not a defect): targets orgs/telenor + orgs/pakistani-government have no targets-registry entries, but orgs/ target FK gaps are gate-INFORMATIONAL corpus-wide ('Target FK gaps — informational, targets/ normalization deferred' in validate.ts line 462) — known tolerated gap."

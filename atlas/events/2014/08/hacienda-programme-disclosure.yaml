@@ -8,15 +8,18 @@ incident_type:
   - bulk-collection
 initial_vector: unknown
 outcome_summary: |
-  Heise Online publication (Appelbaum / Gibson / Goetz / Müller-
-  Maguhn / Poitras / Schneider / Sontheimer, 15 August 2014) of the
-  Snowden-archive HACIENDA programme — agency-wide port-scanning
-  of entire countries by GCHQ to enumerate exploitable services
-  and identify "Operational Relay Boxes" (ORBs) for follow-on
-  CNE staging. Identified scanned ports include FTP, SSH, Telnet,
-  SMTP, HTTP/S, and NetBIOS. The Snowden documents identify
-  GCHQ as the principal operator and Five Eyes partners (NSA,
-  CSE, ASD, GCSB-NZ) as joint consumers via the OLYMPIA tool.
+  Heise Online publication (Kirsch / Grothoff / Ermert / Appelbaum /
+  Poitras / Moltke, 15 August 2014) of the Snowden-archive HACIENDA
+  programme — agency-wide port-scanning of entire countries by GCHQ
+  to enumerate exploitable services and identify "Operational Relay
+  Boxes" (ORBs) for follow-on CNE staging. The cited article
+  enumerates targeted services HTTP, FTP, SSH and SNMP (Figure 4).
+  The Snowden documents identify GCHQ as the principal operator and
+  the resulting scan database as shared across the Five Eyes (US,
+  Canada, UK, Australia, New Zealand) via the MAILORDER transport
+  protocol. ORB-hunting on the HACIENDA results is automated by
+  CSEC's OLYMPIA tool and, at GCHQ, organised under the MUGSHOT
+  programme.
 false_flag_risk: none
 summary: |
   HACIENDA is the canonical Snowden disclosure of Five Eyes
@@ -32,10 +35,11 @@ summary: |
   against the Five Eyes posture that bulk collection is
   passively defensive — HACIENDA is explicitly described in
   the Snowden material as enabling offensive CNE through ORB
-  enumeration. The article also publishes proof-of-concept
-  TCP-stealth code (Mathy Vanhoef et al.) that defeats
-  HACIENDA-style port enumeration, which is itself a small but
-  documented countermeasure in the post-Snowden hardening
+  enumeration. The article also publishes a proof-of-concept
+  "TCP Stealth" countermeasure (by the article's authors Julian
+  Kirsch / Christian Grothoff, distributed as the "Knock" kernel
+  patch) that defeats HACIENDA-style port enumeration — itself a
+  small but documented entry in the post-Snowden hardening
   literature.
 
   Doctrinally this sits alongside TEMPORA and MUSCULAR as part
@@ -52,9 +56,13 @@ attributions:
     attribution_source_id: heise/2014-08-15_hacienda-internet-colonization
     notes: |
       HACIENDA is identified in the Snowden material as
-      GCHQ-operated with Five Eyes joint consumption via the
-      OLYMPIA tool. UK government has not formally attested
-      HACIENDA by name.
+      GCHQ-operated ("the British spy agency GCHQ made port scans
+      a 'standard tool'"), with the resulting scan database shared
+      across the Five Eyes via the MAILORDER transport protocol.
+      UK government has not formally attested HACIENDA by name.
+      attribution_level deliberately left absent, consistent with
+      the uk/gchq/cne-actor generic-bucket cohort (the source names
+      GCHQ the agency, not a specific sub-unit).
 doctrine_links:
   - doctrine_id: uk/five-eyes
     pillar_id: null
@@ -62,10 +70,21 @@ doctrine_links:
     confidence: attested
     reasoning: |
       GCHQ-operated, joint Five Eyes consumed; the canonical
-      shape of UKUSA-partnership division of labour, with
-      GCHQ taking the lead on a programme and the partners
-      drawing on the output through joint tooling.
+      shape of UKUSA-partnership division of labour, with GCHQ
+      taking the lead on a programme and the partners drawing on
+      the shared scan database (the collect-once / share-across-
+      partners end the Five Eyes doctrine encodes). The cited
+      source states this purpose in substance.
     attesting_source_id: heise/2014-08-15_hacienda-internet-colonization
+    inference_basis:
+      source_quote: |
+        "The database resulting from the scans is then shared with
+        other spy agencies of the Five Eyes spying club (Figure 7),
+        which includes the United States, Canada, United Kingdom,
+        Australia and New Zealand. MAILORDER is described in the
+        documents as a secure transport protocol used between the
+        Five Eyes spy agencies to exchange collected data."
+      source_id: heise/2014-08-15_hacienda-internet-colonization
     contested: false
     analyst: claude
 targets:
@@ -78,3 +97,49 @@ targets:
 sources:
   - heise/2014-08-15_hacienda-internet-colonization
   - intercept/snowden-archive
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Heise "NSA/GCHQ: The HACIENDA Program for Internet
+    Colonization" (15 Aug 2014, raw HTML on disk, sha256 9eba6000…a017e85,
+    re-fetched live HTTP 200) and intercept/snowden-archive (raw HTML,
+    sha256 104a5607…536a17, captured in the 2026-06-25 actor audit; hash
+    re-verified). The Intercept source is the generic SIDtoday landing index
+    (provenance only — names no specific GCHQ op). FACTS OK against Heise:
+    GCHQ made port scanning a "standard tool against entire nations" in 2009
+    (→ start_date 2009 ✓); 27 countries listed as targets ✓; disclosure
+    15 Aug 2014 ✓; scan database shared across the Five Eyes (US/CA/UK/AU/NZ)
+    via the MAILORDER transport protocol ✓; ORBs used to hide attacker
+    location when the Five Eyes "launch exploits against targets or steal
+    data" (the CNE/ORB tie-in) ✓; CSEC's OLYMPIA + GCHQ's MUGSHOT automate
+    ORB-hunting over the HACIENDA results ✓. ATTRIBUTION: GCHQ named as
+    operator at the agency/org level (Snowden slides, self-documenting);
+    attribution_level deliberately LEFT ABSENT to match the uk/gchq/cne-actor
+    generic-bucket cohort (audited & KEPT 2026-06-25) — all 5 sibling GCHQ
+    Snowden events also omit it, and the source names GCHQ-the-agency, not a
+    specific sub-unit, so named-unit would over-specify the generic bucket
+    (FLAGGED for Kara: the task brief suggested named-unit; deferred to the
+    actor-audit convention — revisit if a finer uk/gchq sub-cluster is ever
+    created). actor uk/gchq/cne-actor resolves, not stale, primary_service_id
+    uk/gchq valid. attributing_org_confidence held at moderate (journalism on
+    leaked slides; UK govt non-confirmation), consistent with siblings.
+    DOCTRINE LINK uk/five-eyes attested HOLDS — source states the strategic
+    end in substance (collect-once/share-across-partners via MAILORDER);
+    added inference_basis.source_quote + source_id; attacker-rationale (UK
+    doctrine on UK op), no perspective tag or state-mismatch needed.
+    CORRECTIONS: (1) byline fixed in event + source — was the Der Spiegel
+    "Inside TAO" team; correct Heise authors are Kirsch/Grothoff/Ermert/
+    Appelbaum/Poitras/Moltke (<meta name="author">). (2) scanned-ports list
+    corrected FTP/SSH/Telnet/SMTP/HTTP-S/NetBIOS → HTTP/FTP/SSH/SNMP (the
+    only services the cited article enumerates; the slides may name more but
+    that is not in this source). (3) OLYMPIA recharacterised — it is CSEC's
+    ORB-automation tool, NOT the Five-Eyes joint-consumption channel (that is
+    MAILORDER); GCHQ's equivalent automation is MUGSHOT. Fixed in
+    outcome_summary, attribution notes, doctrine reasoning, and the source.
+    (4) TCP-Stealth PoC author fixed: "Mathy Vanhoef et al." → the article's
+    own authors Kirsch/Grothoff ("Knock" kernel patch); Vanhoef does not
+    appear in the source. published_on 2014-08-15 confirmed (15.08.2014,
+    09:59 Uhr). Target sectors/ict primary retained — no sector inflation.
