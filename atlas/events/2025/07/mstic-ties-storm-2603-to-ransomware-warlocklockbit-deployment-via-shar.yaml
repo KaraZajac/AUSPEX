@@ -1,6 +1,6 @@
 id: 2025-07/mstic-ties-storm-2603-to-ransomware-warlocklockbit-deployment-via-shar
 name: "MSTIC ties Storm-2603 to ransomware (Warlock/LockBit) deployment via SharePoint ToolShell exploitation"
-start_date: 2025-07-22
+start_date: 2025-07-18   # source: "Starting on July 18, 2025, Microsoft has observed Storm-2603 deploying ransomware"; was 2025-07-22 (the report's publication date, not the op)
 incident_type:
   - intrusion
   - ransomware
@@ -12,10 +12,17 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/storm-2603
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # source: "assessed with moderate confidence to be a China-based threat actor"
+    attribution_level: nation              # nation only: source attributes "China-based" at moderate confidence; "has not identified links between Storm-2603 and other known Chinese threat actors" (developing Storm-#### cluster, no service)
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-07-22
     attribution_source_id: microsoft/2025-07_mstic-ties-storm-2603-to-ransomware-warl
 doctrine_links: [] # TODO(QC): assign doctrine link
 sources:
   - microsoft/2025-07_mstic-ties-storm-2603-to-ransomware-warl
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs microsoft/2025-07_mstic-ties-storm-2603-to-ransomware-warl (raw captured, sha256 db5be064...; identical Microsoft ToolShell blog as the sibling source microsoft/2025-07_toolshell-sharepoint). FACTS verified: ToolShell CVE chain CVE-2025-49706 (spoofing) + CVE-2025-49704 (RCE); spinstall0.aspx web shell retrieving MachineKey data; 'Starting on July 18, 2025, Microsoft has observed Storm-2603 deploying ransomware'; GPO modification to distribute Warlock; Mimikatz/LSASS; PsExec + Impacket lateral movement. Source also notes prior Warlock AND 'Lockbit' deployment (event uses standard brand casing 'LockBit'). ATTRIBUTION verified + correctly hedged: 'Storm-2603 is assessed with moderate confidence to be a China-based threat actor. Microsoft has not identified links between Storm-2603 and other known Chinese threat actors' — attributing_org_confidence: moderate matches verbatim; actor cn/unscoped/storm-2603 correct (no service claimed; FK resolves, actor re-audited+demoted 2026-06-24). published_on 2025-07-22 confirmed (awa-publishedDate 20250722; carries a 'July 23 update' but original pub is 07-22). doctrine_links [] correct — source: 'Microsoft is currently unable to confidently assess the threat actor's objectives', so no attested goal available; left as TODO. CORRECTIONS: (1) added attribution_level: nation (was missing) — a Storm-#### developing cluster attributed only at nation level with no service/known-actor linkage is 'nation', not named-actor/named-unit; (2) start_date 2025-07-22 -> 2025-07-18 (was the report's publication date; source observed ransomware deployment starting July 18, exploitation as early as July 7); (3) added raw_snapshot + content_sha256 to the cited source. No actor mis-placement (cn/unscoped is correct given the source's actor-linkage disclaimer)."

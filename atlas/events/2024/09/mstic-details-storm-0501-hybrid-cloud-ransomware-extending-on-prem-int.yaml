@@ -1,23 +1,25 @@
 id: 2024-09/mstic-details-storm-0501-hybrid-cloud-ransomware-extending-on-prem-int
 name: "MSTIC details Storm-0501 hybrid-cloud ransomware extending on-prem intrusions into Azure/Entra ID"
-start_date: 2024-09-26
+start_date: 2024-09-26   # MSTIC publication date used as proxy: source describes an undated "recent campaign"; group active since 2021
+disclosure_date: 2024-09-26
 incident_type:
   - ransomware
   - extortion
   - data-theft
   - intrusion
-initial_vector: n-day
+initial_vector: n-day   # dual vector: stolen/valid creds + n-day RCE on unpatched public-facing servers (named CVEs are all known/patched)
 false_flag_risk: none
 summary: |
   Microsoft Threat Intelligence (MSTIC) detailed a multi-staged campaign in which the financially motivated actor it tracks as Storm-0501 extended on-premises intrusions into victims' Azure and Entra ID (hybrid cloud) environments to steal data, create persistent backdoor access and deploy ransomware. Initial access was gained via stolen/compromised credentials and by exploiting known remote-code-execution vulnerabilities in unpatched public-facing servers, including CVE-2022-47966 (Zoho ManageEngine), CVE-2023-4966 (Citrix NetScaler) and a ColdFusion 2016 flaw. MSTIC says Storm-0501 has targeted multiple U.S. sectors including government, manufacturing, transportation, law enforcement and hospitals. The group has deployed several ransomware families over time (Hive, BlackCat/ALPHV, Hunters International, LockBit and, most recently, Embargo).
 attributions:
   - actor_id: criminal/storm-0501
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high   # MSTIC asserts its own tracked-cluster designation with certainty
+    attribution_level: named-actor   # MSTIC + MISP-galaxy individuate Storm-0501 as a discrete actor (since 2021; own TTP profile); "Storm-####" is Microsoft's developing-name convention, not a loose cluster
     auspex_assessment: concur
     attribution_date: 2024-09-26
     attribution_source_id: microsoft/2024-09_mstic-details-storm-0501-hybrid-cloud-ra
-doctrine_links: [] # TODO(QC): assign doctrine link
+doctrine_links: [] # none: purely-financial criminal actor (criminal/storm-0501) with no documented state nexus; no applicable AUSPEX doctrine
 targets:
   - target_id: sectors/government
     country: us
@@ -33,3 +35,10 @@ targets:
     role: primary
 sources:
   - microsoft/2024-09_mstic-details-storm-0501-hybrid-cloud-ra
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Microsoft MSTIC blog 2024-09-26 (raw captured, sha256 a0ecf309...914) + MISP-galaxy cross-check. FACTS: all confirmed verbatim — hybrid-cloud on-prem→Azure/Entra ID lateral movement, data exfil, persistent backdoor (AADInternals federated-domain), Embargo ransomware deployment; initial access via stolen creds + n-day RCE; CVE-2022-47966 (Zoho ManageEngine), CVE-2023-4966 (Citrix NetScaler), ColdFusion 2016 (source hedges "possibly CVE-2023-29300/CVE-2023-38203"); ransomware families Hive, BlackCat/ALPHV, Hunters International, LockBit, Embargo all named in source. ATTRIBUTION: source states "Storm-0501 is a financially motivated cybercriminal group" — criminal/ placement CORRECT, NOT a state service; "Storm-####" is Microsoft's developing-group naming convention, not a state cluster. MISP-galaxy confirms (origin Microsoft, no nation, since 2021, Sabbath→RaaS→Embargo). CORRECTIONS: (1) added attribution_level: named-actor (was absent) — both MSTIC and MISP individuate Storm-0501 as a discrete actor with its own TTP history, so named-actor (not activity-cluster) is honest while not over-claiming a nation/unit. (2) added disclosure_date 2024-09-26 + noted start_date is the publication-date proxy for an undated "recent campaign" (group active since 2021). (3) doctrine_links left [] (was TODO) — purely-financial criminal actor, no documented state nexus, no applicable AUSPEX doctrine; matches reference-event handling. NOTE: source explicitly names "law enforcement" as a fifth targeted US sector, but no law-enforcement sector FK exists in the corpus (closest is government, already listed primary); captured in summary prose, not fabricated as a target. NOTE: actor record criminal/storm-0501 + source are still PROVISIONAL stubs (service placement/aliases = open QC); flagged, not in scope to fully de-provisionalize here. attributing_org_confidence high retained — MSTIC asserts its own cluster designation with certainty.

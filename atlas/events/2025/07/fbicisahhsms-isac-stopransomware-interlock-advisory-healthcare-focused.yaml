@@ -7,17 +7,23 @@ incident_type:
   - data-theft
   - intrusion
 initial_vector: unknown
+disclosure_date: 2025-07-22
 false_flag_risk: none
 summary: |
-  CISA, FBI, HHS and MS-ISAC issued joint advisory AA25-203A on the Interlock ransomware-as-a-service operation, which first emerged in late September 2024 and disproportionately targets healthcare and critical-infrastructure organizations across North America and Europe. Interlock uses a double-extortion model with Windows and Linux/ESXi encryptors and an uncommon initial-access technique — drive-by downloads of fake software installers from compromised legitimate websites, plus the ClickFix social-engineering method. Interlock is not currently in the corpus and fills the 2024–2025 healthcare-extortion gap alongside Qilin and RansomHub.
+  CISA, FBI, HHS and MS-ISAC issued joint advisory AA25-203A on the Interlock ransomware-as-a-service operation, which was first observed in late September 2024 targeting various business, critical-infrastructure, and other organizations across North America and Europe. The advisory frames Interlock as opportunistic and financially motivated ("FBI maintains these actors target their victims based on opportunity"); the HHS/MS-ISAC co-authorship and HPH-mitigations section reflect a healthcare-sector emphasis, and secondary reporting (HIPAA Journal) notes the group "appears to favor" the healthcare/public-health sector (named victims include DaVita, Kettering Health, and Texas Tech University Health Sciences Center). Interlock uses a double-extortion model with Windows and Linux encryptors (the usual Linux encryptor targets VMware ESXi servers/VMs; a FreeBSD ELF encryptor is a recent departure) and an uncommon initial-access technique — drive-by downloads of fake software installers from compromised legitimate websites, plus the ClickFix social-engineering method. Interlock fills the 2024–2025 healthcare-extortion gap alongside Qilin and RansomHub.
 attributions:
   - actor_id: criminal/interlock
-    attributing_org: "hipaajournal"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org: "CISA, FBI, HHS, and MS-ISAC"
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-07-22
-    attribution_source_id: hipaajournal/2025-07_fbicisahhsms-isac-stopransomware-interlo
-doctrine_links: [] # TODO(QC): suggested doctrine fit unclear
+    attribution_source_id: cisa/2025-07-22_aa25-203a-stopransomware-interlock
+    notes: |
+      Primary joint advisory AA25-203A names Interlock at the named-actor level
+      and assesses it as financially motivated / opportunistic, with NO
+      nation-state nexus — confirming the criminal/interlock placement.
+doctrine_links: [] # criminal profit-motivated; no AUSPEX criminal-profit doctrine taxonomy — left empty (conservative)
 targets:
   - target_id: sectors/healthcare/hospital
     country: us
@@ -29,4 +35,11 @@ targets:
     country: us
     role: primary
 sources:
+  - cisa/2025-07-22_aa25-203a-stopransomware-interlock
   - hipaajournal/2025-07_fbicisahhsms-isac-stopransomware-interlo
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs CISA AA25-203A (primary, raw captured sha256 1e06c3bd…) + hipaajournal secondary (raw captured sha256 9d059693…). FACTS: confirmed — emergence 'first observed in late September 2024'; targets 'business, critical infrastructure, and other organizations in North America and Europe'; double-extortion model; Windows + Linux encryptors (usual Linux variant targets VMware ESXi servers/VMs; FreeBSD ELF a recent departure); drive-by download of fake installers from compromised legitimate websites ('uncommon method among ransomware groups') + ClickFix; named healthcare victims (DaVita, Kettering Health, etc.). ATTRIBUTION: AA25-203A names Interlock at named-actor level, financially-motivated/opportunistic, NO state nexus — criminal/interlock placement correct; attribution_level set to named-actor. CORRECTIONS: (1) added primary CISA AA25-203A source + upgraded attributing_org from 'hipaajournal' to 'CISA, FBI, HHS, and MS-ISAC' and attribution_source_id to the primary; (2) added attribution_level: named-actor + disclosure_date 2025-07-22; (3) softened 'disproportionately targets healthcare' — the PRIMARY advisory frames targeting as opportunistic and does NOT say 'disproportionately favors' healthcare; the favor-HPH framing is the SECONDARY hipaajournal source's, now attributed as such in the summary; 'late September 2024' + 'ESXi' confirmed in the primary (absent from the secondary); (4) fixed hipaajournal published_on 2025-07-22→2025-07-23 (article posted day after the advisory) + cleared its stale backfill 403 WARNING (re-fetched HTTP 200); (5) added raw_snapshot/content_sha256/archive_url to both sources. doctrine_links left [] (criminal profit-motive; no AUSPEX criminal-profit doctrine taxonomy — conservative). ACTOR NOTE: criminal/interlock is a PROVISIONAL stub (empty aliases, placeholder ttp_summary) — placement is correct but the record needs de-stubbing (not touched in this event-scoped audit)."

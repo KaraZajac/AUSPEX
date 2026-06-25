@@ -5,21 +5,45 @@ incident_type:
   - surveillance
   - espionage
   - intrusion
-initial_vector: phishing
+initial_vector: supply-chain
 false_flag_risk: none
 summary: |
   CFR records an October 2023 campaign by Arid Viper, a threat actor believed to operate from the Palestinian Territories, which built a trojanized clone of the Arabic-language dating app 'Skipped' to deliver Android spyware.
 attributions:
   - actor_id: ps/unscoped/arid-viper
     attributing_org: "CFR Cyber Operations Tracker (citing Cisco Talos)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CFR labels the sponsor "Suspected"
+    attribution_level: named-actor          # CFR names the actor (Arid Viper / APT-C-23)
     auspex_assessment: concur
     attribution_date: 2023-10-01
     attribution_source_id: cfr/2023-10_arid-viper-trojanized-skipped-arabic-dat
-doctrine_links: [] # TODO(QC): assign doctrine link
+doctrine_links: [] # no Palestinian (ps) cyber-doctrine taxonomy in the corpus yet
 targets:
   - target_id: sectors/civil-society
-    country: ps
+    country: null   # CFR does not geo-locate the victims (users of an Arabic-language dating app)
     role: primary
 sources:
   - cfr/2023-10_arid-viper-trojanized-skipped-arabic-dat
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs CFR Cyber Operations Tracker (raw captured, sha256 ca969c36...; matches recorded
+    content_sha256). FACTS OK: CFR "Date of report Oct 2023"; "Arid Viper, a threat actor believed
+    to operate from the Palestinian Territories, created a compromised version of the Arabic dating
+    app Skipped and distributed it online"; "Type of incident: Espionage"; "Target category: Civil
+    society"; the "Read more" link names the Talos report "Arid Viper disguising mobile spyware as
+    updates for non-malicious Android applications" — supports Android-spyware framing. ATTRIBUTION
+    OK: CFR names the actor (affiliation APT-C-23) + "Suspected state sponsor: Palestine, State of";
+    moderate confidence matches the "Suspected" framing; actor correctly kept ps/unscoped (sponsor
+    suspected, not established). CORRECTIONS: (1) added attribution_level: named-actor (CFR names the
+    actor); (2) initial_vector phishing -> supply-chain — CFR says only "distributed it online" /
+    "disguising ... as updates for non-malicious Android applications" (trojanized-app distribution),
+    no phishing/lure in the cited source; (3) targets[].country ps -> null — CFR does NOT geo-locate
+    the victims ("users of an Arabic-language dating app"); ps was back-imported from the actor's
+    origin (phantom victimology). doctrine_links empty: corpus has no Palestinian (ps) doctrine
+    taxonomy (actor's default_doctrine_alignment_ids is also []); resolved the stale TODO comment.
+    UNCERTAINTY: exact delivery channel (fake-app website vs in-app update) is from the Talos primary,
+    not detailed in the cited CFR tier-2 entry — supply-chain is the conservative source-faithful read.
