@@ -12,18 +12,27 @@ summary: |
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: "welivesecurity"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # ESET: "we attribute this activity with a high level of confidence to Lazarus"
+    attribution_level: named-actor   # ESET names Lazarus (North Korea-aligned); does NOT name the RGB unit (it only cites US authorities for the intel-service link)
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-03-01
+    attribution_date: 2025-10-23
     attribution_source_id: welivesecurity/2025-03_lazarus-operation-dreamjob-targets-europ
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
-    program_id: null
+    program_id: kp/8th-congress-defense-plan/strategic-tech-collection/satellite-and-uav
     confidence: strongly_inferred
     reasoning: |
-      Operation DreamJob targeting European defense firms heavily involved in the UAV/drone sector (including producers of UAVs deployed in Ukraine) is strategic weapons-technology collection feeding the 8th Congress 13-system plan.
-    attesting_source_id: null
+      Operation DreamJob targeting European defense firms heavily involved in the UAV/drone sector (including a producer of UAV models currently deployed in Ukraine) is strategic weapons-technology collection mapping to the satellite-and-UAV program of the 8th Congress 13-system plan. ESET states the suspected goal in substance — theft of UAV manufacturing know-how to "scale up [North Korea's] drone program" — but does not tie the activity to the 8th Congress defense plan or its 13-system list by name, so the doctrine linkage is strongly inferred rather than attested.
+    attesting_source_id: welivesecurity/2025-03_lazarus-operation-dreamjob-targets-europ
+    inference_basis:
+      source_id: welivesecurity/2025-03_lazarus-operation-dreamjob-targets-europ
+      signals:
+        - "ESET: 'The suspected primary goal of the attackers was likely the theft of proprietary information and manufacturing know-how' (UAV-related)"
+        - "ESET: campaign 'may be linked to North Korea's current efforts to scale up its drone program'; targets are aerospace/defense firms, ≥2 in UAV technology, one producing UAV models 'currently employed in Ukraine'"
+        - "ESET: 'North Korea has relied heavily on reverse engineering and intellectual property theft to develop its domestic UAV capabilities' (Saetbyol-4 ≈ RQ-4 Global Hawk; Saetbyol-9 ≈ MQ-9 Reaper)"
+      ruled_out: "the 8th Congress defense plan / 13-system weapons-development goal by name — ESET frames it as NK's general 'drone program', not the specific 2021 five-year plan; revenue/financial motive ruled out (ESET assesses espionage / know-how theft, not financial gain)"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -33,3 +42,37 @@ targets:
     role: primary
 sources:
   - welivesecurity/2025-03_lazarus-operation-dreamjob-targets-europ
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs ESET/WeLiveSecurity "Gotta fly: Lazarus targets the UAV sector"
+    (welivesecurity/2025-03_…, raw snapshot captured + sha256
+    6f165ee6f525a000a39f40f362e7efa568dcba86c25c4579d1fef64a7bc99512). FACTS ✓: DreamJob
+    fake-recruiter lure confirmed verbatim ("fake job offers … the 'dream job' lure"; victim
+    "receives a decoy document with a job description and a trojanized PDF reader to open it");
+    main payload ScoringMathTea RAT ✓; BinMergeLoader "similar to the MISTPEN malware reported
+    by Google's Mandiant" ✓; QuanPinLoader ✓; three European defense-sector victims =
+    metal-engineering (Southeastern Europe), aircraft-components manufacturer (Central Europe),
+    defense company (Central Europe) ✓ (summary's "defense contractor" = ESET's "defense
+    company"); ≥2 in UAV sector, one producing UAV models "currently employed in Ukraine" ✓;
+    suspected goal = theft of proprietary info / manufacturing know-how ✓; campaign began "late
+    March 2025" → start_date 2025-03-01 ✓. ATTRIBUTION: source names ONLY "North Korea-aligned
+    Lazarus" (7×) and "high level of confidence to Lazarus" — it does NOT name the RGB
+    (Reconnaissance General Bureau: 0 hits); ESET only notes "several groups related to Lazarus
+    have been formally linked to North Korean intelligence services by US authorities and others"
+    (cites others, does not itself name the unit). actor kp/rgb/lazarus KEPT (RGB anchored to the
+    actor record's OFAC-2019 / DOJ-2021 / MITRE / Mandiant sources, NOT this ESET blog).
+    CORRECTIONS: (1) attribution_level added = named-actor (ESET names Lazarus, not the RGB
+    unit). (2) doctrine program_id refined null → …/satellite-and-uav (the UAV-specific program;
+    specificity upgrade, NOT confidence). (3) doctrine confidence kept strongly_inferred but
+    attesting_source_id + inference_basis (signals/ruled_out) backfilled — ESET states the goal
+    in substance (UAV know-how theft to "scale up [NK's] drone program") yet never names the 8th
+    Congress defense plan / 13-system list, so it stays below the attested bar. (4) source
+    published_on 2025-03-01 → 2025-10-23 (article byline "23 Oct 2025"; 2025-03 was the campaign
+    month, not the publication date) and attribution_date 2025-03-01 → 2025-10-23 to match.
+    (5) raw_snapshot + content_sha256 added to the source. attributing_org_confidence comment
+    corrected (the bare "mapped from ICD link-confidence: attested" was misleading — ESET
+    explicitly states high confidence).

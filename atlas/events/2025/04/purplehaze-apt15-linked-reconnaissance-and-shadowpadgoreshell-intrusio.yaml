@@ -1,6 +1,7 @@
 id: 2025-04/purplehaze-apt15-linked-reconnaissance-and-shadowpadgoreshell-intrusio
 name: "PurpleHaze (APT15-linked) reconnaissance and ShadowPad/GoReShell intrusions against SentinelOne and 70+ global organizations"
-start_date: 2025-04-28
+start_date: 2024-06-01   # earliest source-documented activity (June 2024 ShadowPad vs the South Asian govt entity); disclosed 2025-04-28
+disclosure_date: 2025-04-28
 incident_type:
   - reconnaissance
   - intrusion
@@ -13,17 +14,19 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/apt15
     attributing_org: "SentinelLABS (SentinelOne)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # SentinelLABS: "high confidence" China-nexus, but only "loosely linking it to APT15" — moderate fits the named-actor (APT15) claim
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-04-28
     attribution_source_id: sentinelone/2025-04_purplehaze-apt15-linked-reconnaissance-a
+    notes: "SentinelLABS attributes at the nation level with high confidence (China-nexus / 'Chinese State-Sponsored Adversaries'); the APT15 (Nylon Typhoon) link is explicitly 'loose'. No Chinese service (MSS) is named — aligns with cn/unscoped/apt15. GTIG separately attributes the ScatterBrain-obfuscated ShadowPad samples to APT41."
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      APT15-linked PurpleHaze ran reconnaissance against a cybersecurity vendor (SentinelOne) and its IT/logistics supply chain plus 70+ global organizations using ShadowPad/GoReShell; targeting a security vendor and its supply chain is MSS-directed counter-intelligence/capability collection that fits no economic or regional CN doctrine, so the intelligence-collection mandate is the most defensible anchor.
+      APT15-linked, China-nexus PurpleHaze ran reconnaissance against a cybersecurity vendor (SentinelOne) and its IT/logistics supply chain plus 70+ global organizations using ShadowPad/GoReShell; targeting a security vendor and its supply chain reads as state-sponsored counter-intelligence / capability collection that fits no economic or regional CN doctrine, so the PRC intelligence-collection legal mandate is the most defensible anchor. Plausible (not attested): SentinelLABS names no strategic purpose, and the specific service (MSS) is not named — the actor sits at cn/unscoped.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -44,3 +47,9 @@ targets:
     role: transit
 sources:
   - sentinelone/2025-04_purplehaze-apt15-linked-reconnaissance-a
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the SentinelLABS 'Top Tier Target' report (28 Apr 2025; raw captured, sha256 b2ef6d85...). FACTS confirmed: PurpleHaze recon against SentinelOne infra + high-value orgs it defends; GoReShell (Go/reverse_ssh) backdoor; ShadowPad (ScatterBrain-obfuscated, evolution of ScatterBee); n-day in Check Point gateway devices; compromise of an IT/logistics provider managing hardware logistics for SentinelOne employees; July 2024-March 2025, 70+ orgs across manufacturing/government/finance/telecom/research; GTIG attributes ScatterBrain ShadowPad to APT41. ATTRIBUTION: source = 'Chinese State-Sponsored Adversaries' / 'China-nexus' at HIGH confidence (nation level), APT15 (Nylon Typhoon) link explicitly LOOSE, NO MSS or any service named -> aligns with cn/unscoped/apt15 (actor freshly demoted 2026-06-24). Set attributing_org_confidence comment straight (was stale 'strongly_inferred' mapping) and added attribution_level: named-actor. CORRECTIONS: start_date 2025-04-28 -> 2024-06-01 (disclosure != op start; earliest source-documented activity is the June 2024 ShadowPad intrusion), original date moved to disclosure_date. doctrine_links: cn/national-intelligence-law-2017 kept at plausible/attesting_source_id:null (source names no strategic purpose; NOT attested) and reasoning de-MSS'd to match the cn/unscoped placement. All FKs (actor, doctrine, 7 sectors, cn/unscoped service) resolve. Source tier (secondary/industry) preserved."

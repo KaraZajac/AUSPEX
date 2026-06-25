@@ -8,14 +8,16 @@ incident_type:
 initial_vector: physical
 false_flag_risk: none
 summary: |
-  Symantec's Threat Hunter Team reported that between February and March 2025 Shuckworm (Gamaredon) targeted the military mission of a Western country based in Ukraine, gaining initial access via infected removable USB drives carrying malicious LNK files. The attackers used obfuscated PowerShell and VBScript loaders executed through mshta.exe and wscript.exe, and deployed an upgraded PowerShell version of the GammaSteel infostealer to exfiltrate files. The group hid command-and-control behind legitimate services and focused on machines containing apparently sensitive military information. Symantec attributes the activity to the Russia-linked, FSB-associated Shuckworm group.
+  Symantec's Threat Hunter Team reported (published 10 Apr 2025) that between February and March 2025 Shuckworm (Gamaredon) targeted the military mission of a Western country based in Ukraine, gaining initial access via an infected removable drive carrying malicious LNK files. The attackers used obfuscated PowerShell and VBScript loaders executed through mshta.exe and wscript.exe, and deployed an upgraded PowerShell version of the GammaSteel infostealer to exfiltrate office documents (.doc/.docx/.xls/.pdf and similar). Command-and-control was hidden behind legitimate web services (Cloudflare tunnels, Telegram, teletype.in, write.as), with cURL-over-Tor as a fallback exfiltration channel, and the operation focused on machines holding apparently sensitive Ukrainian military information (Ukrainian-language military document lures, mil.gov.ua targeting). Symantec describes the activity as Russia-linked and relays the assessment — citing the Ukrainian SBU's Armageddon technical report — that Shuckworm operates on behalf of the Russian FSB.
 attributions:
   - actor_id: ru/fsb/center-18/gamaredon
     attributing_org: "Symantec Threat Hunter Team"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-04-01
+    attribution_date: 2025-04-10
     attribution_source_id: security/2025-04_shuckworm-gammasteel-usb-campaign-agains
+    notes: "Symantec reaches named-actor (Shuckworm/Gamaredon) at high confidence on a Russia-linked basis; the FSB (named-unit ru/fsb/center-18) placement is RELAYED -- the source's 'operates on behalf of the...FSB' clause hyperlinks to the Ukrainian SBU Armageddon technical report, so the unit-level attribution rests on SBU/CERT-UA, not Symantec's own finding. Hence concur-with-caveat and attribution_level: named-actor for THIS source."
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
@@ -35,3 +37,9 @@ targets:
     role: primary
 sources:
   - security/2025-04_shuckworm-gammasteel-usb-campaign-agains
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the Symantec Threat Hunter Team report (security.com), raw-captured + sha256'd (live HTTP 200, 322 KB; sha256 c0349d06...). FACTS confirmed: Feb-March 2025 campaign vs a Western country's military mission based in Ukraine; initial access via an infected removable drive carrying .lnk files; mshta.exe + wscript.exe + obfuscated PowerShell/VBScript loaders; an updated PowerShell version of the GammaSteel infostealer exfiltrating office docs; certutil MD5; cURL+Tor fallback; C&C hidden behind Cloudflare tunnels / Telegram / teletype.in / write.as; Ukrainian military-document lures + mil.gov.ua targeting confirm the military-espionage focus. CORRECTIONS: (1) published_on / attribution_date 2025-04-01 -> 2025-04-10 (article header + HTML datePublished both read 10 Apr 2025); (2) source re-tiered industry/secondary -> vendor-research/primary (first-party Symantec original research); (3) summary 'removable USB drives' -> 'removable drive' -- the source NEVER uses 'USB'; it says 'infected removable drive'/'external drive' and the malware 'infect[s] any removable drives and network drives' via .lnk (the event slug+name retain 'USB' as a stable id and a defensible-but-unstated specialization); (4) added attribution_level: named-actor; (5) removed a stray '# ICD link-confidence: attested' comment on the attribution line (no attested links exist). ATTRIBUTION: Symantec states 'Russia-linked' as its own assessment and RELAYS the FSB linkage -- 'It is believed that Shuckworm operates on behalf of the...FSB', a clause hyperlinked to the Ukrainian SBU Armageddon technical report; so the named-unit ru/fsb/center-18 placement rests on SBU/CERT-UA (already cited in the actor record via sbu/2021-11-04_gamaredon-fsb-officer-identification), NOT on this Symantec source -> concur-with-caveat is correct. DOCTRINE: ru/russkiy-mir/ukraine-theater kept at strongly_inferred (attesting_source_id null) -- source names the espionage behaviour + 'laser-focused on targeting entities within Ukraine for espionage purposes' but does NOT state a Russkiy Mir strategic goal in substance, so NOT upgraded to attested; conservative and honest. Actor ru/fsb/center-18/gamaredon resolves and is current (not stale). UNCERTAINTY: targets tagged country: ua (operational location of the mission + Ukrainian-language lures); the mission belongs to an unnamed Western country, so the victim nationality is technically the Western state -- left as ua per operational location, flagged here."

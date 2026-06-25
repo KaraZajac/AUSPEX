@@ -6,22 +6,30 @@ incident_type:
   - espionage
 false_flag_risk: none
 summary: |
-  On 9 April 2025 the UK NCSC, leading a coalition with the FBI, NSA, Australia's ACSC, Canada's CCCS, New Zealand's NCSC and Germany's BfV/BND, published an advisory on two Android/iOS spyware families — BADBAZAAR and MOONSHINE — used to collect microphone, camera, message, photo and location data from mobile devices 'that could be of interest to the Chinese state.' Targets are transnational-repression communities: Uyghurs, Tibetans, Taiwan-independence supporters, Hong Kong/China democracy advocates and Falun Gong, via trojanised apps (e.g. TibetOne, an Uyghur Quran app). Vendor research links MOONSHINE to Poison Carp (Evil Eye/Earth Empusa) and BADBAZAAR to APT15 (Nickel/Vixen Panda). NOT in the corpus; the UK section (17 events) is largely Snowden-era/meta, so this NCSC-led operational disclosure adds a 2025 attested-disclosure data point. NOTE actor_id_existing is a placeholder — the true map is Poison Carp / APT15 (both in the CN inventory but neither has a canonical bracketed actor_id), so a reviewer should re-point this to Poison Carp.
+  On 9 April 2025 the UK NCSC, leading a coalition with the FBI, NSA, Australia's ACSC (ASD), Canada's CCCS (CSE), New Zealand's NCSC (GCSB) and Germany's BfV and BND, published an advisory on two mobile spyware families — BADBAZAAR (iOS/Android) and MOONSHINE (Android) — that capture location, audio and photo data (MOONSHINE also exfiltrates files, screen recordings, contacts, call logs and SMS) from devices, data NCSC assesses 'would almost certainly be of value to the Chinese state.' Targets are transnational-repression communities: Uyghurs, Tibetans and Taiwanese individuals (the advisory's Assessment), with the broader awareness scope naming Taiwan, Tibet, the Xinjiang Uyghur Autonomous Region, democracy movements and Falun Gong; delivery is via trojanised apps of interest to these communities (e.g. a Uyghur-language Quran app; tibetone[.]org is a BADBAZAAR C2) shared on app stores and group chats. AUDIT (2026-06-25): NCSC attributes ONLY to 'the Chinese state' at the nation level — it names NO Chinese intelligence service and asserts NO named-actor in its own voice. The named-actor labels (MOONSHINE→Poison Carp/Evil Eye/Earth Empusa via Lookout; TA413 via Recorded Future) appear in the advisory solely as citations to vendor reporting; APT15/Nickel/Vixen Panda is NOT mentioned anywhere in the 51-page document — the BADBAZAAR↔APT15 link is wider-vendor lineage, not an NCSC claim, and MISP-galaxy maps BADBAZAAR to GREF, not APT15. ACTOR ISSUE: actor_id cn/unscoped/apt15 is a backfill placeholder that the source does not support; the best-supported actor is Poison Carp (the MOONSHINE operator; MISP UUID 7aa99279-4255-4d26-bb95-12e7156555a0), which has no actor file in the corpus yet — a reviewer should create cn/unscoped/poison-carp and re-point this attribution to it.
 attributions:
   - actor_id: cn/unscoped/apt15
-    attributing_org: "ncscgov"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
-    auspex_assessment: concur-with-caveat
+    attributing_org: "NCSC UK + Five Eyes & German partners"
+    attributing_org_confidence: moderate   # NCSC assessment: data "almost certainly of value to the Chinese state" — nation-level, no service/actor named in NCSC's own voice
+    attribution_level: nation              # AUDIT 2026-06-25: NCSC names only "the Chinese state"; no MSS/PLA service, no named-actor asserted by NCSC
+    auspex_assessment: concur-with-caveat  # caveat: actor_id cn/unscoped/apt15 is a placeholder unsupported by this source — see summary ACTOR ISSUE (should be Poison Carp, no actor file yet)
     attribution_date: 2025-04-09
     attribution_source_id: ncscgov/2025-04_ncsc-uk-led-five-eyes-advisory-on-badbaz
+    notes: "NCSC attribution is nation-level only ('value to the Chinese state'); named-actor labels (Poison Carp, TA413) appear in the advisory only as citations to Lookout/Recorded Future, not as NCSC's own attribution. APT15 is not named anywhere in the advisory."
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      BADBAZAAR and MOONSHINE trojanise apps to surveil Uyghurs, Tibetans, Taiwan-independence supporters, Hong Kong/China democracy advocates and Falun Gong on behalf of the Chinese state; this is textbook transnational-repression collection against diaspora, dissident and ethnic-minority communities.
+      BADBAZAAR and MOONSHINE trojanise apps of interest to Uyghur, Tibetan and Taiwanese communities (and, per the advisory's broader scope, Hong Kong/China democracy movements and Falun Gong) to capture location, audio and photo data — textbook transnational-repression collection against diaspora, dissident and ethnic-minority communities, the exact populations the National Intelligence Law 2017 diaspora-and-dissident-collection pillar encodes. NCSC assesses the collected data "would almost certainly be of value to the Chinese state" and that citizens "perceived to be supporting causes that threaten regime stability... are almost certainly under threat." Held at strongly_inferred (not attested): NCSC names the beneficiary (the Chinese state) and the surveillance/harassment effect, but does not tie the operation to a state intelligence-tasking or legal-compulsion mechanism, and names no service — so the link to the 2017-law collection mandate is AUSPEX's inference, not NCSC's stated purpose.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "NCSC (govt, Five Eyes + DE): data 'almost certainly of value to the Chinese state'; targets those 'perceived to be supporting causes that threaten regime stability'."
+        - "Victim set (Uyghur/Tibetan/Taiwanese/Falun Gong/democracy movements) is the exact population the NatIntLaw-2017 diaspora-and-dissident-collection pillar enumerates."
+        - "Trojanised apps tailored to these communities (Uyghur-language Quran app) + mobile audio/photo/location capture = surveillance/harassment tooling, not financial or generic-espionage tradecraft."
+      ruled_out: "Financially-motivated or untargeted commercial spyware — ruled out by the community-specific app trojanisation and the state-value framing; no revenue or sanctions-evasion purpose is present."
     contested: false
     analyst: claude
 targets:
@@ -39,3 +47,12 @@ targets:
     role: primary
 sources:
   - ncscgov/2025-04_ncsc-uk-led-five-eyes-advisory-on-badbaz
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited against the NCSC 51-page technical advisory (raw captured + hashed, sha256 aac5a6cc...83e1c4) plus the news landing page and news-PDF. FACTS OK: date 9 Apr 2025; partner coalition verbatim (NCSC UK lead + ASD/ACSC, CSE/CCCS, German BND + BfV, NZ NCSC/GCSB, US FBI, US NSA); BADBAZAAR (iOS/Android) + MOONSHINE (Android); victims Uyghur/Tibetan/Taiwanese (+ democracy movements/Falun Gong in the awareness scope); Uyghur-language Quran app + tibetone[.]org C2 confirmed.
+    CORRECTIONS: (1) summary data-types tightened to NCSC's wording ("location, audio and photo data"; was "microphone, camera, message, photo and location"). (2) ATTRIBUTION: added attribution_level: nation — NCSC attributes ONLY to "the Chinese state" ("almost certainly of value to the Chinese state"); it names NO service and NO named-actor in its own voice. The Poison Carp / TA413 labels appear in the advisory only as citations to Lookout / Recorded Future; APT15 is NOT mentioned anywhere in the 51pp document. Corrected the false "mapped from ICD link-confidence" comment and the over-broad attributing_org. (3) doctrine link kept strongly_inferred (NCSC names beneficiary+effect but not a state-tasking/legal-compulsion mechanism) with NCSC quote added + inference_basis backfilled. (4) source kind corrected industry->govt-primary (NCSC is a GCHQ govt body); tier preserved (secondary) per scope though arguably primary.
+    ACTOR ISSUE (flagged, NOT fixed — out of single-event scope): actor_id cn/unscoped/apt15 is an unsupported backfill placeholder. NCSC names no actor; MISP-galaxy maps MOONSHINE->Poison Carp (UUID 7aa99279-4255-4d26-bb95-12e7156555a0) and BADBAZAAR->GREF (not APT15). Recommend a reviewer create cn/unscoped/poison-carp and re-point this attribution; cn/unscoped/apt15 currently resolves so this is not a dangling FK, but it is mis-attributed.

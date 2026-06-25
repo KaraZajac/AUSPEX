@@ -7,11 +7,12 @@ incident_type:
   - data-theft
 false_flag_risk: none
 summary: |
-  ESET detailed Operation FishMedley, a 2022 global espionage campaign by the FishMonger APT group, which ESET independently assessed is operated by the Chinese contractor I-SOON (corroborated by the US DOJ's March 2025 indictment of I-SOON employees). Across January to October 2022 the operators compromised seven high-profile organizations including governments, NGOs, Catholic/religious organizations and geopolitical think tanks in Taiwan, Hungary, Turkey, Thailand, the United States and France. They deployed modular backdoors such as ShadowPad, SodaMaster, Spyder and RPipeCommander alongside Cobalt Strike and custom credential-stealing and reconnaissance utilities. ESET was unable to identify the initial compromise vectors.
+  ESET detailed Operation FishMedley, a 2022 global espionage campaign by the FishMonger APT group, which ESET independently assessed is operated by the Chinese contractor I-SOON (corroborated by the US DOJ's March 2025 indictment of I-SOON employees). Across January to October 2022 the operators compromised seven high-profile organizations including governmental organizations, NGOs, Catholic organizations/charities and a geopolitical think tank in Taiwan, Hungary, Turkey, Thailand, the United States and France. They deployed modular backdoors such as ShadowPad, SodaMaster, Spyder and RPipeCommander alongside Cobalt Strike and custom credential-stealing and reconnaissance utilities. ESET was unable to identify the initial compromise vectors.
 attributions:
   - actor_id: cn/unscoped/fishmonger
     attributing_org: "ESET"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # ESET: "We assess with high confidence that Operation FishMedley was conducted by the FishMonger APT group"
+    attribution_level: named-actor     # ESET reaches the named cluster (FishMonger = I-SOON's operational arm); no Chinese service named, so not named-unit
     auspex_assessment: concur
     attribution_date: 2025-03-20
     attribution_source_id: welivesecurity/2025-03_operation-fishmedley-fishmonger-i-soon-g
@@ -34,3 +35,34 @@ targets:
     role: primary
 sources:
   - welivesecurity/2025-03_operation-fishmedley-fishmonger-i-soon-g
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the single ESET source (welivesecurity, Operation FishMedley, 20 Mar 2025;
+    raw HTML captured + sha256-matched, 121,797 bytes). FACTS confirmed verbatim: 2022 campaign
+    (Jan–Oct), seven independent compromises ESET clustered as Operation FishMedley; victim table
+    A–G = Taiwan (govt), Hungary (Catholic org), Turkey (unknown), Thailand (govt), United States
+    (Catholic charity), United States (NGO), France (geopolitical think tank) — "most are of
+    obvious interest to the Chinese government." Tooling ShadowPad/SodaMaster/Spyder/RPipeCommander
+    + Cobalt Strike confirmed; ESET "was unable to identify the initial-compromise vectors."
+    Trimmed "religious organizations"→"Catholic organizations/charities" and "think tanks"→"a
+    geopolitical think tank" to match the source exactly (one French think tank, two US Catholic
+    bodies). ATTRIBUTION: ESET reaches only nation/contractor level — "FishMonger is an espionage
+    team operated by I-SOON, a Chinese contractor based in Chengdu"; "China-aligned." ESET names
+    NO Chinese service for FishMonger and assesses FishMonger=I-SOON INDEPENDENTLY of the DOJ
+    indictment ("Independent of the DOJ indictment, we determined that FishMonger is operated by
+    I-SOON"), which corroborates it. The ONLY service named is the Ministry of PUBLIC Security
+    (MPS), and only as the DOJ's framing of indicted I-SOON personnel — NOT the MSS; raw has zero
+    "State Security"/"MSS"/"Guoanbu". attributing_org_confidence high matches ESET's "high
+    confidence"; added attribution_level: named-actor (named cluster, not named-unit); fixed a
+    misleading inline comment that conflated org-confidence with a nonexistent "attested" link.
+    published_on 2025-03-20 = byline "20 Mar 2025" (Matthieu Faou). DOCTRINE LINK left at
+    confidence: plausible with attesting_source_id: null — correct: ESET states no strategic
+    purpose at the NIL compelled-contractor goal level (it only notes victims are "of obvious
+    interest to the Chinese government"), so it does not earn attested. ACTOR: cn/unscoped/fishmonger
+    is the right placement for an I-SOON contractor with no service named in the source (already
+    de-provisionalized + demoted from cn/mss on 2026-06-24); FK resolves, not stale. All FKs
+    (actor, doctrine/pillar, 3 sectors, source) resolve.

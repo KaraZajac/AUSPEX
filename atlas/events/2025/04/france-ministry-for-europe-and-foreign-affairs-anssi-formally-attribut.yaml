@@ -8,14 +8,22 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  On 29 April 2025 France made its first public state attribution of APT28 operations against French entities. ANSSI's CERT-FR released CTI report CERTFR-2025-CTI-007 ('Targeting and compromise of French entities using the APT28 intrusion set'), and the Ministry for Europe and Foreign Affairs condemned the GRU-attributed activity. Since 2021 the intrusion set targeted roughly ten French entities — public services, private companies, and a sports organisation involved in Paris 2024 Olympic preparations, plus defence, aerospace, finance and NGO sectors — using phishing, exploitation of CVE-2023-23397, brute-force against webmail and compromised edge devices. France's foreign ministry explicitly attributes APT28 to Russia's GRU (Unit 26165). Distinct from the 2021 ANSSI APT28 attribution already in the corpus (which covered a 2021-2023 campaign); this 2025 report + foreign-ministry condemnation is a new event. Maps to the existing Fancy Bear / APT28 actor.
+  On 29 April 2025 France made its first public state attribution of APT28 operations against French entities. Two companion publications appeared the same day: ANSSI's CERT-FR released technical CTI report CERTFR-2025-CTI-007 ('Targeting and compromise of French entities using the APT28 intrusion set'), which attributes the APT28 intrusion set to 'the Russian Federation' (citing the EU High Representative); and the Ministry for Europe and Foreign Affairs (MEAE) issued a diplomatic condemnation that explicitly names the perpetrator — 'France condemns in the strongest terms the use by Russia's military intelligence service (GRU) of the APT28 attack group'. Since 2021 the intrusion set targeted around ten French entities (later reporting: 12) — public services, private companies, and a sports organisation involved in Paris 2024 Olympic preparations, plus ministerial/local-government, defence (DTIB), aerospace, research/think-tank and economic/finance sectors — using phishing, exploitation of CVE-2023-23397, brute-force against webmail and compromised edge devices. France's MEAE attributes APT28 to Russia's GRU; it does NOT itself name a specific unit — Unit 26165 is the established analyst / MISP-galaxy placement of APT28 (the actor mapped here). Distinct from the 2023 ANSSI APT28 attribution already in the corpus (CERTFR-2023-CTI-009, covering a 2021-2023 campaign); this 2025 report + foreign-ministry condemnation is a new event. Maps to the existing Fancy Bear / APT28 actor.
 attributions:
   - actor_id: ru/gru/26165/apt28
-    attributing_org: "certssigouv"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org: "Ministry for Europe and Foreign Affairs (France)"
+    attributing_org_confidence: high   # formal state attribution
+    attribution_level: named-unit   # MEAE names the GRU (military intelligence service); actor sits under ru/gru/26165
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-04-29
-    attribution_source_id: certssigouv/2025-04_france-ministry-for-europe-and-foreign-a
+    attribution_source_id: diplomatie-gouv-fr/2025-04-29_apt28-attribution-russian-military-gru
+    notes: |
+      The GRU attribution is the MEAE diplomatic statement's, not ANSSI's: ANSSI/CERT-FR's
+      CERTFR-2025-CTI-007 attributes APT28 only to "the Russian Federation" (citing the EU
+      High Representative) and names no unit. The MEAE explicitly condemns "the use by
+      Russia's military intelligence service (GRU) of the APT28 attack group" — hence
+      named-unit (GRU = named service organ). France did NOT name Unit 26165; that is the
+      analyst/MISP-galaxy placement of APT28 reflected in the actor_id.
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/nato-as-principal-threat
@@ -43,4 +51,31 @@ targets:
     country: fr
     role: primary
 sources:
+  - diplomatie-gouv-fr/2025-04-29_apt28-attribution-russian-military-gru
   - certssigouv/2025-04_france-ministry-for-europe-and-foreign-a
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs ANSSI CERTFR-2025-CTI-007 (raw PDF captured + sha256) and the MEAE diplomatic
+    statement (body JS-rendered/unfetchable; official wording corroborated verbatim across
+    Industrial Cyber, The Record, Infosecurity, The Defense Post). FACTS OK: 29 Apr 2025;
+    APT28 vs ~10 French entities (later: 12) since 2021; sectors = ministerial/local-govt,
+    DTIB/defence, aerospace, research/think-tank, finance, sports/Olympics; TTPs = phishing,
+    CVE-2023-23397 (0-day), webmail brute-force, edge-device compromise — all match the raw.
+    ATTRIBUTION CORRECTED: the cited ANSSI report attributes APT28 only to "the Russian
+    Federation" (per EU High Rep) and names NO unit; the GRU attribution is the MEAE
+    statement's ("Russia's military intelligence service (GRU)"). Added the MEAE source as
+    the GRU-attributing primary; changed attributing_org certssigouv -> MEAE; added
+    attribution_level: named-unit (GRU named). France did NOT name Unit 26165 (analyst/
+    MISP-galaxy placement) — summary corrected to stop overstating France's specificity.
+    actor_id ru/gru/26165/apt28 resolves + correct (not stale). doctrine_link
+    ru/military-doctrine-2014/nato-as-principal-threat kept strongly_inferred,
+    attesting_source_id null: France/ANSSI state only the proximate purpose (espionage /
+    strategic-intelligence collection against a NATO state), not the NATO-as-principal-threat
+    end — not attested. NGO sector retained (within attributed European-context targeting) but
+    note: ANSSI's PDF victim list names economic/financial, not NGO. FLAG: ANSSI source
+    kind: industry / tier: secondary understate a national-CERT first-party advisory
+    (preserved per protocol; flagged in the source notes).
