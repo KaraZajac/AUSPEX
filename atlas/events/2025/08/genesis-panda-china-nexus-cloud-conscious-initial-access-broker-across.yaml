@@ -14,6 +14,7 @@ attributions:
   - actor_id: cn/unscoped/genesis-panda
     attributing_org: "CrowdStrike (OverWatch / Counter Adversary Operations)"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: named-actor   # CrowdStrike names a specific tracked adversary (GENESIS PANDA, "-PANDA"=China-nexus) but binds it to NO service/unit. Set 2026-06-25 audit.
     auspex_assessment: concur
     attribution_date: 2025-08-04
     attribution_source_id: crowdstrike/2025-08_genesis-panda-china-nexus-cloud-consciou
@@ -38,3 +39,35 @@ targets:
     role: primary
 sources:
   - crowdstrike/2025-08_genesis-panda-china-nexus-cloud-consciou
+  - thehackernews/2025-08_chinese-hackers-murky-genesis-glacial-panda-cloud-telecom-espionage
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the CrowdStrike 2025 Threat Hunting Report ecosystem (both raw snapshots captured + hashed).
+    FACTS ✓ (corroborated): "Active since at least January 2024 ... high-volume operations targeting the
+    financial services, media, telecommunications, and technology sectors spanning 11 countries. The goal of
+    the attacks is to enable access for future intelligence-collection activity" + the IMDS→cloud-control-plane
+    credential chain + the hedged initial-access-broker assessment ("The possibility that it acts as an initial
+    access broker stems from ... exploitation of a wide range of web-facing vulnerabilities and limited data
+    exfiltration") are all verbatim in the added The Hacker News capture (sha256 8b250b48). SOURCE-DEPTH FIX:
+    the event's original SOLE source (CrowdStrike announcement blog) does NOT contain these detail-level claims
+    or GENESIS PANDA's "-PANDA" intrusion specifics — that page names GENESIS PANDA exactly once, only as a
+    "suspected cloud-conscious China-nexus" adversary, and the full detail lives in CrowdStrike's GATED PDF
+    report; added thehackernews/2025-08_... as a CAPTURABLE corroborator (raw HTML captured + hashed). The
+    early-March-2025 Jenkins intrusion and the "added SSH keys and created a backdoor access key" specifics
+    trace to the CrowdStrike full report (corroborated by CSO Online / Wiz secondary write-ups); both the blog
+    and the THN capture lack the verbatim Jenkins sentence (THN's SSH/backdoor ShieldSlide detail is GLACIAL
+    PANDA, not GENESIS PANDA) — facts held as accurate-to-CrowdStrike, not over-stated. ATTRIBUTION ✓: both
+    captures attribute GENESIS PANDA ONLY as "China-nexus"/"China-linked" — NO service named (0 word-boundary
+    "MSS"/"Ministry of State Security"/"PLA"); attribution_level SET to named-actor (CrowdStrike named a
+    specific tracked adversary but bound it to no service/unit); actor cn/unscoped/genesis-panda is correct and
+    fresh (demoted from cn/mss on 2026-06-24, NOT stale). published_on 2025-08-04 correct (report release;
+    blog dateModified 2025-12-11 is a later edit). DOCTRINE LINK held at plausible / attesting_source_id null
+    (correct, NOT over-attested): no source states an NIL-tied strategic purpose; the link is inferential and
+    pillar is null (target breadth fits no single pillar). ACTOR ENRICHMENT (flag, not changed here): THN and
+    other vendors give GENESIS PANDA the alias "Earth Lamia" (Trend Micro) — candidate to add to the actor's
+    aliases[] in a future actor pass.
+

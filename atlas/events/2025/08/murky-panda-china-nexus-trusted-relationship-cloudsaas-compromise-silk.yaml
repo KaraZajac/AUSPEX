@@ -11,12 +11,21 @@ false_flag_risk: none
 summary: |
   CrowdStrike detailed MURKY PANDA, a China-nexus actor (aligned with Silk Typhoon activity), conducting trusted-relationship compromises in the cloud to reach downstream victims for email espionage, targeting government, technology, academic, legal, and professional-services entities in North America. The actor compromised SaaS providers and Microsoft cloud solution providers to move laterally into customer tenants, and also exploited internet-facing appliances for initial access, including Citrix NetScaler CVE-2023-3519. Tooling included the Neo-reGeorg web shell and a custom Golang Linux RAT named CloudedHope, with RDP used for lateral movement. The trusted-relationship cloud vector makes detection difficult because access arrives through legitimate provider relationships.
 attributions:
-  - actor_id: cn/mss/hafnium
+  - actor_id: cn/unscoped/murky-panda
     attributing_org: "CrowdStrike (Counter Adversary Operations)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CrowdStrike: "likely" intelligence-driven; activity "aligns with" Silk Typhoon
+    attribution_level: named-actor   # named cluster (MURKY PANDA), China-nexus; no service named
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-08-21
     attribution_source_id: crowdstrike/2025-08_murky-panda-china-nexus-trusted-relation
+    notes: |
+      CrowdStrike attributes to the MURKY PANDA cluster and states its "activity aligns with
+      China-nexus targeted intrusion activity tracked by industry sources as Silk Typhoon" —
+      an alignment/overlap, NOT an identity, and it names no service (no MSS/PLA). Re-pointed
+      from cn/mss/hafnium to cn/unscoped/murky-panda on 2026-06-25 (LLM audit): MSS-level
+      placement is over-attributed for this operation; cf. sibling cn/unscoped/genesis-panda.
+      MISP galaxy folds MURKY PANDA into HAFNIUM/Silk Typhoon as a synonym (divergence
+      documented in the actor record, per the MISP-as-reference directive).
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: null
@@ -38,3 +47,31 @@ targets:
     role: primary
 sources:
   - crowdstrike/2025-08_murky-panda-china-nexus-trusted-relation
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited CrowdStrike blog (raw captured + sha256). FACTS all confirmed: China-nexus
+    trusted-relationship cloud compromise; targets government/technology/academic/legal/professional-
+    services in North America; SaaS-provider compromise via Entra ID app-registration secret →
+    service-principal auth into downstream tenants; Microsoft cloud-solution-provider compromise via
+    DAP/Global-Admin cross-tenant access; email exfiltration; Citrix NetScaler CVE-2023-3519; Neo-reGeorg
+    web shell; custom Golang/ELF Linux RAT CloudedHope (garble-obfuscated); RDP lateral movement.
+    published_on 2025-08-21 confirmed (visible "August 21, 2025"; dateModified 2025-08-22).
+    ATTRIBUTION CORRECTION (the Murky-Panda<->Silk-Typhoon<->MSS question): the source names MURKY
+    PANDA as a distinct cluster and says its "activity aligns with ... Silk Typhoon" — an ALIGNMENT,
+    not an identity — and names NO service (zero occurrences of MSS/Ministry of State Security/Hafnium
+    in the captured page). Re-pointed actor cn/mss/hafnium -> cn/unscoped/murky-panda (new conservative
+    record, mirroring cn/unscoped/genesis-panda) because MSS-level placement is over-attributed here;
+    "-PANDA" denotes only a China nexus. Added attribution_level: named-actor. attributing_org_confidence
+    moderate retained (CrowdStrike: "likely" intelligence-driven). DIVERGENCE FROM MISP, documented in
+    the actor record per the MISP-as-reference directive (review, don't auto-adopt): MISP folds MURKY
+    PANDA into the HAFNIUM/Silk Typhoon synonym set; AUSPEX keeps it distinct/unscoped until a source
+    names a service or hard-equates the clusters (cf. cn/mss/hafnium aliases flag this equivalence as
+    contested). FLAG FOR HUMAN REVIEW: confirm the actor split vs merge-into-hafnium decision.
+    doctrine_link kept plausible (source states only generic intelligence-collection intent, no goal-
+    level purpose) on cn/national-intelligence-law-2017, null pillar (multi-sector, no single pillar).
+    Targets unchanged: no "professional-services" sector exists in the taxonomy; "technology"->ict;
+    legal already present — no sector inflation. Source tier (secondary/industry) preserved.

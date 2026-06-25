@@ -1,29 +1,47 @@
 # DEPTH backfill 2026-05-30 — targeted thin-actor depth round; source-verified, pre-enriched.
 id: 2025-09/gamaredonturla-collaboration-deploying-kazuar-backdoor-in-ukraine
 name: "Gamaredon–Turla collaboration deploying Kazuar backdoor in Ukraine"
-start_date: 2025-09-01
+start_date: 2025-02-01   # corrected 2026-06-25 audit: operation onset is the first observed co-compromise (Feb 2025; Gamaredon PteroGraphin file ts 2025-01-20, Turla Kazuar v3 2025-02-11). Was 2025-09-01 (the disclosure month). See disclosure_date.
+disclosure_date: 2025-09-19   # ESET blogpost byline "19 Sep 2025"
 incident_type:
   - espionage
   - intrusion
-initial_vector: unknown
+initial_vector: unknown   # ESET: endpoint installed post-compromise; presumes Gamaredon spearphishing / malicious LNK on removable drives but cannot pinpoint
 false_flag_risk: none
 summary: |
   ESET Research documented the first technical link between Gamaredon and Turla, two FSB-linked groups, in attacks on high-profile Ukrainian government and defense entities. In February 2025 ESET observed Gamaredon's PteroGraphin and PteroOdd tools used to restart Turla's Kazuar v3 backdoor on a compromised machine, and in April and June 2025 Kazuar v2 was deployed using Gamaredon's PteroOdd and PteroPaste. ESET assesses that Gamaredon provided Turla access to a small subset of its many compromised Ukrainian machines so Turla could operate its Kazuar backdoor on the most valuable targets.
 attributions:
   - actor_id: ru/fsb/center-18/gamaredon
     attributing_org: "ESET"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high   # ESET: "high confidence that Gamaredon is collaborating with Turla"
+    attribution_level: named-unit   # added 2026-06-25 audit: ESET names the FSB and relays SSU's attribution of Gamaredon to "Center 18 of Information Security of the FSB"; actor id maps to ru/fsb/center-18
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-09-01
+    attribution_date: 2025-09-19   # corrected from 2025-09-01 (ESET byline 19 Sep 2025)
     attribution_source_id: welivesecurity/2025-09_gamaredonturla-collaboration-deploying-k
+  - actor_id: ru/fsb/center-16/turla   # added 2026-06-25 audit: MULTI-ACTOR event — Turla was missing from attributions[]. ESET confirms Turla via Kazuar v2/v3 ("exclusive to that group") and the documented Gamaredon→Turla collaboration.
+    attributing_org: "ESET"
+    attributing_org_confidence: high   # ESET attributes the collaboration / Turla's Kazuar deployment with high confidence
+    attribution_level: named-unit   # ESET names the FSB and relays UK NCSC's attribution of Turla to "Center 16 of the FSB"; actor id maps to ru/fsb/center-16
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-09-19
+    attribution_source_id: welivesecurity/2025-09_gamaredonturla-collaboration-deploying-k
+    notes: |
+      Turla's role is the Kazuar (v2/v3) operator on a small, high-value subset of machines Gamaredon
+      had already compromised; ESET's named-unit placement (FSB Center 16) is relayed from UK NCSC.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: strongly_inferred
+    confidence: strongly_inferred  # held at strongly_inferred (NOT attested) 2026-06-25 audit: ESET states only the proximate collection purpose ("highly sensitive intelligence" / "most valuable machines"), never the Russkiy Mir / Ukraine-theater strategic goal. attesting_source_id below is the primary SUPPORTING source, not a goal-naming source.
     reasoning: |
-      Two FSB-linked groups combined access so Turla could run its Kazuar backdoor on the most valuable Ukrainian government and defense machines — high-value strategic collection concentrated in the Ukraine priority theater of the Russkiy Mir frame.
-    attesting_source_id: null
+      Two FSB groups (Center 18 / Gamaredon for access, Center 16 / Turla for the Kazuar backdoor) combined capabilities so Turla could run Kazuar on the most valuable Ukrainian government and defense machines — high-value strategic collection concentrated in the Ukraine priority theater of the Russkiy Mir frame. ESET names the collection purpose (highly sensitive intelligence) but not the doctrine-level strategic end, so the WHY is inferred.
+    attesting_source_id: welivesecurity/2025-09_gamaredonturla-collaboration-deploying-k   # primary SUPPORTING source (documents the Ukraine targeting + collection purpose); does NOT name the Russkiy Mir goal — see inference_basis
+    inference_basis:
+      signals:
+        - "ESET: the collaboration targets 'high-profile targets in Ukraine'; recent ESET data shows Gamaredon and Turla 'focusing on the Ukrainian defense sector in recent months' — operation sits squarely in the Ukraine theater."
+        - "ESET: 'Turla is interested only in specific machines, probably ones containing highly sensitive intelligence' and 'choose the most valuable machines' — high-value strategic collection, the end the Ukraine-theater pillar encodes."
+        - "Both perpetrators are FSB units (Center 16 Turla, Center 18 Gamaredon per SSU/NCSC via ESET) tasked against Ukraine — actor-mission aligns with the Russkiy Mir frame's prioritization of the Ukraine theater."
+      ruled_out: "ru/military-doctrine-2014/non-contact-warfare — this is quiet long-dwell espionage for intelligence collection, not a non-contact information-confrontation / disruptive effect against Ukrainian war-fighting, so the non-contact-warfare reading is weaker than the Ukraine-theater strategic-collection reading."
     contested: false
     analyst: claude
 targets:
@@ -35,3 +53,25 @@ targets:
     role: primary
 sources:
   - welivesecurity/2025-09_gamaredonturla-collaboration-deploying-k
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the ESET WeLiveSecurity blogpost "Gamaredon X Turla collab" (Faou & Rusnák, 19 Sep 2025);
+    raw HTML captured (curl HTTP 200, 114,374 bytes) + sha256 38daba13…3bc35cb8. FACTS ✓: ESET documents the
+    "first known cases of collaboration between Gamaredon and Turla, in Ukraine"; PteroGraphin/PteroOdd restarted
+    Turla's Kazuar v3 (Feb 2025); Kazuar v2 deployed via Gamaredon's PteroOdd & PteroPaste (Apr & Jun 2025); Turla
+    operated Kazuar on only the most valuable / highly-sensitive machines among Gamaredon's many compromises; both
+    groups FSB. ATTRIBUTION — major correction: this is a MULTI-ACTOR event and Turla (ru/fsb/center-16/turla) was
+    MISSING from attributions[]; ADDED it (ESET confirms Turla via Kazuar v2/v3 'exclusive to that group'). ESET
+    NAMES THE FSB explicitly ("both Gamaredon and Turla are part of the Russian Federal Security Service (FSB)") and
+    relays unit attributions — SSU → Gamaredon = FSB Center 18; UK NCSC → Turla = FSB Center 16 — so attribution_level
+    SET to named-unit for BOTH; confidence high (ESET states "high confidence" in the collaboration). Both actor_ids
+    resolve and are not stale (Center 18 / Center 16). published_on CORRECTED on the source 2025-09-01 → 2025-09-19
+    (byline); event start_date CORRECTED 2025-09-01 → 2025-02-01 (first co-compromise; PteroGraphin file-ts 2025-01-20,
+    Kazuar v3 2025-02-11) + disclosure_date 2025-09-19 added; attribution_dates aligned to 2025-09-19. DOCTRINE LINK
+    held at strongly_inferred (NOT upgraded): ESET states only the proximate collection purpose, never the Russkiy Mir /
+    Ukraine-theater strategic goal — added inference_basis (signals + ruled_out) and a supporting (non-goal-naming)
+    attesting_source_id. Source fields preserved (tier secondary, kind, etc.); added raw_snapshot + content_sha256.

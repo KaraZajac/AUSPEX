@@ -8,14 +8,16 @@ incident_type:
   - surveillance
 false_flag_risk: none
 summary: |
-  CrowdStrike's 2025 Threat Hunting Report describes GLACIAL PANDA, a China-nexus adversary that since at least 2018 has developed and maintained access to telecommunications provider networks to obtain call detail records (CDRs) and related communications telemetry. The group primarily targets telcos' Linux systems and conducts patient, long-term, espionage-driven intrusions, contributing to a 130% rise in nation-state activity in the telecom sector. GLACIAL PANDA deploys trojanized OpenSSH components collectively codenamed ShieldSlide; the trojanized SSH server binary grants backdoor access by authenticating any account, including root, when a hardcoded password is supplied, while harvesting user authentication sessions and credentials. Its objective is assessed to be intelligence collection from telecom infrastructure.
+  CrowdStrike's 2025 Threat Hunting Report and its Adversary Universe profile describe GLACIAL PANDA, a China-nexus, state-sponsored adversary that since at least 2018 has developed and maintained access to telecommunications-provider networks to obtain call detail records (CDRs) and related communications telemetry from telecom entities. Several identified targets are in the South China Sea region, with likely-attributable breaches also occurring in North and Central America. The group conducts long-term, espionage-driven intrusions, contributing to a 130% rise in nation-state activity in the telecom sector, with its objective assessed to be intelligence gathering. CrowdStrike's full report further reports that GLACIAL PANDA primarily targets telcos' Linux systems and deploys trojanized OpenSSH components collectively codenamed ShieldSlide — a trojanized SSH server binary that grants backdoor access by authenticating any account (including root) when a hardcoded password is supplied, while logging authentication sessions to support lateral movement (these ShieldSlide / OpenSSH tradecraft details are reported only in the gated full report PDF and are not present in the two captured CrowdStrike web sources).
 attributions:
   - actor_id: cn/unscoped/glacial-panda
     attributing_org: "CrowdStrike (OverWatch / Counter Adversary Operations)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CrowdStrike hedges ("likely attributable", "likely conducts targeted intrusions for intelligence collection")
+    attribution_level: named-actor          # tracked as a discrete named adversary; China-nexus origin only — no Chinese service named
     auspex_assessment: concur
     attribution_date: 2025-08-04
     attribution_source_id: crowdstrike/2025-08_glacial-panda-china-nexus-telecom-intrus
+    notes: "Corroborated by CrowdStrike's Glacial Panda Adversary Universe profile (crowdstrike/glacial-panda-adversary-profile), which supplies the CDR + since-2018 + victim-geography facts the cited blog summary omits. Both name only a China nexus / 'State-Sponsored' motivation — no MSS/PLA/unit — hence cn/unscoped."
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
@@ -31,3 +33,29 @@ targets:
     role: primary
 sources:
   - crowdstrike/2025-08_glacial-panda-china-nexus-telecom-intrus
+  - crowdstrike/glacial-panda-adversary-profile
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs both captured CrowdStrike sources (raw + sha256). KEY FINDING: the originally-cited URL
+    is the 2025 Threat-Hunting-Report *blog summary* page, which mentions GLACIAL PANDA in exactly ONE
+    sentence and supports only: China-nexus, embedded in telecom, 130% rise in nation-state telecom
+    activity, long-term/espionage-driven. It does NOT contain the CDR / "since 2018" / ShieldSlide /
+    OpenSSH / hardcoded-password / root / Linux claims (the CDR/2018/credential hits in the raw HTML are
+    coincidental — a "State of CDR Survey", a 2018 press release, unrelated AI-abuse copy). Added
+    CrowdStrike's Glacial Panda Adversary Universe profile (captured 2026-06-25, sha256 4cc1565b…) as the
+    corroborating source: it verbatim supports "since at least 2018", "call detail records (CDRs)", and
+    victim geography (South China Sea region; North/Central America), and lists origin "China" /
+    motivation "State-Sponsored" with NO Chinese service named. Summary rewritten to attribute facts
+    correctly and to flag that ShieldSlide/OpenSSH/hardcoded-backdoor/Linux tradecraft is reported only
+    in the gated full-report PDF (not present in either captured web source) — kept but provenance-tagged,
+    not fabricated. ATTRIBUTION: cn/unscoped is correct — "-PANDA" = China-nexus origin, no service;
+    added attribution_level: named-actor. confidence moderate matches CrowdStrike's hedged language.
+    DOCTRINE: cn/intelligentized-warfare/sigint-c4isr-collection kept at strongly_inferred,
+    attesting_source_id null — CrowdStrike names the behaviour (CDR collection) + proximate purpose
+    ("intelligence gathering") but not the SIGINT/C4ISR strategic end, so NOT attested (correctly
+    calibrated, not over-attested). Actor cn/unscoped/glacial-panda resolves and is current (already
+    de-provisionalized 2026-06-24). FK targets/pillar/sector all resolve.

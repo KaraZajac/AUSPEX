@@ -12,7 +12,8 @@ summary: |
 attributions:
   - actor_id: kp/unscoped/apt37
     attributing_org: "Seqrite Labs"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # Seqrite states attribution flatly: "North Korean state-backed cyber espionage group" / "North Korean state-sponsored actors" (no hedging)
+    attribution_level: named-actor   # names APT37 (the actor), not a DPRK service/unit; source names no MSS/RGB
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-08-29
     attribution_source_id: seqrite/2025-08_apt37-inkysquid-scarcruft-operation-hank
@@ -38,3 +39,33 @@ targets:
     role: primary
 sources:
   - seqrite/2025-08_apt37-inkysquid-scarcruft-operation-hank
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Seqrite Labs "Operation HanKook Phantom" (raw captured, sha256
+    f957ecee1455e7941130f5c4bfccdf01245b7259968bce04238d42efca6a5205). FACTS: all confirmed
+    against the raw. Decoy = "국가정보연구회 소식지 (52호)" / National Intelligence Research Society
+    Newsletter – Issue 52, delivered as a PDF + malicious .pdf.lnk; LNK embeds PowerShell that
+    extracts a decoy PDF + payloads to %TEMP%, then fileless in-memory execution (XOR 0x35
+    decrypt, reflective DLL injection) of the final payload = ROKRAT ("Fingerprint of ROKRAT's
+    Malware"). Named victim institutions confirmed verbatim: Kwangwoon University, Korea
+    University, Institute for National Security Strategy (+ National Intelligence Research
+    Association, Central Labor Economic Research Institute, et al.). Country set matches exactly:
+    primary South Korea; also Japan, Vietnam, Russia, Nepal, China, India, Romania, Kuwait,
+    Middle East. ATTRIBUTION: source says "North Korean state-backed cyber espionage group" /
+    "North Korean state-sponsored actors" — NAMES NO DPRK SERVICE (the 3 'rgb' hits in the raw
+    are CSS rgb() color values, not the Reconnaissance General Bureau; no MSS string).
+    actor_id kp/unscoped/apt37 is correct + current (matches the 2026-06-24 actor audit that
+    demoted kp/mss/apt37→kp/unscoped since no cited source names a service). published_on
+    2025-08-29 = source's actual date (META article:published_time + visible byline). CORRECTIONS:
+    (1) ADDED attribution_level: named-actor (was missing). (2) Replaced the stale inline comment
+    "mapped from ICD link-confidence: attested" on attributing_org_confidence: high with the real
+    basis (Seqrite states attribution flatly, no hedging → high supportable). doctrine_link
+    kp/strategic-information/policy-collection kept at strongly_inferred (UNCHANGED): the
+    Conclusion names only the proximate end "intelligence gathering and long-term espionage" —
+    behaviour, not the strategic policy-collection goal the doctrine encodes — so it does not meet
+    the attested bar; target set (intel-research association, ex-govt officials, NSS think-tank)
+    triangulates strongly to policy-collection with attesting_source_id: null correct.

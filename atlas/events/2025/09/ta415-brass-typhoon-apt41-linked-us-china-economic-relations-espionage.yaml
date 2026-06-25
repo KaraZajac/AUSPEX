@@ -1,6 +1,7 @@
 id: 2025-09/ta415-brass-typhoon-apt41-linked-us-china-economic-relations-espionage
 name: "TA415 (Brass Typhoon / APT41-linked) US-China economic-relations espionage via VS Code Remote Tunnels"
-start_date: 2025-09-16
+start_date: 2025-07-01   # source: "Beginning in July 2025… a series of campaigns"; was publication date 2025-09-16 (now disclosure_date)
+disclosure_date: 2025-09-16
 incident_type:
   - intrusion
   - espionage
@@ -8,21 +9,36 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Proofpoint (published 16 September 2025) detailed that throughout July-August 2025 TA415 — a China-aligned actor Proofpoint links publicly to APT41 / Brass Typhoon — ran spearphishing campaigns against US government, think-tank, and academic organizations using US-China economic-relations lures (impersonating US officials and trade bodies). The actor adopted VS Code Remote Tunnels as a primary persistence/remote-access mechanism, enabling hands-on-keyboard access without traditional malware, to collect intelligence on US trade policy and economic negotiations. Maps to the existing APT41 actor but is a distinct 2025 economic-collection campaign not represented in the corpus.
+  Proofpoint (published 16 September 2025) detailed that throughout July-August 2025 TA415 — a Chinese state-sponsored actor (indicted by the US in 2020) that Proofpoint says overlaps with activity tracked elsewhere as APT41 / Brass Typhoon / Wicked Panda — ran spearphishing campaigns against US government, think-tank, and academic organizations using US-China economic-relations lures. The group impersonated the US-China Business Council (July 2025) and Rep. John Moolenaar, Chair of the House Select Committee on Strategic Competition with the CCP (July-August 2025), soliciting input on a purported China-sanctions framework. The infection chain (WhirlCoil Python loader → LNK) adopted Visual Studio Code Remote Tunnels as a primary persistence/remote-access mechanism, giving hands-on-keyboard access without conventional malware; recent TA415 operations have consistently abused legitimate services for C2 (Google Sheets, Google Calendar, and VS Code Remote Tunnels). Proofpoint assesses the primary objective is likely the collection of intelligence on the trajectory of US-China economic ties. Maps to the existing APT41 actor but is a distinct 2025 economic-collection campaign not previously represented in the corpus.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: "proofpoint"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
-    auspex_assessment: concur-with-caveat
+    attributing_org_confidence: high   # source: "Proofpoint attributes the activity… to TA415 with high confidence"
+    attribution_level: named-actor   # names TA415, overlapping APT41 / Brass Typhoon / Wicked Panda
+    auspex_assessment: concur-with-caveat   # caveat: TA415≡APT41 via overlap; cn/mss rests on the DOJ defendant-boast, which Proofpoint only relays ("reportedly claimed")
     attribution_date: 2025-09-16
     attribution_source_id: proofpoint/2025-09_ta415-brass-typhoon-apt41-linked-us-chin
+    notes: |
+      Proofpoint attributes to TA415 with HIGH confidence (multiple independent
+      overlaps with known TA415 infrastructure, TTPs, and targeting). TA415 is
+      Proofpoint's cluster name; the source states it "overlaps with threat
+      activity tracked by third parties as APT41, Brass Typhoon, and Wicked
+      Panda" and is "a Chinese state-sponsored threat actor indicted by the U.S.
+      government in 2020" — corroborating the cn/apt41 mapping at China-state /
+      named-actor level. On the MSS specifically the source only RELAYS the
+      same defendant boast as the DOJ source: "indicted members of the group
+      reportedly claimed to have links to China's civilian foreign intelligence
+      service, the Ministry of State Security (MSS)." It is not an independent
+      Proofpoint assertion of MSS tasking, so it corroborates the cn/mss/apt41
+      placement only weakly (the placement rests on the actor's DOJ sources,
+      verified 2026-06-24).
 doctrine_links:
   - doctrine_id: cn/dual-circulation
     pillar_id: cn/dual-circulation/external-leverage
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      TA415's spearphishing of US government, think-tank and academic targets with US-China economic-relations lures, explicitly to collect intelligence on US trade policy and economic negotiations, directly serves the external-circulation goal of understanding and exploiting external dependencies for asymmetric leverage in economic statecraft.
+      TA415's spearphishing of US government, think-tank and academic targets with US-China economic-relations lures, which Proofpoint assesses is likely aimed at collecting intelligence on the trajectory of US-China economic ties, serves the external-circulation goal of understanding and exploiting external dependencies for asymmetric leverage in economic statecraft. strongly_inferred (not attested): the source names only the proximate purpose (intelligence collection on economic-tie trajectory, hedged "likely"), which this pillar specializes into the dual-circulation external-leverage strategy; it does not state that strategic end in its own words, so attesting_source_id stays null.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -38,3 +54,33 @@ targets:
     role: primary
 sources:
   - proofpoint/2025-09_ta415-brass-typhoon-apt41-linked-us-chin
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the single cited Proofpoint blog (raw captured + SHA-256). FACTS all
+    confirmed: July-August 2025 spearphishing of US government/think-tank/academic
+    targets with US-China economic lures; impersonation of the US-China Business
+    Council and Rep. John Moolenaar (Chair, House Select Committee on the CCP);
+    WhirlCoil loader establishing VS Code Remote Tunnels for malware-free
+    hands-on-keyboard access; legitimate-service C2 (Google Sheets/Calendar + VS
+    Code Tunnels); objective "likely the collection of intelligence on the
+    trajectory of U.S.-China economic ties." CORRECTIONS: (1) attributing_org_confidence
+    moderate→HIGH — source states "Proofpoint attributes the activity… to TA415 with
+    high confidence" (the old "moderate" was a mis-mapping from the ICD link-confidence
+    field). (2) Added attribution_level: named-actor (names TA415, overlapping APT41 /
+    Brass Typhoon / Wicked Panda). (3) start_date 2025-09-16→2025-07-01 (op start,
+    "Beginning in July 2025…"); the 2025-09-16 publication date moved to disclosure_date.
+    (4) Summary expanded with the impersonation detail + C2 channels + sourced objective
+    phrasing. ATTRIBUTION/MSS: this source does NOT independently name the MSS as tasker —
+    it only relays the same defendant boast as the DOJ source ("indicted members of the
+    group reportedly claimed to have links to … the Ministry of State Security (MSS)").
+    Proofpoint's own attribution is to TA415 ≡ APT41/Brass Typhoon, "Chinese
+    state-sponsored," indicted 2020. The cn/mss/apt41 placement rests on the actor's DOJ
+    sources (verified 2026-06-24) and is only weakly corroborated here; recorded in the
+    attribution notes. DOCTRINE LINK kept strongly_inferred (source names only the
+    proximate intel-collection purpose, hedged "likely"; pillar specializes it) —
+    attesting_source_id null, no over-attestation. actor_id cn/mss/apt41 resolves, not
+    stale. All target sector + doctrine/pillar FKs resolve.

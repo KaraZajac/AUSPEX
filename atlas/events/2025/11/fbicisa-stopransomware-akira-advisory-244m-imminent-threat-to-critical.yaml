@@ -1,5 +1,5 @@
 id: 2025-11/fbicisa-stopransomware-akira-advisory-244m-imminent-threat-to-critical
-name: "FBI/CISA #StopRansomware: Akira advisory — $244M, imminent threat to critical infrastructure"
+name: "FBI/CISA #StopRansomware: updated Akira advisory (AA24-109A) — $244M, FBI 'top-five' variant"
 start_date: 2025-11-13
 incident_type:
   - ransomware
@@ -8,26 +8,31 @@ incident_type:
 initial_vector: n-day
 false_flag_risk: none
 summary: |
-  FBI, CISA, DC3, HHS, Europol and the national cyber authorities of France, Germany and the Netherlands updated their 2024 joint advisory (AA24-109A) on Akira ransomware, warning it now presents an imminent threat to critical infrastructure. Akira, first identified March 2023, has collected more than $244M in ransom proceeds as of late September 2025 and is assessed by the FBI as a top-five ransomware variant. The group is linked to Storm-1567 / Howling Scorpius / Punk Spider / Gold Sahara clusters and has possible Conti lineage; recent intrusions pivoted to exploiting SonicWall SSL-VPN devices (CVE-2024-40766) and encrypting Nutanix AHV in addition to VMware ESXi/Hyper-V. Akira is a major gap in the corpus (no existing events) and is one of the most prolific RaaS operations of 2024–2025.
+  On 2025-11-13 the FBI and CISA — supported by Europol and the national cyber authorities of France, Germany and the Netherlands — released an updated joint #StopRansomware advisory (AA24-109A) on the Akira ransomware group, sharing fresh TTPs, tools and exploited vulnerabilities. Officials stressed the update "was not in response to any specific attack" but reflects ransomware adversaries' continuous evolution. CyberScoop reports Akira, a financially motivated group that initially appeared in March 2023, has claimed more than $244M in ransom proceeds as of late September 2025; the FBI assesses it within its top five investigated variants (of 130+ targeting U.S. businesses across "just about any critical infrastructure sector"). The advisory associates Akira with the Storm-1567 / Howling Scorpius / Punk Spider / Gold Sahara clusters and possible connections to the disbanded Conti group, and lists six newly observed vulnerabilities spanning Cisco firewalls/VPNs, Windows, VMware ESXi, Veeam Backup and Replication and SonicWall firewalls (e.g. CVE-2024-40766). Akira uses a double-extortion model and has exfiltrated data in just over two hours from initial access in some incidents. Akira is otherwise a gap in the corpus and is among the most prolific RaaS operations of 2024–2025.
 attributions:
   - actor_id: criminal/akira
     attributing_org: "cyberscoop"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: named-actor   # CyberScoop/advisory name the specific group (Akira / Storm-1567)
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-11-13
     attribution_source_id: cyberscoop/2025-11_fbicisa-stopransomware-akira-advisory-24
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Akira is a Russia-tolerated criminal ransomware enterprise (possible Conti lineage, Storm-1567 cluster) whose Western-CII intrusions are assessed an imminent threat to critical infrastructure, consistent with the post-2022 posture of permitting/benefiting from criminal proxies that degrade adversary CII. Link is contested because the operation is fundamentally revenue-driven rather than state-directed.
-    attesting_source_id: null
-    contested: true
-    analyst: claude
+# doctrine_links reconciled to [] on 2026-06-25 (claude-opus-4.8/max audit), mirroring the
+# criminal/akira actor de-stating (moved ru/unscoped -> criminal/ on 2026-06-25). The dropped link
+# was ru/sanctions-response-2022/criminal-proxy-mobilization (plausible/contested): no cited source
+# documents a Russia-state nexus for the Akira (Storm-1567 / Gold Sahara) crew, the cited CyberScoop
+# source calls Akira purely "the financially motivated group", and that pillar's roster
+# (Conti/TrickBot/Wizard Spider, Killnet, NoName057(16), CARR) never named Akira. criminal/ convention
+# = empty doctrine_links absent a documented state nexus.
+doctrine_links: []
 targets:
   - target_id: sectors/critical-infrastructure
     role: primary
 sources:
   - cyberscoop/2025-11_fbicisa-stopransomware-akira-advisory-24
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs CyberScoop (raw captured, sha256 dd30f3f6…). Verified: published_on 2025-11-13 (JSON-LD); >$244M as of late Sept; FBI 'top-five' (of 130+ variants); March 2023; Storm-1567/Howling Scorpius/Punk Spider/Gold Sahara + possible Conti; Europol+FR/DE/NL; CVE-2024-40766/SonicWall/VMware ESXi/Veeam/Cisco; AA24-109A (linked); double-extortion; ~2h exfil. CORRECTED over-claims absent from the cited source: removed 'imminent threat to critical infrastructure' (0 'imminent' hits — article says the update 'was not in response to any specific attack'), DC3/HHS co-signers (0 hits), and Nutanix AHV/Hyper-V encryption (0 hits) from name+summary; slug id left unchanged (stable). Added attribution_level: named-actor. ATTRIBUTION: CyberScoop calls Akira purely 'the financially motivated group' — zero state nexus; actor criminal/akira correct (moved ru/unscoped->criminal/ on 2026-06-25). doctrine_links reconciled []: dropped ru/sanctions-response-2022/criminal-proxy-mobilization (criminal/ convention; no documented Russia-state nexus; pillar roster never named Akira), mirroring the actor's dropped alignment."
