@@ -1,6 +1,7 @@
 id: 2024-05/mstic-attributes-quick-assist-teams-vishing-social-engineering-to-blac
 name: "MSTIC attributes Quick Assist / Teams vishing social-engineering-to-Black-Basta intrusions to Storm-1811"
-start_date: 2024-05-15
+start_date: 2024-04-15  # source: Quick Assist abuse observed "Since mid-April 2024"; 2024-05-15 is the disclosure date
+disclosure_date: 2024-05-15
 incident_type:
   - intrusion
   - ransomware
@@ -8,29 +9,21 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Microsoft Threat Intelligence (15 May 2024) attributed a social-engineering campaign abusing the Quick Assist remote-assistance tool to the financially motivated group Storm-1811, which deploys Black Basta ransomware. Operators use voice phishing (vishing) - often after email-bombing a target - to impersonate Microsoft technical support or IT staff and gain remote access via Quick Assist. They then deliver tooling including Qakbot, Cobalt Strike, ScreenConnect, NetSupport Manager and SystemBC, and use PsExec to deploy Black Basta ransomware across the network. Microsoft links the activity to Storm-1811 as the initial-access vector leading to Black Basta deployment.
+  Microsoft Threat Intelligence reported (blog published 15 May 2024) a social-engineering campaign - observed since mid-April 2024 - that abuses the Quick Assist remote-assistance tool, attributed to the financially motivated cybercriminal group Storm-1811, which deploys Black Basta ransomware. Operators use voice phishing (vishing) - often after email-bombing a target - to impersonate Microsoft technical support or IT staff and gain remote access via Quick Assist; a late-May 2024 update added Microsoft Teams (attacker-created tenants posing as "Help Desk") as a further contact vector. They then deliver tooling including Qakbot, Cobalt Strike, ScreenConnect, NetSupport Manager and SystemBC, and use PsExec to deploy Black Basta ransomware across the network. Microsoft frames Storm-1811 strictly as a financially motivated cybercriminal group (no state nexus) and links the activity to it as the initial-access vector leading to Black Basta deployment.
 attributions:
   - actor_id: criminal/black-basta
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: named-actor   # MSTIC names the tracked actor Storm-1811 (= Black Basta cluster)
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-05-15
     attribution_source_id: microsoft/2024-05_mstic-attributes-quick-assist-teams-vish
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Storm-1811 is a financially motivated crew deploying Black Basta ransomware via vishing; with no explicit state objective, the tolerated criminal-proxy lane — disruptive ransomware crews Russia permits to operate post-2022 — is the closest doctrinal frame.
-    attesting_source_id: null
-    inference_basis:
-      alternatives:
-        - "Storm-1811 is characterized only as financially motivated — no Russia attribution in the source"
-      ruled_out: "a Russia-state nexus in the cited MSTIC source — unestablished predicate"
-    counter_explanation: |
-      PREDICATE GAP: the 'Russia-nexus' label and tolerated-criminal-proxy framing presuppose a Russia attribution MSTIC does not make (Microsoft characterizes Storm-1811 only as financially motivated). Source the Russia nexus or drop the doctrine link.
-    contested: true
-    analyst: claude
+doctrine_links: []  # emptied 2026-06-25: actor moved to stateless criminal/black-basta (default_doctrine_alignment_ids cleared); the cited MSTIC source establishes NO Russia nexus (verified: zero russia/FSB/GRU/SVR/sanction tokens in the raw), so the ru/sanctions-response-2022 criminal-proxy link rests on an unestablished predicate. Mirrors the emotet/qilin/ransomhub criminal precedent. (Prior plausible/contested link with its counter_explanation removed.)
 sources:
   - microsoft/2024-05_mstic-attributes-quick-assist-teams-vish
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the MSTIC blog (raw captured, sha256 a0074bb2…). FACTS confirmed: Quick Assist abuse observed since mid-April 2024; Storm-1811 = 'financially motivated cybercriminal group known to deploy Black Basta ransomware'; vishing + email-bombing/link-listing; late-May 2024 Teams vector (attacker tenants posing as 'Help Desk'); tooling Qakbot/Cobalt Strike/ScreenConnect/NetSupport Manager/SystemBC/EvilProxy; PsExec to deploy Black Basta. ATTRIBUTION: MSTIC names Storm-1811 (named-actor) with NO state nexus — raw has zero russia/FSB/GRU/SVR/state-sponsor/sanction tokens; criminal framing only. CORRECTIONS: start_date 2024-05-15→2024-04-15 (source 'since mid-April 2024') + added disclosure_date 2024-05-15; added attribution_level named-actor; summary reworded to distinguish observation-start vs publication and to state the no-state-nexus framing; doctrine_links emptied to [] (actor now stateless criminal/, alignments cleared, source establishes no Russia predicate). published_on 2024-05-15 correct. actor_id criminal/black-basta resolves, not stale. FLAG (out of touch-scope): sibling events ascension-black-basta.yaml + black-basta-internal-chat-log-leak-… still carry the ru/sanctions-response-2022 plausible link on the now-stateless actor — human should reconcile against the emptied convention here. Source tier secondary preserved."

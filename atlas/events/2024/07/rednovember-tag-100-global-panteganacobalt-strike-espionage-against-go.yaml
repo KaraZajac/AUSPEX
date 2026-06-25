@@ -1,11 +1,12 @@
 id: 2024-07/rednovember-tag-100-global-panteganacobalt-strike-espionage-against-go
 name: "RedNovember (TAG-100) global Pantegana/Cobalt Strike espionage against government, defense and technology orgs"
-start_date: 2024-07-16
+start_date: 2024-06-01     # op-activity start: RF states "Between June 2024 and July 2025"; earliest dated activity is the 03-06 June 2024 Check Point VPN targeting. Set 2026-06-25 audit (was 2024-07-16 = the publication date of the EARLIER TAG-100 report, not an op start).
+end_date: 2025-07-25       # RF analysis cut-off date ("The analysis cut-off date for this report was July 25, 2025"); activity window ends July 2025. Set 2026-06-25 audit.
+disclosure_date: 2025-09-24   # publication date of the cited RedNovember report (<meta published-date>; PDF cta-cn-2025-0924); this is the report the summary is written from. The 2024-07-16 slug date is the EARLIER TAG-100 report.
 incident_type:
   - espionage
   - intrusion
-  - reconnaissance
-  - data-theft
+  - reconnaissance     # data-theft REMOVED 2026-06-25 audit: RF explicitly scopes its terms to compromise/targeting/reconnaissance/browsing and asserts NO data exfiltration/theft from victims (zero exfil/steal/collect-from-victim language in the report).
 initial_vector: n-day
 false_flag_risk: none
 summary: |
@@ -13,9 +14,10 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/rednovember
     attributing_org: "Recorded Future (Insikt Group)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # RF: "highly likely a Chinese state-sponsored threat activity group" / "a likely Chinese state-sponsored cyber-espionage group" — China nexus only, NO service named (no MSS/MPS/PLA). Held moderate per the RedJuliett/Confucius sibling pattern. (Replaced a misleading "mapped from ICD link-confidence: strongly_inferred" comment 2026-06-25 audit — the sole doctrine_link is plausible, not strongly_inferred.)
+    attribution_level: named-actor   # RF names its own tracked group (RedNovember, formerly TAG-100, overlaps Storm-2077) but no Chinese nation-service/unit. Added 2026-06-25 audit (cf. cn/unscoped placement).
     auspex_assessment: concur
-    attribution_date: 2024-07-16
+    attribution_date: 2025-09-24   # the China attribution was MADE in the 2025-09-24 RedNovember report; RF explicitly says of the 2024 TAG-100 report "At the time, we did not attribute this activity to a particular country". Corrected from 2024-07-16 (the earlier, unattributed report) 2026-06-25 audit.
     attribution_source_id: recordedfuture/2024-07_rednovember-tag-100-global-panteganacoba
 doctrine_links:
   - doctrine_id: cn/mcf
@@ -42,3 +44,46 @@ targets:
     role: primary
 sources:
   - recordedfuture/2024-07_rednovember-tag-100-global-panteganacoba
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the sole cited Recorded Future (Insikt Group) report (raw snapshot already on disk; re-fetched
+    live HTTP 200, byte-identical 53,252 bytes, sha256 b67e0b02...; full article body present).
+    SOURCE-IDENTITY / DATE FINDING: the cited URL + snapshot are the SEPTEMBER 24, 2025 RedNovember report
+    ("RedNovember Targets Government, Defense, and Technology Organizations", <meta published-date>=2025-09-24,
+    PDF cta-cn-2025-0924, analysis cut-off "July 25, 2025"), NOT the July 2024 TAG-100 report whose date the
+    record had been carrying. The earlier TAG-100 report (recordedfuture .../tag-100-uses-open-source-tools...,
+    published-date 2024-07-16, confirmed live) is where the 2024-07-16 came from, and RF explicitly states of it
+    "At the time, we did not attribute this activity to a particular country." The whole summary (China nexus,
+    "June 2024 to July 2025" window, Pantegana/Cobalt Strike/SparkRAT/LESLIELOADER, perimeter-appliance n-day
+    exploitation, Panama/Taiwan/Korea/US-defense victimology) is written from the 2025 report. So corrected the
+    source's published_on 2024-07-16 -> 2025-09-24; set event disclosure_date 2025-09-24; moved start_date
+    2024-07-16 -> 2024-06-01 (RF: "Between June 2024 and July 2025"; earliest dated activity 03-06 Jun 2024 Check
+    Point VPN targeting); added end_date 2025-07-25 (cut-off); set attribution_date 2025-09-24 (the report that
+    actually makes the China attribution). The source id/slug keep their 2024-07 date (slugs are stable forever).
+    FACTS verbatim-supported: Go-based Pantegana backdoor + Cobalt Strike + SparkRAT + LESLIELOADER loader; n-day
+    weaponization of internet-facing perimeter appliances (SonicWall, Cisco ASA, F5 BIG-IP, Palo Alto
+    GlobalProtect, Sophos SSL VPN, Fortinet FortiGate, OWA, Ivanti Connect Secure; CVE-2024-3400, CVE-2024-24919,
+    Follina); spearphishing PDF lure spoofing a US Navy contractor's IT dept; targets across government, defense/
+    aerospace, technology, law firms, intergovernmental orgs; Panama (30+ govt orgs, Apr 2025), Taiwan (IT/
+    semiconductor firms + air-base-adjacent recon around the 09 Dec 2024 PLA exercise), South Korea (nuclear-
+    safety + research bodies), US defense contractors; timing correlated with Beijing's strategic interests.
+    INCIDENT_TYPE CORRECTION: removed data-theft — RF deliberately scopes its terminology to "compromise/
+    targeting/reconnaissance/browsing" and asserts NO data exfiltration from victims (no exfil/steal/data-theft
+    language anywhere; the only "collection" is RF's own telemetry). Kept espionage/intrusion/reconnaissance.
+    ATTRIBUTION: actor cn/unscoped/rednovember correct — RF assesses "highly likely a Chinese state-sponsored
+    threat activity group" and names its own group (RedNovember = former TAG-100, overlaps Storm-2077) but NO
+    Chinese service/unit (MSS/MPS/PLA absent; the lone "state security organization" is an AFRICAN VICTIM). So
+    nation-nexus is established, service is not -> cn/unscoped is right. Held attributing_org_confidence=moderate
+    and ADDED attribution_level=named-actor (matches the sibling 2024-06 RedJuliett audit, same RF pattern).
+    Replaced the misleading inline "mapped from ICD link-confidence: strongly_inferred" comment (the only
+    doctrine_link is plausible). DOCTRINE LINK cn/mcf/dual-use-research kept at PLAUSIBLE with attesting_source_id
+    null (correct, not over-attested): RF never states an MCF/dual-use strategic purpose; the link rests on the
+    defense/aerospace/technology concentration, and the RF "Outlook" notes targeting that does NOT fit a single
+    reading (law firms, a newspaper, a Christian denomination) — more than one strategic reading survives, so
+    plausible is honest. ACTOR consistency: cn/unscoped/rednovember resolves, primary_service cn/unscoped exists,
+    not stale (the only cn/mss/rednovember strings remaining are explanatory demotion notes, not live FKs); did
+    NOT re-place the actor. TARGETS: all four sectors/countries verbatim-supported; no inflation.

@@ -1,19 +1,21 @@
 id: 2024-07/bluenoroff-hidden-risk-macos-campaign-against-cryptodefi-firms-novel-z
 name: "BlueNoroff 'Hidden Risk' macOS campaign against crypto/DeFi firms (novel Zshenv persistence)"
-start_date: 2024-07-01
+start_date: 2024-07-01   # campaign onset; SentinelLABS: "likely began as early as July 2024"
+disclosure_date: 2024-11-07   # SentinelLABS report publication (datePublished in page metadata)
 incident_type:
   - financial-theft
   - intrusion
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  SentinelOne (SentinelLABS) disclosed the 'Hidden Risk' campaign — attributed with high confidence to BlueNoroff (suspected DPRK-affiliated, Lazarus subcluster) — targeting cryptocurrency and DeFi businesses on macOS from around July 2024. Email/PDF lures with fake crypto-news headlines delivered a Swift dropper displaying a decoy PDF and a C++ backdoor ('growth'), using a first-in-the-wild persistence technique that abuses the Zshenv configuration file. Aligns with an FBI warning that the DPRK runs tailored social-engineering against DeFi/crypto employees to steal company cryptocurrency. Distinct from the 2022 BlueNoroff VC-impersonation MoTW event already in the corpus (BlueNoroff is currently a singleton there).
+  SentinelOne (SentinelLABS) disclosed the 'Hidden Risk' campaign — attributed with high confidence to BlueNoroff (suspected DPRK threat actor, Lazarus/BlueNoroff cluster) — targeting cryptocurrency and DeFi businesses on macOS in a campaign SentinelLABS assesses likely began as early as July 2024 (report published 2024-11-07). Email/PDF lures with fake crypto-news headlines delivered a Swift dropper displaying a decoy PDF and a C++ backdoor ('growth', ~5.1 MB, unsigned), using a first-in-the-wild persistence technique that abuses the Zsh configuration file zshenv. In early September 2024 the FBI warned that North Korea runs highly tailored social-engineering against employees of DeFi, cryptocurrency, and similar businesses. Distinct from the 2022 BlueNoroff VC-impersonation MoTW event already in the corpus.
 attributions:
-  - actor_id: kp/rgb/apt38
-    attributing_org: "sentinelone"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+  - actor_id: kp/rgb/bluenoroff
+    attributing_org: "SentinelLABS"
+    attributing_org_confidence: high   # source: "We assess with high confidence that the same actor is responsible for earlier attacks attributed to BlueNoroff"
+    attribution_level: named-actor   # names DPRK/BlueNoroff, NOT the RGB unit (raw scan: 0 "Reconnaissance General Bureau")
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-07-01
+    attribution_date: 2024-11-07
     attribution_source_id: sentinelone/2024-07_bluenoroff-hidden-risk-macos-campaign-ag
 doctrine_links:
   - doctrine_id: kp/office-39-sanctions-evasion
@@ -30,3 +32,36 @@ targets:
     role: primary
 sources:
   - sentinelone/2024-07_bluenoroff-hidden-risk-macos-campaign-ag
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs SentinelLABS "Hidden Risk" (raw captured, sha c4c7f32c…). FACTS all confirmed:
+    macOS targeting; victims = "employees of decentralized finance ('DeFi'), cryptocurrency,
+    and similar businesses"; novel zshenv persistence ("first time we have observed it used in
+    the wild"); Swift dropper + decoy PDF; C++ 'growth' backdoor (~5.1 MB, unsigned); fake
+    crypto-news email/PDF lures; FBI warning dated by the source to "early September 2024".
+    DATE FIX: source datePublished is 2024-11-07 (slug/start_date said 2024-07 — that is the
+    campaign-onset estimate "likely began as early as July 2024", retained as start_date with a
+    comment; attribution_date + new disclosure_date set to the 2024-11-07 publication; source
+    published_on corrected 2024-07-01 -> 2024-11-07). ATTRIBUTION: source names "suspected DPRK
+    threat actor" / "North Korean-affiliated" / "DPRK's BlueNoroff threat actor" and does NOT
+    name the RGB (raw term-scan: 0 "Reconnaissance General Bureau"; the 35 "RGB" hits are all
+    CSS rgb()/rgba()), so attribution_level = named-actor (not named-unit). Source states the
+    attribution at HIGH confidence verbatim — attributing_org_confidence corrected moderate->high
+    (a confidence dimension, not the doctrine-link scale; the prior "mapped from ICD
+    link-confidence: strongly_inferred" comment conflated the two scales and was removed).
+    ACTOR FIX: actor_id was kp/rgb/apt38 but the source attributes by canonical name to
+    BlueNoroff; corrected to kp/rgb/bluenoroff (resolves; matches the sibling 2022 BlueNoroff
+    MoTW event 2022-12/bluenoroff-motw-vc-impersonation and the 2026-06-25 service-verified actor
+    record). Stale "BlueNoroff is currently a singleton" line removed from summary (now 2+
+    BlueNoroff events). DOCTRINE: kp/office-39-sanctions-evasion/laundering-network kept at
+    strongly_inferred, attesting_source_id null — the source corroborates crypto-theft behaviour
+    + the FBI social-engineering-for-revenue warning but states NO goal-level DPRK strategic
+    purpose (no WMD/regime-revenue language), so NOT attested; not over-attested. NB the
+    kp/rgb/bluenoroff actor record's default doctrine alignment is 8th-congress/byungjin (Office-39
+    is on the kp/rgb/apt38 record) — both are valid hard-currency-generation pillars and the
+    per-event Office-39 link is defensible for direct crypto theft; left as-is, flagged for human
+    review if doctrine consistency across the two BlueNoroff legs is wanted.

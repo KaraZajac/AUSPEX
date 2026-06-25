@@ -7,22 +7,30 @@ incident_type:
   - reconnaissance
 false_flag_risk: none
 summary: |
-  Microsoft's MSTIC (East Asia threat-landscape report) names Raspberry Typhoon, a nation-state activity group based out of China that targets entities tied to China's South China Sea interests. Microsoft reports Raspberry Typhoon successfully targeted military and executive entities in Indonesia and a Malaysian maritime system, with activity coinciding with June 2023 US-China-Indonesia naval exercises. The report does not specify the initial access vector. Microsoft does not in this report equate Raspberry Typhoon with Lotus Blossom / Billbug / Thrip.
+  Microsoft's "Same targets, new playbooks" East Asia report (Microsoft Threat Analysis Center / MTAC, drawing on Microsoft Threat Intelligence taxonomy) names Raspberry Typhoon, a nation-state activity group based out of China that targets entities tied to China's South China Sea interests. The report states that in June 2023 Raspberry Typhoon successfully targeted military and executive entities in Indonesia and a Malaysian maritime system in the weeks before a rare multilateral naval exercise involving Indonesia, China, and the United States. The report attributes the group at nation level only (China) and names no Chinese intelligence service or unit; it does not specify the initial access vector. Microsoft does not in this report equate Raspberry Typhoon with Lotus Blossom / Billbug / Thrip.
 attributions:
   - actor_id: cn/unscoped/lotus-blossom
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # MSTIC states the targeting as established fact ("successfully targeted"), no hedge
+    attribution_level: nation          # report names China only — no service/unit (no MSS/PLA) for Raspberry Typhoon
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-04-04
     attribution_source_id: microsoft/2024-04_mstic-names-raspberry-typhoon-china-base
+    notes: "MSTIC names 'Raspberry Typhoon', NOT Lotus Blossom, and does not equate the two; the link to the Lotus Blossom actor record rests on an AUSPEX editorial alias (confidence: disputed) — see auspex_assessment: concur-with-caveat."
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting of military and executive entities tied to China's South China Sea interests (Indonesian military, a Malaysian maritime system) timed to US-China-Indonesia naval exercises is military/maritime intelligence collection against regional C4ISR, advancing PRC strategic situational awareness in the SCS.
-    attesting_source_id: null
+      Targeting of military and executive entities tied to China's South China Sea interests (Indonesian military, a Malaysian maritime system) timed to a US-China-Indonesia naval exercise is military/maritime intelligence collection against regional C4ISR, advancing PRC strategic situational awareness in the SCS.
+    attesting_source_id: null   # MSTIC names the behaviour/target/timing but NOT the strategic purpose → not attested
+    inference_basis:
+      signals:
+        - "Victims are military and executive entities (Indonesia) plus a Malaysian maritime system — defense/maritime C4ISR-adjacent, not commercial."
+        - "Timing keyed to a rare Indonesia-China-US multilateral naval exercise (June 2023), per the source 'in the weeks prior' — exercise-collection pattern."
+        - "Espionage/reconnaissance intrusion (no destructive effect reported) tied explicitly to China's South China Sea interests."
+      ruled_out: "cn/intelligentized-warfare/pre-positioning (Volt/Flax-style CII pre-positioning for wartime disruption) — the reported activity is espionage/recon against military-decision and maritime targets around an exercise, i.e. collection, with no foothold-for-disruption in civilian CII described in the source."
     contested: false
     analyst: claude
 targets:
@@ -34,3 +42,36 @@ targets:
     role: primary
 sources:
   - microsoft/2024-04_mstic-names-raspberry-typhoon-china-base
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Microsoft "Same targets, new playbooks" East Asia report (raw captured: curl 200,
+    240,615 B, sha256 81e9efca…dedbd; archive.org blocked, live page hashed instead).
+    FACTS: confirmed verbatim — "In June 2023, Raspberry Typhoon, a nation-state activity group
+    based out of China, successfully targeted military and executive entities in Indonesia and a
+    Malaysian maritime system in the weeks prior to a rare multilateral naval exercise involving
+    Indonesia, China, and the United States." Targets (ID gov/defense + MY maritime) and incident
+    types (intrusion/espionage/recon) match; no initial vector stated. published_on 2024-04-04
+    CONFIRMED (companion Microsoft On-the-Issues post dated 2024/04/04 launches this report).
+    ATTRIBUTION: MSTIC/MTAC names China only — NO service/unit (no MSS/Ministry of State Security/
+    PLA) for Raspberry Typhoon; attributing_org_confidence high is sound (stated as fact). The
+    report does NOT equate Raspberry Typhoon to Lotus Blossom/Billbug/Thrip — the event correctly
+    flags this and the actor link rests on a disputed AUSPEX editorial alias (auspex_assessment
+    concur-with-caveat retained). doctrine_link kept strongly_inferred: source names the
+    behaviour/target/timing but NOT the strategic purpose, so not attested (attesting_source_id
+    null); added inference_basis (signals + ruled_out pre-positioning).
+    CORRECTIONS: (1) added attribution_level: nation (was missing). (2) tightened summary
+    "coinciding with…naval exercises" → "in the weeks before a…naval exercise involving Indonesia,
+    China, and the United States" to match the source ("in the weeks prior"), and reframed the
+    discloser from bare "MSTIC report" to the MTAC "Same targets, new playbooks" report (MTI
+    taxonomy). (3) replaced the misleading inline comment that called the attribution confidence an
+    "ICD link-confidence: attested". (4) added an attribution note recording the Raspberry-Typhoon≠
+    Lotus-Blossom caveat. (5) added inference_basis to the doctrine link.
+    ACTOR FLAG (not edited): actor cn/unscoped/lotus-blossom carries a standing NATION-SUPPORT flag
+    — its `cn` bucket is not established by its own cited source (Talos 2025 names no nation/service)
+    and leans on this very MSTIC alias, which MSTIC does not equate to Lotus Blossom. Service
+    placement unresolved (cn/unscoped). Re-grounding the `cn` bucket needs a source that both names
+    China and ties it to Lotus Blossom/Billbug.

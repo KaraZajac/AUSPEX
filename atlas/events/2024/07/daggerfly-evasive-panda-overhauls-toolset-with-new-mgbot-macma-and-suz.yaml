@@ -8,13 +8,14 @@ incident_type:
 initial_vector: n-day
 false_flag_risk: none
 summary: |
-  Symantec's Threat Hunter Team reported that the Daggerfly (Evasive Panda / Bronze Highland) espionage group extensively updated its toolset, introducing new versions of the MgBot modular malware framework, a new variant of the Macma macOS backdoor, and the Trojan.Suzafk (Nightdoor/NetMM) Windows backdoor. The new tooling was deployed against organizations in Taiwan and a US-based NGO operating inside mainland China, indicating internal espionage. In the attack on the NGO the operators exploited a vulnerability in an Apache HTTP server to deliver MgBot. Symantec assessed the activity was the work of Daggerfly based on shared code and infrastructure across the malware families.
+  Symantec's Threat Hunter Team reported that the Daggerfly (Evasive Panda / Bronze Highland) espionage group extensively updated its toolset, introducing new versions of the MgBot modular malware framework, a new variant of the Macma macOS backdoor, and the Trojan.Suzafk (Nightdoor/NetMM) Windows backdoor. The new tooling was deployed against organizations in Taiwan and a US-based NGO based in China, which Symantec said indicates the group also engages in internal espionage. In the attack on the NGO the operators exploited a vulnerability in an Apache HTTP server to deliver MgBot. Symantec assessed the activity was the work of Daggerfly based on shared code (a single shared library across the malware families) and shared command-and-control infrastructure.
 attributions:
   - actor_id: cn/unscoped/evasive-panda
     attributing_org: "Symantec (Broadcom) Threat Hunter Team"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high   # ICD-203 confidence: Symantec asserts the activity is Daggerfly's as fact (shared code + C&C infra). NB this is the confidence dimension, NOT the doctrine-link "attested" scale.
+    attribution_level: named-actor   # Symantec names the named actor "Daggerfly (aka Evasive Panda, Bronze Highland)"; no Chinese service/unit named. Set 2026-06-25 audit.
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-07-01
+    attribution_date: 2024-07-23   # corrected from 2024-07-01 backfill placeholder: Symantec article byline "23 Jul 2024" (2026-06-25 audit)
     attribution_source_id: security/2024-07_daggerfly-evasive-panda-overhauls-toolse
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
@@ -35,3 +36,27 @@ targets:
     role: primary
 sources:
   - security/2024-07_daggerfly-evasive-panda-overhauls-toolse
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Symantec (Broadcom) Threat Hunter Team article (raw snapshot captured + sha256; URL live, HTTP 200).
+    FACTS all confirmed verbatim: group "Daggerfly (aka Evasive Panda, Bronze Highland)"; new MgBot framework variant;
+    new Macma macOS backdoor variant (Symantec now attributes the previously-unknown-authorship Macma to Daggerfly);
+    Trojan.Suzafk = ESET's Nightdoor (aka NetMM), first documented Mar 2024; victims = "organizations in Taiwan and a
+    U.S. NGO based in China, which indicates the group also engages in internal espionage"; Apache HTTP server
+    vulnerability exploited to deliver MgBot (supports initial_vector n-day); attribution basis = shared single library
+    + shared C&C infra (103.243.212[.]98). CORRECTIONS: (1) attribution_date 2024-07-01 -> 2024-07-23 (article byline
+    "23 Jul 2024" + sole machine-readable date token 2024-07-23; source published_on corrected to match). (2) Added
+    attribution_level: named-actor. (3) Removed a stray "ICD link-confidence: attested" comment that conflated the
+    confidence dimension with the doctrine-link scale. (4) Summary softened "operating inside mainland China" ->
+    "based in China" to match the source exactly ("mainland" not in source). start_date 2024-07-01 left as op-start
+    estimate (source says only "recent attacks", no precise date). ATTRIBUTION: Symantec names only the named actor
+    Daggerfly/Evasive Panda — NO Chinese service named — so cn/unscoped/evasive-panda is correct (actor was demoted
+    cn/mss -> cn/unscoped 2026-06-24, FK already propagated). attributing_org_confidence held at high (Symantec asserts
+    Daggerfly authorship/operation as fact). DOCTRINE LINK held at strongly_inferred with attesting_source_id: null
+    (NOT over-attested): Symantec describes Taiwan + in-China-NGO targeting and calls it "internal espionage" but never
+    states a dissident/diaspora-collection or National-Intelligence-Law strategic purpose; the diaspora-and-dissident
+    pillar mapping is AUSPEX's inference, correctly ungated. doctrine + pillar + both sector FKs resolve.

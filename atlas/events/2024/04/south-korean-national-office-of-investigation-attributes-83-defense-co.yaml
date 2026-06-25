@@ -9,12 +9,34 @@ false_flag_risk: none
 summary: |
   On 23 April 2024 South Korea's National Office of Investigation (National Police Agency) attributed breaches of 83 South Korean defense companies or their contractors to the North Korean groups Lazarus, Kimsuky and Andariel, with confidential information stolen from about 10 of them. The reported initial-access methods varied by group: Lazarus hacked an unnamed defense firm's server in November 2022 and exfiltrated internal-network data to an overseas cloud server; Andariel leaked defense-company data by hijacking an employee account around October 2022; and Kimsuky stole technical data (April–July 2023) by exploiting a vulnerability that allowed downloading large files via email. No malware names or named individuals were disclosed.
 attributions:
-  - actor_id: kp/rgb/kimsuky
+  # NOI named THREE Pyongyang-backed groups (Lazarus, Kimsuky, Andariel); one entry each.
+  # Level = named-actor: the police named the threat groups but did NOT name the RGB / any
+  # bureau (raw: "Pyongyang-backed groups … known … as Lazarus, Kimsuky and Andariel";
+  # "Reconnaissance"/"RGB"/"bureau" appear zero times). NOT named-unit.
+  - actor_id: kp/rgb/lazarus
     attributing_org: "South Korea National Office of Investigation (Korean National Police Agency, KNPA)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-04-23
     attribution_source_id: therecord/2024-04_south-korean-national-office-of-investig
+    notes: "Lazarus hacked an unnamed defense firm's server (Nov 2022), exfiltrating internal-network data to an overseas cloud server."
+  - actor_id: kp/rgb/kimsuky
+    attributing_org: "South Korea National Office of Investigation (Korean National Police Agency, KNPA)"
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-04-23
+    attribution_source_id: therecord/2024-04_south-korean-national-office-of-investig
+    notes: "Kimsuky stole technical data (Apr–Jul 2023) by exploiting a vulnerability allowing large-file download via email."
+  - actor_id: kp/rgb/andariel
+    attributing_org: "South Korea National Office of Investigation (Korean National Police Agency, KNPA)"
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-04-23
+    attribution_source_id: therecord/2024-04_south-korean-national-office-of-investig
+    notes: "Andariel leaked defense-company data (~Oct 2022) by hijacking an employee account."
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
@@ -31,3 +53,32 @@ targets:
     role: primary
 sources:
   - therecord/2024-04_south-korean-national-office-of-investig
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs The Record / Recorded Future News (raw captured, sha256 2142f2c7…).
+    FACTS confirmed: 83 ROK defense companies/contractors breached, confidential info stolen
+    from ~10, operational window Oct 2022–Jul 2023; per-group methods (Lazarus Nov-2022
+    server hack → overseas cloud; Andariel ~Oct-2022 account hijack; Kimsuky Apr–Jul-2023
+    email large-file vuln); no malware names / no individuals disclosed — all match source.
+    ATTRIBUTION FIX: source names THREE Pyongyang-backed groups (Lazarus, Kimsuky, Andariel),
+    but the record listed only kimsuky — added kp/rgb/lazarus and kp/rgb/andariel (one entry
+    per named group, mirroring the AA23-040A multi-actor pattern). Level = named-actor on all
+    three: the NOI named the THREAT GROUPS but NOT the RGB / any bureau ("Reconnaissance",
+    "RGB", "bureau" appear zero times in the raw; framing is "Pyongyang-backed"). NOT
+    named-unit. The RGB tie on these actor records comes from their OWN cited govt sources
+    (OFAC/DOJ), not from this police statement. Removed the misleading
+    "mapped from ICD link-confidence: attested" comment (that conflated the doctrine scale
+    with org-confidence). confidence high retained (firm police identification), assessment
+    concur-with-caveat (secondary source relaying the police statement via local media; RGB
+    placement is AUSPEX's, not the NOI's). Three actor FKs resolve and are non-stale
+    (lazarus=sanctioned, kimsuky=sanctioned, andariel=indicted).
+    DOCTRINE: kp/8th-congress-defense-plan / strategic-tech-collection left strongly_inferred
+    (attesting_source_id null) — the source documents defense-tech theft (behaviour) but does
+    NOT state the WMD/13-system-plan purpose, so no attested upgrade; defense-contractor
+    collection by these DPRK groups triangulates to the plan with no serious competitor.
+    SOURCE: corrected publisher (was the NOI) + title (was the AUSPEX event title) to the
+    actual article; published_on 2024-04-23 confirmed via JSON-LD.
