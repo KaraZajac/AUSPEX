@@ -1,7 +1,21 @@
-id: us/cybercom/cmf-actor
-primary_service_id: us/cybercom/cmf
-additional_service_ids:
-  - us/cybercom
+# DEMOTED to us/unscoped + flagged RETIRE-CANDIDATE 2026-06-25 (LLM service-placement audit,
+# claude-opus-4.8/max): this is a self-described STRUCTURAL PLACEHOLDER ("Generic actor entry";
+# "a fallback actor for CYBERCOM operations that cannot be resolved to a specific sub-unit"), not
+# a sourced operational actor. Both cited sources describe the CMF only as FORCE STRUCTURE and
+# attribute NO specific operation to it: the CRS primer (verified against the captured PDF) says
+# "The Cyber Mission Force (CMF), CYBERCOM's operational arm, comprises several cyber mission
+# forces. The CMF consists of the Cyber National Mission Force, the Cyber Protection Force, and
+# the Cyber Combat Mission Force, each with their own associated mission teams." The CYBERCOM
+# "Cyber 101: Cyber Mission Force" page is, by its title and role, a force-structure explainer
+# (it is also the source for the us/cybercom/cmf SERVICE record's team-type composition). Service
+# claim 'us/cybercom/cmf' (operator of a specific op) is therefore unsupported by definition ->
+# us/unscoped. Same shape as the demoted fr/unscoped/joint-actor + kr/unscoped/joint-actor
+# siblings, EXCEPT this actor IS referenced by events: 4 event attributions were FK-propagated
+# us/cybercom/cmf-actor -> us/unscoped/cmf-actor (see notes). primary_service_id -> us/unscoped
+# (matching the dominant <state>/unscoped/* convention; us/unscoped already exists).
+id: us/unscoped/cmf-actor
+primary_service_id: us/unscoped
+additional_service_ids: []
 canonical_name: Cyber Mission Force (generic)
 aliases:
   - alias: CMF
@@ -32,3 +46,78 @@ auspex_assessment: |
 sources:
   - cybercom/cyber-101-cmf
   - congress/crs-if13042_uscybercom-primer
+notes: |
+  AUDIT (2026-06-25, claude-opus-4.8/max — LLM service-placement audit):
+  DEMOTED us/cybercom/cmf-actor -> us/unscoped/cmf-actor (former-id:
+  us/cybercom/cmf-actor; former primary_service_id: us/cybercom/cmf;
+  former additional_service_ids: [us/cybercom] — dropped, as it
+  re-asserted the same operational placement under audit).
+
+  REASON: the CMF is the BROAD force-structure label (CYBERCOM's
+  "operational arm" of ~133 teams), not a specific operational actor.
+  Both of the actor's own cited sources describe it ONLY as force
+  structure and name NO specific operation:
+    * CRS, "Defense Primer: U.S. Cyber Command (USCYBERCOM)" (IF13042,
+      verified 2026-06-25 against the captured PDF): "The Cyber Mission
+      Force (CMF), CYBERCOM's operational arm, comprises several cyber
+      mission forces. The CMF consists of the Cyber National Mission
+      Force, the Cyber Protection Force, and the Cyber Combat Mission
+      Force, each with their own associated mission teams." Every
+      operational mention in the primer (China pre-positioning; the
+      March 2025 ordered pause on offensive ops against Russia) is
+      attributed to CYBERCOM as a posture/policy matter, never to "the
+      CMF" as a named operator of a discrete operation.
+    * US Cyber Command, "Cyber 101: Cyber Mission Force": a
+      force-structure explainer by title and role (it is also the cited
+      source for the us/cybercom/cmf SERVICE record's team-type
+      composition and 133-team FOC date). Raw capture FAILED — the
+      cybercom.mil host returns HTTP 403 (Akamai "Access Denied") via
+      both curl and WebFetch, and the Wayback archive_url is blocked in
+      this environment; left UNFETCHED with this note. Its
+      force-structure nature is not in doubt from its title + existing
+      use.
+  The record self-describes as a "Generic actor entry" and "a fallback
+  actor for CYBERCOM operations that cannot be resolved to a specific
+  sub-unit" — i.e. a placeholder. With no source naming the CMF as the
+  operator of a specific operation, the us/cybercom/cmf service
+  placement is unsupported by definition. Demotion to the us/unscoped
+  backlog service is the conservative placement until a sourced,
+  CMF-specific attribution exists. Same shape as the demoted
+  fr/unscoped/joint-actor (COMCYBER) and kr/unscoped/joint-actor (COC)
+  siblings.
+
+  MISP corroboration: MISP-galaxy threat-actor.json (1,012 clusters)
+  has NO "Cyber Mission Force" / "CMF" / "CYBERCOM" actor entry; the
+  only US-attributed clusters are NSA-lineage intrusion sets (Equation
+  Group, ProjectSauron, Longhorn/Lamberts) plus unrelated crews. The
+  threat-intel community does not track the CMF as an operational
+  actor, independently corroborating the structural-placeholder finding.
+
+  FK PROPAGATION (done): 4 event attributions changed
+  us/cybercom/cmf-actor -> us/unscoped/cmf-actor:
+    - 2019-06/russian-grid-implants
+    - 2019-06/iran-retaliation-tanker
+    - 2020-03/iran-soleimani-retaliation
+    - 2022-12/cybercom-2022-midterm-ops
+    - 2024-08/cybercom-iran-2024-election
+  (A 5th file, 2010-05/operation-socialist-belgacom, mentions the old
+  id only inside a historical editorial note describing how the event
+  was *formerly* filed before re-anchoring to uk/gchq; that prose is an
+  accurate record of a past state, not a live FK, and was left as-is.)
+
+  RETIREMENT CANDIDATE (flagged for human; NOT deleted): unlike the
+  fr/kr placeholder siblings (which had zero referencing events), this
+  actor backs 5 real, source-attributed CYBERCOM operations, so it
+  CANNOT simply be deleted without re-homing those attributions. The
+  open question for Kara is whether a generic, unsourced-at-the-actor-
+  level CMF fallback should exist at all, or whether these 5 events
+  should instead carry actor_id: null with the acting body named in
+  attributing_org per the §9 doctrine-without-attribution convention
+  (the events are all publicly framed as CYBERCOM action but none names
+  a specific CMF sub-unit/team). Recommend Kara decide between
+  (a) retaining this as a us/unscoped forward-looking fallback for
+  CYBERCOM ops that cannot be resolved to a sub-unit, or (b) nulling
+  the 5 attributions and retiring the actor. NOT auto-resolved.
+external_refs:
+  mitre_attack: null
+  misp_galaxy: null
