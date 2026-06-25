@@ -13,24 +13,36 @@ summary: |
 attributions:
   - actor_id: kp/rgb/citrine-sleet
     attributing_org: "CrowdStrike (Counter Adversary Operations)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # CrowdStrike names "DPRK-nexus" / GOLDEN CHOLLIMA (= Citrine Sleet, vendor-consensus equivalent); does NOT name the RGB
+    attribution_level: named-actor   # GOLDEN CHOLLIMA = a named CrowdStrike adversary; nation/named-actor, not named-unit (no RGB/Bureau-121 in this source)
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-11-01
+    attribution_date: 2026-01-29   # corrected 2026-06-25 from 2024-11-01 (the operation month): the CrowdStrike attribution was published 2026-01-29
     attribution_source_id: crowdstrike/2024-11_golden-chollima-dprk-nexus-recruitment-f
 doctrine_links:
-  - doctrine_id: kp/office-39-sanctions-evasion
-    pillar_id: kp/office-39-sanctions-evasion/laundering-network
-    program_id: null
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    confidence: strongly_inferred
     reasoning: |
-      The summary explicitly states the group focuses on consistent cryptocurrency theft to generate revenue for the regime; diverting the fintech victim's crypto to adversary wallets is direct hard-currency aggregation under the Office 39 principle.
+      CrowdStrike states GOLDEN CHOLLIMA conducts consistent cryptocurrency thefts "suggesting responsibility for ensuring baseline revenue generation for the DPRK regime," and that the financial motivation will intensify "to fund ambitious military plans that include constructing new destroyers, building nuclear-powered submarines, and launching additional reconnaissance satellites." Diverting the fintech victim's cryptocurrency to adversary-controlled wallets is exactly the hard-currency crypto-theft this pillar/program encodes (the maximum-tempo aggregation channel underwriting the 8th-Congress 13-system plan). Held at strongly_inferred rather than attested: this single secondary (vendor) source names the proximate purpose ("revenue for the regime") that the doctrine specializes, and the specific-weapons end is stated for GOLDEN+PRESSURE collectively and forward-looking, not tied to this one intrusion.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "CrowdStrike: GOLDEN CHOLLIMA thefts 'ensuring baseline revenue generation for the DPRK regime'"
+        - "CrowdStrike Outlook ties the financial motivation to funding DPRK military plans (destroyers, nuclear-powered submarines, reconnaissance satellites) as sanctions cripple the economy — the 8th-Congress 13-system list"
+        - "Operation is direct crypto theft (victim crypto diverted to adversary wallets), the canonical revenue-aggregation / crypto-bridge-theft channel; actor's default doctrine alignment"
+      ruled_out: "kp/office-39-sanctions-evasion/laundering-network — that pillar covers the downstream LAUNDERING/off-ramp pipework (mixers, OTC desks, front companies); this event documents the THEFT/aggregation step, not laundering, so the revenue-aggregation pillar is the correct fit."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/finance
     role: primary
-  - target_id: sectors/finance/crypto-exchange
-    role: primary
+    country: null   # source says "European fintech" but names no specific country
 sources:
   - crowdstrike/2024-11_golden-chollima-dprk-nexus-recruitment-f
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs crowdstrike/2024-11_golden-chollima-dprk-nexus-recruitment-f (raw HTML captured + SHA-256 abec05e1...). FACTS: all verbatim-confirmed — 'three distinct adversaries ... emerged since 2018'; GOLDEN CHOLLIMA 'ensuring baseline revenue generation for the DPRK regime'; 'In late 2024, the adversary delivered malicious Python packages via recruitment fraud to a European fintech company. They pivoted to the victim's cloud environment to access IAM configurations and associated cloud resources, and ultimately managed to divert the victim's cryptocurrency to adversary-controlled wallets'; targets 'U.S., Canada, South Korea, India, and Western Europe'; 'GOLDEN CHOLLIMA has also reportedly used FudModule'. No specific victim-country, no individual operators named (correctly reflected). ATTRIBUTION: source names only 'DPRK-nexus' / GOLDEN CHOLLIMA (= Citrine Sleet, vendor-consensus equivalent alias) and does NOT name the RGB or Bureau 121 (those strings absent) — the kp/rgb/citrine-sleet RGB/Bureau-121 placement rests on the actor's SEPARATE Microsoft MSTIC source (actor audited 2026-06-24, max); confidence moderate + auspex_assessment concur-with-caveat are honest for that gap. actor_id kp/rgb/citrine-sleet resolves, not stale (file kp/citrine-sleet.yaml). CORRECTIONS: (1) published_on 2024-11-01 -> 2026-01-29 (source byline 'January 29, 2026 - Rob Bruner' + JSON-LD dateModified 2026-01-29, no datePublished; web-search corroborated; the old date was the OPERATION month). (2) attribution_date 2024-11-01 -> 2026-01-29 (when the attribution was published; start_date stays 2024-11-01 = operation). (3) ADDED attribution_level: named-actor. (4) doctrine_link RE-POINTED kp/office-39-sanctions-evasion/laundering-network -> kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft: the event is the THEFT/aggregation step (victim crypto diverted to adversary wallets), not the downstream laundering pipework Office-39 encodes; revenue-aggregation/crypto-bridge-theft is the correct pillar/program and the actor's default alignment. Kept strongly_inferred (single secondary vendor source names the proximate 'revenue for the regime' purpose; specific-weapons end is collective+forward-looking, not attested for this one intrusion) + added inference_basis signals/ruled_out. (5) targets: dropped unsupported sectors/finance/crypto-exchange (source says 'fintech company', not exchange); kept sectors/finance, country null. ACTOR NOTE: actor default_doctrine_alignment is 8th-Congress revenue-aggregation — the prior Office-39 link on this event diverged from it; now aligned."

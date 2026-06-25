@@ -8,14 +8,16 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Trellix documented a spear-phishing campaign (March–July 2025) against foreign embassies in Seoul — generally European facilities — using multilingual lures (Korean, English, Persian, Arabic, French, Russian) with fake meeting invites and official letters. Password-protected ZIPs hid LNK files that deployed a XenoRAT variant, with GitHub abused as a covert C2 channel and Dropbox/Daum for delivery, enabling keylogging, screenshots, webcam/mic access, and remote shell. ATTRIBUTION CAVEAT: Trellix attributes to Kimsuky/APT43 only at medium confidence and hypothesizes possible Chinese sponsorship/involvement (attacker working hours and holiday pauses align with a China-based actor) — hence 'plausible' rather than attested. Not currently in the corpus. (Trellix primary returned 403; verified via Bleeping Computer reporting on the Trellix research.)
+  Trellix documented a spear-phishing campaign (March–July 2025, at least 19 attacks in three phases) against foreign embassies in Seoul — generally European facilities — using multilingual lures (Korean, English, Persian, Arabic, French, Russian) with fake meeting invites and official letters timed to real diplomatic events. Password-protected ZIPs (delivered from Dropbox, Google Drive, or Daum) hid LNK files disguised as PDFs that ran obfuscated PowerShell to fetch a XenoRAT variant from GitHub or Dropbox, with GitHub abused as a covert C2 channel, enabling keylogging, screenshots, webcam/mic access, file transfer, and remote shell. ATTRIBUTION CAVEAT: Trellix attributes to Kimsuky/APT43 only at medium confidence (TTP, infrastructure, and IOC overlap with prior Kimsuky campaigns) and hypothesizes possible Chinese sponsorship/involvement (attacker working hours and holiday pauses align with a China-based actor rather than Korean holidays). The source names only "Kimsuky / APT43 / North Korean" — it does NOT name the RGB; the kp/rgb/kimsuky placement follows the actor record (OFAC 2023 / dossier consensus), not this source. The doctrine link is held at strongly_inferred (the source states no collection purpose). (Trellix primary returned 403; verified via Bleeping Computer reporting on the Trellix research.)
 attributions:
   - actor_id: kp/rgb/kimsuky
-    attributing_org: "bleepingcomputer"
-    attributing_org_confidence: low   # mapped from ICD link-confidence: plausible
-    auspex_assessment: concur-with-caveat
-    attribution_date: 2025-03-01
+    attributing_org: "Trellix (reported by BleepingComputer)"
+    attributing_org_confidence: moderate   # Trellix attributes to APT43 with "medium confidence" (per raw)
+    attribution_level: named-actor   # source names "Kimsuky/APT43", not a unit/RGB
+    auspex_assessment: concur-with-caveat   # Trellix hypothesizes possible Chinese sponsorship
+    attribution_date: 2025-08-18
     attribution_source_id: bleepingcomputer/2025-03_kimsuky-apt43-github-c2-xenorat-campaign
+    notes: "Trellix names only Kimsuky/APT43/North Korean (no RGB/unit). Trellix raises a competing China-based hypothesis (timezone + holiday-pause analysis); AUSPEX retains kp/rgb/kimsuky per the actor record (OFAC 2023 / dossier consensus, MISP-galaxy)."
 doctrine_links:
   - doctrine_id: kp/strategic-information
     pillar_id: kp/strategic-information/policy-collection
@@ -31,3 +33,9 @@ targets:
     role: primary
 sources:
   - bleepingcomputer/2025-03_kimsuky-apt43-github-c2-xenorat-campaign
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs BleepingComputer reporting on Trellix research (raw captured, HTTP 200; Trellix primary 403). FACTS confirmed: March–July 2025, >=19 spear-phishing attacks in 3 phases, embassies in Seoul (generally European), multilingual lures (KO/EN/FA/AR/FR/RU), password-protected ZIPs from Dropbox/Google Drive/Daum, LNK-as-PDF -> PowerShell -> XenoRAT from GitHub/Dropbox, GitHub-as-C2, keylog/screenshot/webcam/mic/remote-shell. ATTRIBUTION: source names ONLY Kimsuky/APT43/North Korean at 'medium confidence' and raises a competing China-based hypothesis (timezone + Chinese-holiday pauses) — the RGB is NOT named here; kp/rgb/kimsuky retained per the actor record (OFAC 2023 / dossier / MISP-galaxy). CORRECTIONS: published_on 2025-03-01 -> 2025-08-18 (article datePublished; 2025-03-01 was a backfill placeholder = campaign start); attribution_date -> 2025-08-18; attributing_org_confidence low -> moderate (source says 'medium confidence'; the old 'mapped from plausible' comment conflated the ICD confidence scale with the doctrine-link scale); added attribution_level named-actor; attributing_org -> Trellix (via BleepingComputer). doctrine_link held at strongly_inferred (diplomatic embassy collection is the single dominant strategic reading; source states no purpose, so not attested). actor_id resolves, not stale. Fixed summary's stray 'plausible' (it had described the attribution caveat, not the doctrine-link confidence)."

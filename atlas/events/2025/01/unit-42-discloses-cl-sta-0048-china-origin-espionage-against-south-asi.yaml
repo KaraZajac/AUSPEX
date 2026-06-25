@@ -1,6 +1,7 @@
 id: 2025-01/unit-42-discloses-cl-sta-0048-china-origin-espionage-against-south-asi
 name: "Unit 42 discloses CL-STA-0048 China-origin espionage against South Asian telecom and government (PlugX, DragonRank overlap)"
-start_date: 2025-01-01
+start_date: 2025-01-01   # op-start unknown; Unit 42 gives no campaign-start date — best-estimate held at month of disclosure (see qc.notes)
+disclosure_date: 2025-01-29
 incident_type:
   - espionage
   - intrusion
@@ -12,9 +13,10 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/cl-sta-0048
     attributing_org: "Palo Alto Networks Unit 42"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # source: "moderate-high confidence that this activity originates in China"
+    attribution_level: nation              # source attributes at nation ("originates in China") + tracks as activity-cluster CL-STA-0048; never names a service
     auspex_assessment: concur
-    attribution_date: 2025-01-01
+    attribution_date: 2025-01-29
     attribution_source_id: unit42paloaltonetworks/2025-01_unit-42-discloses-cl-sta-0048-china-orig
 doctrine_links:
   - doctrine_id: cn/bri
@@ -33,3 +35,28 @@ targets:
     role: primary
 sources:
   - unit42paloaltonetworks/2025-01_unit-42-discloses-cl-sta-0048-china-orig
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the Unit 42 report (raw snapshot already on disk; content_sha256
+    c259b2bd29f31203f8f95cccc6873e3c4a1a48f22546d71eeaca5b4c3a6e7fde re-verified — matches).
+    FACTS confirmed verbatim: South Asian high-value targets incl. a telecommunications org;
+    initial access via unpatched public-facing IIS / Apache Tomcat / MSSQL; PlugX backdoors +
+    Cobalt Strike; "Hex Staging" payload-chunking; exfiltration over DNS (ping); SQLcmd/database
+    PII theft (client names, mobile numbers, gender, DOB, email, addresses). ATTRIBUTION correctly
+    NOT over-claimed: source says "a cluster of activity that we track as CL-STA-0048" and "we
+    assess with moderate-high confidence that this activity originates in China" — nation-level +
+    activity-cluster; it NEVER names the MSS/Ministry of State Security (0 hits; every "MSS" in the
+    text is "MSSQL"). DragonRank overlap explicitly tentative ("We lack sufficient data on DragonRank
+    to definitively link it to CL-STA-0048"). Added attribution_level: nation (was missing); actor
+    cn/unscoped/cl-sta-0048 already correctly demoted from cn/mss on 2026-06-24, FK resolves.
+    CORRECTIONS: published_on was placeholder 2025-01-01 -> actual 2025-01-29 (byline Lior Rochberger
+    & Yoav Zemah, "Published: January 29, 2025"); fixed source.published_on and event.attribution_date
+    to 2025-01-29; added disclosure_date 2025-01-29. start_date left at 2025-01-01 best-estimate (op
+    start undated in source). doctrine_links: strongly_inferred (NOT attested) is honest — the report
+    states the op "bear[s] the hallmarks of a nation-state APT espionage operation" but never names a
+    BRI / partner-country-political-intelligence purpose (Belt/Road absent); attesting_source_id null
+    is correct, no downgrade needed. pillar cn/bri/political-intelligence-collection FK resolves.

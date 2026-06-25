@@ -11,18 +11,33 @@ summary: |
 attributions:
   - actor_id: kp/rgb/apt38
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: nation   # source attributes only "North Korean threat actor (Sapphire Sleet)"; kp/rgb/apt38 is the AUSPEX alias-table mapping, not in this source (audit 2026-06-25)
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-11-22
     attribution_source_id: microsoft/2024-11_mstic-cyberwarcon-2024-details-sapphire-
 doctrine_links:
-  - doctrine_id: kp/office-39-sanctions-evasion
-    pillar_id: kp/office-39-sanctions-evasion/laundering-network
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+    confidence: strongly_inferred
     reasoning: |
-      The summary states Sapphire Sleet conducted cryptocurrency-theft campaigns netting more than $10M; VC- and recruiter-impersonation to deliver crypto-stealing malware is direct hard-currency generation under the Office 39 sanctions-evasion principle.
-    attesting_source_id: null
+      Sapphire Sleet's VC- and recruiter-impersonation to deliver crypto-stealing malware is
+      hard-currency revenue *generation* (>$10M stolen over six months from multiple companies),
+      which fits the revenue-aggregation pillar's maximum-tempo crypto-theft channel — the actor's
+      own primary default alignment. The Microsoft post states the strategic purpose only as a
+      generic class-level focus area for DPRK actors ("Stealing money or cryptocurrency to help
+      fund the North Korea weapons programs"), not pinned to this specific activity (whose own
+      section names no purpose), so the WMD-financing goal is one strong reading rather than an
+      op-specific attestation. Re-pointed 2026-06-25 from office-39/laundering-network: this op is
+      theft (upstream revenue), not the laundering pipework (mixers/OTC off-ramps) that pillar encodes.
+    attesting_source_id: microsoft/2024-11_mstic-cyberwarcon-2024-details-sapphire-
+    inference_basis:
+      signals:
+        - "Microsoft: 'over 10 million US dollars' worth of cryptocurrency was stolen by the threat actor from multiple companies over a six-month period' — sustained hard-currency revenue generation."
+        - "Microsoft lists DPRK threat actors' focus areas as 'Stealing money or cryptocurrency to help fund the North Korea weapons programs' — the goal the revenue-aggregation pillar encodes, stated at the class level."
+        - "Actor kp/rgb/apt38 is a financially-missioned DPRK crew whose primary default doctrine alignment is kp/8th-congress-defense-plan/revenue-aggregation."
+      ruled_out: "kp/office-39-sanctions-evasion/laundering-network — that pillar covers converting stolen proceeds into procurement-usable currency (mixers, PRC OTC desks); this source documents the theft itself, with no laundering infrastructure named."
     contested: false
     analyst: claude
 targets:
@@ -30,3 +45,32 @@ targets:
     role: primary
 sources:
   - microsoft/2024-11_mstic-cyberwarcon-2024-details-sapphire-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the Microsoft Security blog post (raw captured + hashed; a live re-fetch
+    reproduced a byte-identical SHA-256 ec18a4d6…, so the snapshot is authentic). FACTS all
+    corroborated verbatim: CYBERWARCON dated "November 22, 2024" (= start_date / published_on);
+    ">$10M over six months" = "over 10 million US dollars' worth of cryptocurrency ... from
+    multiple companies over a six-month period"; VC-impersonation + frozen-meeting lure delivering
+    a ".scpt file (Mac) or a Visual Basic Script (.vbs) file (Windows)"; secondary LinkedIn
+    "recruiter" / "skills assessment" lure. ATTRIBUTION: source attributes only at NATION level
+    ("North Korean threat actor that Microsoft tracks as Sapphire Sleet") — it never names the RGB
+    (0 occurrences of "Reconnaissance"/"RGB") and never equates Sapphire Sleet with APT38/BlueNoroff;
+    the kp/rgb/apt38 mapping is the actor record's alias table (Microsoft post-2023 taxonomy,
+    equivalent — actor service-verified 2026-06-24), so ADDED attribution_level: nation and kept
+    auspex_assessment: concur-with-caveat. CORRECTIONS: (1) re-pointed the doctrine link from
+    kp/office-39-sanctions-evasion/laundering-network -> kp/8th-congress-defense-plan/revenue-aggregation
+    — this op is crypto theft (upstream revenue generation, the actor's primary default alignment +
+    corpus precedent for DPRK social-engineering crypto theft), NOT the laundering pipework Office 39's
+    pillar encodes; (2) added attesting_source_id + inference_basis. Confidence kept strongly_inferred
+    (not attested): the WMD-financing goal appears only as a generic class-level DPRK "focus area"
+    ("fund the North Korea weapons programs"), not pinned to this activity, whose own section names no
+    purpose. CAVEAT: targets[]=sectors/finance(primary) — Microsoft explicitly does NOT name an
+    industry vertical ("multiple companies"/individual users); kept as the financial asset class
+    (cryptocurrency theft) is the target, but no named vertical exists in the source. Removed the
+    stale PROVISIONAL header on the source and the misleading "mapped from ICD link-confidence:
+    attested" comment on the attribution. Source raw_snapshot + content_sha256 added.

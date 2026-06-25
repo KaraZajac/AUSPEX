@@ -10,11 +10,19 @@ summary: |
   On 5 March 2025 the US DOJ unsealed charges against 12 Chinese nationals — eight employees of the ostensibly private PRC firm Anxun Information Technology (i-Soon), two officers of the Ministry of Public Security (MPS), and two members of APT27 (Silk Typhoon; Yin Kecheng and Zhou Shuai). The indictments describe i-Soon as a key node in the PRC hacker-for-hire ecosystem that conducted intrusions at the direction of the MSS/MPS and also sold stolen data to dozens of provincial MSS/MPS bureaus. This is the criminal-indictment counterpart to the February 2024 i-Soon document leak already in the corpus, formally tying the contractor model to PRC intelligence tasking and transnational repression.
 attributions:
   - actor_id: cn/unscoped/apt27
-    attributing_org: "therecord"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org: "US DOJ (via The Record)"
+    attributing_org_confidence: high   # DOJ indictment — named defendants
+    attribution_level: named-unit  # DOJ names the MPS (a specific service) + indicts two of its officers, and names the APT27 group with two named operators (Yin Kecheng, Zhou Shuai)
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-03-05
     attribution_source_id: therecord/2025-03_doj-indicts-12-chinese-contract-hackers-
+    notes: |
+      Caveat: this single attribution under-represents a 12-defendant prosecution spanning THREE
+      groups — (1) eight i-Soon (Anxun) employees + (2) two MPS officers, charged in SDNY; and
+      (3) two APT27 operators (Yin Kecheng, Zhou Shuai / "Silk Typhoon"), charged in DDC. The
+      record models only the APT27 cluster. DOJ explicitly names the MPS and MSS as the PRC
+      services directing/buying from i-Soon, but names neither as APT27's service (the apt27
+      actor is correctly cn/unscoped — see actor-placement flag in qc.notes).
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
@@ -30,3 +38,36 @@ operators_named:
   - "Zhou Shuai"
 sources:
   - therecord/2025-03_doj-indicts-12-chinese-contract-hackers-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs The Record (raw captured + sha256; tier=secondary journalism on the DOJ action).
+    FACTS confirmed verbatim: 5 Mar 2025; 12 defendants = eight i-Soon (Anxun) employees + two MPS
+    officers (SDNY, $10M reward for the 10) + two APT27 operators Yin Kecheng & Zhou Shuai (DDC,
+    $2M each); i-Soon CEO Wu Haibo, COO Chen Cheng; hacker-for-hire ecosystem selling to "at least
+    43 bureaus of [the] MPS [and the] MSS in at least 31 provinces" at $10k-$75k/inbox; victims =
+    Treasury (2024), dissidents/critics, a large US religious org, foreign ministries of Taiwan/
+    India/S.Korea/Indonesia, news orgs, a HK newspaper. Summary's "dozens of provincial MSS/MPS
+    bureaus" is conservative vs the source's "43 / 31 provinces" — accurate.
+    ATTRIBUTION: DOJ NAMES BOTH SERVICES (MPS + MSS); the MPS is named at named-unit specificity
+    (two indicted MPS officers; i-Soon "hired to train MPS officers"). Added attribution_level:
+    named-unit (was missing). attributing_org corrected from bare "therecord" to "US DOJ (via The
+    Record)" — the indictment is the DOJ's, The Record is the carrying source. Confidence high
+    retained (named indictment). Added an attribution caveat note.
+    ACTOR-PLACEMENT FLAG (per protocol — NOT edited): actor_id cn/unscoped/apt27 resolves and is
+    fresh (demoted from cn/mss/apt27 on 2026-06-24, FK-propagated). Kept unscoped: the DOJ names
+    MPS/MSS as i-Soon's tasking services, NOT as APT27's service — Yin/Zhou are charged as
+    profit-driven brokers selling to "various customers, only some of whom had connections to the
+    PRC government and military," consistent with the apt27 demotion rationale. NO service_id added
+    to the APT27 entry for the same reason. RE-HOME / COMPLETENESS CANDIDATE: a fuller model would
+    add (a) an i-Soon contractor attribution (FBI links i-Soon to Aquatic Panda / RedHotel /
+    Charcoal Typhoon — corpus has cn/unscoped/charcoal-typhoon and cn/unscoped/fishmonger) and
+    (b) an MPS-officer attribution carrying service_id: cn/mps. Left for a human pass; flagged here.
+    DOCTRINE: single link cn/national-intelligence-law-2017/compelled-vendor-cooperation,
+    strongly_inferred, attesting_source_id null — correct: The Record does not name the National
+    Intelligence Law or "compelled vendor cooperation" (the goal is inferred from the documented
+    state-directed contractor model), so NOT attested. Mirrors the sibling 2024-02/isoon-leak link.
+    No downgrade. published_on confirmed 2025-03-05 (source datePublished 2025-03-05T18:48:35Z).

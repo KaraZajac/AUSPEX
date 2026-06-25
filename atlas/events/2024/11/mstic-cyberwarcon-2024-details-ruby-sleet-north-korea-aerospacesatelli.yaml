@@ -9,22 +9,49 @@ incident_type:
 initial_vector: supply-chain
 false_flag_risk: none
 summary: |
-  At CYBERWARCON 2024, Microsoft (MSTIC) detailed Ruby Sleet, a North Korea-nexus threat actor it has tracked since 2020 that targets and has successfully compromised aerospace and defense-related organizations, including satellite and weapons-systems-related targets, primarily through increasingly sophisticated phishing. Microsoft observed Ruby Sleet conduct a supply-chain compromise in December 2023 by breaching a Korean construction company and replacing a legitimate version of the VeraPort software-management client with a backdoored version that communicated with Ruby Sleet infrastructure. The group also leveraged compromised legitimate code-signing certificates, backdoored VPN clients and modified software installers to deliver its implants. Microsoft presented Ruby Sleet as a distinct tracked actor within the North Korean threat landscape, separate from Sapphire Sleet. The Ruby Sleet section names no specific malware families or individual operators.
+  At CYBERWARCON 2024, Microsoft (MSTIC) detailed Ruby Sleet, a North Korea-nexus threat actor it has tracked since 2020 that targets and has successfully compromised aerospace and defense-related organizations, including satellite and weapons-systems-related targets, primarily through increasingly sophisticated phishing. Microsoft observed Ruby Sleet conduct a supply-chain compromise in December 2023 by breaching a Korean construction company and replacing a legitimate version of the VeraPort software-management client with a backdoored version that communicated with Ruby Sleet infrastructure. The group also leveraged compromised legitimate code-signing certificates, backdoored VPN clients and modified software installers to deliver its implants. Microsoft presented Ruby Sleet as a distinct tracked actor within the North Korean threat landscape, separate from Sapphire Sleet; per Microsoft's own threat-actor naming schema it is also distinct from Kimsuky (Microsoft's Emerald Sleet) — Ruby Sleet's previous Microsoft name is CERIUM. The Ruby Sleet section names no specific malware families or individual operators, and Microsoft does not name a specific DPRK service (RGB/MSS) for the cluster.
 attributions:
-  - actor_id: kp/rgb/kimsuky
+  # AUDIT 2026-06-25 (claude-opus-4.8/max): actor_id corrected kp/rgb/kimsuky -> null.
+  # Ruby Sleet is NOT Kimsuky. Microsoft's own threat-actor naming schema
+  # (microsoft/mstic PublicFeeds MicrosoftMapping.json) maps Ruby Sleet -> previous name
+  # CERIUM, whereas Kimsuky is Microsoft's Emerald Sleet (previous name THALLIUM; other names
+  # Black Banshee, RGB-D5, Greendinosa). Malpedia likewise treats Ruby Sleet (CERIUM) as its own
+  # DPRK cluster (and attributes it to the MSS, not the RGB). The two share only the loose
+  # CrowdStrike "Velvet Chollima" tag; on the element-codename mapping they are distinct actors.
+  # The cited source (Microsoft MSTIC, CyberWarCon 2024) attributes Ruby Sleet only at the nation
+  # level ("a threat actor that Microsoft has been tracking since 2020", under a "North Korean ...
+  # threat actors" banner) and NEVER names the RGB, MSS, Bureau 121 or any DPRK service -> the
+  # correct placement is kp/unscoped/ruby-sleet (cf. the 2026-06-24 Moonstone Sleet demotion).
+  # No such actor record exists yet, so to avoid a dangling FK and a false Kimsuky claim the
+  # actor_id is null with attribution_level: nation. ACTION FOR KARA: create kp/unscoped/ruby-sleet
+  # (Ruby Sleet / CERIUM, DPRK-nexus, aerospace-defense/satellite espionage) and repoint this
+  # attribution; also remove the erroneous "Ruby Sleet" equivalent alias from kp/rgb/kimsuky.yaml.
+  - actor_id: null
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # DPRK-nexus is well-supported; caveat is actor-layer placement, not the nation
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-11-22
     attribution_source_id: microsoft/2024-11_mstic-cyberwarcon-2024-details-ruby-slee
+    notes: "DPRK-nexus (Microsoft 'Ruby Sleet' / CERIUM), distinct from Kimsuky/Emerald Sleet; source names no DPRK service. Actor-layer placement (kp/unscoped/ruby-sleet) pending a corpus actor record — see audit comment above."
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Ruby Sleet's compromise of aerospace, defense, satellite and weapons-systems organizations is strategic technology collection in direct service of the 8th Congress 13-system weapons-development plan.
-    attesting_source_id: null
+      Ruby Sleet's compromise of aerospace, defense, satellite and weapons-systems organizations is strategic technology collection in direct service of the 8th Congress 13-system weapons-development plan. The cited source states this purpose in substance but hedged ("may be used by North Korea to increase its understanding of missiles, drones, and other related technologies"); the hedge keeps the link at strongly_inferred rather than attested.
+    # AUDIT 2026-06-25 (claude-opus-4.8/max): attesting_source_id set to the cited MSTIC report as the
+    # primary SUPPORTING source (allowed on strongly_inferred). Not upgraded to attested because the
+    # source's purpose statement is hedged ("may be used") — Microsoft's likely-use assessment, not a
+    # flat statement of the end the op serves.
+    attesting_source_id: microsoft/2024-11_mstic-cyberwarcon-2024-details-ruby-slee
+    inference_basis:
+      signals:
+        - "Targets are aerospace/defense, satellite payload and weapons-systems organizations — the exact victim profile of the strategic-tech-collection pillar (missiles, drones/UAV, satellites)."
+        - "Source states the likely strategic use: 'Stealing aerospace and defense-related technology may be used by North Korea to increase its understanding of missiles, drones, and other related technologies.'"
+        - "DPRK-nexus actor with a multi-year (since 2020) aerospace/defense collection mission, consistent with the 8th Congress 13-system weapons-development plan."
+      ruled_out: "Revenue-generation / sanctions-evasion (the kp/strategic-information or financial pillars) — Ruby Sleet's targets are weapons-systems technology, not financial or general-political intelligence, so a purely fundraising or political-collection reading does not survive."
     contested: false
     analyst: claude
 targets:
@@ -37,3 +64,9 @@ targets:
     role: staging
 sources:
   - microsoft/2024-11_mstic-cyberwarcon-2024-details-ruby-slee
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited against the cited MSTIC CyberWarCon-2024 blog (raw snapshot captured + SHA-256 hashed; live fetch byte-identical to the on-disk snapshot, sha ec18a4d6...). Facts confirmed: Ruby Sleet tracked since 2020; targets aerospace/defense + satellite/weapons-systems; Dec-2023 VeraPort supply-chain compromise of a Korean construction firm; compromised code-signing certs, backdoored VPN clients/installers; presented as distinct from Sapphire Sleet; no malware/operators named. CORRECTION: actor_id kp/rgb/kimsuky -> null. Ruby Sleet is NOT Kimsuky — Microsoft's MicrosoftMapping.json maps Ruby Sleet->CERIUM and Kimsuky->Emerald Sleet/THALLIUM; Malpedia treats Ruby Sleet (CERIUM) as its own DPRK cluster. Source attributes only at nation level and never names the RGB/MSS, so the correct placement is kp/unscoped/ruby-sleet (Moonstone-Sleet precedent); set attribution_level: nation. ACTOR ISSUES FLAGGED FOR KARA: (1) create a kp/unscoped/ruby-sleet actor record and repoint this attribution; (2) remove the incorrect 'Ruby Sleet'=equivalent alias from kp/rgb/kimsuky.yaml (it conflates CERIUM with THALLIUM). Doctrine link kept strongly_inferred (source's purpose statement is hedged, 'may be used'); attesting_source_id set as the supporting source + inference_basis added. Targets/sectors verified; all sector FKs resolve. published_on 2024-11-22 matches the source. false_flag_risk none correct."
