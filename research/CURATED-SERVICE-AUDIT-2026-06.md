@@ -76,6 +76,18 @@ Their FBI/CISA/OFAC/Europol takedown + sanctions documents frame them as "RaaS" 
 - **Source-integrity fixes applied**: junk `Gelsemium` misp_galaxy nulled on 3 unrelated actors; the CARR attribution in the ru/gru + ru/gru/74455 service files corrected (Treasury→DOJ Dec-2025; parent, not Unit 74455); alphv source mis-slug repaired (AA23-061A is Royal's; ALPHV's is AA23-353A).
 - **Open question flagged for Kara**: us/cmf backs 5 real CYBERCOM events — keep as a generic `us/unscoped` fallback (current state) vs null those events' `actor_id` with CYBERCOM in `attributing_org`.
 
+## Defensibility re-check (adversarial, 2026-06-25)
+
+The five KEEP verdicts resting on **indirect** evidence (leak-correlation, contractor-mediation, ecosystem safe-harbor, a tertiary leak) — the placements an examiner is most likely to challenge — were independently re-verified by read-only **refutation** agents, each tasked to *disprove* the keep from the cited sources. **All five held:**
+
+- **`cn/mss/salt-typhoon` — HOLDS (high).** OFAC names the MSS, and only the MSS, for Sichuan Juxinhe (Salt Typhoon's operating arm), in the same paragraph as the Salt-Typhoon role; the PLA appears nowhere in the load-bearing OFAC release (CISA's diffuse "PLA and MSS" is corroboration only).
+- **`us/cia/longhorn-lamberts` — HOLDS at CIA (high).** WikiLeaks Vault7 names the CIA and ties "Longhorn" to it; the keep does not rely on Symantec (which stopped at "North American"). *Flag:* the `cci` sub-unit is inferential (Schulte→EDG→CCI), not named for this cluster by any cited source.
+- **`ru/proxies/lockbit` — HOLDS (high).** OFAC's by-name safe-harbor finding ("Russia… groups such as LockBit are free to launch ransomware attacks… continues to offer safe harbor") satisfies the SCHEMA's *first* proxies criterion (safe-harbor/non-prosecution); the call is consistent with demoting REvil + Emotet, which lacked any such by-name finding.
+- **`us/nsa/equation-group` — HOLDS (high).** Pangu Lab titles its report "US NSA Equation Group" (via the Shadow Brokers dump) and Der Spiegel's ANT catalog names TAO. *Flag:* the TAO sub-unit is one inferential step beyond the firmly-named NSA level.
+- **`ir/mois/apt34` — HOLDS but WEAK (high).** Rule-compliant: the Lab Dookhtegan leak names "the ruthless Iranian Ministry of Intelligence." But that is a tertiary, self-attributing leak; tier-1 vendors say only "Iranian." Would fall to `ir/unscoped` (like apt33) if AUSPEX ever weights tertiary leaks below tier-1 framing — documented for transparency.
+
+The re-check also surfaced one **factual error**, now corrected: the Symantec source note's "No occurrence of MOIS … in the article" was false (the article *does* mention the MOIS — but for Seedworm/MuddyWater, a different actor, never for OilRig). Net: the indirect placements are defensible; the two sub-unit granularity caveats (`cci`, TAO) and the apt34 tier-weakness are recorded so an examiner sees them stated, not hidden.
+
 ## Reproducibility
 
 Every KEEP cites the verbatim service-naming quote in the actor's `notes`; every cited source carries `raw_snapshot` + `content_sha256` + an `AUDIT (2026-06-…, claude-opus-4.8/max)` line. Raw captures live in the gitignored `atlas/sources/raw/`. The gate (`make verify`) is green at every batch commit (schema conformance + atlas FK consistency + engine validator); 0 stale FKs after each.
