@@ -8,11 +8,12 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  A two-part Proofpoint + Threatray report assessed with high confidence that TA397/Bitter is a state-backed actor conducting intelligence gathering in the interests of the Indian state, drawing on campaigns from October 2024 to April 2025 against government and diplomatic entities in China, Pakistan and other neighbors, plus recovered Bangladeshi military/tax documents and Indian Standard Time hands-on-keyboard working-hour patterns. Custom toolset includes MiyaRAT, wmRAT, MuuyDownloader and BDarkRAT, with tool-sharing overlaps to Mysterious Elephant (APT-K-47) and Confucius. New actor not in the inventory; this is the first strong public attribution of Bitter to the Indian state. Maps to IN regional-collection doctrine.
+  A two-part Proofpoint + Threatray report (Part One cited here) assessed with high confidence ("highly likely") that TA397/Bitter is a state-backed actor conducting intelligence gathering in the interests of the Indian state, drawing on campaigns from October 2024 to April 2025 against government and diplomatic entities in China, Pakistan and other neighbours (incl. embassies in Beijing and Madagascar/Mauritius) plus recovered Bangladeshi military and tax-authority documents and Indian Standard Time (UTC+5:30, 9-to-5 Mon-Fri) hands-on-keyboard working-hour patterns. Custom toolset named in Part One includes MiyaRAT, wmRAT, BDarkRAT and ArtraDownloader, with ORPCBackdoor tool-sharing overlaps to other India-aligned actors Mysterious Elephant (APT-K-47) and Confucius. New actor not in the inventory; this is the first strong public attribution of Bitter to the Indian state. Maps to IN regional-collection doctrine. NB Part One names only "the Indian state" / "an Indian intelligence organization" — no specific Indian service.
 attributions:
   - actor_id: in/unscoped/bitter
     attributing_org: "proofpoint"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: moderate   # Proofpoint says "highly likely" (≈ moderate ICD-203); names the Indian state, not a service
+    attribution_level: named-actor   # India nexus + named actor (TA397/Bitter); NO specific Indian service named → not named-unit
     auspex_assessment: concur
     attribution_date: 2025-06-04
     attribution_source_id: proofpoint/2025-06_proofpointthreatray-attribute-bitter-ta3
@@ -22,7 +23,7 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Proofpoint/Threatray assess with high confidence that Bitter gathers intelligence for the Indian state against government and diplomatic entities in China, Pakistan and other neighbours plus Bangladeshi military/tax documents — the regional diplomatic/government collection that defines this doctrine.
+      Proofpoint/Threatray assess it "highly likely that TA397 is a state-backed threat actor tasked with intelligence gathering in the interests of the Indian state," targeting government and diplomatic entities in China, Pakistan and other Indian-subcontinent neighbours plus exfiltrated Bangladeshi military and tax-authority documents — the regional diplomatic/government collection this doctrine encodes. Kept strongly_inferred not attested: the vendor names Indian-state interests in substance, but the source is secondary/industry tier (not govt-primary) and the specific diplomatic-collection *pillar* goal is an AUSPEX mapping of the victim set; the doctrine's own cyber_relevance sets these links at strongly_inferred absent Indian-government-direction sourcing.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -38,3 +39,10 @@ targets:
     role: primary
 sources:
   - proofpoint/2025-06_proofpointthreatray-attribute-bitter-ta3
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Proofpoint "The Bitter End: Unraveling Eight Years of Espionage Antics—Part One" (raw captured, sha256 7f6910f6…). ATTRIBUTION (the key question): Proofpoint/Threatray say it is "highly likely that TA397 is a state-backed threat actor tasked with intelligence gathering in the interests of the Indian state" and "highly likely operates on behalf of an Indian intelligence organization" — they name the INDIAN STATE / a generic "Indian intelligence organization" but NO specific service (full-text search found no NTRO, RAW, Military Intelligence, IB, DRDO, DIA, Defence Cyber Agency, contractor/mercenary). So bitter CANNOT re-home in/unscoped→in/<service> on this source; in/unscoped/bitter is correct and the actor file's 2026-06-24 demotion note already states this. attribution_level set to named-actor (was missing). FACTS verified: campaign window Oct 2024–Apr 2025; victims = govt/diplomatic entities in China, Pakistan, neighbours (Beijing embassies, Madagascar/Mauritius) + Bangladeshi military & tax-authority docs; IST 9-to-5 working hours; tooling MiyaRAT/wmRAT/BDarkRAT/ArtraDownloader + ORPCBackdoor overlap with Mysterious Elephant (APT-K-47) & Confucius. CORRECTION: summary said "MuuyDownloader" — not named in Part One (it names ArtraDownloader); MuuyDownloader is from the uncited Dec-2024 Turkish report → swapped to ArtraDownloader and added ORPCBackdoor. published_on 2025-06-04 = article modified_time (original published_time 2025-06-03); kept 06-04 (Proofpoint's canonical date). DOCTRINE LINK kept strongly_inferred (NOT upgraded to attested): vendor states Indian-state interests in substance, but source is secondary/industry tier (not govt-primary) and the diplomatic-collection pillar goal is an AUSPEX mapping of the victim set; doctrine cyber_relevance sets these at strongly_inferred absent Indian-govt-direction sourcing — conservative call, reasoning tightened with the verbatim quote, attesting_source_id stays null. Source: added raw_snapshot + content_sha256; tier (secondary) preserved.

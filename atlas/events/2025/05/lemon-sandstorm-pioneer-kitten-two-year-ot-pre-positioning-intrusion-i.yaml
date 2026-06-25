@@ -1,6 +1,8 @@
 id: 2025-05/lemon-sandstorm-pioneer-kitten-two-year-ot-pre-positioning-intrusion-i
 name: "Lemon Sandstorm / Pioneer Kitten two-year OT pre-positioning intrusion into Middle East CNI"
-start_date: 2025-05-01
+start_date: 2023-05-01
+end_date: 2025-02-01
+disclosure_date: 2025-05-01
 incident_type:
   - pre-positioning
   - espionage
@@ -9,11 +11,12 @@ incident_type:
 initial_vector: valid-creds
 false_flag_risk: none
 summary: |
-  FortiGuard's incident-response team disclosed (May 2025) a multi-year Iranian state-sponsored intrusion into a Middle Eastern critical-national-infrastructure entity, active May 2023 to February 2025 (traces to 2021). Initial access via stolen SSL-VPN credentials; the actor deployed custom backdoors HanifNet, HXLibrary, NeoExpressRAT and Havoc, performed extensive lateral movement and targeted reconnaissance/credential harvesting against the OT environment with little data exfiltration, consistent with pre-positioning for a future destructive attack. The Fortinet blog itself attributes only to 'an Iranian state-sponsored threat group'; secondary reporting (The Hacker News, Dark Reading) maps this to Lemon Sandstorm = Pioneer Kitten / Fox Kitten / UNC757, hence strongly_inferred and mapped to the existing Pioneer Kitten actor_id. Distinct OT pre-positioning op not in the inventory.
+  FortiGuard's incident-response (FGIR) team disclosed (1 May 2025) a long-term Iranian state-sponsored intrusion into a Middle Eastern critical-national-infrastructure (CNI) entity, which persisted "from at least May 2023 to February 2025, with signs of compromise dating back as far as May 2021." Initial access was via stolen SSL-VPN credentials; the adversary deployed novel backdoors HanifNet, HXLibrary and NeoExpressRAT alongside Havoc/SystemBC, chained open-source proxies (plink, Ngrok, glider, ReverseSocks5) to bypass network segmentation, exfiltrated targeted email data, and conducted targeted reconnaissance and credential harvesting against the victim's restricted Operational-Technology (OT) environment — "no confirmed disruption to OT systems was found" but FGIR assessed "strong adversary interest in these systems," consistent with suspected network pre-positioning "for future strategic advantage." The Fortinet blog itself attributes only to "an Iranian state-sponsored threat group" (a nation-level attribution; it names neither the IRGC nor any specific actor); secondary reporting (The Hacker News, Dark Reading) maps this campaign to Lemon Sandstorm = Pioneer Kitten / Fox Kitten / UNC757, hence strongly_inferred and mapped to the existing Pioneer Kitten actor_id. Distinct OT pre-positioning op not otherwise in the inventory.
 attributions:
   - actor_id: ir/unscoped/pioneer-kitten
     attributing_org: "fortinet"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: nation               # Fortinet itself reaches only "Iranian state-sponsored"; the Pioneer Kitten / Lemon Sandstorm named-actor mapping is AUSPEX's via secondary reporting (THN/Dark Reading), reflected in concur-with-caveat
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-05-01
     attribution_source_id: fortinet/2025-05_lemon-sandstorm-pioneer-kitten-two-year-
@@ -29,7 +32,33 @@ doctrine_links:
     analyst: claude
 targets:
   - target_id: sectors/critical-infrastructure
-    country: ae
+    country: null   # Fortinet names only "the Middle East"; no specific country (UAE/Gulf state) is stated in the source — was 'ae' (unsourced), corrected to null on audit
     role: primary
 sources:
   - fortinet/2025-05_lemon-sandstorm-pioneer-kitten-two-year-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the Fortinet/FGIR blog (raw captured + SHA-256 hashed). FACTS confirmed against source:
+    window "from at least May 2023 to February 2025, with signs ... back as far as May 2021"; initial
+    access via stolen SSL-VPN credentials; backdoors HanifNet/HXLibrary/NeoExpressRAT + Havoc/SystemBC;
+    proxy-chaining to bypass segmentation; targeted recon + credential harvesting against a restricted OT
+    environment with "no confirmed disruption to OT systems" but "strong adversary interest" = suspected
+    pre-positioning "for future strategic advantage." ATTRIBUTION: the Fortinet source attributes ONLY to
+    "an Iranian state-sponsored threat group" — zero hits for IRGC/Revolutionary Guard/Government of
+    Iran/Pioneer Kitten/Lemon Sandstorm/Fox Kitten/UNC757 in the raw. So this source does NOT name an
+    Iranian service (no IRGC); it reaches nation level only. CORRECTIONS: (1) start_date 2025-05-01 ->
+    2023-05-01 (op start; 2025-05 was the disclosure date) + added end_date 2025-02-01 and
+    disclosure_date 2025-05-01; id/slug left fixed. (2) target country 'ae' -> null (source names only
+    "Middle East", no specific country). (3) added attribution_level: nation (Fortinet's own ceiling; the
+    Pioneer Kitten mapping is AUSPEX's via secondary sources, reflected in concur-with-caveat +
+    strongly_inferred). (4) summary tightened to the source's exact wording (incl. that email data WAS
+    exfiltrated). doctrine_link ir/asymmetric-warfare/civilian-cii-coercion kept at strongly_inferred /
+    attesting_source_id: null — Fortinet states "future strategic advantage," not civilian-CII coercion,
+    so NOT attested (correct, not over-attested). actor_id ir/unscoped/pioneer-kitten resolves and is
+    current (matches the 2026-06-24 IRGC->unscoped demotion); not stale. ACTOR NOTE: the actor's IRGC
+    placement remains uncited corpus-wide (already handled by the prior demotion); this event's lone
+    source adds no service-level attribution.

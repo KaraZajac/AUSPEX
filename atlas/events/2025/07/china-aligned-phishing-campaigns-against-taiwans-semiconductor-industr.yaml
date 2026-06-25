@@ -14,9 +14,11 @@ attributions:
   - actor_id: cn/unscoped/china-aligned-taiwan-semiconductor-espionage-cluster
     attributing_org: "proofpoint"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: attested
+    attribution_level: nation   # Proofpoint calls the three sub-clusters "Chinese state-sponsored"/"China-aligned" — names a nation (China) but NO Chinese service (no MSS/PLA); state-organ stays nation-level, hence the cn/unscoped actor id. The "UNK_" labels are Proofpoint's uncategorized-cluster taxonomy, not a service attribution.
     auspex_assessment: concur
     attribution_date: 2025-07-16
     attribution_source_id: proofpoint/2025-07_china-aligned-phishing-campaigns-against
+    notes: "Single attribution entry bundling three China-aligned UNK_ clusters (UNK_FistBump/UNK_DropPitch/UNK_SparkyCarp) that Proofpoint assessed together as 'three Chinese state-sponsored threat actors' targeting Taiwan's semiconductor sector, motive 'most likely espionage'. UNK_FistBump's infection chain resembles TA415/APT41 but Proofpoint tracks it as distinct — resemblance, NOT attribution."
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: cn/mic2025/next-gen-it
@@ -45,3 +47,29 @@ targets:
     role: collateral
 sources:
   - proofpoint/2025-07_china-aligned-phishing-campaigns-against
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Proofpoint (16 Jul 2025) against the captured raw snapshot
+    (content_sha256 c59c8ae1… re-confirmed on disk; HTTP-200 capture from 2026-06-24).
+    FACTS ✓: window "Between March and June 2025"; "three Chinese state-sponsored threat actors";
+    targets = semiconductor manufacturing/design/testing + wider equipment & supply chain + financial
+    investment analysts covering the sector (tw); UNK_FistBump employment/job-seeker lures → Cobalt
+    Strike or custom Voldemort backdoor (Google Sheets C2 via CiscoCollabHost DLL sideloading);
+    UNK_DropPitch → investment-bank analysts, SoftEther VPN tunnelling; UNK_SparkyCarp custom AITM
+    credential-phishing kit vs a Taiwanese semiconductor firm (also targeted Nov 2024). Motive verbatim
+    "most likely espionage"; strategic framing "semiconductor self-sufficiency … US and Taiwanese export
+    controls" present — supports the MIC2025 strongly_inferred link.
+    ATTRIBUTION ✓: China nexus at NATION level; NO Chinese service named (zero MSS/Ministry of State
+    Security/PLA in the raw). "UNK_" = Proofpoint's uncategorized still-developing cluster taxonomy, NOT
+    a service. TA415/APT41 resemblance is an explicit overlap ("distinct to TA415 at this time"), NOT an
+    attribution; false_flag_risk none holds. CORRECTION: added attribution_level: nation (was missing)
+    matching the Flax-Typhoon/cn-unscoped precedent; added attribution notes documenting the
+    three-cluster bundle + the TA415 non-attribution. Actor placement cn/unscoped (China, no service) is
+    correct — verified the prior 2026-06-24 demote from cn/mss/… and confirmed no stale FK remains.
+    DOCTRINE: links honest — MIC2025/next-gen-it strongly_inferred and 14th-FYP/chokepoint plausible,
+    both attesting_source_id null (source states espionage + self-sufficiency goal but not at the
+    attested goal-naming bar); no over-attestation. published_on 2025-07-16 matches the source.

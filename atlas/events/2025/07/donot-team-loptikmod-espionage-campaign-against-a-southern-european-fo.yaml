@@ -8,11 +8,12 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Trellix Advanced Research Center attributed a spear-phishing campaign against a Southern European foreign-affairs ministry to the India-suspected DoNot Team (APT-C-35 / Origami Elephant). Emails impersonating a defence attache delivered Google Drive RAR archives carrying the group's signature LoptikMod RAT, which establishes scheduled-task persistence and exfiltrates system data. Significant because it is the first documented use of LoptikMod against a major European government entity, marking DoNot's expansion from South Asian regional collection toward European diplomatic intelligence collection. DoNot is already in the IN inventory but this European-MFA event is new; doctrine fit is a stretch beyond the named regional-collection doctrine.
+  Trellix Advanced Research Center attributed a spear-phishing campaign against a Southern European government foreign-affairs entity to the India-suspected DoNot Team (APT-C-35 / Origami Elephant). Phishing emails sent from a Gmail address impersonated a defence official, referencing an Italian Defence Attaché's visit to Dhaka, Bangladesh, and delivered a Google Drive link to a RAR archive carrying the group's signature LoptikMod RAT, which establishes scheduled-task persistence and is designed to exfiltrate system data (the C2 was inactive at analysis, so no exfiltration in this incident was observed). Significant because it is the first documented use of LoptikMod against a major European government entity, marking DoNot's expansion from South Asian regional collection toward European diplomatic intelligence collection. DoNot is already in the IN inventory but this European-diplomatic event is new; doctrine fit is a stretch beyond the named regional-collection doctrine.
 attributions:
   - actor_id: in/unscoped/donot-team
-    attributing_org: "thehackernews"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org: "Trellix Advanced Research Center (via The Hacker News)"
+    attributing_org_confidence: moderate   # source: "suspected ties to India"
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-07-09
     attribution_source_id: thehackernews/2025-07_donot-team-loptikmod-espionage-campaign-
@@ -31,3 +32,29 @@ targets:
     role: primary
 sources:
   - thehackernews/2025-07_donot-team-loptikmod-espionage-campaign-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs The Hacker News (raw captured + hashed), which reports the primary Trellix Advanced
+    Research Center analysis (Trellix title: "...DoNot APT Group on Southern European Government
+    Entities"). FACTS confirmed: Trellix attribution, DoNot/APT-C-35/Origami Elephant, Gmail-sent
+    phishing impersonating a defence official re an Italian Defence Attaché visit to Dhaka, Google
+    Drive RAR -> LoptikMod RAT, scheduled-task persistence, first documented LoptikMod use vs a major
+    European government entity. CORRECTIONS: (1) attributing_org was "thehackernews" -> credited the
+    actual attributor "Trellix Advanced Research Center (via The Hacker News)". (2) attributing_org_
+    confidence high (mislabeled "ICD attested") -> moderate: source says "suspected ties to India";
+    Trellix's espionage-motive is confident but the India *nation* attribution is suspected. (3) Added
+    attribution_level: named-actor (named group, no Indian service). (4) Summary: "Southern European
+    foreign-affairs ministry" retained (Trellix's own title says "Southern European Government
+    Entities") but clarified the entity is a European diplomatic/foreign-affairs target; THN also frames
+    it as "South Asian embassies in Europe" (a S-Asian mission on European soil) — both readings noted.
+    Added Gmail/Dhaka/Italian-attaché specifics and the caveat that the C2 was inactive so no actual
+    exfiltration was observed in this incident (data-theft type kept on LoptikMod's documented purpose).
+    doctrine_link plausible + attesting_source_id null is correct and honest — the link reasoning itself
+    flags the target as an expansion beyond the doctrine's named South Asian scope; not upgraded.
+    actor_id in/unscoped/donot-team resolves and is current (demoted from in/ntro on 2026-06-24). FK
+    target sectors/government/foreign-ministry valid. published_on 2025-07-09 matches article ("Jul 09,
+    2025"). Source title corrected to the real article title.

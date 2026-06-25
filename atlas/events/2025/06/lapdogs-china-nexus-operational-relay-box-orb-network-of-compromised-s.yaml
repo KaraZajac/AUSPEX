@@ -13,7 +13,8 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/lapdogs-orb-operator
     attributing_org: "securityscorecard"
-    attributing_org_confidence: low   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # SecurityScorecard's own words (Attribution, p.23): "We therefore assess with MODERATE confidence that LapDogs is an Operational Relay Box Network that China-Nexus threat actors use." Was 'low' (mis-mapped from the doctrine-link scale); corrected to the source's stated confidence 2026-06-25 audit.
+    attribution_level: activity-cluster   # Source names only a loose "China-Nexus" nexus and explicitly cannot determine the operator ("it can be difficult to determine the exact threat actor operating the network... We cannot yet confirm whether UAT-5918 is the operator or just a client"). Nexus + unidentified operator => activity-cluster, NOT a firm nation attribution. No service named anywhere. Set 2026-06-25 audit.
     auspex_assessment: concur
     attribution_date: 2025-06-01
     attribution_source_id: securityscorecard/2025-06_lapdogs-china-nexus-operational-relay-bo
@@ -42,3 +43,40 @@ targets:
     role: collateral
 sources:
   - securityscorecard/2025-06_lapdogs-china-nexus-operational-relay-bo
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited against the SecurityScorecard STRIKE "LapDogs" 27-page PDF read in full (raw snapshot
+    already captured 2026-06-24; content_sha256 cffe609c4e10a4444242f59e0a305e43c34e66fc33dc814a05042172ad4d0b3a
+    re-verified intact this audit). FACTS ✓ all confirmed verbatim: ORB network of "over 1,000 actively
+    infected nodes" (Exec Summary); custom backdoor "ShortLeash" that "generates unique, self-signed TLS
+    certificates with spoofed metadata" presenting as LAPD (City of Los Angeles Police Department spoof — the
+    origin of the "LapDogs" name); persistence via systemd unit ff-agent-pi.service, fake versionless Nginx
+    web server, shared JARM 3fd3fd16...59862b; began "as of September 2023 at the latest"; geography "highly
+    localized to the United States and Southeast Asian countries", with US+Japan+South Korea+Taiwan+Hong Kong
+    "nearly 90% of the entire network" (matches summary); victims in IT, networking, real estate, media;
+    PolarEdge a "separate, sister ORB" sharing some traits but assessed distinct (matches summary). Vendor
+    detail (55%/587 Ruckus, 107 Buffalo AirStation) consistent with the actor record.
+    ATTRIBUTION corrected: the report's dedicated Attribution section (p.23) states verbatim "We therefore
+    assess with MODERATE confidence that LapDogs is an Operational Relay Box Network that China-Nexus threat
+    actors use" — so attributing_org_confidence raised low->moderate (the prior 'low' was mis-mapped from the
+    doctrine-link scale; corrected to the source's own stated confidence — not an over-claim, the source says
+    moderate). attribution_level ADDED as activity-cluster (was missing): an ORB is shared infrastructure and
+    the source explicitly cannot identify the operator ("it can be difficult to determine the exact threat
+    actor operating the network... We cannot yet confirm whether UAT-5918 is the operator or just a client of
+    the network. We also cannot yet confirm whether other threat actors have or will have access"). It names
+    only a loose "China-Nexus" nexus (forensics = Mandarin developer notes in the ShortLeash startup script +
+    US/SE-Asia victimology) and NO service/unit anywhere — so activity-cluster, NOT nation; NO service_id
+    (correct — none present). actor_id cn/unscoped/lapdogs-orb-operator resolves and is current (demoted from
+    cn/mss/... on 2026-06-24 by prior audit for exactly this reason; not stale).
+    DOCTRINE LINK held at plausible (correct, NOT over-attested): the single link to cn/intelligentized-warfare
+    (null pillar/program) carries attesting_source_id: null, which is valid for plausible. The source never
+    states a strategic purpose tied to this doctrine — it describes obfuscation infrastructure servicing
+    China-nexus espionage generally — so plausible (not strongly_inferred/attested) is honest; no attesting
+    source exists to support a higher label. published_on 2025-06-01 retained (report dated "June 2025"; PDF
+    carries no more precise day).
+    SCOPE: corrected this event + verified its one source (raw_snapshot/content_sha256 already present from the
+    prior audit, re-checked, no change needed). Conservative throughout; nothing fabricated.

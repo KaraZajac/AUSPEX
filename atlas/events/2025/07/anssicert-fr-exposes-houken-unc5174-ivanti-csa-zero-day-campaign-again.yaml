@@ -13,6 +13,7 @@ attributions:
   - actor_id: cn/unscoped/houken
     attributing_org: "certssigouv"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: named-actor   # ANSSI named the intrusion set "Houken" and tied it to Mandiant's UNC5174 cluster; it did NOT name a service/unit (no MSS as operator) -> not named-unit
     auspex_assessment: concur
     attribution_date: 2025-07-01
     attribution_source_id: certssigouv/2025-07_anssicert-fr-exposes-houken-unc5174-ivan
@@ -47,3 +48,27 @@ targets:
     role: primary
 sources:
   - certssigouv/2025-07_anssicert-fr-exposes-houken-unc5174-ivan
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the ANSSI/CERT-FR PDF CERTFR-2025-CTI-009 (raw captured 2026-06-24, 22pp, sha256
+    d1241188…; re-read pp.1-14 in this audit, all four supporting quotes in the source record verified
+    verbatim). FACTS confirmed: Sep-2024 campaign continuing to end-Nov 2024, report published 1 Jul 2025;
+    THREE Ivanti CSA zero-days CVE-2024-8190 / CVE-2024-8963 / CVE-2024-9380 (exact); French government,
+    telecom, media, finance, transport sectors impacted (Key Points verbatim) + a French defense-sector
+    rootkit incident (sec. 3.2.4) -> all six target sectors supported; PHP webshells, kernel-module rootkit,
+    self-patching, Monero cryptominer and a South-American-MFA email exfiltration (Mar 2025) all in source.
+    ATTRIBUTION: ANSSI does NOT name a Chinese service as Houken's operator. ANSSI's own assessment is a
+    for-profit initial-access broker that sells TO a "state-linked actor seeking insightful intelligence";
+    the sole MSS reference is ANSSI relaying GTIG's hedged claim that UNC5174 is "a potential access broker
+    for the MSS" (sec. 4.2) — Google's claim, hedged, about UNC5174, framing a vendor FOR the MSS not the MSS
+    itself. Access-broker-selling-to-a-state model explicitly floated (sec. 4.1/4.2, APT41-galaxy comparison).
+    Actor correctly modeled cn/unscoped/houken (China nexus = UTC+8/CST, Chinese-speaking tooling; service
+    unresolved); confidence moderate / auspex concur upheld. CORRECTIONS: added attribution_level: named-actor
+    (ANSSI named the Houken cluster = UNC5174 but no service -> not named-unit). doctrine_links unchanged:
+    cn/national-intelligence-law-2017 plausible, attesting_source_id null is honest — ANSSI does not attest
+    the NIL collection goal (the broker's state end-consumer is only hypothesized), so no over-attestation.
+    published_on 2025-07-01 matches the PDF cover. All FKs resolve (cn/unscoped service, doctrine, 6 sectors).

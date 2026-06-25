@@ -1,6 +1,7 @@
 id: 2025-06/bladedfeline-oilrig-subgroup-whispershahmaran-espionage-against-kurdis
 name: "BladedFeline (OilRig subgroup) Whisper/Shahmaran espionage against Kurdish and Iraqi government officials"
-start_date: 2025-06-05
+start_date: 2017-09-21   # first documented op (VideoSRV reverse shell on a KRG system); 2025-06-05 was ESET's publication date, now disclosure_date
+disclosure_date: 2025-06-05
 incident_type:
   - espionage
   - intrusion
@@ -12,7 +13,8 @@ summary: |
 attributions:
   - actor_id: ir/unscoped/bladedfeline
     attributing_org: "ESET"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # ESET's own wording: "medium confidence" that BladedFeline is an OilRig subgroup
+    attribution_level: named-actor          # ESET names a specific Iran-aligned actor (BladedFeline / OilRig subgroup); no Iranian service named (not named-unit)
     auspex_assessment: concur
     attribution_date: 2025-06-05
     attribution_source_id: welivesecurity/2025-06_bladedfeline-oilrig-subgroup-whispershah
@@ -20,10 +22,16 @@ doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
-    confidence: plausible
+    confidence: strongly_inferred
     reasoning: |
-      Persistent OilRig-subgroup espionage against Kurdistan Regional Government diplomats, high-ranking Iraqi officials and a regional telecom is political/diplomatic intelligence collection across Iran's immediate periphery, the forward theater where the forward-defense posture concentrates collection.
-    attesting_source_id: null
+      Persistent OilRig-subgroup espionage against Kurdistan Regional Government diplomats, high-ranking Iraqi officials and a regional telecom is political/diplomatic intelligence collection across Iran's immediate periphery — the forward theater where the forward-defense posture concentrates collection. ESET states the strategic purpose at the collection level: BladedFeline seeks "to maintain strategic access to high-ranking officials in both governmental entities … to spy on and potentially manipulate," and in Iraq is "most probably trying to counter the influence of Western governments following the US invasion and occupation." Mapping that stated near-abroad, counter-Western-influence collection onto Iran's forward-defense posture is the AUSPEX inference (the source does not name a doctrine), but it is the single strategic reading that survives — hence strongly_inferred, not attested.
+    attesting_source_id: welivesecurity/2025-06_bladedfeline-oilrig-subgroup-whispershah
+    inference_basis:
+      signals:
+        - "ESET names the purpose: targeting KRG + Government of Iraq 'for cyberespionage purposes, with an eye toward maintaining strategic access to high-ranking officials … to spy on and potentially manipulate.'"
+        - "ESET names the geopolitical motive in Iraq: 'most probably trying to counter the influence of Western governments following the US invasion and occupation of the country.'"
+        - "Iran-aligned OilRig subgroup operating exclusively against Iran's immediate periphery (Iraq/KRG diplomats + a regional telecom), the forward theater the doctrine concerns; persistent multi-year access (2017→2024) consistent with strategic-access maintenance rather than a one-off intrusion."
+      ruled_out: "ir/sanctions-evasion — no revenue/financial or sanctions-circumvention element (pure diplomatic/political espionage). ir/resistance-axis — that doctrine concerns anti-Israel/anti-US alliance & proxy-capability transfer (Hezbollah/PMF/Houthis), not unilateral diplomatic espionage against the KRG."
     contested: false
     analyst: claude
 targets:
@@ -38,3 +46,9 @@ targets:
     role: primary
 sources:
   - welivesecurity/2025-06_bladedfeline-oilrig-subgroup-whispershah
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs ESET 'BladedFeline: Whispering in the dark' (raw captured 2026-06-24, sha256 a4b2ee11…, hash re-verified). FACTS confirmed: KRG diplomatic + Iraqi-govt officials + a regional Uzbek telecom; Whisper/Shahmaran backdoors, PrimeCache IIS module, Flog webshell, Laret/Pinar tunnels; GOI access via suspected internet-facing web-server exploit→Flog webshell, KRG vector unclear; OilRig linkage = shared ME targeting + VideoSRV/RDAT recovered on KRG systems + PrimeCache↔RDAT code similarity. ATTRIBUTION: ESET names only 'Iran-aligned' + 'medium confidence … subgroup of OilRig (APT34)' — 0 mentions of MOIS/Ministry of Intelligence/IRGC/Revolutionary Guard in raw, 8 of 'Iran-aligned'; actor correctly ir/unscoped/bladedfeline (no service), attributing_org_confidence moderate, attribution_level set named-actor. CORRECTIONS: (1) start_date 2025-06-05→2017-09-21 (first timeline op; 2025-06-05 was the publication date → moved to new disclosure_date); (2) doctrine_link ir/forward-defense plausible→strongly_inferred + attesting_source set + inference_basis added — ESET states the collection purpose ('strategic access … to spy on and potentially manipulate'; in Iraq 'counter the influence of Western governments'), one surviving strategic reading, but no doctrine named so not attested; (3) added attribution_level; cleaned a stray confidence comment. published_on 2025-06-05 matches raw byline ('05 Jun 2025'). Targets accurate (KRG→iq is correct: a regional govt within Iraq). FK check: actor + ir/forward-defense doctrine + all three sectors resolve. Source already carried a prior 2026-06-24 LLM audit + raw_snapshot/content_sha256 (preserved, not re-fetched). No actor issues outstanding."
