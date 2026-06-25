@@ -1,42 +1,77 @@
 id: 2024-04/cisco-talos-discloses-arcanedoor-uat4356-storm-1849-state-sponsored-es
 name: "Cisco Talos discloses ArcaneDoor (UAT4356 / STORM-1849) state-sponsored espionage via Cisco ASA zero-days"
-start_date: 2024-04-01
+start_date: 2024-04-24
+disclosure_date: 2024-04-24
 incident_type:
   - intrusion
   - espionage
   - reconnaissance
+initial_vector: unknown  # Talos: "We have not determined the initial access vector"
 false_flag_risk: none
 summary: |
-  Cisco Talos disclosed ArcaneDoor, an espionage campaign against perimeter network devices that compromised Cisco ASA firewalls at a small set of customers including government networks. The actors, tracked as UAT4356 (Talos) and STORM-1849 (Microsoft), deployed two custom implants: Line Dancer, an in-memory backdoor for command execution and traffic capture, and Line Runner, a persistence mechanism surviving reboots and upgrades. Two ASA vulnerabilities (CVE-2024-20353 and CVE-2024-20359) were used post-compromise; Talos stated it had not determined the initial access vector. Infrastructure was active from late 2023 with peak activity December 2023 to early January 2024. Talos assessed with high confidence that a state-sponsored actor was responsible but did not attribute the campaign to a specific nation.
+  Cisco Talos disclosed ArcaneDoor (blog dated 2024-04-24), an espionage campaign against perimeter network devices that compromised Cisco ASA firewalls at a small set of customers. Talos states the additional victims it identified "all of which involved government networks globally." The cluster, tracked as UAT4356 (Talos) and STORM-1849 (Microsoft Threat Intelligence Center), deployed two custom implants: Line Dancer, a memory-resident shellcode-interpreter / in-memory backdoor for command execution and traffic capture, and Line Runner, a persistent Lua HTTP backdoor surviving reboots and upgrades. Talos could not determine the initial access vector; it identified two ASA vulnerabilities abused in the campaign chain — CVE-2024-20353 (ASA reboot, used to trigger Line Runner installation) and CVE-2024-20359 (the legacy VPN-client pre-load capability Line Runner persists through). Actor-controlled infrastructure dated to early November 2023, with most activity December 2023 to early January 2024 (capability suspected tested/developed as early as July 2023). Talos assessed with high confidence that a state-sponsored actor was responsible but NAMED NO NATION. The campaign therefore remains an unattributed state-sponsored activity cluster: AUSPEX models actor_id as null (no nation attested by the cited source, and MISP-galaxy records country: None for both ArcaneDoor and Storm-1849). Acknowledging partners on the investigation: ASD ACSC, Lumen Black Lotus Labs, the Canadian Centre for Cyber Security (CSE), the Microsoft Threat Intelligence Center, the UK NCSC, and CISA.
 attributions:
-  - actor_id: cn/unscoped/arcanedoor
+  # Talos verbatim: "we assess with high confidence that these actions were performed by a
+  # state-sponsored actor." NO nation is named anywhere in the report. attribution_level is
+  # therefore activity-cluster (Talos reached "a state-sponsored cluster", not a nation);
+  # attributing_org_confidence is HIGH because that is the confidence Talos states for the
+  # state-sponsorship assessment (confidence is orthogonal to specificity per schema). actor_id
+  # is null = unattributed (no nation to home the actor under). See QC notes re: the orphaned
+  # cn/unscoped/arcanedoor stub.
+  - actor_id: null
     attributing_org: "Cisco Talos"
-    attributing_org_confidence: low   # mapped from ICD link-confidence: strongly_inferred
-    auspex_assessment: partial
-    attribution_date: 2024-04-01
+    attributing_org_confidence: high   # "we assess with high confidence ... a state-sponsored actor"
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-04-24
     attribution_source_id: blogtalosintelligence/2024-04_cisco-talos-discloses-arcanedoor-uat4356
-doctrine_links:
-  - doctrine_id: cn/intelligentized-warfare
-    pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      ArcaneDoor's perimeter-device implants (Line Dancer for traffic capture, Line Runner for persistence) against government networks are an espionage/collection posture on adversary government communications, loosely consistent with strategic SIGINT collection; the target set is small and unspecified, so confidence stays low.
-    attesting_source_id: null
-    inference_basis:
-      alternatives:
-        - "Talos assessed a state-sponsored actor but explicitly did NOT attribute to a nation — any nation-specific doctrine (incl. China's) overreaches the source"
-      ruled_out: "a China attribution in the cited Talos source — explicitly not made"
-    counter_explanation: |
-      PREDICATE GAP: the cn/ actor namespace and the cn/intelligentized-warfare link both presuppose a China attribution Talos does not make (it assessed a state-sponsored actor without naming a nation). Re-attribute or drop the China-specific doctrine link.
-    contested: true
-    analyst: claude
+    notes: |
+      Cisco Talos assessed "with high confidence that these actions were performed by a
+      state-sponsored actor" but named NO nation (basis: victimology, tradecraft, 0-day chaining).
+      Microsoft tracks the same cluster as STORM-1849. No cited source — and MISP-galaxy (country:
+      None for ArcaneDoor uuid 97a10d3b… and for Storm-1849) — attributes it to a nation. Later
+      open-source reporting has *suspected* a China nexus, but suspicion is not attestation and is
+      not in any source cited here; hence null actor + activity-cluster, not a cn/ placement.
+doctrine_links: []  # unattributed state-sponsored cluster — no nation attested by the cited source (or MISP), so no state doctrine (incl. China's) has a predicate to attest. See QC notes.
 targets:
   - target_id: sectors/government
     role: primary
-  - target_id: sectors/ict/telecom
-    role: primary
-  - target_id: sectors/energy
-    role: primary
 sources:
   - blogtalosintelligence/2024-04_cisco-talos-discloses-arcanedoor-uat4356
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited Cisco Talos ArcaneDoor blog (raw snapshot captured + sha256 in the source
+    record) and cross-checked against MISP-galaxy threat-actor.json.
+    FACTS ✓ (verbatim in raw): UAT4356 (Talos) / STORM-1849 (Microsoft Threat Intelligence Center);
+    Line Dancer = memory-resident shellcode interpreter / in-memory implant; Line Runner = persistent
+    Lua HTTP backdoor surviving reboots+upgrades; CVE-2024-20353 (ASA reboot) + CVE-2024-20359
+    (legacy VPN pre-load) abused in the chain; "We have not determined the initial access vector";
+    infra from early Nov 2023, peak Dec 2023–early Jan 2024, dev as early as Jul 2023.
+    DATE CORRECTED: blog byline is "Wednesday, April 24, 2024" — start_date + published_on moved
+    2024-04-01 -> 2024-04-24 (04-01 was a backfill placeholder); disclosure_date set to 2024-04-24.
+    Added initial_vector: unknown (Talos states the vector was not determined).
+    ATTRIBUTION — CORRECTED DOWN: Talos says "high confidence ... state-sponsored actor" and NAMES
+    NO NATION; MISP records country: None for both ArcaneDoor and Storm-1849. The prior record
+    asserted China via actor_id cn/unscoped/arcanedoor + a cn/intelligentized-warfare doctrine link,
+    a predicate the source does not support. Re-modeled as an UNATTRIBUTED activity cluster:
+    actor_id null, attribution_level activity-cluster, attributing_org_confidence high (the stated
+    confidence is on the state-sponsorship, orthogonal to specificity), auspex_assessment concur-
+    with-caveat. Cluster names UAT4356/STORM-1849 preserved in summary + attribution notes.
+    TARGETS — CORRECTED DOWN: removed sectors/ict/telecom and sectors/energy (role primary). The
+    raw attributes ArcaneDoor's actual victims as "all of which involved government networks
+    globally"; the telecom/energy mention is Talos's *general* statement about the edge-device-
+    targeting trend ("critical infrastructure entities that are likely strategic targets of interest
+    for many foreign governments"), NOT this campaign's victimology. Kept sectors/government primary.
+    DOCTRINE: emptied doctrine_links (was a plausible cn/intelligentized-warfare/sigint-c4isr link).
+    An unattributed cluster has no state whose doctrine could be attested or even plausibly assigned;
+    the China-specific link presupposed the China attribution Talos declines to make.
+    ACTOR FLAG (NOT touched per scope): atlas/actors/cn/arcanedoor.yaml (id cn/unscoped/arcanedoor)
+    is now ORPHANED — it is referenced by no event after this fix, and its cn/ (China) namespace
+    asserts an attribution neither Talos nor MISP makes. Recommend human disposition: either delete
+    the stub, or re-home the cluster to a state-neutral / unattributed namespace if one is created.
+    level: full — single cited source fully fetched (HTTP 200) + hashed; MISP cross-check confirms
+    no nation attribution to adopt.

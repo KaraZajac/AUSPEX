@@ -14,7 +14,8 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/evasive-panda
     attributing_org: "ESET"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high   # ESET: "We attribute this campaign with high confidence to the China-aligned Evasive Panda APT group" (verbatim, 2026-06-25 audit)
+    attribution_level: named-actor   # ESET names the actor (Evasive Panda) at high confidence but "China-aligned" only — no MSS/PLA/service named. Set 2026-06-25 audit.
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-03-01
     attribution_source_id: welivesecurity/2024-03_evasive-panda-monlam-festival-watering-h
@@ -24,8 +25,14 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      The campaign explicitly targets Tibetans (a regime-sensitive ethnic-minority/diaspora population) via a Tibetan-festival watering hole and trojanized Tibetan-language software, with victims across India, Taiwan, Hong Kong, Australia and the US. Surveillance of an ethnic-minority diaspora is the diaspora/dissident/ethnic-minority collection pillar.
+      The campaign explicitly targets Tibetans (a regime-sensitive ethnic-minority/diaspora population) via a Tibetan-festival watering hole and trojanized Tibetan-language software, with victims across India, Taiwan, Hong Kong, Australia and the US. Surveillance of an ethnic-minority diaspora is the diaspora/dissident/ethnic-minority collection pillar. Held at strongly_inferred (NOT attested): ESET states the behaviour and victimology ("victimizing Tibetans"; "cyberespionage against ... Tibetans") but does not state the PRC strategic collection purpose at the goal level, so there is no attesting source quote and attesting_source_id is null.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET: the campaign has been 'victimizing Tibetans' via a Kagyu Monlam Festival watering hole (kagyumonlam[.]org) and a supply-chain compromise of an India-based developer of Tibetan-language translation software."
+        - "ESET telemetry shows the IP-range targeting was scoped to the Tibetan diaspora — India, Taiwan, Hong Kong, Australia and the United States — with the note that 'most of the Tibetan diaspora lives in India'."
+        - "Evasive Panda is a China-aligned APT whose ESET-assessed objective is cyberespionage against parties opposing China's interests (Tibetan diaspora, Taiwan/Hong Kong institutions, PRC democracy supporters) — the population class the diaspora/dissident/ethnic-minority collection pillar names."
+      ruled_out: "cn/national-intelligence-law-2017/compelled-vendor-cooperation — although a software supply chain was abused, the developer was the delivery vector for collection against Tibetan end-users, not a compelled PRC-domiciled vendor providing data/access; the targets are an ethnic-minority diaspora, not the ICT-vendor supply side."
     contested: false
     analyst: claude
 targets:
@@ -40,3 +47,29 @@ targets:
     role: staging
 sources:
   - welivesecurity/2024-03_evasive-panda-monlam-festival-watering-h
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited ESET/WeLiveSecurity report (raw snapshot captured + sha256). FACTS all
+    corroborated verbatim: "since at least September 2023 ... victimizing Tibetans through a targeted
+    watering hole ... and a supply-chain compromise to deliver trojanized installers of Tibetan language
+    translation software ... MgBot and a backdoor ... we have named it Nightdoor"; watering hole = the
+    Kagyu International Monlam Trust / Kagyu Monlam Festival website (kagyumonlam[.]org); supply chain =
+    "a software development company based in India that produces Tibetan language translation software"
+    (monlamit[.]com); victim geography "India, Taiwan, Hong Kong, Australia, and the United States" matches
+    the summary exactly, with ESET noting "most of the Tibetan diaspora lives in India". ATTRIBUTION:
+    attributing_org_confidence held at high — ESET states "We attribute this campaign with high confidence
+    to the China-aligned Evasive Panda APT group" and "based on the malware that was used: MgBot and
+    Nightdoor"; attribution_level SET to named-actor (was missing) — ESET names the actor but "China-aligned"
+    only, no MSS/PLA/service. Fixed a misleading inline comment that read "ICD link-confidence: attested" on
+    the high-confidence field. DOCTRINE LINK held at strongly_inferred (NOT attested): ESET states the
+    Tibetan-diaspora victimology/behaviour but not the PRC strategic-collection goal, so attesting_source_id
+    stays null; added inference_basis (signals + ruled_out: compelled-vendor-cooperation). published_on of the
+    cited source CORRECTED 2024-03-01 -> 2024-03-07 (article byline "07 Mar 2024", authors Anh Ho / Facundo
+    Muñoz / Marc-Etienne M.Léveillé). Target sector FKs (civil-society/religious, civil-society/ngo,
+    ict/software) all resolve. ACTOR: cn/unscoped/evasive-panda resolves and is current (demoted from
+    cn/mss 2026-06-24, FK-propagated to 5 events) — the demotion is correct and this source independently
+    corroborates it ("China-aligned Evasive Panda APT group", "Chinese-speaking APT", no service named).

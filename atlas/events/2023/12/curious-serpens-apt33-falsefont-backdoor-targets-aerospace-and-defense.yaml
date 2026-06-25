@@ -8,11 +8,12 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Palo Alto Unit 42 analyzed the FalseFont backdoor used by Curious Serpens (aka Peach Sandstorm, APT33, Elfin, Holmium, Refined Kitten), a suspected Iranian-affiliated actor, against the aerospace and defense sectors (first flagged by Microsoft in Nov-Dec 2023). FalseFont impersonates an aerospace-company HR/job-application portal, steals job-platform credentials, provides remote access, launches additional files and exfiltrates to C2. Confidence set to strongly_inferred because the Unit 42 page hedges on attribution ('suspected Iranian-affiliated'); Microsoft's parallel disclosure attributes it to IRGC-linked Peach Sandstorm. Distinct from the Tickler operation and not in the inventory.
+  Palo Alto Unit 42 analyzed the FalseFont backdoor used by Curious Serpens (aka Peach Sandstorm, APT33, Elfin, Holmium, Refined Kitten), which Unit 42 describes only as a "suspected Iranian-affiliated threat actor", against the aerospace and defense industries (Microsoft Threat Intelligence first noted this actor's use of FalseFont in December 2023; Unit 42 published its analysis 2024-03-21). FalseFont mimics legitimate HR software via a fake job-recruitment process and impersonates a login interface for a U.S.-based aerospace company; it steals credentials from web browsers and from the aerospace job-application platform, establishes persistence (registry Run key) and C2 (with SignalR for real-time commands), and executes processes/commands on the host. Confidence held at the source's own hedge: Unit 42 says only "suspected Iranian-affiliated" and never names the IRGC; the cited page's sole Microsoft reference says only that Microsoft "identified the backdoor as FalseFont" (no service attribution). Distinct from the Tickler operation and not in the inventory.
 attributions:
   - actor_id: ir/unscoped/apt33
     attributing_org: "unit42paloaltonetworks"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # Unit 42 says only "suspected Iranian-affiliated" — hedged => moderate (held, not upgraded). 2026-06-25 audit.
+    attribution_level: named-actor   # Unit 42 names the tracked cluster Curious Serpens (=APT33/Peach Sandstorm/Elfin) and ties it to a SUSPECTED Iran nexus; IRGC NOT named — NOT named-unit. Mirrors the MSTIC Peach Sandstorm sibling event. Set 2026-06-25 audit (field was absent).
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-12-01
     attribution_source_id: unit42paloaltonetworks/2023-12_curious-serpens-apt33-falsefont-backdoor
@@ -22,7 +23,7 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      IRGC-suspected collection against the aerospace and defense sector via a fake aerospace HR/job portal is intelligence collection on adversary military-industrial capability, supporting the forward-defense logic of contesting militarily superior adversaries through asymmetric means at distance.
+      Iranian-suspected collection against the aerospace and defense sector via a fake aerospace HR/job portal is intelligence collection on adversary military-industrial capability, supporting the forward-defense logic of contesting militarily superior adversaries through asymmetric means at distance. Held at plausible: Unit 42 (a malware-analysis report) states no strategic purpose, so the WHY is AUSPEX inference, and the Iran nexus itself is only "suspected" — no attesting_source_id.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -35,3 +36,29 @@ targets:
     role: primary
 sources:
   - unit42paloaltonetworks/2023-12_curious-serpens-apt33-falsefont-backdoor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Palo Alto Unit 42 "Curious Serpens (APT33) FalseFont backdoor" (raw snapshot captured +
+    sha256 2b56db44548253bd9ac4f3654a1afd232f325401c1ce3d0aaba328b92a44c689). FACTS ✓: source confirms
+    FalseFont targets job applicants in the aerospace and defense industries, mimics legitimate HR software
+    via a fake job-recruitment process, impersonates a login interface for a "U.S.-based aerospace company",
+    steals credentials from web browsers and from the aerospace job-application platform, establishes
+    persistence via the registry Run key, and uses C2 (with SignalR for real-time commands). ATTRIBUTION
+    CORRECTED DOWN: Unit 42 names the actor ONLY as a "suspected Iranian-affiliated threat actor" (2x);
+    the strings "IRGC" and "Revolutionary Guard" appear ZERO times, and the page's sole Microsoft reference
+    says only that Microsoft "identified the backdoor as FalseFont" — NO service/IRGC attribution. Removed the
+    unsupported summary claim that Microsoft attributes this to "IRGC-linked Peach Sandstorm" (also contradicted
+    by the 2026-06-24 actor demotion: MSTIC says only "Iranian nation-state"). attribution_level was ABSENT —
+    SET to named-actor (Unit 42 names the tracked cluster + a SUSPECTED Iran nexus; IRGC NOT named => NOT
+    named-unit), mirroring the MSTIC Peach Sandstorm sibling. attributing_org_confidence held at moderate
+    (source hedge "suspected"). PUBLISHED_ON CORRECTED on the source record: the article byline + metadata
+    (article:published_time / datePublished) read 2024-03-21, not the backfilled 2023-12-01 (Dec 2023 is when
+    Microsoft first NOTED FalseFont use, per the article); event start_date 2023-12-01 kept as the activity
+    start. Summary "Nov-Dec 2023" tightened to "December 2023" — source says December only, never November.
+    DOCTRINE LINK held at plausible (ir/forward-defense): Unit 42 states no strategic purpose, attesting_source_id
+    null — correct; softened reasoning "IRGC-suspected" -> "Iranian-suspected". ACTOR ✓ resolves to ir/unscoped/apt33
+    (correctly demoted ir/irgc->ir/unscoped on 2026-06-24, same audit lineage); FKs (doctrine, sectors) all resolve.

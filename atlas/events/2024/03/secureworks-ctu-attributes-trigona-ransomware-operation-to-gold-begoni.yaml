@@ -1,5 +1,5 @@
 id: 2024-03/secureworks-ctu-attributes-trigona-ransomware-operation-to-gold-begoni
-name: "Secureworks CTU attributes Trigona ransomware operation to GOLD BEGONIA (RaaS lifecycle, 2022-2024)"
+name: "Secureworks CTU profiles GOLD BEGONIA, the financially motivated group behind Trigona ransomware (2022-2023)"
 start_date: 2024-03-01
 incident_type:
   - ransomware
@@ -8,29 +8,21 @@ incident_type:
 initial_vector: valid-creds
 false_flag_risk: none
 summary: |
-  Secureworks Counter Threat Unit (Sophos threat profile GOLD BEGONIA) profiles the financially motivated group behind the Trigona ransomware-as-a-service operation. The group obtained initial access primarily through brute-force attacks against publicly facing RDP and Microsoft SQL Server instances, and also exploited CVE-2021-40539 in Zoho ManageEngine in late 2022. After access they used tools including Mimikatz, NTDS.dit dumping, SoftPerfect Network Scanner, Cobalt Strike and PsExec, exfiltrated data with utilities such as FileZilla, and deployed Trigona ransomware (a Linux/ESXi variant was added in February 2023). The profile does not name specific victim sectors or countries.
+  The Secureworks Counter Threat Unit threat profile GOLD BEGONIA (hosted on Sophos after the Secureworks acquisition) describes "a financially motivated cybercriminal threat group that operated and distributed the Trigona ransomware" (also known as the "Trigona Team"). The group obtained initial access primarily through brute-force attacks against publicly facing RDP and Microsoft SQL Server instances, and also exploited CVE-2021-40539 in Zoho ManageEngine in late 2022. After access they used tools including Mimikatz, NTDS.dit dumping (ntdsutil.exe), SoftPerfect Network Scanner, Cobalt Strike and PsExec, exfiltrated data with utilities such as FileZilla, and deployed Trigona ransomware (a Linux version targeting ESXi hypervisors was added in February 2023). The profile lists motivation as financial gain, carries no country-of-origin / sponsor field (no state nexus), and names no specific victim sectors or countries. (The profile does not itself use the terms "ransomware-as-a-service", "RaaS", or "affiliate" — Trigona's RaaS/affiliate model is documented in other vendor reporting, not this source.)
 attributions:
   - actor_id: criminal/trigona
     attributing_org: "Secureworks Counter Threat Unit (CTU) / Sophos"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # vendor directly names GOLD BEGONIA as the group operating/distributing Trigona
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-03-01
     attribution_source_id: sophos/2024-03_secureworks-ctu-attributes-trigona-ranso
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      GOLD BEGONIA is a financially motivated RaaS crew with no stated state tasking; absent a clearer strategic fit, the tolerated criminal-proxy ecosystem (whose ransomware revenue and disruptive effect Russia permits as a strategic asset post-2022) is the closest doctrinal frame.
-    attesting_source_id: null
-    inference_basis:
-      alternatives:
-        - "GOLD BEGONIA may be a purely financially-motivated crew with no state nexus — the source establishes neither Russia attribution nor state tasking"
-      ruled_out: "a Russia-state nexus / tolerated-proxy relationship in the cited source — unestablished predicate"
-    counter_explanation: |
-      PREDICATE GAP: the 'tolerated criminal-proxy' framing presupposes a Russia-state nexus the cited Secureworks/Sophos profile does not establish (GOLD BEGONIA is profiled as financially motivated, no Russia attribution). Source the Russia nexus or drop the doctrine link.
-    contested: true
-    analyst: claude
+doctrine_links: []  # criminal/trigona: profit-criminal, no documented state nexus (the source profiles GOLD BEGONIA as financially motivated with no country-of-origin/sponsor). Dropped the ru/sanctions-response-2022/criminal-proxy-mobilization link on 2026-06-25 (claude-opus-4.8/max): its own counter_explanation already conceded a "PREDICATE GAP" (the tolerated-proxy framing presupposed a Russia-state nexus the cited Sophos/Secureworks profile does not establish), the actor was moved to criminal/ with that doctrine alignment dropped, and the proxy-mobilization roster never named Trigona.
 sources:
   - sophos/2024-03_secureworks-ctu-attributes-trigona-ranso
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the Secureworks CTU GOLD BEGONIA threat profile (curl blocked HTTP 000/exit 92; WebFetch-captured + sha256 snapshot). FACTS confirmed: financially motivated cybercriminal group operating/distributing Trigona (aka Trigona Team), RDP/MSSQL brute force + CVE-2021-40539 Zoho ManageEngine late 2022, Mimikatz/NTDS.dit/SoftPerfect Network Scanner/Cobalt Strike/PsExec/FileZilla, Linux/ESXi variant Feb 2023, no victim sectors/countries. CORRECTIONS: (1) removed the 'RaaS lifecycle'/'ransomware-as-a-service' framing from name+summary — the cited profile does NOT use RaaS/affiliate language (it says the group 'operated and distributed' Trigona); RaaS is documented elsewhere, not here. (2) doctrine_links emptied to [] — criminal/trigona is profit-criminal with no documented state nexus; the link's own counter_explanation conceded a Russia-nexus PREDICATE GAP and the actor was moved to criminal/ with the alignment dropped. (3) added attribution_level: named-actor. ATTRIBUTION: source explicitly profiles GOLD BEGONIA=Trigona as financially motivated, NO state nexus (no country-of-origin/sponsor field) — confirms the criminal/trigona placement; confidence high (vendor directly names the operator); actor_id resolves, not stale (moved 2026-06-25, FK-propagated). published_on 2024-03-01 is a backfill estimate — the page carries no on-page date, so it is uncorroborated (kept conservatively, noted on the source)."

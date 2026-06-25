@@ -13,6 +13,7 @@ attributions:
   - actor_id: cn/unscoped/flax-typhoon
     attributing_org: "Microsoft Threat Intelligence (MSTIC)"
     attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attribution_level: named-actor   # MSTIC names a tracked nation-state activity group ("Flax Typhoon … based out of China")
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-08-24
     attribution_source_id: microsoft/2023-08_mstic-outs-flax-typhoon-china-based-livi
@@ -41,3 +42,9 @@ targets:
     role: primary
 sources:
   - microsoft/2023-08_mstic-outs-flax-typhoon-china-based-livi
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs MSTIC blog 2023-08-24 (raw captured, sha256 b41ede80…). FACTS OK: published_on 2023-08-24 confirmed (article:published_time); victimology verbatim ('government agencies and education, critical manufacturing, and information technology organizations in Taiwan. Some victims … in Southeast Asia, … North America and Africa'); LOTL TTPs all confirmed — initial access via known vulns in public-facing VPN/web/Java/SQL servers + China Chopper web shell; RDP persistence with NLA disabled + Sticky Keys binary replacement; SoftEther VPN bridge; Mimikatz; WMIC + PowerShell; 'minimal use of malware'. ATTRIBUTION: source names a tracked 'nation-state activity group … based in China' / 'Flax Typhoon … based out of China' — China-only, never names MSS (correctly handled by cn/unscoped demotion); no explicit confidence word in the blog but the attribution is stated declaratively. CORRECTIONS: (1) added attribution_level: named-actor (was absent — MSTIC names a specific tracked actor); (2) added raw_snapshot + content_sha256 to the source. doctrine_link cn/taiwan-reunification/taiwan-island-collection correctly strongly_inferred (attesting_source_id null) — MSTIC says 'likely … espionage'/'data-collection and exfiltration objectives' but NEVER names reunification or any strategic goal, so NOT attested. NOTE: summary/incident_type include 'pre-positioning'; source frames the long-term quiet access as espionage and 'has not observed Flax Typhoon act on final objectives' — pre-positioning is a defensible AUSPEX reading of the persistence-without-action pattern, retained. Actor cn/unscoped/flax-typhoon resolves; demoted to unscoped 2026-06-24 (China nexus, no service named) — placement is intentional, not stale."

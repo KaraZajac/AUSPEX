@@ -7,23 +7,36 @@ incident_type:
   - extortion
 false_flag_risk: none
 summary: |
-  Microsoft Threat Intelligence disclosed that the North Korean actor Moonstone Sleet (formerly Storm-1789) delivered a new custom ransomware variant, FakePenny, in April 2024 against a company it had previously compromised in February, demanding a $6.6M USD ransom in BTC — the group's first observed ransomware deployment. Moonstone Sleet also ran fake companies (StarGlow Ventures, C.C. Waterfall), a trojanized tank game (DeTankWar), and IT-worker schemes, blending espionage with revenue generation. This is a distinct operational event from the August 2023 MSTIC outing of Moonstone Sleet already in the corpus (which is the only existing Moonstone Sleet entry).
+  Microsoft Threat Intelligence (MSTIC) reported that the North Korean state-aligned actor Moonstone Sleet (formerly Storm-1789) delivered a new custom ransomware variant, FakePenny, in April 2024 against a company it had previously compromised in February, demanding a $6.6M USD ransom in BTC — the actor's first observed ransomware deployment. The same month MSTIC observed Moonstone Sleet compromise a drone-technology company, and in May 2024 an aircraft-parts maker. Moonstone Sleet also ran fake companies (StarGlow Ventures, C.C. Waterfall), a trojanized tank game (DeTankWar), and IT-worker schemes, blending cyberespionage with revenue generation. This event isolates the FakePenny ransomware operation; the companion corpus event 2024-05/moonstone-sleet-microsoft-disclosure covers MSTIC's 28 May 2024 cluster disclosure as a whole.
 attributions:
   - actor_id: kp/unscoped/moonstone-sleet
-    attributing_org: "microsoft"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org: "Microsoft MSTIC"
+    attributing_org_confidence: high   # MSTIC states the attribution without hedging
+    attribution_level: named-actor   # MSTIC attributes at the nation level ("North Korean state-aligned"); never names the RGB/Bureau 121/Unit 121 — so named-actor, NOT named-unit
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-04-01
-    attribution_source_id: microsoft/2024-04_moonstone-sleet-deploys-custom-fakepenny
+    attribution_date: 2024-05-28
+    attribution_source_id: msft/2024-05-28_moonstone-sleet
 doctrine_links:
   - doctrine_id: kp/office-39-sanctions-evasion
     pillar_id: kp/office-39-sanctions-evasion/laundering-network
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      FakePenny ransomware demanding $6.6M in BTC, alongside fake companies and IT-worker schemes blending espionage with revenue generation, is hard-currency aggregation outside the legitimate financial order — the Office 39 sanctions-evasion principle.
-    attesting_source_id: null
+      FakePenny ransomware demanding $6.6M in BTC, alongside fake companies and IT-worker schemes blending espionage with revenue generation, is hard-currency aggregation outside the legitimate financial order — the Office 39 sanctions-evasion principle. MSTIC states the proximate purpose ("Microsoft assesses that Moonstone Sleet's objective in deploying the ransomware is financial gain", "revenue generation") but does not name Office 39, WMD-financing, or the 8th-Congress plan, so the link to the laundering/sanctions-evasion doctrine is inferred, not attested.
+    attesting_source_id: msft/2024-05-28_moonstone-sleet
+    inference_basis:
+      source_id: msft/2024-05-28_moonstone-sleet
+      signals:
+        - "MSTIC: 'Moonstone Sleet's objective in deploying the ransomware is financial gain' / 'revenue generation' (proximate revenue purpose, $6.6M BTC demand)"
+        - "DPRK hard-currency procurement is run outside the legitimate financial order and aggregated via Office 39 (doctrine summary; Treasury/UN-PoE corroboration)"
+      ruled_out: "Office 39 / WMD-financing as a stated goal — MSTIC names only 'financial gain'/'revenue generation', never the sanctions-evasion mechanism or weapons-procurement end"
     contested: false
     analyst: claude
 sources:
-  - microsoft/2024-04_moonstone-sleet-deploys-custom-fakepenny
+  - msft/2024-05-28_moonstone-sleet
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Microsoft MSTIC (raw captured, HTTP 200, 321,294 bytes, sha256 8aecf4f... verified intact). FACTS confirmed verbatim: FakePenny (first observed DPRK ransomware-by-this-actor); '$6.6M USD in BTC' demand; April 2024 against a company 'previously compromised in February'; drone-tech + aircraft-parts (defense/aerospace) victims; StarGlow Ventures/C.C. Waterfall/DeTankWar; Storm-1789 former name. ATTRIBUTION: MSTIC attributes ONLY at nation level ('North Korean state-aligned'/'North Korean state-sponsored threat actor'); RGB/Reconnaissance General Bureau/Bureau 121/Unit 121/Lab 110 appear ZERO times — actor kp/unscoped/moonstone-sleet (named-actor, NOT named-unit RGB) is correct. Added attribution_level: named-actor (was missing). doctrine_link kept strongly_inferred: MSTIC names proximate purpose 'financial gain'/'revenue generation' but never Office 39 / WMD-financing / 8th-Congress plan — not attested; added inference_basis + supporting source. CORRECTIONS: published_on of cited source was 2024-04-01 (wrong) → the article published 2024-05-28 (April = activity date); re-pointed event from the PROVISIONAL backfill duplicate source microsoft/2024-04_moonstone-sleet-deploys-custom-fakepenny to the canonical, already-audited msft/2024-05-28_moonstone-sleet (same article, verified raw snapshot, also used by the actor + sibling event 2024-05/moonstone-sleet-microsoft-disclosure). Fixed false summary claim of an 'August 2023 MSTIC outing' — no such event; the only sibling is the 2024-05-28 disclosure (its start_date 2023-08-01 = earliest tracked activity, not an outing). FLAG: microsoft/2024-04_moonstone-sleet-deploys-custom-fakepenny is now an unreferenced duplicate orphan (date-corrected + snapshot-tagged in place) for a future source-dedup pass."
