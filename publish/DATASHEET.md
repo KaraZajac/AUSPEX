@@ -88,14 +88,23 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   *Lebanese Cedar* → `lb/`, Iran/Quds-Force backing noted). Unmatched actors (~50) are mostly
   legitimately absent from MISP (2025 vendor cryptonyms not yet ingested, ransomware crews tracked in
   MISP's separate galaxies, and AUSPEX-specific Western/operator-cluster placeholders).
-- **Actor-record service audit (2026-06-24):** separate from the event audits, each actor's *service*
-  placement (MSS / GRU / IRGC / RGB / …) was verified against its **own cited sources**. ~21 provisional
-  placements were demoted to `<nation>/unscoped` where no cited source named the service (vendor
-  "PANDA"/"UNC"/"UAT" clusters attribute only at the nation level); placements were **kept only where a
-  source named the service** (e.g. Scarred Manticore → MOIS, per Check Point), and a handful were
-  re-homed per MISP corroboration (XakNet → GRU; UAT-7290 → PLA Unit 69010). One mis-modeled record
-  (a policy-publishing body) was retired; two actors found to be one cluster were merged
-  (Black Shadow → Agrius / Pink Sandstorm).
+- **Actor-record service audit (2026-06-24/25):** separate from the event audits, every actor's *service*
+  placement (MSS / GRU / SVR / IRGC / MOIS / RGB / NSA / GCHQ / CIA / …) was verified against its **own
+  cited sources** by independent LLM audit (Claude Opus 4.8, max effort; raw evidence captured +
+  SHA-256-hashed). After an initial ~21-actor provisional pass, a comprehensive sweep covered all ~114
+  **curated** service-placed actors (eight batches). Outcome: **67 demoted to `<nation>/unscoped`** where no
+  cited source named the service (vendor "PANDA"/"UNC"/"UAT" clusters, and "Russia/Iran/Turkey-aligned"
+  framings, attribute only at the nation level); **47 kept** where a source named the service (e.g.
+  APT29 → SVR per the White House; Triton → TsNIIKhM, MuddyWater → MOIS, Salt Typhoon → MSS,
+  Lazarus/Andariel/Kimsuky → RGB, all per OFAC/DOJ/CISA; Equation Group → NSA/TAO and Regin → GCHQ via the
+  Snowden / Shadow-Brokers documentary record); and **1 re-homed** (APT26 cn/pla → cn/mss, a wrong-service
+  correction). The audit *discriminates* rather than blanket-demotes — well-attributed state actors are
+  retained, inferred placements are not. **18 profit-criminal** ransomware/botnet crews with no documented
+  state nexus were then moved to the stateless `criminal/` namespace (joining Emotet); Conti + LockBit were
+  kept as `ru/proxies` on documented safe-harbor / state-nexus. Several structural placeholders for national
+  offensive bodies with no specific sourced operation (France's COMCYBER, Korea's COC, the UK's NCF, the US
+  Cyber Mission Force) were demoted and flagged as retire-candidates; one mis-modeled record (a policy body)
+  was retired; two actors found to be one cluster were merged (Black Shadow → Agrius / Pink Sandstorm).
 
 ## Uses
 
