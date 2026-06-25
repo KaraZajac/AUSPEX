@@ -1,6 +1,7 @@
 id: 2024-08/stormbamboo-evasive-panda-daggerfly-compromises-an-isp-to-poison-softw
 name: "StormBamboo (Evasive Panda / Daggerfly) compromises an ISP to poison software-update DNS and deploy MACMA / MGBot"
-start_date: 2024-08-02
+start_date: 2023-06-01   # AUDIT 2026-06-25: corrected disclosure->op-start. Volexity: "In mid-2023, Volexity detected and responded to multiple incidents"; 2024-08-02 was the publication date (now disclosure_date). Mid-year convention YYYY-06-01.
+disclosure_date: 2024-08-02
 incident_type:
   - supply-chain
   - intrusion
@@ -13,6 +14,7 @@ attributions:
   - actor_id: cn/unscoped/evasive-panda
     attributing_org: "Volexity (names StormBamboo = Evasive Panda and the ISP-compromise behaviour); PRC-nexus is the established community attribution of Evasive Panda / Daggerfly"
     attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: named-actor   # AUDIT 2026-06-25: Volexity names the threat actor (StormBamboo=Evasive Panda=StormCloud) but no nation in prose (only an "APT China" topic tag) and no service/unit -> named-actor.
     auspex_assessment: concur
     attribution_date: 2024-08-02
     attribution_source_id: volexity/2024-08_stormbamboo-evasive-panda-daggerfly-comp
@@ -28,3 +30,33 @@ doctrine_links:
     analyst: claude
 sources:
   - volexity/2024-08_stormbamboo-evasive-panda-daggerfly-comp
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited Volexity blog (raw snapshot captured + sha256). FACTS ✓ all confirmed against the
+    raw: ISP-level DNS-poisoning ("the result of a DNS poisoning attack at the internet service provider (ISP)
+    level"; poisoning was upstream at the ISP, not in the victim's firewall — ceased when the ISP rebooted
+    network components); StormBamboo "altering DNS query responses for specific domains tied to automatic
+    software update mechanisms" that used insecure HTTP and did not validate installer signatures (5KPlayer's
+    YoutubeDL update was the worked example); payloads MACMA (macOS) and POCOSTICK aka MGBot (Windows) ✓;
+    attacker-controlled host in Hong Kong ✓ (103.96.130[.]107); "previously tracked by Volexity under StormCloud" ✓;
+    follow-on RELOADEXT Chrome extension exfiltrating cookies to attacker Google Drive (not in summary — fine).
+    ATTRIBUTION: Volexity names ONLY the threat actor (StormBamboo = Evasive Panda; possibly related DriftingBamboo) —
+    the body never names a Chinese service, the MSS, the PLA, or even asserts "Chinese state" in prose; the only
+    nation token is an "APT China" topic tag in the page footer. So no service is named (correct), and
+    attribution_level SET to named-actor (was missing). PRC-nexus framing in attributing_org is community-level,
+    consistent with the actor record's "China-aligned at the named-actor level". attributing_org_confidence: high
+    is for the actor-identity claim (Volexity is firsthand IR) — left as-is.
+    CORRECTIONS: (1) start_date 2024-08-02 -> 2023-06-01 — 2024-08-02 was the publish date; Volexity states the
+    incidents were detected/responded to "In mid-2023". Added disclosure_date: 2024-08-02 (id/slug path unchanged —
+    stable). (2) Added attribution_level: named-actor.
+    DOCTRINE LINK: held at plausible (NOT upgraded). The source states no strategic end — only behaviour
+    ("compromises third parties ... to breach intended targets") and no victim sector — so attesting_source_id
+    stays null and the cn/national-intelligence-law-2017 / no-pillar link is the correct conservative tag.
+    ACTOR ✓: cn/unscoped/evasive-panda resolves, status active, not stale (de-provisionalized + demoted from
+    cn/mss/evasive-panda to cn/unscoped on 2026-06-24 because no cited source names a Chinese service); MgBot
+    tradecraft in the actor record matches the POCOSTICK/MGBot payload here.
+    SOURCE: kind: industry and tier: secondary left unchanged per protocol; added raw_snapshot + content_sha256.

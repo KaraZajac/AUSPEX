@@ -1,6 +1,8 @@
 id: 2024-10/evasive-panda-cloudscout-toolset-steals-taiwanese-government-and-relig
 name: "Evasive Panda CloudScout toolset steals Taiwanese government and religious cloud data via session-cookie theft"
-start_date: 2024-10-28
+start_date: 2022-05-01   # earliest ESET-observed compromise (Taiwanese religious institution, May 2022)
+end_date: 2023-02-28     # latest ESET-observed detection (suspected Taiwanese govt entity, Feb 2023)
+disclosure_date: 2024-10-28   # ESET public disclosure of CloudScout
 incident_type:
   - espionage
   - intrusion
@@ -8,11 +10,12 @@ incident_type:
   - surveillance
 false_flag_risk: none
 summary: |
-  ESET researchers discovered CloudScout, a post-compromise .NET toolset used by the China-aligned group Evasive Panda to steal data from cloud services including Google Drive, Gmail and Outlook. CloudScout works by harvesting authenticated web session cookies from compromised hosts and replaying them to access cloud-stored data, bypassing two-factor authentication. The toolset operates as an extension to Evasive Panda's MgBot backdoor, with HTML parsers to extract and exfiltrate targeted information. ESET observed CloudScout used against a government entity and a religious organization in Taiwan between 2022 and 2023.
+  ESET researchers discovered CloudScout, a post-compromise .NET toolset used by the China-aligned group Evasive Panda to steal data from cloud services including Google Drive, Gmail and Outlook. CloudScout works by harvesting authenticated web session cookies from compromised hosts and replaying them to access cloud-stored data, bypassing two-factor authentication. The toolset operates as an extension to Evasive Panda's MgBot backdoor, with HTML parsers to extract and exfiltrate targeted information. ESET observed CloudScout used in Taiwan against a religious institution (compromised with MgBot and Nightdoor in May 2022) and a suspected government entity (CloudScout and Nightdoor detected February 2023); hardcoded Outlook request fields suggest the samples were crafted to target Taiwanese users.
 attributions:
   - actor_id: cn/unscoped/evasive-panda
     attributing_org: "ESET"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high   # ESET states the actor/toolset linkage declaratively (tier-1 vendor)
+    attribution_level: named-actor   # ESET names the group "Evasive Panda" as "China-aligned"; no PRC service/unit named
     auspex_assessment: concur
     attribution_date: 2024-10-28
     attribution_source_id: eset/2024-10_evasive-panda-cloudscout-toolset-steals-
@@ -35,3 +38,32 @@ targets:
     role: primary
 sources:
   - eset/2024-10_evasive-panda-cloudscout-toolset-steals-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the single cited ESET newsroom source (raw captured 2026-06-24, sha256
+    8dc66bde...; re-hash confirmed). All CloudScout facts verified verbatim: post-compromise .NET
+    toolset (3 modules), stolen web-session cookies replayed to access Google Drive/Gmail/Outlook,
+    bypasses 2FA/IP-tracking, implemented as an extension to MgBot backdoor plugins, complex HTML
+    parsers, full artifact cleanup. Victimology verified: Taiwan religious institution (MgBot+Nightdoor,
+    May 2022) and a "what we suspect is a Taiwanese government entity" (CloudScout+Nightdoor, Feb 2023).
+    CORRECTIONS: (1) start_date 2024-10-28 -> 2022-05-01 (the publication date was being used as the
+    op start; the source pins the earliest compromise to May 2022); added end_date 2023-02-28 and
+    disclosure_date 2024-10-28. (2) summary made source-faithful: govt entity flagged "suspected"
+    (ESET hedges it), added the May-2022/Feb-2023 timeline and the hardcoded-Outlook-fields Taiwan-
+    targeting detail. (3) added attribution_level: named-actor and corrected a misleading inline
+    comment that conflated attributing_org_confidence with the (orthogonal) doctrine-link scale.
+    ATTRIBUTION: ESET names ONLY "China-aligned Evasive Panda" - no MSS/PLA/PRC service of any kind.
+    Actor was already correctly demoted cn/mss -> cn/unscoped/evasive-panda (2026-06-24); FK resolves,
+    not stale. attributing_org_confidence: high is defensible (tier-1 vendor, declarative phrasing).
+    DOCTRINE: cn/taiwan-reunification/taiwan-island-collection link kept at strongly_inferred,
+    attesting_source_id null - correct: pillar covers "cyber tasking against Taiwan government" and
+    Taiwan research institutions, but ESET states only the behaviour (espionage vs orgs opposing
+    China's interests), never the reunification goal -> below the attested bar. inference_basis absent
+    (optional; candidate for later backfill). published_on 2024-10-28 matches the source dateline.
+    Source url is the ESET newsroom press release (tier: secondary, preserved); the deeper WeLiveSecurity
+    technical writeup it links is not a separate cited source - all event claims are supported by the
+    captured newsroom page.

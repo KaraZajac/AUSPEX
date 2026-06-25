@@ -10,8 +10,9 @@ summary: |
   Huntress detailed an APT32/OceanLotus intrusion of a non-profit supporting Vietnamese human rights that persisted for at least four years (initial persistence to June 2020), using scheduled tasks masquerading as Adobe/Windows updaters, COM-object hijacking, DLL side-loading, PNG steganography and Cobalt Strike. Extends the inventory's documented APT32 transnational-repression / dissident-surveillance pattern into 2024.
 attributions:
   - actor_id: vn/unscoped/apt32
-    attributing_org: "huntress"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org: "Huntress"
+    attributing_org_confidence: moderate   # Huntress hedges: "a number of overlaps with known techniques used by the threat actor APT32/OceanLotus, and a known target demographic which aligns"; "suspected" — overlap-based, not a high-confidence positive ID
+    attribution_level: named-actor   # Huntress names the GROUP (APT32/OceanLotus) via technique/victimology overlap; NO Vietnamese service or nation-organ named in-source (mirrors the sibling Elastic-APT32 event). Added 2026-06-25 audit (field was absent).
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-08-28
     attribution_source_id: huntress/2024-08_huntress-exposes-multi-year-apt32-intrus
@@ -21,8 +22,14 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      A multi-year APT32 intrusion of a non-profit supporting Vietnamese human rights is domestic regime-security surveillance of a civil-society/dissident target, the operational core of Resolution 29's regime-stability surveillance task.
+      A multi-year APT32 intrusion of a non-profit supporting Vietnamese human rights is regime-security surveillance of a civil-society / human-rights target — the operational core of Resolution 29's regime-stability surveillance task (monitoring "hostile forces" / civil-society and dissident activity). Huntress states no strategic purpose, so this is AUSPEX's inference, not an attested goal; target + APT32's mission + doctrine-fit triangulate to one strategic reading. (Huntress does not specify whether the victim is inside Vietnam or diaspora; the pillar covers both domestic and overseas opposition-monitoring.)
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victim is a non-profit supporting Vietnamese human rights / a Vietnamese human-rights defender (Huntress) — a civil-society target squarely within the regime-stability-surveillance pillar's remit."
+        - "Attributed (overlap-based) to APT32/OceanLotus, whose documented mission includes espionage against Vietnamese-aligned civil-society / dissident / diaspora targets."
+        - "Intrusion persisted at least four years (June 2020 onward) with surveillance-oriented tradecraft (long-dwell persistence, steganographic loaders, Cobalt Strike) — collection, not financial gain."
+      ruled_out: "vn/industrial-upgrading-cyber-collection (APT32's automotive/aerospace foreign-IP-collection lane) — a human-rights NGO is not an industrial-IP target, so that competing doctrine does not fit."
     contested: false
     analyst: claude
 targets:
@@ -31,3 +38,9 @@ targets:
     role: primary
 sources:
   - huntress/2024-08_huntress-exposes-multi-year-apt32-intrus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the Huntress blog (raw captured, sha256 5a1e360c...). FACTS verified verbatim: 'an intrusion against a non-profit supporting Vietnamese human rights which has likely spanned the course of at least four years'; persistence first set up 'June of 2020' (Task File Creation Date 2020-06-04); TTPs — scheduled tasks masquerading as Adobe/Windows/Dropbox updaters, DLL side-loading (T1574.002), PNG steganography (logo.png/adobe.png loaders), Cobalt Strike (beacon, team server, malleable profiles, getsystem); COM-handler abuse present within the scheduled-task persistence. published_on 2024-08-28 confirmed (JSON-LD datePublished). ATTRIBUTION verified + correctly hedged: Huntress attributes ONLY via 'a number of overlaps with known techniques used by the threat actor APT32/OceanLotus, and a known target demographic which aligns with APT32/OceanLotus targets' and 'suspected' — it names NO Vietnamese service (no TC2 / Tổng cục II / Ministry of Public Security / A05 / military intelligence; no 'Vietnamese government' / nation-state language). attributing_org_confidence: moderate matches the overlap-based hedge; auspex_assessment concur-with-caveat retained. actor_id vn/unscoped/apt32 correct + current (de-provisionalized 2026-06-24; no service named in-source so unscoped, not vn/tc2). CORRECTIONS: (1) added attribution_level: named-actor (was absent) — Huntress names the group, no service (mirrors the sibling Elastic-APT32 event); (2) doctrine link kept at strongly_inferred (Huntress states no purpose; target + APT32 mission + doctrine-fit triangulate, industrial-collection ruled out) and added inference_basis{signals, ruled_out}; softened the reasoning's 'domestic' claim since the source does not pin the victim's location (inside-VN vs diaspora); (3) attributing_org 'huntress'->'Huntress'; (4) on the cited source, corrected the title from the copied event name to the real blog title 'APT Targeting Vietnamese Human Rights Defenders', refreshed the PROVISIONAL backfill header, and added raw_snapshot + content_sha256 (tier: secondary preserved). Note: domestic-targeting angle is plausible but the source neither confirms nor denies the victim's geography."

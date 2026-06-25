@@ -8,21 +8,35 @@ incident_type:
 initial_vector: valid-creds
 false_flag_risk: none
 summary: |
-  Microsoft MSTIC reported that between April and July 2024 the IRGC-attributed actor Peach Sandstorm (APT33 / Refined Kitten / Holmium) deployed a new custom multi-stage backdoor named Tickler against satellite, communications-equipment, oil-and-gas, and federal/state government organizations in the US and UAE. The actor abused fraudulent attacker-controlled Azure subscriptions for C2 and used password-spray plus LinkedIn social engineering and malicious Teams ZIP delivery for initial access. The inventory's APT33 entries are all 2012-2016 Shamoon/Operation-Cleaver era; this is a NEW 2024 APT33 intelligence-gathering operation.
+  Microsoft Threat Intelligence reported (28 Aug 2024) that between April and July 2024 Peach Sandstorm (APT33 / Refined Kitten / Holmium) deployed a new custom multi-stage backdoor named Tickler against satellite, communications-equipment, oil-and-gas, and federal/state government organizations in the US and UAE. Microsoft assesses that Peach Sandstorm "operates on behalf of the Iranian Islamic Revolutionary Guard Corps (IRGC)" and that the operations facilitate "intelligence collection in support of Iranian state interests." The actor abused fraudulent, attacker-controlled Azure subscriptions (Azure-for-Students tenants) for C2 and used password-spray plus LinkedIn social engineering and a malicious Microsoft Teams ZIP ("Network Security.zip") for initial access. The inventory's APT33 entries are all 2012-2016 Shamoon/Operation-Cleaver era; this is a NEW 2024 APT33 intelligence-gathering operation. (NB: actor carried as ir/unscoped/apt33 — its three cited sources name only an Iranian-government nexus; this 2024 source is the one that explicitly names the IRGC.)
 attributions:
   - actor_id: ir/unscoped/apt33
     attributing_org: "microsoft"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: attested
+    attributing_org_confidence: high   # source states the IRGC attribution without hedging
+    attribution_level: named-unit   # source explicitly names the IRGC ("operates on behalf of the ... IRGC")
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-08-01
+    attribution_date: 2024-08-28
     attribution_source_id: microsoft/2024-08_peach-sandstorm-apt33-deploys-tickler-ba
+    notes: |
+      This 2024 MSTIC source names a unit (IRGC) — hence attribution_level named-unit at the
+      source level — even though the actor record is held at ir/unscoped/apt33. The demotion
+      (2026-06-24) was driven by the actor's three CITED sources (2017 FireEye, 2023 MSTIC,
+      CrowdStrike), none of which name the IRGC; this Tickler blog is not in that set. The
+      named-unit value records the attributing org's specificity in THIS source, per the schema
+      (attribution_level = how specific the org got, orthogonal to the resolved actor slug).
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      IRGC-attributed espionage with the Tickler backdoor against satellite, communications, oil-and-gas and government targets in the US and UAE is intelligence collection against the principal adversary (US) and a regional rival, the forward-defense logic of contesting stronger adversaries at distance.
+      Microsoft attributes this Tickler espionage to an IRGC-affiliated actor and states it serves
+      "intelligence collection in support of Iranian state interests" — a generic purpose, not the
+      forward-defense goal specifically. Collecting against satellite, communications, oil-and-gas
+      and government targets in the principal adversary (US) and a regional rival (UAE) FITS the
+      forward-defense logic of contesting stronger adversaries at distance, but the source names no
+      such strategic end, and other Iranian frames (asymmetric warfare, generic state espionage)
+      survive — hence plausible, not attested.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -44,3 +58,9 @@ targets:
     role: primary
 sources:
   - microsoft/2024-08_peach-sandstorm-apt33-deploys-tickler-ba
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the MSTIC Tickler blog (raw HTML captured + SHA-256). FACTS all verbatim-confirmed: April-July 2024 op; Tickler 'custom multi-stage backdoor'; 'fraudulent, attacker-controlled Azure subscriptions' (Azure-for-Students tenants) for C2; victims satellite/communications-equipment/oil-and-gas/federal+state government in US and UAE; initial access password-spray + LinkedIn social engineering + malicious Teams ZIP ('Network Security.zip'). ATTRIBUTION (key finding, OPPOSITE of the audit hypothesis): this 2024 source DOES explicitly name the IRGC — 'Microsoft assesses that Peach Sandstorm operates on behalf of the Iranian Islamic Revolutionary Guard Corps (IRGC)' + 'Iranian state-sponsored threat actor' — so set attribution_level: named-unit at the source level. NOTE the actor record stays ir/unscoped/apt33: its three cited sources (2017 FireEye 'Iranian government', 2023 MSTIC 'Iranian nation-state', CrowdStrike) name no unit, and this Tickler blog is not in that set; the unscoped slug is therefore still correct, but the actor file's demotion rationale ('NONE names the IRGC') should be qualified to 'none of the ACTOR'S CITED sources names the IRGC' since this corpus source does. Removed the misleading 'IRGC-attributed' framing in favor of quoting MSTIC; doctrine_link kept plausible (source names only generic 'Iranian state interests', not the forward-defense goal). published_on corrected 2024-08-01 -> 2024-08-28 on the source; attribution_date aligned to 2024-08-28. FK ir/unscoped/apt33 + ir/forward-defense resolve."

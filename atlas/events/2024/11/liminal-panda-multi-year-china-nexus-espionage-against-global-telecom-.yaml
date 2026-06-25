@@ -14,6 +14,7 @@ attributions:
   - actor_id: cn/unscoped/liminal-panda
     attributing_org: "CrowdStrike (Counter Adversary Operations)"
     attributing_org_confidence: low   # mapped from ICD link-confidence: plausible
+    attribution_level: named-actor   # CrowdStrike assigned a named adversary cryptonym (LIMINAL PANDA); the nation (China-nexus) is asserted only at LOW confidence and no service/unit is named — named-actor is the granularity actually reached
     auspex_assessment: concur
     attribution_date: 2024-11-19
     attribution_source_id: crowdstrike/2024-11_liminal-panda-multi-year-china-nexus-esp
@@ -29,7 +30,32 @@ doctrine_links:
     analyst: claude
 targets:
   - target_id: sectors/ict/telecom/carrier
-    country: in
+    country: null   # CrowdStrike (2024-11) names only a "southern Asia" + "Africa" telecom footprint — no specific country (India was unsupported by the cited source; removed)
     role: primary
 sources:
   - crowdstrike/2024-11_liminal-panda-multi-year-china-nexus-esp
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: >-
+    Audited vs the sole cited source (CrowdStrike Counter Adversary Operations, "Unveiling LIMINAL PANDA",
+    2024-11-19; raw HTML re-verified, sha256 2547da7c…ddf25, HTTP 200, full body present). FACTS confirmed:
+    telecom-provider targeting since at least 2020; custom tooling CordScan, PingPong, SIGTRANslator (source
+    also lists BlindingDart + DaleRAT, not enumerated here); public tools TinyShell, Fast Reverse Proxy,
+    Cobalt Strike; proxy software Microsocks/ProxyChains over VPS; GSM/SIGTRAN protocol orientation; collection
+    of subscriber data, call metadata and SMS; abuse of telecom interoperational trust + weak/default SSH creds.
+    ATTRIBUTION: source names a China-nexus actor at LOW confidence ("do not strongly indicate attribution on
+    their own due to their non-exclusive nature" — Pinyin strings e.g. wuxianpinggu507, BRI-aligned targeting,
+    tooling shared with SUNRISE/HORDE PANDA, China-common VPS); NO service named (no MSS/PLA) — only the SIGINT
+    *mission* is high-confidence. attributing_org_confidence: low matches. actor_id cn/unscoped/liminal-panda
+    resolves (de-provisionalized + demoted from cn/mss in the 2026-06-24 source audit; not stale). published_on
+    2024-11-19 matches the source's own date. CORRECTIONS: (1) added attribution_level: named-actor (CrowdStrike
+    assigned a named cryptonym but reached only low-confidence nation, no unit). (2) target country "in" (India)
+    was UNSUPPORTED — the source names only "southern Asia" + "Africa" generically (zero mentions of India); set
+    country: null, sector tag kept. DOCTRINE LINK cn/bri/political-intelligence-collection left at
+    strongly_inferred / attesting_source_id: null — correct: the source states the purpose only as generic
+    "intelligence collection" (high confidence) and treats BRI-country targeting as a weak attribution indicator,
+    NOT as an attested political-intelligence purpose; the BRI-footprint + subscriber-data triangulation supports
+    strongly_inferred without a goal-level quote, so no attested upgrade.
