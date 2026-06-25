@@ -1,6 +1,7 @@
 id: 2025-12/warp-panda-china-nexus-espionage-against-us-legal-tech-and-manufacturi
 name: "WARP PANDA — China-nexus espionage against US legal, tech and manufacturing firms using BRICKSTORM and ESXi implants"
-start_date: 2025-12-04
+start_date: 2023-12-01   # earliest source-documented operational activity ("gaining initial access in late 2023"); group active since at least 2022 (inception, not a specific op). Was 2025-12-04 = the report's publication date, not an op date (cf. Storm-2603/PurpleHaze precedent). See qc.notes.
+disclosure_date: 2025-12-04
 incident_type:
   - espionage
   - intrusion
@@ -9,11 +10,12 @@ incident_type:
 initial_vector: n-day
 false_flag_risk: none
 summary: |
-  CrowdStrike Intelligence details WARP PANDA, a China-nexus intrusion group active since 2022 whose operations are assessed as likely aligned with PRC intelligence-collection interests, targeting US legal, technology and manufacturing entities. The group gains initial access by exploiting internet-facing edge devices (such as Ivanti VPN appliances and F5 BIG-IP), then pivots into VMware vCenter environments using valid credentials or vCenter exploitation. It deploys custom malware (BRICKSTORM, Junction, GuestConduit) for persistent covert access, and uses techniques such as VM cloning and Azure session-token exfiltration to reach email and SharePoint data. One instance involved only rudimentary reconnaissance against an Asia-Pacific government entity.
+  CrowdStrike Intelligence details WARP PANDA, a China-nexus intrusion group active since at least 2022 whose operations are assessed as likely aligned with PRC intelligence-collection interests, targeting US legal, technology and manufacturing entities. The group gains initial access by exploiting internet-facing edge devices (such as Ivanti VPN appliances and F5 BIG-IP), then pivots into VMware vCenter environments using valid credentials or vCenter exploitation. It deploys custom malware (BRICKSTORM, Junction, GuestConduit) for persistent covert access, and uses techniques such as VM cloning and Azure session-token exfiltration to reach email and SharePoint data. One instance involved only rudimentary reconnaissance against an Asia-Pacific government entity.
 attributions:
   - actor_id: cn/unscoped/warp-panda
     attributing_org: "CrowdStrike (Counter Adversary Operations)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # source verbatim: "This assessment is made with moderate confidence based on the adversary's significant technical capabilities and focus on long-term access operations"
+    attribution_level: named-actor   # CrowdStrike names the actor (WARP PANDA) + PRC/China nexus, but no Chinese service/unit -> named-actor, not named-unit
     auspex_assessment: concur
     attribution_date: 2025-12-04
     attribution_source_id: crowdstrike/2025-12_warp-panda-china-nexus-espionage-against
@@ -23,7 +25,7 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      WARP PANDA's long-dwell BRICKSTORM/ESXi espionage against US technology and manufacturing firms (and their legal counsel) aligns with PRC intelligence-collection interests in acquiring high-tech and industrial IP to advance domestic upgrading; the cross-sector spread fits no single MIC2025 sector pillar, so pillar is null.
+      WARP PANDA's long-dwell BRICKSTORM/ESXi espionage against US technology and manufacturing firms (and their legal counsel) is consistent with PRC interest in acquiring high-tech and industrial IP to advance domestic upgrading (MIC2025); the cross-sector spread fits no single MIC2025 sector pillar, so pillar is null. plausible (not attested/strongly_inferred): CrowdStrike names only generic "intelligence-collection requirements aligned with the strategic interests of the PRC" and states no industrial/IP-advancement goal, and the legal-sector + Asia-Pacific-government targeting leaves classic political/military intelligence collection as an equally live reading.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -41,3 +43,10 @@ targets:
     role: collateral
 sources:
   - crowdstrike/2025-12_warp-panda-china-nexus-espionage-against
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited against the CrowdStrike raw snapshot (HTTP 200, 176,531 bytes; SHA-256 31ef69730ca570d2329c987058b30dcc39b5e2457161054f0047ea1351974a7c, re-verified OK). FACTS all confirmed: U.S.-based legal/technology/manufacturing entities; summer-2025 vCenter intrusions; one intrusion's initial access "in late 2023"; BRICKSTORM + the two Golang ESXi implants Junction (ESXi hosts) and GuestConduit (guest VMs); initial access via Ivanti Connect Secure (CVE-2024-21887/2023-46805) and F5 BIG-IP (CVE-2023-46747), pivot into vCenter (CVE-2024-38812/2023-34048/2021-22005) -> initial_vector n-day correct (all published CVEs; no 0-day claim); domain-controller VM cloning for AD data; stolen Azure session tokens -> M365 OneDrive/SharePoint/Exchange; rudimentary reconnaissance vs an (un-named-country) Asia-Pacific government entity. ATTRIBUTION: source names only a "China-nexus adversary" whose ops are "likely motivated by intelligence-collection requirements aligned with the strategic interests of the PRC" at explicit "moderate confidence"; NO Chinese service/MSS/PLA/unit named -> cn/unscoped/warp-panda correct (actor already demoted from cn/mss on 2026-06-24); added attribution_level: named-actor. CORRECTIONS: (1) start_date 2025-12-04 (= the report's publication date) -> 2023-12-01, the earliest source-documented operational activity ("initial access in late 2023"), with disclosure_date 2025-12-04 added (Storm-2603/PurpleHaze precedent: anchor start_date to documented op, not publication; "since at least 2022" is inception, not a specific op). (2) summary "active since 2022" -> "since at least 2022" (source wording). (3) doctrine reasoning reworded to flag that MIC2025/plausible rests on AUSPEX sector-fit inference, not a source-stated goal. doctrine_links cn/mic2025 plausible/pillar-null HELD (correct, not over-attested): the source states no industrial/IP-advancement purpose and the legal-sector + APAC-government targeting keeps classic political/military espionage as an equally live reading, so neither attested nor strongly_inferred. Fixed the stale inline comment that claimed moderate was "mapped from ICD link-confidence: strongly_inferred" (source states moderate directly). Source raw_snapshot/content_sha256/tier preserved unchanged.

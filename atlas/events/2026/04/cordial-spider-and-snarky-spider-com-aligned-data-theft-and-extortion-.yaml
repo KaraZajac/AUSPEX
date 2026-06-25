@@ -1,6 +1,7 @@
 id: 2026-04/cordial-spider-and-snarky-spider-com-aligned-data-theft-and-extortion-
 name: "CORDIAL SPIDER and SNARKY SPIDER — Com-aligned data-theft-and-extortion crews vishing identity/SaaS platforms (US multi-sector)"
-start_date: 2026-04-30
+start_date: 2025-10-01   # CrowdStrike: active "since at least October 2025" (op start). 2026-06-25 audit corrected from the 2026-04-30 disclosure date.
+disclosure_date: 2026-04-30   # CrowdStrike report shared exclusively with CyberScoop; CyberScoop article published 2026-04-30 (Matt Kapko). Set 2026-06-25 audit.
 incident_type:
   - extortion
   - data-theft
@@ -13,11 +14,22 @@ summary: |
 attributions:
   - actor_id: criminal/cordial-spider
     attributing_org: "CrowdStrike (Counter Adversary Operations; via CyberScoop)"
-    attributing_org_confidence: high   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high
+    attribution_level: named-actor   # CrowdStrike names a specific tracked e-crime actor (Cordial Spider / CL-CRI-1116 / UNC6671); no service/unit (criminal). Set 2026-06-25 audit.
     auspex_assessment: concur
     attribution_date: 2026-04-30
     attribution_source_id: cyberscoop/2026-04_cordial-spider-and-snarky-spider-com-ali
-doctrine_links: [] # TODO(QC): assign doctrine link
+  - actor_id: criminal/snarky-spider
+    attributing_org: "CrowdStrike (Counter Adversary Operations; via CyberScoop)"
+    attributing_org_confidence: high
+    attribution_level: named-actor   # CrowdStrike names a specific tracked e-crime actor (Snarky Spider); no service/unit (criminal). Added 2026-06-25 audit — the event covers BOTH crews; only Cordial was in attributions[].
+    auspex_assessment: concur
+    attribution_date: 2026-04-30
+    attribution_source_id: cyberscoop/2026-04_cordial-spider-and-snarky-spider-com-ali
+# doctrine_links intentionally empty: both actors are CrowdStrike "-SPIDER" = financially-motivated e-crime
+# crews aligned with The Com, with NO documented state nexus. criminal/ actors carry no attacker-rationale
+# doctrine link absent a cited state-tasking/safe-harbor relationship; none exists in the source. (2026-06-25 audit)
+doctrine_links: []
 targets:
   - target_id: sectors/academic
     country: us
@@ -45,3 +57,30 @@ targets:
     role: primary
 sources:
   - cyberscoop/2026-04_cordial-spider-and-snarky-spider-com-ali
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs CyberScoop (Matt Kapko, 2026-04-30) reporting a CrowdStrike Counter Adversary Operations
+    report (Adam Meyers), shared exclusively with CyberScoop pre-release; raw snapshot captured + sha256.
+    FACTS ✓: two financially-motivated e-crime crews tracked as Cordial Spider (also CL-CRI-1116 / UNC6671)
+    and Snarky Spider, affiliated with The Com and closely aligned with Scattered Spider (linked to SLSH and
+    ShinyHunters); vishing + text/email lures → phishing pages spoofing the employer's SSO/identity provider,
+    capturing credentials/session keys/tokens → identity + SaaS platforms; remove/establish MFA, delete alerts;
+    data-theft-for-extortion; non-payers hit with DDoS; Snarky Spider also swats victim employees; residential
+    proxy networks (Mullvad/NetNut/9Proxy/Infatica/NSOCKS); BlackFile = Cordial Spider's (offline) data-leak site.
+    Primary US targets across academic/aviation/retail/hospitality/automotive/financial-services/legal/technology —
+    all 8 sectors match targets[]. CORRECTIONS: (1) start_date 2026-04-30 → 2025-10-01 — source says active
+    "since at least October 2025"; the 2026-04-30 was the disclosure/report date, now in disclosure_date.
+    (2) ADDED criminal/snarky-spider to attributions[] (event covers BOTH crews; only Cordial was present) —
+    same attributing_org/source/confidence (CrowdStrike attributes the pair together). attribution_level set to
+    named-actor on both. (3) Resolved the doctrine_links TODO: held EMPTY [] — both are CrowdStrike "-SPIDER" =
+    e-crime/financially-motivated, no documented state nexus, correctly placed under criminal/. ATTRIBUTION: e-crime,
+    no state nexus; concur. ACTOR FLAG: criminal/snarky-spider had NO actor record — created a PROVISIONAL stub
+    (mirrors the existing criminal/cordial-spider stub, grounded only in this source) so the FK resolves; both
+    stubs need full QC (aliases, external_refs CL-CRI-1116/UNC6671 on cordial, service placement). SOURCE FIX:
+    publisher was "CrowdStrike (...via CyberScoop)" on a kind: journalism CyberScoop article — normalized to
+    "CyberScoop (Matt Kapko)" with a note recording CrowdStrike as the underlying research; added raw_snapshot +
+    content_sha256.

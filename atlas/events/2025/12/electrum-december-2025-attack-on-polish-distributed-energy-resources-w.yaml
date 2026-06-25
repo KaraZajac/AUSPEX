@@ -7,21 +7,29 @@ incident_type:
   - destructive
 false_flag_risk: none
 summary: |
-  Dragos's 2026 OT/ICS Year-in-Review reports that in December 2025 ELECTRUM targeted Polish energy infrastructure in what Dragos calls the first major coordinated attack against distributed energy resources (wind farms and solar installations) at scale. Dragos's ELECTRUM threat profile separately associates ELECTRUM with the SANDWORM APT responsible for the 2015 Ukraine power outage and the CRASHOVERRIDE/Industroyer 2016 Kyiv event.
+  Dragos's 2026 (9th Annual) OT/ICS Year-in-Review reports that in December 2025 ELECTRUM targeted Polish energy infrastructure in what Dragos calls the first major coordinated attack against distributed energy resources (wind farms and solar installations) at scale. The cited Year-in-Review names only the behavioural threat groups KAMACITE and ELECTRUM (describing them as "responsible for Ukraine's 2015 and 2016 power outages") and makes no political/state attribution — it never says Sandworm, GRU or Russia. Separately, Dragos's standalone ELECTRUM threat profile associates ELECTRUM with the SANDWORM activity tied to the 2015 Ukraine power outage and the CRASHOVERRIDE/Industroyer 2016 Kyiv event; AUSPEX resolves this cluster to ru/gru/74455/sandworm (see attribution note).
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: "Dragos (behavioural tracking + stated ELECTRUM–SANDWORM association; Dragos performs no political/state attribution)"
+    attributing_org: "Dragos (behavioural tracking of the ELECTRUM activity group; Dragos performs no political/state attribution — this Year-in-Review names no nation/service and never says Sandworm/GRU/Russia)"
     attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attribution_level: activity-cluster   # this source names only the behavioural group ELECTRUM (no nation/service/Sandworm); the ELECTRUM->Sandworm(GRU 74455) equation is AUSPEX's bridge via Dragos's separate ELECTRUM profile + CSO/govt reporting, not this report
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-12-01
     attribution_source_id: dragos/2025-12_electrum-december-2025-attack-on-polish-
+    notes: "The cited Dragos 2026 OT Year-in-Review names ELECTRUM (and KAMACITE) only and makes no political/state attribution — never 'Sandworm', 'GRU' or 'Russia'. AUSPEX resolves ELECTRUM to ru/gru/74455/sandworm because Dragos's own standalone ELECTRUM threat profile associates ELECTRUM with the SANDWORM activity behind the 2015 Ukraine grid outage and CRASHOVERRIDE/Industroyer (2016), and CSO/US-govt reporting equate that cluster with Unit 74455; hence concur-with-caveat at activity-cluster level — the named-actor/nation specificity is carried by that external attribution, not this report."
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/grid-attack
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      GRU/Sandworm-linked ELECTRUM executed the first coordinated OT attack on distributed energy resources (wind/solar) on the Polish grid, the direct operational expression of treating electric-grid availability as a coercive political instrument. Lineage to the 2015 Ukraine outage and Industroyer reinforces the grid-disruption doctrine.
+      GRU/Sandworm-linked ELECTRUM executed the first coordinated OT attack on distributed energy resources (wind/solar) on the Polish grid, the direct operational expression of treating electric-grid availability as a coercive political instrument. Lineage to the 2015 Ukraine outage and Industroyer reinforces the grid-disruption doctrine. The cited source describes the operation but states no strategic purpose, so this stays strongly_inferred (attested would require Dragos naming the end the op serves); attesting_source_id null.
+    inference_basis:
+      signals:
+        - "ELECTRUM is the Sandworm-overlapping OT-disruption group Dragos names as 'responsible for Ukraine's 2015 and 2016 power outages' (grid-attack lineage)"
+        - "Target is the Polish electric grid (distributed energy resources — wind/solar) and the effect class is cyber-physical/disruptive, i.e. grid availability, not data theft"
+        - "Operation timed amid the post-2022 Russia–NATO energy-coercion context against a frontline aid-hub state"
+      ruled_out: "Espionage/IP-theft reading does not fit a coordinated OT operation against grid generation assets; the doctrine in play is grid disruption, not collection."
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -30,7 +38,11 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Poland is a frontline NATO/EU state and the principal logistics hub for Western aid to Ukraine; an OT-scale strike on its energy infrastructure fits the post-2022 targeting of Ukraine-aiding states' critical infrastructure.
+      Poland is a frontline NATO/EU state and the principal logistics hub for Western aid to Ukraine; an OT-scale strike on its energy infrastructure fits the post-2022 targeting of Ukraine-aiding states' critical infrastructure. The source states no purpose and more than one strategic reading survives, so this stays plausible.
+    inference_basis:
+      alternatives:
+        - "Aid-state retaliation: coercion of a frontline NATO/EU Ukraine-logistics hub (this pillar)"
+        - "General grid-disruption capability demonstration / pre-positioning rehearsal not specifically tied to the aid-state motive (already captured by the energy-weaponization/grid-attack link)"
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -38,5 +50,12 @@ targets:
   - target_id: sectors/energy/renewable
     country: pl
     role: primary
+disclosure_date: 2026-02-17
 sources:
   - dragos/2025-12_electrum-december-2025-attack-on-polish-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Dragos 2026 (9th Annual) OT Year-in-Review blog (raw captured, sha256 67bfd563...). FACTS OK verbatim: 'In December 2025, ELECTRUM targeted Polish energy infrastructure in the first major coordinated attack against distributed energy resources like wind farms and solar installations at scale.' ATTRIBUTION: source names only the behavioural groups ELECTRUM + KAMACITE and makes NO political/state attribution (0 mentions of Sandworm/GRU/Russia) -> ADDED attribution_level: activity-cluster + actor note explaining the ELECTRUM->ru/gru/74455/sandworm bridge (Dragos's separate ELECTRUM profile + CSO/govt hold ELECTRUM = Sandworm/Unit 74455). Did NOT over-attest to GRU: confidence moderate + concur-with-caveat retained; both doctrine links kept strongly_inferred (grid-attack) / plausible (aid-state-targeting) with attesting_source_id null, since Dragos states no strategic purpose; added inference_basis to both. CORRECTIONS: source published_on 2025-12-01->2026-02-17 (blog datePublished metadata; 2025-12 was the operation date, slug kept stable); removed PROVISIONAL header from source; added raw_snapshot+content_sha256+AUDIT note; added disclosure_date 2026-02-17 (start_date 2025-12-01 = operation, confirmed); clarified summary that THIS source makes no state attribution. FK check: actor_id ru/gru/74455/sandworm resolves (active, status sanctioned; alias Electrum=equivalent on the actor record); doctrines/pillars/sector all resolve. Same Dragos URL as the KAMACITE sibling event (2025-03/kamacite-...), audited identically 2026-06-25. Touched only this event + its one source."

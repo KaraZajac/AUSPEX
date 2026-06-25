@@ -7,11 +7,12 @@ incident_type:
 initial_vector: supply-chain
 false_flag_risk: none
 summary: |
-  Google Threat Intelligence Group (GTIG) attributed a supply-chain compromise of the widely used axios npm package (100M+ weekly downloads) to UNC1069, a financially motivated North Korea-nexus actor. On 31 March 2026 the attacker pushed malicious axios releases (1.14.1 and 0.30.4) containing a malicious dependency 'plain-crypto-js' (SILKBELL dropper) that deployed OS-specific WAVESHAPER.V2 backdoors for Windows, macOS, and Linux, supporting reconnaissance, command execution, and PE injection. The maintainer account was taken over via tailored social engineering. UNC1069 overlaps with BlueNoroff/Sapphire Sleet/Stardust Chollima but is tracked distinctly by Google; not currently in the corpus.
+  Google Threat Intelligence Group (GTIG) attributed a supply-chain compromise of the widely used axios npm package (100M+ weekly downloads for 1.14.1; 83M+ for 0.30.4) to UNC1069, a financially motivated North Korea-nexus actor active since at least 2018. Between 00:21 and 03:20 UTC on 31 March 2026 the attacker pushed malicious axios releases (1.14.1 and 0.30.4) carrying a malicious dependency 'plain-crypto-js' (the SILKBELL dropper, setup.js) that, via an NPM postinstall hook, deployed OS-specific WAVESHAPER.V2 backdoors for Windows, macOS, and Linux, supporting reconnaissance, command execution, in-memory PE injection, and file enumeration. GTIG assessed the axios maintainer account was compromised (its email changed to an attacker-controlled address); the takeover mechanism is not detailed in the source. Attribution rests on WAVESHAPER.V2 (an evolution of WAVESHAPER previously attributed to UNC1069) and C2/AstrillVPN infrastructure overlaps with prior UNC1069 activity. UNC1069 overlaps with BlueNoroff/Sapphire Sleet/Stardust Chollima; AUSPEX maps it to kp/rgb/bluenoroff (an equivalent alias) rather than tracking a separate slug.
 attributions:
   - actor_id: kp/rgb/bluenoroff
-    attributing_org: "cloudgoogle"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: attested
+    attributing_org: "Google Threat Intelligence Group"
+    attributing_org_confidence: moderate
+    attribution_level: named-actor   # source names UNC1069 (NK-nexus cluster); no DPRK service/RGB named
     auspex_assessment: concur-with-caveat
     attribution_date: 2026-03-31
     attribution_source_id: cloudgoogle/2026-03_unc1069-north-korea-compromises-axios-np
@@ -30,3 +31,9 @@ targets:
     role: primary
 sources:
   - cloudgoogle/2026-03_unc1069-north-korea-compromises-axios-np
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs GTIG blog (raw captured, sha 92c0b617…). FACTS OK: axios 1.14.1/0.30.4, plain-crypto-js dependency, SILKBELL (setup.js) dropper, WAVESHAPER.V2 cross-platform backdoors (recon/cmd-exec/PE-injection), 31 Mar 2026 00:21–03:20 UTC, 100M+/83M weekly downloads — all verbatim. CORRECTIONS: (1) removed unsupported 'taken over via tailored social engineering' — source states maintainer-account compromise + attacker-controlled email change but NOT the mechanism (term absent from raw); reworded to attested wording + attribution basis (WAVESHAPER lineage + AstrillVPN/ASN infra overlap). (2) removed stale 'not currently in the corpus' — UNC1069 IS in-corpus as an equivalent alias of kp/rgb/bluenoroff, which is this event's actor_id; clarified the mapping. (3) attributing_org 'cloudgoogle' (publisher slug) → 'Google Threat Intelligence Group' (the article byline org; readable-name convention used elsewhere). (4) added attribution_level: named-actor — source names UNC1069/NK-nexus, does NOT name a DPRK service or the RGB, so no service_id added here (the actor's RGB placement rests on the OFAC source in the actor record, not this blog). ATTRIBUTION: GTIG moderate (infra + malware-evolution overlap) retained. doctrine_link kp/office-39-sanctions-evasion/laundering-network = strongly_inferred is correct: source states only the PROXIMATE purpose ('financially motivated'), no revenue/WMD/sanctions-evasion language, so not attested; attesting_source_id null is gate-correct. published_on 2026-03-31 confirmed (datePublished). ACTOR NOTE: kp/rgb/bluenoroff default_doctrine_alignment_ids are 8th-congress/byungjin (not office-39); office-39 is a valid secondary financial-revenue doctrine here. All FKs resolve (actor, doctrine, pillar, sector ict/software, source). Source tier secondary unchanged."

@@ -7,11 +7,12 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Volexity reported that the Russian threat actor it tracks as UTA0355 — the same actor it first reported in April 2025 abusing Microsoft 365 OAuth workflows — ran targeted phishing campaigns in October-November 2025 that spoofed real European security events (the Belgrade Security Conference, the Brussels Indo-Pacific Dialogue and the World Nuclear Exhibition) to phish credentials via OAuth and device-code authentication workflows. Primary targets were individuals working on foreign policy/European matters and former senior US government officials.
+  Volexity reported that the Russian threat actor it tracks as UTA0355 — the same actor it first reported in April 2025 abusing Microsoft 365 OAuth/device-code workflows — ran targeted phishing campaigns in October-November 2025 that spoofed real European security events to phish credentials via OAuth and device-code authentication workflows and steal Microsoft 365 access tokens. Confirmed lures were the Belgrade Security Conference (OAuth-code phishing) and the Brussels Indo-Pacific Dialogue (device-code phishing); Volexity additionally found related World Nuclear Exhibition-themed infrastructure it could not confirm was used but assessed may have featured in earlier UTA0355 attacks. Primary targets were individuals working on foreign policy/European matters and former senior US government officials.
 attributions:
   - actor_id: ru/unscoped/uta0355
-    attributing_org: "Volexity (explicitly a Russian threat actor)"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: attested
+    attributing_org: Volexity
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-12-04
     attribution_source_id: volexity/2025-12_uta0355-russia-spoofs-european-security-
@@ -33,3 +34,9 @@ targets:
     role: primary
 sources:
   - volexity/2025-12_uta0355-russia-spoofs-european-security-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Volexity blog 2025-12-04 (raw captured, sha256 4f17189a...): facts confirmed — UTA0355 (Russia-nexus) spoofed Belgrade Security Conference (OAuth-code phishing) + Brussels Indo-Pacific Dialogue (M365 Device Code phishing) in Oct-Nov 2025, stealing M365 OAuth tokens / registering rogue Entra ID devices; targets = foreign-policy/Europe experts + former senior US officials. World Nuclear Exhibition link is source-hedged (related infra, 'unable to confirm usage') — summary softened to match. Attribution: Volexity attributes (unhedged) to its named cluster UTA0355, Russia-nexus, NO service named -> attribution_level named-actor added; confidence kept moderate (conservative; stale 'mapped from attested' comment removed). attributing_org + source publisher de-polluted ('Volexity (explicitly a Russian threat actor)' -> 'Volexity'; actor descriptor had leaked from backfill). Doctrine ru/military-doctrine-2014/nato-as-principal-threat strongly_inferred, attesting_source_id null — source states no strategic purpose, so attested correctly not used. ACTOR ru/unscoped/uta0355 resolves, mission espionage correct, but remains a PROVISIONAL backfill stub (aliases empty, service unresolved -> ru/unscoped); placement correct, de-provisionalization deferred."

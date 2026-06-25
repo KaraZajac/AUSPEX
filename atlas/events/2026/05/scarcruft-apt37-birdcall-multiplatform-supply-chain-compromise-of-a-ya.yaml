@@ -1,6 +1,7 @@
 id: 2026-05/scarcruft-apt37-birdcall-multiplatform-supply-chain-compromise-of-a-ya
 name: "ScarCruft (APT37) BirdCall multiplatform supply-chain compromise of a Yanbian gaming platform"
-start_date: 2026-05-05
+start_date: 2024-11-01
+disclosure_date: 2026-05-05
 incident_type:
   - supply-chain
   - espionage
@@ -9,11 +10,12 @@ incident_type:
 initial_vector: supply-chain
 false_flag_risk: none
 summary: |
-  ESET Research reported that ScarCruft (also known as APT37 or Reaper), a suspected North Korean espionage group, compromised a video-game platform (sqgame) used by ethnic Koreans living in the Yanbian Korean Autonomous Prefecture in China in a supply-chain attack internally named 'zhuagou'. The actor trojanized both Windows and Android game components distributed through the platform to deliver the BirdCall malware (Windows and Android variants), using RokRAT as an intermediate backdoor. The ultimate targets were ethnic Koreans in Yanbian deemed of interest to the North Korean regime — most likely refugees or defectors. ESET assessed the operation had probably been ongoing since late 2024.
+  ESET Research reported that ScarCruft (also known as APT37 or Reaper), a suspected North Korean espionage group, compromised a video-game platform (sqgame) used by ethnic Koreans living in the Yanbian Korean Autonomous Prefecture in China in a multiplatform supply-chain attack. The actor trojanized both Windows and Android game components distributed through the platform to deliver the BirdCall malware (Windows and Android variants — the Android port being internally named 'zhuagou', Chinese for 'catching dogs'), using RokRAT as an intermediate backdoor. The ultimate targets were ethnic Koreans in Yanbian deemed of interest to the North Korean regime — most likely refugees or defectors. ESET assessed the operation had probably been ongoing since late 2024 (the trojanized desktop update package was malicious since at least November 2024).
 attributions:
   - actor_id: kp/unscoped/apt37
     attributing_org: "ESET"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # ESET: "suspected to be a North Korean espionage group"; "we infer"/"we believe that it is probable"
+    attribution_level: named-actor   # names ScarCruft/APT37 + nation (North Korea-aligned); NO DPRK service → kp/unscoped
     auspex_assessment: concur-with-caveat
     attribution_date: 2026-05-05
     attribution_source_id: welivesecurity/2026-05_scarcruft-apt37-birdcall-multiplatform-s
@@ -36,3 +38,27 @@ targets:
     role: staging
 sources:
   - welivesecurity/2026-05_scarcruft-apt37-birdcall-multiplatform-s
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the ESET WeLiveSecurity blogpost (raw captured + hashed). FACTS OK: sqgame
+    Yanbian gaming platform, multiplatform (Windows + Android) supply-chain compromise,
+    BirdCall delivered via RokRAT, targets = ethnic Koreans / refugees-defectors in Yanbian.
+    CORRECTED a factual error: 'zhuagou' is the internal name of the Android BirdCall backdoor
+    ("Internally, the backdoor is named zhuagou"), NOT the supply-chain attack/campaign — the
+    source gives no campaign/operation name; summary reworded. CORRECTED dating: start_date was
+    set to the disclosure date; moved op-onset to 2024-11-01 ("malicious since at least November
+    2024" / "probably ongoing since late 2024") and added disclosure_date: 2026-05-05 (ESET
+    byline "05 May 2026"). ATTRIBUTION: ESET names only "North Korea-aligned APT group ScarCruft"
+    / "suspected to be a North Korean espionage group" — NO DPRK service (MSS/RGB). actor_id
+    kp/unscoped/apt37 is correct and current (demoted from kp/mss/apt37 on 2026-06-24; no service
+    cited). Added attribution_level: named-actor. attributing_org_confidence moderate matches
+    ESET's hedged language. DOCTRINE LINK: kp/strategic-information @ strongly_inferred,
+    attesting_source_id null — correctly NOT attested: ESET states only the proximate purpose
+    ("the goal of the campaign is espionage") + infers target relevance to the regime; it does not
+    state the strategic end in govt/doctrine terms. Grade left as-is. FK note: the doctrine file
+    kp/strategic-information.yaml summary still reads "APT37 (MSS)" — stale vs the 2026-06-24
+    unscoped demotion; out of scope for this event-only audit, flagged for the doctrine pass.

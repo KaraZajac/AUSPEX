@@ -9,13 +9,14 @@ incident_type:
 initial_vector: supply-chain
 false_flag_risk: none
 summary: |
-  Kaspersky (Securelist) detailed an Evasive Panda (Daggerfly / Bronze Highland / StormBamboo) operation running from November 2022 to November 2024 that used DNS poisoning of legitimate domains to redirect victims to attacker-controlled infrastructure serving fake application updaters for software such as Sohu Video, iQIYI, IObit Smart Defrag and Tencent QQ. The poisoned updaters installed the MgBot implant, with the Macma macOS backdoor also referenced; some systems were compromised for over a year. Detected victims were located in Turkey, China, and India. Kaspersky assessed with high confidence that the Evasive Panda threat actor was responsible based on the TTPs observed.
+  Kaspersky (Securelist) detailed an Evasive Panda (Daggerfly / Bronze Highland / StormBamboo) operation running from November 2022 to November 2024 that used DNS poisoning of legitimate domains (including dictionary[.]com) to redirect victims to attacker-controlled infrastructure serving fake application updaters for software such as SohuVA, iQIYI, IObit Smart Defrag and Tencent QQ. The poisoned updaters installed the MgBot implant, with the Macma macOS backdoor also referenced as the OS-specific payload; some systems were compromised for over a year. Detected victims were located in Turkey (Türkiye), China, and India. Kaspersky assessed with high confidence that the Evasive Panda threat actor was responsible based on the TTPs observed.
 attributions:
   - actor_id: cn/unscoped/evasive-panda
     attributing_org: "Kaspersky (Securelist)"
-    attributing_org_confidence: high   # ICD link-confidence: attested
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-12-01
+    attribution_date: 2025-12-24
     attribution_source_id: securelist/2025-12_evasive-panda-dns-poisoning-campaign-del
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
@@ -39,3 +40,9 @@ targets:
     role: primary
 sources:
   - securelist/2025-12_evasive-panda-dns-poisoning-campaign-del
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Kaspersky/Securelist (raw captured + hashed). FACTS confirmed verbatim: campaign Nov 2022-Nov 2024; DNS poisoning of legitimate domains incl. dictionary[.]com; fake updaters for SohuVA, iQIYI, IObit Smart Defrag, Tencent QQ; MgBot the final-stage implant; Macma referenced as the macOS payload; victims in Turkiye/China/India, some compromised >1yr; Kaspersky 'high confidence' the Evasive Panda actor is responsible (TTP-based). Corrected: source+attribution date 2025-12-01 -> 2025-12-24 (JSON-LD/byline); 'Sohu Video' -> 'SohuVA' (source's name); added attribution_level named-actor; removed stale 'ICD link-confidence: attested' inline comment (link is plausible). ATTRIBUTION: source names ONLY 'Evasive Panda threat actor' / 'China-aligned' (cn/national-intelligence-law doctrine present), NEVER the MSS/PLA or any Chinese service - actor cn/unscoped/evasive-panda is correctly placed (de-provisionalized + demoted from cn/mss on 2026-06-24). DOCTRINE: lone link plausible w/ attesting_source_id null is honest - source states TTPs/method, not strategic purpose/diaspora-targeting motive; not over-attested."

@@ -1,6 +1,7 @@
 id: 2026-05/cisco-talos-discloses-uat-8302-china-nexus-espionage-against-south-ame
 name: "Cisco Talos discloses UAT-8302 China-nexus espionage against South American and Southeastern European governments"
-start_date: 2026-05-01
+start_date: 2024-12-01   # approximate onset; Talos: targeting "since at least late 2024" (no exact date disclosed)
+disclosure_date: 2026-05-05   # Talos blog datePublished (raw metadata); the article month, not its true publish day, gave the 2026-05 slug
 incident_type:
   - espionage
   - intrusion
@@ -11,9 +12,10 @@ summary: |
 attributions:
   - actor_id: cn/unscoped/uat-8302
     attributing_org: "Cisco Talos"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high   # Talos: "assesses with high confidence that UAT-8302 is a China-nexus APT group"
+    attribution_level: nation   # China nexus at high confidence; "UAT-" = uncategorized cluster, no service/unit named
     auspex_assessment: concur
-    attribution_date: 2026-05-01
+    attribution_date: 2026-05-05
     attribution_source_id: blogtalosintelligence/2026-05_cisco-talos-discloses-uat-8302-china-nex
 doctrine_links:
   - doctrine_id: cn/bri
@@ -26,11 +28,19 @@ doctrine_links:
     contested: false
     analyst: claude
 targets:
+  # Talos names only regions ("South America", "southeastern Europe"), no specific country —
+  # the prior ar/rs codes were unsourced inferences, set null per the no-fabrication rule.
   - target_id: sectors/government
-    country: ar
+    country: null   # South America (Talos names no country)
     role: primary
   - target_id: sectors/government
-    country: rs
+    country: null   # southeastern Europe (Talos names no country)
     role: primary
 sources:
   - blogtalosintelligence/2026-05_cisco-talos-discloses-uat-8302-china-nex
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Cisco Talos blog (raw re-verified, sha256 cb108b44... matches the stored snapshot). FACTS OK verbatim: China-nexus APT at HIGH confidence; tasking = long-term access to govt + related entities worldwide; govt entities in South America since at least late 2024 + SE Europe in 2025; malware overlap NetDraft (Jewelbug/REF7707/CL-STA-0049/LongNosedGoblin), CloudSorcerer v3, VSHELL, Draculoader (Earth Estries/Earth Naga), SNOWLIGHT (UNC5174/UNC6586); 'same paradigm' of 0-day+n-day initial access with NO specific vector for this actor; Impacket recon/proliferation (event's 'lateral movement' = Talos's 'proliferates across endpoints'). CORRECTIONS: (1) attributing_org_confidence moderate->high (Talos states high confidence; old comment conflated the AUSPEX doctrine-link scale with ICD-203 org confidence). (2) Added attribution_level: nation (China nexus at high conf; 'UAT-' = uncategorized cluster, no MSS/PLA/service named — confirmed by 0 hits for MSS/Ministry of State Security/state security; 8 'pla' + 2 'state-sponsored' substring/teaser false-positives). (3) target country ar+rs -> null: Talos names only regions ('South America','southeastern Europe'), zero specific country names — the codes were unsourced inferences. (4) start_date 2026-05-01 -> 2024-12-01 (approx onset per 'since at least late 2024') + added disclosure_date 2026-05-05. (5) attribution_date 2026-05-01 -> 2026-05-05 and source published_on 2026-05-01 -> 2026-05-05 (article datePublished in raw HTML = 2026-05-05T10:00:30Z; 2026-05 month gave the slug). doctrine_link cn/bri/political-intelligence-collection kept strongly_inferred (NOT attested): Talos states only the proximate objective (govt access), not the BRI purpose; pillar text explicitly carries Latin America collection (APT15), supporting the inference; attesting_source_id null is consistent. actor_id cn/unscoped/uat-8302 resolves, not stale (no live cn/mss/uat-8302 FKs; only this event references it). Source raw_snapshot+content_sha256 preserved from the 2026-06-24 actor audit."

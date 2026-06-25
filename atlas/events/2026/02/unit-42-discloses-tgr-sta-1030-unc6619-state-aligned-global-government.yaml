@@ -1,6 +1,7 @@
 id: 2026-02/unit-42-discloses-tgr-sta-1030-unc6619-state-aligned-global-government
 name: "Unit 42 discloses TGR-STA-1030 (UNC6619) state-aligned global government-espionage campaign across 37 countries (Shadow Campaigns)"
-start_date: 2026-02-01
+start_date: 2026-02-01   # disclosure-month best-estimate placeholder; the documented campaign ("Shadow Campaigns") runs from infrastructure dating "as far back as January 2024" per Unit 42 — start held at placeholder, real activity-start noted in qc. 2026-06-25 audit.
+disclosure_date: 2026-02-05   # Unit 42 blog actual publication date (article:published_time / datePublished). Added 2026-06-25 audit.
 incident_type:
   - espionage
   - intrusion
@@ -9,13 +10,14 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Unit 42 discloses the 'Shadow Campaigns' conducted by TGR-STA-1030 (also tracked as UNC6619), assessed with high confidence as a state-aligned group operating out of Asia — Unit 42 explicitly declines to attribute it to a specific country and uses TGR-STA as a temporary placeholder. Active since at least January 2024, the group has compromised at least 70 organizations across 37 countries (with reconnaissance against 155 countries in Nov-Dec 2025), targeting government ministries (finance, interior, foreign affairs, trade, defense), law enforcement, border control, telecommunications and critical infrastructure. Initial access is via spear-phishing (e.g., ministry-reorganization lures delivering the Diaoyu Loader from mega[.]nz) and n-day exploitation (e.g., CVE-2019-11580 Atlassian Crowd, Exchange, D-Link, SAP), with Cobalt Strike and VShell for C2. Circumstantial indicators include GMT+8 operational timing and upstream connections from AS 9808; one operator used the handle 'JackMa' (identity unconfirmed).
+  Unit 42 discloses the 'Shadow Campaigns' conducted by TGR-STA-1030 (also tracked as UNC6619), assessed with high confidence as a state-aligned group operating out of Asia — Unit 42 explicitly declines to attribute it to a specific country and uses TGR-STA as a temporary placeholder. Active since at least January 2024, the group has compromised at least 70 organizations across 37 countries (with reconnaissance against government infrastructure in 155 countries in Nov-Dec 2025), targeting government ministries (interior, foreign affairs, finance, trade, economy, immigration, mining, justice, energy), law enforcement/border control, telecommunications and critical infrastructure. Initial access is via spear-phishing (e.g., ministry-reorganization lures delivering the Diaoyu Loader from mega[.]nz) and n-day exploitation (e.g., CVE-2019-11580 Atlassian Crowd, plus Exchange, D-Link, SAP), with Cobalt Strike and VShell for C2. Circumstantial indicators include GMT+8 operational timing and upstream connections from AS 9808; one operator used the handle 'JackMa' (identity unconfirmed).
 attributions:
   - actor_id: cn/unscoped/tgr-sta-1030
     attributing_org: "Palo Alto Networks Unit 42"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: moderate   # Unit 42 is "high confidence" only that the group is state-aligned/out-of-Asia; it explicitly DECLINES country attribution -> AUSPEX holds the who-attribution at moderate (no nation, no service). Set 2026-06-25 audit.
+    attribution_level: activity-cluster    # Unit 42 uses "TGR-STA" as a temporary placeholder for a cluster of state-aligned activity while it "continue[s] to refine attribution to a specific organization" — it names NO nation and NO service/unit. Set 2026-06-25 audit.
     auspex_assessment: partial
-    attribution_date: 2026-02-01
+    attribution_date: 2026-02-05           # corrected from placeholder 2026-02-01 -> source's actual publication date (article:published_time / datePublished = 2026-02-05). 2026-06-25 audit.
     attribution_source_id: unit42paloaltonetworks/2026-02_unit-42-discloses-tgr-sta-1030-unc6619-s
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
@@ -36,3 +38,43 @@ operators_named:
   - "JackMa"
 sources:
   - unit42paloaltonetworks/2026-02_unit-42-discloses-tgr-sta-1030-unc6619-s
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the Unit 42 "Shadow Campaigns" report (raw snapshot captured + content_sha256
+    864a90c154ffe634bb3931cd9c5ca693afb6b7b96a0aa142fa459fc620b2ab4e). FACTS confirmed verbatim:
+    "high confidence that TGR-STA-1030 is a state-aligned group that operates out of Asia"; aka
+    UNC6619; active "as far back as January 2024"; "at least 70 organizations across 37 countries";
+    reconnaissance "across 155 countries between November and December 2025"; spear-phishing with
+    ministry/department-reorganization lures linking to files on mega[.]nz; Diaoyu Loader
+    (DiaoYu.exe) -> Cobalt Strike, later transition to VShell (Go C2); CVE-2019-11580 (Atlassian
+    Crowd) on an MFA e-passport/e-visa server; Exchange/D-Link/SAP among n-day ATP detections;
+    GMT+8 activity alignment; direct connections from AS 9808 ("ISP in the group's region");
+    operator handle "JackMa" (Unit 42 only notes it "could refer to" the Alibaba founder = identity
+    unconfirmed). ATTRIBUTION correctly NOT over-claimed: Unit 42 EXPLICITLY declines country
+    attribution -- "We use the prefix TGR-STA as a placeholder to denote a temporary group of
+    state-aligned activity while we continue to refine attribution to a specific organization" --
+    so NO nation and NO service. Added attribution_level: activity-cluster (was missing). The MISP
+    galaxy canonical entry for UNC6619 (uuid 1006069d-722f-4149-8609-2d524b8ba9dd) ALSO carries NO
+    country field (contrast APT40: country=CN) -- the cn/ placement is the atlas's own tentative
+    theory-test inference, not a sourced attribution; attributing_org_confidence held at moderate.
+    Doctrine link held at plausible + contested (NOT upgraded): Unit 42 states espionage purpose and
+    an economic-partnership pattern but names no nation, so the PRC SIGINT/C4ISR "why" rests only on
+    the tentative cn placement -- honest, attesting_source_id stays null.
+    CORRECTIONS: (1) published_on placeholder 2026-02-01 -> actual 2026-02-05 (article:published_time
+    + JSON-LD datePublished = 2026-02-05T11:00:10Z); fixed source.published_on, event.attribution_date,
+    and added disclosure_date 2026-02-05. (2) Summary over-claim removed: source's impacted-ministry
+    list is "interior, foreign affairs, finance, trade, economy, immigration, mining, justice and
+    energy" -- it does NOT include a defense/MoD ministry (every "defense/defence" in the source is
+    defensive-products / Djibouti geopolitics / network-defenders), so "defense" was dropped and the
+    parenthetical aligned to the source list. start_date left at 2026-02-01 disclosure-month
+    best-estimate (documented activity-start Jan 2024 noted inline; op-start otherwise undated).
+    ACTOR FLAG: actor file id cn/unscoped/tgr-sta-1030 (lives at atlas/actors/cn/tgr-sta-1030.yaml --
+    path/id mismatch is cosmetic; FK resolves by id) is a PROVISIONAL theory-test stub placing an
+    explicitly-uncountried group under cn on a China-nexus hunch; defensible as a tentative/contested
+    placement but NOT source-backed -- flagged for human QC, NOT moved here. FKs all resolve
+    (cn/unscoped service, cn/intelligentized-warfare doctrine + sigint-c4isr-collection pillar,
+    sectors/government/foreign-ministry + /civilian).

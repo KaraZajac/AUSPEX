@@ -1,6 +1,7 @@
 id: 2026-01/cisco-talos-discloses-uat-7290-china-nexus-espionage-against-south-asi
 name: "Cisco Talos discloses UAT-7290 China-nexus espionage against South Asian telecom (Red Foxtrot / PLA Unit 69010 overlap)"
-start_date: 2026-01-01
+start_date: 2022-01-01   # Talos: UAT-7290 "active since at least 2022"; disclosure was 2026-01-08 (see disclosure_date)
+disclosure_date: 2026-01-08
 incident_type:
   - espionage
   - intrusion
@@ -13,18 +14,27 @@ summary: |
 attributions:
   - actor_id: cn/pla/uat-7290
     attributing_org: "Cisco Talos"
-    attributing_org_confidence: moderate   # mapped from ICD link-confidence: strongly_inferred
+    attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
-    attribution_date: 2026-01-01
+    attribution_date: 2026-01-08
     attribution_source_id: blogtalosintelligence/2026-01_cisco-talos-discloses-uat-7290-china-nex
+    notes: "Talos attributes UAT-7290 only to the CHINA-NEXUS at HIGH confidence (verbatim: 'Talos assesses with high confidence that UAT-7290 is a sophisticated threat actor falling under the China-nexus of advanced persistent threat actors (APTs)') — a nation-level nexus, not a named Chinese service. attribution_level=nation accordingly. The cn/pla-ssf SERVICE carried by actor_id cn/pla/uat-7290 is NOT from this Talos source (which names no service: 'MSS' appears zero times, and the only unit reference, PLA Unit 69010, is a hedged THIRD-PARTY overlap — Talos: 'significant amount of overlap in victimology, infrastructure, and tooling' with Red Foxtrot; Recorded Future 2021 'linked' Red Foxtrot to PLA Unit 69010). The PLA-SSF placement rests on the MISP-galaxy DAGGER PANDA equivalence chain at the actor level (MODERATE, overlap-based; documented in the actor record, with cn/unscoped as the explicit fallback). No event-level service_id override is asserted because this source supports none. attributing_org_confidence corrected moderate->high: the prior 'moderate' (with an inline 'mapped from ICD link-confidence: strongly_inferred' comment) wrongly placed the AUSPEX service-chain confidence on the attributing-org's confidence field; Talos's own confidence in the China-nexus is high."
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      UAT-7290 (Red Foxtrot, overlapping PLA Unit 69010) persistently targets telecommunications infrastructure; a PLA-linked actor compromising telecom is strategic SIGINT collection on communications infrastructure, the core of this doctrine's SIGINT/C4ISR pillar.
+      UAT-7290 is a China-nexus actor (Talos, high confidence) that persistently and primarily targets telecommunications providers, burrowing deep into victim network infrastructure for espionage; a China-nexus actor's sustained, deep compromise of telecom carriers is, on the dominant reading, strategic SIGINT collection on communications infrastructure — the core of this pillar. The PLA-unit framing (Red Foxtrot / PLA Unit 69010) reinforces but is not required for this inference: it is a hedged third-party overlap (Talos states only "significant overlap" with Red Foxtrot; RF's Unit-69010 link is itself hedged), so the SIGINT reading rests on the telecom-targeting pattern and China-nexus, not on a confirmed military unit. Talos states no strategic purpose beyond "espionage," so this is strongly_inferred, not attested.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Primary, sustained targeting of telecommunications providers (Talos: 'primarily targets telecommunications providers in South Asia')."
+        - "Deep, persistent intrusion into victim network infrastructure (Talos: 'burrows deep inside a victim enterprise's network infrastructure')."
+        - "China-nexus attribution at high confidence (Talos)."
+        - "Builds ORB relay infrastructure reusable by other China-nexus actors — consistent with a collection/access role serving wider state SIGINT operations."
+      ruled_out: "cn/bri/political-intelligence-collection is the principal competing strategic reading (telecom in a BRI partner region as political/strategic intel). It is retained below as a plausible link rather than ruling out the SIGINT reading; the SIGINT/C4ISR collection reading is treated as dominant for sustained carrier-level telecom compromise by a China-nexus military-overlapping actor, but the BRI reading survives, which is why this link is strongly_inferred (not attested) and the BRI link is plausible (not absent)."
     contested: false
     analyst: claude
   - doctrine_id: cn/bri
@@ -32,8 +42,13 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Concentration on South Asian telecom — a core BRI partner region — also serves BRI partner-country political/strategic intelligence collection, a distinct strategic logic from the military SIGINT framing.
+      Concentration on South Asian telecom — a core BRI partner region — also serves BRI partner-country political/strategic intelligence collection, a distinct strategic logic from the military SIGINT framing. Talos states no such purpose, and South-Asia telecom targeting reads at least as readily as military SIGINT, so this is plausible rather than the dominant reading.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Strategic military SIGINT/C4ISR collection (the strongly_inferred link above) — the dominant reading."
+        - "BRI partner-country political/strategic intelligence collection (this link) — South Asia is a core BRI region."
+        - "Pure access-brokering / ORB-building to service other China-nexus actors (Talos notes the dual espionage / initial-access role)."
     contested: false
     analyst: claude
 targets:
@@ -42,3 +57,48 @@ targets:
     role: primary
 sources:
   - blogtalosintelligence/2026-01_cisco-talos-discloses-uat-7290-china-nex
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the Cisco Talos blog (existing raw snapshot re-verified intact; on-disk sha256
+    5dfd793e... matches the source's content_sha256). FACTS ✓ (all verbatim-supported): UAT-7290 a
+    Talos-tracked China-nexus actor "active since at least 2022"; dual espionage + initial-access role;
+    primarily targets South-Asian telecom providers, recent expansion into Southeastern Europe; access
+    via one-day exploits + target-specific SSH brute force on public-facing edge devices using public
+    PoC code; Linux suite RushDrop(=ChronosRAT)/DriveSwitch/SilentRaid(=MystRodX) + Bulbature (Sekoia
+    late-2024) building ORBs reusable by other China-nexus actors; possible Windows RedLeaves(APT10
+    overlap)/ShadowPad. incident_type and initial_vector(n-day) consistent with the source.
+    DATE CORRECTIONS: (a) start_date 2026-01-01 -> 2022-01-01 (Talos: "active since at least 2022"; the
+    old value conflated the disclosure year/month with the activity start). (b) Added disclosure_date
+    2026-01-08 (article's real publish date: meta article:published_time 2026-01-08T11:00:03Z; byline
+    "Thursday, January 8, 2026"). (c) attribution_date 2026-01-01 -> 2026-01-08. Source published_on
+    also corrected 2026-01-01 -> 2026-01-08.
+    ATTRIBUTION: Talos attributes ONLY to the China-nexus at HIGH confidence (verbatim quote captured)
+    — a nation-level nexus, names no Chinese service ("MSS" appears zero times; no "moderate
+    confidence" string anywhere). CORRECTIONS: attributing_org_confidence moderate -> high (the prior
+    'moderate', tagged 'mapped from ICD link-confidence: strongly_inferred', wrongly put the AUSPEX
+    service-chain confidence on the attributing-org field); added attribution_level: nation; removed
+    the misleading inline ICD comment.
+    *** cn/pla-ssf vs cn/unscoped FLAG (per memory + task) ***: this event carries actor_id
+    cn/pla/uat-7290, whose cn/pla-ssf SERVICE is NOT supported by this Talos source. Talos's only unit
+    reference is a hedged THIRD-PARTY overlap (UAT-7290 ~ Red Foxtrot by "significant overlap";
+    Recorded Future 2021 "linked" Red Foxtrot to PLA Unit 69010). The PLA-SSF placement rests entirely
+    on the MISP-galaxy DAGGER PANDA equivalence chain at the ACTOR level (MODERATE, overlap-based;
+    documented in atlas/actors/cn/uat-7290.yaml, which already names cn/unscoped as the explicit
+    fallback). I did NOT re-place the shared actor (FK resolves; verify_atlas PASS) and asserted no
+    event-level service_id override (this source supports none). The event-level attribution now
+    faithfully reflects the source: nation-level China-nexus. If the MISP synonym treatment is later
+    revised, both the actor and this event's effective service fall back to cn/unscoped, NOT cn/mss.
+    DOCTRINE LINKS: neither is attested (Talos states no strategic purpose beyond "espionage"), so no
+    attesting_source_id required — correct. sigint-c4isr-collection kept strongly_inferred but reasoning
+    softened (PLA framing is hedged, not load-bearing; SIGINT reading rests on the carrier-level telecom
+    pattern + China-nexus) and a structured inference_basis{signals, ruled_out} added. bri/political-
+    intelligence-collection kept plausible (a second surviving reading) with inference_basis{alternatives}
+    added. Both pillar FKs resolve.
+    TARGETS: sectors/ict/telecom ✓ (FK resolves). country: in (India) is a representative proxy for the
+    source's "primarily in South Asia" — Talos names no specific country; kept as a documented-region
+    stand-in, not a named victim. Southeastern-Europe expansion is mentioned in summary only (no second
+    target row), acceptable given no country named.

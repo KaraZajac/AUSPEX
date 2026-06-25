@@ -8,11 +8,12 @@ incident_type:
 initial_vector: phishing
 false_flag_risk: none
 summary: |
-  Kaspersky GReAT disclosed a new 2025 Mysterious Elephant (APT-K-47) campaign targeting government and foreign-affairs organizations across Asia-Pacific with a focus on Pakistan, Bangladesh, Afghanistan, Nepal and Sri Lanka, deploying custom tools (BabShell reverse shell, MemLoader HidenDesk) and PowerShell to steal sensitive documents, images, archives and notably WhatsApp data. Mysterious Elephant shares tooling with Bitter (TA397) and Confucius, both India-linked clusters, but Kaspersky does not name a sponsoring state — hence India-nexus is only plausible and filed under IN with that caveat. New actor not in the inventory.
+  Kaspersky GReAT (press release, 15 Oct 2025; campaign identified early 2025) disclosed a new Mysterious Elephant campaign targeting government and foreign-affairs organizations across the Asia-Pacific region with a focus on Pakistan, Bangladesh, Afghanistan, Nepal and Sri Lanka, deploying custom tools (BabShell reverse shell, the MemLoader HidenDesk in-memory module) and PowerShell, with personalized spear-phishing and malicious documents for initial access, to steal sensitive documents, images and archives and — notably — WhatsApp data. The cited Kaspersky press release names only the "Mysterious Elephant" APT and assigns NO sponsoring state. The APT-K-47 designation (Knownsec 404) and the assessed India nexus rest on tool/code-sharing overlaps with the India-aligned clusters Bitter (TA397) and Confucius — documented in the fuller Securelist report and by Knownsec/Proofpoint-Threatray, NOT in this press release — so India-nexus is only plausible here and the actor is filed under IN with that caveat. New actor not previously in the inventory.
 attributions:
   - actor_id: in/unscoped/mysterious-elephant
     attributing_org: "kaspersky"
     attributing_org_confidence: low   # mapped from ICD link-confidence: plausible
+    attribution_level: named-actor   # Kaspersky press release names the actor cluster ("Mysterious Elephant" APT) only — no nation/unit, no sponsoring state. Set 2026-06-25 audit.
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-10-15
     attribution_source_id: kaspersky/2025-10_kaspersky-great-details-2025-mysterious-
@@ -44,3 +45,34 @@ targets:
     role: primary
 sources:
   - kaspersky/2025-10_kaspersky-great-details-2025-mysterious-
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited Kaspersky GReAT press release "An elephant in the room: Kaspersky detects
+    new Mysterious Elephant activity in Asia-Pacific" (raw snapshot captured + sha256). FACTS ✓ (verbatim
+    in the release): targets = "government entities and foreign affairs organizations across the Asia-Pacific
+    region, with a focus on Pakistan, Bangladesh, Afghanistan, Nepal, Sri Lanka and other countries"; aim =
+    steal documents, images, archived files "with WhatsApp data targeted for exfiltration"; tools = BabShell
+    reverse shell + MemLoader HidenDesk in-memory module + PowerShell; initial access = personalized
+    spear-phishing + malicious documents. Date confirmed: release dated October 15, 2025 (article:published_time
+    2025-10-15T13:00:00Z) — matches published_on; campaign "identified in early 2025" (so the op predates the
+    Oct disclosure; start_date is disclosure-anchored, left as-is + noted). ATTRIBUTION: the press release names
+    ONLY the "Mysterious Elephant" APT and assigns NO sponsoring state, NO service, and never uses "APT-K-47"
+    (count=0), "India" (0, as a nexus), "Bitter"/"TA397"/"Confucius" (0), or "South Asia" (0). So
+    attributing_org_confidence held at low, auspex_assessment concur-with-caveat, and attribution_level SET to
+    named-actor (added — was MISSING). NEXUS DIRECTION = INDIA (verified): Mysterious Elephant/APT-K-47 TARGETS
+    Pakistan + neighbours and is assessed India-aligned via tool/code overlaps with the India clusters Bitter,
+    Confucius, SideWinder, Patchwork (Knownsec 404; Proofpoint/Threatray 2025 — see the audited sibling
+    in/unscoped/bitter, which cites "tool-sharing overlaps with Mysterious Elephant (APT-K-47) and Confucius").
+    IN filing is CORRECT. DOCTRINE LINK held at plausible with attesting_source_id null — correct, NOT
+    over-attested: the press release states no strategic purpose and the India nexus is itself only plausible
+    from this source. CORRECTIONS: (1) added attribution_level: named-actor; (2) rewrote the summary so the
+    APT-K-47 designation, the Bitter/Confucius tool-sharing, and the India nexus are attributed to their real
+    provenance (the fuller Securelist report + Knownsec/Proofpoint) rather than implied to be in this press
+    release, which states none of them; press-release-grounded facts retained. ACTOR FLAG: in/unscoped/mysterious-elephant
+    is a PROVISIONAL backfill stub (empty aliases, analyst-hint ttp_summary) — candidate to de-provisionalize
+    like its sibling in/unscoped/bitter (add APT-K-47/Knownsec-404 alias + India-nexus ttp_summary citing the
+    Securelist report); flagged, NOT edited here (touch only this event + its source).
