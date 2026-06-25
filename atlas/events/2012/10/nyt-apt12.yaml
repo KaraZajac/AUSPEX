@@ -8,42 +8,51 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  The New York Times disclosed (2013-01-30) that PRC-attributed
+  The New York Times disclosed (2013-01-30) that China-based
   operators had infiltrated its corporate network for four
-  months, beginning approximately on the day NYT published David
-  Barboza's investigation into the family wealth of then-Premier
-  Wen Jiabao (2012-10-25). Mandiant investigation identified the
-  operator cluster as APT12 / IXESHE. The operators harvested
-  every employee's corporate password and accessed the email
-  accounts of David Barboza (Shanghai bureau chief) and Jim Yardley
-  (former Beijing bureau chief). Subsequent Wall Street Journal,
-  Washington Post, and Bloomberg disclosures (early 2013) cited
-  similar PRC-attributed intrusions, establishing the
-  press-targeting pattern as a doctrinal feature of MSS / PLA
-  collection against Western reporting on Chinese leadership.
+  months. The intrusion began ~2012-09-13, as David Barboza's
+  investigation into the family wealth of then-Premier Wen
+  Jiabao was nearing completion (the article published
+  2012-10-25). Mandiant, hired by the NYT to investigate and
+  remediate, identified the operator cluster as APT12 / IXESHE
+  (a China-nexus group; no specific PLA/MSS unit was named).
+  The operators harvested every employee's corporate password
+  and accessed the email accounts of David Barboza (Shanghai
+  bureau chief) and Jim Yardley (former Beijing bureau chief).
+  Subsequent Wall Street Journal, Washington Post, and Bloomberg
+  disclosures (early 2013) cited similar PRC-attributed
+  intrusions, establishing the press-targeting pattern as a
+  doctrinal feature of MSS / PLA collection against Western
+  reporting on Chinese leadership.
 false_flag_risk: none
 summary: |
   NYT/APT12 is the canonical case of PRC cyber operations
   retaliating against Western press reporting on PRC leadership
-  finance. The timing — beginning the day of Barboza's
-  publication, focused on reporters with leadership-finance
-  reporting — establishes the dissident-and-press collection
-  pattern that later codified into the broader MSS counter-
-  reporting posture. Mandiant's January 2013 attribution
-  immediately preceded (and contextualized) its February 2013
-  APT1 report.
+  finance. The timing — the intrusion beginning (~2012-09-13) as
+  Barboza's Wen-family-wealth reporting neared completion, and
+  focused on the reporters behind that leadership-finance work —
+  establishes the dissident-and-press collection pattern that
+  later codified into the broader MSS counter-reporting posture.
+  Mandiant's January 2013 attribution immediately preceded (and
+  contextualized) its February 2013 APT1 report.
 attributions:
   - actor_id: null
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2013-01-30
     attribution_source_id: nyt/2013-01-30_chinese-hackers-nyt
     notes: |
-      Mandiant attributed to APT12 / IXESHE. The cn/mss/apt12
-      actor slug is not present in the current atlas registry
-      (see AUSPEX gap list). actor_id left null pending creation
-      of the cluster slug.
+      Mandiant attributed to APT12 / IXESHE — a China-nexus
+      named-actor cluster; no specific PLA/MSS numbered unit was
+      named (so attribution_level is named-actor, not
+      named-unit). The cn/mss/apt12 actor slug is not present in
+      the current atlas registry (see AUSPEX gap list). actor_id
+      left null pending creation of the cluster slug. MISP-galaxy
+      ref for backfill: APT12 = NUMBERED PANDA / IXESHE / Calc
+      Team / DynCalc, country CN, UUID
+      48146604-6693-4db1-bd94-159744726514.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
@@ -52,10 +61,16 @@ doctrine_links:
     reasoning: |
       Targeting of NYT correspondents specifically reporting on
       PRC leadership finance is the canonical
-      counter-press / dissident-suppression pattern. The 2017
-      Intelligence Law had not yet codified compelled
-      cooperation but the operational pattern is the same one
-      the law later authorized.
+      counter-press / dissident-suppression pattern that the
+      2017 Intelligence Law's diaspora-and-dissident-collection
+      frame later names. The link is a pattern-anchor, NOT a
+      temporal/causal claim: this 2012 operation predates the
+      2017 statute by five years, so the law did not task or
+      authorize it. The doctrine is used here as the closest
+      codified frame for the standing collection posture the
+      operation exemplifies. The cited source does not state the
+      strategic purpose in the law's terms — hence
+      strongly_inferred, not attested.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -68,3 +83,33 @@ targets:
       reporter email accounts accessed.
 sources:
   - nyt/2013-01-30_chinese-hackers-nyt
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: >
+    Primary source unfetchable (NYT DataDome CAPTCHA bot-wall on
+    curl/WebFetch; archive.org blocked in this environment), so
+    level: partial — captured raw is the 403 challenge page, not
+    article content. Facts corroborated against secondary
+    reporting (NPR 2013-01-31; IBTimes; The Diplomat) and the
+    MISP-galaxy actor reference: 4-month intrusion, Mandiant
+    hired to remediate, China-nexus APT12/IXESHE, every
+    employee's password harvested, Barboza + Yardley email
+    accessed. CORRECTIONS: (1) summary/outcome fixed an internal
+    contradiction — the intrusion began ~2012-09-13 as Barboza's
+    Wen reporting neared completion (matching start_date), NOT
+    "on the day NYT published" the article (publication was
+    2012-10-25). (2) Added attribution_level: named-actor —
+    Mandiant named APT12/IXESHE but NO specific PLA/MSS numbered
+    unit. (3) Doctrine link kept strongly_inferred (source does
+    not name the goal in the law's terms; attesting_source_id
+    null) and re-worded as a pattern-anchor, since this 2012 op
+    predates the 2017 Intelligence Law by 5 years (the prior
+    wording risked an anachronistic temporal claim). published_on
+    2013-01-30 correct (report Jan 2013 / op 2012). actor_id null
+    correct — no APT12 slug in corpus (flagged; MISP UUID noted
+    for backfill). Target FK orgs/new-york-times is undefined but
+    that is a corpus-wide deferred-normalization gap (validator
+    treats orgs/ refs as informational), so left untouched.

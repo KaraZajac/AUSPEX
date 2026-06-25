@@ -6,18 +6,27 @@ end_date: 2011-02-10
 incident_type:
   - intrusion
   - data-theft
-initial_vector: n-day  # SQL injection plus spear-phishing in the McAfee analysis
+initial_vector: n-day  # SQL injection of extranet web servers + spear-phishing of mobile/VPN users (McAfee report, "Details of the Attack")
 outcome_summary: |
-  McAfee disclosed a two-year intrusion campaign against five
-  unnamed major Western oil, gas, and petrochemical firms
-  (Exxon, Royal Dutch Shell, BP, Marathon, ConocoPhillips
-  per subsequent press identification). Initial access via SQL
-  injection and spear-phishing; lateral movement to harvest
-  competitive-intelligence material — bid information, oil-
-  field exploration data, operational SCADA documentation,
-  and project financing data. C2 infrastructure resolved to
-  Beijing IP space; tooling overlap with prior PRC-attributed
-  campaigns.
+  McAfee disclosed a coordinated intrusion campaign — ongoing
+  "at least two years, and likely as many as four" — against
+  global oil, gas, and petrochemical companies (the report
+  names no victim company), plus individuals and executives in
+  Kazakhstan, Taiwan, Greece, and the United States. The five
+  named majors widely cited for this case (ExxonMobil, Royal
+  Dutch Shell, BP, Marathon, ConocoPhillips) come from later
+  press reporting (Bloomberg, Feb 2011), NOT from the McAfee
+  white paper. Initial access via SQL injection of extranet web
+  servers and spear-phishing; lateral movement with pass-the-
+  hash / credential tools (gsecdump, Cain & Abel) and custom
+  RATs (chiefly zwShell) to harvest competitive-intelligence
+  material — oil-and-gas field bid and exploration data,
+  project-financing documents, and, in some cases, data from
+  SCADA systems. C&C ran on attacker-leased hosting in the US
+  and compromised servers in the Netherlands; McAfee found all
+  identified data-exfiltration activity originated from
+  Beijing-based IP addresses, operating weekdays 9–5 Beijing
+  time.
 false_flag_risk: none
 summary: |
   Night Dragon is the canonical pre-MIC2025 case of PRC
@@ -25,21 +34,33 @@ summary: |
   energy/extractives sector. The campaign aligns with PRC
   state interest in equity-stake-and-acquisition strategy
   for overseas oil-and-gas assets (CNOOC, Sinopec) during
-  the 11th Five-Year Plan period. McAfee declined to name a
-  specific PRC service; the campaign is generally clustered
-  with the broader PLA / MSS collection milieu of the period.
+  the 11th Five-Year Plan period. McAfee was explicit that it
+  had "no direct evidence to name the originators" — only
+  circumstantial evidence that "the attackers were based in
+  China"; it named no PRC service and no PLA/MSS unit. The
+  campaign is editorially clustered with the broader PRC
+  state-aligned collection milieu of the period (this AUSPEX
+  framing, not McAfee's).
 attributions:
   - actor_id: null
     attributing_org: McAfee
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2011-02-10
     attribution_source_id: mcafee/2011-02-10_night-dragon
     notes: |
-      McAfee assigned coordinator-level attribution to a single
-      Chinese individual operating from Heze (Shandong) and
-      identified Beijing C2 infrastructure. No PLA / MSS unit
-      named; no DOJ indictment.
+      McAfee identified one individual in Heze City, Shandong
+      Province, who ran a US-server-leasing reseller ("hosted
+      servers in the U.S. with no records kept") used to host the
+      zwShell C&C application — but states explicitly it does NOT
+      believe this person is the mastermind, only that he may have
+      information identifying the responsible parties. Data
+      exfiltration came from Beijing-based IPs (the C&C servers
+      themselves were US-leased / NL-compromised). McAfee named no
+      PLA/MSS unit and "no direct evidence to name the originators";
+      no DOJ indictment. activity-cluster: China-origin asserted,
+      no named actor.
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
@@ -56,28 +77,42 @@ doctrine_links:
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
-    pillar_id: cn/mcf/dual-use-research
+    pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Energy-extractive cyber targeting supporting PRC SOE
+      Energy-extractive cyber targeting in service of PRC SOE
       competitive position is consistent with the MCF
-      civilian-economic-utility frame.
+      civilian-economic-utility frame. Doctrine-level link only
+      (no specific pillar): the dual-use-R&D pillar's target
+      sectors are academic/defense/ICT, not energy, so the fit is
+      at the broad civil-military-fusion level, not that pillar.
+      MCF as a named national strategy also postdates this 2009-11
+      campaign (retrospective framing).
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
+  # McAfee names NO victim company; it names targeting of "global
+  # oil, gas, and petrochemical companies" and of individuals/
+  # executives in KZ, TW, GR, US. The sector target carries the
+  # source-supported victim class. ExxonMobil is the most widely
+  # press-named victim (Bloomberg, 2011) and is retained as the one
+  # registry-backed org; Shell/BP (also press-named, not in the
+  # cited source and not in the targets registry) were removed
+  # rather than left as unsupported / dangling FKs.
   - target_id: sectors/energy/oil-gas/upstream
-    country: us
+    country: null   # multi-country; report cites KZ/TW/GR/US individuals + global majors
     role: primary
   - target_id: orgs/exxon
     country: us
     role: primary
-  - target_id: orgs/shell
-    country: nl
-    role: primary
-  - target_id: orgs/bp
-    country: gb
-    role: primary
+    outcome: named in press reporting (Bloomberg 2011), not in the McAfee paper
 sources:
   - mcafee/2011-02-10_night-dragon
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs the McAfee Night Dragon white paper (live URL 403; archive.org snapshot fetched, HTTP 200, 19-pg PDF, sha256 b7de0515... captured as raw_snapshot). FACTS corrected: (1) report names NO victim company — the five majors (Exxon/Shell/BP/Marathon/Conoco) are LATER PRESS (Bloomberg 2011), not McAfee; moved that claim out of McAfee's voice. (2) C2 geography fixed — C&C ran on US-leased + NL-compromised servers; only data EXFILTRATION came from Beijing IPs (report p.4 + Appendix B). (3) duration 'two years' -> 'at least two years, likely as many as four' (verbatim). (4) added source-named victim geography KZ/TW/GR/US + tools (zwShell RAT, gsecdump, Cain & Abel). ATTRIBUTION: McAfee 'no direct evidence to name the originators', only 'strong evidence... based in China' — added attribution_level: activity-cluster; corrected note (the Heze/Shandong individual ran a US-hosting reseller, explicitly NOT the mastermind; 'coordinator-level attribution' was an overstatement). actor_id stays null (counter-action norm, mirrors Operation Shady RAT). FK FIX: removed dangling orgs/shell + orgs/bp (absent from targets registry AND from the cited source); kept registry-backed orgs/exxon flagged as press-named. doctrine_links: both kept at plausible (MIC2025/MCF both postdate the 2009-11 op — not over-attested); MCF pillar dropped to null (dual-use-R&D pillar covers academic/defense/ICT, not energy). published_on 2011-02-10 confirmed (PDF cover). level: full (primary source fully reviewed via archive snapshot)."

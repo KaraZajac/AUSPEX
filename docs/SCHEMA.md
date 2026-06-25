@@ -74,7 +74,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `doctrine_links` | list\<dict\> | REQUIRED | the *why* (may be empty `[]`) — see below |
 | `sources` | list\<str\> | REQUIRED | FK → sources |
 | `targets` | list\<dict\> | optional (98%) | the victims — see below |
-| `qc` | dict | optional | **verification stamp** (`{verified_by, verified_on, level: full\|sources-only, effort?, notes?}`). `verified_by` names the auditor: a model id (e.g. `claude-opus-4.8`, paired with `effort`) = independent **LLM audit** against primary sources with raw evidence captured + hashed; `kara` = **human** verification by the candidate. Presence = passed the per-event protocol (`docs/CORPUS-VERIFICATION-PLAN.md`); absence = machine-checked only. *(Field is `verified_on`, never `on` — bare `on:` is a YAML 1.1 boolean key.)* Coverage reported by `verify_atlas.py` (`qc-coverage`). |
+| `qc` | dict | optional | **verification stamp** (`{verified_by, verified_on, level: full\|partial\|sources-only, effort?, notes?}`). `verified_by` names the auditor: a model id (e.g. `claude-opus-4.8`, paired with `effort`) = independent **LLM audit** against primary sources with raw evidence captured + hashed; `kara` = **human** verification by the candidate. Presence = passed the per-event protocol (`docs/CORPUS-VERIFICATION-PLAN.md`); absence = machine-checked only. *(Field is `verified_on`, never `on` — bare `on:` is a YAML 1.1 boolean key.)* Coverage reported by `verify_atlas.py` (`qc-coverage`). |
 | `initial_vector` | str | optional (94%) | initial-access vocab (below) |
 | `disclosure_date` | date | optional (80%) | public disclosure |
 | `end_date` | date\|null | optional (80%) | op end if bounded |

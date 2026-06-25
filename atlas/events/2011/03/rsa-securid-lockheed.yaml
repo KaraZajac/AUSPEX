@@ -17,40 +17,76 @@ outcome_summary: |
   blocked.
 false_flag_risk: none
 summary: |
-  Vendor assessment subsequently assigned to APT1 / PLA, with some
-  analysts attributing to APT12. The pattern — break the two-
-  factor token vendor to attack the defense-prime customer base —
-  was an early canonical supply-chain compromise. Initial access
-  was a spear-phishing email titled "2011 Recruitment Plan" with
-  a malicious Excel attachment exploiting an Adobe Flash zero-day
+  Attribution to China was made post-hoc and at the nation level:
+  NSA Director Gen. Keith Alexander, briefing the Senate Armed
+  Services Committee in 2012, pinned the RSA-derived defense-
+  contractor intrusions "vaguely" on China; the specific
+  identification of the PLA's Unit 61398 / APT1 followed from the
+  2013 Mandiant / NYT exposé, which listed RSA among APT1's
+  targets. No cited source pins the RSA operation to a named unit
+  at the time, and no cited source names APT12 (an early
+  conflation now treated as an overlapping-cluster footnote, not
+  the cited attribution). The pattern — break the two-factor token
+  vendor to reach the defense-prime customer base — was an early
+  canonical supply-chain compromise. Initial access was a spear-
+  phishing email titled "2011 Recruitment Plan" with a malicious
+  Excel attachment exploiting an Adobe Flash zero-day
   (CVE-2011-0609) to drop the Poison Ivy remote-access trojan,
-  followed by privilege escalation, credential dumping, and
-  lateral movement to the SecurID engineering enclave where the
-  seed-record database was exfiltrated. The Lockheed Martin
-  follow-on, blocked in May 2011, used the stolen SecurID seeds
-  against Lockheed's two-factor VPN — establishing the canonical
+  followed by credential theft, lateral movement, and exfiltration
+  of the SecurID seed-record database. The Lockheed Martin follow-
+  on, blocked in May 2011, used the stolen SecurID seeds against
+  Lockheed's two-factor VPN (Northrop Grumman and L-3 were also
+  named in subsequent reporting) — establishing the canonical
   "compromise the supply chain to defeat the defense in depth"
-  pattern that subsequent PLA / MSS supply-chain operations
-  refined.
+  pattern that later Chinese supply-chain operations refined.
 attributions:
   - actor_id: cn/pla/apt1
-    attributing_org: vendor consensus (post-hoc)
+    attributing_org: NSA (Gen. Keith Alexander, Senate Armed Services Committee briefing)
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
-    attribution_date: 2011-06-01
+    attribution_date: 2012-03-01
+    attribution_source_id: wired/2021-05-20_full-story-rsa-hack
+    notes: |
+      Earliest governmental attribution: NSA's director told the
+      Senate Armed Services Committee (2012) that the RSA hack led
+      to a US defense contractor being compromised and pinned it
+      "vaguely" on China — nation level, no unit named (per WIRED,
+      Greenberg 2021).
+  - actor_id: cn/pla/apt1
+    attributing_org: Mandiant / New York Times (post-hoc consensus)
+    attributing_org_confidence: moderate
+    attribution_level: named-unit
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2013-02-19
     attribution_source_id: mandiant/2013-02-19_apt1-report
     notes: |
-      Some analysts assign APT12; treat as overlapping cluster
-      attribution rather than identity.
+      The PLA Unit 61398 / APT1 identification followed from the
+      Feb-2013 Mandiant report, which listed RSA among APT1's
+      targets; WIRED ties the RSA breach to this group. The 2013
+      report itself documents Unit 61398 generally and does NOT
+      analyze the RSA intrusion — it backs the actor identity, not
+      the event facts (those are in the WIRED + Threatpost cites).
+      Some early reporting assigned APT12; treated as an
+      overlapping-cluster footnote, not the cited attribution.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/dual-use-research
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting Lockheed via the two-factor token supplier is the
-      classic MCF-aligned defense-aerospace collection pattern.
-    attesting_source_id: null
+      Compromising RSA to reach Lockheed Martin (and Northrop
+      Grumman / L-3) targets the US defense-aerospace IP base —
+      "a cornucopia of ultra-secret plans for weapons and
+      intelligence technologies" (WIRED) — which is precisely the
+      defense/contractor collection the MCF dual-use-research
+      pillar encodes (cf. the Su Bin C-17/F-22/F-35 case the
+      pillar names). No cited source states the strategic purpose
+      in doctrine terms, so this stays strongly_inferred rather
+      than attested; the competing reading (generic financially-
+      motivated theft) is ruled out by the exclusively defense-
+      prime target set and the seed-theft-as-access-enabler MO.
+    attesting_source_id: wired/2021-05-20_full-story-rsa-hack
     counter_explanation: null
     contested: false
     analyst: claude
@@ -60,4 +96,31 @@ targets:
   - target_id: orgs/lockheed-martin
     role: primary
 sources:
+  - wired/2021-05-20_full-story-rsa-hack
+  - threatpost/2011-04-01_rsa-securid-attack-phishing-excel
   - mandiant/2013-02-19_apt1-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs primary/tier-1 sources (raw captured + hashed). FACTS: all confirmed —
+    WIRED (Greenberg, 2021-05-20) corroborates the "2011 Recruitment plan" Excel phish, the
+    Adobe Flash 0-day -> Poison Ivy, the SecurID "seeds" theft, and the Lockheed Martin
+    follow-on (Reuters-named; Northrop Grumman + L-3 also named); Threatpost (2011-04-01)
+    relays RSA's own Uri Rivner disclosure of the same Excel/Flash/Poison-Ivy chain
+    contemporaneously. ATTRIBUTION (recalibrated): China-nexus is FIRM but post-hoc — NSA's
+    Gen. Alexander pinned it "vaguely" on China (nation level, 2012); APT1/Unit-61398 is the
+    later Mandiant/NYT consensus (named-unit, 2013). KEY CORRECTION: the prior SOLE source was
+    the 2013 Mandiant APT1 report, which on firsthand re-read of the captured PDF contains
+    ZERO references to RSA, SecurID, Lockheed, CVE-2011-0609, or the Flash 0-day (the 1 "RSA"
+    hit was substring noise in a DoD-dictionary quote) — it cannot support the event facts.
+    Added WIRED + Threatpost as the factual cites; kept the APT1 report only as actor-identity
+    backing, with a note. Added attribution_level (was absent): two dated entries model the
+    nation->named-unit latency. Removed the unsupported APT12 attribution from the summary's
+    framing (no cited source names it; no cn/.../apt12 actor exists) -> demoted to a footnote.
+    doctrine_link cn/mcf/dual-use-research kept at strongly_inferred (pillar explicitly covers
+    defense/contractor + the Su Bin F-35 precedent); added WIRED as supporting source +
+    ruled_out reasoning. actor_id cn/pla/apt1 resolves, not stale; defensible per WIRED.
+

@@ -9,31 +9,49 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Telvent Canada (an ICS SCADA vendor to North American oil & gas
-  pipelines) discovered an intrusion that compromised project
-  files and access to customer networks. The first reported PRC
-  pre-positioning-flavored event against US critical-infrastructure
-  OT supply chain.
+  pipelines) discovered an intrusion that breached its internal
+  firewall/security systems and stole project files for its OASyS
+  product; as a precaution Telvent indefinitely terminated its
+  remote access into customer systems. Telvent reported no evidence
+  the intruders obtained anything enabling access to a customer
+  system. An early reported PRC-attributed compromise of a US
+  critical-infrastructure OT supply-chain vendor.
 false_flag_risk: none
 summary: |
-  Reported by KrebsOnSecurity in September 2012; vendor framing
-  attributed to Comment Crew / APT1. Telvent's customer
-  notification described compromise of internal firewalls and
-  the OASyS DNA project-file repository, with the intruders
-  installing custom backdoors (later associated with the
-  Comment Crew / Comment Group / Shanghai Group toolset
-  catalogued in the 2013 Mandiant APT1 report) and exfiltrating
-  detailed AutoCAD pipeline-engineering drawings and customer
-  authentication material. The pattern — supply-chain compromise
-  of an ICS-engineering vendor whose product touches energy
-  critical infrastructure — foreshadows the Volt Typhoon / Flax
-  Typhoon civilian-CII pre-positioning pattern by a decade.
+  Reported by KrebsOnSecurity on 26 Sep 2012. Per customer letters
+  obtained by Krebs, Telvent Canada Ltd. learned on 10 Sep 2012 of a
+  breach of its internal firewall and security systems; the
+  intruder(s) installed malicious software and stole project files
+  for its OASyS SCADA product (a Telvent-customer comment on the same
+  article identifies it as OASyS DNA, the dominant oil/gas-pipeline
+  SCADA platform in North America). Joe Stewart of Dell SecureWorks
+  told Krebs that the website and malware names in Telvent's report
+  "map back to a Chinese hacking team known as the 'Comment Group'";
+  Krebs frames the digital fingerprints as pointing to a Chinese
+  cyber-espionage group, citing Bloomberg's July 2012 Comment Group
+  investigation (IP / trade-secret harvesting from energy firms, law
+  firms and banks). AUSPEX resolves Comment Group to APT1 / Unit
+  61398 (the modern vendor-consensus equivalence; the Mandiant APT1
+  report formalizing it came Feb 2013, after this article). The
+  pattern — supply-chain compromise of an ICS-engineering vendor
+  whose product touches energy critical infrastructure — prefigures
+  the Volt Typhoon / Flax Typhoon civilian-CII pre-positioning
+  pattern by a decade.
 attributions:
   - actor_id: cn/pla/apt1
-    attributing_org: KrebsOnSecurity (vendor reporting)
-    attributing_org_confidence: moderate
+    attributing_org: KrebsOnSecurity / Dell SecureWorks (Joe Stewart)
+    attributing_org_confidence: moderate   # "blamed" / "strongly suggest" / "map back to"
+    attribution_level: named-actor   # the 2012 source reaches a named group ("Comment Group")
     auspex_assessment: concur-with-caveat
     attribution_date: 2012-09-26
     attribution_source_id: krebs/2012-09_telvent-comment-crew
+    notes: |
+      The cited source names only "Comment Group" (Joe Stewart, Dell
+      SecureWorks); it does not say APT1, Comment Crew, or Unit 61398.
+      AUSPEX resolves Comment Group → cn/pla/apt1 via the actor record's
+      vendor-consensus "Comment Group" = equivalent alias. The Mandiant
+      APT1 report that formalized this equivalence postdates this
+      article (Feb 2013).
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/pre-positioning
@@ -57,3 +75,28 @@ targets:
     role: primary
 sources:
   - krebs/2012-09_telvent-comment-crew
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the cited Krebs article (raw captured + hashed; live HTTP 200, archive.org blocked).
+    FACTS confirmed by source: Telvent Canada Ltd.; breach learned 10 Sep 2012; internal firewall/security
+    systems breached; malware installed; project files for OASyS SCADA stolen; Schneider Electric parent;
+    US/Canada/Spain ops; remote customer access indefinitely terminated. "OASyS DNA" + "oil/gas pipeline
+    SCADA, N. America majority share" appear in an on-page Telvent-customer comment (Dale Peterson), not in
+    Krebs's reporting — kept but flagged. ATTRIBUTION: source names only "Comment Group" (Joe Stewart, Dell
+    SecureWorks) at moderate confidence ("blamed"/"strongly suggest"/"map back to"); it does NOT name APT1,
+    Comment Crew, or Unit 61398 (those = later Mandiant-2013 consensus; the report postdates this article).
+    Resolved Comment Group → cn/pla/apt1 via the actor's equivalent "Comment Group" alias; added attribution
+    notes + attribution_level named-actor. CORRECTIONS: removed two unsupported summary claims — "AutoCAD
+    pipeline-engineering drawings" (0 source hits) and "customer authentication material" (0 hits; source
+    says Telvent had NO reason to believe customer-system access was acquired — direct contradiction);
+    softened the "custom backdoors catalogued in the 2013 Mandiant APT1 report" extrapolation and the
+    contemporaneous "Comment Crew / APT1" framing to the consensus-equivalence it actually is. published_on
+    2012-09-26 matches the masthead. doctrine_link kept at plausible (no attesting source; the source's own
+    IP/trade-secret framing IS the competing reading captured in counter_explanation). actor_id resolves and
+    is service-verified (2026-06-24); not stale. FLAG: target orgs/telvent-canada has no registry file —
+    tolerated informational FK gap (validate.ts: "targets/ normalization deferred"), left untouched (out of
+    event+source scope).

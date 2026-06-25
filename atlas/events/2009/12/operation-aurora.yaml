@@ -10,43 +10,83 @@ initial_vector: 0-day
 outcome_summary: |
   IE zero-day (CVE-2010-0249) exploited via spear-phishing and
   watering-hole compromises to deliver the Hydraq / Aurora trojan
-  against Google, Adobe, Juniper, Rackspace, and ~30 other tech
-  and defense firms. Source-code theft confirmed; access to
-  Chinese-dissident Gmail accounts established. Google subsequently
-  withdrew its mainland search engine.
+  against Google and dozens of other firms (Google said >20 companies
+  were attacked; other sources cited >34). Adobe, Juniper Networks,
+  Akamai, and Rackspace publicly confirmed they were targeted; Yahoo,
+  Symantec, Northrop Grumman, Morgan Stanley, and Dow Chemical were
+  also reported as targets. Attackers obtained some of Google's source
+  code and viewed details of two Gmail accounts used by Chinese
+  human-rights activists (limited to subject line / creation date per
+  Google). Google subsequently announced it would stop censoring and
+  later withdrew its mainland China search engine.
 false_flag_risk: none
 summary: |
   Public disclosure by Google on 12 January 2010. McAfee subsequently
-  named "Operation Aurora" after a debug-symbol path found in the
-  malware. Considered the watershed moment for Western recognition
-  of PRC state-sponsored cyber espionage at industrial scale.
-  Operators leveraged a then-zero-day in Microsoft Internet Explorer
-  (CVE-2010-0249) delivered via spear-phishing and watering-hole
-  compromises, dropping the Hydraq / Trojan.Hydraq backdoor (also
-  tracked as the Aurora trojan) to establish persistent remote
-  access. Symantec's later Elderwood reporting attributed the
-  zero-day pipeline to a shared PRC supplier ("Elderwood Platform")
-  feeding multiple MSS-aligned clusters; source-code repositories
-  at the victim firms were the primary collection objective, with
-  Chinese-dissident Gmail accounts accessed as a parallel goal.
+  named "Operation Aurora" after the "Aurora" file-path string found
+  in the attacker's malware binaries (per McAfee). Considered the
+  watershed moment for Western recognition of PRC state-sponsored
+  cyber espionage at industrial scale. Operators leveraged a then-
+  zero-day in Microsoft Internet Explorer (the IE flaw later patched
+  by Microsoft Security Bulletin MS10-002, tracked as CVE-2010-0249;
+  Microsoft acknowledged knowing of the flaw since September 2009)
+  delivered via spear-phishing and watering-hole compromises,
+  dropping the Hydraq / Trojan.Hydraq backdoor (also tracked as the
+  Aurora trojan) to establish persistent remote access. Symantec's
+  later "Elderwood Project" reporting (2012) ties the Hydraq/Aurora
+  activity to a SINGLE group ("a single gang is most likely to be
+  behind the attacks") that systematically re-uses a shared attack
+  infrastructure Symantec termed the "Elderwood platform" — a set of
+  re-usable exploit/delivery components, NOT a third-party supplier
+  feeding multiple clusters. Symantec names no Chinese service and
+  hedges even on statehood (the resources "could only be provided by
+  a large criminal organization, attackers supported by a nation
+  state, or a nation state itself"), relaying only Google's statement
+  that the attacks "originated in China." Per McAfee, source-code
+  repositories at the victim firms were the primary collection
+  objective; per Google's own disclosure, Gmail accounts of Chinese
+  human-rights activists/dissidents were a parallel target.
 attributions:
   - actor_id: cn/unscoped/apt17
-    attributing_org: Mandiant + Symantec + McAfee
+    attributing_org: Symantec (Elderwood) + McAfee
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2010-01-13
     attribution_source_id: symantec/2012-09_elderwood-report
+    notes: |
+      Cited sources reach NAMED-ACTOR / single-group level, not named-unit:
+      Symantec named the "Elderwood" group (single gang re-using the
+      "Elderwood platform"); McAfee named "Operation Aurora"; Wikipedia
+      records the "APT17" designation and Dell Secureworks' "Beijing Group"
+      label. China nexus is high-confidence; the specific Chinese SERVICE is
+      NOT named by either cited source (Symantec names no service and hedges
+      on statehood), which is why the actor is cn/unscoped/apt17 (demoted from
+      cn/mss/apt17 on 2026-06-24). "Mandiant" removed from attributing_org —
+      not supported by either cited source for the Aurora/Elderwood naming.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Access to dissident Gmail accounts was a stated purpose of
-      the campaign per Google's disclosure. The 2017 Intelligence
-      Law had not yet been enacted, but the dissident-suppression
-      doctrinal pattern that the law later codified was operative.
-    attesting_source_id: null
+      Targeting Gmail accounts of Chinese human-rights activists /
+      dissidents was a documented objective of the campaign (Google's
+      disclosure; the Ai Weiwei accounts per the Financial Times). The
+      behaviour is attested, but the cn/national-intelligence-law-2017
+      doctrine post-dates the 2009 operation by eight years, so the LINK
+      to that codifying instrument is necessarily inferred, not attested:
+      the dissident-collection pattern the 2017 law later formalized was
+      already operative. Label held at strongly_inferred for that reason.
+    attesting_source_id: wikipedia/operation-aurora
+    inference_basis:
+      signals:
+        - Google's disclosure stated the attackers sought access to Gmail accounts of Chinese human-rights activists
+        - Symantec's Elderwood Project documents repeated targeting of human-rights / NGO and Hong Kong / Tibet / Taiwan-themed sites by the same group
+      ruled_out: |
+        Pure economic-IP-theft reading (cn/mic2025) does not explain the
+        parallel dissident-Gmail targeting, which is collection against
+        persons, not industrial IP — diaspora/dissident-collection fits
+        that strand specifically.
     counter_explanation: null
     contested: false
     analyst: claude
@@ -57,13 +97,19 @@ doctrine_links:
     reasoning: |
       Tech-sector IP theft (source code at Google, Adobe, Juniper)
       is consistent with the precursor "Strategic Emerging Industries"
-      framing that MIC2025 (2015) operationalized. No primary
-      attesting source.
+      framing that MIC2025 (2015) operationalized. No source states this
+      purpose, and the op pre-dates MIC2025 by ~6 years, so the link is
+      only plausible.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - cn/mic2025 (Strategic Emerging Industries precursor) — the tag shown here
+        - The 12th Five-Year Plan (2011) emphasis on indigenous innovation
+        - Generic pre-doctrinal PRC tech-sector / IP collection, with no specific framework
     counter_explanation: |
-      Pre-MIC2025 by five years; could equally be tagged to the
+      Pre-MIC2025 by ~6 years; could equally be tagged to the
       12th Five-Year Plan or to generic PRC tech-sector collection
-      doctrine.
+      doctrine. No primary attesting source names the purpose.
     contested: false
     analyst: claude
 targets:
@@ -78,3 +124,42 @@ targets:
 sources:
   - symantec/2012-09_elderwood-report
   - wikipedia/operation-aurora
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs Symantec "The Elderwood Project" (2012, raw PDF on disk,
+    sha256 5e255c16…78c7) and Wikipedia "Operation Aurora" (raw HTML,
+    sha256 45155086…2d931). Both sources fully fetchable (snapshots
+    captured in the 2026-06-24 actor-demotion pass; hashes re-verified).
+    FACTS OK: Google disclosure 12 Jan 2010; attacks began mid-2009
+    through Dec 2009; IE zero-day (MS10-002 / CVE-2010-0249, MS knew since
+    Sep 2009); Hydraq/Aurora trojan; spear-phishing + watering-hole;
+    source-code repos the primary objective (McAfee); Chinese-activist
+    Gmail targeting (Google/FT-AiWeiwei); Adobe/Juniper/Akamai/Rackspace
+    publicly confirmed victims. ATTRIBUTION: cited sources reach
+    named-actor/single-group (Symantec "Elderwood" gang; McAfee named the
+    op; Wikipedia records "APT17"/"Beijing Group"); China nexus high-conf
+    but NO Chinese SERVICE named and Symantec hedges on statehood — actor
+    correctly cn/unscoped/apt17 (demoted 2026-06-24). CORRECTIONS:
+    (1) summary over-attributed Symantec — it claimed Elderwood = "shared
+    PRC supplier feeding multiple MSS-aligned clusters"; Symantec actually
+    says a SINGLE gang re-using an attack PLATFORM (toolset), names no
+    service, hedges on statehood — rewritten to source. (2) Removed
+    "Mandiant" from attributing_org (unsupported by cited sources for the
+    Aurora/Elderwood naming). (3) Added attribution_level: named-actor +
+    attribution notes. (4) Created the missing orgs/adobe target registry
+    entry (dangling FK — Adobe is a source-confirmed primary victim).
+    (5) Tightened outcome_summary victim list / ">20 vs >34 companies" to
+    match sources; softened McAfee-naming wording. (6) Added inference_basis
+    to both doctrine_links and set the dissident link's attesting_source_id
+    to the supporting Wikipedia source; both links honestly held at
+    strongly_inferred / plausible (op pre-dates both the 2017 Intel Law and
+    MIC2025, so neither can be attested). NOTE: end_date 2010-01-31 retained
+    though C2 was deactivated ~4 Jan 2010 (attacks reportedly continued into
+    Feb 2010 per Dark Reading) — within the disclosure-month window, not
+    contradicted. CVE-2010-0249 kept as the universally-accepted identifier
+    for the Aurora IE flaw though the bare CVE string is not verbatim in
+    either source (the flaw itself is fully attested).

@@ -35,13 +35,23 @@ attributions:
     service_id: null
     attributing_org: US-CCU / Greylogic (Bumgarner)
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2009-08-01
     attribution_source_id: uscc/2009_georgia-cyber-campaign-report
     notes: |
       No DOJ or government legal attribution exists. Vendor and
       academic assessment of GRU coordination is consensus but
-      not legally proven.
+      not legally proven. The CCDCOE Cyber Law Toolkit source frames
+      it as allegation + Russian denial: Georgia accused Russia,
+      Russia denied but conceded "individuals in Russia or elsewhere
+      had taken it upon themselves," and "several cyber security
+      experts claimed that the attacks had been launched by a group
+      known as the 'Russian Business Network', which had allegedly
+      had close ties to the Russian government." attribution_level is
+      nation (Russia, by allegation/expert claim), not named-unit —
+      no GRU unit is legally named and AUSPEX adopts no specific
+      cluster (actor_id stays null).
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/baltic-and-near-abroad
@@ -54,6 +64,22 @@ doctrine_links:
       Doctrine non-contact-warfare language is a retroactive
       formalization of the operational pattern visible here.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - Target is Georgia, a post-Soviet near-abroad state the Russkiy Mir doctrine names explicitly (baltic-and-near-abroad pillar).
+        - DDoS/defacement timed with the kinetic invasion over South Ossetia; CCDCOE source frames purpose as "part of Russia's warfare in the armed conflict" that "created the time and space for Russia to shape the international narrative."
+        - Effect degraded Georgian government's ability to communicate during the war (Deutsche Telekom rerouting), consistent with near-abroad coercion.
+      ruled_out: >
+        Not strongly_inferred-to-attested: no authoritative source states the
+        Russkiy Mir / near-abroad strategic PURPOSE at the goal level — the
+        sources describe the operation as wartime support but do not articulate
+        the civilizational/near-abroad end the doctrine encodes, and firm state
+        attribution itself is contested (RBN/criminal overlap, Russian denial).
+        Competing reading considered and not adopted: pure patriotic-hacker
+        opportunism with no strategic direction — rejected as the SOLE
+        explanation given the precise timing and target selection against
+        government/MoD/media, but it remains a live enough alternative that the
+        link stays strongly_inferred rather than attested.
     counter_explanation: null
     contested: false
     analyst: claude
@@ -67,3 +93,9 @@ targets:
 sources:
   - uscc/2009_georgia-cyber-campaign-report
   - ccdcoe/georgia-russia-conflict-2008
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: "Canonical Aug-2008 Russia-Georgia war cyber campaign. Of two cited sources: CCDCOE Cyber Law Toolkit fetched + hashed (raw snapshot captured); US-CCU/Bumgarner report UNFETCHABLE (url: null, domain defunct, archive.org blocked) -> level: partial. FACTS verified vs the CCDCOE primary text: DDoS against Georgian government portals, defacements with Saakashvili-Hitler imagery, targets = President/Parliament/Foreign-Affairs/Defence ministries + news agencies + commercial entities, Deutsche-Telekom traffic rerouting, severely-disrupted government comms, and 'one of the first examples of offensive cyber attacks forming part of synchronized kinetic military operations.' Timing confirmed against the public record: a precursor DDoS hit president.gov.ge ~19 Jul 2008; the major war-synchronized DDoS round climaxed 8 Aug 2008; Aug-9 traffic redirection via Russian/Turkish servers corroborates the routing/BGP-manipulation claim; Saakashvili-Hitler defacement by 11 Aug. start_date 2008-08-07 / disclosure 2008-08-08 / end 2008-08-12 are sound for the war-synchronized campaign AUSPEX models. ATTRIBUTION (did NOT over-attest to the Russian state): the CCDCOE source frames it as allegation + Russian denial -- Georgia accused Russia; Russia denied but conceded 'individuals in Russia or elsewhere had taken it upon themselves'; 'several cyber security experts claimed' RBN, 'which had allegedly had close ties to the Russian government.' Firm state/GRU attribution is NOT established; actor_id correctly stays null (the only RBN/pro-Russia actor modeled, ru/gru/xaknet, is a 2022-era group -- wrong era, not a fit). CORRECTIONS: (1) added attribution_level: nation (Russia by allegation/expert claim; no GRU unit legally named, AUSPEX adopts no specific cluster) -- was missing; expanded the attribution note with the CCDCOE verbatim framing. (2) doctrine_link ru/russkiy-mir/baltic-and-near-abroad kept strongly_inferred (NOT upgraded to attested -- no source states the near-abroad strategic purpose at goal level; CCDCOE 'part of Russia's warfare' is proximate, and state attribution itself is contested); added inference_basis {signals, ruled_out} to make the WHY auditable. attesting_source_id stays null (correct for non-attested). (3) BGP-route-manipulation + banking/SQL-injection specifics rest on the unfetchable US-CCU report (banking is a subset of CCDCOE's 'commercial entities'); flagged in both source notes, not stripped (independently corroborated). FK NOTE (out of single-event scope, not an error): targets orgs/georgia-government, orgs/georgia-banking-sector, orgs/georgia-media have no targets-registry entries -- but orgs/ target FK gaps are gate-INFORMATIONAL corpus-wide ('targets/ normalization deferred' in validate.ts), so this is a known tolerated gap, not a per-event defect."
