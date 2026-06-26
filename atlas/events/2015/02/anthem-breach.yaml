@@ -22,10 +22,12 @@ summary: |
   a spear-phishing campaign against an Anthem subsidiary in early
   2014 that delivered the Sakula / Mivast remote-access trojan,
   followed by lateral movement using valid credentials, Mimikatz-
-  style credential dumping, and a custom installer-Backdoor.Mivast
-  family with shared certificate infrastructure (the Hurricane
-  Panda / DTOPTOOLZ code-signing certs Symantec tied to Black
-  Vine). The intruders ran a slow, stealthy bulk-PII extraction
+  style credential dumping, and a Backdoor.Mivast / Sakula family
+  with shared certificate infrastructure (the Mivast and Sakula
+  payloads were code-signed with a certificate stolen from
+  DTOPTOOLZ, a Korean software firm — the same cert Symantec tied
+  to Black Vine and that also appears in the OPM breach). The
+  intruders ran a slow, stealthy bulk-PII extraction
   of approximately 78.8 million member records — names, dates of
   birth, Social Security numbers, employment data — staged via
   internal SQL queries and exfiltrated to attacker-controlled
@@ -34,9 +36,20 @@ attributions:
   - actor_id: cn/unscoped/deep-panda
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-05-09
     attribution_source_id: doj/2019_anthem-fujie-wang
+    notes: |
+      DOJ named the perpetrators only as "a Chinese national"
+      (Fujie Wang) and "other members of [an] extremely
+      sophisticated hacking group operating in China" — a named
+      individual + named (vendor) cluster (Deep Panda / Black
+      Vine), but NO Chinese intelligence service or PLA/ministry
+      unit. Hence attribution_level: named-actor (not named-unit),
+      and the actor sits at cn/unscoped/deep-panda — China nexus
+      source-supported, service placement not (the cited
+      indictment names none). See the source's AUDIT note.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
@@ -61,3 +74,43 @@ targets:
     role: primary
 sources:
   - doj/2019_anthem-fujie-wang
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: |
+    Audited vs the sole cited source doj/2019_anthem-fujie-wang (DOJ press release, 9 May 2019).
+    level=partial: the canonical justice.gov URL is Akamai-Bot-Manager-gated (fresh curl this
+    session returned an 8KB challenge/HTTP-400 shell; WebFetch 403 per the prior audit) and
+    archive.org is blocked here, so no byte-for-byte DOM of the primary could be captured. The
+    pre-existing raw_snapshot (verbatim attribution-bearing release text, content_sha256
+    bb5a83121892d7af989f9ab00559fa43ef74e743735aab0794b01d6d088bb1ea) was re-verified intact this
+    session, and every load-bearing claim was independently corroborated against live mirrors
+    (CyberScoop, BleepingComputer) plus contemporaneous Symantec/Krebs reporting (via Wikipedia,
+    krebsonsecurity.com, CSO Online).
+    FACTS confirmed: ~78.8M persons (DOJ "approximately 78.8 million"; 37.5M->78.8M revision
+    Feb 2015); data = names/DOB/SSN/addresses/health ID numbers/employment+income (PII), and per
+    Anthem "users' medical information and financial data were not compromised" (no clinical
+    records, no credit-card data) — consistent with the outcome_summary's "PII + employment".
+    start_date 2014-02-18 supported (state-insurance investigation). VECTOR confirmed as
+    SPEAR-PHISHING, not watering-hole: Symantec/Black-Vine reporting states Black Vine "bucked the
+    trend of using watering-hole attacks (no evidence of such was found) and instead targeted
+    Anthem's technical staff with spear-phishing emails" — so initial_vector: phishing is correct.
+    Sakula/Mivast RAT + DTOPTOOLZ-stolen code-signing cert (shared with OPM) confirmed.
+    ATTRIBUTION: the DOJ release names NO Chinese intelligence service — only "a Chinese national"
+    (Fujie Wang) and an "extremely sophisticated hacking group operating in China"; "Ministry of
+    State Security"/"MSS"/any PLA-ministry unit are absent (corroborated: CyberScoop, BleepingComputer
+    name no service). Actor cn/unscoped/deep-panda resolves (atlas/actors/cn/deep-panda.yaml),
+    correctly demoted from cn/mss on 2026-06-24; not stale.
+    CORRECTIONS: (1) summary — removed the "Hurricane Panda / DTOPTOOLZ" conflation; no source ties
+    the DTOPTOOLZ cert to Hurricane Panda (a distinct CrowdStrike cluster). Symantec tied that stolen
+    DTOPTOOLZ cert to Black Vine/Deep Panda (and it recurs in OPM); rewrote accordingly. (2) Added
+    attribution_level: named-actor (DOJ reached a named individual + named vendor-cluster, NOT a
+    named state unit) + an explanatory attribution note.
+    DOCTRINE LINK unchanged: cn/mcf/bulk-pii-humint-enabling kept strongly_inferred (correctly NOT
+    attested) — the indictment establishes the bulk-PII/espionage objective but names neither
+    Military-Civil Fusion nor the bulk-PII-HUMINT strategic goal; inference_basis shape
+    (signals+ruled_out) is correct for strongly_inferred. published_on 2019-05-09 matches the
+    release ("Thursday, May 9, 2019") — no change. PRESERVED source tier (primary) and the existing
+    raw_snapshot/sha; added nothing new to the source file this session.
