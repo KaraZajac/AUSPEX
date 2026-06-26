@@ -1,15 +1,90 @@
-# PROVISIONAL backfill import 2026-05-30 (theory-test). Service placement & aliases = QC.
 id: criminal/cordial-spider
-primary_service_id: null
+primary_service_id: null  # stateless e-crime crew (The Com); no documented state nexus
 additional_service_ids: []
-canonical_name: "CORDIAL SPIDER"
-aliases: []
+canonical_name: "Cordial Spider"
+aliases:
+  - alias: Cordial Spider
+    assigning_org: CrowdStrike
+    confidence: equivalent
+  - alias: CL-CRI-1116
+    assigning_org: Palo Alto Unit 42
+    confidence: equivalent
+    note: |
+      Unit 42 temporary-cluster designation (CL- prefix). Per CyberScoop
+      (2026-04-30) "Cordial Spider, which is also tracked as CL-CRI-1116
+      and UNC6671"; Unit 42 / RH-ISAC reported the same retail/hospitality
+      activity the week before CrowdStrike's report.
+  - alias: UNC6671
+    assigning_org: Mandiant (Google Threat Intelligence)
+    confidence: equivalent
+    note: |
+      Mandiant uncategorized-cluster designation. Corroborated in the MISP
+      galaxy threat-actor.json (uuid fddcdeb1-0528-4770-ad2e-f61718e1dc04,
+      origin Mandiant): credential-harvesting via vishing impersonating IT
+      staff, victim-branded credential-capture site, Okta account access,
+      PowerShell exfil from SharePoint/OneDrive, harassment-based extortion,
+      Tucows domain registration. No country / state-sponsor field (stateless).
+active_since: 2025-10-01  # CrowdStrike: active "since at least October 2025"
+active_until: null
 status: active
 mission:
   - financial
+target_sector_ids:
+  - academic
+  - transport/aviation
+  - retail
+  - hospitality
+  - manufacturing/automotive
+  - finance
+  - legal
+  - ict
 ttp_summary: |
-  PROVISIONAL stub from corpus backfill. Original analyst hint:
-  NEW: CORDIAL SPIDER / SNARKY SPIDER
-default_doctrine_alignment_ids: []
+  Financially-motivated data-theft-and-extortion e-crime crew affiliated
+  with "The Com" (the English-language Comm cybercrime community) and
+  closely aligned with Scattered Spider — CrowdStrike frames it (with
+  sibling Snarky Spider) as a "new wave"/"new generation" of e-crime
+  actors running the Scattered Spider playbook with lower technical
+  sophistication. Tradecraft: voice-phishing (vishing) plus text and
+  email lures directing targeted employees to phishing pages spoofing
+  their employer's legitimate single sign-on (SSO) / primary identity
+  provider, capturing credentials, session keys and tokens; uses that
+  foothold for broad lateral movement across the victim's entire SaaS
+  ecosystem (Okta account access; PowerShell exfil from SharePoint /
+  OneDrive per Mandiant/UNC6671). Monetization is data-theft-for-extortion
+  (Unit 42: typically seven-figure demands); non-paying victims are hit
+  with DDoS attacks. Operates the BlackFile data-leak site (offline as of
+  the 2026-04 reporting). Uses residential-proxy networks (Mullvad, NetNut,
+  9Proxy, Infatica, NSOCKS) to evade IP-based detection. Primarily targets
+  U.S.-based organizations across academic, aviation, retail, hospitality,
+  automotive, financial-services, legal and technology sectors.
+notes: |
+  De-provisionalized 2026-06-25 (LLM audit, claude-opus-4.8/max) from the
+  2026-05-30 backfill stub: populated aliases (CL-CRI-1116, UNC6671), a
+  real ttp_summary, target sectors, active_since, and the MISP external_ref,
+  grounded in the cited CyberScoop/CrowdStrike source (Matt Kapko, 2026-04-30,
+  reporting a CrowdStrike Counter Adversary Operations report shared exclusively
+  pre-release; raw snapshot captured + sha256) and corroborated by the MISP
+  galaxy threat-actor.json UNC6671 cluster (origin Mandiant).
+  THE COM / SCATTERED SPIDER LINEAGE: Cordial Spider is part of "The Com" —
+  the loose English-language Comm cybercrime community — and CrowdStrike
+  describes it and Snarky Spider as a new wave of e-crime crews "closely
+  aligned with Scattered Spider and linked to other subsets of The Com,
+  including SLSH and ShinyHunters." The wider Com ecosystem this crew sits in
+  is documented on the sibling criminal/ actor records criminal/scattered-spider
+  (the canonical Anglophone collective whose playbook Cordial Spider mirrors),
+  criminal/shinyhunters (the SaaS-data-theft Com subset Mandiant ties to the
+  same UNC6671 activity), and criminal/lapsus (the earlier youth-led Com-adjacent
+  extortion crew) — named here as prose lineage only, not as foreign keys.
+  PLACEMENT: stateless e-crime, kept in criminal/ with primary_service_id: null
+  and default_doctrine_alignment_ids: [] — no state nexus in the source, and the
+  MISP UNC6671 cluster carries no country / cfr-suspected-state-sponsor field.
+  Sibling crew criminal/snarky-spider remains a PROVISIONAL stub.
+default_doctrine_alignment_ids: []  # stateless e-crime: no attacker-rationale doctrine
 sources:
   - cyberscoop/2026-04_cordial-spider-and-snarky-spider-com-ali
+
+external_refs:
+  misp_galaxy: fddcdeb1-0528-4770-ad2e-f61718e1dc04
+  misp_galaxy_name: UNC6671
+  misp_refs:
+    - https://cloud.google.com/blog/topics/threat-intelligence/expansion-shinyhunters-saas-data-theft/
