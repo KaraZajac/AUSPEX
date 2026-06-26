@@ -9,14 +9,21 @@ incident_type:
   - influence-operation
 initial_vector: unknown  # IC-sourced public reporting does not specify intrusion vector
 outcome_summary: |
-  On 23–24 May 2017, the Qatar News Agency (QNA) and the official
-  Qatari government Twitter account were compromised and used to
-  publish fabricated quotes attributed to Qatari Emir Tamim bin
-  Hamad Al Thani — statements praising Iran and Hamas. Saudi
-  Arabia, UAE, Bahrain, and Egypt cited the (fabricated)
-  statements as justification for the diplomatic and economic
-  blockade of Qatar announced 5 June 2017, which lasted until
-  the January 2021 Al-Ula Declaration.
+  In the early hours of 24 May 2017 (Qatar's Government
+  Communications Office confirmed the breach that day; the
+  fabricated story posted at ~00:13), the Qatar News Agency (QNA)
+  website and the official Qatari government social-media accounts
+  were compromised and used to publish fabricated quotes
+  attributed to Qatari Emir Tamim bin Hamad Al Thani — per the
+  Washington Post, praising Hamas and calling Iran an "Islamic
+  power" (Qatari/contemporaneous reporting adds fabricated remarks
+  on Hezbollah and on "good" relations with Israel). Per US
+  intelligence officials, senior UAE officials had discussed the
+  plan the day before, on 23 May (start_date). Saudi Arabia, the
+  UAE, Bahrain, and Egypt cited the (fabricated) statements as
+  justification for the diplomatic and economic blockade of Qatar
+  announced 5 June 2017, which lasted until the January 2021
+  Al-Ula Declaration.
 
   On 16 July 2017, the Washington Post (DeYoung and Nakashima),
   citing US intelligence officials, attributed the QNA
@@ -42,29 +49,62 @@ attributions:
     service_id: ae/state-security
     attributing_org: US Intelligence Community (via Washington Post)
     attributing_org_confidence: moderate
+    attribution_level: nation  # WaPo/US-IC attribute the orchestration to the UAE *state*; explicitly unclear whether the UAE did it itself or contracted it out — no named operator cluster or unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2017-07-16
     attribution_source_id: wapo/2017-07-16_qatar-uae-hack
     notes: |
-      Tier-2 attribution via Washington Post sourcing on US IC
-      officials. UAE denial on the record. AUSPEX models the
-      service customer side as ae/state-security; no specific
-      named operator cluster (DarkMatter / Project Raven
-      involvement has been speculated in subsequent academic
+      Tier-2 attribution via Washington Post sourcing on unnamed
+      US IC officials; the source explicitly hedges that it
+      "remains unclear whether the UAE carried out the hacks
+      itself or contracted to have them done." UAE denial on the
+      record (Anwar Gargash, Minister of State for Foreign
+      Affairs: the report "is simply not true"; Ambassador Yousef
+      al-Otaiba: "no role whatsoever in the alleged hacking").
+      AUSPEX models the service customer side as ae/state-security;
+      no specific named operator cluster (DarkMatter / Project
+      Raven involvement has been speculated in subsequent academic
       analysis but is not pinned by public reporting). Confidence
       capped at moderate accordingly.
 doctrine_links:
   - doctrine_id: ae/regional-influence-realigned
     pillar_id: ae/regional-influence-realigned/qatar-pre-2021
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      US IC officials per the Washington Post directly framed the
-      operation as UAE-state action against Qatar — i.e., the
-      attributing organization explicitly named the strategic
-      goal (regional pressure on Qatar). Meets the AUSPEX
-      attested bar.
+      The Washington Post, citing US intelligence officials,
+      attributes the QNA compromise to the UAE and states the
+      operation's *proximate* purpose — that the UAE "arranged
+      for Qatari government social media and news sites to be
+      hacked ... in order to post fiery but false quotes" of the
+      Qatari Emir — and frames the act as having "spark[ed]
+      regional upheaval" (the June-2017 GCC blockade). The
+      regional-influence / pressure-on-Qatar *strategic* goal the
+      doctrine encodes is AUSPEX's inference from that consequence
+      and from the well-established UAE–Qatar rivalry: the cited
+      source documents the act and its immediate intent (inject
+      false statements) but does not quote US IC officials
+      articulating a UAE strategic objective of regional
+      realignment. Graded strongly_inferred, not attested — the
+      same boundary the pillar's own guidance flags ("rarely the
+      subject of attributing-source explicit goal articulation").
+      Held conservative and NOT upgraded.
     attesting_source_id: wapo/2017-07-16_qatar-uae-hack
+    inference_basis:
+      source_id: wapo/2017-07-16_qatar-uae-hack
+      signals:
+        - "WaPo/US-IC: the UAE 'arranged for Qatari government social media and news sites to be hacked ... in order to post fiery but false quotes' attributed to Qatar's Emir (the operation's proximate purpose)"
+        - "Headline + lede frame the hack as 'sparking regional upheaval' — the false quotes praising Iran/Hamas were cited by Saudi Arabia, the UAE, Egypt and Bahrain to cut ties with Qatar on 5 June 2017 (strategic consequence consistent with a regional-pressure reading)"
+        - "Well-documented pre-2021 UAE–Qatar rivalry over Iran ties, the Muslim Brotherhood, and Al Jazeera supplies the strategic context any competing reading would have to displace"
+      ruled_out: "a non-strategic / purely-disruptive reading — the operation planted specific pro-Iran/pro-Hamas/pro-Israel false statements of the Emir whose only plausible payoff was the regional-isolation pretext they in fact supplied; an apolitical or opportunistic motive does not survive. The cited source nonetheless stops short of stating the regional-realignment goal in the IC's own words, so the link is inferred, not attested."
+    counter_explanation: |
+      Attribution itself is contested: it rests on unnamed US
+      intelligence officials via the Washington Post (UAE denied
+      on the record), and the source does not state the UAE's
+      strategic objective — only that it orchestrated the hack to
+      post false quotes. The strategic-purpose link is therefore
+      AUSPEX's inference, which is why contested remains true and
+      the grade is held at strongly_inferred.
     contested: true
     analyst: claude
 targets:
@@ -76,3 +116,67 @@ targets:
     role: primary
 sources:
   - wapo/2017-07-16_qatar-uae-hack
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: |
+    Audited against the single cited WaPo primary (DeYoung &
+    Nakashima, 16 Jul 2017). The WaPo URL is UNFETCHABLE by tooling
+    — curl returns HTTP 000 (connection refused at the WaPo edge),
+    WebFetch returns HTTP 403, and archive.org is blocked by
+    protocol — so no raw_snapshot/content_sha256 could be captured
+    (both left null); hence level: partial. The article's key text
+    was cross-checked VERBATIM against four independent renderings
+    that quote it (Al Jazeera 17 Jul, Daily Sabah 17 Jul, US News/
+    Reuters 17 Jul, Middle East Monitor 17 Jul) plus the Qatari
+    primary (Peninsula / Govt Communications Office, 24 May 2017).
+
+    FACTS ✓ — QNA website + official Qatari govt social-media
+    accounts compromised; fabricated Emir quotes published in the
+    early hours of 24 MAY 2017 (~00:13), confirmed same day by
+    Qatar's GCO ("hacked by an unknown entity"; "false statement
+    attributed to His Highness"). Corrected the outcome_summary's
+    onset framing: the false statements were PUBLISHED 24 May; 23
+    May is when senior UAE officials *discussed* the plan per US IC
+    ("the day before they occurred") — start_date 2017-05-23 kept
+    as the planning/onset date, end_date 2017-05-24 correct. Quotes
+    per WaPo: praising Hamas + Iran an "Islamic power" (added the
+    Hezbollah / "good relations with Israel" fabrications attested
+    by the Qatari + contemporaneous record). Blockade by KSA/UAE/
+    BHR/EGY announced 5 Jun 2017 ✓; Al-Ula Jan 2021 ✓.
+
+    ATTRIBUTION (contested) ✓ — WaPo cites UNNAMED US intelligence
+    officials attributing the orchestration to the UAE; explicitly
+    hedged ("remains unclear whether the UAE carried out the hacks
+    itself or contracted to have them done"). Added the missing
+    attribution_level: nation (state-level, no named operator/unit)
+    and folded the on-record UAE denials (Gargash "simply not
+    true"; al-Otaiba "no role whatsoever") into the attribution
+    note. attributing_org_confidence: moderate / concur-with-caveat
+    unchanged — correct for single-source unnamed-IC reporting.
+
+    DOCTRINE — DOWNGRADED the ae/regional-influence-realigned /
+    qatar-pre-2021 link `attested` → `strongly_inferred`
+    (over-attestation). The cited source states the act and its
+    PROXIMATE purpose (UAE "arranged ... to post fiery but false
+    quotes") and frames the hack as "sparking regional upheaval"
+    (the consequence), but does NOT quote US IC officials
+    articulating the UAE's STRATEGIC objective of regional pressure/
+    realignment — that is AUSPEX's inference. Rewrote the reasoning,
+    added inference_basis (signals[] + ruled_out), retained
+    attesting_source_id as the supporting source, added
+    counter_explanation, contested kept true. (The pillar's own
+    guidance already notes these links are "rarely the subject of
+    attributing-source explicit goal articulation.")
+
+    published_on 2017-07-16 = disclosure_date ✓; FK targets
+    (sectors/government, sectors/media/journalism), service
+    ae/state-security, doctrine + pillar all resolve.
+
+    FLAG (out of scope — not edited): the doctrine record
+    atlas/doctrines/ae/regional-influence-realigned.yaml carries the
+    SAME "27 May 2017" date error (pillar summary) that this audit
+    corrected in the source file — the QNA false statements posted
+    24 May, not 27 May. Pillar text should be fixed to 24 May.

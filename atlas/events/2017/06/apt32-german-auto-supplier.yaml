@@ -8,14 +8,20 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Bayerischer Rundfunk and Norddeutscher Rundfunk published a
-  joint investigation in July 2019 tying OceanLotus / APT32 to
-  a multi-year intrusion at a major German automotive sector
-  victim — covered alongside the contemporaneous BMW and Daimler
-  intrusions. The reporting drew on intelligence-service briefings
-  and on tradecraft analysis matching the Toyota Australia and
-  Hyundai victim cluster. Tooling included the KerrDown loader
-  and Cobalt Strike beacons.
+  Bayerischer Rundfunk and Norddeutscher Rundfunk reporting tied
+  OceanLotus / APT32 to a sustained intrusion at a major German
+  automotive-sector victim — covered alongside the contemporaneous
+  BMW (and Hyundai) intrusions broken by the same BR/NDR team. The
+  reporting drew on intelligence-service briefings and on tradecraft
+  analysis matching the wider 2019 OceanLotus automotive cluster.
+  Tooling included Cobalt Strike beacons.
+  # AUDIT (2026-06-25, claude-opus-4.8/max): removed "KerrDown loader" —
+  # KerrDown was first observed in the wild early 2018 (Unit 42, Feb 2019),
+  # so it cannot be the tooling of a 2016-2017 intrusion; only Cobalt Strike
+  # is corroborated for the BR/NDR auto cluster. Changed "BMW and Daimler"
+  # to "BMW (and Hyundai)": the well-documented BR/NDR pair is BMW+Hyundai
+  # (SecurityWeek/CyberScoop/Security Affairs, Dec 2019); a distinct Daimler
+  # intrusion is unverified. "July 2019" removed — see qc notes (date unsupported).
 false_flag_risk: none
 summary: |
   Part of the rolling 2017-2019 OceanLotus automotive cluster.
@@ -29,28 +35,94 @@ attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: BR / NDR (drawing on German intel briefings)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2019-07-08
     attribution_source_id: br-ndr/2019-07-08_oceanlotus-german-auto
     notes: |
       Attribution is journalism-reported intelligence-service
       assessment rather than a primary government statement
-      naming the perpetrator on the record.
+      naming the perpetrator on the record. Reaches named-actor
+      (OceanLotus / APT32, Vietnam-nexus) but NO Vietnamese service
+      is named — consistent with the vn/unscoped/apt32 actor record
+      (whole-actor audit 2026-06-24: every cited source stops at the
+      Vietnam nation/named-actor level; service lane unattested).
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: vn/industrial-upgrading-cyber-collection/automotive
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      German automotive supplier targeting fits the documented
-      OceanLotus automotive cluster (Toyota, Hyundai, BMW,
-      Daimler) and the Resolution 23-NQ/TW automotive-priorities
-      framing.
+      German automotive-sector targeting fits the documented 2019
+      OceanLotus automotive cluster (Toyota, Hyundai, BMW) and the
+      Resolution 23-NQ/TW automotive-priorities framing. FireEye
+      assessed (moderate confidence) the cluster supported "the
+      Vietnamese government's stated domestic vehicle and auto part
+      manufacturing goals" — goal-in-substance, but that source is
+      not cited here, so the link stays strongly_inferred.
     contested: false
     analyst: claude
 targets:
+  # NOTE (2026-06-25 audit): orgs/german-automotive-tier1-supplier has no
+  # targets/ registry file — but that is the project-wide deferred convention
+  # (validate.ts: "Target FK gaps (informational — targets/ normalization
+  # deferred)"; 401 unique orgs/ slugs referenced, ~108 registered, anonymous
+  # victims like orgs/unnamed-asian-conglomerate are unregistered too). Not an
+  # error; left as-is per "touch only this event + its sources."
   - target_id: orgs/german-automotive-tier1-supplier
     country: de
     role: primary
 sources:
   - br-ndr/2019-07-08_oceanlotus-german-auto
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial
+  notes: |
+    APT32 / OceanLotus (Vietnam-nexus) intrusion in the German automotive
+    sector, cited to a single BR/NDR source whose URL is null (404, no
+    wayback) — UNFETCHABLE, no raw_snapshot captured, no URL fabricated.
+    Core actor + sector CONFIRMED against multiple independent mirrors
+    (SecurityWeek 2019-12; CyberScoop "Vietnam's premier hacking group
+    ramps up targeting of global car companies"; Security Affairs 94805;
+    BleepingComputer): APT32/OceanLotus, Vietnam-aligned, ran a 2019
+    automotive-IP collection cluster using Cobalt Strike; FireEye assessed
+    (moderate confidence) it supported "the Vietnamese government's stated
+    domestic vehicle and auto part manufacturing goals." That ties cleanly
+    to Resolution 23-NQ/TW (2018, automotive indigenization) + VinFast —
+    doctrine link vn/industrial-upgrading-cyber-collection/automotive holds.
+    LEVEL partial — three event-specific claims could NOT be corroborated and
+    conflict with the well-documented record; left in place but flagged for
+    Kara (not fabricating corrections):
+    (1) DATE. disclosure/attribution/source published_on = 2019-07-08. The
+    major BR/NDR OceanLotus auto investigation was DECEMBER 2019 (Dec 6-10,
+    widely mirrored). No independent trace of a distinct 8-Jul-2019 BR/NDR
+    report survives link-rot. The 2017-06 end_date / 2016-01 start_date
+    (multi-year 2016-2017 sustained intrusion) are likewise uncorroborated;
+    the documented German-carmaker intrusions are spring-2019. This event may
+    be the same underlying reporting as br-ndr/2019-12-06_oceanlotus-bmw-hyundai,
+    back-projected — human should reconcile or merge.
+    (2) VICTIM. A distinct, named German "tier-1 supplier" with a sustained
+    2016-2017 intrusion is not in any locatable source; documented victims are
+    OEMs (BMW + Hyundai; Toyota via fake domains). FireEye noted "5-10
+    automotive-sector orgs" got lures since Feb 2019, which is the only basis
+    for an unnamed supplier — hence the anonymous orgs/ slug.
+    CORRECTIONS MADE (factual, in place): removed "KerrDown loader" from
+    outcome_summary — KerrDown first appeared early 2018 (Unit 42), so it is
+    anachronistic for a 2016-2017 op (only Cobalt Strike corroborated);
+    de-claimed "VW"/"Daimler" → BMW(+Hyundai), the corroborated pair (VW and a
+    separate Daimler intrusion are unverified); source title de-claimed VW;
+    added AUDIT note to the source documenting unfetchable + date discrepancy.
+    ATTRIBUTION: added attribution_level: named-actor (was missing). Reaches
+    named-actor (OceanLotus/APT32) but NO Vietnamese service named — matches
+    the vn/unscoped/apt32 actor record (demoted from vn/tc2 on 2026-06-24:
+    no cited source names a service). auspex_assessment concur-with-caveat is
+    apt given the single unfetchable journalism source. actor_id resolves and
+    is CURRENT (not stale). DOCTRINE LINK strongly_inferred, no attesting_source_id
+    — honest, no over-attestation (FireEye goal-in-substance source not cited
+    here, so not upgraded to attested). Doctrine + pillar FKs resolve;
+    Resolution 23-NQ/TW reference is consistent with the doctrine record (23 =
+    industrial/automotive; distinct from 29-NQ/TW = cyber/regime-stability).
+    Event NOT in the backfill cohort (dates to initial commit). false_flag_risk
+    none and incident_type intrusion+data-theft are supported.

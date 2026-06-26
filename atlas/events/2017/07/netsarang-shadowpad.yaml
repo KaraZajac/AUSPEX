@@ -19,30 +19,71 @@ summary: |
   PlugX-lineage successor delivered as an obfuscated shellcode
   loader with an encrypted "Root" plugin and additional plugins
   loaded into memory via a linked-list structure, extensible at
-  C2 runtime. Attributed to APT41 / Barium by Kaspersky and
-  Microsoft; the same ShadowPad family is subsequently observed
-  in operations tied to Tick, Tonto Team, Fishmonger, and other
-  MSS-linked clusters. The NetSarang Xmanager / Xshell server-
+  C2 runtime. Kaspersky's disclosing 2017 report named NO actor or
+  nation ("Attribution is hard"), noting only a PlugX/Winnti
+  code-technique link "allegedly developed by Chinese-speaking
+  actors"; the NetSarang victim was attributed specifically to
+  BARIUM (an APT41 sub-group) only later, by SentinelLabs (2021).
+  The same ShadowPad family is subsequently observed in operations
+  tied to Tick, Tonto Team, Fishmonger, and other China-nexus
+  clusters. The NetSarang Xmanager / Xshell server-
   management software was trojanized via a build-environment
   compromise and pushed to enterprise IT administrators worldwide
   as the staging foothold for selective second-stage exploitation.
 attributions:
-  - actor_id: cn/mss/apt41
-    attributing_org: Kaspersky + Microsoft
-    attributing_org_confidence: high
+  # Disclosure (2017): Kaspersky named NO actor/nation — "Attribution is hard."
+  - actor_id: null
+    attributing_org: Kaspersky
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2017-08-15
     attribution_source_id: kaspersky/2017-08_shadowpad-netsarang
+    notes: |
+      Kaspersky's disclosing report (15 Aug 2017) explicitly declined
+      attribution — verbatim: "Who is behind this attack? Attribution is
+      hard and the attackers were very careful to not leave obvious
+      traces. However certain techniques were known to be used in another
+      malware like PlugX and Winnti, which were allegedly developed by
+      Chinese-speaking actors." It named no nation, no actor, no APT41 and
+      no Microsoft co-attribution (Microsoft is NOT a source on this
+      event). Only a PlugX/Winnti code-family signal, hedged ("allegedly").
+  # Attribution latency: NetSarang→BARIUM/APT41 reached named-actor only in 2021.
+  - actor_id: cn/mss/apt41
+    attributing_org: SentinelLabs (SentinelOne)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2021-08-19
+    attribution_source_id: sentinellabs/shadowpad-masterpiece
+    notes: |
+      SentinelLabs' 2021 ShadowPad study attributes the NetSarang victim
+      specifically to BARIUM — "BARIUM (Rose and Zhang Haoran) were one of
+      the earliest threat groups with access to ShadowPad. Some of their
+      victims included NetSarang, ASUS, and allegedly, CCleaner" — and
+      names BARIUM/LEAD as the sub-groups under "APT41 ... the accepted
+      naming convention." The same report stresses ShadowPad is privately
+      sold across ≥5 clusters, so "any claim made publicly on the
+      attribution of ShadowPad users requires careful validation"; hence
+      moderate, not high. "APT41" did not exist in 2017 (coined by
+      FireEye/Mandiant, Aug 2019), so the actor_id is the modern
+      consolidated cluster, not a 2017 attribution. cn/mss placement of
+      the actor was QC-verified separately (DOJ Sept-2020 indictment).
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: cn/mic2025/next-gen-it
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
       IT-administrator supply-chain compromise positions the
       attacker for selective second-stage targeting of MIC2025-
       relevant downstream customers; consistent with the IT /
-      software pillar.
+      software pillar. Downgraded from strongly_inferred 2026-06-25
+      (claude-opus-4.8/max): no cited source states a MIC2025/next-gen-IT
+      purpose for the NetSarang op, and an indiscriminate IT-admin
+      supply-chain seed admits more than one strategic reading (broad
+      espionage access, IP collection, or financial second-stage), so
+      no single reading dominates — plausible, not strongly_inferred.
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -64,3 +105,63 @@ targets:
 sources:
   - kaspersky/2017-08_shadowpad-netsarang
   - sentinellabs/shadowpad-masterpiece
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Canonical ShadowPad debut — NetSarang Xmanager/Xshell supply-chain
+    compromise, disclosed by Kaspersky (Securelist, 15 Aug 2017). Both
+    cited sources fetched HTTP 200 + hashed (Kaspersky 193,998 B sha256
+    f62a3095…; SentinelLabs 330,198 B sha256 f566049f…).
+
+    FACTS — all CONFIRMED against the primary Kaspersky report: nssock2.dll
+    backdoor embedded in the NetSarang code library (malicious DLL compiled
+    Thu Jul 13 2017); trojanized builds dated Jul 17 2017 (Xmanager
+    Enterprise 5 B1232, Xmanager 5 B1045, Xshell 5 B1322, Xftp/Xlpd);
+    DNS-based C2 — activation via a crafted DNS TXT record, monthly DGA
+    (e.g. nylalobghyhirgh[.]com for Aug 2017); modular/tiered platform with
+    encrypted layers + per-victim VFS; build-server compromise ("attackers
+    either modified source codes or patched software on the build servers").
+    start_date 2017-07-17 = the build date (matches). published_on
+    2017-08-15 = page datePublished metadata (exact).
+
+    ATTRIBUTION CORRECTION (key finding — prior record over-attested):
+    the record claimed "Attributed to APT41 / Barium by Kaspersky and
+    Microsoft" with attribution_source_id = the 2017 Kaspersky post. FALSE.
+    Kaspersky 2017 verbatim: "Attribution is hard ... techniques were known
+    to be used in another malware like PlugX and Winnti, which were
+    allegedly developed by Chinese-speaking actors" — NO actor, NO nation,
+    NO APT41, NO Barium; and Microsoft is not even a source on this event.
+    Rewrote attributions to model the latency honestly: (1) actor_id null,
+    Kaspersky, low / activity-cluster at disclosure (PlugX/Winnti code link
+    only); (2) actor_id cn/mss/apt41, SentinelLabs (2021), moderate /
+    named-actor — SentinelLabs ties the NetSarang victim to BARIUM (an APT41
+    sub-group) but cautions ShadowPad is privately sold across ≥5 clusters,
+    so moderate not high. attribution_date moved 2017-08-15 → 2021-08-19
+    (APT41 was coined Aug 2019; NetSarang→APT41 traces to 2021). Summary
+    "Attributed to APT41/Barium by Kaspersky and Microsoft" rewritten to
+    reflect Kaspersky's non-attribution + the later SentinelLabs link.
+    actor_id cn/mss/apt41 KEPT (SentinelLabs supports it; cn/mss verified
+    separately on the DOJ Sept-2020 indictment).
+
+    DOCTRINE LINKS: cn/mic2025/next-gen-it downgraded strongly_inferred →
+    plausible (no source states a MIC2025 purpose for this op; an
+    indiscriminate IT-admin supply-chain seed admits multiple strategic
+    readings). cn/mcf already plausible — kept. Neither is attested, both
+    attesting_source_id null — no over-attestation in the WHY layer.
+
+    FKs: actor cn/mss/apt41 resolves (not stale); doctrines cn/mic2025 +
+    pillar next-gen-it and cn/mcf resolve. NOTE (not an error, left as-is):
+    targets[].target_id orgs/netsarang has no registry file — it is one of
+    the 401 deferred orgs/ target-FK gaps the engine reports as
+    informational ("targets/ normalization deferred"), consistent with the
+    sibling CCleaner event's orgs/piriform-ccleaner. Not fabricating a
+    registry entry under this single-event scope. end_date 2017-08-04 is a
+    bounded-end estimate (NetSarang pulled the software shortly after
+    Kaspersky's notification); not stated verbatim in-source but plausible
+    and pre-existing — left untouched.
+
+    level: full — facts + attribution independently confirmed against both
+    cited sources with raw evidence captured + hashed.

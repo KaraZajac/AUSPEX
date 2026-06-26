@@ -1,6 +1,6 @@
 id: 2017-05/fireeye-apt32-disclosure
 name: FireEye discloses APT32 — first canonical Vietnamese-aligned APT attribution
-start_date: 2014-01-01  # earliest activity FireEye dates to
+start_date: 2014-01-01  # FireEye dates corporate targeting to "since at least 2014"; it dates dissident/journalist/government targeting to "since at least 2013" (per the 2017 report)
 disclosure_date: 2017-05-14
 end_date: null
 incident_type:
@@ -9,13 +9,16 @@ incident_type:
 initial_vector: phishing
 outcome_summary: |
   FireEye (now Mandiant) publicly named APT32 / OceanLotus as a
-  Vietnamese-aligned cluster operating against foreign corporations
-  with Vietnamese business interests, ASEAN governments
-  (Philippines, Cambodia, Laos), regional media, and Vietnamese
-  dissidents and political opposition. The disclosure consolidated
-  earlier reporting by Qihoo 360 (APT-C-00, SkyEye Labs) and ESET
-  (SeaLotus) into the APT32 naming convention now used across
-  Western vendors.
+  cluster aligned with Vietnamese government interests, operating
+  against foreign corporations with a vested interest in Vietnam's
+  manufacturing, consumer products, and hospitality sectors, foreign
+  governments (a Western national legislature in 2014; Philippine
+  government employees), Vietnamese media, and Vietnamese dissidents,
+  journalists, and the Vietnam diaspora. FireEye consolidated four
+  previously unrelated activity clusters (twelve prior intrusions)
+  under the APT32 name and cited overlapping 2015 SkyEye Labs / Qihoo
+  360 reporting; the broader OceanLotus / APT-C-00 / SeaLotus alias
+  set (Qihoo, ESET) converged on this naming across Western vendors.
 false_flag_risk: none
 summary: |
   Anchor event for the Vietnamese cyber program: the public
@@ -30,9 +33,19 @@ attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: FireEye (Nick Carr, Nalani Fraser, Vincent Cannon, Fred Plan)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2017-05-14
     attribution_source_id: fireeye/2017-05-14_apt32-cyber-espionage
+    notes: |
+      FireEye attributes at NAMED-ACTOR level only: it names the actor
+      (APT32 / OceanLotus) and assesses it "aligned with Vietnamese
+      government interests" / "Vietnamese state interests" but names NO
+      Vietnamese service (no TC2 / Tổng cục II / MPS / military
+      intelligence) — hence actor_id vn/unscoped/apt32 (demoted from
+      vn/tc2 on 2026-06-24). attributing_org_confidence: high reflects
+      FireEye's own stated assessment confidence in the Vietnam nexus;
+      the *specificity* stops at the named actor, not a unit.
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: vn/industrial-upgrading-cyber-collection/automotive
@@ -74,3 +87,69 @@ targets:
     role: primary
 sources:
   - fireeye/2017-05-14_apt32-cyber-espionage
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Canonical FireEye APT32 disclosure (Nick Carr, 14 May 2017,
+    "Cyber Espionage Is Alive and Well"). Audited against the full
+    article text recovered from the existing raw_snapshot
+    (fireeye__2017-05-14_apt32-cyber-espionage.html, Wayback copy of
+    the Mandiant blog; content_sha256 88043527f1ebb3ce1167847cff32a7932b3d34c749fe84a06fe7e1a189b8e6e4
+    re-verified, matches the source YAML — the live Mandiant URL serves
+    a JS-only shell, so the snapshot is the article of record).
+    FACTS CONFIRMED verbatim: APT32 = OceanLotus Group; "intrusions
+    into private sector companies ... also targeted foreign
+    governments, dissidents, and journalists"; "targeting foreign
+    corporations with a vested interest in Vietnam's manufacturing,
+    consumer products, and hospitality sectors" (the NB sectors,
+    verbatim); spear-phishing with ActiveMime/.mht lures + macros;
+    WINDSHIELD/KOMPROGO/SOUNDBITE/PHOREAL + Cobalt Strike BEACON;
+    consolidation of four clusters / twelve prior intrusions; 2015
+    SkyEye Labs (Qihoo 360) overlap. initial_vector phishing and
+    incident_type intrusion+data-theft both supported.
+    ATTRIBUTION (key): FireEye stops at NAMED-ACTOR — verbatim
+    "operations that are aligned with Vietnamese state interests" and
+    "APT32 is a cyber espionage group aligned with Vietnamese
+    government interests"; NO Vietnamese service named (grep for
+    TC2/Tổng cục/General Department/MPS/military intelligence = zero
+    hits). Confirms actor vn/unscoped/apt32 (demoted from vn/tc2
+    2026-06-24) and the source's existing AUDIT note. Added
+    attribution_level: named-actor (was absent) + an attribution note
+    recording the latency honestly.
+    CORRECTIONS (single-source event — pulled outcome_summary back to
+    what THIS source supports): (1) removed "(Philippines, Cambodia,
+    Laos)" — FireEye names Philippines + a Western national
+    legislature only; Cambodia/Laos foreign-ministry watering-holes
+    are real APT32 history but from OTHER vendors (Volexity/ESET), not
+    this report. (2) "consolidated ... ESET (SeaLotus)" softened —
+    FireEye consolidated four clusters and cited Qihoo/SkyEye, did NOT
+    name ESET; SeaLotus/ESET kept only as part of the alias-convergence
+    statement, not a FireEye consolidation claim. (3) start_date 2014
+    comment corrected — FireEye dates corporate targeting to "since at
+    least 2014" but dissident/journalist/government targeting to "since
+    at least 2013"; anchor date left at 2014 (corporate-targeting
+    floor, the summary's emphasis) with the comment now accurate.
+    DOCTRINE LINKS both honest, neither attested, both attesting_source_id
+    null — no over-attestation. industrial-upgrading/automotive
+    (strongly_inferred): manufacturing+consumer-products targeting is
+    confirmed, but FireEye is explicit that private-sector motive
+    "varied — and in some cases was unknown" (law enforcement / IP
+    theft / anticorruption), and "automotive" is an AUSPEX sectoral
+    inference the source does not name — strongly_inferred is correctly
+    NOT attested, counter_explanation already carries the caveat.
+    resolution-29-nqtw/regime-stability-surveillance (plausible):
+    correctly flags the doctrine post-dates the 2017 report; dissident/
+    political-activism/journalist targeting is confirmed.
+    published_on/disclosure_date 2017-05-14 = the article's own date.
+    Byline: the snapshot shows lead author "Nick Carr" only; the
+    full four-author credit (Carr/Fraser/Cannon/Plan) is the
+    externally-documented report authorship — left as-is.
+    FKs all resolve: actor vn/unscoped/apt32; both target orgs
+    (asean-governments, vietnamese-dissident-network); both doctrine
+    pillars exist. Event is NOT in the backfill cohort. Touched only
+    this event (the source + actor were already audited 2026-06-24 and
+    carry their own stamps/notes; raw_snapshot + sha256 already present
+    and re-verified — nothing re-captured). level: full.

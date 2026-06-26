@@ -8,12 +8,13 @@ incident_type:
   - data-theft
 initial_vector: n-day  # CVE-2017-5638 Apache Struts
 outcome_summary: |
-  Exploitation of unpatched Apache Struts (CVE-2017-5638) at
-  Equifax; pivot through internal network; deletion of logs to
-  evade detection; exfiltration via 34 servers in ~20 countries.
-  PII of 145 million Americans (names, DOB, SSN), driver's
-  license numbers for 10 million, and credit-card data for
-  200,000.
+  Exploitation of an Apache Struts vulnerability (CVE-2017-5638)
+  in Equifax's online dispute portal; reconnaissance and credential
+  harvesting to navigate the network; deletion/wiping of compressed
+  and log files daily to evade detection; exfiltration routed through
+  ~34 servers in nearly 20 countries. PII of ~145 million Americans
+  (names, DOB, SSN), driver's-license numbers for at least 10 million,
+  and credit-card data for ~200,000.
 quantified_impact:
   records_exfiltrated: 145000000
 false_flag_risk: none
@@ -27,22 +28,27 @@ summary: |
   DOJ February 2020 indictment of four PLA 54th Research Institute
   officers (Wu Zhiyong, Wang Qian, Xu Ke, Liu Lei). Combined with
   OPM and Anthem, Equifax completes the MSS / PLA bulk-PII trinity.
-  Initial access exploited an unpatched Apache Struts2 OGNL
-  injection (CVE-2017-5638) on Equifax's online customer dispute
-  portal to drop web shells, after which the operators used
-  valid credentials harvested from a misplaced credential file
-  to pivot across an internal-network segment that lacked
-  segmentation from the production databases. They ran ~9,000
-  reconnaissance queries against 48 unrelated databases, staged
-  exfiltration through 34 attacker-controlled servers in roughly
-  20 countries, encrypted the output, and deliberately deleted
-  log files to defeat forensics — the indictment treats these as
-  anti-forensic tradecraft establishing nation-state rather than
-  criminal intent.
+  Per the indictment, initial access exploited a vulnerability in
+  the Apache Struts Web Framework (CVE-2017-5638) used by Equifax's
+  online dispute portal; the operators conducted reconnaissance and
+  obtained login credentials to navigate Equifax's network, then
+  spent several weeks running queries (~9,000 in total) to map the
+  database structure and locate PII. They stored the output in
+  temporary files, compressed and divided it, routed traffic through
+  ~34 servers in nearly 20 countries to obfuscate their location,
+  used encrypted channels to blend with normal activity, and deleted
+  compressed files and wiped log files daily to eliminate records of
+  their activity. The indictment charges economic espionage and the
+  theft of Equifax's trade secrets (data compilations and database
+  designs) alongside the PII theft. (Additional operational detail —
+  e.g. ~48 databases queried, a misplaced credential file, and the
+  unsegmented network — comes from the GAO / House Oversight Equifax
+  post-mortems, not the two DOJ/FBI sources cited here.)
 attributions:
   - actor_id: cn/pla/54th-ri-equifax
     attributing_org: US DOJ (Northern District of Georgia)
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ + FBI name the PLA's 54th Research Institute as the operating unit
     auspex_assessment: concur
     attribution_date: 2020-02-10
     attribution_source_id: doj/2020-02-10_pla-54th-ri-equifax-indictment
@@ -50,12 +56,32 @@ doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      DOJ indictment frames the operation as economic espionage
-      with counterintelligence value; bulk-PII / HUMINT enabling
-      pillar applies directly.
+      The DOJ indictment attests the proximate goal — economic
+      espionage and the bulk collection of Americans' PII plus
+      Equifax trade secrets "for the benefit of the Chinese
+      government" / "the Chinese military's effort to collect
+      sensitive information of Americans on an unprecedented scale".
+      It does NOT state the HUMINT-vetting / counterintelligence
+      purpose the bulk-PII-HUMINT-enabling pillar encodes; that
+      strategic reading is an AUSPEX inference. It is nonetheless the
+      dominant reading: a PLA SSF unit taking SSNs/DOBs for ~145M
+      Americans, in the same OPM/Anthem/Marriott portfolio, fits the
+      MCF-fused HUMINT-enabling collection pipeline with no serious
+      competitor (the indictment's own "economic espionage" framing
+      is the proximate, not the strategic, end). Downgraded from
+      `attested` (2026-06-25): the source names the goal in substance
+      only at the economic-espionage / state-benefit level, not at
+      the HUMINT-vetting goal-level the pillar requires.
     attesting_source_id: doj/2020-02-10_pla-54th-ri-equifax-indictment
+    inference_basis:
+      signals:
+        - "PLA SSF Network Systems Department 54th RI = a military SIGINT/cyber R&D unit, not a commercial actor (DOJ: 'a unit of the Chinese military')."
+        - "Target set = SSN/DOB/name for ~145M Americans + driver's licenses for 10M — identity records optimized for person-vetting, not monetization."
+        - "Same actor-state portfolio as OPM (SF-86 clearance records), Anthem, and Marriott — the canonical PRC bulk-PII-for-HUMINT pattern."
+        - "DOJ frames it as state-directed collection 'for the benefit of the Chinese government', not financially-motivated criminal theft."
+      ruled_out: "Pure financial-fraud / criminal monetization — ruled out by the military-unit attribution, the anti-forensic tradecraft, and the absence of any fraud-cashout in the record; the DOJ's 'economic espionage' charge is the proximate frame, not a revenue motive."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -65,3 +91,44 @@ targets:
 sources:
   - doj/2020-02-10_pla-54th-ri-equifax-indictment
   - fbi-wanted/pla-54th-research-institute
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs both cited primary sources (DOJ NDGA press release +
+    FBI Wanted page); raw snapshots already captured 2026-06-24 and
+    re-verified by SHA-256 this pass (doj 35a2578d…, fbi 28cef6bc… —
+    both match on disk). FACTS ✓: CVE-2017-5638 Apache Struts on the
+    online dispute portal (DOJ verbatim), ~145M Americans' name/DOB/SSN
+    (DOJ + FBI), driver's licenses 10M + credit cards 200k (FBI), ~9,000
+    queries / ~34 servers / nearly 20 countries / daily log-wiping (DOJ),
+    economic-espionage + trade-secret theft (DOJ). FACT CORRECTION:
+    softened summary/outcome_summary — "drop web shells", "misplaced
+    credential file", "48 unrelated databases", and "lacked segmentation
+    from production databases" are NOT in either cited source (confirmed
+    by full-text extraction of both snapshots); they trace to the
+    GAO/House-Oversight post-mortems and are now flagged as such rather
+    than asserted as the indictment's words. Removed "OGNL injection"
+    (not in source) and the "anti-forensic tradecraft establishing
+    nation-state intent" gloss (AUSPEX framing, not the indictment's).
+    start_date 2017-05-13 + end_date 2017-07-30 ✓ (FBI verbatim:
+    "beginning at least by on or about May 13, 2017, and continuing
+    through on or about July 30, 2017"). disclosure_date 2017-09-07 =
+    Equifax's public announcement (canonical; not in the 2020 sources,
+    not contradicted). ATTRIBUTION: both sources name the PLA's 54th
+    Research Institute as the operating unit verbatim → added the
+    missing attribution_level: named-unit; high/concur retained.
+    DOCTRINE DOWNGRADE: cn/mcf/bulk-pii-humint-enabling attested →
+    strongly_inferred (over-attestation, memo case (a)/mode-1
+    goal-gradient inflation): the DOJ release attests the PROXIMATE
+    goal (economic espionage + bulk-PII "for the benefit of the
+    Chinese government") but NOT the HUMINT-vetting/CI goal the pillar
+    encodes — that strategic reading is AUSPEX's inference (dominant,
+    no serious competitor). Added inference_basis (signals + ruled_out),
+    rewrote reasoning to quote only what the source states, kept the DOJ
+    source as the primary supporting (now non-gated) attesting_source_id.
+    actor_id cn/pla/54th-ri-equifax resolves → service
+    cn/pla/54th-research-institute (status indicted, not stale). Sources
+    untouched (raw_snapshot + content_sha256 already present + correct).

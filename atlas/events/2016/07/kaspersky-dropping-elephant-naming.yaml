@@ -1,6 +1,11 @@
 id: 2016-07/kaspersky-dropping-elephant-naming
 name: Kaspersky publishes "The Dropping Elephant Actor" — first public naming of the Patchwork cluster
-start_date: 2015-02-01
+# start_date corrected 2015-02-01 → 2015-11-01 (claude-opus-4.8/max, 2026-06-25): the sole cited
+# source (Kaspersky) states the actor "has been able to steal sensitive documents and data from
+# victims since at least November 2015." No source supports the earlier Feb-2015 start; aligned to
+# the source's own "at least November 2015" floor (the cluster's Hangover antecedent goes back
+# further, but that is the actor record's active_since, not this Kaspersky-scoped event).
+start_date: 2015-11-01
 disclosure_date: 2016-07-08
 end_date: null
 incident_type:
@@ -9,14 +14,18 @@ incident_type:
 initial_vector: phishing
 outcome_summary: |
   Kaspersky GReAT's Securelist team published "The Dropping
-  Elephant Actor," the first Kaspersky-named writeup of the
-  Patchwork / Hangover cluster. The report documented sustained
-  spear-phishing of Chinese diplomatic personnel, foreign-affairs
-  scholars working on PRC, and adjacent regional government
-  equities. Tradecraft documented included weaponized Office
-  documents exploiting older CVEs, custom downloaders, and the
-  AutoIt-based implant family that became central to subsequent
-  vendor naming.
+  Elephant Actor" (aka "Chinastrats" / "Patchwork"), the first
+  Kaspersky-named writeup of the Patchwork / Hangover cluster.
+  The report documented spear-phishing and watering-hole
+  collection — active since at least November 2015 — against
+  high-profile diplomatic and economic targets all "involved
+  with China's foreign relations in some way": diplomatic and
+  governmental entities, PRC-focused think tanks, and analysts.
+  Tradecraft documented: weaponized MS Office documents exploiting
+  older CVEs (CVE-2012-0158, CVE-2014-6352, CVE-2014-1761), a
+  UPX-packed AutoIt downloader/backdoor (steals Chrome
+  credentials), and PowerShell-staged follow-on malware — no
+  0-days. Kaspersky named no nation or service as sponsor.
 false_flag_risk: none
 summary: |
   One of the foundational 2016 Patchwork-naming triad
@@ -31,14 +40,25 @@ attributions:
   - actor_id: in/unscoped/patchwork
     attributing_org: Kaspersky GReAT (Securelist)
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2016-07-08
     attribution_source_id: kaspersky/2016-07_dropping-elephant
     notes: |
-      Kaspersky did not publicly attribute Dropping Elephant to
-      the Indian government; the Indian-aligned framing rests
-      on the target mix (PRC, Pakistan) and continuity with the
-      Hangover cluster Norman Shark had attributed.
+      Kaspersky reached only ACTIVITY-CLUSTER level: it named and
+      profiled the actor ("Dropping Elephant", aka "Chinastrats"
+      and "Patchwork") with high confidence in its existence and
+      cohesion, but named NO nation, NO Indian service, and NO
+      state sponsor. Verified verbatim against the captured raw
+      snapshot: the actor is framed entirely by its China-policy
+      targeting ("Its victims are all involved with China's foreign
+      relations in some way"); the sole India reference is attacker
+      infrastructure, not attribution ("sometimes via IPs belonging
+      to an ordinary ISP in India"). The Indian-aligned framing in
+      this corpus rests on the target mix and continuity with the
+      Hangover cluster Norman Shark earlier tied to India — NOT on
+      anything Kaspersky asserted (high attributing_org_confidence
+      applies to the cluster's existence, not to a sponsor claim).
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/china-collection
@@ -68,3 +88,63 @@ targets:
     role: primary
 sources:
   - kaspersky/2016-07_dropping-elephant
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Kaspersky GReAT "The Dropping Elephant Actor" (Securelist, 08 Jul
+    2016), the foundational naming writeup. Audited against the captured
+    raw snapshot (kaspersky__2016-07_dropping-elephant.html, sha256
+    372c1a3f0d2f76afb83d41f79280edaa76f5f636e9d96453754cc63a50fb9d22 —
+    re-hashed this audit, MATCHES the recorded content_sha256; 193 KB,
+    genuine Securelist article body, not an error/bot page). The raw +
+    hash were already added by the 2026-06-24 actor-demotion audit;
+    PRESERVED, not re-fetched.
+    FACTS — CONFIRMED verbatim: actor named "Dropping Elephant (also
+    known as 'Chinastrats' and 'Patchwork')"; "Its victims are all
+    involved with China's foreign relations in some way"; targets are
+    "high profile diplomatic and economic" / "diplomatic and governmental
+    entities" + PRC-focused think tanks/analysts; vectors = spear-phishing
+    (CVE-2012-0158 Word, CVE-2014-6352 / CVE-2014-1761 PowerPoint) +
+    watering-hole; UPX-packed AutoIt downloader/backdoor stealing Chrome
+    creds; PowerShell-staged follow-on; "no 0 days"; active "since at
+    least November 2015." NB South China Sea appears only as a lure-doc
+    filename (militarizationofsouthchinasea.pps), NOT as a Kaspersky-
+    stated targeting theme — so SCS was deliberately NOT asserted as a
+    target claim.
+    ATTRIBUTION (key finding): Kaspersky reached only ACTIVITY-CLUSTER
+    level. It named/profiled the cluster with high confidence but named
+    NO nation, NO Indian service, NO state sponsor. The ONLY India
+    reference is attacker infrastructure ("sometimes via IPs belonging to
+    an ordinary ISP in India") — not attribution. CORRECTED: added
+    attribution_level: activity-cluster and rewrote the attribution notes
+    to make explicit that high attributing_org_confidence attaches to the
+    cluster's existence, not to any sponsor claim. The India-nexus framing
+    in this corpus is AUSPEX's, resting on the China/Pakistan target mix +
+    Hangover continuity (Norman Shark), corroborated only at "pro-Indian
+    or Indian entity" by MITRE G0040 — consistent with actor placement
+    in/unscoped/patchwork (no cited source names a specific Indian service;
+    the NTRO placement was demoted 2026-06-24, audit-confirmed here).
+    DATE CORRECTION: start_date 2015-02-01 → 2015-11-01 — the sole cited
+    source supports only "since at least November 2015"; the earlier date
+    was unsourced. published_on/disclosure_date 2016-07-08 = the actual
+    Securelist publication date ("08 Jul 2016"), CONFIRMED.
+    DOCTRINE LINKS: both honest and KEPT — china-collection +
+    diplomatic-collection pillars, both strongly_inferred, no
+    attesting_source_id (correct: Kaspersky states the targeting INTEREST
+    is China-foreign-relations but assigns NO Indian-intelligence
+    strategic purpose, so not attested). attacker-rationale default
+    correct; no over-attestation, nothing to downgrade. FKs: doctrine +
+    both pillars resolve; actor_id in/unscoped/patchwork resolves and is
+    current (not stale). Conformance + verify_atlas: PASS (0 errors).
+    FLAG for Kara (NOT changed — out of audit scope, corpus-wide): the two
+    target_ids orgs/chinese-government and orgs/regional-foreign-ministries-various
+    have NO registry file under atlas/targets/orgs/ yet are shared by
+    sibling Patchwork/SideWinder/Monsoon events (4 and 2 events resp.);
+    verify_atlas does not flag them as dangling, so they appear to be a
+    tolerated registry-less convention — worth a registry backfill or an
+    explicit allowlist. Event NOT in the backfill cohort.
+    level: full — every core fact + the attribution ceiling independently
+    confirmed against the hash-verified primary snapshot.

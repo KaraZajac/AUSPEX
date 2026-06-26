@@ -8,14 +8,20 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Cybereason documented a multi-stage, year-long APT32 intrusion
-  into an unnamed Asian conglomerate operating in manufacturing,
-  consumer products, and "subsidiaries in multiple countries"
-  with corporate hosting in Vietnam. Operators used Cobalt Strike
-  beacons, custom backdoors (Phantom, Goopy), DNS-tunneling C2,
-  and PowerShell living-off-the-land tradecraft to maintain
-  persistence across more than 40 systems for roughly twelve
-  months prior to detection.
+  Cybereason documented a multi-stage APT32 intrusion into "a
+  global corporation based in Asia," carried out "with the goal
+  of stealing proprietary business information" by targeting the
+  company's top-level management (vice presidents, senior
+  directors and other key personnel in the operational
+  departments). Operators ran a fileless first phase (PowerShell
+  + Cobalt Strike beacons), then switched to custom backdoors
+  (Denis and Goopy) using DLL side-loading and DNS-tunneling C2,
+  maintaining persistence across more than 40 PCs and servers
+  (including the domain controller) for "at least a year" before
+  Cybereason was deployed. (The cited report does not name the
+  victim, its sector, or its country beyond "Asia"; the
+  manufacturing/consumer-products and Vietnamese-ownership
+  details below are industry inference, not Cybereason claims.)
 false_flag_risk: none
 summary: |
   The first long-form public dissection of an APT32 intrusion
@@ -38,11 +44,18 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Manufacturing-and-consumer-products targeting fits the
-      doctrine, but the specific victim and Cybereason's framing
-      leave open whether this was business-intelligence
-      collection against a competitor or against the conglomerate
-      itself for political reasons.
+      Cybereason states only that the operation aimed at
+      "stealing proprietary business information" from "a global
+      corporation based in Asia" — it names no sector, no victim,
+      and no strategic motive. The industrial-collection reading
+      rests on the widely-held (un-sourced-by-Cybereason) industry
+      view that the victim was a Vietnamese-owned conglomerate with
+      manufacturing/consumer-products lines, which would make this
+      domestic/competitor business-intelligence collection rather
+      than foreign industrial-upgrading collection. Because the
+      victim sector is unconfirmed and more than one strategic
+      reading survives (business-intelligence vs. politically
+      motivated collection against the parent), kept `plausible`.
     contested: false
     analyst: claude
 targets:
@@ -50,3 +63,9 @@ targets:
     role: primary
 sources:
   - cybereason/2017-05-25_cobalt-kitty-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "Audited vs Cybereason 'Operation Cobalt Kitty' (Assaf Dahan, 2017-05-25; raw snapshot cybereason__2017-05-25_cobalt-kitty-report.html present, sha256 7518229c55dc6f0fa108beadf3af35dd159886a4fda45003501d472d67394efd re-confirmed). FACTS confirmed verbatim: 'a global corporation based in Asia'; fileless phase one (PowerShell + Cobalt Strike); phase two backdoors via DLL-hijacking + DNS tunneling; 'more than 40 PCs and servers' incl. domain controller; persisted 'for at least a year'; spear-phishing of top-level management (VPs/senior directors). ATTRIBUTION verified: report attributes to the OceanLotus Group (= APT-C-00 / SeaLotus / APT32) at NAMED-ACTOR level only and explicitly declines nation-state/service attribution — 'there was no publicly available evidence that can confirm that the OceanLotus Group is a nation-state threat actor.' No Vietnamese service named (consistent with actor demotion vn/tc2/apt32 -> vn/unscoped/apt32, 2026-06-24); auspex_assessment=concur retained. published_on/disclosure/attribution dates all 2017-05-25 (correct). CORRECTIONS: (1) FACT fix — backdoors were 'Phantom, Goopy' but the report names DENIS and Goopy (+ Backdoor.Win32.Denis); 'Phantom' appears nowhere in the source and was wrong; changed to (Denis, Goopy). (2) DE-OVER-SPECIFIED outcome_summary — the source says nothing about 'manufacturing, consumer products', 'subsidiaries in multiple countries', or 'corporate hosting in Vietnam', and says 'at least a year' not 'roughly twelve months'; rewrote to the source's own words and explicitly flagged the sector/Vietnam-ownership details as industry inference (the summary already noted Cybereason 'did not name it'). Added the fileless->DLL-sideload->DNS-tunnel phase structure, the 'proprietary business information' goal, and the top-management targeting, all verbatim-grounded. (3) Tightened the plausible doctrine-link reasoning to stop implying Cybereason framed the victim as manufacturing/consumer-products; kept confidence=plausible (no source states a strategic purpose; >1 reading survives — correctly NOT attested). NOTE: target FK orgs/unnamed-asian-conglomerate is unregistered — part of the corpus-wide deferred targets/ registry gap (validate.ts: informational, not an error); left as-is, out of scope for a single-event audit, though 'conglomerate'/Vietnam framing exceeds the source. start/end dates (2016-04-01 / 2017-04-30, ~13 mo) are an estimate consistent with 'at least a year'; the source gives no exact campaign bounds — left as conservative estimate."

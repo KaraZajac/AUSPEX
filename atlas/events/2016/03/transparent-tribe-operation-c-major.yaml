@@ -1,51 +1,144 @@
 id: 2016-03/transparent-tribe-operation-c-major
-name: Proofpoint discloses Operation C-Major / Transparent Tribe targeting Indian military
+name: Proofpoint discloses Operation Transparent Tribe targeting Indian diplomatic and military resources
 start_date: 2015-09-01
-disclosure_date: 2016-03-15
+disclosure_date: 2016-03-01
 end_date: 2016-02-29
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Proofpoint published "Operation Transparent Tribe," documenting
-  a multi-month spear-phishing campaign against Indian military
-  diplomats stationed in Riyadh, Astana, and other postings.
-  Attackers used weaponized RTF documents and the MSIL/Crimson
-  Remote Access Trojan (Crimson RAT) — the staple Pakistani-
-  aligned implant family. Lures themed on diplomatic cables,
-  visa-application portals, and military pension communications.
-  The disclosure named the operation "C-Major" and established
-  the canonical Transparent Tribe attribution cluster.
+  Proofpoint published "Operation Transparent Tribe" (1 March 2016),
+  documenting a multi-month espionage campaign that began as a small
+  email campaign against Indian embassies in Saudi Arabia and
+  Kazakhstan and was found connected to watering-hole sites targeting
+  Indian military personnel. The campaign dropped the MSIL/Crimson
+  Remote Access Trojan (Crimson RAT) — which Proofpoint dubbed and
+  which became the long-running Pakistani-aligned implant family —
+  with screen-capture and keylogging exfiltration. Proofpoint left
+  attribution OPEN, stating "the exact nature and attribution
+  associated with this APT remains under investigation" and that the
+  actors may be "nation-states or private parties with interests in
+  international conflicts." The companion name "Operation C-Major" and
+  the Pakistan-location attribution came from Trend Micro's separate
+  March 2016 report (not a cited source here); this Proofpoint
+  disclosure established the canonical Transparent Tribe activity
+  cluster.
 false_flag_risk: none
 summary: |
   Foundational public disclosure of Transparent Tribe / APT36
-  and the Crimson RAT family. Established the Pakistani-aligned
-  attribution that subsequent Secureworks (COPPER FIELDSTONE,
-  2017), Cisco Talos (2021, 2022), and Cyfirma (2023) reporting
-  refined. The Crimson RAT remains the long-running Windows
-  staple a decade later.
+  and the Crimson RAT family. Proofpoint named and clustered the
+  activity (Indian diplomatic and military victimology, shared
+  IOCs/payloads) but did NOT name Pakistan — it called attribution
+  "under investigation." The Pakistani-aligned attribution this
+  cluster later carried was established by Trend Micro (Operation
+  C-Major, March 2016, "located in Pakistan") and Unit 42 (ProjectM,
+  a Karachi-based individual), then refined by Secureworks (COPPER
+  FIELDSTONE, 2017), Cisco Talos (2021, 2022), and Cyfirma (2023).
+  No source names a specific Pakistani service (ISI), hence the
+  actor sits at pk/unscoped. The Crimson RAT remains the long-running
+  Windows staple a decade later.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Proofpoint
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2016-03-15
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2016-03-01
     attribution_source_id: proofpoint/2016-03-15_operation-transparent-tribe
+    notes: |
+      Proofpoint established the activity cluster (the basis of the
+      Transparent Tribe / APT36 actor) but explicitly left nation-level
+      attribution OPEN — "the exact nature and attribution associated
+      with this APT remains under investigation"; actors may be
+      "nation-states or private parties." Hence attributing_org_confidence
+      low + attribution_level activity-cluster for THIS source. The
+      Pakistan-location attribution came from Trend Micro's Operation
+      C-Major report (March 2016) and Unit 42's ProjectM analysis, neither
+      cited on this event. The actor's standing Pakistan-nexus (named-actor)
+      attribution is carried by its own record's later sources, not by
+      this 2016 Proofpoint blog.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian military diplomats are the canonical military-
-      collection target set. Pakistani-aligned attribution
-      rests on tradecraft and victimology.
+      Indian diplomatic and military personnel (embassies in Saudi
+      Arabia and Kazakhstan; Indian military personnel via watering
+      holes) are the canonical military-collection target set for the
+      PK asymmetric-posture-against-India doctrine. No source states a
+      strategic purpose for the operation — Proofpoint left attribution
+      itself "under investigation" — so this is an inference from
+      target + actor-mission, not attested. The competing reading
+      (financial / criminal data theft) is ruled out by the
+      consistently military-diplomatic victimology and the later
+      Pakistan-location attribution (Trend Micro C-Major).
     contested: false
     analyst: claude
+    inference_basis:
+      signals:
+        - "Victimology: Indian embassies (Saudi Arabia, Kazakhstan) + Indian military personnel — military/diplomatic collection, not opportunistic"
+        - "Actor mission is espionage; Crimson RAT exfiltration = screen-capture/keylogging (intelligence collection)"
+        - "Trend Micro's companion C-Major report places the actors in Pakistan, aligning the cluster with PK asymmetric posture against India"
+      ruled_out: "Financially-motivated / criminal data theft — incompatible with the exclusively Indian military-diplomatic target set and the espionage tradecraft"
 targets:
-  - target_id: orgs/indian-military-diplomats
+  - target_id: orgs/indian-armed-forces
+    country: in
+    role: primary
+  - target_id: government/foreign-ministry
     country: in
     role: primary
 sources:
   - proofpoint/2016-03-15_operation-transparent-tribe
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited against the sole cited source (Proofpoint "Operation Transparent
+    Tribe") via its raw_snapshot (sha256 re-verified, matches:
+    f136c956...881f1) plus the Trend Micro C-Major report and Unit 42 ProjectM
+    for cross-checking. SUBSTANTIAL CORRECTIONS — the record conflated two
+    distinct March-2016 reports:
+    [FACTS] Crimson RAT (MSIL/Crimson) CONFIRMED — Proofpoint dubbed it.
+    Indian diplomatic + military victimology CONFIRMED. Proofpoint's actual
+    wording is "Indian embassies in Saudi Arabia and Kazakstan" + "watering
+    hole sites targeting Indian military personnel" — the record's "diplomats
+    stationed in Riyadh, Astana" and "weaponized RTF documents / spear-phishing"
+    were NOT in this Proofpoint blog (RTF/spear/Riyadh/Astana: 0 hits in the
+    snapshot); rewrote outcome_summary to Proofpoint's actual terms (countries,
+    not capitals; watering-hole + email; Crimson exfiltration = screen-capture/
+    keylogging).
+    [NAME] "Operation C-Major" is Trend Micro's, NOT Proofpoint's. Proofpoint
+    named it "Operation Transparent Tribe." Corrected the event `name`
+    accordingly and the outcome_summary's false "the disclosure named the
+    operation 'C-Major'" claim. (Event id slug retains the legacy "c-major" —
+    slugs are immutable.)
+    [ATTRIBUTION] DOWNGRADED. Proofpoint explicitly left attribution OPEN
+    ("the exact nature and attribution associated with this APT remains under
+    investigation"; actors may be "nation-states or private parties"). The
+    record's attributing_org_confidence: high + bare concur overstated this.
+    Set to LOW + attribution_level: activity-cluster + concur-with-caveat, with
+    a note that the Pakistan-location attribution came from Trend Micro
+    (C-Major: "located in Pakistan, although there is no evidence to suggest
+    this attack is tied to the Pakistani government") and Unit 42 (ProjectM,
+    Karachi individual) — neither cited here. No source (incl. the actor's six)
+    names the ISI; actor correctly at pk/unscoped/transparent-tribe (demoted
+    2026-06-24; FK resolves, not stale).
+    [DATE] published_on/disclosure 2016-03-15 -> 2016-03-01: the only date in
+    the snapshot is the byline "March 01, 2016"; corrected on both the event
+    (disclosure_date, attribution_date) and the source (published_on; slug kept).
+    [DOCTRINE] pk/asymmetric-posture-india/military-collection kept at
+    strongly_inferred (honest — no source attests the strategic purpose, and
+    Proofpoint left attribution itself open); sharpened reasoning + added
+    inference_basis (signals + ruled_out). FK resolves.
+    [TARGET FK] Repointed dangling orgs/indian-military-diplomats (no such
+    registry entry) -> orgs/indian-armed-forces (exists) + sector
+    government/foreign-ministry (embassies), both resolving and matching
+    Proofpoint's "diplomatic and military resources." No target files created.
+    [UNCERTAINTY] start_date 2015-09-01 / end_date 2016-02-29 are multi-month-
+    campaign estimates not pinned to a precise date in the cited blog; left as
+    reasonable, uncontradicted estimates. level: full (every cited claim checked
+    against the captured primary source).
