@@ -15,28 +15,47 @@ outcome_summary: |
   with Anthem (2015), CareFirst, and Empire BlueCross, this
   was the most concentrated healthcare-PII theft cluster in US
   history.
+quantified_impact:
+  records_exfiltrated: 11000000
 false_flag_risk: none
 campaign_id: prc-bulk-pii-collection-wave
 summary: |
   Premera, like Anthem, was tied to the Deep Panda / Black Vine
-  PRC-aligned cluster on the basis of TTP overlap and shared
-  infrastructure with the Anthem intrusion. Federal Blue Cross
-  enrollees included a substantial population of cleared US
-  personnel — making the Premera intrusion a PII-enrichment
-  layer atop the OPM SF-86 base data. No DOJ indictment named
-  Premera-specific defendants but the Anthem/Fujie Wang case
-  is the closest legal anchor.
+  PRC-nexus cluster. The concrete link is the typosquat domain
+  prennera.com (the "m" replaced by a double "n"), which
+  ThreatConnect identified on 2015-02-27 as impersonating Premera
+  — the same character-swap phishing MO as we11point.com in the
+  Anthem campaign; Symantec's August-2015 Black Vine report
+  separately lists prennera.com (registered 2013-09-12) on the
+  Black Vine infrastructure used against Anthem. Premera disclosed
+  the intrusion on 2015-03-17: a phishing email installed malware
+  on or about 2014-05-05; the access went undetected until
+  2015-01-29. Federal Blue Cross enrollees included a substantial
+  population of cleared US personnel — making the Premera intrusion
+  a PII-enrichment layer atop the OPM SF-86 base data. No DOJ
+  indictment named Premera-specific defendants but the
+  Anthem/Fujie Wang case is the closest legal anchor.
 attributions:
   - actor_id: cn/unscoped/deep-panda
-    attributing_org: Symantec + vendor consensus
+    attributing_org: ThreatConnect + vendor consensus
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
-    attribution_date: 2015-08-05
-    attribution_source_id: symantec/2015-08-05_black-vine-anthem
+    attribution_date: 2015-02-27
+    attribution_source_id: krebs/2015-03-17_premera-blue-cross-breach
     notes: |
-      Symantec's August 2015 Black Vine report linked Anthem
-      and Premera to the same operational cluster via shared
-      Sakula / HttpBrowser tooling and infrastructure overlap.
+      The Premera-specific link is the prennera.com typosquat
+      (m -> nn), which ThreatConnect identified on 2015-02-27 as
+      impersonating Premera — the same MO as we11point.com in the
+      Anthem campaign (reported by Krebs, 2015-03-17). Symantec's
+      August 2015 Black Vine report independently lists prennera.com
+      among the Black Vine healthcare-themed domains (Table 2), tying
+      it to the Deep Panda / Black Vine cluster via shared Sakurel /
+      Mivast tooling and infrastructure. attribution_level: nation —
+      every cited source stops at "state-sponsored ... based in China"
+      / "Chinese state-sponsored"; NO specific Chinese intelligence
+      service (MSS / PLA unit) is named, which is why the actor sits
+      at cn/unscoped/deep-panda.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
@@ -46,9 +65,17 @@ doctrine_links:
       Healthcare-PII enrichment of the OPM/Anthem set,
       specifically including federal Blue Cross enrollees, fits
       the bulk-PII collection pattern. Treated as strongly
-      inferred rather than attested because no government
-      attribution document names Premera explicitly.
-    attesting_source_id: null
+      inferred rather than attested because no government or
+      tier-1 vendor attribution document names Premera explicitly,
+      let alone states a bulk-PII-HUMINT strategic purpose for it.
+    attesting_source_id: krebs/2015-03-17_premera-blue-cross-breach
+    inference_basis:
+      source_id: krebs/2015-03-17_premera-blue-cross-breach
+      signals:
+        - "~11M member records incl. SSN + clinical + bank-account data exfiltrated from a US health insurer covering federal Blue Cross enrollees (target value: PII/PHI enrichment over the OPM/Anthem set)"
+        - "same Deep Panda / Black Vine cluster and prennera.com typosquat MO as the Anthem bulk-PII intrusion (operational continuity within the PRC bulk-PII wave)"
+      ruled_out: "Military-Civil Fusion / bulk-PII-HUMINT goal by name — no source states a strategic purpose for the Premera intrusion; commodity cybercrime ruled out by the state-sponsored China attribution and the cleared-personnel target value"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -58,4 +85,60 @@ targets:
     outcome: |
       ~11M member records (PII + clinical + banking) exfiltrated.
 sources:
+  - krebs/2015-03-17_premera-blue-cross-breach
   - symantec/2015-08-05_black-vine-anthem
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs both cited sources. PRIMARY-SOURCE INTEGRITY: the cited Symantec
+    Black Vine PDF (docs.broadcom.com) was re-fetched this session — HTTP 200,
+    4,267,454 bytes, byte-for-byte identical to the committed raw_snapshot
+    (sha256 16557bd2…b1d0); pdftotext extraction read in full. KEY FINDING: that
+    Symantec report is about ANTHEM and never names Premera — it does NOT support
+    the Premera headline facts (11M / clinical+banking / dates) and does NOT
+    mention "HttpBrowser" (it names Sakurel/Mivast/Hurix). The only Premera tie in
+    the document is the typosquat prennera.com (Table 2, registered 2013-09-12) on
+    Black Vine infra used against Anthem. So the event was effectively single-
+    sourced on a document that doesn't cover its subject. CORRECTION: added a
+    second, properly-provenanced source — Krebs (2015-03-17, captured: HTTP 200,
+    101,993 bytes, sha256 3585b00a…dc9f, archive.org blocked) — which confirms
+    EVERY Premera fact verbatim: "11 million" customers; data = name/DOB/email/
+    address/phone/SSN/member-IDs/"bank account information"/"claims information,
+    including clinical information"; discovered 2015-01-29; initial attack
+    "May 5, 2014" (= start_date 2014-05-05); and that ThreatConnect identified
+    prennera.com on 2015-02-27 as impersonating Premera (m->nn), same MO as
+    we11point.com. NPR + WA State AG + Senate HELP corroborate 11M / WA-OR-AK /
+    ~6M WA residents (Amazon/MS/Starbucks employees) / phishing.
+    ATTRIBUTION: NATION level only — Krebs: "state-sponsored espionage groups
+    based in China", "Deep Panda", "Chinese state-sponsored hacking group";
+    Symantec: "China-based"/"Chinese origin"/Beijing-based Topsec ("may have a
+    past or present association"). NO Chinese intelligence service (MSS/PLA unit)
+    named anywhere -> added attribution_level: nation; actor cn/unscoped/deep-panda
+    resolves (atlas/actors/cn/deep-panda.yaml, correctly demoted from cn/mss
+    2026-06-24), not stale. Moved attribution_source_id/org/date to Krebs +
+    ThreatConnect (2015-02-27, the actual provenance of the Premera linkage);
+    attributing_org_confidence kept moderate, auspex_assessment concur-with-caveat
+    (no DOJ indictment names Premera).
+    CORRECTIONS (event): (1) rewrote summary to source the prennera.com→Premera
+    tie to ThreatConnect/Krebs and remove the unsupported "shared Sakula/HttpBrowser"
+    framing; (2) added quantified_impact.records_exfiltrated: 11000000 (matches the
+    Anthem sibling's shape); (3) added attribution_level: nation + corrected
+    attribution note; (4) doctrine_link cn/mcf/bulk-pii-humint-enabling kept
+    strongly_inferred (correctly NOT attested — no source states an MCF/bulk-PII-
+    HUMINT purpose for Premera) and given a proper inference_basis (signals +
+    ruled_out) plus attesting_source_id (Krebs) to match the schema for
+    strongly_inferred; (5) CREATED the missing target registry file
+    atlas/targets/orgs/premera.yaml — the event referenced orgs/premera but no
+    such file existed (dangling FK); (6) added the Symantec snapshot/sha to the
+    source file and corrected its note (Anthem-not-Premera; Sakurel/Mivast not
+    HttpBrowser; nation-level/Topsec attribution).
+    published_on: the Symantec source published_on stays 2015-08-05 (original
+    release; the captured PDF is the v1.11 / Aug-6-2015 revision — noted in the
+    source). Krebs published_on 2015-03-17 matches the article. start_date
+    2014-05-05, disclosure_date 2015-03-17, end_date 2015-01-29 (last access /
+    detection) all source-confirmed. All FKs resolve; event not in the backfill
+    cohort. level: full (both sources captured + hashed; every load-bearing fact
+    independently confirmed against the primary Krebs reporting + Symantec PDF).

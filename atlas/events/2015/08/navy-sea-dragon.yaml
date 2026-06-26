@@ -1,6 +1,6 @@
-id: 2015-08/navy-sea-dragon
+id: 2015-08/navy-sea-dragon  # NB: slug date 2015-08 is wrong (WaPo: intrusions Jan–Feb 2018) but slugs are stable-forever, never renamed
 name: US Navy / Sea Dragon submarine-warfare data theft
-start_date: 2017-01-01  # WaPo reported 2018 with intrusion period 2017-early 2018
+start_date: 2018-01-01  # WaPo: "The breaches occurred in January and February" (2018)
 disclosure_date: 2018-06-08
 end_date: 2018-02-28
 incident_type:
@@ -8,56 +8,102 @@ incident_type:
   - data-theft
 initial_vector: unknown
 outcome_summary: |
-  Hundreds of GB of US Navy submarine-warfare R&D — including the
-  Sea Dragon program (anti-ship Tomahawk variant for submarines) —
-  exfiltrated from a Naval Undersea Warfare Center contractor.
+  614 GB of US Navy submarine-warfare R&D — the Sea Dragon program
+  (a closely held effort to field a supersonic anti-ship missile on
+  US submarines by 2020), plus signals/sensor data, submarine radio-
+  room cryptographic-system information, and the submarine
+  development unit's electronic-warfare library — exfiltrated from a
+  Naval Undersea Warfare Center contractor's unclassified network.
 false_flag_risk: none
 summary: |
-  Disclosed by Washington Post (June 2018). No DOJ indictment; US
-  official attribution to "China-based" actors. Reporting and
-  follow-on vendor consensus place the intrusion within the
-  broader MSS-linked Cloud Hopper-era MSP and contractor-pivot
-  pattern (APT10 / Stone Panda or adjacent clusters): spear-
-  phishing of contractor IT staff at the Naval Undersea Warfare
-  Center supplier, valid-credentials lateral movement into the
-  contractor's unclassified network, deployment of PlugX and
-  Cobalt Strike beacons with DLL side-loading via signed binaries
-  for defense evasion, web shells on internet-facing servers,
-  Mimikatz credential dumping, and bulk staged exfiltration of
-  hundreds of gigabytes of Sea Dragon program documents, signals-
-  data libraries, and submarine cryptographic-system materials.
+  Disclosed by the Washington Post (8 June 2018), citing anonymous US
+  officials describing an ongoing Navy/FBI investigation; no DOJ
+  indictment. The breaches occurred in January and February 2018
+  against an (unnamed) contractor to the Naval Undersea Warfare
+  Center, headquartered in Newport, R.I. 614 GB was taken: material
+  on the closely held Sea Dragon project (a supersonic anti-ship
+  missile for US submarines), signals and sensor data, submarine
+  radio-room information relating to cryptographic systems, and the
+  submarine development unit's electronic-warfare library. The data
+  sat on an unclassified network but US officials said it could be
+  considered classified in aggregate. WaPo reported that investigators
+  attributed the hack to the Chinese Ministry of State Security (MSS),
+  operating out of an MSS division in Guangdong province — explicitly
+  distinguishing the MSS from the better-known PLA; no specific
+  APT cluster was publicly named, and AUSPEX adopts none. WaPo did not
+  report the intrusion vector or tooling.
 attributions:
-  - actor_id: cn/pla/apt1  # working assignment to PLA cluster; specific actor not publicly named
+  - actor_id: null  # WaPo named NO APT cluster; AUSPEX adopts none (was wrongly cn/pla/apt1 — PLA, which WaPo explicitly contrasts against the MSS)
+    service_id: cn/mss  # WaPo: "the hack was carried out by the Chinese Ministry of State Security ... an MSS division in the province of Guangdong"
     attributing_org: US Government officials (via Washington Post)
     attributing_org_confidence: moderate
+    attribution_level: named-unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2018-06-08
     attribution_source_id: washington-post/2018-06_sea-dragon-navy
     notes: |
-      Public attribution at the country level only; specific
-      service / actor cluster not named. PLA-Navy alignment
-      strongly suggested by victim profile.
+      Source-faithful service-level attribution. WaPo names the MSS,
+      Guangdong division ("Investigators say the hack was carried out
+      by the Chinese Ministry of State Security ... The hackers operated
+      out of an MSS division in the province of Guangdong") and explicitly
+      distinguishes the MSS from the PLA ("Although the Chinese People's
+      Liberation Army is far better-known than the MSS when it comes to
+      hacking, the latter's personnel are more skilled..."). No APT
+      cluster (APT1/APT3/APT10/APT40 or other) is named in the source, so
+      actor_id stays null and the named-unit claim is carried by
+      service_id: cn/mss (MSS Guangdong). The prior cn/pla/apt1 assignment
+      (PLA Unit 61398) directly contradicted the source and is removed.
+      attributing_org_confidence kept moderate: single secondary source,
+      anonymous officials, ongoing investigation, no indictment. (Note: the
+      "MSS division in Guangdong" geographically resembles the APT3/Boyusec
+      lineage, cn/mss/apt3 — but WaPo names no cluster and AUSPEX does not
+      back-fit one onto an anonymous-sourced 2018 report.)
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/dual-use-research
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Naval submarine-warfare R&D theft via a contractor is the
-      canonical PLAN-modernization-via-MCF pattern.
-    attesting_source_id: null
+      Theft of US submarine-warfare R&D (Sea Dragon, EW library,
+      sensor/cryptographic data) via a defense contractor is the
+      canonical "acquire foreign military technology to close the
+      capability gap" pattern that Military-Civil Fusion institutionalizes.
+    attesting_source_id: washington-post/2018-06_sea-dragon-navy
+    inference_basis:
+      signals:
+        - WaPo states the strategic end in substance — "part of China's long-running effort to blunt the U.S. advantage in military technology and become the preeminent power in east Asia" and "China has made closing the gap in undersea warfare one of its three top military priorities" — i.e. acquiring foreign military tech to modernize, which is what MCF organizes.
+        - Stolen content is dual-use military R&D held by a contractor on an unclassified network (the contractor-pivot surface MCF/MSS exploitation targets).
+        - WaPo situates it in a documented series of Chinese thefts of US weapons designs (F-35, PAC-3, THAAD, Littoral Combat Ship).
+      ruled_out: >
+        NOT attested: WaPo names the goal at the level of "blunt the US military-technology
+        advantage," which the MCF pillar specializes, but it never articulates the dual-use
+        civil-military-fusion mechanism the doctrine encodes, nor names MCF. Competing reading
+        considered: pure military espionage with no industrial/fusion dimension — not the SOLE
+        reading given the dual-use R&D target and the modernization framing, so the link stays
+        strongly_inferred rather than plausible, but short of attested.
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: cn/mic2025
     pillar_id: cn/mic2025/maritime
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Maritime engineering and high-tech ships (incl. dual-use
-      naval) is an explicit MIC2025 pillar.
+      The maritime/high-tech-ships pillar of Made in China 2025 covers
+      naval engineering, so submarine-warfare theft is pillar-adjacent —
+      but the source frames the motive as military advantage, not the
+      civilian maritime-industry competitiveness MIC2025 is about.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      alternatives:
+        - "MIC2025/maritime (industrial-competitiveness reading) — weakly supported: Sea Dragon is a weapons program, and WaPo frames the theft as closing a MILITARY undersea-warfare gap, not advancing China's commercial shipbuilding sector."
+        - 'cn/mcf/dual-use-research (military-modernization reading) — better fit and the primary link above; the WaPo "blunt the US military-technology advantage" language points here, not at industrial policy.'
+    counter_explanation: |
+      Downgraded attested-era over-reach: the prior strongly_inferred was
+      not supportable for MIC2025 — no source ties this military theft to
+      MIC2025's civilian maritime-industry goal, and the better strategic
+      reading is military modernization (the MCF link). Kept as a plausible
+      adjacency rather than removed.
     contested: false
     analyst: claude
 targets:
@@ -67,3 +113,9 @@ targets:
     role: primary
 sources:
   - washington-post/2018-06_sea-dragon-navy
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: "China-nexus theft of US Navy Sea Dragon submarine-warfare data. Sole source (WaPo, 2018-06-08) fetched in full + hashed (raw_snapshot washington-post__2018-06_sea-dragon-navy.html, sha256 2bff7c34...; embedded JSON-LD datePublished 2018-06-08T18:17:08Z) -> level: full. FACTS verified verbatim: 614 GB taken ('Taken were 614 gigabytes of material relating to a closely held project known as Sea Dragon, as well as signals and sensor data, submarine radio room information relating to cryptographic systems, and the Navy submarine development unit's electronic warfare library'); victim = an unnamed contractor to the Naval Undersea Warfare Center, Newport R.I.; data on an unclassified network, classified-in-aggregate; no DOJ indictment, ongoing Navy/FBI investigation. CORRECTIONS: (1) DATES — start_date 2017-01-01 -> 2018-01-01 (WaPo: 'The breaches occurred in January and February' = 2018, not 2017); end_date 2018-02-28 kept. Slug 2015-08 is wrong but slugs are stable-forever (never renamed) so the id is retained with an inline note. (2) ATTRIBUTION — actor_id cn/pla/apt1 was FLATLY WRONG: APT1 is PLA Unit 61398, and WaPo explicitly attributes the hack to the MSS and contrasts it against the PLA ('Investigators say the hack was carried out by the Chinese Ministry of State Security ... an MSS division in the province of Guangdong'; 'Although the Chinese People's Liberation Army is far better-known than the MSS ...'). Fixed to actor_id: null + service_id: cn/mss + attribution_level: named-unit (the source names the MSS Guangdong division but NO APT cluster; AUSPEX adopts none — note that Guangdong resembles the APT3/Boyusec lineage but no back-fit is made). attributing_org_confidence kept moderate (single secondary source, anonymous officials). (3) SUMMARY — stripped FABRICATED tradecraft absent from the source: PlugX, Cobalt Strike, DLL side-loading, web shells, Mimikatz, spear-phishing of IT staff, valid-creds lateral movement, and the 'APT10/Stone Panda/Cloud Hopper-era MSP' framing (APT10 is MSS-Tianjin, contradicting the WaPo MSS-Guangdong attribution); WaPo reports NO vector or tooling. Also corrected 'anti-ship Tomahawk variant' -> 'supersonic anti-ship missile' (string 'tomahawk' appears 0x in the article; WaPo: 'a supersonic anti-ship missile for use on U.S. submarines by 2020'). (4) DOCTRINE LINKS — cn/mcf/dual-use-research kept strongly_inferred and upgraded its evidence: WaPo states the goal in substance ('blunt the U.S. advantage in military technology', 'closing the gap in undersea warfare one of its three top military priorities') so attesting_source_id set to the WaPo source and inference_basis {signals, ruled_out} added; held at strongly_inferred (not attested) because WaPo names the military-modernization end but not the civil-military-fusion mechanism MCF encodes. cn/mic2025/maritime DOWNGRADED strongly_inferred -> plausible (over-attestation): the theft is a weapons program framed as military advantage, not the civilian maritime-industry competitiveness MIC2025 is about; inference_basis {alternatives} + counter_explanation added, link kept as a documented adjacency. published_on (source) confirmed 2018-06-08. FK NOTE (out of single-event scope): target orgs/us-navy-nuwc-contractor has no targets-registry entry, but orgs/ target-FK gaps are gate-informational corpus-wide (targets/ normalization deferred), so a known tolerated gap, not a per-event defect."

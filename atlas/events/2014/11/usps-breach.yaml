@@ -8,33 +8,49 @@ incident_type:
   - data-theft
 initial_vector: unknown
 outcome_summary: |
-  US Postal Service disclosed compromise of employee PII for
-  approximately 800,000 current and former employees, plus
-  customer call-center data for an estimated 2.9 million
-  individuals. USPS attributed the intrusion to "a sophisticated
-  actor"; IC and press attribution named PRC state-sponsored
-  operators within days. The breach sits inside the broader
-  2013–2015 PRC bulk-PII collection campaign that produced OPM,
-  Anthem, USIS, and Premera.
+  US Postal Service disclosed compromise of employee PII —
+  including Social Security numbers — for approximately 800,000
+  current and former employees, plus customer call-center data
+  (Customer Care Center contacts, Jan 1–Aug 16 2014) for an
+  estimated 2.9 million individuals. USPS characterized the
+  intrusion as the work of a "sophisticated actor". The intrusion
+  was discovered in mid-September 2014. Attribution to "Chinese
+  government hackers" was press/official-sourced suspicion (WaPo,
+  Nakashima) at the nation level — USPS itself declined to name a
+  responsible party and the source named no specific service or
+  actor. The breach sits inside the broader 2013–2015 PRC bulk-PII
+  collection campaign that produced OPM, Anthem, USIS, and Premera.
 false_flag_risk: none
 campaign_id: prc-bulk-pii-collection-wave
 summary: |
   USPS targeting is doctrinally distinctive: federal-employee
   PII at scale, but absent the SF-86 clearance-application
-  specificity of OPM. The collection-value frame is enabling
-  HUMINT and travel-pattern analytics on US federal personnel
-  more broadly. No DOJ indictment.
+  specificity of OPM. AUSPEX reads the collection value as
+  enabling HUMINT and travel-pattern analytics on US federal
+  personnel more broadly (the source does not state a purpose;
+  this is an AUSPEX inference). No DOJ indictment, and the cited
+  reporting names neither a specific actor nor a Chinese service.
 attributions:
   - actor_id: cn/unscoped/deep-panda
-    attributing_org: US Intelligence Community (press attribution)
+    attributing_org: The Washington Post (Nakashima), citing US officials
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
     attribution_date: 2014-11-10
     attribution_source_id: wapo/2014-11-10_usps-china-attribution
     notes: |
-      Press attribution sourced to IC officials. No DOJ
-      indictment; cluster assignment to the same MSS-Jiangsu-
-      linked Deep Panda / Black Vine collection set.
+      The cited source attributes the breach to "Chinese government
+      hackers" at the NATION level only ("China suspected"); US
+      officials "declined to comment on who was thought to be
+      responsible" and named no service or actor. The
+      cn/unscoped/deep-panda assignment is an AUSPEX-curatorial
+      cluster placement into the 2013–2015 PRC bulk-PII collection
+      set (same window as OPM/USIS/Anthem/Premera) — NOT a
+      source-stated identification, and NOT an MSS attribution (the
+      actor record was demoted cn/mss → cn/unscoped on 2026-06-24
+      because no cited source names a Chinese service). Hence
+      attribution_level: nation and concur-with-caveat. No DOJ
+      indictment.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
@@ -43,8 +59,28 @@ doctrine_links:
     reasoning: |
       Federal-employee PII at scale, in the same operational
       window as OPM/USIS, is part of the bulk-PII / HUMINT-
-      enabling collection set.
+      enabling collection set. The cited source does NOT state a
+      strategic purpose (it notes only that a federal agency
+      "would make a logical espionage target for China"), so this
+      is inferred, not attested.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - Bulk federal-employee PII (names, DOB, SSNs, addresses,
+          employment dates) on ~800k current/former USPS staff —
+          counterintelligence-grade data on US government personnel.
+        - Same 2013–2015 collection window and victim profile
+          (US-federal-personnel data) as OPM, USIS, Anthem, Premera —
+          the canonical PRC bulk-PII / HUMINT-enabling campaign.
+        - No financial monetization — USPS stated the actor was not
+          after credit-card data or identity-theft fraud, consistent
+          with intelligence collection rather than criminal use.
+      ruled_out: |
+        Financially-motivated criminal theft is the obvious competitor
+        but is ruled out by the absence of payment-card targeting and
+        USPS's own statement that the actor sought neither identity
+        theft nor card fraud; the espionage/HUMINT-enabling reading is
+        the only strong fit.
     contested: false
     analyst: claude
 targets:
@@ -56,3 +92,43 @@ targets:
       records exfiltrated.
 sources:
   - wapo/2014-11-10_usps-china-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: partial   # sole WaPo source un-snapshottable (curl 000 / WebFetch 403 / archive.org blocked); all claims corroborated via mirrors
+  notes: |
+    FACTS verified against the cited WaPo article (Nakashima, 2014-11-10) and
+    authoritative mirrors (NPR, CNN, BankInfoSecurity, NBC News, Tampa Bay
+    Times reprint): ~800,000 employees with PII INCLUDING Social Security
+    numbers (also DOB/addresses/employment dates); ~2.9M customers via the
+    Customer Care Center (contacts Jan 1–Aug 16 2014: names/addresses/
+    phone/email); intrusion DISCOVERED mid-September 2014 (start_date
+    2014-09-01 is the era-consistent estimate); USPS called the actor "very
+    sophisticated" and uninterested in card fraud/identity theft. published_on
+    2014-11-10 = actual WaPo date. ATTRIBUTION (key finding): the source
+    attributes the breach to "Chinese government hackers" at the NATION level
+    only — officials "declined to comment on who was thought to be
+    responsible"; NO Chinese service (MSS/PLA) and NO specific actor (no
+    "Deep Panda") is named. CORRECTIONS: (1) added attribution_level: nation.
+    (2) corrected attributing_org from "US Intelligence Community (press
+    attribution)" → "The Washington Post (Nakashima), citing US officials" (no
+    formal IC attribution exists; officials declined to confirm). (3) rewrote
+    the attribution notes to drop the unsourced "MSS-Jiangsu-linked" claim and
+    state plainly that cn/unscoped/deep-panda is an AUSPEX-curatorial cluster
+    placement, NOT a source identification — consistent with the actor's
+    2026-06-24 demotion cn/mss → cn/unscoped (no cited source names a service).
+    (4) corrected outcome_summary/summary: dropped "IC and press attribution
+    named PRC state-sponsored operators" (overstated — it was nation-level
+    suspicion), added SSNs + the call-center date range + mid-Sept detection,
+    and labeled the HUMINT-enabling frame as an explicit AUSPEX inference.
+    (5) doctrine link cn/mcf/bulk-pii-humint-enabling kept at strongly_inferred
+    with attesting_source_id: null (the source states no purpose — NOT
+    attested); added inference_basis (signals + ruled_out: financial theft
+    ruled out by USPS's own no-card-fraud statement). ACTOR: cn/unscoped/deep-
+    panda FK resolves (atlas/actors/cn/deep-panda.yaml, freshly audited
+    2026-06-24, not stale). NOTE/UNCHANGED: target_id orgs/us-postal-service is
+    a dangling FK, but orgs/* target gaps are a corpus-wide deferred-
+    normalization backlog treated as informational by validate.ts (siblings
+    usis/premera/united-airlines are likewise undefined) — left as-is, out of
+    single-event scope. level: partial because the WaPo URL is un-snapshottable.

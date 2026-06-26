@@ -27,30 +27,116 @@ attributions:
   - actor_id: in/unscoped/patchwork
     attributing_org: Cymmetria Research
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2016-07-07
     attribution_source_id: cymmetria/2016-07_unveiling-patchwork
     notes: |
-      Cymmetria characterized the actor as targeting
-      governments and corporate equities; did not publicly
-      attribute to the Indian government but framed the
-      cluster in continuity with prior Hangover / Indian-aligned
-      reporting.
+      Cymmetria reached the NATION level only — "pro-Indian or
+      Indian entity" / "plausible that the threat actor is a
+      pro-Indian one" / the threat actor "correlates with a
+      location in India" (verbatim, Attribution + Conclusions
+      sections) — and named NO Indian service (no NTRO). The
+      report itself flags the false-flag possibility ("another
+      threat actor wanted to look like India") while assessing
+      it as unlikely ("zero evidence to support that claim").
+      Grounds offered: target mix matching pro-Indian collection
+      requirements, time-of-day/work-hours analysis pointing to
+      Indian time zones, and a tentative Hangover/Appin link.
+      This is why the actor sits at in/unscoped (service
+      unresolved), not in/ntro.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
-    pillar_id: null
+    pillar_id: in/regional-collection-pakistan-china/china-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Patchwork's documented target mix (Chinese, Pakistani,
-      and adjacent regional governments) maps onto the
-      regional-collection doctrine. Pillar-level attribution
-      held at parent doctrine because Cymmetria's victim
-      disclosure did not break out by pillar.
+      Cymmetria's report documents a target set "chosen worldwide
+      with a focus on personnel working on military and political
+      assignments, and specifically those working on issues
+      relating to Southeast Asia and the South China Sea ...
+      governments and government-related organizations," with the
+      spear-phishing lures "directly related to China-related
+      subjects" (verbatim) — the trigger victim being a European
+      government employee doing Chinese-policy research. This maps
+      onto the doctrine's PRC-collection pillar. The report names
+      the strategic reading only circumstantially — "intelligence
+      requirements necessary for a pro-Indian entity" — and the
+      doctrine itself is an inferred posture with no Indian-state
+      text, so the link is held at strongly_inferred (China-policy
+      collection is the dominant, but not sole, reading of this
+      naming-report's victim set; the Pakistani-military pillar is
+      not exercised in THIS event's disclosed targets). NOT
+      upgraded to attested: no governing Indian text and no
+      attributing-authority statement of state tasking.
+    attesting_source_id: cymmetria/2016-07_unveiling-patchwork
+    inference_basis:
+      signals:
+        - China-policy/South-China-Sea targeting of government and
+          government-related personnel (Cymmetria exec summary +
+          investigation overview)
+        - spear-phishing lures "directly related to China-related
+          subjects" (e.g. CHINA_FEAR_US, chinamilstrength,
+          China_Response_NKorea_Nuclear_Test)
+        - Cymmetria assessing the operator as a "pro-Indian or
+          Indian entity" correlating with an India location
+      ruled_out: |
+        Pakistani-military pillar — supported for the cluster
+        overall (Hangover/SideWinder/DoNot) but not exercised in
+        the targets THIS naming report discloses, which are
+        China-policy / SCS-focused; held at the china-collection
+        pillar rather than the parent doctrine.
     contested: false
     analyst: claude
 targets:
+  - target_id: sectors/government
+    role: primary
+    outcome: |
+      ~2,500 machines worldwide; governments and
+      government-related organizations doing military/political
+      work on Southeast Asia and the South China Sea (Cymmetria)
   - target_id: orgs/government-various
     role: primary
+    outcome: |
+      Trigger victim: a European government employee working on
+      Chinese-policy research, phished via a China/South-China-Sea
+      PowerPoint lure (CVE-2014-4114)
 sources:
   - cymmetria/2016-07_unveiling-patchwork
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Audited vs the sole cited source cymmetria/2016-07_unveiling-patchwork. The source was
+    UNFETCHABLE on the prior 2026-06-24 pass (cymmetria.com 403; archive.org blocked) but is NOW
+    CAPTURED: a verbatim 34-page mirror of the original report PDF was recovered and saved as the
+    source's raw_snapshot (sha256 a0766011...; live URL + S3/wp-content PDFs still 403/404,
+    archive.org still blocked). FACTS — all confirmed verbatim: "copy-paste"/patchwork-quilt
+    recycled-code framing (PowerSploit/Meterpreter/AutoIt/UACME; CVE-2014-4114 "Sandworm" PPT
+    exploit); first public "Patchwork" naming; ~2,500 machines worldwide; targets = governments
+    and government-related orgs on Southeast-Asia / South-China-Sea military-political issues;
+    spear-phishing lures "directly related to China-related subjects"; trigger victim a European
+    government employee doing Chinese-policy research; first observed December 2015; published
+    2016-07-07. ATTRIBUTION — the report reaches the NATION level only: "pro-Indian or Indian
+    entity" / "plausible that the threat actor is a pro-Indian one" / "correlates with a location
+    in India," names NO Indian service (no NTRO), and explicitly raises-then-discounts the
+    false-flag possibility ("zero evidence"). Matches actor in/unscoped/patchwork (service
+    unresolved by design). auspex_assessment: concur is correct. CORRECTIONS: (1) added
+    attribution_level: nation + replaced the attribution note with the source's verbatim
+    attribution language and grounds (target mix + time-of-day analysis + tentative Hangover/Appin
+    link). (2) doctrine link: moved from parent in/regional-collection-pakistan-china to the
+    china-collection pillar (this naming report's disclosed victim set is China-policy/SCS, not the
+    Pakistani-military pillar), rewrote the reasoning on the source's actual China-focused targeting
+    + "pro-Indian intelligence requirements" language, added attesting_source_id (as the supporting
+    source) and an inference_basis{signals, ruled_out}; held at strongly_inferred (NOT upgraded to
+    attested — the doctrine is an inferred posture with no Indian-state text and the report names
+    state tasking only circumstantially). (3) targets: kept orgs/government-various (free-form
+    orgs/ slug; validator does not hard-FK it — sibling Patchwork events use the same convention)
+    but added sectors/government as the primary worldwide-government target and per-target outcome
+    prose for both. published_on (2016-07-07), disclosure_date (2016-07-07), start_date
+    (2015-12-01 = "first observed December 2015") all correct; start<disclosure ordering valid.
+    FKs resolve: actor in/unscoped/patchwork (file atlas/actors/in/patchwork.yaml), doctrine +
+    china-collection pillar, source. NB the start_date/slug year split (2015-12 start vs 2016-07
+    slug) is intentional (the slug dates the disclosure event; slugs are stable).

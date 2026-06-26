@@ -1,58 +1,164 @@
-id: 2015-12/banco-del-austro
+id: 2015-12/banco-del-austro  # slug stable; the heist is January 2015 (see start_date) — id path retained per the never-rename rule
 name: Banco del Austro (Ecuador) SWIFT theft
-start_date: 2015-12-01  # approximate; pre-Bangladesh prototype window
-disclosure_date: 2016-05-19  # via Reuters reporting
-end_date: 2016-01-31
+start_date: 2015-01-12  # Jan 12 2015 per Reuters/Mandiant; fraudulent transfers ran ~10 days (was erroneously 2015-12-01)
+disclosure_date: 2016-05-20  # Reuters special report / Bloomberg / CNN, 2016-05-20 (was 2016-05-19)
+end_date: 2015-01-31  # ~10-day transfer window in Jan 2015 (was erroneously 2016-01-31)
 incident_type:
   - financial-theft
-initial_vector: unknown
+initial_vector: valid-creds  # hackers obtained a BDA employee's SWIFT logon credentials (Reuters; Wells Fargo defense)
 outcome_summary: |
-  SWIFT-message manipulation against Banco del Austro (Ecuador),
-  routing $12M in fraudulent transfers. Partial recovery via
-  litigation against Wells Fargo. Pre-Bangladesh prototype
-  attack — established the SWIFT-network financial-theft pattern
-  that APT38 would scale at Bangladesh Bank two months later.
+  Fraudulent SWIFT messages instructed correspondent bank Wells
+  Fargo to move ~$12M out of Banco del Austro (Ecuador) over a
+  ~10-day window in January 2015, to receiving accounts in Hong
+  Kong, Dubai, New York and Los Angeles. The theft surfaced
+  publicly only via BDA's New York lawsuit against Wells Fargo
+  (Reuters, May 2016); the suit settled in February 2018 (terms
+  undisclosed; partial recovery). An EARLY SWIFT-network bank
+  heist — it predates the Bangladesh Bank theft (Feb 2016) by
+  ~13 months and was later linked, with limited insight, to the
+  same DPRK-attributed SWIFT-fraud cluster (APT38 / Lazarus).
 quantified_impact:
   usd_stolen: 12000000
 false_flag_risk: none
 campaign_id: apt38-swift-bank-heists
 summary: |
-  Retrospectively attributed to APT38 by Mandiant's October 2018
-  report on tradecraft similarity to Bangladesh Bank. Less
-  attested than the canonical APT38 events because no DOJ
-  indictment or Treasury action names this incident specifically.
-  Mandiant links the operation to the same APT38 / BeagleBoyz
-  toolkit later catalogued in CISA AA20-239A: long pre-heist
-  reconnaissance, abuse of valid credentials on the bank's SWIFT
-  Alliance Access workstations, DYEPACK-style manipulation of
-  outbound MT-103 messages and suppression of corresponding
-  confirmation receipts, and the use of NESTEGG / KEYMARBLE /
-  FALLCHILL-lineage backdoors with Manuscrypt-family loaders for
-  C2. The $12M routed through Wells Fargo to receiving accounts
-  in Hong Kong and Dubai prefigures the Bangladesh Bank attempt
-  two months later.
+  At disclosure (Reuters, May 2016) the Banco del Austro incident
+  was framed strictly as fraud + litigation: hackers used a BDA
+  employee's stolen SWIFT credentials to send authenticated
+  messages instructing correspondent Wells Fargo to wire ~$12M to
+  accounts in Hong Kong, Dubai, New York and Los Angeles; neither
+  bank reported it to SWIFT, and the facts emerged only through
+  BDA's suit against Wells Fargo (settled Feb 2018). NO attribution
+  to the DPRK / Lazarus was made at the time.
+
+  The DPRK link is LATER and INFERENTIAL, via SWIFT-fraud TTP
+  clustering. Symantec (May 2016) tied the Bangladesh Bank, Tien
+  Phong and Banco del Austro operations to Lazarus on shared
+  tooling; Mandiant's Oct-2018 "APT38: Un-usual Suspects" report
+  lists Banco del Austro among APT38-linked targets but expressly
+  caveats "While we have limited insight into this targeting, we
+  have identified APT38 targeting South American entities
+  previously" — i.e. a hedged, public-reporting-based association,
+  not a forensic attribution of this specific intrusion. Mandiant
+  documents APT38's signature SWIFT tradecraft in general (long
+  pre-positioning; manipulation of the Alliance Access Oracle/SQL
+  records via the DYEPACK suite to erase fraudulent-transfer
+  traces; NESTEGG backdoor), but does NOT establish those specific
+  tools for the Banco del Austro intrusion. This is therefore one
+  of the LEAST-attested events in the APT38 cluster — no DOJ
+  indictment or Treasury action names this incident.
 attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: Symantec Security Response
+    attributing_org_confidence: moderate
+    attribution_level: named-actor  # Symantec named "Lazarus" (= APT38 financial subset)
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2016-05-26
+    attribution_source_id: symantec/2016-05-26_swift-attacks-lazarus
+    notes: |
+      Earliest public linkage of Banco del Austro to the Lazarus
+      cluster, via shared SWIFT-attack tooling/infrastructure across
+      Bangladesh Bank, Tien Phong and Banco del Austro. AUSPEX maps
+      this to the APT38 financial subset. Moderate confidence: a
+      tooling-similarity inference, not a forensic attribution of
+      the BDA intrusion specifically.
   - actor_id: kp/rgb/apt38
     attributing_org: Mandiant
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor  # Mandiant named APT38 but with "limited insight" into this target
+    auspex_assessment: concur-with-caveat
     attribution_date: 2018-10-03
     attribution_source_id: mandiant/2018-10-03_apt38-report
+    notes: |
+      Mandiant's "Un-usual Suspects" lists Banco del Austro among
+      APT38-linked targets but caveats "While we have limited
+      insight into this targeting" — a hedged, public-reporting
+      association. concur-with-caveat (was concur): the DPRK link
+      for this specific incident is inferential, not forensically
+      established, and no govt action names it.
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Byungjin-window hard-currency generation via SWIFT-network
-      theft. Same doctrinal logic as Bangladesh Bank; less
-      attested because attribution itself is retrospective and
-      via vendor research rather than US-government indictment.
+      Byungjin-window (2013–2018) hard-currency generation via
+      SWIFT-network theft — the same doctrinal logic as the
+      Bangladesh Bank / Tien Phong cluster. strongly_inferred, NOT
+      attested: neither cited source states the strategic purpose
+      of THIS operation (Mandiant has "limited insight" into the
+      BDA targeting; Symantec speaks to tooling, not intent), and
+      the actor/cluster's revenue-for-the-regime motive is itself a
+      proximate goal the byungjin pillar specializes — which is the
+      strongly_inferred bar, not attested.
+    inference_basis:
+      signals:
+        - APT38/Lazarus is a financially-motivated DPRK cluster whose
+          mission is hard-currency generation (Mandiant, Treasury).
+        - The op is a SWIFT-network bank heist in the byungjin window,
+          matching the cluster's signature revenue tradecraft.
+      ruled_out: |
+        Pure-criminal (non-state) financial crime is ruled out by the
+        actor's DPRK-state attribution; an espionage/sabotage reading
+        is ruled out by the financial-theft mechanism and outcome.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/banco-del-austro
+  - target_id: orgs/banco-del-austro  # registry entry not yet created — tolerated target-FK gap (validate.ts: "targets/ normalization deferred"); mirrors sibling orgs/tien-phong-bank
+    country: ec
     role: primary
-    outcome: $12M fraudulently transferred; partial recovery.
+    outcome: ~$12M fraudulently transferred via Wells Fargo; surfaced through litigation, settled Feb 2018 (partial recovery, terms undisclosed).
 sources:
+  - symantec/2016-05-26_swift-attacks-lazarus
   - mandiant/2018-10-03_apt38-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-25
+  level: full
+  notes: |
+    Early (Jan-2015) Banco del Austro / Ecuador SWIFT heist — an APT38/Lazarus
+    SWIFT-fraud case that PREDATES Bangladesh Bank. FACTS verified against primary
+    reporting (Reuters special report, Bloomberg, CNN, all 2016-05-20; Wikipedia
+    "2015–2016 SWIFT banking hack"; PYMNTS on the settlement): ~$12M via stolen SWIFT
+    credentials, correspondent Wells Fargo, receiving accounts in Hong Kong/Dubai/New
+    York/Los Angeles, surfaced only via BDA's NY lawsuit, settled Feb-2018. ATTRIBUTION
+    (the load-bearing point): at disclosure the incident was framed STRICTLY as
+    fraud+litigation with NO Lazarus/DPRK attribution; the DPRK link is later and
+    inferential. Symantec (2016-05-26, tier=primary) first tied BDA to Lazarus on
+    shared tooling; Mandiant's "APT38: Un-usual Suspects" (2018-10-03) lists BDA among
+    APT38 targets but EXPRESSLY caveats "While we have limited insight into this
+    targeting, we have identified APT38 targeting South American entities previously"
+    (verbatim, raw PDF p.6) — a hedged public-reporting association, not a forensic
+    attribution. CORRECTIONS: (1) start_date 2015-12-01 → 2015-01-12 (heist is Jan
+    2015, not Dec 2015 — the id slug is retained per the never-rename rule); end_date
+    2016-01-31 → 2015-01-31; disclosure_date 2016-05-19 → 2016-05-20. (2) "two months
+    [before Bangladesh Bank]" → ~13 months (Jan-2015 vs Feb-2016) — corrected in both
+    summaries. (3) De-over-specified the TTPs: KEYMARBLE/FALLCHILL/Manuscrypt and
+    MT-103-receipt-suppression are NOT in the cited Mandiant report (term-scan 0 hits;
+    those are CISA Hidden-Cobra artifacts) and Mandiant does NOT establish any tooling
+    for the BDA intrusion specifically; reframed to what the source supports (DYEPACK
+    Alliance-Access SQL manipulation + NESTEGG as APT38's GENERAL tradecraft, both
+    confirmed in the PDF). (4) initial_vector unknown → valid-creds (stolen SWIFT
+    logon). (5) Added Symantec 2016-05-26 (tier=primary) as a second attribution +
+    source, resolving the single-source/circularity risk flagged in the verification
+    plan. (6) Both attribution entries auspex_assessment concur → concur-with-caveat
+    and given attribution_level: named-actor; the inferential nature is documented in
+    their notes. (7) Doctrine link KEPT strongly_inferred (correctly NOT attested — no
+    source states this op's purpose; revenue motive is the proximate goal the byungjin
+    pillar specializes); added inference_basis (signals + ruled_out). Added country: ec
+    to the target. ACTOR: kp/rgb/apt38 resolves, freshly audited 2026-06-24 (primary
+    service kp/rgb/lab-110, RGB nexus raw-verified on OFAC/DOJ/CISA). target_id
+    orgs/banco-del-austro has no registry file, but that is a corpus-wide tolerated
+    target-FK gap (validate.ts: "targets/ normalization deferred"; 403 orgs referenced
+    vs 110 files), not an error — left as-is (mirrors sibling orgs/tien-phong-bank).
+    RAW: cited Mandiant source captured as the genuine 32-page "Un-usual Suspects" PDF
+    (services.google.com canonical copy), sha256
+    b64603759c0a96721c69ba2083770a2a3baec1535a7f4f5ec08ef353d986ed71 — it names Banco
+    del Austro (6 hits). The blog URL itself is an empty cloud.google.com SPA shell
+    (UNFETCHABLE, per the source's existing note) so the PDF is the raw_snapshot of
+    record. Symantec live URL is 404 (Broadcom migration) and its archive copy is
+    archive.org-blocked per protocol; content independently corroborated via
+    Wikipedia/ComputerWeekly excerpts, so no raw_snapshot on Symantec. level: full —
+    every factual + attribution claim corroborated against primary sources with the
+    cited Mandiant report raw-captured and hashed.
