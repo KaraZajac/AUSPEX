@@ -8,58 +8,125 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Vendor reporting through late 2017 documented continued
-  Patchwork / Dropping Elephant operations using the BADNEWS
-  Windows implant against Pakistani government, military, and
-  diplomatic targets, with extensions into Bangladeshi and Sri
-  Lankan equities. Tradecraft included weaponized Office
-  documents (CVE-2012-0158, CVE-2015-1641), PowerShell loaders,
-  and BADNEWS variants with refreshed C2 infrastructure
-  consistent with prior Forcepoint and Cymmetria characterization.
+  Contemporaneous vendor reporting documented continued
+  Patchwork / Dropping Elephant operations through 2017 using
+  the BADNEWS Windows implant against Pakistani government and
+  military targets, delivered through weaponized Office
+  documents.
 false_flag_risk: none
 summary: |
-  Continuity-tradecraft event covering the gap between the
-  2016 Patchwork-naming triad (Kaspersky, Cymmetria, Forcepoint)
-  and the 2018 Volexity US-think-tank disclosure. The BADNEWS
-  family remained the cluster's canonical Windows implant
-  through this period; operational tempo against Pakistani
-  government targets was sustained rather than elevated.
+  Continuity event for the period between the 2016 Patchwork
+  naming reports (Kaspersky, Cymmetria, Forcepoint) and the
+  2018 Volexity US-think-tank disclosure. Patchwork / Dropping
+  Elephant remained active through 2017, with the BADNEWS
+  Windows implant as its canonical first-stage tooling against
+  South Asian government and diplomatic targets, delivered via
+  spear-phished weaponized Office documents.
 attributions:
   - actor_id: in/unscoped/patchwork
-    attributing_org: Cisco Talos / vendor-consensus
+    attributing_org: vendor-consensus
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2017-11-01
     attribution_source_id: cisco-talos/2017-11_patchwork-badnews-continuation
     notes: |
-      Attribution rests on tradecraft and tooling overlap with
-      prior Kaspersky / Cymmetria / Forcepoint Patchwork
-      reporting rather than independent attribution development.
+      Named-actor (the "Patchwork" / Dropping Elephant cluster),
+      not a named Indian service. Attribution rests on tradecraft
+      and tooling overlap with prior Kaspersky / Cymmetria /
+      Forcepoint Patchwork reporting. AUDIT 2026-06-27: removed
+      the "Cisco Talos" attributor credit — Talos never published
+      on Patchwork and the cited Talos source does not exist (see
+      qc / source notes). attribution_source_id still points to
+      that placeholder pending re-sourcing to Trend Micro
+      (2017-12-11) / Unit 42 (2018-03-07).
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani government and military victim set is canonical
-      for the Pakistan-military pillar.
-    contested: false
-    analyst: claude
-  - doctrine_id: in/regional-collection-pakistan-china
-    pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Bangladeshi and Sri Lankan diplomatic targeting maps onto
-      the diplomatic-collection pillar.
+      Patchwork is an India-aligned cluster whose canonical
+      mission is collection against Pakistani government and
+      military targets (Unit 42's 2018 BADNEWS reporting names
+      the Pakistan Army, Pakistan Atomic Energy Commission, and
+      Ministry of the Interior). No source states the strategic
+      goal, so the link is strongly_inferred, not attested.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/pakistani-government
+  - target_id: orgs/pakistani-military
     country: pk
-    role: primary
-  - target_id: orgs/bangladesh-foreign-ministry
-    country: bd
     role: primary
 sources:
   - cisco-talos/2017-11_patchwork-badnews-continuation
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: partial
+  notes: |
+    AUDIT 2026-06-27 (max effort). HEADLINE FINDING — the sole cited source is
+    FABRICATED / non-existent. There is no Cisco Talos report on Patchwork / Dropping
+    Elephant / BADNEWS. Evidence: (1) web search + `site:blog.talosintelligence.com`
+    for Patchwork/Dropping Elephant return zero Talos articles — Patchwork coverage is
+    all from other vendors (Trend Micro, Unit 42, Rapid7, Forcepoint, Kaspersky,
+    Cymmetria, Volexity). (2) The source record's url is only the blog homepage
+    (https://blog.talosintelligence.com/), not an article; curl 2026-06-27 returned
+    HTTP 200, 81,247 bytes, sha256 d85ed0e6…28914343 = the CURRENT (2026) Talos
+    homepage, containing zero "patchwork"/"badnews"/"dropping elephant" matches. No
+    valid raw snapshot of the cited source could be captured because the source content
+    does not exist; the misleading homepage capture was deleted, not recorded. (3) The
+    source record itself admits "Exact URL needs verification." (4) The source slug is
+    identical to the event slug — a hallmark of an auto-synthesized placeholder, and the
+    event summary openly described itself as a "continuity-tradecraft event covering the
+    gap." Level=partial: the event's CORE claim (Patchwork continued BADNEWS deployment
+    vs. Pakistani government/military through 2017) is mirror-corroborated by GENUINE
+    contemporaneous reporting — Trend Micro "Untangling the Patchwork Cyberespionage
+    Group" (2017-12-11; Lunghi/Horejsi/Pernet) and Palo Alto Unit 42 "Patchwork
+    Continues to Deliver BADNEWS to the Indian Subcontinent" (2018-03-07) — but the
+    cited source itself is invalid, so this is NOT a full pass.
+    [a] FACTS — corrected. outcome_summary previously asserted CVE-2012-0158 +
+    CVE-2015-1641, "PowerShell loaders," and "BADNEWS variants with refreshed C2
+    infrastructure consistent with prior Forcepoint and Cymmetria characterization":
+    none of these is carried by any verifiable cited source (the cited source does not
+    exist), and the real 2017-18 BADNEWS exploit chain per Unit 42 is CVE-2015-2545 +
+    CVE-2017-0261 — the asserted CVEs are unsourced/wrong. STRIPPED. Also removed the
+    unsupported "extensions into Bangladeshi and Sri Lankan equities" and the unsourced
+    "operational tempo… sustained rather than elevated" characterization. Retained only
+    Patchwork's uncontroversial, well-corroborated profile (India-aligned cluster,
+    BADNEWS first-stage implant, weaponized Office docs, Pakistani govt/military
+    victimology).
+    [b] ATTRIBUTION — corrected. attributing_org "Cisco Talos / vendor-consensus" →
+    "vendor-consensus": Talos never reported Patchwork, so crediting it as attributor is
+    false. Confidence kept moderate (tradecraft/tooling-overlap basis, per the actor's
+    real cited sources). DIRECTIONALITY verified: actor = India-aligned (in/…),
+    victims = Pakistan (pk) — attacker-home India is NOT set as a victim. ✓
+    [c] DATES — flagged, not silently rewritten. start_date 2017-01-01 is a defensible
+    best-estimate for 2017 activity. disclosure_date 2017-11-01 and end_date 2017-10-31
+    trace to the fabricated source's invented published_on; the GENUINE public
+    disclosures are 2017-12-11 (Trend Micro) and 2018-03-07 (Unit 42). Left as-is
+    pending re-sourcing (changing them would imply sources not yet cited) — to be fixed
+    when the event is re-sourced.
+    [d] DOCTRINE_LINKS — corrected. REMOVED the diplomatic-collection link: it rested
+    entirely on the unsupported Bangladesh/Sri Lanka claim and a dangling target FK; no
+    verifiable source carries regional diplomatic targeting for THIS window. KEPT the
+    pakistan-military link at strongly_inferred (honest: Patchwork's canonical Pakistani
+    military/govt victim set is corroborated by Unit 42, which names the Pakistan Army /
+    Atomic Energy Commission / Ministry of the Interior; no source states the strategic
+    goal, so not attested; doctrine is itself `inferred`, no attesting_source_id — correct).
+    [e] ATTRIBUTION_LEVEL — added: named-actor (vendors name the "Patchwork" cluster,
+    not an Indian service/unit; consistent with the actor being in/unscoped).
+    [f] ACTOR_ID — in/unscoped/patchwork RESOLVES (file atlas/actors/in/patchwork.yaml,
+    id: in/unscoped/patchwork; demoted from in/ntro/patchwork on 2026-06-24, already
+    audited). No actor flag.
+    TARGETS — both original FKs were DANGLING. orgs/pakistani-government does not exist
+    → fixed to orgs/pakistani-military (real entry: pk, government/defense-ministry,
+    national-cii; matches Unit 42's victim set). orgs/bangladesh-foreign-ministry does
+    not exist (only orgs/bangladesh-bank, a central bank, exists) AND the claim is
+    unsupported → target REMOVED.
+    RESIDUAL FLAGS for orchestrator: (1) SOURCE FABRICATION — cisco-talos/2017-11_
+    patchwork-badnews-continuation is a non-existent report; replace with real records
+    (Trend Micro 2017-12-11 + Unit 42 2018-03-07) or REMOVE this synthesized event.
+    (2) Once re-sourced, fix disclosure_date→2017-12-11 and reconsider end_date.
+    (3) attribution_source_id still points to the placeholder source pending re-sourcing.

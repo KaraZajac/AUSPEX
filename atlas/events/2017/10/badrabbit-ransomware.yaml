@@ -5,48 +5,160 @@ disclosure_date: 2017-10-24
 end_date: 2017-10-25
 incident_type:
   - ransomware
-  - destructive
-initial_vector: 0-day  # drive-by water-holed news sites delivering fake Flash update
+  - destructive  # MBR overwrite + full-disk (DiskCryptor) encryption locked systems; NOT a wiper (Securelist: recoverable)
+initial_vector: phishing  # watering-hole drive-by: compromised news sites served a fake Adobe Flash updater the user ran manually; NO exploit at initial access (EternalRomance/MS17-010 was lateral movement only). 0-day was wrong; enum has no watering-hole term, phishing = social-engineering bucket.
 outcome_summary: |
-  Drive-by water-holed news sites delivered a fake Flash update
-  that dropped a SMB-worming ransomware against Russian media,
-  Ukrainian Kyiv metro, Odessa airport, and Ukrainian ministries.
-  Limited but visible disruption.
-false_flag_risk: suspected
+  Compromised, mostly-Russian news/media websites served a fake
+  Adobe Flash updater via drive-by; once a user ran it, the
+  ransomware encrypted the disk and worm-spread over SMB using
+  Mimikatz, a hardcoded weak-credential list, and the EternalRomance
+  (MS17-010) exploit. ESET telemetry put the dropper distribution at
+  ~65% Russia and ~12% Ukraine; the named Ukrainian infrastructure
+  victim was the Kyiv metro. Distribution infrastructure
+  (1dnscontrol[.]com) was active only ~6 hours before takedown —
+  limited but visible disruption.
+false_flag_risk: none  # no cited source carries a false-flag assessment; majority-Russia impact is genuine, not misdirection
 summary: |
-  ESET and Cisco Talos assessed BadRabbit as part of the Sandworm
-  / BlackEnergy ecosystem on the basis of code re-use. Hitting
-  Russian outlets alongside Ukrainian targets has been read as
-  false-flag obfuscation rather than genuine cross-border
-  targeting. AUSPEX preserves the dossier's plausible call.
+  On 24 Oct 2017 ESET, Cisco Talos and Kaspersky/Securelist
+  independently documented "BadRabbit" (ESET: Win32/Diskcoder.D), a
+  drive-by ransomware outbreak across Russia, Ukraine and eastern
+  Europe. All three vendors linked it by code to the June-2017
+  NotPetya outbreak (Talos "Nyetya"; ESET "Diskcoder.C"; Kaspersky
+  "ExPetr"): Talos assessed "with high confidence ... BadRabbit is
+  built on the same core codebase as Nyetya" but only "with low
+  confidence that the authors of Nyetya and BadRabbit are the same",
+  and Kaspersky noted "a notable similarity between the code of ExPetr
+  and Bad Rabbit binaries". No cited vendor named Sandworm, TeleBots,
+  BlackEnergy or the GRU. AUSPEX assesses the actor as Sandworm
+  transitively — NotPetya is governmentally attributed to GRU Unit
+  74455/Sandworm (see 2017-06/notpetya) and BadRabbit shares its
+  codebase — but treats that tie as low-confidence and activity-
+  cluster-level, since the criminal-revenue alternative survives.
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: ESET / Cisco Talos
-    attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2017-10-25
-    attribution_source_id: eset/2017-06_industroyer-win32  # ESET tracking; no separate badrabbit advisory source modeled
+    attributing_org: "Cisco Talos (code link to NotPetya / Nyetya)"
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2017-10-24
+    attribution_source_id: blogtalosintelligence/2017-10-24_bad-rabbit
+    notes: |
+      No cited 2017 source names Sandworm/TeleBots/BlackEnergy/GRU. The vendors reached only a
+      code-cluster link to NotPetya: Talos "We assess with high confidence ... BadRabbit is built
+      on the same core codebase as Nyetya" but "with low confidence that the authors of Nyetya and
+      BadRabbit are the same"; ESET "Win32/Diskcoder.D is modified version of Win32/Diskcoder.C"
+      (=NotPetya); Kaspersky "notable similarity between the code of ExPetr and Bad Rabbit
+      binaries". Hence attribution_level=activity-cluster and confidence=low. AUSPEX resolves the
+      NotPetya developer cluster to ru/gru/74455/sandworm because NotPetya is attributed to GRU
+      Unit 74455/Sandworm by the White House/UK NCSC (2018) and DOJ (2020) — see 2017-06/notpetya;
+      the BadRabbit URL is also carried in the Sandworm actor record's misp_refs. This is a
+      TRANSITIVE/AUSPEX assessment via the NotPetya code link, NOT a vendor-stated attribution —
+      hence concur-with-caveat. (Prior record over-attested: it cited the unrelated ESET June-2017
+      Industroyer report as a "moderate"/concur Sandworm attribution; corrected.)
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: plausible
     reasoning: |
-      Ukrainian critical-services targeting aligns with Ukraine-
-      theater destabilization but the cross-border collateral
-      to Russian targets complicates the clean tag.
+      If BadRabbit is Sandworm (a low-confidence, transitive attribution), the hit on Ukrainian
+      critical services — the named Kyiv-metro disruption — fits Ukraine-theater destabilization.
+      The label is only plausible because (a) the actor tie itself is weak and vendor-unstated, and
+      (b) ESET telemetry shows ~65% of the impact fell inside Russia (vs ~12% Ukraine) and the
+      malware is recoverable, revenue-capable ransomware, so a criminal operation recycling
+      NotPetya code is a live competing reading. No source states a strategic purpose.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Sandworm Ukraine-theater disruption: the named infrastructure victim is the Kyiv metro and the codebase descends from NotPetya, an attested Russkiy-Mir/Ukraine-theater operation (2017-06/notpetya)."
+        - "Criminal ransomware recycling NotPetya code for revenue: BadRabbit is genuine recoverable ransomware (Securelist: 'not intended as a wiper'), no vendor named a state actor, and ~65% of the impact was inside Russia rather than Ukraine."
     counter_explanation: |
-      Could be a criminal ransomware operation that recycled
-      Sandworm-adjacent code rather than a state-directed
-      campaign. Attribution rests on code-overlap inference; no
-      government attribution exists.
+      Could be a financially-motivated operation that reused Sandworm-adjacent (NotPetya) code
+      rather than a state-directed campaign; attribution rests on code overlap (Talos: low
+      confidence same authors) and no government attribution of BadRabbit exists.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/kyiv-metro
-    role: primary
-  - target_id: orgs/odessa-airport
-    role: primary
+  - target_id: sectors/transport/rail
+    country: ua
+    role: primary  # Kyiv metro — ESET: "major infrastructure in Ukraine including Kiev metro"
+  - target_id: sectors/media/journalism
+    country: ru
+    role: staging  # compromised Russian news/media sites (e.g. fontanka.ru) hosting the watering-hole inject
 sources:
-  - eset/2017-06_industroyer-win32
+  - welivesecurity/2017-10-24_bad-rabbit-notpetya
+  - blogtalosintelligence/2017-10-24_bad-rabbit
+  - securelist/2017-10-24_bad-rabbit-ransomware
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: full
+  notes: |
+    Audited against three first-hand vendor analyses of BadRabbit, all 24 Oct 2017, raw-snapshotted
+    + hashed: ESET welivesecurity/2017-10-24_bad-rabbit-notpetya (sha256 2233eb88…884f6003, 77457 B),
+    Cisco Talos blogtalosintelligence/2017-10-24_bad-rabbit (bddfa31b…1bc6f289, 83894 B), Kaspersky
+    securelist/2017-10-24_bad-rabbit-ransomware (ac66b684…0101cff3, 205894 B).
+
+    SOURCING DEFECT FIXED (root issue): the event's ONLY source was eset/2017-06_industroyer-win32 —
+    the June-2017 ESET Industroyer/CrashOverride report about the Dec-2016 Ukraine power-grid attack,
+    a DIFFERENT malware/event. I snapshotted it (d4e0c621…715b7720, 76672 B) as proof: its text has
+    16 "Industroyer/CrashOverride" mentions and ZERO "Bad Rabbit/Diskcoder.D" — it carries NONE of
+    this event's claims. Removed it from sources; added the three correct BadRabbit primaries (new
+    source records created, snapshots reused/captured + hashed). Industroyer record left intact for
+    its legitimate citers (2016-12/ukraine-industroyer-crashoverride, targets/orgs/ukrenergo).
+
+    [a] FACTS — corrected to source. Drive-by via compromised sites + fake "Flash" updater the user
+    runs manually, then SMB worming (Mimikatz + weak-cred list + EternalRomance/MS17-010): carried
+    verbatim by all three (Talos "does not use any exploit to compromise the system directly" /
+    "usage of the EternalRomance exploit to propagate in the network"; Kaspersky "No exploits were
+    used, so the victim would have to manually execute the malware dropper"). Kyiv metro = ESET
+    ("major infrastructure in Ukraine including Kiev metro"). Russia ~65% / Ukraine ~12.2% = ESET
+    telemetry. ~6h infrastructure lifetime = Talos. STRIPPED unsourced victims: "Odessa airport"
+    (0 mentions in any of the 3 sources) and "Ukrainian ministries" (0 — the earlier read was a
+    false positive on "adMINISTRator"/"administrative" in the password list). incident_type kept
+    [ransomware, destructive] and NOT wiper: Securelist "Bad Rabbit is not intended as a wiper ...
+    technical means to decrypt"; "destructive" reflects MBR overwrite + full-disk lock (Talos
+    "destructive nature"), not data-wiping. false_flag_risk suspected -> none (no source carries a
+    false-flag assessment; majority-Russia impact is genuine).
+
+    [b] ATTRIBUTION — de-over-attested. Was actor=sandworm, org "ESET / Cisco Talos", confidence
+    moderate, assessment concur, cited to the WRONG (Industroyer) source. NO 2017 vendor names
+    Sandworm/TeleBots/BlackEnergy/GRU (grep across all 3 snapshots = 0 each). Strongest vendor claim
+    is Talos: "high confidence ... same core codebase as Nyetya" but "low confidence that the authors
+    of Nyetya and BadRabbit are the same". Set confidence=low, attribution_level=activity-cluster
+    (cf. Tortoiseshell precedent), assessment=concur-with-caveat, date=2017-10-24, source=Talos.
+    actor_id ru/gru/74455/sandworm KEPT as an explicit transitive AUSPEX assessment (BadRabbit shares
+    NotPetya's codebase; NotPetya = govt-attributed Sandworm, 2017-06/notpetya; BadRabbit URL already
+    in Sandworm actor misp_refs) — fully documented in attribution.notes. NB: MISP-galaxy
+    threat-actor.json does NOT map BadRabbit (0 hits) — no MISP claim made.
+
+    [c] DATES — start/disclosure 2017-10-24 confirmed (Talos "initial download ... around 2017-10-24
+    08:22 UTC"; all 3 datePublished 2017-10-24). end_date 2017-10-25 kept (distribution server down
+    same day; vendor updates ran to 26 Oct). All three new source records carry the true
+    published_on = 2017-10-24 (from each snapshot's datePublished/byline), distinct from the campaign
+    being a single-day event.
+
+    [d] DOCTRINE_LINKS — ru/russkiy-mir/ukraine-theater kept at confidence=plausible, attesting_source_id
+    null (correct: no source states purpose; NOT attested). Reasoning rewritten to be honest about the
+    weak/transitive actor tie + majority-Russia impact; added inference_basis.alternatives (2, colon-
+    space items quoted per YAML rule) and tightened counter_explanation. Attacker-rationale link
+    (actor-state ru = doctrine-state ru) — no perspective tag needed, no doctrine-state-mismatch.
+
+    [e] ATTRIBUTION_LEVEL — set to activity-cluster (was absent); vendors reached only the NotPetya
+    developer-cluster, not named-actor.
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml (id matches);
+    record is mature, not provisional. No actor-file edit. FLAG: the BadRabbit->Sandworm tie is
+    transitive only (no contemporaneous source names the actor) — surfaced here for the orchestrator,
+    not an actor-record defect.
+
+    TARGETS — both prior targets were DANGLING FKs (orgs/kyiv-metro, orgs/odessa-airport: no registry
+    files exist) and odessa-airport was also unsourced. Replaced with sector FKs that resolve and are
+    source-carried: sectors/transport/rail (ua, primary = Kyiv metro) and sectors/media/journalism
+    (ru, staging = compromised Russian news sites hosting the inject). Did not invent registry files
+    (out of audit scope).
+
+    RESIDUAL UNCERTAINTY — the Sandworm attribution is the weakest link: it is an AUSPEX inference off
+    a low-confidence code overlap, with a genuine criminal-actor alternative; reflected by confidence=low,
+    level=activity-cluster, assessment=concur-with-caveat, and a plausible (not higher) doctrine link.

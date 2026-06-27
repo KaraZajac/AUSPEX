@@ -2,27 +2,30 @@ id: 2014-02/carbanak-bank-heists
 name: Carbanak / Anunak bank-network intrusions and SWIFT / ATM heists
 start_date: 2013-12-01
 disclosure_date: 2015-02-16
-end_date: 2018-03-26  # FIN7 operator Hladyr arrest
+end_date: null  # not bounded by either cited source; prior 2018-03-26 ("FIN7 operator Hladyr arrest") was mislabeled (Hladyr arrested Jan 2018) and actually matches the Europol Spain Carbanak/Cobalt-mastermind arrest announcement, which is not cited here — see qc
 incident_type:
   - intrusion
   - financial-theft
 initial_vector: phishing
 outcome_summary: |
   Multi-year campaign by the Russian-speaking Carbanak / Anunak
-  cluster (later separately tracked as FIN7) targeting more than
-  100 financial institutions across 40 countries with cumulative
-  losses estimated at USD 900M to USD 1B. Tradecraft: phishing
-  delivery of the Carbanak / Anunak backdoor against bank
-  employees, weeks-to-months of patient internal reconnaissance,
-  followed by direct manipulation of SWIFT messaging, ATM cash-
-  out via remote orchestration ("jackpotting"), and database-
-  level adjustment of account balances. Kaspersky's February
-  2015 public disclosure was the first major exposure of the
-  cluster.
+  cluster (later separately tracked as FIN7) targeting up to
+  100 financial institutions (most-affected countries per
+  Kaspersky's infection telemetry: Russia, the US, Germany and
+  China) with cumulative losses estimated as high as USD 1B.
+  Tradecraft: spear-phishing delivery of the Carbanak / Anunak
+  backdoor against bank employees, an average of two-to-four
+  months of patient manual internal reconnaissance per bank,
+  followed by use of the SWIFT network to transfer funds to
+  criminal-controlled accounts, ATM cash-out via remote
+  orchestration ("jackpotting"), and database-level adjustment
+  of account balances. Kaspersky's February 2015 public
+  disclosure was the first major exposure of the cluster.
 quantified_impact:
-  banks_targeted: 100
-  countries_affected: 40
-  estimated_losses_usd: 1000000000
+  banks_targeted: 100  # Kaspersky: "up to 100 financial institutions"
+  estimated_losses_usd: 1000000000  # Kaspersky: losses "could be as high as $1 billion"
+  # countries_affected removed in audit: neither cited source states a total country
+  # count (Kaspersky names only RU/US/DE/CN as most-affected); prior value 40 unsupported
 false_flag_risk: none
 operators_named:
   - kolpakov-andrii  # FIN7 / Carbanak, DOJ Aug 2018
@@ -39,8 +42,9 @@ summary: |
   ever been published.
 attributions:
   - actor_id: criminal/fin7
-    attributing_org: Kaspersky + DOJ + Group-IB
+    attributing_org: Kaspersky + DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2015-02-16
     attribution_source_id: kaspersky/2015-02-16_carbanak-great-bank-robbery
@@ -56,4 +60,74 @@ targets:
   - target_id: sectors/finance/swift
     role: collateral
 sources:
-  - doj/2018-08-01_fin7-three-indictments
+  - kaspersky/2015-02-16_carbanak-great-bank-robbery  # primary for the bank-heist operation claims
+  - doj/2018-08-01_fin7-three-indictments  # operator names + FIN7/Carbanak cluster identity (retail/POS indictment)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: partial
+  notes: |
+    Audited vs the two cited sources. KASPERSKY GReAT "The Great Bank Robbery: the
+    Carbanak APT" (2015-02-16) was fully snapshotted (raw sha256 aafe5680…5dabf8b9,
+    206,455 bytes HTML / 23,396 chars text) and carries the operation claims. DOJ
+    "Three Members of ... 'Fin7' In Custody" (2018-08-01) is Akamai-INTERSTITIAL
+    bot-walled on both /opa/pr/ and /archives/opa/pr/ paths (only a 2,586-byte
+    challenge page returns; not a valid content capture) — its claims are mirror-
+    corroborated via the sibling event 2018-08/fin7-three-indictments + the source
+    record's own title/notes; hence level=partial.
+
+    SOURCING DEFECT FIXED (the central finding): the event previously cited ONLY the
+    DOJ indictment, but that indictment is FIN7 RETAIL/POS-specific ("attacking over
+    100 U.S. companies ... predominantly in the restaurant, gaming, and hospitality
+    industries"; 6,500 POS terminals / 3,600 locations — see sibling event) and does
+    NOT carry this event's core bank-network SWIFT/ATM-heist claims. Added the real
+    primary, kaspersky/2015-02-16_carbanak-great-bank-robbery (it was already the
+    attribution_source_id but absent from sources[]). Carbanak (Kaspersky-named
+    2013-2016 bank heists) vs FIN7 (POS/retail) are related-but-distinguished
+    clusters; this event is the bank-heist operation, the 2018-08 event is the
+    documentary retail indictment. Both are legitimately distinct.
+
+    [a] FACTS — Kaspersky raw verbatim: "Carbanak is the name we use for an APT-style
+    campaign targeting (but not limited to) financial institutions" (also "Anunak");
+    "Up to 100 financial institutions have been hit"; "total financial losses could
+    be as a high as $1 billion"; "the first malicious samples were compiled in
+    August, 2013 ... The first infections were detected in December, 2013"; "On
+    average, each bank robbery took between two and four months ... they perform a
+    manual reconnaissance"; "a spear phishing e-mail with a CPL attachment"; cash-out
+    triad verbatim: "the SWIFT network was used to transfer money out of the
+    organisation and into criminals' accounts; and databases with account information
+    were altered so that fake accou[nts]..." + ATMs "instructed remotely to dispense
+    cash ... collected by mules". CORRECTIONS: "more than 100" -> "up to 100" (source
+    says "up to"); SWIFT prose "direct manipulation of SWIFT messaging" -> "use of
+    the SWIFT network to transfer funds" (source wording); "weeks-to-months" ->
+    "two-to-four months" (source figure). STRIPPED as unsupported: "40 countries"
+    (NO cited source states a total country count; Kaspersky names only RU/US/DE/CN
+    as most-affected by IP traces) — removed quantified_impact.countries_affected and
+    the "across 40 countries" prose; "$900M" lower bound (no "900" appears anywhere
+    in the Kaspersky raw) -> "as high as ~$1B". banks_targeted:100 and
+    estimated_losses_usd:1e9 retained (both source-carried as upper bounds).
+
+    [c] DATES — start_date 2013-12-01 CONFIRMED real and NOT the indictment date
+    ("first infections were detected in December, 2013"). disclosure_date 2015-02-16
+    = Kaspersky published_on (correct). end_date 2018-03-26 was MISLABELED "FIN7
+    operator Hladyr arrest" (Hladyr was arrested Jan 2018) and is in fact the Europol
+    Spain Carbanak/Cobalt-mastermind arrest-announcement date — NOT carried by either
+    cited source -> set null (see flag). NB: the event id path is 2014-02 while
+    start_date is 2013-12-01; ids are stable-forever so left unchanged (residual).
+
+    [b]/[e] ATTRIBUTION — actor criminal/fin7 resolves. Kaspersky named the
+    "Carbanak" cluster (Russian-speaking, no nation/unit); DOJ named "FIN7" + the
+    three Ukrainian operators. Set attribution_level=named-actor (named criminal
+    group; no nation or state-unit named). Confidence high retained (DOJ indicted
+    named individuals; Kaspersky on-site forensics). Trimmed attributing_org
+    "Kaspersky + DOJ + Group-IB" -> "Kaspersky + DOJ": Group-IB's Anunak report is
+    not a cited source on this event (only in the actor's misp_refs). attribution_date
+    2015-02-16 matches the Kaspersky attribution_source_id.
+
+    [d] DOCTRINE_LINKS [] — correct: a financially-motivated criminal cluster with
+    explicitly no documented state nexus (per the actor record); no doctrine applies,
+    none invented.
+
+    [f] ACTOR_ID — criminal/fin7 resolves to atlas/actors/criminal/fin7.yaml. No
+    actor edit made; see FLAGS for one note on the Carbanak/FIN7 umbrella scope.

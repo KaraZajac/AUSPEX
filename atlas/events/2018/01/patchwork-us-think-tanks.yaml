@@ -1,53 +1,140 @@
 id: 2018-01/patchwork-us-think-tanks
 name: Patchwork spear-phishing of US-based China-focused think tanks
-start_date: 2017-05-01
-disclosure_date: 2018-01-09
-end_date: 2017-12-31
+start_date: 2018-03-01
+disclosure_date: 2018-06-07
+end_date: 2018-04-30
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Volexity and adjacent vendor reporting documented Patchwork /
-  Dropping Elephant operations against US-based think tanks
-  conducting China-focused policy research during 2017. Targets
-  included scholars working on PLA modernization, the Belt and
-  Road Initiative, and South China Sea issues. Tradecraft
-  included weaponized Office documents with Patchwork's BADNEWS
-  and NDiskMonitor implants; lures themed on China-policy
-  conference invitations and academic correspondence.
+  Volexity documented three Patchwork / Dropping Elephant spear-
+  phishing campaigns in March and April 2018 in which the group
+  pivoted to target US-based think tanks. The lures impersonated
+  well-known China-policy institutions — copying their articles and
+  spoofing look-alike domains of the Council on Foreign Relations
+  (CFR), the Center for Strategic and International Studies (CSIS),
+  the Foreign Policy Research Institute (FPRI), and the Mercator
+  Institute for China Studies (MERICS). Each email linked to a .doc
+  that was actually an RTF exploiting CVE-2017-8570 (Composite
+  Moniker) using public GitHub exploit code; on success it dropped
+  QuasarRAT, a freely available remote-access tool. The actors also
+  embedded unique tracking links/image beacons to identify which
+  recipients opened the messages.
 false_flag_risk: none
 summary: |
-  An early high-confidence case of Patchwork's reach beyond
-  South Asia into US-located China-watching scholarship — the
-  precise victim set Indian intelligence is incentivized to
-  collect on as it seeks insight into US views of PLA capability
-  and Indo-Pacific posture. The campaign predates the formal
-  emergence of the Quad as a strategic concept but is consistent
-  with the underlying Indian interest in US-PRC threat
-  perception.
+  Volexity attributed three March–April 2018 spear-phishing
+  campaigns to Patchwork (an Indian APT, also known as Dropping
+  Elephant) in which the group pivoted to target US-based think
+  tanks. The lures impersonated US/EU foreign-policy institutions
+  working on China (CFR, CSIS, FPRI, MERICS), each delivering an RTF
+  that exploited CVE-2017-8570 to drop QuasarRAT. AUSPEX reads the
+  operation as collection on the US China-policy debate — the view
+  of the PRC that US think tanks produce — consistent with
+  Patchwork's documented PRC-adjacent collection and the broader
+  Indian interest in US–PRC threat perception. Volexity noted the
+  activity was consistent with concurrent Patchwork reporting by 360
+  Threat Intelligence Center and Trend Micro.
 attributions:
   - actor_id: in/unscoped/patchwork
     attributing_org: Volexity
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2018-01-09
+    attribution_date: 2018-06-07
     attribution_source_id: volexity/2018-01-09_patchwork-china-think-tanks
+    notes: |
+      Volexity declaratively "attributed [the campaigns] to
+      Patchwork, an Indian APT group also known as Dropping
+      Elephant" (no explicit confidence qualifier; stated as fact
+      from their own analysis and consistency with 360 TIC / Trend
+      Micro reporting). Named-actor: group + nation ("Indian"); no
+      Indian service/unit is named — hence in/unscoped/patchwork.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/china-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      US think-tank China scholarship is an unconventional but
-      coherent extension of the China-collection pillar:
-      collection on PRC by proxy through Western academic
-      analysis.
+      Targeting US think tanks whose China-policy output is itself
+      the lure theme (CFR/CSIS/MERICS/FPRI China analysis) is a
+      coherent extension of the China-collection pillar: collection
+      on the PRC question by proxy through Western policy-research
+      analysis, matching Patchwork's documented PRC-adjacent
+      collection mission. Not attested — Volexity's report is a
+      technical/targeting disclosure and states no strategic purpose.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "All three lures are China-policy content (CSIS 'China's Arctic Dream', CFR 'The Four Traps China May Fall Into', MERICS 'Authoritarian Advance: ... China's growing political influence in Europe')."
+        - "Patchwork's actor profile and the china-collection pillar both explicitly include think tanks studying China in the target set."
+        - "Volexity names the actor as 'an Indian APT group', so the doctrine state matches the actor state (attacker-rationale link, no perspective tag needed)."
+      ruled_out: "Regional diplomatic-collection pillar — the victims are US (not Afghan/Sri Lankan/Nepalese) and every theme is the PRC question, so china-collection dominates within the India doctrine menu. The residual nuance (collection on US views OF the PRC vs. on the PRC directly) serves the same China-question end and keeps the link strongly_inferred rather than attested."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/us-china-policy-think-tanks
+  - target_id: sectors/civil-society/think-tank
     country: us
     role: primary
 sources:
   - volexity/2018-01-09_patchwork-china-think-tanks
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: full
+  notes: |
+    Audited against the sole cited source, Volexity "Patchwork APT Group Targets US Think Tanks"
+    (raw snapshot sha256 72ca7c93…99ffe8b2, 76923 bytes; re-fetched from the live URL, byte-stable
+    vs the on-disk copy).
+
+    [a] FACTS — major corrections. The pre-audit record was substantially fabricated:
+    • DATES: claimed start 2017-05-01 / disclosure 2018-01-09 / end 2017-12-31. The source byline
+      reads "June 7, 2018" and its first sentence is "In March and April 2018, Volexity identified
+      multiple spear phishing campaigns attributed to Patchwork". No January date and NO 2017
+      activity appear anywhere — the only "2017" in the text is inside "CVE-2017-8570". Corrected:
+      start_date 2018-03-01, end_date 2018-04-30, disclosure_date 2018-06-07.
+    • MALWARE: claimed "BADNEWS and NDiskMonitor implants" — neither string appears in the source
+      (greps for BADNEWS / NDiskMonitor / NDisk / TINYTYPHON all return zero). The actual payload
+      is QuasarRAT (x18 mentions): "If the exploit is successful, the threat actors will attempt to
+      drop and execute QuasarRAT." Fabricated malware removed; QuasarRAT + CVE-2017-8570 substituted.
+    • TARGET SPECIFICS: claimed "scholars working on PLA modernization, the Belt and Road Initiative,
+      and South China Sea issues." None appear — "Belt and Road" / "South China Sea" / "scholar" are
+      absent; the two "PLA" hits were the substring inside "disPLAyed". The real lure themes are the
+      three impersonated articles (CSIS "China's Arctic Dream", CFR "The Four Traps China May Fall
+      Into", MERICS "Authoritarian Advance"). Fabricated specifics removed.
+    • LURE CHARACTERIZATION: claimed "China-policy conference invitations and academic correspondence."
+      The source describes impersonation of think-tank articles/reports via look-alike domains
+      (mailcenter.support sender; chinapolicyanalysis.org, fprii.net, mericcs.org), not conference
+      invites. Corrected. Also dropped "and adjacent vendor reporting documented" framing in
+      outcome_summary — the 360 TIC / Trend Micro mentions are context inside the Volexity report,
+      not separately-cited AUSPEX sources; rephrased as Volexity noting consistency with them.
+    • incident_type intrusion+data-theft -> intrusion+espionage: no data exfiltration is documented
+      (the report covers delivery + the RAT capability, "the target user has likely just been
+      infected"); the campaign's clear purpose is espionage against policy think tanks via a RAT.
+    [b] ATTRIBUTION — source carries it. "multiple spear phishing campaigns attributed to Patchwork,
+    an Indian APT group also known as Dropping Elephant." Declarative, no explicit confidence word
+    (greps for "medium confidence"/"high confidence" return zero); a tier-1 vendor's unhedged
+    attribution + cited corroboration → kept attributing_org_confidence: high, auspex_assessment:
+    concur. attribution_date corrected 2018-01-09 -> 2018-06-07.
+    [c] DATES — see [a]; source published_on corrected 2018-01-09 -> 2018-06-07 in the source record;
+    event start/end/disclosure realigned to the operation (Mar–Apr 2018) and disclosure (7 Jun 2018).
+    [d] DOCTRINE_LINKS — link is strongly_inferred (NOT attested): the source states no strategic
+    purpose, so attested is impossible and attesting_source_id stays null. Kept strongly_inferred
+    (consistent with the doctrine's own cyber_relevance: "generally strongly_inferred ... but not
+    attested") and ADDED inference_basis {signals[], ruled_out}; signals quoted to avoid the
+    colon-space YAML-dict trap. Attacker-rationale (in actor → in doctrine), no perspective tag.
+    [e] ATTRIBUTION_LEVEL — was missing; set named-actor (group "Patchwork" + nation "Indian"; no
+    Indian service/unit named).
+    [f] ACTOR_ID — in/unscoped/patchwork resolves to atlas/actors/in/patchwork.yaml (canonical
+    Patchwork; was demoted from in/ntro on 2026-06-24). No actor edit made.
+
+    TARGET FK FIX: target_id was orgs/us-china-policy-think-tanks, a DANGLING FK (no file in
+    atlas/targets/orgs/; the string exists only in this event). Repointed to the existing sector
+    sectors/civil-society/think-tank (country: us) — accurate and well-precedented. Note Volexity
+    names only the *impersonated* brands (CFR/CSIS/MERICS/FPRI), not the actual victim orgs, so a
+    sector target is more correct than naming those orgs as victims.
+
+    RESIDUAL: the event id/path month (2018-01) is now a legacy artifact of the wrong Jan-2018 date;
+    true campaign is Mar–Apr 2018, disclosed 7 Jun 2018. Slug left unchanged per the immutable-slug
+    rule — flagged for orchestrator if relocation is desired (would need FK/alias handling).

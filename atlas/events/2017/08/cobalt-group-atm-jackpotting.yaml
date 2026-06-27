@@ -1,40 +1,138 @@
 id: 2017-08/cobalt-group-atm-jackpotting
 name: Group-IB profiles Cobalt Group ATM-jackpotting campaign
 start_date: 2016-06-01
-disclosure_date: 2017-08-01
-end_date: 2018-03-25
+disclosure_date: 2018-05-29  # AUDIT 2026-06-27: was 2017-08-01 — cited report published 2018-05-29
+end_date: null  # AUDIT 2026-06-27: was 2018-03-25 (leader arrest, external/Europol); cited source says group "still active" — not bounded here
 incident_type:
   - financial-theft
 initial_vector: phishing
 outcome_summary: |
-  Group-IB's August 2017 report on Cobalt Group — a Russian-
-  speaking financial-cybercrime cluster active since 2016
-  against more than 250 banks across Eastern Europe, Russia,
-  the CIS, Southeast Asia, and the Americas. Tradecraft:
-  spear-phishing bank employees, lateral movement to ATM
-  control infrastructure, deployment of ATMSpitter / atmii
-  to instruct ATMs to dispense cash on demand to mule
-  collectors ("ATM jackpotting"). Heavy use of Cobalt Strike
-  penetration-testing tool for C2 — the source of the
-  cluster name. Lead defendant "Denis K." (Ukrainian
-  national) arrested in Alicante, Spain in March 2018 on a
-  Spanish warrant; subsequent convictions in Spain and
-  Kazakhstan through 2019–2020.
+  Per Group-IB, Cobalt operated from 2016 against the global
+  banking sector and stole approximately €1 billion from over
+  100 banks in 40 countries. Reported tradecraft: phishing of
+  bank employees, roughly three weeks of reconnaissance inside
+  victim networks, then cash-out — initially by attacking ATMs
+  to dispense cash ("ATM jackpotting"), later expanding to SWIFT
+  transfers, card processing and payment gateways. Group-IB
+  states it has technical proof of joint operations with Anunak
+  (Carbanak), including SWIFT thefts in Hong Kong and Ukraine.
+  The report assesses the group as still active at publication.
 false_flag_risk: none
 summary: |
-  Cobalt Group is the canonical ATM-jackpotting criminal
-  cluster of the late 2010s, operationally adjacent to
-  Carbanak / FIN7. AUSPEX classifies as criminal-baseline.
+  Group-IB's "Cobalt: Evolution and Joint Operations" report
+  profiles the Cobalt Group, a financially-motivated cybercrime
+  cluster active since 2016 that Group-IB credits with stealing
+  ~€1 billion from over 100 banks in 40 countries. The group
+  began with attacks on ATMs in 2016 (the late-2010s ATM-
+  jackpotting wave) and expanded to SWIFT, card-processing and
+  payment-gateway fraud; Group-IB reports technical proof of
+  joint operations with Anunak (Carbanak). AUSPEX classifies
+  this as criminal-baseline — no documented state nexus, so
+  doctrine_links is empty.
 attributions:
   - actor_id: criminal/cobalt-group
     attributing_org: Group-IB
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2017-08-01
+    attribution_date: 2018-05-29
     attribution_source_id: group-ib/2017-08-01_cobalt-group-report
+    notes: "Group-IB coined and profiles the 'Cobalt' cluster — named-actor (a criminal group, not a nation or service/unit). attribution_date set to the cited report's actual publication (2018-05-29); Group-IB first named Cobalt in its Nov-2016 ATM report. attribution_source_id slug retains 2017-08-01 (immutable)."
 doctrine_links: []
 targets:
   - target_id: sectors/finance/banking
     role: primary
+  - target_id: sectors/finance/swift
+    role: primary
+  - target_id: sectors/finance/payments
+    role: primary
 sources:
   - group-ib/2017-08-01_cobalt-group-report
+notes: |
+  Context NOT carried by the single cited Group-IB report
+  (flagged for the orchestrator to add proper citations): the
+  cluster name derives from the "Cobalt Strike" pentest tool the
+  group used for C2; on ~26 March 2018 the alleged leader (named
+  by Spain's Interior Ministry as "Denis K.", a Ukrainian
+  national) was arrested in Alicante, Spain — per Europol, which
+  described the Carbanak/Cobalt syndicate as hitting 100+
+  financial institutions across 40 countries for >€1 billion.
+  Cobalt is also widely linked to FIN7, and the detailed ATM-
+  jackpotting tooling (e.g. ATMSpitter) is documented in
+  Group-IB's earlier Nov-2016 "Cobalt: logical attacks on ATMs"
+  report, not the cited "Evolution and Joint Operations" report.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: partial
+  notes: |
+    Audited vs the single cited source group-ib/2017-08-01_cobalt-group-report
+    ("Cobalt: Evolution and Joint Operations"). Raw snapshot = the PUBLIC LANDING
+    PAGE only (sha256 171b8cb2…28f661cc, 438678 bytes); the full report is gated
+    behind a registration form (go.group-ib.com/report-cobalt-evolution-en) and
+    could not be captured — hence level: partial, with headline claims corroborated
+    via Europol and Group-IB's own 2018-05-29 media release.
+
+    [c] DATES — MAJOR FIX. The cited report is NOT an August-2017 report: Group-IB's
+    media release on it is dated 2018-05-29 and the research-hub page metadata is
+    datePublished 2018-05-29T12:06:14Z; no Aug-2017 Group-IB Cobalt report exists.
+    Corrected disclosure_date + attribution_date 2017-08-01 -> 2018-05-29 and source
+    published_on 2017-08-01 -> 2018-05-29. start_date 2016-06-01 kept (source:
+    "Starting from the attacks on ATMs in 2016" / "from the beginning of their
+    operations in 2016"; specific day is an estimate). end_date 2018-03-25 -> null:
+    the cited source says "Cobalt is still active" at publication, so it does not
+    bound the campaign; the ~26 Mar 2018 leader arrest is real but external (Europol)
+    and is not in this source. FLAG: event id slug (2017-08/...) and source id slug
+    (2017-08-01_...) still encode the wrong date — immutable, orchestrator to
+    rename/move.
+
+    [a] FACTS — corrected claims not carried by (or contradicting) the cited source.
+    (1) "more than 250 banks across Eastern Europe, Russia, the CIS, Southeast Asia,
+    and the Americas" -> "over 100 banks in 40 countries / ~€1 billion": landing-page
+    verbatim "steal approximately 1 billion dollars from over 100 banks in 40
+    different countries"; "250" never appears in the snapshot (its 13 raw matches are
+    all WordPress cache-hash markup) and traces to "250 companies" phishing-recipient
+    counts in other reporting, not 250 banks. Europol independently states "over 100
+    financial institutions in 40 countries / >€1 billion". (2) Removed from the SOURCED
+    prose as not in the cited report: "Russian-speaking", malware names "ATMSpitter /
+    atmii", "Cobalt Strike … the source of the cluster name", and the "Denis K.
+    arrested … convictions in Spain and Kazakhstan 2019-2020" block. Verbatim claims
+    the snapshot DOES carry and that were kept: "Thefts using SWIFT transactions in
+    Hong Kong and Ukraine were committed in cooperation with Anunak (Carbanak)";
+    "Cybercriminals were spending approximately three weeks of study inside the
+    network"; "Starting from the attacks on ATMs in 2016, Cobalt learned to target
+    SWIFT, card processing and payment gateways"; "Cobalt is still active". The
+    removed-but-true facts (name <- Cobalt Strike; Ukrainian "Denis K." arrested
+    Alicante ~26 Mar 2018 per Europol/Spanish Interior Ministry; FIN7 link; ATMSpitter
+    from the Nov-2016 Group-IB ATM report) were relocated to an explicitly-labeled
+    event notes: field and FLAGGED for the orchestrator to add Europol + Nov-2016
+    Group-IB citations if they are to ship as event facts.
+
+    [b] ATTRIBUTION — Group-IB attributes to its own coined "Cobalt" cluster. Kept
+    attributing_org Group-IB, attributing_org_confidence moderate (not upgraded),
+    auspex_assessment concur. attribution_date -> 2018-05-29 (matches cited source;
+    Group-IB first named Cobalt in 2016).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (Group-IB names a criminal
+    GROUP — neither a nation nor a service/unit), per the criminal-cluster placement.
+
+    [f] ACTOR_ID — criminal/cobalt-group resolves to atlas/actors/criminal/cobalt-
+    group.yaml; placement correct (criminal/, primary_service_id null, mission
+    financial, no state nexus — matches the profit-crew rule). FLAG for orchestrator:
+    the actor record's own ttp_summary/notes carry the same specifics not in this
+    source (Russian-speaking, ATMSpitter/atmii, Cobalt Strike name origin, Denis K.,
+    FIN7) and assert "more than 250 banks" — that figure is likewise unsupported by
+    this source (should be 100/40). Actor file NOT edited per protocol.
+
+    [d] DOCTRINE_LINKS — [] is correct and kept: a financially-motivated criminal crew
+    with no documented state nexus; no doctrine applies.
+
+    [targets] added sectors/finance/swift and sectors/finance/payments (role primary)
+    alongside finance/banking — all three explicitly named as targeted financial
+    systems in the source's key facts.
+
+    Residual uncertainty: full report text un-verified (gated); all kept claims are
+    landing-page-verbatim and/or Europol-corroborated. Single-source event — recommend
+    adding the Europol arrest release + the Nov-2016 Group-IB ATM report as second
+    sources.
