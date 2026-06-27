@@ -6,126 +6,207 @@ end_date: 2017-09-12
 incident_type:
   - supply-chain
   - intrusion
+  - espionage
 initial_vector: supply-chain
 outcome_summary: |
-  Cisco Talos identified the trojanized CCleaner v5.33 on 2017-09-13 (it had been
-  hosted on Piriform's legitimate download server "as recently as September 11,
-  2017") and notified Avast the same day. The malicious v5.33 had been distributed
-  from its release on 2017-08-15 until v5.34 shipped on 2017-09-12. CCleaner
-  reported over 2 billion total downloads as of November 2016 and ~5 million new
-  users per week, so the exposure was potentially very large; Talos did NOT state
-  an infection count. Talos registered and sinkholed the malware's DGA fallback
-  domains to deny them to the operators, and noted antivirus detection of the
-  binary was very low (1/64) at publication.
+  Cisco Talos identified the trojanized, code-signed CCleaner v5.33 on 2017-09-13 (it
+  had been hosted on Piriform's legitimate download server "as recently as September
+  11, 2017") and notified Avast the same day; the malicious v5.33 was distributed from
+  its 2017-08-15 release until v5.34 shipped on 2017-09-12. Avast (Piriform) put the
+  scale at "2.27M computers between August 15, 2017 and September 15, 2017." Talos
+  registered and sinkholed the malware's DGA fallback domains. Recovery of the stage-1
+  C2 "targets.php" database then revealed a second, selective stage: the operators
+  delivered a specialized second-stage payload only to a curated list of high-profile
+  technology companies — Talos confirmed "at least 20 victim machines," and Avast's
+  log review found "20 machines in a total of 8 organizations" over the few days of
+  recovered logs — which Talos read as "a very focused actor after valuable
+  intellectual property." (FireEye later dated the initial Piriform network compromise
+  to March 2017.)
 false_flag_risk: none
 summary: |
-  Cisco Talos disclosed that the legitimate, code-signed CCleaner v5.33 distributed
-  by Piriform (which Avast had recently acquired) had for a period carried a
-  multi-stage malware payload (CCBkdr). The 32-bit CCleaner binary was modified so
-  that '__scrt_get_dyn_tls_init_callback' redirected execution into malicious code
-  that decrypted a position-independent PE loader and a backdoor DLL (CBkdr.dll).
-  The backdoor profiled the host, stored state in HKLM\SOFTWARE\Piriform\Agomo
-  registry values, delayed ~601 seconds to evade automated analysis, and beaconed
-  via HTTPS POST to a hardcoded C2 (216.126.225.148) using a spoofed
+  The legitimate, code-signed CCleaner v5.33 distributed by Piriform (which Avast had
+  recently acquired) carried a multi-stage backdoor (CCBkdr). The 32-bit binary was
+  modified so that '__scrt_get_dyn_tls_init_callback' redirected execution into
+  malicious code that decrypted a position-independent PE loader and a backdoor DLL
+  (CBkdr.dll); the backdoor profiled the host, stored state in
+  HKLM\SOFTWARE\Piriform\Agomo, delayed ~601 seconds to evade automated analysis, and
+  beaconed via HTTPS POST to a hardcoded C2 (216.126.225.148) using a spoofed
   speccy.piriform.com Host header, failing back to a time-based Domain Generation
-  Algorithm when the primary C2 was unreachable. The installer was signed with a
-  valid certificate issued to Piriform Ltd by Symantec; Talos assessed it likely
-  that an external attacker had compromised part of Piriform's development or build
-  environment, while expressly noting an insider could not be ruled out. This
-  report named no threat actor and made no nation-state attribution.
+  Algorithm. The installer was signed with a valid certificate issued to Piriform Ltd
+  by Symantec; Talos assessed it likely that an external attacker compromised part of
+  Piriform's development or build environment, while noting an insider could not be
+  ruled out. The first disclosure (Cisco Talos, 2017-09-18) named no actor, but
+  follow-up code analysis tied the operation to a China-nexus espionage cluster:
+  Intezer and, independently, Kaspersky's Costin Raiu matched the stage-1 backdoor's
+  unique base64 routine to the "Missl" backdoor used by APT17 / Axiom (a.k.a. Group
+  72, Aurora / "Operation Aurora") — a comparison Cisco Talos reproduced in its C2
+  follow-up post. FireEye's 2019 APT41 report described the operators as "suspected
+  Chinese espionage operators" and identified the backdoor as BLACKCOFFEE (an APT17
+  tool) while expressly declining to attribute CCleaner to APT41. AUSPEX therefore
+  attributes the operation to the China-nexus APT17 / Axiom cluster (named-actor,
+  moderate confidence, via code overlap), not to APT41 / Barium.
 attributions:
-  - actor_id: null
-    attributing_org: Cisco Talos
-    attributing_org_confidence: low
-    attribution_level: activity-cluster
+  - actor_id: cn/unscoped/apt17
+    attributing_org: Intezer
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2017-09-18
-    attribution_source_id: avast/2017-09_ccleaner
+    attribution_date: 2017-09-20
+    attribution_source_id: intezer/2017-09-20_aurora-ccleaner-supply-chain
     notes: |
-      The single cited source (Cisco Talos, "CCleanup: A Vast Number of Machines
-      at Risk", 2017-09-18) documents the CCleaner/CCBkdr supply-chain compromise
-      but NAMES NO THREAT ACTOR and makes NO nation-state attribution — it states
-      only that an external attacker (or possibly an insider) compromised
-      Piriform's build/dev environment. actor_id is therefore null and
-      attribution_level is activity-cluster. The prior record asserted "Attributed
-      to APT41 / Barium by Avast + Cisco Talos" at high confidence (concur,
-      actor_id cn/mss/apt41); that attribution is NOT carried by this source and
-      has been removed as over-attestation. Real-world consensus does tie CCleaner
-      to a China-nexus actor (Axiom / Group 72 / APT17 via 2017 code-overlap work
-      by Intezer and Kaspersky; later folded into APT41 / Barium by FireEye's 2019
-      reporting), but none of that appears in any source cited by this event. See
-      the QC FLAGS for the sources an orchestrator would need to add to restore a
-      China-nexus / APT41 attribution.
-doctrine_links: []
+      First disclosure (Cisco Talos, "CCleanup", 2017-09-18) named NO actor and NO
+      nation — only "an external attacker ... or an insider." The China-nexus
+      attribution comes from follow-up code analysis: Intezer (Jay Rosenberg,
+      2017-09-20) found the CCleaner stage-1 backdoor shares "a unique implementation
+      of base64 only previously seen in APT17 and not in any public repository, which
+      makes a strong case about attribution to the same threat actor," placing it in
+      the APT17 / Axiom ("Operation Aurora" / #Axiom umbrella) cluster = AUSPEX
+      cn/unscoped/apt17. Independently corroborated by Kaspersky's Costin Raiu (same
+      base64 subroutine matched to the APT17/Axiom "Missl" backdoor) and reproduced by
+      Cisco Talos, whose C2 post embeds the "Missl backdoor - APT17/Group 72" code
+      comparison. attribution_level = named-actor (a China-nexus group is named via
+      code overlap); NOT named-unit (no MSS/PLA service is named — the actor sits at
+      cn/unscoped/apt17). attributing_org_confidence = moderate (code-overlap
+      inference; the specific cluster is debated), auspex_assessment =
+      concur-with-caveat. KEY CAVEAT: this is NOT attributed to APT41 / Barium. No
+      cited source makes that attribution, and FireEye's 2019 Double Dragon report —
+      the canonical APT41 reference — explicitly DECLINES it: "While we have identified
+      some overlaps between the CCleaner activity and APT41, we do not have enough
+      information to attribute the CCleaner compromise to APT41 at this time." The
+      pre-degradation record's "Attributed to APT41 / Barium by Avast + Cisco Talos"
+      (high) was unsupported on both counts (neither Avast nor the Talos reports name
+      APT41) and is not restored. See QC FLAGS re: the cn/mss/apt41 actor record.
+doctrine_links:
+  - doctrine_id: cn/mic2025
+    pillar_id: cn/mic2025/next-gen-it
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      After establishing a mass supply-chain foothold, the operators used the stage-1
+      C2 database to selectively deliver a second-stage payload to a curated list of
+      high-profile technology companies (Cisco Talos: "the array specified contains
+      Cisco's domain (cisco.com) along with other high-profile technology companies ...
+      a very focused actor after valuable intellectual property"; at least 20 victim
+      machines across ~8 organizations). Selective IP collection from semiconductor /
+      networking / software / telecom firms by a China-nexus espionage cluster (APT17 /
+      Axiom) is the behaviour the MIC2025 next-generation-IT pillar encodes — narrowing
+      PRC technology gaps in the ICT / semiconductor space. The label is
+      strongly_inferred, not attested: Talos names only the proximate purpose
+      ("valuable intellectual property"), not a MIC2025 industrial-policy goal, and no
+      attesting source states the strategic end; it is above plausible because
+      selective, intelligence-driven IP-targeting of technology firms by an espionage
+      (non-financial) actor triangulates to industrial-tech collection with no serious
+      financial-crime competitor.
+    attesting_source_id: blogtalosintelligence/2017-09-20_ccleaner-c2-concern
+    inference_basis:
+      signals:
+        - "Stage-2 selectively targeted high-profile technology companies (Cisco named in Talos' text; the targeting-table screenshot lists semiconductor/networking/software/telecom firms) rather than the full 2.27M install base."
+        - "Cisco Talos states the proximate purpose: 'a very focused actor after valuable intellectual property'; the attributed actor (APT17/Axiom) is a China-nexus espionage cluster whose mission is strategic/IP collection."
+      ruled_out: "Financially-motivated cybercrime: rejected because the stage-2 was a selective, intelligence-driven IP-targeting of technology firms (no ransomware, fraud, or theft-of-funds) carried out by an espionage actor, not a revenue operation."
+    contested: false
+    analyst: claude
 targets:
   - target_id: orgs/piriform-ccleaner
     role: staging
+  - target_id: sectors/ict
+    role: primary
 sources:
   - avast/2017-09_ccleaner
+  - blogtalosintelligence/2017-09-20_ccleaner-c2-concern
+  - avast/2017-09-21_progress-on-ccleaner-investigation
+  - intezer/2017-09-20_aurora-ccleaner-supply-chain
+  - mandiant/2019-08-07_apt41-double-dragon
 qc:
   verified_by: claude-opus-4.8
   effort: max
   verified_on: 2026-06-27
   level: full
   notes: |
-    Audited against the sole cited source, Cisco Talos "CCleanup: A Vast Number of
-    Machines at Risk" (raw snapshot avast__2017-09_ccleaner.html, sha256
-    519fd6fe…eb98643c, 91,536 bytes; hash re-verified from existing on-disk
-    snapshot, URL live HTTP 200). Note the source SLUG is avast/2017-09_ccleaner
-    but the page is a CISCO TALOS blog (og:url/canonical
-    blog.talosintelligence.com/avast-distributes-malware/, byline Brumaghin/
-    Mercer/Williams) — source record's title + publisher corrected to match (see
-    that record's AUDIT note); legacy slug left immutable.
+    RE-SOURCE (badrabbit model) of a DEGRADED record. The prior stamp had nulled the
+    actor and emptied doctrine because the sole citation (avast/2017-09_ccleaner = the
+    Talos "CCleanup" blog) names no actor. The CCleaner compromise is genuine and
+    well-documented; restored by adding the real primaries and re-pointing attribution.
+    Sources snapshotted + hashed:
+      - avast/2017-09_ccleaner (Talos "CCleanup", 2017-09-18): sha256 519fd6fe…eb98643c,
+        91,536 B (re-verified on disk).
+      - blogtalosintelligence/2017-09-20_ccleaner-c2-concern (Talos C2 follow-up): sha256
+        0776f5e5…20aef845, 85,161 B (NEW).
+      - avast/2017-09-21_progress-on-ccleaner-investigation (Avast figures): sha256
+        49657d33…f573af75, 173,908 B (NEW).
+      - intezer/2017-09-20_aurora-ccleaner-supply-chain (APT17/Axiom code overlap): sha256
+        cb9e2901…5cf9f6e2, 261,583 B (NEW).
+      - mandiant/2019-08-07_apt41-double-dragon (FireEye Double Dragon, full PDF mirror):
+        sha256 6085d114…9ea04ec4, 8,244,365 B (snapshot ADDED; official cloud.google.com
+        URL is a JS shell, so the snapshot is the publicly-mirrored full PDF,
+        cross-checked vs the threatrack/cti_report_collection text mirror).
 
-    [a] FACTS — retained claims are all source-carried: trojanized signed CCleaner
-    v5.33 ("the affected version (5.33) was released on August 15, 2017"); CCBkdr /
-    CBkdr.dll multi-stage payload with PIC PE loader; __scrt_get_dyn_tls_init_callback
-    redirect; ~601s delay ("delays for 601 seconds"); HKLM\SOFTWARE\Piriform\Agomo
-    registry state; HTTPS POST to "216[.]126[.]225[.]148" with speccy.piriform.com
-    Host header; time-based DGA fallback; valid cert "issued to Piriform Ltd by
-    Symantec"; Talos identified it 2017-09-13, notified Avast same day, hosted "as
-    recently as September 11, 2017"; v5.34 released 2017-09-12; "over 2 billion
-    total downloads by November of 2016 ... 5 million additional users per week";
-    DGA domains "registered and sinkholed"; "detections are at 1/64". STRIPPED as
-    NOT in this source: (1) "2.27 million compromised downloads" — absent (zero
-    hits for 2.27/million-as-infections; the source gives only CCleaner's 2B+
-    lifetime download base, not an infection count); (2) "Second-stage selectively
-    targeted ~40 technology firms — Intel, Samsung, Cisco, Microsoft, Sony, VMware
-    — for IP collection" — absent (zero hits for the firm names as targets; the
-    only "Intel"/"Microsoft" strings are nav chrome "Talos Intelligence"/"Microsoft
-    Advisories"; this stage-2 finding lives in Talos's follow-up "ccleaner-c2-concern"
-    post + Avast's analysis, neither cited here); (3) the "APT41/BARIUM tradecraft
-    also seen in NetSarang/ShadowPad and ShadowHammer" sentence — none of those
-    strings appear, and ShadowHammer is a 2019 operation post-dating this 2017
-    report (anachronistic import). outcome_summary + summary rewritten to only
-    source-carried facts; added Talos's explicit external-attacker-OR-insider hedge.
+    [a] FACTS — all source-carried. Talos CCleanup carries: trojanized signed v5.33
+    (rel. 2017-08-15); CCBkdr/CBkdr.dll multi-stage payload;
+    __scrt_get_dyn_tls_init_callback redirect; ~601s delay; HKLM\SOFTWARE\Piriform\Agomo;
+    HTTPS POST to 216.126.225.148 w/ speccy.piriform.com Host header; time-based DGA;
+    Symantec-issued Piriform cert; identified 2017-09-13 / notified Avast same day /
+    hosted "as recently as September 11, 2017"; v5.34 rel. 2017-09-12; DGA sinkholed;
+    external-attacker-or-insider. NEWLY RESTORED + now source-carried: 2.27M install base
+    ("2.27M computers between August 15, 2017 and September 15, 2017" — Avast progress;
+    corroborated by the FireEye PDF "downloaded by 2.27 million customers"); stage-2
+    selective targeting of "high-profile technology companies" incl. Cisco ("the array
+    specified contains Cisco's domain (cisco.com) along with other high-profile
+    technology companies … a very focused actor after valuable intellectual property" —
+    Talos C2), with "at least 20 victim machines" (Talos C2) / "20 machines in a total
+    of 8 organizations" (Avast). CAVEAT (recorded on the Talos-C2 source): the individual
+    firm list (Intel/Samsung/Sony/VMware/…) is in the post's targeting-table SCREENSHOT,
+    not the HTML text — only "Cisco" + "high-profile technology companies" are
+    text-extractable, so the prose says "a list of high-profile technology companies" and
+    names only Cisco verbatim. NOT re-introduced: the anachronistic ShadowHammer-2019
+    framing (no cited 2017 source ties it) and the "third-stage ShadowPad/keylogger"
+    finding (lives in Avast's 2018 TeamViewer post, not cited here); only FireEye's
+    "March 2017 initial access" is noted, since the snapshotted FireEye PDF carries it.
 
-    [b] ATTRIBUTION — DEMOTED to null/unattributed. The source names no actor and
-    no nation (zero hits: APT41, Barium, APT17, Axiom, "Group 72", China, Chinese,
-    nation-state, nexus). Prior entry (cn/mss/apt41, attributing_org "Avast + Cisco
-    Talos", high, concur) was unsupported by its own attribution_source_id; replaced
-    with actor_id:null, attributing_org "Cisco Talos", attributing_org_confidence
-    low, auspex_assessment concur-with-caveat (modeled on the Titan Rain null-actor
-    pattern, but lower because here the source makes NO actor/nation claim at all).
+    [b] ATTRIBUTION — restored to cn/unscoped/apt17 (APT17 / Axiom / Group 72 /
+    "Operation Aurora"): named-actor, moderate, concur-with-caveat, via Intezer's base64
+    code-overlap ("a unique implementation of base64 only previously seen in APT17 … a
+    strong case about attribution to the same threat actor"), corroborated by
+    Kaspersky/Raiu (Missl backdoor) and Cisco Talos' own "Missl backdoor - APT17/Group
+    72" comparison. NOT apt41: the re-source brief's premise (that FireEye named
+    APT41/Barium for CCleaner) is contradicted by the source — the FireEye Double Dragon
+    PDF explicitly DECLINES ("we do not have enough information to attribute the CCleaner
+    compromise to APT41 at this time"), identifies the backdoor as BLACKCOFFEE (an APT17
+    tool), and calls the operators "suspected Chinese espionage operators."
+    attribution_source_id → intezer/2017-09-20_aurora-ccleaner-supply-chain.
 
-    [c] DATES — verified: start_date 2017-08-15 (v5.33 release), end_date 2017-09-12
-    (v5.34 release ended malicious distribution), disclosure_date 2017-09-18 (Talos
-    post date = source article:published_time). published_on on the source =
-    2017-09-18, the real publication date (not the campaign month). No conflation.
+    [c] DATES — published_on verified from snapshot metadata: Talos C2 2017-09-20T21:57Z;
+    Intezer 2017-09-20T10:34Z; Avast progress 2017-09-21 (only date stamp on page);
+    FireEye 2019-08-07. Event start_date 2017-08-15 (v5.33 malicious-distribution start) /
+    disclosure_date 2017-09-18 (Talos CCleanup) / end_date 2017-09-12 (v5.34) retained;
+    FireEye's "March 2017" initial-access date noted in prose, not used as start_date
+    (operationally the distribution window is the op).
 
-    [d] DOCTRINE_LINKS — EMPTIED to []. Prior link cn/mic2025 / next-gen-it
-    (strongly_inferred) rested entirely on two facts absent from the cited source:
-    the China attribution and the stage-2 selective targeting of semiconductor/IT
-    firms. With both stripped, no doctrine is supportable from the citations, so []
-    is the honest state (no attesting_source_id was present and none is warranted).
+    [d] DOCTRINE_LINKS — restored cn/mic2025 / next-gen-it at strongly_inferred (was [] after
+    degradation; pre-degradation was strongly_inferred). Grounds now source-carried: stage-2
+    selective IP-targeting of high-profile technology firms (Talos C2) by a China-nexus
+    espionage actor (APT17/Axiom). attesting_source_id =
+    blogtalosintelligence/2017-09-20_ccleaner-c2-concern (the supporting source; it states
+    the proximate IP purpose, not the MIC2025 goal → strongly_inferred, not attested).
+    inference_basis.signals + ruled_out (financial cybercrime) added.
 
-    [e] ATTRIBUTION_LEVEL — set to activity-cluster (was unset): the source
-    documents the activity/compromise without naming a cluster, actor, or nation.
+    [e] ATTRIBUTION_LEVEL — named-actor (China-nexus group named via code overlap; no
+    service/unit named → cn/unscoped, not named-unit).
 
-    [f] ACTOR_ID — n/a now (null). For the record: cn/mss/apt41 DOES resolve
-    (atlas/actors/cn/apt41.yaml carries internal id cn/mss/apt41).
+    [f] ACTOR_ID — cn/unscoped/apt17 resolves (atlas/actors/cn/apt17.yaml). Added
+    sectors/ict (resolves) as the stage-2 primary target; orgs/piriform-ccleaner (staging)
+    retained as a known deferred orgs/ target-FK gap (not fabricating a registry entry, per
+    the sibling NetSarang event's precedent).
 
-    RESIDUAL UNCERTAINTY: the real-world China-nexus / APT41 attribution and the
-    stage-2 tech-firm targeting are well established but simply not in this event's
-    single citation; restoration is an additive task for the orchestrator (see
-    FLAGS), not a fix within this event's evidence.
+    FLAGS:
+    1) ACTOR cn/mss/apt41: its ttp_summary lists "CCleaner 2017" as an APT41 supply-chain
+       compromise — NOT supported by the evidence here. FireEye (the APT41 originator)
+       explicitly declined to attribute CCleaner to APT41, and the code overlap points to
+       APT17/Axiom. Recommend revising the apt41 record to drop or heavily caveat the
+       CCleaner claim.
+    2) SOURCE mandiant/2019-08-07_apt41-double-dragon: official cloud.google.com URL is a JS
+       shell (body absent from static HTML); the snapshot is the publicly-mirrored full PDF
+       (hashed, text-mirror-cross-checked). A reviewer who rejects mirror snapshots may
+       downgrade this event to partial.
+    3) The APT17-vs-APT41-vs-"new cluster" question is genuinely contested; "Group 72" is an
+       equivalent alias on BOTH cn/unscoped/apt17 (MISP) and cn/mss/apt41 (Talos) — a real
+       taxonomic collision the orchestrator may want to reconcile.
