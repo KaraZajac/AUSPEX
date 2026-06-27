@@ -1,44 +1,176 @@
 id: 2023-01/cyfirma-transparent-tribe-government
-name: Cyfirma documents Transparent Tribe targeting of Indian government with Poseidon C2
-start_date: 2022-09-01
-disclosure_date: 2023-01-18
-end_date: 2023-01-18
+name: Uptycs documents Transparent Tribe (APT36) Poseidon Linux backdoor delivered via trojanized Kavach 2FA against Indian government
+start_date: 2023-04-17
+disclosure_date: 2023-04-17
+end_date: 2023-04-17
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Cyfirma documented APT36 phishing campaigns against Indian
-  government employees using maliciously modified versions of
-  legitimate Kavach (Indian government 2FA solution) applications
-  and the Poseidon command-and-control framework. The campaign
-  targeted users of the @gov.in mail infrastructure with
-  Linux-targeting and Windows-targeting variants of the implant.
+  Uptycs documented a Transparent Tribe (APT36) campaign that
+  delivered the Poseidon Linux backdoor to Indian government users
+  by distributing a backdoored (trojanized) version of Kavach —
+  the two-factor-authentication application the Indian government
+  mandates for secure access to its email services. The malicious
+  Kavach clones were spread through rogue websites impersonating
+  legitimate Indian-government portals (e.g. ksboard[.]in,
+  rodra[.]in masquerading as "RODRA — Retired Officers Digital
+  Records Archive", kavach-app[.]in); on execution the genuine
+  Kavach login page was shown as a decoy while the payload was
+  fetched in the background. Poseidon is a Golang ELF
+  (Mythic-framework agent) general-purpose backdoor providing
+  keylogging, screen capture, file upload/download and remote
+  administration. Uptycs framed the activity as APT36 expanding
+  its collection from its historical Windows and Android targeting
+  onto Linux users in Indian government agencies.
 false_flag_risk: none
 summary: |
   Notable for documenting APT36's tooling adaptation to the
-  Indian-government technology stack — specifically, the
-  Kavach 2FA application that Indian government users are
-  mandated to install. Demonstrates the cluster's operational
-  knowledge of Indian government IT.
+  Indian-government technology stack — specifically the
+  trojanizing of Kavach, the government-mandated 2FA client —
+  and for marking the cluster's expansion onto Linux (the
+  Poseidon ELF backdoor) beyond its long-standing Windows and
+  Android tradecraft. Demonstrates the cluster's operational
+  knowledge of Indian government IT and its fit with Pakistan's
+  asymmetric collection posture against India.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
-    attributing_org: Cyfirma
+    attributing_org: Uptycs
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-01-18
-    attribution_source_id: cyfirma/2023-01-18_transparent-tribe-government-targeting
+    attribution_date: 2023-04-17
+    attribution_source_id: uptycs/2023-04-17_apt36-poseidon-linux-kavach
+    notes: |
+      Uptycs (definitive, unhedged): "This Pakistan-based advanced persistent threat group
+      is notorious for targeting Indian government organizations, military personnel, and
+      defense contractors." Names the group (Transparent Tribe / APT-36) + nation
+      (Pakistan-based); no specific Pakistani service / ISI named -> attribution_level
+      named-actor, not named-unit (consistent with actor pk/unscoped/transparent-tribe).
+      Corroborated by The Hacker News (2023-04-19), which credits the Uptycs research.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian government / gov.in mail user targeting.
+      A Pakistan-based espionage actor building bespoke tooling
+      (a trojanized clone of the government-mandated Kavach 2FA
+      client plus the Poseidon ELF backdoor) around the Indian
+      government email/identity stack is collection against the
+      Indian state — the core of Pakistan's asymmetric cyber
+      posture against India. Uptycs frames it as "Cyber Espionage
+      in India," and the victim set (Indian government agency users
+      of @gov.in mail, with APT36/Transparent Tribe's historical
+      focus on government, military personnel and defense
+      contractors) places it in the military/government-collection
+      pillar. Not attested: no source states the strategic goal,
+      so the WHY is an AUSPEX inference; strongly_inferred because
+      the espionage-against-India reading has no serious competitor.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victim set is Indian government email users: the Kavach 2FA gates secure access to government email (gov.in), and the trojanized Kavach clones target Linux users 'working for Indian government agencies' (Uptycs)."
+        - "Perpetrator is a Pakistan-based espionage actor and Uptycs titles the report 'Cyber Espionage in India' - the operation is intelligence collection, not disruption, revenue or hacktivism."
+        - "Tradecraft (backdoored Kavach clone + Poseidon ELF backdoor with keylog/screen-capture/file-exfil) is purpose-built for the Indian-government technology stack, matching the cluster's standing collection mission."
+      ruled_out: "kashmir-political (no Kashmir-dissident/journalist targeting in this campaign; lures impersonate generic government / retired-officer portals) and afghan-collection (no Afghan or Western-diplomat nexus) - this is general Indian-government collection, the military-collection pillar's core."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/indian-government
+    country: in
     role: primary
 sources:
-  - cyfirma/2023-01-18_transparent-tribe-government-targeting
+  - uptycs/2023-04-17_apt36-poseidon-linux-kavach
+  - thehackernews/2023-04-19_transparent-tribe-poseidon-linux-kavach
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The prior sole citation
+    cyfirma/2023-01-18_transparent-tribe-government-targeting is a PHANTOM: its url
+    (https://www.cyfirma.com/research/) returns HTTP 200 but is a catalogue page
+    (<title>Out of Band Archive - CYFIRMA</title>, 115,986 bytes) with ZERO Transparent
+    Tribe / Kavach / Poseidon content (re-confirmed by curl 2026-06-27; an earlier
+    2026-06-24 source-record audit reached the same conclusion). The underlying incident is
+    REAL and well-documented, so it was re-sourced to the genuine primaries rather than
+    retired.
+
+    REAL SOURCES ADDED (raw captured + sha256):
+      - uptycs/2023-04-17_apt36-poseidon-linux-kavach (PRIMARY, first-party vendor original
+        research) - sha256 4ad093fb...4166fd7c, 169,570 bytes, datePublished 2023-04-17.
+      - thehackernews/2023-04-19_transparent-tribe-poseidon-linux-kavach (secondary
+        corroboration) - sha256 150f857f...c73ee91cd, 166,693 bytes, byline Apr 19, 2023.
+
+    [a] FACTS - now all carried by the Uptycs primary (verbatim):
+      * Backdoored/trojanized Kavach clone targeting Indian-gov Linux users: "Transparent
+        Tribe created a backdoored version of Kavach to target Linux users working for
+        Indian government agencies." ✓
+      * Kavach = Indian-government 2FA for email (the @gov.in claim): "Kavach is a
+        two-factor authentication (2FA) solution provided by the Indian government for
+        secure access to their email services." ✓ (THN: "the Indian government-mandated 2FA
+        software").
+      * Poseidon = general-purpose backdoor, Golang ELF Mythic agent: "Poseidon is a
+        second-stage payload malware ... a general-purpose backdoor ..."; payload is "a
+        Golang ELF binary; GO version 1.17.8 ... an unsigned Poseidon payload in
+        MythicAgents." ✓ CORRECTION: prior prose called Poseidon a "command-and-control
+        framework" - it is the backdoor/agent (of the Mythic C2 framework); re-worded.
+      * Decoy login + rogue distribution domains (ksboard[.]in, rodra[.]in/RODRA,
+        kavach-app[.]in) ✓.
+      * REMOVED unsupported claim: prior text said "Linux-targeting and Windows-targeting
+        variants of the implant." No source supports a Windows Poseidon variant in this
+        campaign; both sources state the OPPOSITE - this is the cluster's LINUX EXPANSION:
+        "APT-36 is known to have exploited various platforms, including Windows and Android."
+        + "Now APT 36 has started targeting Linux users, too." (THN: "expand its attack
+        spectrum beyond Windows and Android ecosystems"). Windows/Android are historical
+        context only; corrected.
+
+    [b] ATTRIBUTION - re-pointed Cyfirma -> Uptycs. High confidence is honest: Uptycs is
+      unhedged ("This Pakistan-based advanced persistent threat group ..."). Names group +
+      nation, NO Pakistani service -> attribution_level set to named-actor (was missing).
+      auspex_assessment concur. actor_id pk/unscoped/transparent-tribe is correct (actor was
+      demoted ISI->unscoped on 2026-06-24 for exactly this no-service-named reason).
+
+    [c] DATES - CORRECTED. Real disclosure is the Uptycs report, 2023-04-17 (page meta
+      datePublished 2023-04-17; THN 2023-04-19) - NOT 2023-01-18 (a phantom-era fabrication
+      tied to the bogus CYFIRMA date). start_date 2022-09-01 was unsupported by any source
+      and removed; no source documents an operation window, so start=disclosure=end=
+      2023-04-17 (point-in-time disclosure). Source published_on dates match their bylines.
+
+    [d] DOCTRINE_LINKS - kept pk/asymmetric-posture-india/military-collection at
+      strongly_inferred (NOT attested: no source states the strategic goal). Expanded the
+      one-line reasoning and added inference_basis.signals[] + ruled_out (kashmir-political
+      and afghan-collection rejected). attesting_source_id null (correct).
+
+    [e] ATTRIBUTION_LEVEL - added (named-actor), per Uptycs naming the group + nation only.
+
+    [f] ACTOR_ID - pk/unscoped/transparent-tribe RESOLVES (file
+      atlas/actors/pk/transparent-tribe.yaml, internal id matches). No actor edit made.
+
+    FLAGS for orchestrator:
+      1) DANGLING TARGET FK: target_id orgs/indian-government has NO registry file
+         (atlas/targets/orgs/indian-government.yaml absent); it is referenced by 8 events
+         (this one + talos-obliquerat-maldocs, talos-obliquerat-new-campaign,
+         sidecopy-reverserat-india-government, checkpoint-elizarat-evolution-apt36,
+         zscaler-apt36-updated-arsenal, apt36-post-pulwama-balakot-tempo,
+         apt36-post-article-370-kashmir-tempo). Kept for cluster consistency; a registry
+         file should be created (corpus-wide fix, out of single-event scope).
+      2) ID/PATH ARTIFACT: id is 2023-01/cyfirma-transparent-tribe-government and the file
+         sits in events/2023/01/, but the real disclosure is 2023-04 and the source is
+         Uptycs, not CYFIRMA. Left in place per the "slugs are stable forever" rule; the
+         month band and "cyfirma" token are now historical artifacts (orchestrator's call
+         whether to relocate/realias).
+      3) PHANTOM source cyfirma/2023-01-18_transparent-tribe-government-targeting is still
+         cited by actor pk/unscoped/transparent-tribe AND doctrine
+         pk/asymmetric-posture-india - NOT orphaned by this re-source; orchestrator to
+         repoint/retire those two references.
+
+    RESIDUAL UNCERTAINTY: initial_vector kept as phishing (best-fit enum for the
+    social-engineering delivery of trojanized apps via rogue Indian-gov-impersonating
+    sites); the sources document fake-website distribution but do not explicitly describe
+    an email-phishing stage. No campaign start date is documented anywhere, so the
+    start/end window is collapsed to the disclosure date by necessity, not evidence.

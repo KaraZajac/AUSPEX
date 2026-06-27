@@ -1,42 +1,71 @@
 id: 2023-04/sidewinder-pakistan-china-ongoing
-name: SideWinder ongoing operations against Pakistani military and Chinese academic targets (Kaspersky APT trends Q1 2023)
+name: SideWinder attack infrastructure targeting Pakistani military and Chinese academic targets (Group-IB / Bridewell "distinctive rattle")
 start_date: 2022-10-01
-disclosure_date: 2023-04-27
+disclosure_date: 2023-05-17
 end_date: 2023-03-31
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky's Q1 2023 APT trends report documented continued
-  SideWinder operations against Pakistani military targets and
-  Chinese academic / research institutions through late 2022
-  and into 2023. Tradecraft continued the cluster's canonical
-  RTF / HTA / SideWinder.SE staging chain with iterative
-  refresh of dropper and loader artifacts.
+  In their joint "distinctive rattle of APT SideWinder" analysis
+  (17 May 2023), Group-IB and Bridewell uncovered 55 previously
+  undocumented IP addresses / domains attributed "with high
+  confidence to SideWinder", together with malicious documents
+  collected from VirusTotal across late 2022 into March 2023. The
+  phishing domains impersonate news, government, telecommunications
+  and financial organizations, and the servers are used as A records
+  for domains mimicking government organizations in Pakistan, China
+  and India. Named lures include a document spoofing the Pakistan
+  Navy War College (PNWC; domain pnwc[.]bol-north[.]com) and a spoof
+  of Tsinghua University's email system (mailtsinghua[.]sinacn[.]co),
+  whose 公管学院 (School of Public Policy & Management) archive was
+  uploaded to VirusTotal from Beijing on 24 November 2022. The
+  staging chain used weaponized RTF documents and LNK downloaders
+  that launch remote HTA payloads via mshta.exe.
 false_flag_risk: none
 summary: |
-  Continuity-tradecraft event for SideWinder across the
-  2022-2023 window, sitting between the Group-IB May 2022
-  retrospective and the Kaspersky October 2024 StealerBot
-  disclosure. The Chinese academic / research targeting strand
-  is operationally consistent with the post-Galwan
-  China-collection elevation documented by Group-IB.
+  Joint Group-IB / Bridewell disclosure of SideWinder infrastructure
+  and lures active across the late-2022-to-early-2023 window — a
+  distinct report from Group-IB's May 2022 "Old Snake, New Skin"
+  retrospective and from Kaspersky's October 2024 StealerBot
+  analysis. The Pakistani-military strand is anchored by a Pakistan
+  Navy War College decoy; the Chinese strand by the spoof of Tsinghua
+  University's email system (the malicious archive uploaded from
+  Beijing in November 2022), consistent with the post-Galwan
+  India-China collection posture. India appears in the report only as
+  a *target* country; the report does not name the operating state,
+  describing SideWinder as a state-sponsored group widely associated
+  with Indian espionage interests.
 attributions:
   - actor_id: in/unscoped/sidewinder
-    attributing_org: Kaspersky (Securelist)
+    attributing_org: Group-IB / Bridewell
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-04-27
-    attribution_source_id: kaspersky/2023-04_sidewinder-pakistan-china-ongoing
+    attribution_date: 2023-05-17
+    attribution_source_id: groupib/2023-05-17_sidewinder-distinctive-rattle
+    notes: "Group-IB and Bridewell attributed the 55 newly discovered IP addresses / domains 'with high confidence to SideWinder'. Named-actor: the source names the SideWinder cluster; it does NOT name an Indian service or the Indian state as operator (India appears only as a target country). India-aligned attribution at named-actor level rests on the broader vendor consensus carried in the actor record, not on this report. Corroborated by The Hacker News (2023-05-17), which adds that SideWinder is 'widely believed to be associated with Indian espionage interests'."
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani military victim set is canonical for the
-      Pakistan-military pillar.
+      The headline Pakistani lure documented in this report — a
+      decoy impersonating the Pakistan Navy War College (PNWC), with
+      a dedicated pnwc[.]bol-north[.]com staging domain — is direct
+      targeting of a Pakistani military institution, the canonical
+      victim set for the Pakistan-military pillar. SideWinder is an
+      India-aligned espionage actor whose standing mission is
+      collection against the Pakistani military and government.
+    attesting_source_id: groupib/2023-05-17_sidewinder-distinctive-rattle
+    inference_basis:
+      signals:
+        - "Named lure 'GUIDELINES FOR JOURNAL – 2023 PAKISTAN NAVY WAR COLLEGE (PNWC).docx' and the dedicated pnwc[.]bol-north[.]com domain target a Pakistani military war college."
+        - "Additional Pakistani government / law-enforcement decoys in the same infrastructure (State Bank of Pakistan, Sindh Police, Punjab Police, FIA) confirm a Pakistan-state collection focus."
+        - "SideWinder's documented mission is India-aligned espionage against Pakistani military / government targets (actor record; vendor consensus)."
+      ruled_out: "Financially-motivated crime is ruled out — Group-IB attributes the infrastructure to a state-sponsored espionage actor with no financial mission, and the decoys are military / government themed, not fraud lures."
     contested: false
     analyst: claude
   - doctrine_id: in/regional-collection-pakistan-china
@@ -44,16 +73,86 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Chinese academic and research-institute targeting fits
-      the China-collection pillar precisely.
+      The Chinese strand of this campaign spoofs the email system of
+      Tsinghua University and uses an academic-themed lure (公管学院,
+      a School of Public Policy & Management notice) uploaded to
+      VirusTotal from Beijing — direct targeting of a PRC academic
+      institution, which the china-collection pillar ("PRC state and
+      academic collection") explicitly encodes. The timing extends
+      the post-Galwan Indian-aligned PRC-collection pattern.
+    attesting_source_id: groupib/2023-05-17_sidewinder-distinctive-rattle
+    inference_basis:
+      signals:
+        - "Group-IB: 'the target of SideWinder's attack may have been Tsinghua University, one of the leading universities in China'; spoof domain mailtsinghua[.]sinacn[.]co, with the 公管学院 archive uploaded to VirusTotal from Beijing on 2022-11-24."
+        - "The doctrine's china-collection pillar is defined as 'PRC state and academic collection', citing prior SideWinder targeting of Chinese academics / research institutes."
+      ruled_out: "An incidental / opportunistic reading is rejected — an India-aligned actor spoofing a leading Chinese university's mail system during the post-Galwan standoff is squarely the China-collection pillar, not a stray target."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/pakistani-military
     country: pk
     role: primary
-  - target_id: orgs/prc-academic-institutions-various
+  - target_id: sectors/academic/research-lab
     country: cn
     role: primary
 sources:
-  - kaspersky/2023-04_sidewinder-pakistan-china-ongoing
+  - groupib/2023-05-17_sidewinder-distinctive-rattle
+  - thehackernews/2023-05-17_sidewinder-infrastructure-uncovered
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-27
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The event previously rested on a single phantom citation,
+    kaspersky/2023-04_sidewinder-pakistan-china-ongoing, whose url was the Securelist HOMEPAGE
+    (https://securelist.com/; title "Securelist | Kaspersky's threat research and reports"; 168445 bytes;
+    0 "SideWinder"/"Pakistan" mentions). The real report that slug invokes — Kaspersky "APT trends report
+    Q1 2023" (https://securelist.com/apt-trends-report-q1-2023/109581/, datePublished 2023-04-27) — does
+    NOT cover SideWinder: its only 5 "SideWinder" strings are a related-posts sidebar linking the 2024
+    StealerBot article; body "China"=0; body "Pakistan" hits are DTrack/Andariel + the unrelated
+    "DreamLand" malware; "academic" is ScarCruft/North-Korea. The event's claims were therefore
+    unsupported by any cited source. The underlying incident IS real and documented, so re-sourced to the
+    genuine primary.
+    RE-SOURCED TO: Group-IB / Bridewell, "The distinctive rattle of APT SideWinder"
+    (groupib/2023-05-17_sidewinder-distinctive-rattle; url https://www.group-ib.com/blog/hunting-sidewinder/;
+    raw sha256 a526a25e…a792315a, 604310 bytes; HTTP 200) — corroborated by The Hacker News
+    (thehackernews/2023-05-17_sidewinder-infrastructure-uncovered; sha256 803ea833…c412cf86, 167043 bytes).
+    NOT A DUPLICATE: a corpus-wide grep for distinctive-rattle / hunting-sidewinder / bridewell / PNWC /
+    Tsinghua found no other event citing this 2023 report; it is a distinct disclosure from the 2022-05
+    Group-IB "Old Snake, New Skin" retrospective (different report, different infrastructure, +1 year).
+    [a] FACTS — all now carried by the Group-IB primary (verbatim): "Group-IB and Bridewell detected 55
+    previously unknown IP addresses"; "We have attributed them with high confidence to SideWinder";
+    "GUIDELINES FOR JOURNAL – 2023 PAKISTAN NAVY WAR COLLEGE (PNWC).docx" with domain pnwc[.]bol-north[.]com;
+    "the target of SideWinder's attack may have been Tsinghua University, one of the leading universities in
+    China"; spoof domain mailtsinghua[.]sinacn[.]co; the 公管学院 archive "uploaded to VirusTotal for the
+    first time on November 24, 2022 … from China (the city of Beijing)"; "domains that mimic government
+    organizations in Pakistan, China, and India"; RTF/LNK/HTA (mshta.exe) chain. STRIPPED unsupported
+    embellishments from the prior prose: the "SideWinder.SE staging chain" artifact name (not in source) and
+    "data-theft" as a confirmed outcome (the report frames much as planned/potential attacks + infrastructure
+    + lures, not confirmed exfiltration) → incident_type changed [intrusion,data-theft]→[intrusion,espionage].
+    [b] ATTRIBUTION — attributing_org Kaspersky→"Group-IB / Bridewell"; confidence high (source: "high
+    confidence to SideWinder"); auspex_assessment concur; attribution_date 2023-04-27→2023-05-17. Set
+    attribution_level=named-actor: the source names the SideWinder cluster but NOT an Indian service/state as
+    operator — "Indian" appears 0× as operator and India only as a *target* country. India-aligned standing is
+    from the actor record / vendor consensus (THN: "widely believed to be associated with Indian espionage
+    interests"), not over-claimed here.
+    [c] DATES — published_on of the new primary = 2023-05-17 (metadata 2023-05-17T07:57:37+00:00; "May 17,
+    2023"). Operation window start_date 2022-10-01 (earliest dated artifact: a Tsinghua-related sample uploaded
+    2022-10-16; 公管学院 archive 2022-11-24), end_date 2023-03-31 (March-2023 Pakistan VT uploads per THN).
+    disclosure_date corrected from the phantom-Kaspersky 2023-04-27 to the genuine 2023-05-17.
+    [d] DOCTRINE_LINKS — both kept at strongly_inferred (NOT attested: the source states no Indian strategic
+    purpose, and the doctrine itself notes no Indian govt statement claims this tasking). Rewrote reasoning to
+    the actual evidence (PNWC; Tsinghua) and added inference_basis.signals + ruled_out; set attesting_source_id
+    to the Group-IB primary as the supporting source. perspective omitted (attacker-rationale default: India's
+    doctrine on an India-aligned op).
+    [e] ATTRIBUTION_LEVEL — added (named-actor), per exactly what the source names.
+    [f] ACTOR_ID — in/unscoped/sidewinder RESOLVES (file atlas/actors/in/sidewinder.yaml, id
+    in/unscoped/sidewinder; audited + de-NTRO'd 2026-06-24). No actor edit made.
+    TARGETS — orgs/pakistani-military (pk) RESOLVES and fits the PNWC military lure. For the Chinese academic
+    victim I used sectors/academic/research-lab (cn), which RESOLVES and matches the Tsinghua university lure;
+    I did NOT use the prior orgs/prc-academic-institutions-various because that registry entry does NOT exist
+    (dangling FK — see FLAG). RESIDUAL: Group-IB also lists Pakistani gov/law-enforcement + media and PRC
+    government domains as *potential* targets; left out of targets[] as planned/unconfirmed.
+    LEVEL=full: all 6 points done, every retained claim source-carried, both genuine sources reachable +
+    snapshotted + hashed.
