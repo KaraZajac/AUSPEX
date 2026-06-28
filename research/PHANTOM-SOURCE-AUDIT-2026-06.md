@@ -3,7 +3,28 @@
 **Date:** 2026-06-27 · **Author:** claude-opus-4.8 (max), during the event-audit census ·
 **Status:** finding + remediation worklist (for Kara's review)
 
-## What happened
+## CORRECTION (2026-06-28) — the 2026-05-30 import is NOT the source of these phantoms
+
+The original framing below blamed the 2026-05-30 corpus-growth import. **That
+attribution is wrong** — verified three ways: (1) the remediated phantom events
+(iran-soleimani, sidewinder-afghanistan, black-reward, zedcex, …) are **absent from
+both candidate queues** (`research/*-backfill-candidates-2026-05-30.json`); (2) **0 of
+590** unstamped events carry the importer's mandatory `PROVISIONAL` header, and none of
+the phantoms had it (they read as hand-/LLM-authored, with specific bylines + comments);
+(3) the importer's candidate queues still hold **real article URLs**, and the (now
+hardened) importer dry-runs at **0 generic URLs**. So the 2026-05-30 import is a separate,
+cleaner population that did validate as documented.
+
+**Actual origin:** a broader population of hand-/LLM-authored events (2020–2026) that
+recorded a source by *publisher + approximate topic* but stored only the publisher's
+**landing/catalogue URL as a placeholder** ("exact URL needs verification — publisher
+landing URL used", as several source records literally say). The article was then either
+never filled in, mis-remembered, or nonexistent. The importer hardening below is therefore
+**preventive only**, not a fix for the observed phantoms. The **detector and the
+"badrabbit-model" remediation are origin-agnostic and remain correct** — they find and fix
+phantoms regardless of how they got there.
+
+## What happened (original 2026-06-27 analysis — see correction above)
 
 The 2026-05-30 corpus-growth experiment (`docs/CORPUS-GROWTH-EXPERIMENT-2026-05-30.md`)
 bulk-imported **127 events** via a deterministic, no-LLM importer

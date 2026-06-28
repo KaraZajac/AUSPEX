@@ -45,6 +45,18 @@ try {
   }
 } catch { /* no verify file -> treat all as unknown-ok */ }
 const urlOk = (u: string) => { const s = urlStatus.get(u); return !s || /^[23]\d\d$/.test(s); };
+// A 200 is necessary but NOT sufficient: a publisher homepage or catalogue
+// (e.g. /research/, securelist.com/, yahoo.com/) returns 200 yet is NOT the cited
+// article. That gap created the phantom-citation class the 2026-06 census found
+// (see research/PHANTOM-SOURCE-AUDIT-2026-06.md). Flag URLs whose path is empty
+// or a known catalogue stem (depth <= 1) so QC replaces them with the real article.
+const urlGeneric = (u: string) => {
+  try {
+    const p = new URL(u).pathname.replace(/\/+$/, '');
+    if (p === '' || p === '/') return true;
+    return /^\/(en[_-]us\/)?(research|blog|news|threat-research|labs|intelligence|reports?|insights?|press-releases|recent-actions|en|index\.html)$/i.test(p);
+  } catch { return false; }
+};
 
 // ---- atlas indexes ---------------------------------------------------------
 const a: any = atlas();
@@ -146,7 +158,7 @@ const seenEvent = new Set<string>();
 const seenSource = new Set<string>();
 const newActors = new Map<string, { id: string; canonical: string; state: string; hint: string; srcId: string; itypes: string[] }>();
 const resolutions: { raw: string; state: string; id: string; isNew: boolean }[] = [];
-const report = { resolvedExisting: 0, newState: 0, newCriminal: 0, urlFlagged: 0, collisionSuffixed: 0, dupDropped: 0, skipped: [] as string[] };
+const report = { resolvedExisting: 0, newState: 0, newCriminal: 0, urlFlagged: 0, urlGenericFlagged: 0, collisionSuffixed: 0, dupDropped: 0, skipped: [] as string[] };
 
 const uniq = (base: string, taken: Set<string>, suffixed: () => void): string => {
   if (!taken.has(base)) return base;
@@ -183,7 +195,9 @@ for (let idx = 0; idx < all.length; idx++) {
   const srcFinal = uniq(srcBase, new Set([...sourceIds, ...seenSource]), () => report.collisionSuffixed++);
   seenSource.add(srcFinal);
   const urlBad = url && !urlOk(url);
+  const urlPhantomRisk = url && urlGeneric(url);   // HTTP 200 but a homepage/catalogue, not the article
   if (urlBad) report.urlFlagged++;
+  if (urlPhantomRisk) report.urlGenericFlagged++;
 
   const attributingOrg = c.attributing_org || c.vendor_name_for_actor || (pub ? pub : 'vendor-report');
   const orgConf = confMap[String(c.confidence || '').trim()] || 'moderate';
@@ -216,7 +230,7 @@ sources:
 
   // ---- source YAML ----
   const srcBody =
-`# PROVISIONAL backfill import 2026-05-30. URL curl-verified to resolve.${urlBad ? ` # WARNING: curl returned ${urlStatus.get(url)} (real-publisher block/redirect); agent-fetched; QC re-verify.` : ''}
+`# PROVISIONAL backfill import 2026-05-30. URL curl-verified to resolve.${urlBad ? ` # WARNING: curl returned ${urlStatus.get(url)} (real-publisher block/redirect); agent-fetched; QC re-verify.` : ''}${urlPhantomRisk ? ` # WARNING: URL is a homepage/catalogue (HTTP 200 != the cited article) -- PHANTOM-CITATION RISK; QC must replace with the real article URL.` : ''}
 id: ${srcFinal}
 kind: ${kindOf(c.source_kind)}
 publisher: ${yamlStr(c.attributing_org || pub)}
@@ -310,7 +324,7 @@ console.log(`candidates: ${all.length} | events: ${seenEvent.size} | sources: ${
 console.log(`actor resolution -> existing: ${report.resolvedExisting} | new-state: ${report.newState} | new-criminal: ${report.newCriminal}`);
 console.log(`new actor YAMLs: ${newActors.size} | placeholder services: ${[...newStateServices].filter(s => !serviceIds.has(s)).length} (${[...newStateServices].join(', ') || 'none'})`);
 console.log(`new state stubs: ${[...newStates].filter(s => !stateIds.has(s)).join(', ') || 'none'}`);
-console.log(`url-flagged (curl block/redirect, kept+noted): ${report.urlFlagged} | slug collisions suffixed: ${report.collisionSuffixed} | within-batch dups dropped: ${report.dupDropped}`);
+console.log(`url-flagged (curl block/redirect, kept+noted): ${report.urlFlagged} | url-generic (homepage/catalogue, PHANTOM RISK): ${report.urlGenericFlagged} | slug collisions suffixed: ${report.collisionSuffixed} | within-batch dups dropped: ${report.dupDropped}`);
 console.log(`total files to write: ${files.length} (events ${byKind('events')}, sources ${byKind('sources')}, actors ${byKind('actors')}, services ${byKind('services')}, nation-states ${files.filter(f=>f.path.includes('/nation-states/')).length})`);
 
 if (process.argv.includes('--dump')) {
