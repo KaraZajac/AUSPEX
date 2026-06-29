@@ -1,57 +1,246 @@
 id: 2020-06/sidewinder-nepal-bhutan-sri-lanka
-name: Trend Micro documents SideWinder targeting of Nepalese, Bhutanese, Sri Lankan governments
-start_date: 2019-06-01
-disclosure_date: 2020-06-04
-end_date: 2020-04-30
+name: SideWinder South Asian government & military targeting (Nepal, Afghanistan, Sri Lanka, China) — Trend Micro Dec-2020
+start_date: 2019-11-01
+disclosure_date: 2020-12-09
+end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Trend Micro published a technical analysis of SideWinder /
-  Rattlesnake operations against Nepalese, Bhutanese, and Sri
-  Lankan government targets during 2019-2020. SideWinder used
-  weaponized RTF documents exploiting CVE-2017-11882 and HTA-
-  staged droppers; tradecraft was consistent with prior Kaspersky
-  reporting on Pakistani targets. Lures themed on regional
-  political content (Indo-Nepal border issues, Bhutanese foreign-
-  ministry communications, Sri Lankan ministerial circulars).
+  Trend Micro's December 2020 report "SideWinder Uses South Asian
+  Issues for Spear Phishing, Mobile Attacks" documented a long-running
+  SideWinder credential-phishing and intrusion campaign whose
+  phishing-domain table spans 2019 Nov - 2020 Nov. The group's
+  targets were "multiple government and military units, mainly in
+  Nepal and Afghanistan". In Nepal, dozens of bodies appear in the
+  table, including the Government of Nepal and the Ministries of
+  Defence / Foreign Affairs / Home Affairs / Finance, the Nepali
+  Army, Nepal Police, the Armed Police Force, Nepal Rastra Bank
+  (central bank), the Federal Parliament of Nepal, Nepal Telecom and
+  the Nepal Communist Party. In Afghanistan, the targets are the
+  Administrative Office of the President / Presidential Palace
+  (aop.gov.af, arg.gov.af), the National Security Council (nsc.gov.af)
+  and the Ministry of Higher Education (mohe.gov.af). The table also
+  lists the Ministry of Defense of Sri Lanka (defence.lk) and the
+  Ministry of Foreign Affairs of China (mfa.gov.cn), and the report
+  states the group "also launched attacks against Pakistan,
+  Bangladesh, and China using lure files related to Covid-19" (plus
+  single entries for Qatar Charity and Myanma Posts and
+  Telecommunications). Delivery used weaponized RTF documents
+  (CVE-2017-11882) and ZIP -> LNK -> HTA -> JavaScript droppers that
+  installed a .NET "backdoor + stealer"; the group also deployed
+  malicious Android APKs that rooted devices via CVE-2019-2215 and
+  MediaTek-SU. Lures were themed on COVID-19 and South Asian
+  territorial disputes (the Nepal-India Lipulekh / Humla rows, the
+  Indo-Pakistani political-map dispute).
 false_flag_risk: none
 summary: |
-  Significant extension of the SideWinder picture beyond the
-  Pakistan-primary cluster: Nepal and Bhutan are India-adjacent
-  Himalayan states with extensive Indian intelligence interest;
-  Sri Lanka is a recurring South Asian collection target
-  consistent with Indian regional intelligence priorities. The
-  BackDeer family is the canonical implant referenced in Trend
-  Micro's analysis.
+  Trend Micro's Dec-2020 disclosure is the canonical record of
+  SideWinder's broad South Asian government and military targeting.
+  SideWinder is an India-aligned espionage cluster, attributed at
+  named-actor level; this Trend Micro report itself names no nation or
+  service - India appears only as a territorial-dispute subject in the
+  lures, and the India-aligned read rests on the actor's other cited
+  reporting. The dominant victim set - Nepalese and Afghan government,
+  defence and security bodies, alongside Sri Lankan defence, Chinese
+  foreign-affairs, and Pakistani / Bangladeshi targets - fits
+  SideWinder's documented regional government / diplomatic-collection
+  lane and Indian regional-collection priorities. This event is the
+  canonical anchor that subsumes the per-country fragment
+  2020-04/sidewinder-afghanistan-government, which rests on the same
+  single Trend Micro report; the Afghan victim set is folded in here.
 attributions:
   - actor_id: in/unscoped/sidewinder
     attributing_org: Trend Micro
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-06-04
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-12-09
     attribution_source_id: trend-micro/2020-06-04_sidewinder-nepal-bhutan
+    notes: |
+      Trend Micro attributes the activity to the named "SideWinder"
+      cluster but names no nation or service in the post (India
+      appears only as a territorial-dispute subject in the lures -
+      "Indian and Pakistani political map issues", the Lipulekh /
+      Humla rows). The India-aligned, named-actor assessment rests on
+      the actor's other cited reporting (Kaspersky 2018 low-confidence
+      "an Indian company"; MITRE G0121 "suspected Indian") - hence
+      named-actor / moderate, not named-unit, and concur-with-caveat.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Nepal, Bhutan, and Sri Lanka are textbook South Asian
-      diplomatic-collection targets consistent with the
-      AUSPEX-defined diplomatic-collection pillar.
+      Nepalese, Afghan and Sri Lankan government / military targeting
+      is canonical for SideWinder's regional diplomatic-collection
+      pillar, whose own summary names "Afghan, Sri Lankan, Nepalese,
+      and Bangladeshi government targeting ... consistent with Indian
+      regional diplomatic-collection priorities". No cited source
+      states India's strategic goal (this Trend Micro report names no
+      nation at all), so the link is strongly_inferred, not attested:
+      the South-Asian-government target set plus the actor's
+      India-aligned mission triangulate to one strategic reading.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Dominant victims are Nepalese and Afghan government, defence, foreign-affairs and security bodies (Trend Micro's phishing-domain table), the exact target set the diplomatic-collection pillar encodes."
+        - "SideWinder is an India-aligned cluster whose standing mission is regional government / diplomatic collection against South Asian neighbours."
+        - "Lures themed on the Nepal-India-China territorial disputes (Lipulekh, Humla) and the Indo-Pakistani political-map row tie the collection to Indian regional-strategic concerns."
+      ruled_out: |
+        Financially-motivated or hacktivist readings - the victims are
+        state government / military / foreign-ministry webmail with no
+        extortion, leak or revenue element; the operation is
+        intelligence collection, which the diplomatic-collection pillar
+        specializes for India's South Asian neighbours.
 targets:
   - target_id: orgs/nepal-government
     country: np
     role: primary
-  - target_id: orgs/bhutan-foreign-ministry
-    country: bt
+  - target_id: orgs/afghan-government
+    country: af
     role: primary
   - target_id: orgs/sri-lanka-government
     country: lk
     role: primary
 sources:
   - trend-micro/2020-06-04_sidewinder-nepal-bhutan
+notes: |
+  CANONICAL ANCHOR for SideWinder's Trend Micro Dec-2020 South Asian
+  campaign. Subsumes the per-country fragment
+  2020-04/sidewinder-afghanistan-government (same single source); the
+  Afghan victim set is folded in here. The slug retains
+  "nepal-bhutan-sri-lanka" for stability (slugs are stable forever),
+  but the source carries ZERO mentions of Bhutan - the Bhutan target
+  was removed as unsupported (see qc). The report's full victim set is
+  broader still (China MFA, Pakistan, Bangladesh, Qatar Charity,
+  Myanma Posts & Telecom); the targets[] list carries the dominant
+  government victim set, with the remainder captured in the prose.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    CANONICAL ANCHOR audit. Verified against the single cited source,
+    Trend Micro "SideWinder Uses South Asian Issues for Spear Phishing,
+    Mobile Attacks" (raw snapshot trend-micro__2020-06-04_sidewinder-
+    nepal-bhutan.html, sha256 53e5f208...2616daea, 118,320 bytes;
+    hash re-verified on disk this audit). This event is the canonical
+    record that SUBSUMES the duplicate fragment
+    2020-04/sidewinder-afghanistan-government (audited 2026-06-27,
+    flagged RETIRE/MERGE) - both rest on this one report. Afghan victim
+    set folded in so nothing is lost on the fragment's deletion.
+
+    [a FACTS] Rebuilt the prose from the report's authoritative
+    phishing-domain table (90 <tr> rows extracted from the raw).
+    SUPPORTED & now carried: "The group's targets include multiple
+    government and military units, mainly in Nepal and Afghanistan."
+    Nepal victims (2019 Nov - 2020 Nov): Government of Nepal, Ministry
+    of Defence, Ministry of Foreign Affairs, Ministry of Home Affairs,
+    Ministry of Finance, Nepali Army, Nepal Police, Armed Police Force,
+    Nepal Rastra Bank, Federal Parliament of Nepal, Nepal Telecom,
+    Nepal Communist Party, Civil Aviation Authority, Nepal Electricity
+    Authority, Kantipur Media Group, et al. Afghan victims (2020
+    Jan-Sep): Administrative Office of the President / Presidential
+    Palace (aop.gov.af / arg.gov.af), National Security Council
+    (nsc.gov.af), Ministry of Higher Education (mohe.gov.af). Sri Lanka:
+    a single row - "Ministry of Defense, Sri Lanka" (mail.defence.lk,
+    2020 Feb). China: "Ministry of Foreign Affairs, China"
+    (mail.mfa.gov.cn, 2020 Nov), and prose "The group also launched
+    attacks against Pakistan, Bangladesh, and China using lure files
+    related to Covid-19". Plus single rows for Qatar Charity and Myanma
+    Posts and Telecommunications. TTP supported: RTF (CVE-2017-11882),
+    ZIP -> LNK -> HTA -> JavaScript dropper -> ".NET backdoor +
+    stealer", Android APKs rooting via CVE-2019-2215 / MediaTek-SU;
+    COVID-19 + South Asian territorial-dispute lures (Lipulekh, Humla,
+    Indo-Pakistani map row).
+    STRIPPED as fabricated/unsupported by the source (grep counts on
+    the raw): (1) "Bhutan" / "Bhutanese foreign-ministry communications"
+    - "bhutan" = 0 hits, "foreign ministry" (Bhutanese) = 0; the
+    title's & old name's "Bhutan" is unsupported. Bhutan target DROPPED.
+    (2) "Rattlesnake" - 0 hits (a real SideWinder alias, but this source
+    does not use it; removed to avoid implying the source named it).
+    (3) "BackDeer family is the canonical implant referenced in Trend
+    Micro's analysis" - "backdeer" = 0 hits; the report names only a
+    ".NET backdoor + stealer". BackDeer is in the actor's general TTP
+    record but NOT in this report - claim removed. (4) "tradecraft
+    consistent with prior Kaspersky reporting on Pakistani targets" -
+    "kaspersky" = 0 hits; this report makes no such comparison. Removed.
+    (5) the "2019-2020 / 2019-06" framing softened to the table's real
+    span (see [c]).
+
+    [b ATTRIBUTION] Source NAMES the "SideWinder" cluster but no nation
+    / service (India appears only as a lure SUBJECT: "Indian and
+    Pakistani political map issues"; the Lipulekh news row). Corrections:
+    attributing_org_confidence high -> moderate; auspex_assessment
+    concur -> concur-with-caveat; ADDED attribution_level: named-actor
+    (was missing - protocol [e]); attribution_date 2020-06-04 ->
+    2020-12-09; ADDED a notes field. The India-aligned read rests on
+    the actor's OTHER cited sources (Kaspersky 2018 low-confidence "an
+    Indian company"; MITRE G0121 "suspected Indian"), consistent with
+    the actor's audited in/unscoped placement - hence named-actor, not
+    named-unit. Matches the sibling fragment's attribution (same source).
+
+    [c DATES] start_date 2019-06-01 -> 2019-11-01: earliest dated table
+    row is "2019 Nov | Government of Nepal | mail.nepal.gov.np" (no
+    June-2019 activity anywhere in the source). end_date 2020-04-30 ->
+    null: the table runs to "2020 Nov" (Ministry of Foreign Affairs,
+    China; Federal Parliament of Nepal), so the old April-2020 bound was
+    false; this is a point-in-time infrastructure disclosure with no
+    declared campaign end, so null + observed span 2019-11..2020-11 in
+    prose. disclosure_date 2020-06-04 -> 2020-12-09: the real TM article
+    "SideWinder Uses South Asian Issues for Spear Phishing, Mobile
+    Attacks" (raw <title> confirms) is dated 2020-12-09; the URL path
+    "/research/20/l/" encodes 2020 month-L = December, so this is ONE
+    report, NOT two, and the slug's "2020-06-04" is a stable-but-wrong
+    legacy import date (source record already corrected published_on).
+
+    [d DOCTRINE] in/regional-collection-pakistan-china/diplomatic-
+    collection, strongly_inferred - KEPT (honest), de-Bhutaned the
+    reasoning. NOT attested: this report names no nation/goal, so
+    attesting_source_id stays null. The pillar's own summary names
+    "Afghan, Sri Lankan, Nepalese, and Bangladeshi government
+    targeting ... consistent with Indian regional diplomatic-collection
+    priorities" - i.e. the pillar explicitly encodes this exact victim
+    set (and notably includes Afghanistan, excludes Bhutan). ADDED
+    inference_basis (signals[] + ruled_out). doctrine + pillar FKs both
+    resolve (atlas/doctrines/in/regional-collection-pakistan-china.yaml
+    lines 1, 56).
+
+    [e ATTRIBUTION_LEVEL] named-actor added (see [b]).
+
+    [f ACTOR_ID] in/unscoped/sidewinder RESOLVES
+    (atlas/actors/in/sidewinder.yaml carries id in/unscoped/sidewinder;
+    India-aligned, NTRO placement demoted 2026-06-24). No actor edits.
+    Directionality correct: victims = Nepal (np) / Afghanistan (af) /
+    Sri Lanka (lk) government, actor = India-aligned (India is NOT a
+    victim; it is only a lure subject).
+
+    FLAGS (for orchestrator/Kara):
+    1) MERGE CONFIRMED: 2020-04/sidewinder-afghanistan-government is a
+       same-source duplicate fragment of THIS event; its Afghan victim
+       set is now folded in here. Safe to retire/delete that fragment.
+    2) DANGLING target FKs: orgs/nepal-government, orgs/afghan-
+       government, orgs/sri-lanka-government have no registry files under
+       atlas/targets/orgs/ (systemic targets-registry backlog; each is
+       referenced by 2-4 events). Kept the established cohort slugs for
+       consistency rather than minting new ones or diverging to
+       sectors/government. orgs/bhutan-foreign-ministry was REMOVED here
+       (Bhutan unsupported); it is still referenced by other events that
+       should be checked.
+    3) BROADER VICTIM SET not in targets[]: the source also documents
+       China (MFA), Pakistan, Bangladesh, Qatar (Qatar Charity) and
+       Myanmar (Myanma Posts & Telecom). These are captured in the prose
+       but NOT minted as target FKs (orgs/china-*, orgs/pakistan-* etc.
+       are referenced by 0 files - would be novel dangling FKs). If the
+       registry is built out, China/Pakistan/Bangladesh targeting is
+       source-supported and could be added (China also implicates the
+       china-collection pillar).
+    4) incident_type: ADDED espionage (state-aligned credential theft +
+       .NET backdoor/stealer + Android spyware = espionage); kept
+       intrusion + data-theft.

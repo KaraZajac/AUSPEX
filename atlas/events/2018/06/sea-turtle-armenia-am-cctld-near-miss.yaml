@@ -1,52 +1,170 @@
 id: 2018-06/sea-turtle-armenia-am-cctld-near-miss
-name: Sea Turtle near-compromise of Armenia .am ccTLD registrar — averted ccTLD-wide hijack
-start_date: 2018-01-01
+name: Sea Turtle gains registrar access over Armenia's .am ccTLD (Amnic) — latent DNS-hijack capability across all .am domains
+start_date: 2018-03-01
 disclosure_date: 2019-04-17
-end_date: 2019-04-01
+end_date: null
 incident_type:
   - intrusion
 initial_vector: valid-creds
 outcome_summary: |
-  Cisco Talos's April 2019 Sea Turtle disclosure documented that
-  the cluster came close to compromising the registrar
-  managing Armenia's .am country-code TLD — an outcome that
-  would have placed every .am domain at risk of attacker-
-  controlled DNS resolution. Talos characterized this as a
-  near-miss; the precise mechanism that prevented full
-  compromise is not detailed publicly. The targeting of the
-  .am infrastructure during the active 2018-2020 Nagorno-
-  Karabakh tension cycle (which culminated in the September
-  2020 war) fits the Mavi Vatan regional-influence and Turkish
-  alliance-with-Azerbaijan framing.
+  Cisco Talos's April 17, 2019 Sea Turtle disclosure reported that the
+  actor "were able to gain access to registrars that manage ccTLDs for
+  Amnic, which is listed as the technical contact on IANA for the ccTLD
+  .am" (Armenia), and that "obtaining access to this ccTLD registrars
+  would have allowed attackers to hijack any domain that used those
+  ccTLDs." Talos classes such registrar/registry victims as secondary
+  targets — compromised to enable DNS hijacking of the campaign's primary
+  victims (national-security organizations, foreign ministries, and energy
+  firms, largely in the Middle East and North Africa). Talos does not state
+  whether any .am domains were actually hijacked, and does not characterize
+  the Amnic access as averted or unsuccessful: it documents the registrar
+  access as obtained, with .am-wide DNS hijacking as the latent capability
+  that access conferred. Armenia is one of 13 countries in a campaign Talos
+  assessed as running since approximately January 2017, carried out by "an
+  advanced, state-sponsored actor" (no nation named).
 false_flag_risk: none
 summary: |
-  Important doctrinal data point: targeting the .am ccTLD
-  during the Nagorno-Karabakh tension cycle directly serves
-  Turkish state collection on the Armenian information
-  ecosystem and aligns with the Turkish-Azerbaijani strategic
-  partnership. The Mavi Vatan regional-influence pillar
-  explicitly names Karabakh as a key term.
+  Sea Turtle's compromise of the registrar managing Armenia's .am
+  country-code TLD (Amnic, the IANA technical contact for .am) gave the
+  actor registrar-level control that, in Talos's words, "would have allowed
+  attackers to hijack any domain that used those ccTLDs." Within AUSPEX the
+  actor is tracked as a Turkey-aligned espionage cluster
+  (tr/unscoped/sea-turtle); that Turkey nexus rests on later reporting, not
+  on the Talos 2019 source, which names no nation. Collection against
+  Armenian internet infrastructure plausibly aligns with the Mavi Vatan
+  regional-influence pillar (which covers the Caucasus and names Karabakh as
+  a key term), but the link is only plausible: Talos states no purpose for
+  the Armenian targeting and classes Amnic/.am as a secondary registrar
+  victim, leaving an opportunistic-infrastructure reading open.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Cisco Talos
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: talos/2019-04-17_sea-turtle-dns-hijacking
+    notes: |
+      Talos (2019-04-17) attributes the campaign "with high confidence" to
+      "an advanced, state-sponsored actor" and names NO nation as the
+      perpetrator — "Turkey" appears in the report only as one entry in the
+      victim IP/country table, not as the sponsor. Hence attribution_level
+      activity-cluster (Talos's named "Sea Turtle" cluster; state-sponsored;
+      nation un-named at this source). The Turkey nexus carried by the
+      actor_id rests on later reporting cited in the actor record (Reuters
+      2020; Hunt & Hackett 2024), not on this 2019 Talos source; no cited
+      source names a specific Turkish service, so the actor remains
+      tr/unscoped.
 doctrine_links:
   - doctrine_id: tr/mavi-vatan
     pillar_id: tr/mavi-vatan/regional-influence
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Armenia .am ccTLD targeting during the active Nagorno-
-      Karabakh tension cycle is a precise regional-influence
-      pillar fit; the doctrine explicitly names Karabakh.
+      Sea Turtle is assessed within AUSPEX as a Turkey-aligned espionage
+      actor (per the actor record's later sources; Talos 2019 itself names
+      only "an advanced, state-sponsored actor" and no nation). A
+      Turkey-aligned actor obtaining registrar-level access over Armenia's
+      .am ccTLD plausibly fits the Mavi Vatan regional-influence pillar,
+      which covers the Caucasus and names Karabakh as a key term. The label
+      is plausible rather than higher because Talos states no purpose for the
+      Armenian targeting and names no nation, and because Talos classes
+      Amnic/.am as a secondary (registrar) victim compromised to enable
+      access to the campaign's primary Middle East / North Africa victims —
+      so an opportunistic-infrastructure reading (Armenia as one of ~13
+      campaign countries; .am as collateral ccTLD-registrar collection)
+      survives alongside the Caucasus-regional-influence reading. The
+      Nagorno-Karabakh war (September 2020) post-dates the Talos-documented
+      Armenian indicators (March 2018; December 2018-January 2019) by over a
+      year.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Mavi Vatan regional-influence (Caucasus): a Turkey-aligned actor collecting on Armenian internet infrastructure fits the pillar, which names Karabakh and aligns with the Turkish-Azerbaijani strategic partnership."
+        - "Opportunistic ccTLD-registrar collection: Talos classes Amnic/.am as a secondary registrar victim compromised to reach primary Middle East / North Africa targets, so the .am access may be campaign infrastructure rather than Armenia-specific tasking — Armenia being one of ~13 campaign countries."
 targets:
   - target_id: orgs/armenia-am-cctld-registrar
     country: am
     role: staging
 sources:
   - talos/2019-04-17_sea-turtle-dns-hijacking
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Phantom-remediation triage -> CORRECT-IN-PLACE (not re-source/retire). The single cited
+    source talos/2019-04-17_sea-turtle-dns-hijacking is a REAL first-party article (Cisco Talos,
+    "DNS Hijacking Abuses Trust In Core Internet Service"), already on disk and hash re-verified:
+    sha256 eae3a904...b060af0f, 199,058 bytes (matches the source record). It genuinely carries
+    the core incident, so no re-sourcing was needed; the defects were embellishment +
+    over-attribution, fixed in place against the raw snapshot.
+
+    [a] FACTS — the event's "near-miss / averted ccTLD-wide hijack / came close to compromising /
+    mechanism that prevented full compromise" framing was FABRICATED and INVERTED the source.
+    Talos says access WAS obtained: "the threat actors were able to gain access to registrars that
+    manage ccTLDs for Amnic, which is listed as the technical contact on IANA for the ccTLD .am.
+    Obtaining access to this ccTLD registrars would have allowed attackers to hijack any domain
+    that used those ccTLDs." The subjunctive "would have allowed ... to hijack any domain"
+    describes the latent capability the (successful) registrar access conferred, NOT an averted
+    compromise. Negative evidence in the raw: ZERO occurrences of "near", "near-miss", "averted",
+    "came close", "nearly", or "prevent". Rewrote name/outcome_summary/summary to the
+    source-faithful facts: registrar access over .am (Amnic) obtained; .am-wide DNS hijack as
+    latent capability; Talos does not say any .am domain was actually hijacked, nor that it was
+    averted. Amnic/.am is a SECONDARY victim per Talos ("Targets that fall into the secondary
+    victim category include numerous DNS registrars, telecommunication companies, and internet
+    service providers") — kept targets[].role staging (correct). Armenia = 1 of 13 campaign
+    countries.
+
+    [b] ATTRIBUTION — over-attribution fixed. Talos: "We assess with high confidence that this
+    activity is being carried out by an advanced, state-sponsored actor that seeks to obtain
+    persistent access to sensitive networks and systems" — names NO nation (raw grep: "turkish"=0,
+    "iran"=0; "turkey"=1, occurring only in the victim IP/country table). Set attribution_level
+    activity-cluster (was MISSING) — Talos reached the named-cluster / state-sponsored level only,
+    no nation (the schema's Tortoiseshell attribution-latency pattern). Kept
+    attributing_org_confidence high (Talos's stated confidence in the state-sponsored-actor
+    assessment; orthogonal to level) and auspex_assessment concur. Added an attribution note: the
+    Turkey nexus carried by actor_id tr/unscoped/sea-turtle rests on LATER reporting cited in the
+    actor record (Reuters 2020; Hunt & Hackett 2024), not on this 2019 Talos source; no cited
+    source names a Turkish service (actor correctly tr/unscoped, demoted from tr/mit on 2026-06-25).
+    NB on the task's framing: AUSPEX's Sea Turtle nation is TURKEY (post-2020 consensus — PwC Teal
+    Kurma / Microsoft MARBLED DUST / Hunt & Hackett / Reuters), NOT Iran; the "don't over-attest to
+    Iran" steer was right in spirit (don't pin a nation on Talos 2019) but the corpus actor is
+    Turkish.
+
+    [c] DATES — disclosure_date 2019-04-17 confirmed (Talos publication; source published_on
+    matches). start_date 2018-01-01 was unsupported (matches no source date); Talos: "The ongoing
+    operation likely began as early as January 2017 and has continued through the first quarter of
+    2019," with Armenia-linked operational IPs dated "March 2018" (relay shared with
+    Turkey/Sweden/Syria/US) and "December - January 2018-2019" (Armenia-dedicated relay). Set
+    start_date -> 2018-03-01 (earliest Armenia-linked indicator; source does not precisely date the
+    Amnic access). Set end_date 2019-04-01 -> null (source does not bound the .am operation's end;
+    Armenia-dedicated relay ran Dec 2018-Jan 2019, the overall campaign through Q1 2019). The id
+    slug "2018-06" is an immutable import artifact matching no source date — left as-is (slugs are
+    stable forever; sibling Sea Turtle events show the same id-month/start-date divergence).
+
+    [d] DOCTRINE_LINKS — downgraded tr/mavi-vatan/regional-influence strongly_inferred -> plausible.
+    NOT attested (correct: no attesting_source_id; Talos states no purpose), but strongly_inferred
+    overstated it: Talos states no purpose for the Armenian targeting, names no nation, and classes
+    Amnic/.am as a secondary registrar victim, so a second strategic reading (opportunistic
+    ccTLD-registrar collection as campaign infrastructure, Armenia one of ~13 countries) survives
+    alongside the Caucasus/Karabakh regional-influence reading; the Karabakh war (Sept 2020)
+    post-dates the 2018-2019 indicators by a year. Rewrote reasoning to honest plausible framing;
+    added inference_basis.alternatives (two competing readings, quoted per the colon-space rule).
+    attesting_source_id stays null.
+
+    [e] ATTRIBUTION_LEVEL — set to activity-cluster (see [b]); was absent.
+
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves (file atlas/actors/tr/sea-turtle.yaml, internal
+    id tr/unscoped/sea-turtle; audited + demoted from tr/mit on 2026-06-25, in good shape). No
+    actor edit made.
+
+    Residual uncertainties: Talos does not date the Amnic access precisely (start_date is the
+    earliest Armenia-linked indicator, not a confirmed access date) and does not state whether any
+    .am domain was actually hijacked (only that the access "would have allowed" it). Target FK
+    orgs/armenia-am-cctld-registrar has no registry file, but that is the corpus norm (303 of 410
+    referenced orgs/ ids are file-less, incl. the sibling .net.cy and .gr ccTLD operators) — left
+    as-is.

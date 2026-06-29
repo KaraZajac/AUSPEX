@@ -1,46 +1,155 @@
 id: 2018-03/kaspersky-sidewinder-pakistan
 name: Kaspersky publicly documents SideWinder targeting of Pakistani military
 start_date: 2017-01-01
-disclosure_date: 2018-03-07
+disclosure_date: 2018-04-12
 end_date: null
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky's Securelist published the first long-form public
-  dissection of SideWinder, attributing ongoing Pakistani-military
-  targeting to the cluster and naming the actor "SideWinder" for
-  the first time in Western vendor reporting. Tradecraft documented
-  included weaponized RTF lures, multi-stage downloaders, and
-  RAT installations consistent with the Indian-aligned operational
-  pattern previously documented (less specifically) under
-  Hangover.
+  In its Q1-2018 APT-trends report, Kaspersky's Securelist gave the
+  first Western-vendor profile of SideWinder as a distinct cluster,
+  describing "an actor mainly targeting Pakistan military targets,
+  active since at least 2012." Kaspersky documented the cluster
+  spreading malware through unique implementations of known-
+  vulnerability exploits — notably CVE-2017-11882 — followed by a
+  PowerShell payload in the final stages. Kaspersky held only "low
+  confidence that this malware might be authored by an Indian
+  company" and named no Indian government service.
 false_flag_risk: none
 summary: |
-  The naming event for SideWinder as a distinct cluster. Kaspersky
-  did not publicly attribute to the Indian government; subsequent
-  vendor consensus has placed SideWinder among the Indian-aligned
-  cluster set without authoritative government attestation.
+  The Western-vendor naming event for SideWinder (aka Rattlesnake /
+  T-APT-04) as a distinct India-aligned espionage cluster whose
+  canonical victim set is the Pakistani military. Kaspersky's
+  Q1-2018 APT-trends report profiled the actor — Pakistani-military
+  focus, active since at least 2012, CVE-2017-11882 exploitation
+  with a PowerShell final-stage payload — but attributed authorship
+  only to an unnamed "Indian company" at low confidence and did NOT
+  attribute to the Indian government. Subsequent vendor consensus
+  has placed SideWinder among the India-aligned cluster set without
+  authoritative government attestation.
 attributions:
   - actor_id: in/unscoped/sidewinder
     attributing_org: Kaspersky (Securelist)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2018-03-07
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2018-04-12
     attribution_source_id: kaspersky/2018-03-07_sidewinder-targeting-pakistan
+    notes: |
+      Kaspersky's Q1-2018 APT-trends report firmly names the
+      SideWinder cluster as "mainly targeting Pakistan military
+      targets, active since at least 2012", but holds only "low
+      confidence that this malware might be authored by an Indian
+      company" and names no Indian service — nation asserted at low
+      confidence, no service named -> named-actor (not named-unit),
+      and in/unscoped placement. attributing_org_confidence is
+      moderate, not high: high confidence in the cluster identity,
+      low confidence in the Indian authorship -> moderate is the
+      honest blend (over-attestation corrected from high, 2026-06-28).
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani military victim profile is canonical for the
-      regional-collection / Pakistan-military pillar.
+      An India-aligned cluster whose documented victim set is
+      "mainly Pakistan military targets" is canonical for the
+      regional-collection / Pakistan-military pillar, on which
+      SideWinder, Patchwork and DoNot Team all converge.
+      Strongly_inferred rather than attested: Kaspersky states the
+      victim profile but no source states India's strategic GOAL,
+      and no Indian-government text claims this tasking (no
+      attesting_source_id).
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victim profile: Kaspersky describes SideWinder as 'an actor mainly targeting Pakistan military targets' — squarely the Pakistan-military pillar."
+        - "Actor mission + alignment: SideWinder is an India-aligned espionage cluster (vendor-consensus named-actor) active since at least 2012, converging with Patchwork and DoNot Team on the same Pakistani military/government victim set."
+        - "Tradecraft fit: espionage-oriented exploitation (CVE-2017-11882) plus PowerShell staging for collection, not destruction or revenue."
+      ruled_out: "Financially-motivated or hacktivist explanations are ruled out by the exclusively military/government victim profile and espionage tradecraft; the only competing strategic reading would be a non-India sponsor, which the India-aligned vendor consensus makes the weaker option."
 targets:
   - target_id: orgs/pakistani-military
+    country: pk
     role: primary
 sources:
   - kaspersky/2018-03-07_sidewinder-targeting-pakistan
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    CANONICAL SideWinder-Pakistan record — subsumes the retired fragment
+    2017-12/sidewinder-pakistan-air-force-early (same Kaspersky source;
+    duplicate slated for deletion). Audited so every source-supported
+    Pakistan-military targeting detail is captured here. Source: Kaspersky
+    Securelist "APT Trends report Q1 2018"
+    (https://securelist.com/apt-trends-report-q1-2018/85100/), raw snapshot
+    kaspersky__2018-03-07_sidewinder-targeting-pakistan.html, sha256
+    20f8402f…2407a12b, 187,450 bytes (hash re-verified, matches source record).
+
+    The entire SideWinder content in this report is ONE bullet (snapshot
+    line 584), verbatim: "Sidewinder – An actor mainly targeting Pakistan
+    military targets, active since at least 2012. We have low confidence
+    that this malware might be authored by an Indian company. To spread the
+    malware, they use unique implementations to leverage the exploits of
+    known vulnerabilities (such as CVE-2017-11882) and later deploy a
+    Powershell payload in the final stages."
+
+    [a FACTS] SUPPORTED & now captured here: SideWinder cluster; "mainly
+    targeting Pakistan military targets" (victim = Pakistan, NOT India);
+    active since at least 2012; India authorship at LOW confidence ("an
+    Indian company"); CVE-2017-11882 exploitation; PowerShell payload in
+    final stages. STRIPPED as unsupported by this source (grep over the full
+    187,450-byte snapshot): "weaponized RTF lures" (RTF: 0 hits), "multi-
+    stage downloaders" (downloader: 0 hits), "RAT installations" (the 3 'RAT'
+    hits are meta-keywords + an IronHusky paragraph re PlugX/PoisonIvy, none
+    about SideWinder), and the "Hangover" lineage claim (Hangover: 0 hits).
+    Softened "first long-form public dissection" -> the report devotes a
+    single bullet to SideWinder, so it is a brief first Western-vendor
+    profile. initial_vector kept phishing (document-exploit delivery of
+    CVE-2017-11882). start_date kept 2017-01-01 as APPROXIMATE (CVE-2017-11882
+    is a late-2017 staple; the Q1-2018 report describes then-current
+    activity); "since at least 2012" recorded as actor history in the
+    summary, not as op-start.
+
+    [b ATTRIBUTION] attributing_org_confidence DOWNGRADED high -> moderate
+    (over-attestation: Kaspersky firmly names the cluster but holds only "low
+    confidence" on Indian-company authorship; high cluster-identity + low
+    nation = moderate). auspex_assessment concur -> concur-with-caveat. Added
+    attribution_level: named-actor (named cluster + nation at low confidence,
+    no service). Consistent with the sibling fragment's audit, which already
+    flagged this record's high as over-stated.
+
+    [c DATES] published_on / disclosure_date / attribution_date CORRECTED
+    2018-03-07 -> 2018-04-12. The snapshot's own structured metadata gives
+    datePublished "2018-04-12T10:00:17+00:00" (dateModified 2020-09-16); a
+    "Q1 2018" trends summary could not publish on 2018-03-07. The source id
+    slug retains the legacy 2018-03-07 string (slugs are stable-forever per
+    SCHEMA.md; only published_on corrected). FLAGGED for orchestrator.
+
+    [d DOCTRINE] in/regional-collection-pakistan-china/pakistan-military,
+    strongly_inferred — kept (correct). No Indian-government text states the
+    strategic goal -> NOT attested, attesting_source_id null. Added
+    inference_basis {signals[], ruled_out} per the strongly_inferred schema.
+
+    [e ATTRIBUTION_LEVEL] named-actor (added; was missing) — matches the
+    actor's audited in/unscoped placement.
+
+    [f ACTOR_ID] in/unscoped/sidewinder RESOLVES (atlas/actors/in/sidewinder.yaml
+    carries id in/unscoped/sidewinder; de-provisionalized 2026-06-24). Target
+    orgs/pakistani-military RESOLVES; added country: pk. No actor edits.
+
+    SOURCE RECORD FIXED: title was "Walking in your enemy's shadow — when
+    fourth-party collection becomes attribution hell" (an unrelated Kaspersky
+    report) -> corrected to the real article title "APT Trends report Q1
+    2018" (<title>/og:title/h1 in snapshot); published_on 2018-03-07 ->
+    2018-04-12.
+
+    LEVEL full: every retained claim is carried by the snapshotted Kaspersky
+    primary; fabricated tradecraft stripped; dates corrected to the page's
+    own metadata. This record now subsumes the duplicate fragment.

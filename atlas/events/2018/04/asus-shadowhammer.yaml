@@ -8,50 +8,174 @@ incident_type:
   - intrusion
 initial_vector: supply-chain
 outcome_summary: |
-  Trojanized ASUS Live Update delivered backdoored updates to
-  approximately 1 million ASUS notebook owners, with selective
-  exploitation limited to ~600 hard-coded MAC addresses
-  (targeted individuals).
+  Trojanized ASUS Live Update delivered backdoored updates to an
+  estimated one-million-plus ASUS users worldwide (over 57,000 of
+  them Kaspersky customers), but the implant activated only on
+  systems whose network-adapter MAC address matched a hard-coded
+  list — Kaspersky extracted more than 600 unique MAC addresses
+  from over 200 samples. The actual intended victims were an
+  unknown pool of surgically-selected targets.
 false_flag_risk: none
 summary: |
-  Attributed to APT41 / Barium by Kaspersky. The compromised
-  ASUS Live Update installers were signed with valid ASUSTeK
-  digital certificates and distributed from official ASUS
-  update servers (liveupdate01s.asus[.]com, liveupdate01.asus[.]com),
-  giving the supply-chain compromise legitimate code-signing
-  cover. The trojanized binaries remained dormant unless the
-  infected system's network-adapter MAC address matched one of
-  roughly 600 hard-coded targets, enabling surgical second-stage
-  delivery. Kaspersky's verdict for the implants was
-  HEUR:Trojan.Win32.ShadowHammer, and the operation reuses
-  Winnti-lineage tradecraft consistent with the BARIUM cluster
-  inside APT41.
+  In January 2019 Kaspersky discovered a sophisticated supply-chain
+  attack in which ASUS Live Update installers were trojanized,
+  signed with valid "ASUSTeK Computer Inc." code-signing
+  certificates, and distributed from the official ASUS update
+  servers (liveupdate01s.asus[.]com, liveupdate01.asus[.]com) —
+  legitimate signatures and hosting that gave the compromise
+  authentic cover and let it remain undetected; Kaspersky assessed
+  it matched or surpassed the ShadowPad and CCleaner incidents in
+  complexity. The implant stayed dormant unless the infected
+  system's network-adapter MAC address matched a hard-coded list,
+  enabling surgical second-stage delivery to the (unknown) intended
+  targets. Kaspersky's detection verdict was
+  HEUR:Trojan.Win32.ShadowHammer.gen. Kaspersky stated that
+  "precise attribution is not available at the moment" but linked
+  the attack — via collected evidence — to the 2017 ShadowPad
+  incident, whose actor Microsoft named in court documents as
+  BARIUM (a known Winnti-backdoor user), and to a related
+  supply-chain case reported by ESET. AUSPEX maps BARIUM to the
+  APT41 umbrella, of which it is an equivalent alias.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: Kaspersky
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-03-25
     attribution_source_id: kaspersky/2019-03_shadowhammer-asus
+    notes: |
+      Kaspersky GReAT named BARIUM — not APT41 and not a nation: the
+      report says only "precise attribution is not available at the
+      moment" and links ShadowHammer, "via collected evidence", to the
+      2017 ShadowPad incident, "publicly identified by Microsoft in
+      court documents as BARIUM" (a Winnti-backdoor user), plus a
+      related ESET-reported supply-chain case. The strings "APT41",
+      "China"/"Chinese" and "MSS" appear NOWHERE in the source.
+      BARIUM is an equivalent alias of APT41 in the actor record, so
+      actor_id cn/mss/apt41 is the correct resolution; AUSPEX concurs
+      because the ShadowHammer -> APT41/BARIUM attribution is firm and
+      uncontested in vendor/consensus reporting (contrast the
+      contested CCleaner -> APT17). attributing_org_confidence
+      DOWNGRADED high -> moderate to honor the explicit "precise
+      attribution is not available" hedge; attribution_level =
+      named-actor (Kaspersky names the named group BARIUM but no
+      nation/unit — the cn/mss placement is the actor record's
+      verified call, not this source's).
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: cn/mic2025/next-gen-it
     program_id: null
     confidence: plausible
     reasoning: |
-      Targeted intelligence collection on specific individuals via
-      a hardware-vendor supply-chain compromise is consistent with
-      MIC2025 IT / hardware-sector mapping but cannot be fully
-      attested without knowing target identities.
+      An APT41/BARIUM supply-chain compromise of a major PC/ICT
+      vendor's (ASUS) software-update channel is broadly consistent
+      with the MIC2025 next-gen-IT pillar's interest in the
+      information-technology sector. The label is plausible — not
+      higher — because the Kaspersky source states no strategic
+      purpose at all (it gives only the operational goal, "to
+      surgically target an unknown pool of users" by MAC address, and
+      says the actual victims are unknown), and ASUS is the
+      staging/delivery vector (target role: staging), not the
+      intelligence objective. With the targets unknown and APT41's
+      documented dual espionage/financial character, more than one
+      strategic reading survives. Mirrors the sibling
+      NetSarang/ShadowPad 2017 treatment (same pillar, plausible).
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MIC2025 next-gen-IT collection: APT41 abusing an ICT-vendor supply chain fits the IT-sector pillar, but ASUS is the staging vector, not the named target."
+        - "Intelligence-Law / political collection on specific individuals: the >600 hard-coded MAC addresses point at a surgically-chosen, unknown set of persons — reads as targeted human-intelligence collection rather than IP/industrial acquisition."
+        - "APT41 tolerated financial/IP second-stage: the cluster's documented for-profit half means a criminal or IP-theft objective for the unknown downstream targets cannot be excluded."
     counter_explanation: |
-      Targeted-individual collection could equally be aligned with
-      Intelligence-Law / political collection rather than IP-sector
-      MIC2025 framing.
+      Targeted-individual collection could equally align with
+      intelligence-law / political collection rather than IP-sector
+      MIC2025 framing; the source names no purpose.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/asus
+  - target_id: sectors/ict
+    country: tw
     role: staging
+    outcome: "ASUS (Taiwanese PC/ICT vendor) — Live Update channel abused as the supply-chain staging vector; not the intelligence target. (Repointed from dangling FK orgs/asus, which has no registry entry — see qc notes.)"
 sources:
   - kaspersky/2019-03_shadowhammer-asus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited against Kaspersky GReAT "Operation ShadowHammer"
+    (securelist.com/operation-shadowhammer/89992/). Existing raw
+    snapshot reused + hash re-verified: kaspersky__2019-03_shadowhammer-asus.html,
+    sha256 25d18753…38c4498b, 201288 bytes; <title> "Operation
+    ShadowHammer | Securelist". NOT a phantom — the on-disk file is
+    the genuine article (ShadowHammer ×55, "Live Update" ×11, BARIUM
+    ×5, ShadowPad ×5, ASUSTeK, liveupdate01, "more than 600 unique
+    MAC addresses").
+
+    [a] FACTS — all now source-carried. VERBATIM: "The attack took
+    place between June and November 2018"; "over 57,000 Kaspersky
+    users have downloaded and installed the backdoored version …
+    possibly affecting over a million users worldwide"; "We were able
+    to extract more than 600 unique MAC addresses from over 200
+    samples"; signed "with legitimate certificates (eg: 'ASUSTeK
+    Computer Inc.')" hosted on "liveupdate01s.asus[.]com and
+    liveupdate01.asus[.]com"; verdict "HEUR:Trojan.Win32.ShadowHammer.gen";
+    "matches or even surpasses the Shadowpad and the CCleaner
+    incidents". CORRECTIONS: outcome_summary "1 million ASUS NOTEBOOK
+    owners" → "one-million-plus ASUS users worldwide" (source says
+    "users"/"computers", never "notebook"); "(targeted individuals)"
+    → "unknown pool of surgically-selected targets" (source: goal was
+    "to surgically target an unknown pool of users"); verdict given
+    the precise ".gen" suffix; added the 57,000 / >200-samples
+    figures.
+
+    [b] ATTRIBUTION — over-attestation fixed. Source VERBATIM:
+    "Although precise attribution is not available at the moment,
+    certain evidence we have collected allows us to link this attack
+    to the ShadowPad incident from 2017. The actor behind the
+    ShadowPad incident has been publicly identified by Microsoft in
+    court documents as BARIUM. BARIUM is an APT actor known to be
+    using the Winnti backdoor." The strings "APT41", "China",
+    "Chinese", "MSS", "espionage" appear 0× in the source. So
+    attributing_org_confidence DOWNGRADED high → moderate (explicit
+    hedge), and attribution_level set to named-actor (names the group
+    BARIUM; no nation/unit). actor_id cn/mss/apt41 KEPT — BARIUM is an
+    "equivalent" alias of APT41 in atlas/actors/cn/apt41.yaml
+    (Microsoft pre-2023 taxonomy), so the FK resolution is correct;
+    the cn/mss placement is that actor record's own DOJ-2020-sourced
+    call, not this source's. auspex_assessment kept concur:
+    ShadowHammer→APT41/BARIUM is firm/uncontested consensus (unlike
+    CCleaner→APT17). Added an attribution-level note documenting all
+    of this.
+
+    [c] DATES — confirmed, no change. published_on 2019-03-25 = the
+    article dateline "25 Mar 2019". start_date 2018-06-01 / end_date
+    2018-11-30 = "between June and November 2018"; disclosure_date
+    2019-03-25 = the same-day Motherboard/Securelist disclosure. (The
+    legacy id path 2018-04/… is a stable slug, never renamed — not a
+    date defect.)
+
+    [d] DOCTRINE — cn/mic2025 / next-gen-it kept at plausible (honest;
+    attesting_source_id null is correct, source states no purpose).
+    Rewrote reasoning to be source-faithful (targets unknown; ASUS is
+    staging not the objective) and added inference_basis.alternatives
+    (3 surviving readings: IT-sector collection / targeted-individual
+    HUMINT / APT41 financial-IP second-stage). Consistent with the
+    sibling NetSarang/ShadowPad 2017 event, which carries the same
+    pillar at plausible.
+
+    [e] ATTRIBUTION_LEVEL — was missing; set named-actor (see [b]).
+
+    [f] ACTOR_ID — cn/mss/apt41 resolves to atlas/actors/cn/apt41.yaml
+    (id cn/mss/apt41); record is well-formed, cn/mss placement
+    VERIFIED 2026-06-24, BARIUM + Winnti listed as aliases. No actor
+    flag.
+
+    TARGET FK FIX: target_id orgs/asus was DANGLING (no
+    atlas/targets/orgs/asus.yaml; referenced only by this event).
+    Repointed to sectors/ict (role staging, country tw) so the event
+    is conformant. FLAG for orchestrator: create an orgs/asus registry
+    entry if an org-level staging target is wanted.

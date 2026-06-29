@@ -1,61 +1,187 @@
 id: 2023-10/amnesty-donot-kashmir
-name: Amnesty Security Lab links DoNot Team Android tooling to Kashmir-activist targeting
-start_date: 2023-04-01
-disclosure_date: 2023-10-31
+name: CYFIRMA documents DoNot Team Android spyware on Google Play targeting individuals in Kashmir and Pakistan (2023)
+start_date: 2023-06-01
+disclosure_date: 2023-06-16
 end_date: null
 incident_type:
   - intrusion
+  - surveillance
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Amnesty International's Security Lab documented the use of
-  Android spyware attributable to the DoNot Team against an
-  unnamed Kashmir-area human-rights activist. The implants were
-  delivered via WhatsApp social engineering. The report extends
-  Amnesty's October 2021 finding that DoNot tooling was sold by
-  the Indian commercial vendor Innefu Labs and used in
-  Indian-state operations against domestic civil society.
+  CYFIRMA documented a DoNot Team (APT-C-35) Android campaign
+  distributed through the official Google Play Store. Three apps
+  were hosted under an account named "SecurITY Industry" — Device
+  Basic Plus, nSure Chat, and iKHfaa VPN — of which nSure Chat and
+  iKHfaa VPN carried malicious functionality. The implants used
+  otherwise-clean Android libraries to fetch the victim's contacts
+  and location, and the C2 server logged the installing user's
+  username and password in plain text. CYFIRMA assessed, "with a
+  moderate level of confidence", that the Play Store account was
+  linked to DoNot, which it said "recently targeted individuals in
+  the Kashmir region" and was also "using Android payload against
+  individuals in the Pakistan region" — adding that "it is still
+  unknown what drives them to conduct cyber strikes in the South
+  Asian region".
 false_flag_risk: none
 summary: |
-  One of the clearest publicly available evidentiary chains
-  from a documented contractor (Innefu Labs) through tooling
-  (the yty framework) to operational use (DoNot Team) against
-  Indian-state political targets (Kashmir activists). This is
-  the strongest "state-contractor handshake" datum for the
-  Indian cyber program in open-source as of 2026.
+  A 2023 datapoint for DoNot Team's Android collection lane: the
+  India-aligned cluster's move to abuse the official Google Play
+  Store (rather than only sideloaded/lure-delivered APKs) to reach
+  individuals in Kashmir and Pakistan. The exfiltration set
+  (contacts, location, plaintext credentials) is intelligence-value
+  collection against individuals of interest. The disclosing vendor,
+  CYFIRMA, is India-headquartered and attributes to DoNot at moderate
+  confidence while explicitly declining to state a motive, so the
+  campaign reads equally as domestic internal-security surveillance
+  (the Kashmir slice) and foreign regional collection (the Pakistan
+  slice).
 attributions:
   - actor_id: in/unscoped/donot-team
-    attributing_org: Amnesty International Security Lab
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2023-10-31
-    attribution_source_id: amnesty/2023-10-31_donot-targeting-kashmir-activists
+    attributing_org: CYFIRMA
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-06-16
+    attribution_source_id: cyfirma/2023-06-16_donot-android-google-play
+    notes: |
+      CYFIRMA links the "SecurITY Industry" Google Play account to
+      "APT DoNot" "with a moderate level of confidence" (named cluster
+      + India nexus by cluster identity; no Indian service/unit named
+      and no sponsor motive asserted — hence named-actor, not
+      named-unit, and the actor stays in/unscoped). CYFIRMA is
+      India-headquartered and cluster-consistent with prior ESET /
+      Morphisec reporting, not independently service-level — hence
+      moderate / concur-with-caveat.
 doctrine_links:
-  - doctrine_id: in/contractor-hack-for-hire
-    pillar_id: in/contractor-hack-for-hire/political-espionage
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Innefu Labs as commercial vendor, DoNot Team as
-      operational cluster, Kashmir civil-society targeting as
-      victim profile — the link to the contractor-political
-      pillar is direct.
-    contested: false
-    analyst: claude
   - doctrine_id: in/regional-collection-pakistan-china
-    pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
+    pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Kashmir targeting straddles domestic political surveillance
-      and the broader Pakistan-related regional collection set.
-      Editorial choice: tag the contractor pillar primarily and
-      the regional-collection pillar secondarily.
+      DoNot is a canonical Indian-aligned South-Asia collection
+      cluster, and CYFIRMA observed this campaign targeting
+      individuals in the Kashmir region and the Pakistan region —
+      foreign/adversary-region collection of the kind this doctrine
+      encodes. Plausible, not higher: CYFIRMA explicitly states "it
+      is still unknown what drives them to conduct cyber strikes in
+      the South Asian region", i.e. names no strategic purpose, and a
+      domestic internal-security reading of the Kashmir slice
+      competes. Pillar left null: the victims are unspecified
+      "individuals", not a diplomatic or military target that pins a
+      single pillar.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Foreign regional collection (regional-collection-pakistan-china): the campaign's targeting of individuals in the Pakistan region reads as foreign-adversary collection across South Asia, the doctrine's core."
+        - "Domestic internal-security / political surveillance: the Kashmir-region individuals reasonably read as domestic surveillance of civil society inside India-administered territory, which the contractor political-espionage pillar covers instead."
+    contested: false
+    analyst: claude
+  - doctrine_id: in/contractor-hack-for-hire
+    pillar_id: in/contractor-hack-for-hire/political-espionage
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      The Kashmir-region individual targeting reads as domestic
+      political / internal-security surveillance of civil society,
+      which the political-espionage pillar (government + civil-society
+      targeting) covers; DoNot is the Innefu-linked, contractor-adjacent
+      cluster per the actor record and the separate 2021 Amnesty Togo
+      report. Plausible, not higher: THIS source (CYFIRMA, June 2023)
+      names no contractor and no purpose, and a foreign
+      regional-collection reading of the same activity survives equally.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Domestic political / internal-security espionage (contractor political-espionage pillar): targeting individuals in the Kashmir region fits domestic civil-society surveillance; DoNot is the Innefu-linked contractor-adjacent cluster, but that contractor handshake is attested only in the separate 2021 Amnesty Togo source/event, not in this CYFIRMA report."
+        - "Foreign regional state collection (regional-collection-pakistan-china): the same campaign also targets individuals in the Pakistan region, i.e. foreign regional collection rather than the privatized hack-for-hire ecosystem; this report names no contractor."
     contested: false
     analyst: claude
 targets:
-  - target_id: persons/kashmir-activists
+  - target_id: sectors/civil-society
     role: primary
 sources:
-  - amnesty/2023-10-31_donot-targeting-kashmir-activists
-  - amnesty/2021-10-07_donot-yty-android-innefu
+  - cyfirma/2023-06-16_donot-android-google-play
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    PHANTOM REMEDIATION — RE-SOURCE path (badrabbit model). The prior primary citation
+    amnesty/2023-10-31_donot-targeting-kashmir-activists (url
+    https://www.amnesty.org/en/latest/research/) is a confirmed PHANTOM: I curled the url
+    (HTTP 200) and it returns the generic "Research Archives - Amnesty International"
+    CATALOGUE page (0 "kashmir", 0 "donot"); the on-disk snapshot from the prior audit
+    (sha256 0586e9bb…ee4d9d99, 118,515 bytes) is instead the Amnesty Security Lab
+    search-results page for "Donot" (<title>"Search results for 'Donot'"; og:url
+    securitylab.amnesty.org/search/Donot/) — 0 "kashmir"/"innefu"/"bahamut". NO standalone
+    2023 Amnesty DoNot/Kashmir article exists: Amnesty's only DoNot reporting is the 2021
+    Togo report (amnesty/2021-10-07_donot-yty-android-innefu), which is itself the source of
+    the "DoNot attacks … concentrated in the north of India, Pakistan and Kashmir" + Innefu
+    framing the phantom-era prose borrowed; Amnesty's actual Oct/Dec-2023 India work is the
+    Pegasus/NSO investigation (Varadarajan/Mangnale, published Dec 2023) — a DIFFERENT actor
+    that does NOT belong on this event. The underlying incident (DoNot targeting individuals
+    in Kashmir in 2023) IS real and well-documented, so RE-SOURCED to the genuine primary
+    cyfirma/2023-06-16_donot-android-google-play ("DoNot APT Elevates its Tactics by Deploying
+    Malicious Android Apps on Google Play Store", raw snapshot sha256 894b8b4e…f09429e5,
+    116,283 bytes, page meta "Published On : 2023-06-16"). sources[] and attribution_source_id
+    re-pointed; event rewritten to source-true facts. (Same defect + remedy as the sister
+    event 2024-08/donot-android-continuation-2024, re-sourced 2026-06-27.)
+    [a] FACTS — rewritten to the real report. KEPT/verified verbatim from the Cyfirma raw:
+    three Google Play apps under the "SecurITY Industry" account (Device Basic Plus, nSure
+    Chat, iKHfaa VPN; the latter two malicious) — "A total of three Android apps were hosted
+    with the name Device Basic Plus, nSure Chat, and iKHfaa VPN, with two of them having
+    malicious characteristics"; "made them fetch contacts and the location of the compromised
+    victim"; C2 logs username/password "in plain text"; "recently targeted individuals in the
+    Kashmir region"; "using Android payload against individuals in the Pakistan region";
+    "it is still unknown what drives them". STRIPPED as fabricated (each confirmed absent from
+    the Cyfirma raw, count=0): "Amnesty International's Security Lab documented…"; "extends
+    Amnesty's October 2021 finding"; "Innefu Labs"; "yty framework"; "WhatsApp social
+    engineering"; "an unnamed Kashmir-area human-rights activist"; and the
+    "strongest 'state-contractor handshake' datum" framing — all of which describe the
+    SEPARATE 2021 Amnesty Togo report (event 2021-10/amnesty-innefu-donot-contractor-link),
+    not this 2023 Cyfirma Play-Store campaign.
+    [b] ATTRIBUTION — re-pointed Amnesty→CYFIRMA. CYFIRMA: "with a moderate level of confidence,
+    we can confirm that the Google Play store account is linked to APT DoNot". Set
+    attributing_org=CYFIRMA, attributing_org_confidence high→moderate (the source's own word),
+    attribution_level named-actor (added; cluster + India-by-identity, no service/unit, no
+    sponsor motive asserted), auspex concur→concur-with-caveat (India-HQ'd secondary vendor,
+    cluster-consistent), attribution_date 2023-10-31→2023-06-16.
+    [c] DATES — all phantom-era values corrected. disclosure_date 2023-10-31→2023-06-16
+    (Cyfirma publication; the 2023-10-31 value was the Apple-threat-notification / Amnesty
+    Pegasus date for a different actor). start_date 2023-04-01→2023-06-01 (estimate: apps live
+    on Play Store as of the mid-June report; exact campaign-start not stated — see residuals).
+    end_date null. source published_on 2023-06-16.
+    [d] DOCTRINE_LINKS — both rewritten honest. (1) in/regional-collection-pakistan-china:
+    pillar diplomatic-collection→null (victims are unspecified individuals, not diplomats),
+    confidence kept plausible, alternatives[] added — the source names targeting (Kashmir +
+    Pakistan individuals) but explicitly states no motive, and domestic vs foreign readings
+    both survive. (2) in/contractor-hack-for-hire/political-espionage: confidence DOWNGRADED
+    strongly_inferred→plausible — its prior basis ("Innefu Labs as commercial vendor … the link
+    to the contractor-political pillar is direct") is NOT carried by this Cyfirma source (0
+    "Innefu"); kept as a plausible domestic-political reading only, with alternatives[] noting
+    the contractor handshake is attested solely in the separate 2021 Togo source/event. Neither
+    link is attested; both attesting_source_id=null. Both are attacker-rationale (actor=in,
+    doctrine=in/*) → no perspective tag, no doctrine-state mismatch. All doctrine/pillar FKs
+    resolve.
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+    [f] ACTOR_ID — in/unscoped/donot-team RESOLVES (file atlas/actors/in/donot-team.yaml carries
+    internal id in/unscoped/donot-team). No actor edit. The actor record's own 2026-06-24 notes
+    already flag this amnesty/2023-10-31 citation as a misattribution — corroborated here.
+    TARGETS — replaced the dangling/invalid persons/kashmir-activists FK (no persons/ namespace
+    in the targets registry; only orgs/ exists) with the source-true sectors/civil-society
+    (the "individuals" in Kashmir/Pakistan); no country set (campaign spans India-administered
+    Kashmir + Pakistan, and Kashmir's status is contested). INCIDENT_TYPE intrusion+data-theft →
+    intrusion+surveillance+data-theft (spyware harvesting contacts/location).
+    RESIDUAL UNCERTAINTY: (i) start_date is an estimate — Cyfirma gives only the 2023-06-16
+    publication and "recently"/an April technical-findings reference; no firm op-start.
+    (ii) initial_vector kept phishing for consistency with the sister DoNot Android events,
+    though delivery here was trojanized apps on the official Play Store (social-engineering to
+    install) rather than a classic phishing lure — the vector vocab has no trojanized-app value.
+    (iii) targets are source-vague — civil-society is the honest bucket for "individuals", but
+    Cyfirma names no concrete victim/org. (iv) event id/file path remain 2023-10/ (slug stable
+    per the never-rename rule) though true disclosure is 2023-06-16 — orchestrator may relocate.
+    See FLAGS in the audit report: the phantom amnesty/2023-10-31 source is still cited by the
+    actor record (atlas/actors/in/donot-team.yaml) and the doctrine
+    (atlas/doctrines/in/regional-collection-pakistan-china.yaml) — neither editable here.

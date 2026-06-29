@@ -1,46 +1,66 @@
 id: 2018-06/mustang-panda-first-disclosure
 name: Mustang Panda — first Western-vendor public disclosure
-start_date: 2017-01-01
+start_date: 2017-04-01
 disclosure_date: 2018-06-15
 end_date: 2018-06-15
 incident_type:
   - intrusion
+  - espionage
 initial_vector: phishing
 outcome_summary: |
   CrowdStrike publishes its "Adversary of the Month" profile
-  for Mustang Panda — the first Western-vendor public naming
-  of the cluster. Reporting describes target set of Mongolian
-  government, a US-based think tank with China-policy focus,
-  and multiple non-profit / NGO organizations.
+  for Mustang Panda — the first public naming of the cluster
+  ("There are no known community or industry names associated
+  with this actor"). Reporting describes a China-nexus actor
+  first observed in April 2017 targeting a US-based think tank,
+  with a wider campaign against non-governmental organizations
+  (NGOs) using Mongolian-language decoys, indicating a focus on
+  gathering intelligence on Mongolia.
 false_flag_risk: none
 summary: |
   Anchors Mustang Panda's public-disclosure timeline. The
-  initial profile already identifies the durable target
-  pattern that holds across the next eight years: regional
-  MFA-equivalent governments (Mongolia first; ASEAN MFAs
-  and the Vatican later), Western think tanks tracking PRC
-  policy, and NGO / refugee / diaspora organizations.
-  Tradecraft was PlugX variants delivered via weaponized
-  LNK lures, Cobalt Strike for C2 — the same loader / C2
-  family Mustang Panda continued to refine through the
-  2022 Vatican campaigns and the 2025 EU / NATO disclosures.
+  2018 profile establishes the cluster's early target set —
+  a US-based think tank and Mongolia-focused NGOs — and its
+  Mongolia intelligence focus. The broader pattern (ASEAN
+  MFAs, the Vatican, EU / NATO institutions, diaspora groups)
+  is documented in later reporting, not this first profile.
+  CrowdStrike highlights rapid tooling assimilation — use of
+  CVE-2017-0199 within days of its public disclosure. Per the
+  source, tradecraft comprised Poison Ivy / PlugX as shared
+  malware plus an infection chain using a weaponized .lnk (PDF
+  double-extension, delivered via a goo.gl / Google Drive link)
+  that stages a Cobalt Strike beacon for C2 — the PlugX /
+  Cobalt Strike signatures recur in later Mustang Panda
+  campaigns.
 attributions:
   - actor_id: cn/unscoped/mustang-panda
     attributing_org: CrowdStrike
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-06-15
     attribution_source_id: crowdstrike/2018-06-15_mustang-panda-adversary-of-the-month
+    notes: "CrowdStrike coins the named cluster MUSTANG PANDA (the '-PANDA' suffix = China-nexus in CrowdStrike taxonomy) and asserts a 'China-based adversary'; no Chinese service (MSS/PLA) is named — hence named-actor (named group + nation), not named-unit, and the actor stays cn/unscoped. The source states 'There are no known community or industry names associated with this actor' — i.e. the first public naming."
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Mongolian government targeting plus US China-policy
-      think tanks is the canonical BRI political-intelligence
-      collection profile.
+      CrowdStrike reports a China-nexus actor collecting
+      intelligence on Mongolia (a China-Mongolia-Russia BRI
+      corridor state) via Mongolia-focused NGOs, alongside a
+      US think tank — a fit for BRI political-intelligence
+      collection. Kept plausible, not higher: the source
+      states no strategic purpose, names no government / MFA
+      victim, and generic PRC political espionage is an equally
+      live reading, so more than one strategic interpretation
+      survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "BRI political-intelligence collection: Mongolia is a flagship China-Mongolia-Russia BRI corridor state, and the actor's documented mission is regional political-intelligence collection."
+        - "Generic PRC political/strategic espionage (National Intelligence Law): the named victims are NGOs and a US think tank, reading as broad MSS-style political collection not specifically tied to BRI."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -49,19 +69,99 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      NGO and refugee-organization targeting fits the diaspora
-      pillar; CrowdStrike's first-disclosure framing does not
-      specify which NGOs, so confidence stays at plausible.
+      CrowdStrike reports targeting of NGOs ("non-governmental
+      organizations (NGOs) in general", with a Mongolia focus);
+      PRC collection against civil-society / NGO targets fits
+      the National Intelligence Law diaspora-and-dissident-
+      collection pillar. Plausible only: the source neither
+      identifies the specific NGOs nor frames them as diaspora /
+      dissident / refugee organizations, so the diaspora reading
+      is a fit but not the sole one.
     attesting_source_id: null
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/government/foreign-ministry
-    role: primary
   - target_id: sectors/civil-society/think-tank
     role: primary
   - target_id: sectors/civil-society/ngo
     role: primary
 sources:
   - crowdstrike/2018-06-15_mustang-panda-adversary-of-the-month
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited vs the live CrowdStrike "Meet CrowdStrike's Adversary of the Month for
+    June: MUSTANG PANDA" blog (Adam Meyers, 2018-06-15). NOT a phantom: URL resolves
+    to the genuine, complete article (title "Mustang Panda | Threat Actor Profile",
+    H1 "Meet CrowdStrike's Adversary of the Month for June: MUSTANG PANDA", body
+    carries Mongolia/think-tank/NGO/PlugX/Cobalt-Strike content, no bot-wall).
+    raw_snapshot captured: crowdstrike__2018-06-15_mustang-panda-adversary-of-the-month.html,
+    sha256 ad590b43…dd73439b, 162086 bytes (added to the source record).
+
+    [a] FACTS — corrections made:
+      • start_date 2017-01-01 -> 2017-04-01. Source: "In April 2017, CrowdStrike Falcon
+        Intelligence observed a previously unattributed actor group with a Chinese nexus
+        targeting a U.S.-based think tank." (2017-01-01 was a year-default; April is the
+        earliest dated observation, consistent with their "use of CVE-2017-0199 within
+        days of its public disclosure" — that CVE went public April 2017.)
+      • Removed "Mongolian government" from outcome_summary and "regional MFA-equivalent
+        governments (Mongolia first)" from summary — UNSUPPORTED. The source names NO
+        government/MFA victim; the Mongolia angle is "uses Mongolian language decoys and
+        themes, suggesting … a specific focus on gathering intelligence on Mongolia",
+        "Mongolia-focused NGOs", "likely Mongolia-based victims". Mongolia is the
+        intelligence SUBJECT, realized via NGO targeting — not a named government victim.
+      • Removed "with China-policy focus" (think tank) and "Western think tanks tracking
+        PRC policy" — embellishment. Source says only "a U.S.-based think tank"; the
+        "Chinese nexus" qualifies the ACTOR, not the think tank's remit.
+      • Decoupled the malware claim. Source lists "shared malware like Poison Ivy or
+        PlugX" generally; the detailed infection chain (goo.gl/Google Drive link -> zip
+        -> .lnk disguised .pdf -> .wsc/VBScript -> PowerShell -> Cobalt Strike stager ->
+        XOR-encoded Cobalt Strike beacon -> C2) delivers COBALT STRIKE, not PlugX. The
+        old "PlugX variants delivered via weaponized LNK lures" conflated the two; rewrote
+        to match. Added Poison Ivy and the CVE-2017-0199 rapid-assimilation fact (both
+        prominent in the source). Trimmed the unsourced "2022 Vatican / 2025 EU-NATO"
+        specifics from this event's prose (those are later-reporting, in the actor record,
+        not this profile) -> kept a generic "recur in later campaigns" continuity note.
+      • initial_vector phishing confirmed: the chain begins with a weaponized link the
+        target must open. Added incident_type espionage (source: "gathering intelligence
+        on Mongolia") alongside the existing intrusion.
+
+    [b] ATTRIBUTION — CrowdStrike explicitly names the cluster ("MUSTANG PANDA, a
+    China-based adversary") and states "There are no known community or industry names
+    associated with this actor" (the first public naming). attributing_org_confidence
+    high kept (asserted definitively, no hedge). Added attribution_level: named-actor —
+    a named group + nation (China) but NO Chinese service (MSS/PLA) named, consistent
+    with the actor being cn/unscoped. Added a notes line. auspex_assessment concur kept.
+
+    [c] DATES — source published_on 2018-06-15 = the article's actual byline date ✓
+    (added raw_snapshot+sha256 to the source record; tier primary kept — first-party
+    tier-1 vendor research). disclosure_date 2018-06-15 ✓. start_date corrected (above).
+
+    [d] DOCTRINE_LINKS — neither link is attested, so no attesting_source gate applies.
+      • cn/bri/political-intelligence-collection DOWNGRADED strongly_inferred -> plausible.
+        The source states no purpose, names no government/MFA victim, and generic PRC
+        political espionage is an equally live competitor to a specifically-BRI reading,
+        so >1 strategic interpretation survives (textbook plausible). Rewrote reasoning
+        to drop the "Mongolian government" / "China-policy think tank" claims and added
+        inference_basis.alternatives.
+      • cn/national-intelligence-law-2017/diaspora-and-dissident-collection kept plausible;
+        fixed reasoning (removed "refugee-organization" — not in the source; the source
+        says "NGOs in general"; it does not frame them as diaspora/dissident/refugee).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing). See [b].
+
+    [f] ACTOR_ID — cn/unscoped/mustang-panda RESOLVES (file atlas/actors/cn/mustang-panda.yaml
+    carries id: cn/unscoped/mustang-panda; demoted from cn/mss on 2026-06-24, well-audited).
+    No actor flag. NB confirmed: unlike the tibetan-budget event, CrowdStrike genuinely
+    names Mustang Panda here, so the attribution is source-backed.
+
+    Targets: REMOVED sectors/government/foreign-ministry (target inflation — no
+    government victim in the source; that is the later ASEAN-MFA pattern). Kept
+    civil-society/think-tank (the US think tank) and civil-society/ngo (the NGOs) — both
+    source-carried. All FKs (actor, 2 doctrines + pillars, 2 sectors, source) resolve.
+    Residual uncertainty: the specific identity of the think tank / NGOs is not given by
+    the source, which is why both doctrine links stay plausible.

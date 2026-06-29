@@ -1,57 +1,68 @@
 id: 2018-04/mitre-attack-apt32-catalog
 name: MITRE ATT&CK publishes APT32 (G0050) group profile
 start_date: 2014-01-01
-disclosure_date: 2018-04-18
+disclosure_date: 2017-12-14  # page's own "Created" metadata; slug 2018-04 kept (stable-id rule)
 end_date: null
 incident_type:
   - documentary
 initial_vector: unknown
 outcome_summary: |
   MITRE ATT&CK created the APT32 (G0050) group profile on
-  18 April 2018, consolidating vendor reporting from FireEye
-  (May 2017), Cybereason (Cobalt Kitty, May 2017), Volexity
-  (ASEAN watering hole, November 2017), and ESET (March 2018
-  backdoor refresh) into a canonical TTP catalog. The page
-  lists associated software (Cobalt Strike, KerrDown,
-  WINDSHIELD, KOMPROGO, SOUNDBITE, PHOREAL, DENIS, OceanLotus
-  Mac variants, Goopy, Roland) and maps observed techniques
-  across initial-access, execution, persistence, and
-  defense-evasion tactics. The MITRE catalog is the canonical
-  cross-vendor synthesis for APT32 tooling and tradecraft.
+  14 December 2017 (per the page's own "Created" metadata),
+  synthesizing vendor reporting from FireEye (May 2017),
+  Cybereason (Cobalt Kitty, May 2017), Volexity (watering-hole
+  research, November 2017), TrendMicro (macOS, April 2018), and
+  ESET (OceanLotus macOS update, 2019) into a canonical TTP
+  catalog. The page's associated-software list includes Cobalt
+  Strike, KerrDown, WINDSHIELD, KOMPROGO, SOUNDBITE, PHOREAL,
+  Denis, Goopy, and the OceanLotus macOS variants, and maps
+  observed techniques across initial-access, execution,
+  persistence, and defense-evasion tactics. The MITRE catalog
+  is the canonical cross-vendor synthesis for APT32 tooling and
+  tradecraft.
 false_flag_risk: none
 summary: |
   Documentary marker for the maturation of public OSINT on
-  APT32. The MITRE ATT&CK G0050 page became the
+  APT32. The MITRE ATT&CK G0050 page became a
   reference-of-first-resort for analysts working APT32
-  intrusions and is the bibliographic spine of subsequent
+  intrusions and a bibliographic spine for subsequent
   third-party reporting. The catalog page has been version-
-  updated multiple times since 2018 to incorporate the
-  Bitdefender Mac disclosure (2020), the Facebook takedown
-  (2020), the Amnesty diaspora-targeting research (2021), and
-  later ESET retrospectives.
+  updated repeatedly since its December 2017 creation (last
+  modified April 2024), incorporating later research it cites
+  including ESET's OceanLotus macOS analysis (2019) and Amnesty
+  International's diaspora-targeting investigation (February
+  2021).
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: MITRE ATT&CK
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2018-04-18
+    attribution_date: 2017-12-14
     attribution_source_id: mitre-attack/g0050_apt32
     notes: |
-      MITRE inherits the underlying attribution from the
-      vendor-research corpus it catalogs (FireEye 2017 first;
-      Cybereason, Volexity, ESET subsequently). The MITRE entry
-      itself is a tertiary synthesis rather than primary
-      attribution.
+      MITRE's own wording attributes APT32 only at the nation
+      level and hedges: "APT32 is a suspected Vietnam-based
+      threat group that has been active since at least 2014" —
+      no Vietnamese service/unit is named (hence named-actor,
+      not named-unit; the actor is vn/unscoped). MITRE inherits
+      this attribution from the vendor corpus it catalogs
+      (FireEye 2017 first; Cybereason, Volexity, ESET
+      subsequently); the entry is a cross-vendor synthesis
+      rather than primary attribution. "Suspected" supports
+      moderate (not high) attributing-org confidence.
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      MITRE's tactics/techniques cataloguing is doctrine-agnostic;
-      doctrine assignment here is by sector overlap with the
-      victims MITRE itself summarizes (foreign manufacturing,
-      consumer-products multinationals).
+      MITRE's tactics/techniques cataloguing is doctrine-agnostic.
+      Plausible sector-overlap tag only: the G0050 page summarizes
+      APT32 targeting of "multiple private sector industries,"
+      which overlaps the industrial-collection doctrine, but the
+      page itemizes no specific manufacturing/automotive victims
+      and states no strategic purpose.
     contested: false
     analyst: claude
   - doctrine_id: vn/resolution-29-nqtw
@@ -59,11 +70,65 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      MITRE's victim summary also notes Vietnamese dissidents,
-      journalists, and ASEAN-government targeting — the
-      regime-stability pillar's profile.
+      The same G0050 victim summary notes targeting of "foreign
+      governments, dissidents, and journalists" with a strong
+      Southeast-Asia focus — overlapping the
+      regime-stability-surveillance pillar's profile. Plausible
+      (sector overlap only); MITRE states no strategic purpose.
     contested: false
     analyst: claude
 targets: []
 sources:
   - mitre-attack/g0050_apt32
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Documentary/reference event — MITRE ATT&CK's creation of the APT32 (G0050) group
+    profile. Audited against the live G0050 page. Raw snapshot
+    atlas/sources/raw/mitre-attack__g0050_apt32.html, sha256 3376746b…45b7f1e3
+    (217,223 bytes) — re-verified against the committed hash AND a fresh curl of
+    https://attack.mitre.org/groups/G0050/ (byte-identical, exit 0). NOT a phantom:
+    title "APT32, SeaLotus, OceanLotus, APT-C-00, Canvas Cyclone, BISMUTH, Group G0050 |
+    MITRE ATT&CK", full article body present.
+    [a] FACTS — corrected three unsupported claims. (1) "Roland" removed from the
+    associated-software list — absent from the page (0 hits); the page's Software section
+    lists Cobalt Strike (S0154), WINDSHIELD (S0155), KOMPROGO (S0156), SOUNDBITE (S0157),
+    PHOREAL (S0158), Denis (S0354), Goopy (S0477), Kerrdown (S0585) — all verified — plus
+    OceanLotus macOS variants documented via technique citations. (2) "Bitdefender Mac
+    disclosure (2020)" removed from summary — "Bitdefender" appears 0× on the page; the
+    page's macOS sources are TrendMicro ("TrendMicro MacOS April 2018", retrieved Nov 13
+    2018) and ESET (Dumont, OceanLotus macOS update, 2019). (3) "Facebook takedown (2020)"
+    removed — the lone Facebook mention is a TTP ("APT32 has set up Facebook pages in
+    tandem with fake websites"), not the Dec-2020 takedown; the page documents no takedown.
+    Verified-and-kept citations: FireEye May 2017, Cybereason/Cobalt Kitty May 2017,
+    Volexity Nov 2017, Amnesty Intl 24 Feb 2021.
+    [b] ATTRIBUTION — over-attestation downgraded high → moderate. MITRE verbatim: "APT32
+    is a suspected Vietnam-based threat group that has been active since at least 2014. The
+    group has targeted multiple private sector industries as well as foreign governments,
+    dissidents, and journalists with a strong focus on Southeast Asian countries like
+    Vietnam, the Philippines, Laos, and Cambodia." "Suspected" is a nation-level hedge →
+    moderate. auspex_assessment concur retained (Vietnam nexus well-sourced at named-actor
+    level across the actor's 7 cited sources).
+    [c] DATES — disclosure_date + attribution_date + source.published_on corrected
+    2018-04-18 → 2017-12-14, the page's own "Created: 14 December 2017" metadata (Last
+    Modified 17 April 2024). The only "April 2018" string on the page is a citation
+    retrieval tag (TrendMicro), NOT a publication date — 2018-04-18 was unsupported.
+    start_date 2014-01-01 kept ("active since at least 2014", page-verbatim). FLAG: the
+    immutable slug/path (2018-04/…, events/2018/04/) now disagree with the true 2017-12-14
+    date; slug left unchanged per stable-id rule — orchestrator's call whether to relocate.
+    [d] DOCTRINE_LINKS — both links plausible (no attesting_source_id; correct — plausible
+    requires none). Reasoning made page-faithful: link 1 (industrial-upgrading) softened to
+    the page's "multiple private sector industries" wording; link 2 (resolution-29-nqtw/
+    regime-stability-surveillance) anchored to the page's "foreign governments, dissidents,
+    and journalists … Southeast Asia" summary. Neither states a strategic goal, so neither
+    can rise above plausible on a doctrine-agnostic catalog page.
+    [e] ATTRIBUTION_LEVEL — set to named-actor (was missing): MITRE names the group + the
+    Vietnam nation, no service/unit.
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves (file atlas/actors/vn/apt32.yaml whose id is
+    vn/unscoped/apt32 — FK is by id, not path). No actor-file edit.
+    Source record: tier secondary retained (cross-vendor synthesis; defensible);
+    raw_snapshot + content_sha256 already present and re-verified; added a 2026-06-28 AUDIT
+    line and corrected published_on to 2017-12-14.

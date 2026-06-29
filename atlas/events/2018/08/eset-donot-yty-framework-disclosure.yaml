@@ -1,62 +1,194 @@
 id: 2018-08/eset-donot-yty-framework-disclosure
-name: ESET dissects the DoNot Team yty malware framework — first long-form Western disclosure
-start_date: 2017-01-01
-disclosure_date: 2018-08-23
+name: NETSCOUT ASERT discloses the DoNot Team yty modular malware framework — first public disclosure
+start_date: 2018-01-01
+disclosure_date: 2018-03-08
 end_date: null
 incident_type:
+  - espionage
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  ESET's WeLiveSecurity team published a detailed dissection of
-  the DoNot Team / Origami Elephant cluster's modular Windows
-  malware framework, which the report named "yty." The framework
-  bundles separable loaders, droppers, and a backdoor with
-  command-and-control over HTTPS. ESET tied operational use of
-  the framework to Pakistani, Bangladeshi, and South Asian
-  diplomatic targeting consistent with prior vendor reporting
-  on the broader Patchwork / Hangover ecosystem.
+  On 8 March 2018 NETSCOUT's ASERT team (Dennis Schwarz and Jill
+  Sopko) published "Donot Team Leverages New Modular Malware
+  Framework in South Asia," the first public disclosure of a
+  modular Windows malware framework ASERT named "yty" (after
+  debugging strings in its components). The framework chains a
+  C++ downloader to a .NET plugin-downloader and a low-
+  functionality backdoor that pulls further modules for file
+  collection, screenshots, keylogging, and system
+  reconnaissance; command-and-control IP addresses were staged
+  in a Google Docs document and HTTPS beacons used football-
+  themed URL paths. ASERT assessed with medium confidence that
+  yty is a successor to the EHDevel framework and that the same
+  operator — the Donot Team — built both. Decoy documents,
+  timestamp analysis, and C2-log analysis showed a focus on
+  Pakistan (decoys impersonating official Government of Pakistan
+  memos), with infrastructure also impersonating Sri Lankan
+  (Sunday Observer) and Bangladeshi (Bangladesh Today) news
+  outlets, indicating broader South Asian targeting.
 false_flag_risk: none
 summary: |
-  The canonical Western-vendor technical anchor for the DoNot
-  Team's Windows toolchain. yty has remained the central
-  Windows malware family in the cluster's tradecraft across
-  subsequent Morphisec, Cyfirma, and Amnesty reporting, with
-  refreshes in 2020-2022. The disclosure established DoNot Team
-  as a distinct Indian-aligned cluster, separable from
-  Patchwork and SideWinder in vendor naming.
+  The first public technical anchor for the DoNot Team's yty
+  Windows malware framework, which remained the cluster's
+  central Windows family across subsequent Morphisec, Cyfirma,
+  ESET, and Amnesty reporting (with refreshes through 2020-2022).
+  ASERT named the Donot Team operator and noted "strikingly
+  similar" code, infrastructure, and TTP overlaps with the
+  EHDevel malware and with Operation Hangover / Patchwork, but
+  stated it "did not uncover definitive evidence to link the two
+  groups" — i.e. it established Donot Team as a tracked cluster
+  without resolving the Patchwork relationship. ASERT named no
+  sponsoring state; the India alignment AUSPEX records for this
+  actor rests on later and other-vendor reporting, not on this
+  source.
 attributions:
   - actor_id: in/unscoped/donot-team
-    attributing_org: ESET (WeLiveSecurity)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2018-08-23
-    attribution_source_id: eset/2018-08-23_donotapt-yty-framework
+    attributing_org: NETSCOUT (ASERT)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2018-03-08
+    attribution_source_id: netscout/2018-03-08_donot-team-yty-modular-malware-framework
+    notes: |
+      ASERT named the "Donot Team" cluster as the yty operator
+      "with medium confidence" (hence attributing_org_confidence:
+      moderate) and identified yty as an EHDevel successor. No
+      sponsoring nation or intelligence service is named, and
+      ASERT explicitly "did not uncover definitive evidence to
+      link" Donot Team and Patchwork — so attribution_level is
+      named-actor (group, not nation or unit). concur-with-caveat:
+      AUSPEX concurs the activity is DoNot Team (firmly
+      established by later reporting) while flagging that this
+      first-disclosure attribution was medium-confidence with the
+      EHDevel / Patchwork lineage unresolved.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani military and government victim set is canonical
-      for the Pakistan-military pillar.
+      ASERT's own analysis ("a focus on Pakistan"; decoys
+      impersonating official Government of Pakistan memos) places
+      the yty campaign on Pakistani government collection, the
+      core victim set the Pakistan-military/government pillar
+      encodes for India-aligned clusters (DoNot, SideWinder, and
+      Patchwork all converge here). strongly_inferred, not
+      attested: ASERT names the Pakistani-government focus but
+      states no Indian strategic purpose.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ASERT: decoy documents 'appeared to be official Government of Pakistan memos' and C2-log/timestamp analysis 'showed a focus on Pakistan'."
+        - "DoNot Team is assessed India-aligned in subsequent reporting; an India-aligned actor concentrating on Pakistani government targets fits the regional-collection-vs-Pakistan pillar."
+      ruled_out: "Financially-motivated or hacktivist activity — ruled out by the espionage-only toolset (file collection, keylogging, screenshots, exfiltration) and government-decoy lures, with no monetization or messaging component."
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Bangladeshi and South Asian diplomatic targeting maps
-      onto the diplomatic-collection pillar.
+      ASERT documented yty infrastructure impersonating Sri Lankan
+      (Sunday Observer) and Bangladeshi (Bangladesh Today) outlets
+      alongside the Pakistani focus — the regional South Asian
+      collection (Sri Lanka, Bangladesh) the diplomatic-collection
+      pillar encodes. Honesty caveat: this evidence is lookalike
+      registration infrastructure, not confirmed foreign-ministry
+      compromise, and ASERT does not use the word "diplomatic";
+      hence strongly_inferred on the regional target-mix, never
+      attested on a stated Indian purpose.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ASERT domains table: 'sundayobserver[.]net' mimics a Sri Lankan newspaper and 'thebangladeshtoday[.]net' mimics a Bangladeshi national daily — regional South Asian targeting infrastructure beyond Pakistan."
+        - "The diplomatic-collection pillar explicitly encodes Afghan, Sri Lankan, Nepalese, and Bangladeshi regional collection for India-aligned clusters."
+      ruled_out: "A Pakistan-only reading — ruled out because the Sri Lanka / Bangladesh impersonation infrastructure extends the target set beyond Pakistan into the broader regional-collection lane."
 targets:
   - target_id: orgs/pakistani-government
     country: pk
     role: primary
-  - target_id: orgs/bangladesh-foreign-ministry
-    country: bd
-    role: primary
 sources:
-  - eset/2018-08-23_donotapt-yty-framework
+  - netscout/2018-03-08_donot-team-yty-modular-malware-framework
+notes: |
+  Event id/slug retained as 2018-08/eset-donot-yty-framework-disclosure per the
+  stable-slug rule, though the slug is now historical: this event was re-sourced on
+  2026-06-28 from a phantom ESET citation (eset/2018-08-23_donotapt-yty-framework,
+  url null — no such ESET article exists) to the genuine first disclosure of the yty
+  framework, NETSCOUT / ASERT's 2018-03-08 post. ESET did not disclose yty in 2018;
+  ESET's DoNot / yty reporting is the 2022-01-18 "DoNot Go! Do not respawn!" piece
+  (covered by the 2019-04 continuation event family). Slug rename and the dangling
+  orgs/pakistani-government target registry are flagged for the orchestrator.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION (badrabbit-model RE-SOURCE). The event rested on a phantom
+    citation eset/2018-08-23_donotapt-yty-framework (url: null; a prior 2026-05-29 audit
+    already established no ESET WeLiveSecurity article of that title/date exists, and the
+    title was a TrendMicro-"Untangling the Patchwork" + yty mashup). Web research confirmed
+    the genuine FIRST public disclosure of the yty framework is NETSCOUT/ASERT, "Donot Team
+    Leverages New Modular Malware Framework in South Asia," 2018-03-08 (Dennis Schwarz & Jill
+    Sopko). Re-sourced the event to that primary; created source record
+    netscout/2018-03-08_donot-team-yty-modular-malware-framework with raw snapshot
+    netscout__2018-03-08_donot-team-yty-modular-malware-framework.html, sha256
+    12aa0f8a…d470e45, 386,427 bytes (page fetched cleanly, NOT bot-walled). Annotated the
+    orphaned phantom source record as such (STEP 0c); it remains cited by actor
+    in/unscoped/donot-team, which I cannot edit — FLAGGED for the orchestrator.
+
+    [a] FACTS — all now carried verbatim by the NETSCOUT/ASERT raw: "ASERT discovered a new
+    modular malware framework, we call yty, that focuses on file collection, screenshots, and
+    keylogging"; C++→.NET downloader chain + low-functionality backdoor; "Command and control
+    (C2) hosts stored in a document hosted on Google Docs"; football-themed HTTPS paths; "a
+    focus on Pakistan" with decoys that "appeared to be official Government of Pakistan memos";
+    Sri Lanka (sundayobserver[.]net) and Bangladesh (thebangladeshtoday[.]net) impersonation
+    domains. STRIPPED false ESET framing, the "first long-form WESTERN disclosure"/"established
+    DoNot Team as distinct from Patchwork" overclaims (ASERT in fact "did not uncover definitive
+    evidence to link the two groups"), and the unsourced 2017-01-01 start. start_date set to
+    2018-01-01 (conservative; ASERT discovered the framework "In late January 2018" — precise
+    op-start not documented). disclosure_date corrected 2018-08-23 → 2018-03-08.
+
+    [b] ATTRIBUTION — ASERT: "We believe the threat actors, Donot Team, who created EHDevel,
+    also created the yty framework. With medium confidence, ASERT believes this new malware
+    framework will pick up where EHDevel left off." attributing_org ESET (WeLiveSecurity) →
+    NETSCOUT (ASERT); attributing_org_confidence high → moderate ("medium confidence");
+    auspex_assessment concur → concur-with-caveat (first-disclosure medium confidence,
+    EHDevel/Patchwork lineage unresolved); attribution_date 2018-08-23 → 2018-03-08;
+    attribution_source_id re-pointed to the NETSCOUT record. ASERT names NO sponsoring state.
+
+    [c] DATES — source published_on 2018-03-08 (verified on the page byline "March 8th, 2018");
+    event disclosure_date now matches the source's real publication date (the prior 2018-08-23
+    was the phantom's fabricated date).
+
+    [d] DOCTRINE_LINKS — both links kept at strongly_inferred (not attested): ASERT names the
+    Pakistani-government focus and the Sri Lanka/Bangladesh impersonation infra but states no
+    Indian strategic purpose, so no attesting_source_id (correct — attested would require a
+    source stating the goal). Added inference_basis {signals[], ruled_out} to both; tightened
+    the pakistan-military reasoning to "Government of Pakistan" (what ASERT actually says, not
+    "military" specifically) and added an honesty caveat to the diplomatic-collection link that
+    its Sri Lanka/Bangladesh basis is lookalike infrastructure, not confirmed foreign-ministry
+    compromise. Consistent with the doctrine's own cyber_relevance ("generally strongly_inferred
+    ... not attested; no Indian government statement claims this tasking").
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing): ASERT names the "Donot Team" cluster
+    but no nation and no unit, and did not definitively resolve the Patchwork overlap.
+
+    [f] ACTOR_ID — in/unscoped/donot-team resolves to atlas/actors/in/donot-team.yaml (id
+    in/unscoped/donot-team; demoted from in/ntro on 2026-06-24). Directionality verified: actor
+    India-aligned, victims = Pakistan (focus) + Sri Lanka + Bangladesh (South Asia), NOT India.
+
+    TARGETS — dropped orgs/bangladesh-foreign-ministry: ASERT's Bangladesh evidence is a
+    newspaper-impersonating domain, not foreign-ministry compromise (and the FK is dangling).
+    Kept orgs/pakistani-government (pk, primary) — carried by the "Government of Pakistan" decoy
+    focus; note this target id is ALSO a dangling registry FK shared by sibling DoNot events.
+
+    FLAGS (orchestrator): (1) phantom source eset/2018-08-23_donotapt-yty-framework still cited
+    by actor in/unscoped/donot-team — retire from the actor too, then the source can be retired.
+    (2) Dangling target registry: orgs/pakistani-government and orgs/bangladesh-foreign-ministry
+    have no atlas/targets/orgs/ files yet are referenced by multiple events. (3) Stale slug:
+    event id/file still says "eset"/"2018-08" though the event is now NETSCOUT/2018-03-08 —
+    kept per stable-slug rule; rename is Kara's call.

@@ -8,45 +8,174 @@ incident_type:
   - supply-chain
 initial_vector: supply-chain
 outcome_summary: |
-  Citizen Lab published "Bad Traffic," documenting ISP-level
-  network-injection operations against users in Türkiye and
-  Syria. Türk Telekom-mediated middleboxes (assessed by Citizen
-  Lab as Sandvine / Procera PacketLogic equipment) redirected
-  users requesting downloads of legitimate software (Avast,
-  CCleaner, 7-Zip) to attacker-controlled mirrors delivering
-  StrongPity-family implants. The report named "operators
-  associated with the Turkish government" and identified Türkiye
-  and Syria as principal victim countries, with Egypt as a
-  separate but related case.
+  Citizen Lab published "Bad Traffic" (Research Report No. 107),
+  documenting ISP-level network-injection operations against users
+  in Türkiye and Syria. Deep-packet-inspection middleboxes on Türk
+  Telekom's network — fingerprinted by Citizen Lab as
+  Sandvine/Procera PacketLogic equipment — injected HTTP 307
+  redirects that silently sent users downloading legitimate Windows
+  software (Avast, CCleaner, Opera, 7-Zip, VLC, WinRAR, Skype and
+  others, fetched over unencrypted HTTP) to attacker-controlled
+  mirrors serving trojanized installers. The bundled spyware was
+  FinFisher "lawful intercept" malware in an earlier phase and
+  StrongPity-family implants thereafter. Citizen Lab assessed the
+  operators as nation-state / "government-linked entities,"
+  documented spyware injection across at least five Turkish
+  provinces plus Syrian users relayed via Türk Telekom (including
+  at least one IP appearing to serve YPG Kurdish users), and the
+  same PacketLogic fingerprint blocking political content in
+  Türkiye (the PKK site, every-language Wikipedia, the Dutch NOS
+  broadcaster). Egypt was a separate but related case: the same
+  fingerprint drove "AdHose," redirecting Egyptian users to
+  affiliate ads and browser cryptocurrency mining for revenue
+  rather than spyware.
 false_flag_risk: none
 summary: |
-  Landmark public attribution tying a state-aligned cluster
-  (PROMETHIUM / StrongPity) to ISP-network-position tradecraft
-  uniquely available to a state actor with Türk Telekom
-  cooperation. Citizen Lab's documentation of Sandvine
-  PacketLogic equipment use prompted Sandvine to subsequently
-  withdraw from certain Turkish business and led to industry
-  debate about dual-use middlebox equipment governance.
+  Landmark Citizen Lab investigation that captured the first-ever
+  public packet-capture proof of nation-state spyware injection in
+  the wild, delivered from ISP network position (Türk Telekom) via
+  Sandvine/Procera PacketLogic deep-packet-inspection middleboxes —
+  tradecraft requiring telecom-operator cooperation. Citizen Lab
+  attributed the injection middlebox to Sandvine PacketLogic with
+  high confidence (matching a distinctive packet fingerprint
+  against a second-hand device it procured) and assessed the
+  spyware operators as nation-state / "government-linked entities"
+  in Turkey, but stopped short of a named-actor attribution — it
+  explicitly called the delivered StrongPity family "an
+  unattributed APT operation in 2016" and named the Turkish
+  intelligence service (MİT) only as surveillance-law background.
+  The PROMETHIUM / StrongPity named-actor placement here is
+  AUSPEX's, carried by the malware family and the broader vendor
+  consensus recorded on the actor, not by Citizen Lab. The report's
+  concluding theme is the unrestrained dual-use middlebox market
+  (NSO Group and Sandvine both held by Francisco Partners).
 attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: Citizen Lab (Bill Marczak et al.)
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2018-03-09
     attribution_source_id: citizenlab/2018-03-09_bad-traffic-strongpity
+    notes: |
+      Citizen Lab attributes at the NATION level, not named-actor or
+      named-unit. It assesses the injection as "nation-state" spyware
+      run by "government-linked entities" in Turkey ("the PacketLogic
+      product may have been used by government-linked entities in both
+      Turkey and Egypt to inject spyware"; "likely by nation-states or
+      ISPs"), and its high-confidence forensic attribution concerns the
+      injection MIDDLEBOX (matched to Sandvine PacketLogic via a
+      second-hand device, §3.3), not the operator. It explicitly calls
+      the delivered family unattributed — "StrongPity was an
+      unattributed APT operation in 2016" — and names the MİT only as
+      surveillance-law background (Law No. 6532), never as this
+      operation's operator. attributing_org_confidence set moderate
+      (operator attribution is hedged: "apparent," "may have been used
+      by," "likely by nation-states or ISPs"); attribution_level nation.
+      The tr/unscoped/promethium (PROMETHIUM/StrongPity) named-actor
+      linkage is AUSPEX's via the malware family + the vendor consensus
+      on the actor record, hence concur-with-caveat.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Türkiye + Syria victim countries fit the Kurdish-targeting
-      pillar; Citizen Lab documented surveillance-of-dissident
-      use of the implants.
+      The operation carries some specific Kurdish-targeting indicators
+      consistent with the counter-Kurdish surveillance pillar: Citizen
+      Lab found at least one targeted IP that "appears to serve YPG
+      (Kurdish militia) users" and router pages named "ypg" (ciwan.ypg,
+      ypg-matar), spyware injection reaching the Kurdish-majority
+      province of Diyarbakır (among five targeted provinces), and the
+      same middleboxes blocking the PKK (Kurdistan Workers' Party)
+      website. But the documented targeting is broad — five provinces
+      including Ankara's Ulus quarter, Syrian users in non-Kurdish areas
+      such as Idlib, generic Windows-software downloads delivered to
+      whoever requested them, and censorship of unrelated content
+      (Wikipedia, the Dutch NOS) — and no cited source states a
+      Kurdish-surveillance purpose. The pillar's "diaspora/KRG" scope is
+      also an imperfect fit: the Kurdish indicators here are domestic
+      Turkish and Syrian-YPG, not diaspora-abroad or KRG-Iraq. More than
+      one strategic reading therefore survives, so the link is plausible
+      rather than strongly_inferred.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Counter-Kurdish surveillance/coercion: YPG-serving target IPs and 'ypg'-named router pages, injection reaching Diyarbakır, and blocking of the PKK website point to selection of Kurdish-aligned targets within the campaign."
+        - "Broad authoritarian population surveillance and information control: targeting spans five provinces (including Ankara) and Syrian users in non-Kurdish areas via generic software-download hijacking, alongside censorship of Wikipedia and other non-Kurdish content — a general state-surveillance/censorship reading that does not turn on Kurdish identity."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/turkish-syrian-internet-users
+  - target_id: sectors/civil-society
+    country: tr
+    role: primary
+  - target_id: sectors/civil-society
+    country: sy
     role: primary
 sources:
   - citizenlab/2018-03-09_bad-traffic-strongpity
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited vs Citizen Lab "Bad Traffic: Sandvine's PacketLogic Devices Used to Deploy
+    Government Spyware in Turkey and Redirect Egyptian Users to Affiliate Ads?" (Research
+    Report No. 107; Marczak/Dalek/McKune/Senft/Scott-Railton/Deibert; 2018-03-09). Raw snapshot
+    citizenlab__2018-03-09_bad-traffic-strongpity.html re-verified this audit: sha256
+    f2f803b7…d6b043fe, 321174 bytes (matches the committed hash on the source record). NOT a
+    phantom — genuine first-party article; tier primary confirmed.
+    [a] FACTS — corrected. Vector = ISP-level deep-packet-INJECTION, not phishing: "deep packet
+    inspection (DPI) middleboxes on Türk Telekom's network… were being used to redirect hundreds
+    of users in Turkey and Syria to nation-state spyware when those users attempted to download
+    certain legitimate Windows applications," via injected HTTP 307 redirects. Added the
+    FinFisher→StrongPity progression: "Before switching to the StrongPity spyware, the operators
+    of the Turkey injection used the FinFisher 'lawful intercept' spyware." Targeted apps
+    (Avast/CCleaner/Opera/7-Zip/VLC/WinRAR/Skype) and attacker-controlled mirrors verbatim per
+    Fig 11. Egypt clarified as a separate AdHose ad/cryptomining-for-revenue case on the same
+    fingerprint ("AdHose is likely an effort to covertly raise money") — not StrongPity, not a
+    target of this event. REMOVED a fabricated quotation: the prior outcome quoted 'operators
+    associated with the Turkish government' as if verbatim; the source's actual language is
+    "government-linked entities" / "nation-state" / "likely by nation-states or ISPs" — de-quoted.
+    REMOVED from the summary the unsupported claim that the report "prompted Sandvine to
+    subsequently withdraw from certain Turkish business" — this sole source (2018-03-09) predates
+    and does not carry any Sandvine withdrawal; §7 documents only Sandvine's defensive/legal
+    correspondence. Kept the dual-use-governance point — it is the report's own §8 conclusion
+    ("Conclusion: Dual-Use Technology, Unrestrained").
+    [b] ATTRIBUTION — downgraded (was high / concur / no level). Citizen Lab's high-confidence
+    forensic attribution is of the injection MIDDLEBOX to Sandvine PacketLogic (fingerprint vs a
+    procured second-hand device, §3.3), NOT of the operator. On the operator it hedges — "the
+    PacketLogic product MAY HAVE BEEN used by government-linked entities," "the APPARENT use,"
+    "LIKELY by nation-states or ISPs" — and declines a named actor: "StrongPity was an
+    unattributed APT operation in 2016." It names the MİT (Millî İstihbarat Teşkilatı) only as
+    surveillance-LAW background (Law No. 6532), not as operator. Set attributing_org_confidence
+    moderate, attribution_level nation, auspex_assessment concur-with-caveat; added an attribution
+    notes block. The tr/unscoped/promethium named-actor placement is AUSPEX's (malware family +
+    vendor consensus on the actor), not Citizen Lab's — recorded as the caveat. No over-attestation
+    of a firm Turkey-service nexus, per the audit brief.
+    [c] DATES — fine. published_on 2018-03-09 = disclosure_date (verified on source record).
+    start_date 2017-09-01 anchors to the first public report of the injection ("A September 2017
+    report revealed…"); Citizen Lab's own scans ran Oct 2017–Mar 2018; end_date null (campaign
+    still rotating injection domains in Mar 2018). No start/disclosure conflation.
+    [d] DOCTRINE_LINKS — downgraded strongly_inferred → plausible. Kurdish indicators are real but
+    partial/hedged: "at least one targeted IP address APPEARS to serve YPG (Kurdish militia)
+    users," 'ypg'-named router pages, injection reaching Diyarbakır, PKK-website blocking. But
+    targeting is broad (five provinces incl. Ankara Ulus; Syrian users in non-Kurdish Idlib;
+    generic software-download hijack; censorship of Wikipedia/NOS), no source states a Kurdish
+    purpose, and the pillar's diaspora/KRG scope is an imperfect fit (indicators are domestic +
+    Syrian-YPG). Two strategic readings survive → plausible. Rewrote reasoning honestly; added
+    inference_basis.alternatives (counter-Kurdish vs broad population-surveillance). Not attested
+    (no goal-level purpose stated; attesting_source_id stays null). Consistent with the
+    talos-promethium-strongpity3 sibling (kurdish-diaspora / plausible).
+    [e] ATTRIBUTION_LEVEL — set nation (was missing).
+    [f] ACTOR_ID — tr/unscoped/promethium resolves (atlas/actors/tr/promethium.yaml, id
+    tr/unscoped/promethium); consistent with that record's 2026-06-25 demotion from tr/mit. No
+    actor edit.
+    TARGET DEFECT FIXED — target_id orgs/turkish-syrian-internet-users was a DANGLING FK: it
+    exists in no targets-registry file (grep: referenced only by this event). Re-pointed to
+    sectors/civil-society for tr and sy (the targeted population, incl. the dissident/YPG subset),
+    and added country codes (were absent). Egypt not modeled as a target (separate ad-fraud case).
+    RESIDUAL UNCERTAINTY: Citizen Lab's Sandvine fingerprint is forensically strong, but the
+    operator identity rests on circumstantial state-nexus reasoning, and the PROMETHIUM cluster
+    label is AUSPEX's editorial join (malware family), not Citizen Lab's attribution.

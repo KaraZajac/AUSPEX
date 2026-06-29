@@ -8,19 +8,26 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   US Department of Justice unsealed indictments against three
-  Ukrainian nationals — Andrii Kolpakov, Dmytro Fedorov, and
-  Fedir Hladyr — for their roles in the FIN7 / Carbanak
-  financial-cybercrime cluster. The indictments alleged
-  attacks against more than 100 US companies primarily in the
-  restaurant, gaming, and hospitality sectors, with theft of
-  payment-card data from more than 6,500 individual point-of-
-  sale terminals at over 3,600 separate business locations.
-  Hladyr was extradited from Poland in 2018, pleaded guilty
-  September 2019, and was sentenced April 2021 to 10 years.
-  Fedorov and Kolpakov were extradited from Poland and
-  Spain respectively in 2019.
+  Ukrainian nationals — Dmytro Fedorov, Fedir Hladyr, and Andrii
+  Kolpakov — for their roles in the FIN7 / Carbanak financial-
+  cybercrime cluster (Hladyr served as the group's systems
+  administrator; Fedorov and Kolpakov supervised other FIN7
+  hackers). The indictments alleged that, since at least 2015,
+  FIN7 attacked more than 100 US companies — predominantly in the
+  restaurant, gaming, and hospitality sectors — breaching networks
+  in 47 states and the District of Columbia and stealing more than
+  15 million payment-card records from over 6,500 individual
+  point-of-sale terminals at more than 3,600 separate business
+  locations. The group operated a front company, "Combi Security,"
+  posing as a penetration-testing firm to recruit operators. As of
+  the unsealing, Hladyr — arrested in Germany in January 2018 — had
+  been extradited to the United States and was in federal custody in
+  Seattle; Fedorov (arrested in Bielsko-Biala, Poland) and Kolpakov
+  (arrested in Lepe, Spain) remained in custody abroad pending
+  extradition.
 quantified_impact:
   us_companies_targeted: 100
+  payment_cards_stolen: 15000000
   pos_terminals_compromised: 6500
   locations_compromised: 3600
 false_flag_risk: none
@@ -31,15 +38,16 @@ operators_named:
 summary: |
   Canonical DOJ attribution of the FIN7 / Carbanak cluster's
   Ukrainian operator base. Important for AUSPEX criminal-baseline
-  because the successful extradition and prosecution of named
-  Ukrainian operators is the public-record reason FIN7 is
-  classified `criminal/` rather than `ru/proxies/` despite
-  Russian-speaking forum presence — the indicted core is
-  transnational and Ukrainian, not Russian-state-resident.
+  because the public-record indictment and prosecution of named
+  Ukrainian operators is the reason FIN7 is classified `criminal/`
+  rather than `ru/proxies/` despite Russian-speaking forum presence
+  — the indicted core is transnational and Ukrainian, not
+  Russian-state-resident.
 attributions:
   - actor_id: criminal/fin7
     attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-08-01
     attribution_source_id: doj/2018-08-01_fin7-three-indictments
@@ -51,3 +59,84 @@ targets:
     role: primary
 sources:
   - doj/2018-08-01_fin7-three-indictments
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: partial
+  notes: |
+    Audited vs the sole cited DOJ primary (doj/2018-08-01_fin7-three-indictments),
+    which is Akamai bot-walled and UN-SNAPSHOTTABLE: re-verified 2026-06-28 — the
+    /opa/pr/ URL redirects to /archives/opa/pr/ and returns the DOJ HOMEPAGE on HTTP
+    400 (<title>Department of Justice | Homepage</title>, 8,004 bytes; none of the
+    defendant names / "100 U.S. companies" / "6,500" appear), so NO content hash is
+    recorded (raw_snapshot/content_sha256 correctly absent). Per the bot-wall rule the
+    claims are MIRROR-CORROBORATED against three reachable accounts of the same
+    2018-08-01 unsealing, hence level=partial:
+      - FBI Seattle (govt-primary) "How Cyber Crime Group FIN7 Attacked and Stole Data
+        from Hundreds of U.S. Companies" — sha256 7e47b7db…2574ab0e, 83,929 bytes.
+      - VOANews "Hackers Behind Attacks on US Retailers Arrested" — sha256
+        ba9a75aa…ab72c727, 72,997 bytes.
+      - CyberScoop "DOJ arrests three leaders of FIN7 hacking gang" — sha256
+        768e41de…be227277, 105,778 bytes.
+    (Mirror raws held in the audit scratchpad, not committed — raw/ is for cited-source
+    snapshots only.)
+
+    [a] FACTS — core claims mirror-verified verbatim. FBI: "Ukrainian nationals Dmytro
+    Fedorov, Fedir Hladyr, and Andrii Ko[l]pakov, are members of a prolific hacking
+    group widely known as FIN7 (also referred to as the Carbanak Group ...)"; "Since at
+    least 2015, FIN7 members engaged in a highly sophisticated malware campaign
+    targeting more than 100 U.S. companies, predominantly in the restaurant, gaming, and
+    hospitality industries"; "FIN7 successfully breached the computer networks of
+    companies in 47 states and the District of Columbia, stealing more than 15 million
+    customer card records from over 6,500 individual point-of-sale terminals at more
+    than 3,600 separate business locations"; "created a fake computer security business
+    called Combi Security". Roles: CyberScoop "Hladyr, who allegedly acted as the system
+    administrator"; "Fedorov, who allegedly fulfilled hacking and supervisory roles";
+    "Another alleged supervisor, Ukrainian Andrii Kolpakov".
+    CORRECTIONS: (1) outcome_summary said "Hladyr was extradited from Poland in 2018" —
+    WRONG; Hladyr was arrested in GERMANY (Jan 2018) and extradited from there (VOA: "in
+    federal custody in Seattle after being arrested in Germany in January and extradited
+    to the United States in early May"; CyberScoop: "arrested in January 2018 while on
+    vacation in Germany"). POLAND is where FEDOROV was arrested ("Bielsko-Biala, Poland
+    ... pending extradition"); Kolpakov in "Lepe, Spain". Rewrote the procedural sentence
+    to the source-carried arrest/extradition facts as of the unsealing. (2) STRIPPED the
+    post-source procedural tail ("pleaded guilty September 2019 ... sentenced April 2021
+    to 10 years ... extradited ... in 2019") — these POSTDATE the only cited 2018-08-01
+    source and are not carried by it; this documentary event covers the unsealing, while
+    the later pleas/sentencings are separate developments. (3) ADDED source-carried
+    detail: operator roles, "since at least 2015", 47 states + DC, 15M+ card records,
+    Combi Security; added quantified_impact.payment_cards_stolen: 15000000.
+    BOUNDARY (per task NB) CONFIRMED: this indictment is FIN7's RETAIL/POS campaign, NOT
+    the 2013–2016 Carbanak bank/SWIFT/ATM heists — the FBI source explicitly separates
+    them: "FIN7 incorporated and adapted the notorious Carbanak malware, which was used
+    by OTHER cybercriminals in a massive transnational attack on the banking industry."
+    No bank-heist/SWIFT/$1B claim appears in this event (those correctly live on the
+    2014-02/carbanak-bank-heists sibling, carried by Kaspersky 2015). Softened summary
+    "successful extradition and prosecution" -> "indictment and prosecution" (as of
+    2018-08-01 only Hladyr had been extradited; Fedorov/Kolpakov were pending).
+
+    [b]/[e] ATTRIBUTION — actor criminal/fin7; attributing_org US DOJ; confidence high
+    (named individuals indicted). SET attribution_level=named-actor (DOJ names the FIN7
+    criminal group + three named operators, but NO nation-state or state-unit — FIN7 is
+    stateless criminal, so neither nation nor named-unit applies). auspex_assessment
+    concur retained. attribution_date 2018-08-01 = unsealing date (all three mirrors
+    carry that dateline).
+
+    [c] DATES — source published_on 2018-08-01 = the press-release/unsealing date (FBI/
+    VOA/CyberScoop all 2018-08-01). Event start=disclosure=end=2018-08-01 is correct for
+    a single-day documentary unsealing event (the underlying FIN7 campaign timeline lives
+    on the operation records, not this announcement).
+
+    [d] DOCTRINE_LINKS [] — correct and unchanged: FIN7 is a stateless profit-motivated
+    criminal cluster (actor primary_service_id null, default_doctrine_alignment_ids []),
+    no documented state nexus; no doctrine applies, none invented.
+
+    [f] ACTOR_ID — criminal/fin7 resolves to atlas/actors/criminal/fin7.yaml (primary_
+    service_id null, status indicted, mission financial). No actor edit made. FLAG
+    (minor): the actor record's status comment dates "Hladyr (Aug 2018)" as a conviction,
+    but Aug 2018 was the indictment unsealing — Hladyr pleaded guilty Sep 2019 and was
+    sentenced Apr 2021 (10 yrs). Orchestrator/Kara may wish to correct that date.
+
+    RESIDUAL: the DOJ primary remains un-snapshottable (Akamai) -> level partial;
+    corroboration rests on one govt-primary (FBI) + two consistent journalism mirrors.

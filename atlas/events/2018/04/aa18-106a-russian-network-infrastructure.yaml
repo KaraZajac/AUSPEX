@@ -1,74 +1,101 @@
 id: 2018-04/aa18-106a-russian-network-infrastructure
-name: AA18-106A — first joint US-CERT + NCSC technical advisory on Russian network-infrastructure targeting
-start_date: 2015-01-01  # campaign period covered by the advisory
+name: AA18-106A — joint US-CERT + FBI + NCSC technical advisory on Russian network-infrastructure-device targeting
+start_date: 2015-01-01  # advisory: "Since 2015, the U.S. Government received information ..."
 disclosure_date: 2018-04-16
 end_date: null
 incident_type:
   - attribution-publication
   - intrusion
-initial_vector: n-day
+initial_vector: valid-creds  # advisory: "Legitimate user masquerade is the primary method ... able to easily obtain legitimate credentials"
 outcome_summary: |
-  US-CERT (now CISA) and UK NCSC published a joint technical
-  alert (then TA18-106A, now AA18-106A) attributing a sustained
-  campaign to "Russian state-sponsored cyber actors" targeting
-  enterprise routers, switches, and firewalls (Cisco Smart Install,
-  SNMP, Telnet) at ISPs, critical-infrastructure operators, and
-  government targets across the US, UK, and Europe. The advisory
-  is the first NCSC + US-CERT co-published technical attribution
-  and established the operating template for the post-2018
-  NCSC + CISA + FBI joint AA cadence.
+  On 16 April 2018 DHS (NCCIC / US-CERT), the FBI, and the UK
+  NCSC published joint Technical Alert TA18-106A (re-issued as
+  AA18-106A) on a worldwide campaign against network-
+  infrastructure devices — enterprise and SOHO/residential
+  routers, switches, and firewalls. The advisory states "The
+  U.S. Government assesses that cyber actors supported by the
+  Russian government carried out this worldwide campaign,"
+  describing the use of Generic Routing Encapsulation (GRE),
+  Cisco Smart Install (SMI, TCP/4786), SNMP (161/162), and
+  Telnet (23) to scan and fingerprint devices, exfiltrate
+  configuration files over TFTP, harvest credentials, and gain
+  persistent access at ISPs, public- and private-sector
+  organizations, and U.S. critical infrastructure. In form it
+  is principally a defensive Technical Alert: detection
+  signatures, log-review guidance, and mitigations for network-
+  device vendors, ISPs, and operators.
 false_flag_risk: none
 summary: |
-  Doctrinally significant as the operational origin of the
-  joint UK-US technical-attribution AA cadence. The advisory
-  was published the same week as the UK government's Salisbury
-  novichok attribution to GRU Unit 29155 (March-April 2018) and
-  immediately precedes the watershed 4 October 2018 NCSC + FCO
-  GRU calling-out. AUSPEX models it as a UK NCS-2016 "deter"
-  pillar event from the UK side (attributing UK; targeted actor
-  is Russian state-sponsored) and as the first instance of the
-  multi-government technical-attribution mode that becomes the
-  default modality through 2020-2025.
+  AUSPEX records this as a doctrinally significant instance of
+  joint UK-US public technical attribution: a Technical Alert
+  co-authored by DHS / US-CERT, the FBI, and the UK NCSC that
+  attributes a sustained network-infrastructure-targeting
+  campaign to "Russian state-sponsored cyber actors" / "cyber
+  actors supported by the Russian government." AUSPEX reads it
+  from the UK side as a defender-response act consistent with
+  the NCS-2016 'deter' pillar (public, multi-government
+  attribution as signalling) — part of the joint-attribution
+  modality that becomes routine in the post-2018 NCSC + CISA +
+  FBI advisory cadence.
 
-  The targeted-actor attribution is by behavioural and TTP
-  overlap to the cluster broadly tracked as Dragonfly / Energetic
-  Bear / Berserk Bear (FSB Center 16). AUSPEX records the FSB
-  attribution as `concur-with-caveat` because the 2018 joint
-  advisory itself did not name the cluster by codename — the
-  cluster attribution is by subsequent industry consolidation
-  (Symantec, CrowdStrike, Microsoft) rather than by the
-  advisory's own naming.
+  Attribution is at NATION level only. The advisory names no
+  specific cluster, intelligence service, or unit — it says
+  "Russian state-sponsored cyber actors" and "the Russian
+  government" throughout — so AUSPEX adopts no named cluster for
+  it (actor_id null, following the Estonia-2007 and Georgia-2008
+  nation-level Russia records). This advisory must not be
+  conflated with the separate March 2018 energy-sector advisory
+  TA18-074A, which is the one tied to the Dragonfly / Energetic
+  Bear / Berserk Bear cluster and anchors the
+  berserk-bear-us-energy-campaign event rather than this one.
 attributions:
-  - actor_id: ru/fsb/center-16/berserk-bear
-    attributing_org: US-CERT (DHS NCCIC) + UK NCSC + FBI
+  - actor_id: null  # advisory reaches only nation level — "Russian state-sponsored cyber actors"; no cluster/service/unit named
+    service_id: null
+    attributing_org: DHS (NCCIC / US-CERT) + FBI + UK NCSC
     attributing_org_confidence: moderate
-    auspex_assessment: concur-with-caveat
+    attribution_level: nation
+    auspex_assessment: concur
     attribution_date: 2018-04-16
     attribution_source_id: cisa/2018-04-16_aa18-106a-russian-network-infrastructure
     notes: |
-      The advisory names "Russian state-sponsored cyber actors"
-      rather than the specific cluster; AUSPEX records the
-      cluster attribution as `concur-with-caveat`. Confidence
-      `moderate` reflects this scoping limitation in the
-      advisory's own language.
+      The joint TA18-106A / AA18-106A states "The U.S. Government
+      assesses that cyber actors supported by the Russian
+      government carried out this worldwide campaign" and refers to
+      "Russian state-sponsored cyber actors" throughout. The
+      attribution is at NATION level: no codename, intelligence
+      service, or unit is named anywhere in the advisory (raw-text
+      scan: zero occurrences of Dragonfly / Energetic Bear / Berserk
+      Bear / Crouching Yeti / FSB / Center 16 / GRU). attribution_level
+      set to nation and actor_id to null accordingly — AUSPEX adopts
+      no named cluster for this router campaign. Confidence moderate:
+      a government assessment, not indictment-grade proof, calibration-
+      consistent with the Georgia-2008 nation-level Russia record. The
+      prior ru/fsb/center-16/berserk-bear (named-unit) attribution was
+      an over-reach unsupported by the only cited source and conflated
+      this April network-infrastructure advisory with the separate
+      March 2018 energy-sector advisory TA18-074A.
 doctrine_links:
   - doctrine_id: uk/ncs-2016
     perspective: defender-response
     pillar_id: uk/ncs-2016/deter
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      First NCSC-co-signed joint technical attribution; the cited
-      alert is a technical IOC advisory and does not name the NCS
-      2016 'deter' pillar or attribution-as-deterrence, so the
-      doctrine linkage is AUSPEX inference from the joint-attribution
-      act.
+      The UK NCSC co-signing a public, multi-government attribution
+      of Russia can be read as a defender-response act under the
+      NCS-2016 'deter' pillar (attribution-as-signalling), and AUSPEX
+      records this advisory as an early template for that joint-
+      attribution cadence. But the advisory neither names the NCS-2016
+      deter pillar nor frames its publication as deterrence, and in
+      form it is a defensive Technical Alert (detection and mitigation
+      guidance) — at least as readable as an NCS-2016 'defend' act.
+      Because more than one strategic reading survives, the link is
+      plausible rather than strongly_inferred.
     attesting_source_id: cisa/2018-04-16_aa18-106a-russian-network-infrastructure
     inference_basis:
-      source_id: cisa/2018-04-16_aa18-106a-russian-network-infrastructure
-      signals:
-        - "First NCSC + US-CERT co-published technical attribution of Russian state-sponsored network-infrastructure targeting (joint-attribution act)"
-      ruled_out: "the NCS 2016 'deter' pillar / attribution-as-deterrence framing — not named in the technical advisory"
+      alternatives:
+        - "NCS-2016 'deter' pillar: a joint DHS / FBI / NCSC public attribution naming the Russian government functions as attribution-as-deterrence signalling — the modality that becomes the post-2018 NCSC + CISA + FBI cadence."
+        - "NCS-2016 'defend' pillar: the document is in form a defensive Technical Alert (detection signatures, log-review and mitigation guidance for vendors / ISPs / operators), i.e. national network defence rather than deterrence signalling."
     contested: false
     analyst: claude
 targets:
@@ -80,3 +107,69 @@ targets:
     role: primary
 sources:
   - cisa/2018-04-16_aa18-106a-russian-network-infrastructure
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited against the RAW CISA / US-CERT advisory TA18-106A / AA18-106A
+    "Russian State-Sponsored Cyber Actors Targeting Network Infrastructure
+    Devices" (snapshot atlas/sources/raw/cisa__2018-04-16_aa18-106a-russian-
+    network-infrastructure.html, sha256 61cba0da…53df5877, 94294 bytes;
+    cisa.gov returned HTTP 200 with the real article (node/9396) — NOT
+    bot-walled and NOT a phantom, so level = full.
+    [a] FACTS ✓: tri-government joint Technical Alert (DHS, FBI, UK NCSC);
+    worldwide campaign against network-infrastructure devices — enterprise
+    and SOHO/residential routers, switches, firewalls; protocols GRE,
+    Cisco Smart Install (SMI, TCP/4786), SNMP (161/162), Telnet (23);
+    configuration-file exfiltration over TFTP, credential harvesting,
+    persistent access; victims = network-device vendors, ISPs, public- and
+    private-sector orgs, SOHO, "U.S. critical infrastructure" — all
+    verbatim in the raw. initial_vector corrected n-day -> valid-creds per
+    "Legitimate user masquerade is the primary method ... cyber actors are
+    able to easily obtain legitimate credentials."
+    [b] ATTRIBUTION — KEY CORRECTION: actor_id ru/fsb/center-16/berserk-bear
+    (named-unit) -> null. The advisory names ONLY "Russian state-sponsored
+    cyber actors" / "The U.S. Government assesses that cyber actors supported
+    by the Russian government carried out this worldwide campaign." Raw-text
+    scan returned 0 occurrences of Dragonfly / Energetic Bear / Berserk /
+    Crouching Yeti / FSB / Center 16 / GRU / Symantec / CrowdStrike. The
+    berserk-bear / FSB Center 16 claim was unsupported by the only cited
+    source and conflated this April router advisory with the separate
+    March-2018 energy-sector advisory TA18-074A (the genuine Dragonfly /
+    Berserk Bear anchor, already cited by berserk-bear-us-energy-campaign).
+    Demoted per the Estonia-2007 / Georgia-2008 nation-level-Russia
+    convention (actor_id null + attribution_level nation).
+    attributing_org_confidence kept moderate (govt assessment, not legal
+    proof). auspex_assessment concur-with-caveat -> concur (the caveat's
+    referent — the cluster scoping — is removed). The unsourced "subsequent
+    industry consolidation (Symantec, CrowdStrike, Microsoft)" embellishment
+    was stripped from the summary.
+    [c] DATES ✓: published / disclosure 2018-04-16 (Original Post; Update
+    2018-04-19); start_date 2015-01-01 carried by "Since 2015, the U.S.
+    Government received information"; the dated scanning evidence in the
+    advisory is 2016-07 (SNMP) and 2017-06/07 (SMI). source published_on
+    2018-04-16 ✓.
+    [d] DOCTRINE ✓: uk/ncs-2016 deter link downgraded strongly_inferred ->
+    plausible. The advisory states no deterrence purpose and is in form a
+    defensive Technical Alert, so a competing NCS-2016 'defend' reading
+    survives; restructured the malformed inference_basis (signals + a
+    self-referential ruled_out that named the chosen deter pillar) into
+    alternatives[] (deter vs defend). perspective defender-response retained
+    (UK doctrine on an advisory about a Russian operation). Not attested, so
+    attesting_source_id denotes the supporting source only.
+    [e] ATTRIBUTION_LEVEL: set to nation (was missing) — exactly what the
+    source names.
+    [f] ACTOR_ID: now null (no FK to resolve). Note for the orchestrator:
+    the berserk-bear actor file lives at atlas/actors/ru/berserk-bear.yaml
+    but carries id ru/fsb/center-16/berserk-bear (FK resolves by id, not by
+    path) — left untouched; it is correctly used by the energy-sector events
+    (dragonfly-energetic-bear, berserk-bear-us-energy-campaign,
+    aa22-110a-russian-threats-to-cii, the 2025 Cisco-IOS events), just not
+    here. The cited source record was updated with raw_snapshot +
+    content_sha256; tier primary preserved (correct for a first-party govt
+    advisory). Also removed from name/prose: the unsourced "first joint"
+    superlative, and the summary's Salisbury / GRU-Unit-29155 and
+    4-Oct-2018 contextual claims (not carried by the cited source; the
+    Salisbury -> "Unit 29155" detail was also anachronistic for April 2018).

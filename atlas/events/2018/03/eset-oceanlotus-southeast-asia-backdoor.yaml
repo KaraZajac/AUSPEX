@@ -1,64 +1,206 @@
 id: 2018-03/eset-oceanlotus-southeast-asia-backdoor
 name: ESET documents OceanLotus / APT32 second-stage backdoor refresh against Southeast Asian targets
-start_date: 2017-06-01
+start_date: 2017-09-01  # est.: earliest dated artifact in the white paper is 2017-09-05 (decoy/sample); "a few months ago" rel. to Mar 2018. ESET gives no precise op-start.
 disclosure_date: 2018-03-13
-end_date: 2018-03-13
+end_date: null  # ESET frames the activity as ongoing ("OceanLotus continues its activity"); prior end_date merely re-stated the publication date
 incident_type:
   - intrusion
+  - espionage
 initial_vector: phishing
-outcome_summary: |
-  ESET (Romain Dumont) published a technical analysis of a
-  refreshed OceanLotus / APT32 dropper-plus-backdoor chain
-  observed against "high-profile" Southeast Asian targets in late
-  2017 and early 2018. The two-stage architecture used a side-
-  loaded benign-signed application to load the malicious dropper,
-  followed by an obfuscated second-stage backdoor with multi-
-  protocol C2 (HTTP, HTTPS, TCP) and improved anti-analysis
-  measures relative to prior OceanLotus implants. ESET did not
-  publicly name victims but characterized the targeting as
-  consistent with the FireEye 2017 APT32 attribution.
 false_flag_risk: none
+outcome_summary: |
+  ESET published a technical analysis — a WeLiveSecurity blog post
+  (Tomáš Foltýn, 13 Mar 2018) plus a 21-page companion white paper
+  "OceanLotus: Old Techniques, New Backdoor" — of a refreshed
+  OceanLotus / APT32 dropper-plus-backdoor chain. ESET's telemetry
+  named "company and government networks" in East-Asian countries —
+  "Vietnam, the Philippines, Laos and Cambodia … the most targeted" —
+  as the victim set, but disclosed no specific victim organizations.
+  The two-stage chain runs a first-stage dropper (delivered as a
+  spearphishing email attachment masquerading as a document, opening a
+  password-protected decoy; "no software exploits are needed") that
+  gains a foothold and establishes persistence, then loads a
+  second-stage backdoor via DLL side-loading of a legitimately-signed
+  executable (Symantec RasTlsc.exe / McAfee mcoemcpy.exe paired with a
+  malicious rastls.dll / McUtil.dll). The backdoor fingerprints the
+  host and beacons to C2 over an encrypted (RC4 + LZMA) TCP channel on
+  port 25123, with an HTTP/HTTPS (and SOCKS) fallback library, behind
+  heavy control-flow obfuscation and garbage code. ESET situated the
+  work alongside prior OceanLotus reporting from CyberReason, FireEye,
+  and Volexity.
 summary: |
-  Mid-cycle tradecraft disclosure that confirms continuity of
-  APT32 operations between the FireEye May 2017 naming and the
-  Volexity November 2017 watering-hole disclosure on one side
-  and the 2019 automotive-OEM campaign cluster on the other.
-  ESET's analysis is one of the cleanest published technical
-  references for OceanLotus second-stage tradecraft in the
-  pre-2020 window and is the source the WeLiveSecurity APT32
-  reporting cluster builds on.
+  A first-party ESET malware/tradecraft disclosure documenting a new
+  OceanLotus / APT32 second-stage backdoor and its dropper →
+  DLL-side-loading delivery, observed (per ESET telemetry) against
+  company and government networks in Southeast / East Asia in the
+  late-2017–early-2018 window. The report is a technical reference for
+  OceanLotus second-stage tradecraft — encrypted multi-protocol C2,
+  trusted-binary side-loading, and control-flow obfuscation — rather
+  than a victim-named campaign disclosure; ESET names no specific
+  victims and states no strategic purpose, situating its analysis
+  alongside the earlier CyberReason, FireEye, and Volexity OceanLotus
+  reporting.
 attributions:
   - actor_id: vn/unscoped/apt32
-    attributing_org: ESET (Romain Dumont)
+    attributing_org: ESET
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-03-13
     attribution_source_id: eset/2018-03-13_oceanlotus-southeast-asia-backdoor
+    notes: |
+      ESET attributes the malware first-hand and flatly to the named
+      cluster "OceanLotus, also dubbed APT32 and APT-C-00" — named-actor,
+      NOT named-unit (no Vietnamese service/unit is named; the actor is
+      vn/unscoped). High confidence at the named-actor level (first-party
+      analysis of the actor's own toolset). attributing_org corrected
+      "ESET (Romain Dumont)" -> "ESET": the blog is bylined Tomáš Foltýn
+      and neither cited ESET document names Romain Dumont.
 doctrine_links:
-  - doctrine_id: vn/resolution-29-nqtw
-    pillar_id: vn/resolution-29-nqtw/regime-stability-surveillance
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      "High-profile Southeast Asian targets" is consistent with
-      the regional-political-collection / regime-stability lane
-      but ESET declined to publish victim identities, so the
-      pillar assignment cannot be tighter than plausible.
-    contested: false
-    analyst: claude
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      ESET's "high-profile" phrasing is consistent with either
-      government or corporate targets; the industrial-upgrading
-      reading is plausible but not better-evidenced than the
-      political-collection reading.
+      ESET documents targeting of "company … networks" and lists
+      "intellectual property theft" among OceanLotus's stated goals, and
+      the vn/industrial-upgrading-cyber-collection doctrine's own summary
+      cites this very ESET 2018 report (alongside "Vietnam-adjacent ASEAN
+      governments" and "select multinationals") as evidence of the
+      collection cluster — so the company-network half of the targeting
+      fits this doctrine. The label is plausible, not higher: ESET states
+      no strategic purpose, names no specific industrial victim, and the
+      report's defining industrial-pillar victimology (automotive /
+      aerospace OEMs) is absent here, while the parallel "government
+      networks" half reads as foreign / neighbour-state intelligence
+      collection — so more than one strategic reading survives. Linked at
+      the doctrine level (pillar_id null) rather than to the automotive
+      or aerospace pillar, neither of whose victimology appears.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Industrial-upgrading cyber-collection: ESET documents 'company … networks' targeting and lists IP theft among OceanLotus's goals, and the industrial-upgrading doctrine's own summary names this ESET 2018 report and 'company networks' / 'select multinationals' as in-scope — but no automotive/aerospace pillar victimology appears and ESET states no purpose."
+        - "Foreign political / government-intelligence collection: ESET equally documents 'government networks' in Cambodia, Laos and the Philippines (decoy lures reference a defence/MOD contract, a Mi-17 military-helicopter theme, and a Lao conglomerate), reading as neighbour-state foreign-intelligence collection — a lane for which the atlas has no dedicated Vietnamese doctrine; this reading survives alongside the industrial one."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/southeast-asia-high-profile-undisclosed
+  - target_id: sectors/government
     role: primary
 sources:
   - eset/2018-03-13_oceanlotus-southeast-asia-backdoor
+  - eset/2018-03_oceanlotus-old-techniques-new-backdoor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited against BOTH cited ESET documents (raw snapshots captured +
+    hashed). Blog: eset__2018-03-13_oceanlotus-southeast-asia-backdoor.html,
+    sha256 5fc543e7…2fb10515, 74709 bytes (HTTP 200, real article,
+    bylined Tomáš Foltýn, 13 Mar 2018 — NOT a phantom). White paper
+    (added this audit): eset__2018-03_oceanlotus-old-techniques-new-backdoor.pdf,
+    sha256 f6a3d64a…459af9be, 1900054 bytes, 21 pp (PDF CreationDate
+    2018-03-13; cover "ESET / March 2018"; no author in PDF/metadata).
+
+    DISTINCTNESS (per orchestrator NB) — confirmed NOT a duplicate. This
+    is a malware/backdoor technical analysis, not a watering-hole
+    campaign disclosure. Distinct from 2017-11/volexity-oceanlotus-asean-
+    watering-hole (Volexity's 100+ -site SWC network, dissident-dominated
+    victimology) and from 2018-03/apt32-cambodia-watering-hole (Cambodian
+    election-cycle watering holes, cites the Volexity source). No shared
+    incident, victim set, or source. Kept as its own event.
+
+    [a] FACTS — corrected several claims that the BLOG did not carry
+    (sourced the true ones to the white paper, struck the false ones):
+    (1) Authorship: "ESET (Romain Dumont)" -> "ESET". The blog is bylined
+    Tomáš Foltýn; "Romain Dumont" appears in neither document. (2) C2:
+    "multi-protocol C2 (HTTP, HTTPS, TCP)" is NOT in the blog (blog: "All
+    communication with the C&C servers is encrypted") but IS in the white
+    paper: "The backdoor uses a classic TCP communication protocol over
+    port 25123 … All communication is encrypted using RC4 and compressed
+    with LZMA … HTTPprov … sends a POST request over the HTTP protocol …
+    also supports HTTPS and the usage of a SOCKS5, SOCKS4a or SOCKS4
+    proxy." Re-pointed to the white paper; added RC4+LZMA + port 25123 +
+    SOCKS detail. (3) "consistent with the FireEye 2017 APT32
+    attribution" — the blog never mentions FireEye; the white paper
+    references it only as prior reporting ("papers such as those from
+    CyberReason, a lengthy global view from FireEye and the watering-hole
+    explanation from Volexity"). Replaced the invented "consistency"
+    claim with that accurate situating sentence. (4) Chain DIRECTION
+    fixed: prior prose said side-loading "load[s] the malicious dropper"
+    — backwards. Per both docs the dropper is delivered by spearphishing
+    attachment (stage 1) and DLL side-loading of a signed Symantec/McAfee
+    binary loads the BACKDOOR (stage 2). (5) "improved anti-analysis
+    measures relative to prior OceanLotus implants" — comparative claim
+    unstated; softened to the documented obfuscation/garbage-code/
+    side-loading evasion. KEPT + source-confirmed: OceanLotus/APT32/
+    APT-C-00 naming; two-stage dropper->backdoor; spearphishing,
+    "no software exploits are needed"; signed RasTlsc.exe/mcoemcpy.exe +
+    malicious rastls.dll/McUtil.dll side-loading; host fingerprint +
+    encrypted C2; "company and government networks … Vietnam, the
+    Philippines, Laos and Cambodia … the most targeted"; goals "include
+    cyberespionage, reconnaissance and intellectual property theft"; no
+    specific victims named. Added incident_type espionage (remote-access
+    backdoor: system fingerprint, data exfil, file/registry/process
+    manipulation, stated espionage goals); kept intrusion. initial_vector
+    phishing retained ("most probably via a spearphishing email"; NOT
+    exploit-based — contrast the 0-day apt32-cambodia event).
+
+    [b] ATTRIBUTION — ESET names the actor first-hand and flatly
+    ("OceanLotus, also known as APT32 and APT-C-00"); attributing_org_
+    confidence high retained; auspex_assessment concur retained.
+    attributing_org "ESET (Romain Dumont)" -> "ESET" (byline correction).
+
+    [c] DATES — published_on 2018-03-13 confirmed (blog "13 Mar 2018";
+    PDF CreationDate 2018-03-13). disclosure_date 2018-03-13 ✓. FIXED
+    end_date 2018-03-13 -> null: the white paper says "OceanLotus
+    continues its activity" (ongoing); the prior end_date only re-stated
+    the publication date (op-end/disclosure conflation). FIXED start_date
+    2017-06-01 -> 2017-09-01 (estimate): neither doc gives an op-start;
+    the earliest dated artifacts are Sep 2017 ("Sorchornor_with_PM_-_Sep_
+    2017", "20170905-Evaluation Table.xls.exe"), with "Jan 2018" decoys
+    and "Last IoC update: 2018-02-22"; "a few months ago" rel. to Mar
+    2018. 2017-06-01 was unsupported (too early).
+
+    [d] DOCTRINE_LINKS — REMOVED the vn/resolution-29-nqtw/regime-
+    stability-surveillance (plausible) link: that pillar's defining
+    victimology is dissident / diaspora / civil-society / media monitoring
+    ("hostile forces", Viet Tan), which is ABSENT from ESET's described
+    targets (company + government networks abroad); the old reasoning
+    conflated foreign-government espionage with domestic regime-stability
+    surveillance. KEPT vn/industrial-upgrading-cyber-collection at
+    plausible (pillar_id null), tightened the reasoning to the
+    company-network / IP-theft half (the doctrine's own summary cites this
+    exact ESET 2018 report), and added inference_basis.alternatives
+    capturing the surviving competing reading — foreign / neighbour-state
+    government-intelligence collection, for which the atlas has no
+    dedicated VN doctrine. Not attested (no source states the strategic
+    purpose). perspective attacker-rationale (default; vn actor + vn
+    doctrine).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing): ESET names the
+    group OceanLotus/APT32/APT-C-00, no Vietnamese service/unit.
+
+    [f] ACTOR_ID — vn/unscoped/apt32 RESOLVES to atlas/actors/vn/apt32.yaml
+    (id field vn/unscoped/apt32). Well-sourced, non-provisional; consistent
+    with siblings. No actor flag.
+
+    TARGETS — replaced the DANGLING FK orgs/southeast-asia-high-profile-
+    undisclosed (no such registry record; used by this event only) with
+    sectors/government (role primary) — "government networks" is the one
+    explicitly-named, resolvable target type. ESET names no specific
+    victim org, and there is no generic private-sector sector for the
+    "company" half (captured instead in the doctrine reasoning). Per
+    orchestrator NB, NO target set to Vietnam: although ESET lists Vietnam
+    among most-targeted countries, OceanLotus is the Vietnamese actor, so
+    tagging Vietnam as a victim would invert directionality; country left
+    null (multi-country, none singled out by sector). Decoy-lure themes
+    (defence/MOD contract, Mi-17 helicopter, Lao conglomerate, telecom)
+    are social-engineering bait, not confirmed victims — not tagged.
+
+    Residual uncertainties: (i) start_date is an estimate anchored to the
+    earliest dated artifact (2017-09-05); ESET gives no precise op-start.
+    (ii) The foreign-government-collection strategic lane is real but has
+    no atlas VN doctrine, so it is recorded as a surviving alternative on
+    the single industrial link rather than as its own doctrine_link.

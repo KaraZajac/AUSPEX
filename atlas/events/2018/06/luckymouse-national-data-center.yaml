@@ -2,63 +2,89 @@ id: 2018-06/luckymouse-national-data-center
 name: LuckyMouse / APT27 national data center compromise (Central Asia)
 start_date: 2017-09-01
 disclosure_date: 2018-06-13
-end_date: 2018-03-31
+end_date: null
 incident_type:
   - intrusion
-  - supply-chain
-initial_vector: n-day
+  - espionage
+initial_vector: unknown
 outcome_summary: |
-  Kaspersky discloses LuckyMouse / APT27 / Emissary Panda
-  compromise of an unnamed Central Asian country's national
-  data center between fall 2017 and March 2018. Operators
-  staged a country-level watering-hole campaign by injecting
-  malicious code into government websites hosted in the data
-  center, redirecting visitors to HyperBro and Sysget payloads.
-  Lateral movement leveraged ShadowPad-family tooling.
+  Kaspersky (Securelist, 13 June 2018) disclosed a LuckyMouse /
+  APT27 / Emissary Panda compromise of an unnamed Central Asian
+  country's national data center, detected in March 2018 and
+  assessed active since autumn 2017 (HyperBro traces in the
+  facility from mid-November 2017). Inside the data center the
+  operators ran the HyperBro in-memory RAT, side-loaded via a
+  legitimate Symantec pcAnywhere binary through a Metasploit
+  shikata_ga_nai-obfuscated launcher and an LZNT1 decompressor
+  injected into svchost.exe. They abused the access to inject
+  malicious scripts into the country's official government
+  websites, turning them into watering holes that redirected
+  visitors to ScanBox (reconnaissance) and BeEF (Browser
+  Exploitation Framework) instances. Command-and-control ran
+  through bbs.sonypsps[.]com via a hacked MikroTik router; reuse
+  of the C2 domain update.iaacstudio[.]com tied the activity to
+  prior LuckyMouse campaigns. The initial infection vector into
+  the data center was not established.
 false_flag_risk: none
 summary: |
-  Important early case of PRC-aligned operator compromising a
-  national-level hosting facility to enable downstream
-  country-scale collection — the structural antecedent of
-  later supply-chain / vendor-pivot operations. The
-  Central-Asian-state target framing fits both the BRI
-  political-intelligence collection pillar (Central Asia is a
-  core BRI geography) and the MCF-aligned dual-use research
-  collection pattern via national-data-center access to
-  government and adjacent civilian research traffic. APT27 /
-  Emissary Panda is a long-running PLA-aligned cluster that
-  has since 2015 been re-tasked toward MSS / MCF-priority
-  collection.
+  Early, structurally significant case of a Chinese-speaking actor
+  (LuckyMouse / APT27 / Emissary Panda) compromising a national-level
+  hosting facility — a national data center in an unnamed Central
+  Asian country — to gain broad access to government resources "at
+  one fell swoop" and to stage a country-scale watering-hole
+  campaign. Kaspersky attributed the campaign to LuckyMouse on the
+  basis of tools and tactics plus reuse of the C2 domain
+  update.iaacstudio[.]com from prior LuckyMouse operations, while
+  cautioning that its HyperBro RAT and the shikata_ga_nai encoder
+  are shared among many Chinese-speaking actors; it named no
+  specific Chinese intelligence service (hence the actor is tracked
+  cn/unscoped). The data-center-as-collection-vantage-point against
+  a core Belt-and-Road geography is the read that anchors the
+  (plausible) BRI political-intelligence-collection doctrine link.
 attributions:
   - actor_id: cn/unscoped/apt27
     attributing_org: Kaspersky
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-06-13
     attribution_source_id: kaspersky/2018-06-13_luckymouse-national-data-center
+    notes: |
+      Kaspersky: "Due to tools and tactics in use we attribute the
+      campaign to LuckyMouse Chinese-speaking actor (also known as
+      EmissaryPanda and APT27)", plus reuse of the C2 domain
+      update.iaacstudio[.]com from prior campaigns and prior
+      LuckyMouse targeting of Central Asian government entities.
+      Named-actor (LuckyMouse/APT27 cluster + Chinese-speaking
+      nexus), NOT named-unit: no MSS/PLA or other Chinese service is
+      named — hence the actor is cn/unscoped. Confidence set
+      moderate (down from high): Kaspersky attributes firmly but
+      self-caveats its indicators — "The tools found in this
+      campaign, such as the HyperBro Trojan, are regularly used by a
+      variety of Chinese-speaking actors" and the shikata_ga_nai
+      encoder "is available for everyone and couldn't be the basis
+      for attribution" — leaving the reused C2 domain + victimology
+      as the load-bearing basis.
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Central Asian target state is a core BRI geography;
-      national-data-center-as-vantage-point is the
-      political-intelligence collection lane operationalized.
-    attesting_source_id: null
-    counter_explanation: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/mcf
-    pillar_id: null
-    program_id: null
     confidence: plausible
     reasoning: |
-      Country-scale watering-hole campaign enabled by a single
-      pivot point fits the MCF coordination model; cross-
-      pillar applicability rather than a clean fit to one
-      sub-pillar.
+      The victim is a national-level government hosting facility in
+      Central Asia — a core Belt-and-Road geography — and the
+      operation converts a single foothold into broad access to a
+      wide range of government resources, the political-intelligence
+      collection lane the pillar encodes. The label is plausible,
+      not strongly_inferred: Kaspersky states no strategic purpose
+      for the campaign, and a generic PRC strategic-espionage /
+      regional-influence reading survives alongside the BRI-specific
+      one, so more than one strategic reading remains.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "BRI political-intelligence collection: the target is a government data center in Central Asia, a core BRI region, and national-data-center access yields broad government collection — insight/leverage on a BRI partner state."
+        - "Generic PRC strategic espionage / regional-influence collection: a Chinese-speaking actor collecting on a neighbouring government's resources fits long-running regional intelligence priorities that need not be BRI-specific; Kaspersky names no purpose."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -69,3 +95,75 @@ targets:
     role: staging
 sources:
   - kaspersky/2018-06-13_luckymouse-national-data-center
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Audited vs Kaspersky/Securelist "LuckyMouse hits national data
+    center to organize country-level waterholing campaign" (Denis
+    Legezo, 2018-06-13); raw snapshot captured, sha256
+    67fa80a4…ff39d69c (183450 bytes). NOT a phantom — the URL
+    resolves to the real first-party article (title + body match the
+    citation); normal audit, no re-source needed.
+    [a] FACTS — corrected fabricated tradecraft. Source carries: "In
+    March 2018 we detected an ongoing campaign targeting a national
+    data center in the Central Asia ... active since autumn 2017";
+    access to "a wide range of government resources at one fell
+    swoop"; "The operators used the HyperBro Trojan as their
+    last-stage in-memory remote administration tool (RAT)";
+    pcAnywhere DLL side-load + shikata_ga_nai + LZNT1; "The websites
+    were compromised to redirect visitors to instances of both
+    ScanBox and BEeF." STRIPPED "Sysget" and "ShadowPad-family
+    tooling" — ZERO occurrences of either in the source (the
+    watering-hole payloads were ScanBox + BeEF, not HyperBro/Sysget;
+    no lateral-movement tool is named). Rewrote outcome_summary +
+    summary to the source and removed the unsupported "PLA-aligned",
+    "re-tasked toward MSS / MCF-priority collection", and
+    "MCF-aligned dual-use research collection / civilian research
+    traffic" framing (contradicts the actor record's cn/unscoped
+    audit and the source, which names only government targets).
+    [b] ATTRIBUTION — Kaspersky: "Due to tools and tactics in use we
+    attribute the campaign to LuckyMouse Chinese-speaking actor (also
+    known as EmissaryPanda and APT27)" + reused C2 domain
+    update.iaacstudio[.]com + prior Central-Asian-government
+    targeting. DOWNGRADED attributing_org_confidence high -> moderate:
+    the source self-caveats its indicators ("HyperBro ... regularly
+    used by a variety of Chinese-speaking actors"; shikata_ga_nai
+    "couldn't be the basis for attribution"), so the load-bearing
+    basis is one reused C2 domain + victimology — a firm but
+    single-vendor TTP/infra attribution. auspex_assessment kept
+    concur (LuckyMouse/APT27 cluster is well-corroborated).
+    [c] DATES — published_on 2018-06-13 = the Securelist post date
+    (verified). start_date 2017-09-01 keeps the source's "active
+    since autumn 2017". end_date 2018-03-31 -> null: the source calls
+    the campaign "ongoing" at the March-2018 detection and states no
+    end. disclosure_date 2018-06-13 ok.
+    [d] DOCTRINE_LINKS — BRI link DOWNGRADED strongly_inferred ->
+    plausible (the source states no purpose; BRI vs generic regional
+    espionage both survive) and given inference_basis.alternatives.
+    REMOVED the cn/mcf link: it rested on a fabricated "dual-use
+    research collection / civilian research traffic" premise absent
+    from the source (the target was government, not research) and its
+    own reasoning conceded it was "not a clean fit" — invented
+    doctrine, struck per the no-invention rule. No attested link, so
+    no attesting_source needed.
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing): Kaspersky
+    names the LuckyMouse/APT27 cluster but no Chinese service ->
+    named-actor, not named-unit; firmer than bare nation given the
+    named cluster.
+    [f] ACTOR_ID — cn/unscoped/apt27 resolves to
+    atlas/actors/cn/apt27.yaml (internal id cn/unscoped/apt27; the
+    file kept its path after the 2026-06-24 MSS->unscoped demotion,
+    FK-propagated to its 5 referencing events). The actor record is
+    well-audited and consistent with this source (Kaspersky names no
+    service); no actor edit needed.
+    Residuals: incident_type set [intrusion, espionage] (dropped
+    supply-chain — the source describes a watering-hole / strategic
+    web compromise, not a software supply chain); initial_vector
+    n-day -> unknown (source: "The initial infection vector ... is
+    unclear"; CVE-2017-11882 is mentioned only speculatively, "we
+    can't prove they were related"). Targets unchanged (government
+    primary; ict/cloud staging); country left null — Kaspersky did
+    NOT name the Central Asian country, so none is invented.
