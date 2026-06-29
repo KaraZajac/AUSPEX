@@ -10,11 +10,17 @@ initial_vector: unknown
 outcome_summary: |
   Citizen Lab publishes "HIDE AND SEEK: Tracking NSO Group's
   Pegasus Spyware to Operations in 45 Countries" — an internet-
-  scanning methodology paper identifying suspected Pegasus
-  operator infrastructure across 45 countries. UAE was named as
-  one of the operator-states; Citizen Lab tracked multiple
-  distinct UAE-attributed operator clusters (informally
-  Pegasus-1, Pegasus-2, Pegasus-3) inside the country.
+  scanning / DNS-cache-probing paper that groups Pegasus C&C
+  fingerprints into 36 suspected operators and links their
+  suspected infections to 45 countries (scan window Aug 2016 –
+  Aug 2018). Citizen Lab identifies "at least two [operators]
+  that appear to predominantly focus on the UAE" — the named
+  operators FALCON, BABYFALCON, and MAYBEFALCON — placing the UAE
+  among the operator-states. Citizen Lab cautions that operator-
+  to-country links rest on suspected-infection geolocation (which
+  VPN / satellite connections can distort, so the 45-country list
+  "necessarily includes countries that are not NSO Group
+  customers") and names no UAE government agency.
 false_flag_risk: none
 summary: |
   AUSPEX includes the Hide and Seek disclosure as the corpus-
@@ -22,40 +28,143 @@ summary: |
   infrastructure. Individual victim-specific Pegasus events
   (Mansoor 2016, Al Jazeera journalists 2020, Pegasus Project
   2021 named victims) are recorded separately; this entry
-  captures the scanning-level evidence of multiple distinct UAE
-  Pegasus operator clusters running concurrently — a key
-  doctrine-link supporting the procurement-led-capability
-  framing.
+  captures the scanning-level evidence that at least two distinct
+  UAE-focused Pegasus operators (Citizen Lab codenames FALCON,
+  BABYFALCON, MAYBEFALCON) were running concurrently — a key
+  doctrine-link supporting the procurement-led-capability framing.
+  The only UAE victim named in this report is human-rights
+  defender Ahmed Mansoor (Pegasus-targeted Aug 2016); the report's
+  journalist-targeting findings concern other operators (Mexico,
+  Bahrain), so the UAE-journalist slice is left to the separately
+  recorded events.
 attributions:
   - actor_id: null
     service_id: ae/state-security
     attributing_org: The Citizen Lab
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2018-09-18
     attribution_source_id: citizenlab/2018-09-18_hide-and-seek-pegasus-45-countries
     notes: |
-      Citizen Lab attribution via internet-scanning methodology
-      and operator-infrastructure clustering. Pegasus is sold by
-      NSO exclusively to state customers per stated policy;
-      Citizen Lab's UAE-operator-cluster identification is
-      consistent with NSO customer-state status.
+      Citizen Lab links suspected Pegasus infections to 36
+      operators via internet-scanning / DNS-cache-probing, and
+      ties the operators FALCON / BABYFALCON / MAYBEFALCON to the
+      UAE at the COUNTRY level ("at least two [operators] that
+      appear to predominantly focus on the UAE"). It does NOT name
+      a UAE government agency, and cautions the 45-country list
+      "necessarily includes countries that are not NSO Group
+      customers" (VPN/satellite geolocation error) — hence
+      attribution_level: nation, attributing_org_confidence:
+      moderate. The ae/state-security service_id is an AUSPEX
+      customer-side overlay (inferred from NSO's stated
+      government-only sales policy plus the documented UAE Pegasus
+      record — Mansoor, Aug 2016), NOT a Citizen Lab attribution;
+      hence auspex_assessment: concur-with-caveat. No over-attestation
+      of a UAE-state-security nexus beyond what Citizen Lab states.
 doctrine_links:
   - doctrine_id: ae/procurement-led-capability
     pillar_id: ae/procurement-led-capability/commercial-spyware
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Direct documentation of UAE-attributed Pegasus operator
-      infrastructure — the canonical procurement-led-capability
-      signature.
+      Citizen Lab documents UAE-focused Pegasus operator
+      infrastructure (FALCON / BABYFALCON / MAYBEFALCON). Pegasus
+      is a commercial implant sold by NSO Group only to government
+      customers, so a UAE customer operating it is, by definition,
+      procured commercial-spyware capability — the canonical
+      procurement-led-capability signature. strongly_inferred (not
+      attested) because Citizen Lab documents the operator
+      infrastructure but does not state a UAE procurement strategy
+      at the goal level; per the doctrine's own rule, attested
+      requires a source naming UAE procurement of the capability
+      (Reuters Project Raven, NSO customer-state listings).
     attesting_source_id: citizenlab/2018-09-18_hide-and-seek-pegasus-45-countries
+    inference_basis:
+      signals:
+        - "Citizen Lab identifies UAE-focused Pegasus operators (FALCON / BABYFALCON / MAYBEFALCON); Pegasus is a proprietary NSO commercial product, so a UAE customer operating it is procured commercial-spyware capability."
+        - "NSO sells Pegasus only to government customers (Citizen Lab: a 'government operator of Pegasus'), so a UAE-focused operator implies a UAE government customer that procured — rather than built — the capability."
+        - "Prior Citizen Lab reporting (Ahmed Mansoor, Aug 2016) already established the UAE as an operating NSO customer-state, corroborating a sustained procurement relationship."
+      ruled_out: "Indigenous / self-developed offensive capability: ruled out because Pegasus is a proprietary NSO commercial product that cannot be domestically built, leaving procured-commercial-spyware as the only strategic reading with no serious competitor for this infrastructure."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/civil-society/dissident
-    role: primary
-  - target_id: sectors/media/journalism
+    country: ae
     role: primary
 sources:
   - citizenlab/2018-09-18_hide-and-seek-pegasus-45-countries
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Phantom-remediation audit. STEP 0: the cited URL
+    (citizenlab.ca/research/hide-and-seek-...) is the REAL article,
+    NOT a phantom/homepage — snapshot captured + hashed: sha256
+    2066d892…6719beba, 219401 B; <title> = "HIDE AND SEEK: Tracking
+    NSO Group's Pegasus Spyware to Operations in 45 Countries". No
+    re-sourcing needed; audited in place against the genuine source.
+
+    [a] FACTS — "45 countries" ✓ verbatim ("identify 45 countries in
+    which operators of NSO Group's Pegasus spyware may be conducting
+    operations"); "36 suspected operators" ✓ ("36 distinct operators");
+    scan window Aug 2016–Aug 2018 ✓ ("Between August 2016 and August
+    2018, we scanned the Internet…"). KEY CORRECTION (fabrication): the
+    event (and the source record's notes) claimed Citizen Lab tracked
+    UAE clusters "Pegasus-1, Pegasus-2, Pegasus-3" — that string appears
+    NOWHERE in the report (grep = 0 hits). Replaced with the actual CL
+    statement "at least two [operators] that appear to predominantly
+    focus on the UAE" and the real operator codenames FALCON (UAE / Yes
+    / UAE), BABYFALCON (May 2018–present, GCC–UAE), MAYBEFALCON. Removed
+    sectors/media/journalism target: the report's journalist-targeting
+    findings are tied to Mexico ("dozens of Mexican lawyers, journalists,
+    human rights defenders") and Bahrain ("Bahrain is noteworthy for
+    compromising journalists…"), NOT the UAE; the only UAE victim named
+    is HRD Ahmed Mansoor (Aug 2016) → sectors/civil-society/dissident
+    (country ae) retained, carried.
+
+    [b] ATTRIBUTION — Citizen Lab links operators to COUNTRIES via
+    suspected-infection geolocation and explicitly hedges: "our list of
+    45 countries necessarily includes countries that are not NSO Group
+    customers" (VPN/satellite error). It NAMES NO UAE government agency.
+    Added missing attribution_level: nation (CL reaches country-level,
+    not named-unit). Downgraded auspex_assessment concur → concur-with-
+    caveat: the ae/state-security service_id is an AUSPEX customer-side
+    overlay (NSO government-only sales policy + Mansoor 2016 record), not
+    a CL attribution. attributing_org_confidence kept moderate (multiple
+    UAE-focused operators + corroborating Mansoor history, but heavily
+    method-caveated). actor_id null + service_id customer-side is correct
+    per the established UAE customer-operator modeling; no APT mis-placed.
+
+    [c] DATES — source published_on 2018-09-18 ✓ (report date); event
+    start_date 2016-08-01 / end_date 2018-08-31 ✓ match the scan window;
+    disclosure_date 2018-09-18 ✓. No conflation.
+
+    [d] DOCTRINE — ae/procurement-led-capability /commercial-spyware
+    pillar resolves ✓. Kept strongly_inferred (correct per the doctrine's
+    own cyber_relevance: attested ONLY where a source names UAE
+    procurement — Reuters Raven / NSO listings; this report documents the
+    operator infrastructure, not a stated procurement goal). Added
+    inference_basis {signals[], ruled_out} (Pegasus is a commercial NSO
+    product sold only to governments → operating it = procured capability;
+    indigenous-build ruled out). attesting_source_id retained as the
+    primary supporting source (schema-allowed on strongly_inferred).
+
+    [e] ATTRIBUTION_LEVEL — set to nation (was missing).
+
+    [f] ACTOR_ID — null (customer-side); service_id ae/state-security
+    resolves to atlas/services/ae/state-security.yaml ✓. That service
+    record itself notes UAE State Security is "rare[ly]" named as an
+    operator and is "primarily a doctrine-link anchor" — consistent with
+    the nation-level / concur-with-caveat downgrade here. No actor-file
+    edit; no flag (service placement is sound as a customer anchor).
+
+    SOURCE: tier secondary→primary (Citizen Lab first-party original
+    research) + raw_snapshot/content_sha256 added; its notes' fabricated
+    "Pegasus-1/2/3" likewise corrected. Residual uncertainty: CL's
+    operator→country geolocation is method-limited (its own caveat), so
+    the UAE-operator linkage, while well-corroborated, is not a hard
+    technical attribution to a named UAE agency — captured by nation /
+    moderate / concur-with-caveat.

@@ -8,53 +8,103 @@ incident_type:
   - data-theft
 initial_vector: valid-creds
 outcome_summary: |
-  Cisco Talos's April 2019 Sea Turtle disclosure documented
-  victims across 13 countries including the UAE, Saudi Arabia,
-  Lebanon, Jordan, Libya, and Egypt — beyond the Cyprus / Greece
-  / Iraqi-Kurdistan / Albania / Armenia core that dominates the
-  Mavi Vatan and counter-Kurdish doctrinal narratives. Talos
-  declined to name individual victim organizations or specific
-  registrars, citing risk of copycat operations, but
-  characterized the target set as national-security
-  organizations, ministries of foreign affairs, energy
-  organizations, and intelligence agencies. This rollup event
-  captures the broader-MENA Sea Turtle victimology distinct
-  from the country-specific Cyprus, Greece, and KRG events.
+  Cisco Talos's April 17, 2019 Sea Turtle disclosure reported that
+  "at least 40 different organizations across 13 different countries
+  were compromised during this campaign." Talos's "Country of targets"
+  IP table lists the UAE, Egypt, Libya, Jordan, and Lebanon (alongside
+  Cyprus, Albania, Iraq, Armenia, Syria, Sweden, the US, and Turkey) as
+  countries whose targets the actor's relay infrastructure was used
+  against; Saudi Arabia is named separately in prose, where the actors
+  manipulated sa1[.]dnsnode[.]net to "harvest credentials of
+  administrators who manage domains with the TLD of Saudi Arabia (.sa)"
+  with "likely ... additional Saudi Arabia-based victims." Talos split
+  the victimology into PRIMARY victims — "national security
+  organizations, ministries of foreign affairs, and prominent energy
+  organizations" (its compromised-org list also names military
+  organizations and intelligence agencies) — and SECONDARY victims —
+  "numerous DNS registrars, telecommunication companies, and internet
+  service providers" — but did NOT map individual countries to either
+  tier. Talos named specific organizations only at the infrastructure
+  level and largely outside the MENA core (NetNod and the consulting
+  firm Cafax in Sweden; the NGO Packet Clearing House), characterizing
+  the MENA government victims by category and country-of-targets rather
+  than individually. Talos stated no copycat rationale for withholding
+  victim names; its expressed concern was that the operation's success
+  "will lead to actors more broadly attacking the global DNS system."
+  This rollup event captures the broader-MENA Sea Turtle victimology
+  distinct from the country-specific Cyprus, Iraqi-Kurdistan, and
+  Armenia events.
 false_flag_risk: none
 summary: |
   Captures the broader-MENA Sea Turtle victim set that does not
-  cleanly map to a single doctrinal pillar. The UAE, Saudi, and
-  Egyptian targeting in particular sits awkwardly with a purely
-  counter-Kurdish-and-Eastern-Med reading of Turkish state
-  collection priorities — these are sometimes Turkish-aligned
-  states, sometimes adversaries on the regional-influence file
-  (Libya is the central example of Turkish-vs-UAE proxy
-  competition). Suggests Turkish state collection equities are
-  broader than the two doctrinally-modeled pillars and that
-  this corpus may benefit from a third "regional rivalry"
-  pillar in a future doctrine revision.
+  cleanly map to a single doctrinal pillar. Within AUSPEX the actor is
+  tracked as a Turkey-aligned espionage cluster (tr/unscoped/sea-turtle),
+  but that Turkey nexus rests on LATER reporting (Reuters 2020; Hunt &
+  Hackett 2024) cited in the actor record, NOT on this Talos 2019 source,
+  which attributes the campaign only to "an advanced, state-sponsored
+  actor" and names no nation — "Turkey" appears in the report solely as
+  one entry in the victim "Country of targets" table. Taking the
+  Turkey-aligned reading on later evidence, the UAE / Saudi / Egyptian
+  targeting in particular sits awkwardly with a purely counter-Kurdish-
+  and-Eastern-Med reading of Turkish state collection priorities — these
+  are sometimes Turkish-aligned states, sometimes adversaries on the
+  regional-influence file (Libya is the central example of Turkish-vs-UAE
+  proxy competition). The broad 13-country / ~40-organization victim set
+  suggests Turkish state collection equities (on the later attribution)
+  are broader than the two doctrinally-modeled pillars, and that this
+  corpus may benefit from a third "regional rivalry" pillar in a future
+  doctrine revision.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Cisco Talos
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: talos/2019-04-17_sea-turtle-dns-hijacking
+    notes: |
+      Talos (2019-04-17) assesses "with high confidence that this
+      activity is being carried out by an advanced, state-sponsored
+      actor" and names NO nation as the perpetrator — raw grep of the
+      hash-verified snapshot: "turkish"=0, "iran"=0; "turkey"=1,
+      occurring only in the "Country of targets" IP table (alongside
+      Sweden, Syria, Armenia, US) as a target location, not as the
+      sponsor. Hence attribution_level activity-cluster (Talos's named
+      "Sea Turtle" cluster; state-sponsored; nation un-named at this
+      source) — the schema's Tortoiseshell attribution-latency pattern.
+      attributing_org_confidence stays high (Talos's confidence in the
+      state-sponsored-actor assessment; orthogonal to specificity). The
+      Turkey nexus carried by actor_id tr/unscoped/sea-turtle rests on
+      LATER reporting cited in the actor record (Reuters 2020; Hunt &
+      Hackett 2024), not on this 2019 Talos source; no cited source
+      names a specific Turkish service, so the actor remains tr/unscoped.
 doctrine_links:
   - doctrine_id: tr/mavi-vatan
     pillar_id: tr/mavi-vatan/regional-influence
     program_id: null
     confidence: plausible
     reasoning: |
-      The regional-influence pillar covers Libya, Syria,
-      Caucasus, and KRG theaters. UAE / Saudi / Egypt / Lebanon
-      targeting is plausibly explained by regional-influence
-      collection (notably Libya, where Turkish-UAE proxy
-      competition is intense) but is not a precise pillar fit;
-      confidence demoted to plausible to flag the doctrinal
-      gap.
+      Sea Turtle is assessed within AUSPEX as a Turkey-aligned espionage
+      actor (per the actor record's later sources; Talos 2019 itself
+      names only "an advanced, state-sponsored actor" and no nation). The
+      regional-influence pillar covers Libya, Syria, the Caucasus, and
+      KRG theaters. The broad MENA country-of-targets set (UAE / Saudi /
+      Egypt / Lebanon / Jordan / Libya) is plausibly explained by
+      regional-influence collection — notably Libya, where Turkish-UAE
+      proxy competition is intense — but is not a precise pillar fit. The
+      label is plausible rather than higher because Talos states no
+      purpose for any of this targeting and names no nation, so a broad
+      state-sponsored MENA espionage reading not specific to Mavi Vatan
+      survives alongside the regional-influence reading; confidence is
+      demoted to plausible to flag the doctrinal gap this rollup exists
+      to surface.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Mavi Vatan regional-influence collection: a Turkey-aligned actor (per the actor record's later sources) collecting across MENA states fits the pillar, which covers Libya — where Turkish-UAE proxy competition is intense — Syria, the Caucasus and the KRG."
+        - "Broad state-sponsored MENA espionage with no single pillar: Talos states no purpose and names no nation; the headline primary victims are national-security organizations / MFAs / energy across 13 countries-of-targets that include Turkish-aligned states (UAE, Saudi, Egypt) as well as adversaries, so a general regional-collection reading survives — the doctrinal gap this rollup flags."
 targets:
   - target_id: orgs/uae-government-various
     country: ae
@@ -76,3 +126,108 @@ targets:
     role: primary
 sources:
   - talos/2019-04-17_sea-turtle-dns-hijacking
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-28
+  level: full
+  notes: |
+    Phantom-remediation triage -> CORRECT-IN-PLACE (not phantom, not re-source, not retire).
+    The single cited source talos/2019-04-17_sea-turtle-dns-hijacking is a REAL first-party
+    article (Cisco Talos, "DNS Hijacking Abuses Trust In Core Internet Service"), already on
+    disk and HASH RE-VERIFIED: sha256 eae3a904...b060af0f, 199,058 bytes (matches the source
+    record exactly). It genuinely carries the core incident, so no re-sourcing was needed; the
+    defects were a fabricated "copycat" rationale, an over-stated victim-naming claim, a
+    stray Greece reference, and over-attribution of Turkey-as-sponsor to a source that names no
+    nation. Sibling of the 2018-06/sea-turtle-armenia-am-cctld-near-miss event (same source,
+    same audit day); findings reconciled with it.
+
+    [a] FACTS — corrected. (i) "13 countries" is SUPPORTED verbatim: "at least 40 different
+    organizations across 13 different countries were compromised during this campaign." Added
+    the ~40-organization figure. (ii) The six MENA countries are TALOS "Country of targets"
+    entries, NOT a list of named government victims: the report's IP table header reads "IP
+    address | Month | Year | Country of targets," and UAE/Egypt/Libya/Jordan/Lebanon appear
+    ONLY there (raw prose grep for Emirates/Arab/Egypt/Libya/Jordan/Lebanon outside the IP table
+    = 0 hits each). The same table lists Turkey, Sweden, and the US as countries-of-targets too
+    — reinforcing that Turkey is a target location, not the sponsor. (iii) Saudi Arabia is the
+    ONE country with prose victim detail: "manipulate the DNS records for sa1[.]dnsnode[.]net.
+    This redirection allowed the attackers to harvest credentials of administrators who manage
+    domains with the TLD of Saudi Arabia (.sa). It is likely that there are additional Saudi
+    Arabia-based victims" — i.e. a registry/registrar-level (secondary/staging-type) mechanism
+    with likely downstream primary victims. (iv) REMOVED the fabricated sentence that "Talos
+    declined to name individual victim organizations or specific registrars, citing risk of
+    copycat operations": raw grep "copycat"=0, and NO victim-withholding statement exists
+    ("will not"/"decline"/"redact"/"chosen not"/"name the victim" all =0). On the contrary Talos
+    DID name organizations — NetNod ("the attackers were able to compromise NetNod, a non-profit,
+    independent internet infrastructure organization based in Sweden"), Packet Clearing House,
+    and the Sweden-based consulting firm Cafax — all infrastructure/secondary victims outside the
+    MENA core. Talos's actual stated concern was that the operation's success "will lead to
+    actors more broadly attacking the global DNS system." Rewrote outcome_summary accordingly.
+    (v) REMOVED "Greece" from the campaign "core": raw grep "Greece"=0 / "Greek"=0 in this April
+    report (the FORTH/.gr Greek-ccTLD operation is the separate sibling event, not this source).
+    (vi) Victim taxonomy quote retained and made precise — primary: "national security
+    organizations, ministries of foreign affairs, and prominent energy organizations" (+ "Military
+    organizations" / "Intelligence agencies" in the compromised-org list); secondary: "numerous
+    DNS registrars, telecommunication companies, and internet service providers."
+
+    [b] ATTRIBUTION — over-attribution fixed. Talos: "We assess with high confidence that this
+    activity is being carried out by an advanced, state-sponsored actor that seeks to obtain
+    persistent access to sensitive networks and systems" — NO nation (turkish=0, iran=0; turkey=1
+    in the Country-of-targets table only). Set attribution_level=activity-cluster (was MISSING).
+    Kept attributing_org_confidence high and auspex_assessment concur. Added an attribution note:
+    the Turkey nexus carried by actor_id rests on LATER reporting (Reuters 2020; Hunt & Hackett
+    2024) cited in the actor record, not on this 2019 source; no cited source names a Turkish
+    service (actor correctly tr/unscoped, demoted from tr/mit on 2026-06-25). Softened the summary,
+    which had asserted "Turkish state collection equities" as established fact — now flagged as
+    resting on the later attribution, with Talos 2019 naming only "an advanced, state-sponsored
+    actor." NB on task framing: AUSPEX's Sea Turtle nation is TURKEY (post-2020 consensus: Reuters
+    / PwC Teal Kurma / Microsoft MARBLED DUST / Hunt & Hackett), NOT Iran; the "don't over-attest
+    to Iran" steer was right in spirit (don't pin any nation on Talos 2019) but the corpus actor
+    is Turkish — left tr/unscoped/sea-turtle unchanged.
+
+    [c] DATES — all confirmed against the source, no change. start_date 2017-01-01 SUPPORTED:
+    "The ongoing operation likely began as early as January 2017 and has continued through the
+    first quarter of 2019." disclosure_date 2019-04-17 = Talos publication (matches source
+    published_on). end_date 2019-04-01 SUPPORTED: campaign ran "through the first quarter of 2019"
+    and the IP table carries "March - April 2019" relay entries (and a March 27, 2019 Cafax op),
+    so ~end-of-Q1/early-Q2 2019 is a faithful bound. The id slug "2018-06" matches no source date
+    (immutable import artifact; slugs are stable forever — sibling Sea Turtle events show the same
+    id-month/start-date divergence). Left as-is.
+
+    [d] DOCTRINE_LINKS — tr/mavi-vatan/regional-influence kept at plausible (honest, unchanged
+    label) but rebuilt: NOT attested (correct — attesting_source_id null; Talos states no purpose
+    and names no nation). Rewrote reasoning to honest plausible framing and ADDED
+    inference_basis.alternatives (two surviving readings — Mavi Vatan regional-influence vs. broad
+    state-sponsored MENA espionage with no single pillar; both quoted per the colon-space rule).
+    The link is an AUSPEX intent inference on top of a later-sourced Turkey attribution; plausible
+    is the correct rung.
+
+    [e] ATTRIBUTION_LEVEL — set to activity-cluster (see [b]); was absent.
+
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves (file atlas/actors/tr/sea-turtle.yaml, internal
+    id tr/unscoped/sea-turtle; audited + demoted from tr/mit on 2026-06-25, in good shape). No
+    actor edit made; no actor flag needed.
+
+    TARGETS — kept all six country entries: each is a Talos-confirmed "Country of targets" (the
+    13-country table; Saudi additionally in prose). Roles/sectors NOT restructured because Talos
+    provides NO per-country victim-tier and names NO government organization in any of the six
+    MENA countries — the "orgs/<country>-government-various / role: primary" entries are AUSPEX's
+    country-level rollup of the campaign's stated PRIMARY-victim profile (national-security / MFA /
+    military / intelligence / energy — predominantly government), applied to confirmed
+    countries-of-targets. Per the prompt's primary-vs-staging question, REPORTED AS DATA: Talos
+    documents a primary-vs-secondary split campaign-wide but maps no country to a tier; the only
+    per-country mechanism it details is Saudi's .sa-registry (a secondary/staging-type registrar
+    compromise) with "likely additional Saudi Arabia-based victims" downstream. The six target
+    registry files do not exist (orgs/<...>-government-various — corpus norm; 303/410 referenced
+    orgs/ ids are file-less, incl. the sibling .am/.net.cy ccTLD operators). Left target_ids as-is
+    (stable editorial ids).
+
+    Residual uncertainties: (1) Talos gives no per-country victim names or tiers for the five
+    non-Saudi MENA countries, so their role:primary reflects the campaign-level primary-victim
+    characterization, not a per-country Talos statement. (2) Saudi's documented target is a
+    registry-level (.sa) compromise; "additional Saudi-based victims" are asserted as likely but
+    un-named. (3) The 13-country count is Talos's; the report's own table enumerates 13 distinct
+    country-of-targets tokens (Albania, Iraq, UAE, Egypt, Libya, Jordan, Cyprus, Armenia, Syria,
+    Sweden, US, Turkey, Lebanon) with Saudi additionally in prose. Source record already carried
+    raw_snapshot + content_sha256 (audited 2026-06-25); hash re-verified this pass, no source-record
+    edit required.
