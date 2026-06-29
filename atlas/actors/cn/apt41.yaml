@@ -38,9 +38,8 @@ aliases:
   - alias: BRONZE EXPORT
     assigning_org: Secureworks
     confidence: equivalent
-  - alias: Group 72
-    assigning_org: Cisco Talos
-    confidence: equivalent
+  # "Group 72" intentionally NOT an APT41 alias: it is Cisco Talos's 2014 designation for
+  # the Axiom / APT17 cluster (see cn/unscoped/apt17), not APT41. Removed 2026-06-28.
   - alias: Earth Baku
     assigning_org: Trend Micro
     confidence: overlapping
@@ -93,7 +92,7 @@ target_sector_ids:
   - finance/crypto-exchange
 ttp_summary: |
   The most diverse PRC APT. Supply-chain compromise (NetSarang
-  ShadowPad 2017, CCleaner 2017, ASUS ShadowHammer 2018);
+  ShadowPad 2017, ASUS ShadowHammer 2018);
   code-signing-certificate theft; ShadowPad, PlugX, Winnti,
   DUSTPAN/DUSTTRAP droppers (2023–24); N-day exploitation of
   Citrix, Confluence, Log4j, USAHerds (CVE-2021-44207). "Double
@@ -129,6 +128,17 @@ notes: |
   all 5 fetchable sources (DOJ 2020, FBI, Mandiant ×2, Talos); the DOJ 2019
   first-indictment source is unfetchable (url null, slug collision) and was noted
   + skipped. No id/FK change (positive case).
+
+  CLEANUP (2026-06-28, claude-opus-4.8/max, Kara-approved): (1) removed the "Group 72"
+  alias — "Group 72" is Cisco Talos's 2014 designation for the Axiom/APT17 cluster
+  (cn/unscoped/apt17), not APT41; it was a mis-assigned alias (and MISP also files Group 72
+  under APT17). (2) removed "CCleaner 2017" from the supply-chain ttp_summary line: FireEye's
+  own Double Dragon report explicitly DECLINED to attribute the CCleaner compromise to APT41
+  ("we do not have enough information to attribute the CCleaner compromise to APT41 at this
+  time"); the CCleaner backdoor is BLACKCOFFEE (an APT17 tool) and the code overlap points to
+  APT17/Axiom — so AUSPEX attributes the 2017-09/ccleaner-supply-chain event to
+  cn/unscoped/apt17. NetSarang ShadowPad 2017 + ASUS ShadowHammer 2018 remain (those ARE
+  APT41/BARIUM).
 default_doctrine_alignment_ids:
   - cn/mic2025
   - cn/mcf
