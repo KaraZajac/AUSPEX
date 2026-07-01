@@ -8,15 +8,23 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Bitdefender published a technical analysis of a new macOS
-  variant of an OceanLotus / APT32 backdoor distributed via
-  weaponized Word documents in Vietnamese-language ZIP archives.
-  The malware (a successor to the 2018 OceanLotus macOS implant)
-  established C2 over HTTPS to attacker-controlled domains and
-  ran multi-stage AppleScript droppers culminating in a Mach-O
-  binary providing remote shell, file exfiltration, and process
-  enumeration. Victimology centered on Vietnamese diaspora users
-  on macOS.
+  Bitdefender (2020-11-04), and Trend Micro in a companion
+  analysis (2020-11-27, detecting it as Backdoor.MacOS.OCEANLOTUS.F),
+  documented a new macOS variant of an OceanLotus / APT32 backdoor.
+  It was delivered as an app bundle disguised with a Word-document
+  icon and .doc extension inside a ZIP archive, alongside a
+  Vietnamese-language decoy document. The malware — a variant of
+  the previously documented OceanLotus macOS backdoor, sharing its
+  command set — ran a multi-stage shell-script dropper that
+  extracted a second-stage Mach-O (fat) binary and a third-stage
+  payload, established encrypted C2 to attacker-controlled domains
+  (mihannevis[.]com, mykessef[.]com, idtpl[.]org), and provided
+  terminal command execution, file download/upload/delete
+  (exfiltration), and host reconnaissance (processor, memory,
+  serial number, MAC addresses). The decoy filename ("ALL tim nha
+  Chi Ngoc Canada") and OceanLotus's history point to Vietnamese-
+  language / diaspora macOS users; Trend Micro assessed the sample
+  as "suspected to target users from Vietnam."
 false_flag_risk: none
 summary: |
   Notable for tradecraft sophistication on a non-Windows platform
@@ -28,26 +36,97 @@ summary: |
   surveillance interest follows.
 attributions:
   - actor_id: vn/unscoped/apt32
-    attributing_org: Bitdefender (Bogdan Botezatu, Andrei Lapusneanu)
+    attributing_org: Bitdefender (Bogdan Botezatu, Andrei Lapusneanu); corroborated by Trend Micro (Luis Magisa, Steven Du)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-11-04
     attribution_source_id: bitdefender/2020-11-04_oceanlotus-mac-backdoor
+    notes: "Bitdefender's 2020-11-04 post named the macOS backdoor as OceanLotus/APT32 (url now null — did not survive Bitdefender's blog-domain migration; no Wayback snapshot). Trend Micro's 2020-11-27 companion analysis (verifiable, snapshotted) independently reached the same actor link: 'a new backdoor that we believe to be related to the OceanLotus group ... confirmed to be a variant of the said malware'. Named-actor level (OceanLotus/APT32 group + Vietnam nexus); NO Vietnamese state service (TC2 / MPS-A05) is named by either report — consistent with actor id vn/unscoped/apt32."
 doctrine_links:
   - doctrine_id: vn/resolution-29-nqtw
     pillar_id: vn/resolution-29-nqtw/regime-stability-surveillance
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Vietnamese diaspora targeting fits the regime-stability
-      and dissident-surveillance framing — though the diaspora-
-      surveillance strand has historically been operationalized
-      through both TC2 and MPS A05 channels.
+      Vietnamese-language / diaspora targeting fits the regime-
+      stability and dissident-surveillance framing — the pillar
+      explicitly encodes monitoring of overseas Vietnamese
+      opposition and civil society. This APT32 operation targets
+      individual Vietnamese-language Mac users (a diaspora-lure
+      decoy naming Canada), which reads cleanly to the surveillance
+      strand rather than APT32's industrial-collection strand,
+      though the diaspora-surveillance activity has historically
+      been operationalized through both TC2 and MPS A05 channels.
+      No cited source states the strategic purpose (both reports
+      are technical malware analyses), so the link is
+      strongly_inferred, not attested.
+    attesting_source_id: trendmicro/2020-11-27_new-macos-backdoor-oceanlotus
+    inference_basis:
+      signals:
+        - "Victimology is Vietnamese-language / diaspora macOS users (Trend Micro: 'suspected to target users from Vietnam'; decoy filename 'ALL tim nha Chi Ngoc Canada' points overseas) — civil-society / dissident-monitoring targets, not industry."
+        - "APT32/OceanLotus's well-documented diaspora-surveillance strand (Volexity 2020, Amnesty 2021) matches the regime-stability-surveillance pillar's named target set (overseas Vietnamese opposition)."
+      ruled_out: "vn/industrial-upgrading-cyber-collection — APT32's other doctrine strand (automotive/aerospace/manufacturing IP collection) does not fit a backdoor targeting individual Vietnamese-language Mac users."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/vietnamese-diaspora-mac-users
+  - target_id: sectors/civil-society/diaspora
     country: null
     role: primary
 sources:
   - bitdefender/2020-11-04_oceanlotus-mac-backdoor
+  - trendmicro/2020-11-27_new-macos-backdoor-oceanlotus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCE case (PHANTOM-REMEDIATION 0b): real, well-documented event; the cited
+    Bitdefender post (bitdefender/2020-11-04, url null) did not survive Bitdefender's
+    blog-domain migration and has no Wayback snapshot (unfetchable, confirmed by prior
+    audits + a fresh 2026-07-01 search that surfaced only later 2023 Bitdefender macOS
+    posts). Added the live companion primary — Trend Micro, "New MacOS Backdoor Connected
+    to OceanLotus Surfaces" (2020-11-27) — as trendmicro/2020-11-27_new-macos-backdoor-oceanlotus:
+    curl 200, 98,260 bytes, sha256 464a25f2…b00c6a9f, raw_snapshot captured. All facts below
+    are now carried by that verifiable raw source.
+    [a] FACTS — corrected against the raw Trend Micro report:
+      • "weaponized Word documents in ZIP" → the sample "arrives as an app bundled in a Zip
+        archive" that "uses the icon for a Word document file as a disguise" with a Vietnamese
+        decoy — NOT a macro-weaponized .doc; reworded.
+      • "C2 over HTTPS" → STRIPPED: raw has zero HTTP/HTTPS/TLS/SSL; C2 is custom-encrypted
+        over TCP ("collected information is encrypted and sent to the malware C&C server";
+        domains mihannevis[.]com, mykessef[.]com, idtpl[.]org). Reworded to "encrypted C2".
+      • "multi-stage AppleScript droppers" → CORRECTED to shell-script: the app contains "the
+        shell script containing the main malicious routines" → extracts a b64 "fat binary"
+        second-stage (Mach-O) → drops third-stage (~/Library/User Photos/mount_devfs). No
+        AppleScript in the report.
+      • "remote shell, file exfiltration, process enumeration" → CORRECTED to the documented
+        command set: "Run command in terminal" (0xac), "Upload file"/"Download file"/"Download
+        and execute a file"/"Remove file"/"Get file size", plus host recon (processor, memory,
+        serial, MAC via system_profiler/ioreg/ifconfig). "Process enumeration" is NOT in the
+        report (the recon is host/hardware info) — removed.
+      • "successor to the 2018 macOS implant" → kept but reworded to "a variant of the
+        previously documented OceanLotus macOS backdoor, sharing its command set" (Trend Micro:
+        "confirmed to be a variant"; the supported-command codes are taken "from an earlier blog
+        post that covered OceanLotus"; ESET documented the 2018 sample separately).
+      • Victimology → Trend Micro states only "suspected to target users from Vietnam ... the
+        document's name is in Vietnamese"; the diaspora reading is grounded in the decoy filename
+        ("...Canada") + APT32's documented diaspora strand, and is now hedged rather than asserted.
+    [b] ATTRIBUTION — Trend Micro: "a new backdoor that we believe to be related to the
+      OceanLotus group ... confirmed to be a variant of the said malware" (+ Bitdefender named
+      OceanLotus/APT32). high / concur retained; NO Vietnamese state service named by either.
+    [c] DATES — Bitdefender source published_on 2020-11-04 (disclosure_date); Trend Micro
+      companion published_on 2020-11-27 (its own record, not the campaign month). start_date
+      2020-01-01 is a best-estimate (Trend Micro notes a C2 domain was repurposed ~end Aug 2020;
+      no firm op-start given) — left as estimate.
+    [d] DOCTRINE — vn/resolution-29-nqtw/regime-stability-surveillance kept at strongly_inferred
+      (NOT attested: both sources are technical, neither states the strategic purpose). Added
+      inference_basis.signals + ruled_out (industrial-collection strand) and set attesting_source_id
+      to the supporting Trend Micro source. Directionality: Vietnam is the attacker (via APT32);
+      victims are Vietnamese-language/diaspora users abroad, not the Vietnamese state.
+    [e] ATTRIBUTION_LEVEL — set named-actor (OceanLotus/APT32 group + Vietnam nexus; no unit/service).
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves (atlas/actors/vn/apt32.yaml); no actor issue.
+    FK FIX: target_id orgs/vietnamese-diaspora-mac-users was a DANGLING FK (no target-registry
+      file exists; only this event referenced it) → repointed to sectors/civil-society/diaspora
+      (existing sector; 8 prior uses). country null (diaspora, extraterritorial).

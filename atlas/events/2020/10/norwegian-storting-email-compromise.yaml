@@ -6,47 +6,177 @@ end_date: 2020-09-30
 incident_type:
   - intrusion
   - data-theft
-initial_vector: phishing
+  - espionage
+initial_vector: valid-creds
 outcome_summary: |
-  Compromise of email accounts in the Norwegian parliament
-  (Storting). Norwegian government formally attributed the
-  operation to Russia in October 2020.
+  Compromise of a number of email accounts at the Norwegian
+  parliament (Storting); sensitive content was extracted from some
+  affected mailboxes. Norway's Foreign Minister publicly attributed
+  the operation to Russia at the nation level on 2020-10-13; the
+  Police Security Service (PST) subsequently (2020-12-08) assessed
+  it likely carried out by APT28 / Fancy Bear, linked to GRU's 85th
+  GTsSS (Unit 26165), and closed the case without indictment for
+  lack of sufficient evidence.
 false_flag_risk: none
 summary: |
-  One in a long sequence of APT28 / Fancy Bear targeting of
-  NATO-member parliaments alongside the 2015 Bundestag and other
-  operations. Norwegian MFA public attribution but no DOJ
-  indictment. Initial access was achieved via password-spray and
-  spear-phishing against Storting email accounts to obtain valid
-  credentials, after which operators consistent with GRU Unit
-  26165 tradecraft accessed mailboxes through Exchange Web
-  Services / IMAP and exfiltrated message contents — the same
-  identity-attack pattern visible in the contemporaneous
-  Microsoft 365 password-spray waves and a smaller-scale rehearsal
-  for SVR's later cloud-identity tradecraft.
+  In August 2020 the Norwegian parliament (Stortinget) detected a
+  network operation against its email system; the Storting filed a
+  police report on 1 September 2020 and publicly disclosed the
+  breach the same day. Per Norway's Police Security Service (PST),
+  the actor used password brute-forcing to obtain valid usernames
+  and passwords against a high number of Storting email accounts,
+  succeeded in logging into a smaller number of accounts, and
+  exfiltrated sensitive content from some of the affected mailboxes;
+  the actor also attempted to move laterally further into Storting
+  systems. On 2020-10-13 Foreign Minister Ine Eriksen Søreide
+  publicly attributed the attack to Russia (nation level). On
+  2020-12-08 PST assessed it likely carried out by the actor known
+  in open sources as APT28 / Fancy Bear, tied to GRU military
+  intelligence, specifically its 85th Main Special Service Center
+  (GTsSS / Unit 26165). PST investigated the operation as a possible
+  breach of Penal Code §121 (illegal intelligence activity capable
+  of harming fundamental national interests) but did not obtain
+  sufficient evidence to indict. Part of the broader pattern of
+  APT28 targeting NATO-member national legislatures (cf. the 2015
+  Bundestag intrusion).
 attributions:
   - actor_id: ru/gru/26165/apt28
     attributing_org: Norwegian Ministry of Foreign Affairs
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2020-10-13
     attribution_source_id: regjeringen-no/2020-10-13_storting-attribution
     notes: |
-      Norwegian MFA attribution.
+      FM Ine Eriksen Søreide's 2020-10-13 statement attributes the
+      attack to "Russia" at the NATION level only ("it is our
+      assessment that Russia is behind the data attack against
+      Stortinget") — it does NOT name APT28 or the GRU. Hence
+      attribution_level: nation. The named-unit specificity is
+      carried by the later PST entry below, not by this source.
+  - actor_id: ru/gru/26165/apt28
+    attributing_org: Politiets sikkerhetstjeneste (PST)
+    attributing_org_confidence: moderate
+    attribution_level: named-unit
+    auspex_assessment: concur
+    attribution_date: 2020-12-08
+    attribution_source_id: pst-no/2020-12-08_storting-datainnbrudd-ferdig-etterforsket
+    notes: |
+      PST's 2020-12-08 investigation-closure press release: "det er
+      sannsynlig" ("it is likely") the operation was carried out by
+      "APT28 og Fancy Bear … knyttet til Russlands militære
+      etterretningstjeneste GRU, mer spesifikt deres 85. hovedsenter
+      for spesielle tjenester (GTsSS)" = Unit 26165. Named-unit; the
+      "sannsynlig"/likely wording maps to moderate confidence, and
+      PST closed the case without indictment.
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/nato-as-principal-threat
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting of NATO-member legislature for strategic political
-      espionage; pattern-matches the Bundestag intrusion.
+      A GRU 85th-GTsSS (Unit 26165 / APT28) clandestine collection
+      operation against the national parliament of a NATO member,
+      exfiltrating sensitive content from MPs' and staff mailboxes,
+      is strategic political-military espionage against the alliance
+      the 2014 Military Doctrine names as Russia's principal external
+      danger. Not attested: neither the MFA nor the PST source states
+      the strategic purpose (both name only the who and the how), so
+      the WHY remains an AUSPEX inference. Pattern-matches the 2015
+      Bundestag intrusion.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Perpetrator is GRU military intelligence (Unit 26165 / APT28), a foreign-espionage collection actor, not a financially motivated crew — PST ties it to GRU's 85th GTsSS."
+        - "Target is a NATO-member national legislature; PST notes sensitive content was exfiltrated from affected mailboxes, consistent with strategic political intelligence collection."
+        - "Fits the standing APT28 campaign against NATO-member parliaments (2015 Bundestag), i.e. the alliance framed as principal external danger."
+      ruled_out: "Criminal/financial motive (no ransom, extortion or monetization — clandestine espionage exfiltration) and info-destabilization / hack-and-leak (no public leak or dump followed the collection), leaving strategic anti-NATO political-military espionage as the dominant reading."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/norway-storting
+    country: "no"  # quoted: YAML 1.1 parses bare no -> boolean false
     role: primary
 sources:
   - regjeringen-no/2020-10-13_storting-attribution
+  - pst-no/2020-12-08_storting-datainnbrudd-ferdig-etterforsket
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    Audited per AUDIT-PROTOCOL + PHANTOM-REMEDIATION. Path taken:
+    RE-SOURCE (not a phantom — the cited MFA statement is the genuine
+    primary, but it is nation-level only and does NOT carry the APT28
+    attribution the event asserted; added the real PST primary that
+    does). Level: PARTIAL because one load-bearing cited source
+    (regjeringen-no MFA statement) is bot-walled (Cloudflare "Just a
+    moment…" / HTTP 403 to curl AND WebFetch) and un-snapshottable —
+    its nation-level claim rests on mirror corroboration (Moscow
+    Times / Al Jazeera / High North News, all 2020-10-13). The PST
+    primary IS snapshotted + hashed.
+
+    [a] FACTS — corrected. STRIPPED as unsourced/fabricated: "spear-
+    phishing" (PST says password brute-forcing, no phishing); "Exchange
+    Web Services / IMAP" mailbox-access tradecraft (no source for the
+    Aug-2020 event — likely conflated with the SEPARATE Mar-2021
+    Storting ProxyLogon/Exchange breach); "same identity-attack pattern
+    visible in the contemporaneous Microsoft 365 password-spray waves
+    and a smaller-scale rehearsal for SVR's later cloud-identity
+    tradecraft" (editorial fabrication, no source). REWROTE summary to
+    PST's account: Aug-2020 network operation; police report 1 Sep;
+    password brute-forcing to obtain valid usernames/passwords vs a
+    high number of accounts → login to a smaller number; sensitive
+    content exfiltrated from some mailboxes; attempted lateral movement;
+    §121 illegal-intelligence probe closed without indictment. Added
+    incident_type: espionage.
+
+    [b] ATTRIBUTION — the core defect. Event asserted a single
+    high-confidence MFA→APT28(26165) attribution, but the MFA
+    (2020-10-13) source names only "Russia" (nation). Split into the
+    real two-entry attribution-latency chain: (1) MFA 2020-10-13,
+    nation, high; (2) PST 2020-12-08, named-unit, moderate — PST
+    "sannsynlig"/"likely" APT28/Fancy Bear = GRU 85th GTsSS (Unit
+    26165). actor_id ru/gru/26165/apt28 is now genuinely source-carried
+    (by PST), not imported without a citation.
+
+    [c] DATES — verified. start 2020-08 (op detected Aug 2020) ✓;
+    disclosure 2020-09-01 (Storting filed police report + public
+    announcement, per PST + Stortinget) ✓; MFA attribution 2020-10-13 ✓;
+    PST attribution 2020-12-08 ✓ (raw). Source published_on values
+    correct (MFA 2020-10-13; PST 2020-12-08).
+
+    [d] DOCTRINE — ru/military-doctrine-2014/nato-as-principal-threat
+    kept at strongly_inferred (honest: neither source states the goal,
+    so NOT attested; attesting_source_id null). Added inference_basis
+    {signals[], ruled_out}: GRU-26165 espionage actor + NATO-member
+    parliament target + sensitive-content exfiltration triangulate to
+    anti-NATO strategic espionage; ruled out criminal/financial and
+    hack-and-leak readings.
+
+    [e] ATTRIBUTION_LEVEL — set: MFA nation, PST named-unit.
+
+    [f] ACTOR_ID — ru/gru/26165/apt28 resolves (atlas/actors/ru/apt28.yaml,
+    id ru/gru/26165/apt28); service ru/gru/26165 (85th GTsSS) resolves.
+    Correct.
+
+    RAW EVIDENCE — PST primary sha256 f3d03c89…361a85739, 74688 bytes:
+    "Analysene viser at det er sannsynlig at operasjonen er utført av
+    cyberaktøren som i åpne kilder omtales som APT28 og Fancy Bear.
+    Denne aktøren knyttes til Russlands militære etterretningstjeneste
+    GRU, mer spesifikt deres 85. hovedsenter for spesielle tjenester
+    (GTsSS)." / "aktøren har benyttet en fremgangsmåte som kalles
+    passord-«bruteforcing» for å skaffe gyldige brukernavn og passord …
+    mot et høyt antall brukerkontoer … logge seg inn på et mindre antall
+    kontoer." / "hentet ut sensitivt innhold fra en del av de berørte
+    e-postkonti." MFA source un-snapshottable (Cloudflare) — no hash.
+
+    FLAGS: (1) target orgs/norway-storting is a DANGLING FK — no
+    registry file exists at atlas/targets/orgs/norway-storting.yaml and
+    only this event references it; orchestrator should create it (target:
+    Norwegian Storting, sector government, nation_state no). (2) Possible
+    companion event: the separate Mar-2021 Storting Microsoft-Exchange
+    ProxyLogon breach is a DIFFERENT incident — ensure it is not merged
+    with this one.

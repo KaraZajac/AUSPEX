@@ -2,60 +2,149 @@ id: 2020-07/covid-vaccine-research-targeting
 name: APT29 COVID-19 vaccine research targeting
 start_date: 2020-02-01  # campaign visible from early 2020
 disclosure_date: 2020-07-16
-end_date: 2020-12-31
+end_date: null  # advisory (Jul 2020) states activity "likely to continue"; no bounded end
 incident_type:
   - intrusion
   - data-theft
 initial_vector: n-day
 outcome_summary: |
-  APT29 (SVR) campaign against COVID-19 vaccine research
-  organizations in the US, UK, and Canada (including Oxford,
-  AstraZeneca). WellMess and WellMail custom malware; CVE-2019-19781
-  (Citrix) exploitation. Theft of vaccine research IP.
+  APT29 campaign against organisations involved in COVID-19 vaccine
+  development in the US, UK, and Canada. WellMess and WellMail custom
+  malware; public-exploit initial access (incl. CVE-2019-19781,
+  Citrix). The advisory assesses the activity was conducted "highly
+  likely with the intention of stealing information and intellectual
+  property relating to the development and testing of COVID-19
+  vaccines" (intent stated; confirmed exfiltration not detailed).
 false_flag_risk: none
 summary: |
-  Joint Five Eyes advisory (CISA + NCSC + NSA + CSE Canada)
-  published 16 July 2020. The advisory documents APT29 / Cozy
-  Bear / The Dukes tradecraft: exploitation of edge-device n-days
-  (Citrix ADC CVE-2019-19781, Pulse Secure CVE-2019-11510,
-  Fortinet CVE-2019-13379), spear-phishing follow-on for second-
-  stage access, the WellMess and WellMail custom Go-based
-  backdoors with hard-coded RC6 / DES-encrypted C2, the SoreFang
-  downloader exploiting the Sangfor SSL VPN client, lateral
-  movement on valid credentials, and credential dumping from
-  victim research environments. The campaign produced significant
-  political embarrassment for Russia and coincided with the
-  Russian government's domestic Sputnik V vaccine narrative.
+  Joint advisory published 16 July 2020 by the UK NCSC and Canada's
+  CSE (assessment), with the US NSA agreeing to the attribution and
+  DHS CISA endorsing the technical detail (CISA mirror AA20-201A).
+  The advisory documents APT29 / Cozy Bear / The Dukes tradecraft:
+  use of publicly available exploits against edge devices as initial
+  access (examples given: Citrix CVE-2019-19781, Pulse Secure
+  CVE-2019-11510, FortiGate CVE-2018-13379, Zimbra CVE-2019-9670),
+  spear-phishing to harvest credentials to internet-facing login
+  pages, and the acquisition/retention of legitimate credentials for
+  persistent access. It details the WellMess (Golang or .NET) and
+  WellMail (ELF/Golang) custom backdoors, which run shell
+  commands/scripts and communicate over HTTP/TLS/DNS using hard-coded
+  TLS certificates (SKI 0102030406); the published WellMess YARA IOCs
+  reference RC6 and AES cipher routines. It also names SoreFang, a
+  first-stage HTTP downloader assessed as likely targeting SangFor
+  SSL VPN devices. APT29 is assessed as "almost certainly part of the
+  Russian intelligence services"; the advisory does not name a
+  specific service (e.g. SVR).
 attributions:
   - actor_id: ru/svr/apt29
-    attributing_org: UK NCSC / US CISA / US NSA / Canada CSE
+    attributing_org: UK NCSC / Canada CSE (assessment); US NSA (concurs); US DHS CISA (endorses technical detail)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-07-16
     attribution_source_id: cisa/2020-07-16_aa20-201a-covid-vaccine-targeting
+    notes: "Advisory assesses APT29 (the Dukes / Cozy Bear) 'almost certainly part of the Russian intelligence services' (ICD 'almost certainly' = high). named-actor NOT named-unit: it names the group + nation (Russia) but does NOT name a specific service; the ru/svr/apt29 SVR placement is the AUSPEX/consensus actor attribution, not stated in this source."
 doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Pandemic-era SVR strategic collection in pursuit of vaccine
-      IP — aligns with the 2016 Information Security Doctrine's
-      framing of the information sphere as a national-security
-      domain. Joint advisory does not explicitly name doctrinal
-      intent; inferred from target selection and timing.
+      Pandemic-era Russian intelligence collection in pursuit of
+      COVID-19 vaccine research/IP, loosely read against the 2016
+      Information Security Doctrine's framing of the information
+      sphere as a national-security domain. The advisory states a
+      proximate purpose (steal vaccine information and IP) but does
+      not name doctrinal intent, and the information-sphere-as-domain
+      pillar is oriented at information-confrontation (media, NGOs,
+      civil society), a weak fit for scientific-technical espionage —
+      so more than one strategic reading survives. Kept plausible;
+      flagged for possible doctrine re-scoping or removal.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Information Security Doctrine (2016), information-sphere-as-domain: pandemic-era strategic collection read as Russian activity in the information sphere as a contested national-security domain."
+        - "Ordinary scientific-technical / competitive intelligence espionage: the advisory frames the goal as stealing vaccine information and IP, which reads as classic S&T collection not tied to the info-confrontation pillar."
     counter_explanation: |
-      Could be framed as competitive scientific intelligence
-      rather than information-confrontation per se; AUSPEX
-      preserves both readings under strongly_inferred.
+      Could be framed as competitive scientific-technical intelligence
+      rather than information-confrontation per se; AUSPEX preserves
+      both readings under plausible.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/oxford-astrazeneca-vaccine
-    role: primary
   - target_id: sectors/healthcare/research
-    country: uk-us-canada
+    country: null  # campaign spans Canada + US + UK (advisory); no single ISO code
     role: primary
 sources:
   - cisa/2020-07-16_aa20-201a-covid-vaccine-targeting
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs the joint NCSC/CSE advisory "APT29 targets COVID-19
+    vaccine development" (CISA mirror AA20-201A). Two artefacts
+    captured: NCSC news landing page (HTML, sha256
+    29780e60…01213389, 137533 B — the source url) and the full
+    technical advisory PDF it links (sha256 82a8d7ee…3430fe5f,
+    414373 B), which carries the CVEs/SoreFang/YARA. Both quotes
+    below verbatim from these.
+    [a] FACTS: WellMess ("written in either Golang or .NET") and
+    WellMail ("ELF utility written in Golang") custom backdoors ✓;
+    HTTP/TLS/DNS comms + hard-coded TLS certs (SKI '0102030406') ✓;
+    SoreFang first-stage HTTP downloader, "likely … targets SangFor
+    devices" ✓; spear-phishing "to obtain authentication credentials
+    to internet-accessible login pages" ✓; public-exploit initial
+    access ✓. CORRECTIONS: (1) Fortinet CVE fixed 2019-13379 →
+    CVE-2018-13379 (advisory line: "CVE-2018-13379 FortiGate"; the
+    2019 form was a typo — that CVE does not exist). (2) "DES-
+    encrypted C2" struck — DES appears nowhere as a cipher; the
+    WellMess YARA IOCs reference rc6cipher and AES_Encrypt (RC6/AES),
+    so summary now says RC6/AES. (3) "Oxford, AstraZeneca" struck
+    from outcome_summary AND the target orgs/oxford-astrazeneca-
+    vaccine removed — the advisory names NO victim orgs ("various
+    organisations involved in COVID-19 vaccine development in Canada,
+    the United States and the United Kingdom"); Oxford/AZ came from
+    press reporting, not this cited source, and the target FK was
+    dangling (no registry file). (4) "Theft of vaccine research IP"
+    softened to stated INTENT — advisory: "highly likely with the
+    intention of stealing information and intellectual property
+    relating to the development and testing of COVID-19 vaccines"
+    (intent, not confirmed exfiltration). (5) Unsourced "political
+    embarrassment for Russia / Sputnik V narrative" sentence struck
+    (no cited source). (6) "credential dumping / lateral movement"
+    softened to legitimate-credential acquisition/retention, which is
+    what the Persistent-access section actually states.
+    [b] ATTRIBUTION: exact wording "APT29 … is a cyber espionage
+    group, almost certainly part of the Russian intelligence
+    services. The … NSA agrees with this attribution … DHS CISA
+    endorses the technical detail". So attributing_org rewritten to
+    reflect NCSC/CSE = assessing bodies, NSA = concurs, CISA =
+    endorses technical detail (NOT four co-equal attributors).
+    Confidence high ("almost certainly"). auspex concur.
+    [c] DATES: source published_on 2020-07-16 ✓ = disclosure_date ✓.
+    end_date 2020-12-31 → null — advisory says "APT29 is likely to
+    continue to target organisations involved in COVID-19 vaccine
+    research and development"; no bounded end. start_date 2020-02-01
+    left as a best-estimate ("Throughout 2020" per advisory; no
+    precise start given).
+    [d] DOCTRINE: link ru/info-security-2016/information-sphere-as-
+    domain DOWNGRADED strongly_inferred → plausible. The advisory
+    states only a proximate goal (steal vaccine info/IP), not
+    doctrinal intent; the info-sphere-as-domain pillar is oriented at
+    information-confrontation (media/NGO/civil-society, kinetic-
+    equivalent response to foreign info-ops), a weak fit for S&T
+    espionage, so a serious competing reading (ordinary competitive
+    scientific-technical intelligence) survives → plausible, with
+    inference_basis.alternatives added. attesting_source_id stays
+    null (not attested).
+    [e] ATTRIBUTION_LEVEL: set named-actor (group APT29 + nation
+    Russia named; specific service NOT named — advisory says only
+    "Russian intelligence services").
+    [f] ACTOR_ID: ru/svr/apt29 resolves → atlas/actors/ru/apt29.yaml
+    (id ru/svr/apt29). Note: SVR service placement is the AUSPEX/
+    consensus actor attribution and is standard, but is NOT stated in
+    THIS source (which says only "Russian intelligence services").
+    Source tier primary retained. Snapshot discipline: HTML + PDF
+    hashed above.

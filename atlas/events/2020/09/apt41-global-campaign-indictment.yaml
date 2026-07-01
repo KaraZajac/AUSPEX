@@ -6,11 +6,20 @@ end_date: 2020-09-16
 incident_type:
   - intrusion
   - data-theft
-initial_vector: phishing
+  - supply-chain
+initial_vector: supply-chain
 outcome_summary: |
-  DOJ unsealing covering 100+ victims worldwide — Taiwanese
-  telecom, Indian government, SE Asian governments, US technology
-  firms. The state-tasked espionage side of APT41's portfolio.
+  DOJ unsealing spanning 100+ victim companies, organizations, and
+  individuals worldwide — software developers, hardware
+  manufacturers, telecom providers, social-media and video-game
+  firms, universities, think tanks, non-profits, foreign
+  governments, and Hong Kong pro-democracy activists. The
+  defendants compromised government networks in India and Vietnam
+  and targeted (without compromising) UK government networks.
+  Companion to the August 2019 indictment of Zhang Haoran and Tan
+  Dailin; the charges mix state-relevant IP theft ("intellectual
+  property helpful to China", per the Deputy AG) with for-profit
+  crime (ransomware, crypto-jacking, video-game currency fraud).
 false_flag_risk: none
 campaign_id: apt41-double-dragon-indictment-chain
 operators_named:
@@ -20,59 +29,81 @@ operators_named:
   - zhang-haoran  # APT41, DOJ Aug 2019
   - tan-dailin  # APT41, DOJ Aug 2019
 summary: |
-  Companion to the August 2019 indictment of Zhang Haoran and Tan
-  Dailin. Charges seven defendants including Jiang Lizhi, Qian
-  Chuan, Fu Qiang plus two Malaysian co-conspirators. The
-  indictment catalogues APT41's MSS Chengdu-area tooling: the
-  ShadowPad and PlugX modular backdoors delivered via DLL side-
-  loading, the Crosswalk, POISONPLUG, and SOGU implants, Cobalt
-  Strike beacons for C2, supply-chain compromises (the linked
-  CCleaner, NetSarang, and ShadowHammer operations), and spear-
-  phishing against telecom, semiconductor, biotech, and software
-  victims. Lateral movement leveraged valid credentials and
-  Mimikatz-style credential dumping, with bulk SMS metadata
-  collection from compromised Taiwanese and Indian telecom
-  operators feeding both economic-IP collection and signals-
-  intelligence value to the MSS tasking pool.
+  On September 16, 2020 the U.S. Department of Justice unsealed
+  charges against seven defendants in connection with intrusion
+  campaigns tracked by researchers as APT41 (also Barium, Winnti,
+  Wicked Panda, Wicked Spider). Five Chinese nationals — Zhang
+  Haoran and Tan Dailin (charged August 2019) and Jiang Lizhi,
+  Qian Chuan, and Fu Qiang (charged August 2020) — allegedly ran
+  the affairs of Chengdu 404 Network Technology, a PRC company,
+  through computer intrusions affecting over 100 victim companies,
+  organizations, and individuals worldwide (software developers,
+  hardware manufacturers, telecom providers, social-media and
+  video-game companies, universities, think tanks, non-profits,
+  foreign governments, and Hong Kong pro-democracy politicians and
+  activists). A third August 2020 indictment charged two Malaysian
+  nationals, Wong Ong Hua and Ling Yang Ching (Sea Gamer Mall), who
+  conspired with the hackers to profit from intrusions targeting
+  the video-game industry. DOJ characterized the tradecraft as
+  supply-chain attacks (compromising software providers and
+  modifying their code to reach downstream customers), C2 "dead
+  drop" web pages carrying encoded instructions to their malware,
+  and use of publicly available exploits/CVEs (CVE-2019-19781,
+  -11510, -16920, -16278, -1652/-1653, and CVE-2020-10189). The
+  intrusions facilitated theft of source code, code-signing
+  certificates, customer-account data, and business information,
+  and enabled ransomware and crypto-jacking (cryptocurrency-mining)
+  schemes. The release's subtitle notes one of the five fugitive
+  defendants "allegedly boasted of connections to the Chinese
+  Ministry of State Security" — framed by DOJ as the defendant's
+  own boast, not an independent DOJ assertion of MSS tasking. The
+  FBI concurrently issued a FLASH report and seized accounts,
+  servers, and domains used for C2.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: US DOJ
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2020-09-16
     attribution_source_id: doj/2020-09-16_apt41-indictment
+    notes: |
+      DOJ names five Chinese nationals running Chengdu 404 Network
+      Technology and the APT41 cluster (named-actor). NOT named-unit:
+      the DOJ does not attribute APT41 to a specific PRC service. The
+      Ministry of State Security appears only in the release subtitle,
+      as one fugitive defendant (Jiang Lizhi, per the underlying August
+      2020 indictment) who "allegedly boasted of connections to the
+      Chinese Ministry of State Security" — DOJ frames this as the
+      defendant's own boast, not an assertion of MSS tasking.
+      auspex_assessment=concur-with-caveat: the actor-level attribution
+      (APT41 / Chengdu 404) is solid; the cn/mss service placement rests
+      on that boast rather than a clean named-unit tasking claim.
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      DOJ indictment names targeting of telecom, semiconductors,
-      biotech, and software — direct mapping to MIC2025 pillars.
-    attesting_source_id: doj/2020-09-16_apt41-indictment
-    counter_explanation: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/mcf
-    pillar_id: null
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Dual-use research targeting on the Taiwanese telecom and
-      Indian government side is the MCF-aligned cross-sector pattern.
+      The DOJ says the intrusions stole source code, code-signing
+      certificates, and business information, and the Deputy AG
+      states China tolerates cybercriminals "so long as they attack
+      computers outside China and steal intellectual property helpful
+      to China" — a general statement that the IP theft benefits the
+      Chinese state, consistent with the industrial-technology
+      acquisition MIC2025 encodes. Only plausible: DOJ names no
+      Made-in-China-2025 / industrial-modernization purpose (and no
+      semiconductor or biotech targeting), and the same indictments
+      emphasize substantial for-profit crime (ransomware,
+      crypto-jacking, video-game currency fraud) and political
+      targeting (Hong Kong pro-democracy activists), so more than one
+      strategic reading survives.
     attesting_source_id: null
-    counter_explanation: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/taiwan-reunification
-    pillar_id: cn/taiwan-reunification/taiwan-island-collection
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Taiwanese telecom targeting is the Taiwan-island-collection
-      pillar; explicit US-government Taiwan-contingency framing
-      had not yet emerged in 2020 but is consistent.
-    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MIC2025 industrial-technology acquisition: theft of source code and business information from software/hardware/telecom firms fits state-directed IP acquisition, and DOJ says the stolen IP is 'helpful to China'."
+        - "For-profit cybercrime: DOJ stresses ransomware, crypto-jacking, and video-game virtual-currency fraud, and the Deputy AG frames China as a 'safe harbor' for cybercriminals rather than asserting industrial-policy tasking."
+        - "Political / internal-security espionage: targeting of Hong Kong pro-democracy politicians and activists points to repression-oriented motives distinct from industrial modernization."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -83,3 +114,89 @@ targets:
     role: primary
 sources:
   - doj/2020-09-16_apt41-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the sole cited source, DOJ press release "Seven
+    International Cyber Defendants, Including 'APT41' Actors, Charged..."
+    (doj/2020-09-16_apt41-indictment). Raw snapshot on disk
+    (doj__2020-09-16_apt41-indictment.html) is the archive.org capture —
+    live justice.gov serves a JS rate-limit interstitial to curl and 403s
+    WebFetch. sha256 RE-VERIFIED 4a8fdfa0…f038f9d27 (first8…last8), 100,880
+    bytes; matches the source record. Source is a genuine govt-primary
+    article (NOT a phantom).
+
+    [a] FACTS — MAJOR CORRECTION. The prior summary carried a large block
+    of tradecraft that this single cited source does NOT support and that I
+    stripped: ShadowPad, PlugX, DLL side-loading, Crosswalk, POISONPLUG,
+    SOGU, Cobalt Strike, Mimikatz, "spear-phishing against telecom/
+    semiconductor/biotech/software", and "bulk SMS metadata collection from
+    Taiwanese and Indian telecom … feeding the MSS tasking pool". None of
+    those strings appear in the DOJ release (grep-verified: SMS/metadata/
+    Mimikatz/Cobalt/ShadowPad/spear/semiconductor/biotech all absent). It
+    also named "CCleaner, NetSarang, ShadowHammer" supply-chain ops — the
+    DOJ says only generic "supply chain attacks" and names none of these;
+    moreover AUSPEX's own actor audit (2026-06-28) removed CCleaner from
+    APT41 (it is APT17/BLACKCOFFEE). Rewrote summary to only DOJ-carried
+    facts: 7 defendants (5 Chinese nationals of Chengdu 404 Network
+    Technology — Zhang Haoran + Tan Dailin charged Aug 2019; Jiang Lizhi,
+    Qian Chuan, Fu Qiang charged Aug 2020; 2 Malaysians Wong Ong Hua + Ling
+    Yang Ching / Sea Gamer Mall); 100+ victims; researcher labels APT41/
+    Barium/Winnti/Wicked Panda/Wicked Spider; tradecraft = supply-chain
+    attacks + C2 "dead drops" + publicly available exploits/CVEs
+    (CVE-2019-19781,-11510,-16920,-16278,-1652/-1653,CVE-2020-10189); theft
+    of source code, code-signing certs, customer data, business info;
+    ransomware + crypto-jacking; video-game targeting. outcome_summary:
+    removed unsupported "Taiwanese telecom" (Taiwan is only 1 of 15 victim
+    countries listed, no sector named) and the "state-tasked espionage
+    side" framing; DOJ-supported facts substituted (govt networks in India
+    and Vietnam compromised; UK targeted-not-compromised — verbatim). Verbatim
+    anchor: "compromised foreign government computer networks in India and
+    Vietnam, and targeted, but did not compromise, government computer
+    networks in the United Kingdom." initial_vector phishing → supply-chain
+    (DOJ's lead technique example; no phishing mentioned); added supply-chain
+    to incident_type.
+
+    [b] ATTRIBUTION — actor cn/mss/apt41 resolves (atlas/actors/cn/apt41.yaml).
+    Added attribution_level: named-actor (DOJ names individuals + Chengdu 404
+    + the APT41 cluster; it does NOT attribute APT41 to a service, so NOT
+    named-unit). auspex_assessment concur → concur-with-caveat, with a note:
+    MSS appears ONLY in the subtitle — "Remaining Five Defendants, One of Whom
+    Allegedly Boasted of Connections to the Chinese Ministry of State
+    Security, are Fugitives in China" — DOJ's own framing is the defendant's
+    BOAST, not a tasking assertion; caveat preserved honestly.
+
+    [c] DATES — source published_on 2020-09-16 ✓ (verbatim "Wednesday,
+    September 16, 2020"). disclosure_date/end_date 2020-09-16 ✓.
+    RESIDUAL: start_date 2014-01-01 is a best-estimate NOT carried by this
+    source — the DOJ release states no campaign start year (only years found
+    in body: 2019, 2020 for the indictments). Left as a required-field
+    best-estimate (actor record documents APT41 active since 2012) and
+    flagged rather than fabricating a different date.
+
+    [d]/[e] DOCTRINE — de-attested. cn/mic2025 was `attested` citing "telecom,
+    semiconductors, biotech, and software" — but the DOJ names NO
+    semiconductor or biotech targeting and states NO Made-in-China-2025 /
+    industrial-modernization purpose; the only strategic-purpose language is
+    the Deputy AG's general "steal intellectual property helpful to China".
+    Per the attested bar (source must state the goal in substance) this fails
+    → downgraded to plausible, attesting_source_id nulled, reasoning corrected,
+    inference_basis.alternatives added (industrial-IP-acquisition vs for-profit
+    crime vs HK political repression all survive). REMOVED two links that
+    rested on a fabricated "Taiwanese telecom targeting" fact the source does
+    not carry: cn/mcf (strongly_inferred; no dual-use/military nexus named) and
+    cn/taiwan-reunification/taiwan-island-collection (strongly_inferred; Taiwan
+    is merely one of 15 victim-location countries — Brazil, Chile, etc. — with
+    no Taiwan sector/target specified; the link's own reasoning conceded the
+    Taiwan-contingency framing "had not yet emerged"). No attested links remain.
+
+    [f] ACTOR — cn/mss/apt41 resolves. FLAG (context, not a defect for me to
+    fix): the cn/mss *service* placement is load-bearing on this event and rests
+    on a defendant's boast (documented in the actor record's own 2026-06-24
+    audit note); the actor file already carries that caveat. No actor-file edit
+    made (per protocol). targets sectors/ict/telecom + sectors/government both
+    source-supported (telecom providers among victims; India+Vietnam govt
+    networks compromised). operators_named all verbatim-confirmed.

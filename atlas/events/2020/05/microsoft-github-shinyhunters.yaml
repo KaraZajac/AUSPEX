@@ -1,48 +1,127 @@
 id: 2020-05/microsoft-github-shinyhunters
 name: Microsoft private-GitHub repository leak claimed by ShinyHunters
 start_date: 2020-03-28
-disclosure_date: 2020-05-07
-end_date: 2020-05-08
+disclosure_date: 2020-05-06
+end_date: null
 incident_type:
   - data-theft
-initial_vector: valid-creds  # claimed via compromised employee credentials
+initial_vector: unknown  # source does not state the access method
 outcome_summary: |
-  In early May 2020 ShinyHunters claimed possession of
-  approximately 500GB of source code from Microsoft's private
-  GitHub repositories, posting a 1GB sample to an
-  unspecified darknet site on May 7 2020. The sample contained
-  internal project metadata consistent with Microsoft-employee
-  GitHub accounts (Azure, Office, internal sample projects,
-  documentation), but Microsoft never formally confirmed the
-  scope of the compromise. The bulk dataset was withdrawn from
-  sale shortly after posting; ShinyHunters subsequently leaked
-  small subsets for free on RaidForums.
+  In early May 2020 the criminal data-theft crew ShinyHunters
+  contacted BleepingComputer claiming to have gained full access
+  to Microsoft's private GitHub repositories and to have
+  downloaded roughly 500GB of private projects. File stamps in
+  the leaked directory listing suggested the breach may have
+  occurred around March 28 2020. Having initially planned to sell
+  the data, the actor instead offered a ~1GB teaser on a hacker
+  forum for free (accessed via site 'credits'). BleepingComputer
+  and cyber-intelligence firm Under the Breach, reviewing the
+  directory listing and sample, assessed the content as mostly
+  code samples, test projects, an eBook and other generic items —
+  with nothing sensitive such as Windows or Office source code —
+  though they noted private API keys or passwords could have been
+  left in some repositories. An anonymous Microsoft employee told
+  BleepingComputer the stolen data was legitimate; Microsoft's
+  only formal statement was that it was "aware of these claims and
+  are investigating."
 quantified_impact:
-  data_exfiltrated_gb: 500
-false_flag_risk: suspected
+  data_exfiltrated_gb: 500  # actor's claim; the shared/verified sample was ~1GB
+false_flag_risk: none
 summary: |
-  Notable as the only major-vendor source-code claim in the
-  2020 ShinyHunters wave and as a marker of the brand's
-  cluster-fuzziness: Microsoft's public position has been that
-  the leaked content was non-sensitive and that no internal
-  source code was exposed. The claim sits in the AUSPEX corpus
-  with `suspected` false-flag-risk because the link from the
-  ShinyHunters handle to actual demonstrated source-code access
-  was never independently verified.
+  Notable as the only major-vendor source-code claim in the 2020
+  ShinyHunters wave and as a marker of the brand's
+  cluster-fuzziness. The 500GB figure is the actor's own claim;
+  independent review (BleepingComputer, Under the Breach) of the
+  ~1GB shared sample judged the content non-sensitive and found no
+  Windows or Office source code, while an anonymous Microsoft
+  employee confirmed the leaked data was genuine. Microsoft itself
+  said only that it was investigating and never formally confirmed
+  the scope of the compromise. Kept as a named-actor self-claim
+  (made directly to BleepingComputer) rather than a demonstrated
+  full-scope compromise.
 attributions:
   - actor_id: criminal/shinyhunters
     attributing_org: ShinyHunters (self-claimed)
     attributing_org_confidence: low
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2020-05-07
-    attribution_source_id: zdnet/2020-05-10_shinyhunters-73m-records
+    attribution_date: 2020-05-06
+    attribution_source_id: bleepingcomputer/2020-05-06_microsoft-github-account-hacked
     notes: |
-      Self-claim only; Microsoft did not formally confirm the
-      scope. Treated as a brand-level claim rather than a
-      cluster-attribution finding.
+      Self-claim made directly to BleepingComputer. An anonymous
+      Microsoft employee corroborated the leaked data as
+      legitimate, but Microsoft issued no formal confirmation of
+      scope (only "aware ... and are investigating"). Treated as a
+      named-actor self-claim rather than a cluster-attribution
+      finding.
 doctrine_links: []
 targets:
   - target_id: orgs/microsoft
     role: primary
 sources:
+  - bleepingcomputer/2020-05-06_microsoft-github-account-hacked
   - zdnet/2020-05-10_shinyhunters-73m-records
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Phantom/wrong-source remediation (RE-SOURCE path, badrabbit model).
+    The cited source zdnet/2020-05-10_shinyhunters-73m-records is a REAL
+    ZDNet article but about a DIFFERENT event — the parallel 73.2M-records /
+    10-company sale wave (Tokopedia, SocialShare, Chronicle of Higher
+    Education, GGuMim, Chatbooks, StarTribune, Home Chef, etc.). Its body
+    carries NO Microsoft or GitHub content (raw sha256 86a069b2…000dafc4,
+    994,599 bytes: the "Microsoft" string hits are all site-nav menu; the lone
+    "github" hit is inside a bundled uuid JS library). It is still validly
+    cited by 3 other wave events, so it is retained here only as wave-context
+    secondary (scope note added to its record), and the attribution was
+    re-pointed to the genuine primary report.
+    RE-SOURCED to bleepingcomputer/2020-05-06_microsoft-github-account-hacked
+    (Lawrence Abrams; raw snapshot captured, sha256 25abf9a7…92bd6e33, 93,787
+    bytes; datePublished 2020-05-06T20:04-04:00, dateModified 2020-05-08).
+    [a] FACTS vs BleepingComputer — all now source-carried: 500GB claim ("A
+    hacker claims to have stolen over 500GB of data from Microsoft's private
+    GitHub repositories"); full access to 'Private' repos; breach date "may
+    have occurred on March 28th, 2020" (file stamps); 1GB free teaser "on a
+    hacker forum for registered members to use site 'credits'"; content
+    "mostly code samples, test projects, an eBook, and other generic items";
+    "did not contain more sensitive code for software like Windows or Office";
+    API-key/password concern (Under the Breach); MS-employee legitimacy
+    confirmation; Microsoft "aware of these claims and are investigating."
+    CORRECTIONS: (1) initial_vector valid-creds -> unknown — "claimed via
+    compromised employee credentials" is FABRICATED; the source states no
+    access method. (2) outcome_summary stripped fabricated specifics not in
+    any source: the "May 7 2020" posting date, "Azure, Office" content (in
+    fact CONTRADICTED — source says it did NOT contain Office source code),
+    "internal project metadata consistent with Microsoft-employee GitHub
+    accounts", "withdrawn from sale" (source says the actor decided to leak it
+    free, not that a sale was withdrawn), and "RaidForums" (source says only
+    "a hacker forum"). (3) summary FIXED misattribution — the "non-sensitive /
+    no source code" assessment was BleepingComputer's and Under the Breach's,
+    NOT "Microsoft's public position"; Microsoft's only statement was that it
+    was investigating. (4) false_flag_risk suspected -> none — the original
+    rationale conflated "scope not independently verified" with false flag;
+    there is no misattribution/deception (open self-claim), and the leaked
+    data was corroborated as legitimate by an MS employee. (5) end_date
+    2020-05-08 -> null (that date was only the article's update stamp, not an
+    operation end). quantified_impact.data_exfiltrated_gb kept at 500 but
+    annotated as the actor's claim (verified/shared sample ~1GB).
+    [b] ATTRIBUTION: ShinyHunters self-claim to BleepingComputer;
+    attributing_org_confidence low (self-claim; MS did not confirm scope);
+    auspex_assessment concur-with-caveat. attribution_date 2020-05-07 ->
+    2020-05-06 (BC datePublished). attribution_source_id re-pointed to BC.
+    [c] DATES: disclosure_date 2020-05-07 -> 2020-05-06 (BC publication, "this
+    evening"); start_date 2020-03-28 retained (source-backed); end_date
+    nulled. New source published_on = 2020-05-06.
+    [d] DOCTRINE_LINKS: [] correct — a criminal financial/data-theft crew with
+    no source-documented state nexus; no doctrine applies. Not invented.
+    [e] ATTRIBUTION_LEVEL: added named-actor (ShinyHunters named as the
+    claiming group; no unit/service).
+    [f] ACTOR_ID: criminal/shinyhunters resolves (primary_service_id null,
+    correct for a criminal/ crew). No actor-file edit made. No flags.
+    RESIDUAL UNCERTAINTY: the 500GB figure and the "full access" claim rest on
+    the actor's own account; only ~1GB was ever shown and independently judged
+    non-significant, hence the low attributing-org confidence and
+    concur-with-caveat stance retained.

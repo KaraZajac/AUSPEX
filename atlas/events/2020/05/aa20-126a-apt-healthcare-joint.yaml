@@ -8,11 +8,13 @@ incident_type:
 initial_vector: valid-creds
 outcome_summary: |
   Joint CISA + UK NCSC technical advisory documenting Advanced
-  Persistent Threat (APT) group password-spraying and bulk-
-  credential-stuffing campaigns against COVID-19 research
-  organisations, healthcare bodies, pharmaceutical companies,
-  academic institutions, and local-government entities involved
-  in the pandemic response. The advisory operationally precedes
+  Persistent Threat (APT) group password-spraying campaigns —
+  plus scanning for and exploitation of known unpatched
+  vulnerabilities (Citrix products, Pulse Secure VPN) — against
+  COVID-19 research organisations, healthcare bodies,
+  pharmaceutical companies, academic institutions, and
+  local-government entities involved in the pandemic response.
+  The advisory operationally precedes
   AA20-201A (16 July 2020), which named APT29 / SVR specifically
   for the same target set.
 false_flag_risk: none
@@ -34,6 +36,7 @@ attributions:
   - actor_id: null
     attributing_org: US CISA + UK NCSC
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2020-05-05
     attribution_source_id: cisa/2020-05-05_aa20-126a-apt-healthcare
@@ -44,11 +47,25 @@ doctrine_links:
   - doctrine_id: uk/ncs-2016
     pillar_id: uk/ncs-2016/defend
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
+    perspective: defender-response
     reasoning: |
       Joint CISA-NCSC defensive advisory; operational expression
       of the NCS 2016 "defend" pillar's pandemic-response cadence.
+      The advisory is a defensive publication (threat warning +
+      mitigation guidance) by the disclosing state's cyber-defence
+      body, so the link names the UK discloser's own defensive
+      doctrine, not an attacker rationale (there is no attributed
+      perpetrator here). Downgraded from attested because the
+      advisory nowhere states a strategic doctrinal purpose or
+      references NCS-2016 — the "defend" reading is inferred from
+      the nature of the act, not quoted.
     attesting_source_id: cisa/2020-05-05_aa20-126a-apt-healthcare
+    inference_basis:
+      signals:
+        - "The document is a joint NCSC/CISA technical advisory whose stated function is warning targeted organisations and providing password-policy and vulnerability-patching mitigations — a defensive act by the disclosing state's national cyber-defence body."
+        - "It defends pandemic-response healthcare, pharma, research, academic and local-government targets, exactly the national-network protection the NCS-2016 defend pillar encodes."
+      ruled_out: "No attacker-rationale doctrine applies: the advisory attributes to no perpetrator (deliberately actor-agnostic 'APT groups'), so this is the discloser's defensive posture, not an offensive-strategy link."
     contested: false
     analyst: claude
 targets:
@@ -60,3 +77,60 @@ targets:
     role: primary
 sources:
   - cisa/2020-05-05_aa20-126a-apt-healthcare
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs the primary CISA/NCSC advisory AA20-126A "APT Groups
+    Target Healthcare and Essential Services"
+    (cisa__2020-05-05_aa20-126a-apt-healthcare.html, sha256
+    646ddde8…6fa5e818, 64,654 bytes). Live HTTP 200 from cisa.gov —
+    NOT bot-walled; genuine article, NOT a phantom.
+    [a] FACTS ✓/corrected: RAW confirms it is a JOINT advisory —
+    "National Cyber Security Centre" + CISA (NCSC named 30x, "joint"
+    6x). Technique = password spraying ("password spraying attacks",
+    "password spraying campaigns conducted by APT groups") plus
+    scanning "the external websites of targeted companies and looking
+    for vulnerabilities in unpatched software" and exploitation of
+    "Citrix products vulnerability" and "Pulse Secure VPN
+    Vulnerability". Target set verbatim-supported: healthcare bodies,
+    pharmaceutical, "research organi(s)ations", academic, local
+    government, all tied to "COVID-19 response" (COVID-19 16x,
+    pandemic 7x). CORRECTION: outcome_summary previously claimed
+    "bulk-credential-stuffing campaigns" — the advisory describes
+    PASSWORD SPRAYING (a distinct technique) and names no credential
+    stuffing; rewrote to password-spraying + scanning/exploitation of
+    known Citrix/Pulse-Secure vulns, which the source carries. "bulk"
+    in the RAW appears only in "bulk personal information ...
+    intelligence that aligns with national priorities" (the goal of
+    collection), not a technique.
+    [b] ATTRIBUTION ✓: actor_id null is correct — RAW names NO
+    perpetrator (grep for APT29/APT28/Russia/China/Iran/SVR/GRU = 0
+    hits); deliberately actor-agnostic "APT groups"/"advanced
+    persistent threat". No fabricated named-actor attribution present.
+    Added attribution_level: activity-cluster (the advisory clusters
+    the activity without naming a nation or group). attributing_org
+    "US CISA + UK NCSC", confidence high, concur — all match.
+    [c] DATES ✓: RAW "May 5, 2020: Initial Version" confirms
+    published_on / disclosure_date / end_date = 2020-05-05.
+    start_date 2020-04-01 is an explicit "period covered" estimate
+    for the ongoing activity the advisory documents — acceptable.
+    [d] DOCTRINE_LINKS — DOWNGRADED uk/ncs-2016/defend from attested
+    to strongly_inferred: attested requires the source to state the
+    strategic goal in substance, but the advisory nowhere references
+    NCS-2016 or articulates a doctrinal purpose — it is simply a
+    technical warning + mitigations. The "defend" reading is inferred
+    from the nature of the act (NCSC issuing a defensive advisory),
+    with no serious competing doctrine (no attacker attributed), so
+    strongly_inferred is honest. Added perspective: defender-response
+    (the discloser's own doctrine on an advisory about others'
+    operations) and inference_basis {signals[], ruled_out}.
+    attesting_source_id retained as the primary supporting source.
+    [e] ATTRIBUTION_LEVEL: set activity-cluster (see [b]).
+    [f] ACTOR_ID: null — no actor file needed; targets
+    sectors/healthcare, /pharma, /research and doctrine
+    uk/ncs-2016 + pillar /defend all resolve. No actor/source flags.
+    Documentary/govt-advisory event; no fabricated single-actor
+    attribution — verified clean.

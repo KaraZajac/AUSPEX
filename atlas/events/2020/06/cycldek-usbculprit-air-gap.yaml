@@ -8,46 +8,122 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky discloses an updated Cycldek / Goblin Panda
-  toolset including the "USBCulprit" USB-bridge component
-  used to exfiltrate data from air-gapped Vietnamese
-  government networks. Cycldek also tracked against
-  Laotian and Thai government targets in the same wave.
+  Kaspersky (GReAT) discloses a previously undocumented
+  Cycldek / Goblin Panda toolset including the "USBCulprit"
+  USB-bridge component, which relies on USB media to reach
+  and exfiltrate data from air-gapped machines in Southeast
+  Asian government networks. Kaspersky assessed the activity
+  concentrated on Vietnamese targets, with outliers in Laos
+  and Thailand.
 false_flag_risk: none
 summary: |
-  Important for two reasons. First, documents PRC-nexus
-  operator-level investment in air-gap-bridging capability
-  against SE Asian government targets — the first publicly
-  documented USB-based PRC air-gap-bridging tool. Second,
-  reinforces Cycldek's role as a regional MSS-aligned
-  operator focused on the Vietnam / Laos / Thailand cluster
-  of BRI-priority states, complementing Mustang Panda
-  (Mongolia, Myanmar) and APT30 / Naikon (ASEAN MFAs
-  broadly).
+  Documents operator-level investment in USB-based
+  air-gap-bridging capability against Southeast Asian
+  government targets: "USBCulprit", a previously unreported
+  tool that relies on USB media to reach and exfiltrate data
+  from air-gapped machines. Kaspersky attributes the activity
+  to Cycldek (aka Goblin Panda / Conimes), which it
+  characterises only as a "long-known Chinese-speaking threat
+  actor" — a language-level inference; the report names no
+  Chinese service and does not explicitly attribute the group
+  to the Chinese state. AUSPEX reads the Vietnam / Laos /
+  Thailand government-and-diplomatic targeting as the Mekong /
+  SE Asia subset of BRI political-intelligence collection (a
+  strongly-inferred doctrine link, not stated by the source).
 attributions:
   - actor_id: cn/unscoped/cycldek
     attributing_org: Kaspersky
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-06-03
     attribution_source_id: kaspersky/2020-06-03_cycldek-bridging-air-gap
+    notes: |
+      Kaspersky (GReAT) confidently identifies the long-tracked
+      Cycldek cluster (aka Goblin Panda / Conimes) as the actor —
+      named-actor. Caveat on the nation nexus: the report names NO
+      Chinese service (0 occurrences of "MSS"/"Ministry of State
+      Security") and does not explicitly attribute Cycldek to the
+      Chinese STATE — its only attribution wording is a language
+      inference, "Cycldek is a long-known Chinese-speaking threat
+      actor." Hence the actor is placed cn/unscoped (service
+      unresolved) and the cn/ nation bucket rests on that language
+      inference; see the actor-file flag (audited 2026-06-24).
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Vietnam / Laos / Thailand government targeting is the
-      Mekong / SE Asia subset of BRI political-intelligence
-      collection.
+      Vietnam / Laos / Thailand government-and-diplomatic
+      targeting is the Mekong / SE Asia subset of BRI
+      political-intelligence collection. Strongly-inferred, not
+      attested: Kaspersky states no strategic purpose (it frames
+      the activity operationally — an espionage / info-stealing
+      toolset against SE Asian governments) so there is no
+      attesting source, but the actor-mission (regional political
+      espionage) + target set (Mekong BRI-priority states,
+      diplomatic and government entities) + long-run persistence
+      triangulate to this reading with no serious competitor.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Kaspersky: Cycldek 'has been active in the past two years, conducting targeted operations against governments in Southeast Asia'; 'all targets were diplomatic and government entities'."
+        - "Geographic focus on Vietnam with outliers in Laos and Thailand — the Mekong / BRI-priority subset of SE Asia; lures themed on regional political / diplomatic affairs."
+        - "Custom info-stealing + air-gap-exfiltration toolset (USBCulprit) against government networks indicates political-intelligence collection, not revenue or disruption."
+      ruled_out: "cn/mcf (military-civil fusion): no dual-use-research, defence-industrial, or technology-acquisition targeting is evidenced — the victims are diplomatic/government entities, which fits BRI political-intelligence collection rather than MCF."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government/foreign-ministry
     role: primary
-  - target_id: sectors/government/defense-ministry
+  - target_id: sectors/government
     role: primary
 sources:
   - kaspersky/2020-06-03_cycldek-bridging-air-gap
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Kaspersky/GReAT "Cycldek — Bridging the (air) gap" (Securelist, 2020-06-03).
+    Raw snapshot re-verified: kaspersky__2020-06-03_cycldek-bridging-air-gap.html,
+    sha256 787602ba…92bd7201 (full 787602ba6fb316659fd534b158032d0cbcf0c83c172084fee41b1cca92bd7201),
+    225346 bytes; hash matches the source record captured 2026-06-24. NOT a phantom — the URL is the
+    real article body.
+    [a] FACTS: verbatim-supported — "One of the newly revealed tools is named USBCulprit and has been
+    found to rely on USB media in order to exfiltrate victim data. This may suggest Cycldek is trying to
+    reach air-gapped networks in victim environments"; "USBCulprit … is a tool custom built by the group";
+    "seen in the wild since 2014, with the latest samples emerging at the end of 2019"; targeting =
+    "targeted operations against governments in Southeast Asia" / "all targets were diplomatic and
+    government entities"; geography = "focus most of their efforts on Vietnamese targets with several
+    outliers in Laos and Thailand"; delivery = RTF lures "sent as a phishing mail to the victims" bundled
+    with 1-day exploits (CVE-2012-0158 / CVE-2017-11882 / CVE-2018-0802) — supports initial_vector:phishing.
+    CORRECTIONS to prose: removed the unsupported superlative "the first publicly documented USB-based PRC
+    air-gap-bridging tool" (source calls USBCulprit "formerly unreported malware", not a first/PRC
+    superlative); removed "MSS-aligned operator" (see [b]); softened "PRC-nexus" to reflect the source's
+    actual language-level wording; dropped the unsourced cross-corpus Mustang Panda / APT30 comparison.
+    [b] ATTRIBUTION: source's ONLY attribution wording is a language inference — "Cycldek is a long-known
+    Chinese-speaking threat actor" (2 occurrences of "Chinese-speaking"); "MSS"/"Ministry of State
+    Security" appear 0 times; the word "China" as a nation does not appear (other "Chinese" hits are tool
+    provenance: "Chinese hacker forums"). Kept attributing_org_confidence:high — Kaspersky is confident in
+    naming the tracked Cycldek cluster (its own investigation), and named-actor is the right specificity
+    (group named, aliases Goblin Panda / Conimes given). Added a note recording that the cn/ nation nexus
+    and cn/unscoped service placement rest on that language inference only. auspex_assessment:concur kept.
+    [c] DATES: source published_on 2020-06-03 ✓ (source record correct). start_date 2017-01-01 sits inside
+    the source's documented window ("2017 – the group was witnessed launching attacks using RTF lure
+    documents"; this investigation "post 2018" / "active in the past two years"); USBCulprit telemetry
+    itself dates to 2014 — noted, not corrected, as the event scopes the broader Cycldek campaign disclosed
+    2020. disclosure_date / end_date 2020-06-03 ✓.
+    [d] DOCTRINE_LINKS: cn/bri/political-intelligence-collection kept at strongly_inferred with
+    attesting_source_id:null (correct — Kaspersky states no strategic purpose, so nothing is attested).
+    Backfilled inference_basis.signals + ruled_out (cn/mcf) to make the WHY-inference auditable.
+    [e] ATTRIBUTION_LEVEL: was missing → set named-actor.
+    [f] ACTOR_ID: cn/unscoped/cycldek resolves to atlas/actors/cn/cycldek.yaml (id cn/unscoped/cycldek),
+    already audited/demoted 2026-06-24; no edit made. Its thin nation-attribution is already flagged there.
+    TARGETS: removed sectors/government/defense-ministry (SECTOR INFLATION — 0 "defense"/"military"
+    occurrences in the raw; the source says "diplomatic and government entities"). Kept
+    sectors/government/foreign-ministry (diplomatic) and broadened the second target to sectors/government
+    (source says "governments"). No residual unsupported claims.

@@ -1,47 +1,151 @@
 id: 2020-06/bitdefender-strongpity-syrian-kurds
-name: Bitdefender documents StrongPity targeting of Syrian Kurdish community
-start_date: 2019-10-01
+name: Bitdefender documents StrongPity/PROMETHIUM watering-hole surveillance of the Kurdish community (Turkey–Syria)
+start_date: 2018-01-01
 disclosure_date: 2020-06-30
-end_date: 2020-06-01
+end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - surveillance
 initial_vector: supply-chain
 outcome_summary: |
-  Bitdefender published an extended analysis of StrongPity /
-  PROMETHIUM operations targeting members of the Syrian Kurdish
-  community, particularly in the period following the October
-  2019 Turkish Operation Peace Spring incursion into northeast
-  Syria. Targets received trojanized installers of legitimate
-  Kurdish-language and security-tool software. The temporal
-  alignment with the military operation is the strongest piece
-  of evidence for state-direction in the public reporting.
+  Bitdefender published an extended technical analysis of
+  StrongPity / PROMETHIUM operations. Using a watering-hole
+  technique, the actor served IP-targeted trojanized installers
+  of popular legitimate software (7-Zip, WinRAR, McAfee Security
+  Scan Plus, Recuva, TeamViewer, WhatsApp, CCleaner, Disk Drill,
+  DAEMON Tools Lite, Glary Utilities, RAR Password Unlocker) to
+  selected victims, dropping a backdoor that searched for and
+  exfiltrated documents over a three-tier proxied C2. Bitdefender
+  reports the victims were concentrated in Turkey and Syria — most
+  near the Turkey–Syria border and in Istanbul — and assesses the
+  actor was "interested especially in the Kurdish community,"
+  situating the threat in "the constant conflicts between Turkey
+  and the Kurdish community." Bitdefender states it is "believed
+  that the attacks attributed to StrongPity are government-sponsored
+  and are used for population surveillance and intelligence
+  exfiltration"; it does not name a specific sponsoring state or
+  service.
 false_flag_risk: none
 summary: |
-  The clearest publicly documented temporal alignment between
-  Turkish kinetic operations (Operation Peace Spring) and
-  contemporaneous cyber surveillance of Kurdish targets. Provides
-  high-confidence evidence for the counter-Kurdish-diaspora
-  pillar of the inferred Turkish surveillance doctrine.
+  A first-party Bitdefender whitepaper documenting StrongPity /
+  PROMETHIUM watering-hole surveillance operations against the
+  Kurdish community in the Turkey–Syria border region (victims
+  concentrated near the border and in Istanbul, spanning Turkey
+  and Syria). Bitdefender assesses the campaign as
+  government-sponsored population surveillance placed in the
+  geopolitical context of the Turkey–Kurdish conflict, but names
+  no specific sponsoring state or service. Supports the
+  counter-Kurdish-surveillance reading of Turkish state-aligned
+  activity at the strongly-inferred level.
 attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: Bitdefender
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-06-30
     attribution_source_id: bitdefender/2020-06-30_strongpity-syrian-kurds
+    notes: |
+      Bitdefender documents the named cluster StrongPity/PROMETHIUM
+      first-party (high confidence on the actor cluster). Sponsorship
+      is hedged: "It is believed that the attacks attributed to
+      StrongPity are government-sponsored" — no specific state or
+      service is named (not even "the Turkish government," only
+      "government-sponsored"), hence named-actor (cluster named,
+      sponsor unattributed) and the actor sits at tr/unscoped.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Syrian Kurdish target community, temporally aligned with
-      Operation Peace Spring (October 2019).
+      Bitdefender documents government-sponsored population
+      surveillance of the Kurdish community, with victims
+      concentrated in the Turkey–Syria border region and Istanbul,
+      explicitly placed in "the constant conflicts between Turkey
+      and the Kurdish community." A Turkey-nexus actor conducting
+      document-exfiltration surveillance of Kurdish targets is the
+      counter-Kurdish-surveillance behaviour this doctrine encodes.
+      Not attested: Bitdefender hedges sponsorship as
+      "government-sponsored" without naming Turkey or a service, so
+      the Turkish-state direction remains an inference rather than
+      an authoritative statement of purpose.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victim selection: Bitdefender states the actor is 'interested especially in the Kurdish community', with victims concentrated near the Turkey–Syria border and in Istanbul."
+        - "Stated purpose: 'government-sponsored and are used for population surveillance and intelligence exfiltration' placed in 'the constant conflicts between Turkey and the Kurdish community'."
+        - "Actor mission: PROMETHIUM/StrongPity is a Turkey-nexus espionage cluster (nation-level 'government-sponsored' attribution in the cited reporting)."
+      ruled_out: "Financially-motivated or generic criminal surveillance-ware — excluded by the government-sponsored assessment, the selective IP-targeted watering hole, and the Kurdish-community victim concentration."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/syrian-kurdish-community
+  - target_id: sectors/civil-society
     role: primary
 sources:
   - bitdefender/2020-06-30_strongpity-syrian-kurds
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the raw Bitdefender whitepaper "StrongPity APT — Revealing Trojanized Tools,
+    Working Hours and Infrastructure" (2020-06-30), 16-page PDF, sha256 f2b85d61…f72422eb,
+    5,426,737 bytes (hash re-verified against the on-disk snapshot; matches the source record).
+
+    [a] FACTS — three unsupported embellishments STRIPPED:
+      • "October 2019 Turkish Operation Peace Spring" / temporal alignment with the incursion:
+        NOT in the source. pdftotext + grep of the full text find no "Peace Spring", no "incursion",
+        and no "October 2019". The source dates the geographic shift to Turkey/Syria to 2018:
+        "Later, in 2018, the attackers shifted their focus … compromising Turkish telecommunication
+        companies to target hundreds of users in Turkey and Syria." The whole Peace-Spring framing
+        (and the claim that "temporal alignment with the military operation is the strongest piece
+        of evidence for state-direction") was an AUSPEX inference falsely attributed to "the public
+        reporting" — removed from summary/outcome_summary and from the doctrine reasoning.
+      • "trojanized installers of legitimate Kurdish-language and security-tool software": the
+        source lists ONLY generic popular tools — 7-Zip, WinRAR, McAfee Security Scan Plus, Recuva,
+        TeamViewer, WhatsApp, CCleaner, Disk Drill, DAEMON Tools Lite, Glary Utilities, RAR Password
+        Unlocker. No Kurdish-language software appears anywhere. Rewrote to the source's actual list;
+        only McAfee is a "security tool".
+      • Victim reframe: the source says the MAJORITY of victims are in Turkey ("most of the targets
+        are located near the border between Turkey and Syria, as well as in Istanbul"), spanning
+        "Turkey and Syria", with the actor "interested especially in the Kurdish community." Not
+        exclusively "Syrian Kurds" — reframed to the Kurdish community in the Turkey–Syria border
+        region. Watering-hole IP-targeting, self-signed trojanized droppers, document searcher +
+        .sft exfiltration, 3-tier proxied C2, 47 mapped servers — all verbatim-supported.
+    [b] ATTRIBUTION — added attribution_level: named-actor. Bitdefender names the cluster
+      StrongPity/PROMETHIUM first-party (high confidence on the actor), but sponsorship is hedged:
+      "It is believed that the attacks attributed to StrongPity are government-sponsored." No state
+      and no service is named (not even "the Turkish government" — only "government-sponsored").
+      auspex_assessment concur retained (we concur PROMETHIUM is the actor). Not over-attesting a
+      Turkish service.
+    [c] DATES — start_date 2019-10-01 → 2018-01-01 (source: "in 2018" the actor shifted to the
+      Turkey/Syria target set; the fabricated Oct-2019 start existed only to fit Peace Spring).
+      end_date 2020-06-01 → null (point-in-time report, "at the moment of writing"; nothing bounds
+      the operation). disclosure_date 2020-06-30 ✓ = source published_on ✓.
+    [d] DOCTRINE — kept strongly_inferred (honest): the source states the purpose (government-
+      sponsored population surveillance) and the victim (the Kurdish community) and situates it in
+      the Turkey–Kurdish conflict, triangulating to counter-Kurdish surveillance with no serious
+      competitor — but hedges the sponsoring state, so NOT attested (consistent with the doctrine's
+      own cyber_relevance note that its links are "generally strongly_inferred … but not attested").
+      Rewrote reasoning to drop the Peace-Spring claim; added inference_basis{signals, ruled_out}.
+      Kept attesting_source_id: null.
+    [e] attribution_level set (named-actor).
+    [f] actor_id tr/unscoped/promethium RESOLVES → atlas/actors/tr/promethium.yaml (id
+      tr/unscoped/promethium) — same actor as the audited citizenlab-strongpity and att-strongpity
+      events; no actor edits made.
+
+    FLAGS for orchestrator:
+      • TARGET FK: the prior target_id orgs/syrian-kurdish-community is a DANGLING FK — no such
+        file among the 112 records in atlas/targets/orgs/, referenced only by this event.
+        Repointed to sectors/civil-society (resolves; the source describes "the Kurdish community"
+        as a surveilled civil population, majority in Turkey — not diaspora/KRG). If a named-org
+        target for the Kurdish community is desired, Kara should create the registry file
+        (target-file creation is out of audit scope).
+      • DOCTRINE PILLAR imperfect fit: pillar kurdish-diaspora is titled "Kurdish diaspora and KRG
+        targeting", but this campaign's victims are the in-region Kurdish community near the
+        Turkey–Syria border (not diaspora abroad, not the Iraqi KRG). Kept as the closest available
+        pillar under the counter-Kurdish-surveillance doctrine; consider an in-region Kurdish
+        pillar. Not invented here.
