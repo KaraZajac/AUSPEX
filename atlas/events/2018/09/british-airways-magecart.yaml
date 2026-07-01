@@ -6,42 +6,121 @@ end_date: 2018-09-05
 incident_type:
   - intrusion
   - data-theft
-initial_vector: n-day
+initial_vector: unknown
 outcome_summary: |
-  Magecart Group 6 operators injected 22 lines of customised
-  JavaScript skimmer into the British Airways online booking
-  flow (specifically the baggage-claim page baggageclaim.js
-  resource). The skimmer harvested approximately 380,000 to
-  430,000 payment-card transactions including CVV codes and
-  cardholder details over a ~15-day window before being
-  detected by RiskIQ researchers. ICO subsequently fined BA
-  GBP 20M in October 2020 (reduced from a GBP 183M initial
-  notice of intent under Article 83 GDPR — the largest such
-  fine at that time).
+  Magecart operators injected a small (22-line) customised
+  JavaScript card-skimmer into the British Airways online
+  booking/payment flow. RiskIQ found the skimmer was a
+  trojanized copy of the Modernizr JavaScript library (version
+  2.6.2) served from the baggage-claim information page, which
+  grabbed payment-card details (including CVV) on submit and
+  exfiltrated them to a look-alike domain (baways.com). Payments
+  were affected from 22:58 BST 21 August 2018 until 21:45 BST
+  5 September 2018 (~15 days); RiskIQ/BA estimated ~380,000
+  affected card transactions. The UK ICO later (16 October 2020)
+  assessed that personal data of ~429,612 data subjects had been
+  accessible (~244,000 with full card details incl. CVV) and
+  fined BA GBP 20M — the largest ICO penalty to that date,
+  reduced from the GBP 183M it had originally announced it
+  intended to issue (partly for Covid-19 and BA's remediation).
 quantified_impact:
-  cards_compromised: 430000
+  cards_compromised: 380000
+  data_subjects_accessible: 429612
   ico_fine_gbp: 20000000
   ico_initial_intent_gbp: 183000000
 false_flag_risk: none
 summary: |
-  Canonical Magecart e-skimming case: targeted Javascript injection,
-  short dwell, payment-card harvest at scale. AUSPEX classifies as
-  criminal-baseline with no doctrinal targeting — Magecart Group 6
-  was a primarily Russian-speaking cluster but no state-nexus
-  attribution has been made and victim selection across the
-  Magecart umbrella spans all major e-commerce jurisdictions.
+  Canonical Magecart e-skimming case: targeted JavaScript
+  injection, short dwell, payment-card harvest at scale. RiskIQ
+  attributed the breach to the Magecart collective (2018-09-11)
+  and its joint RiskIQ/Flashpoint "Inside Magecart" report
+  (2018-11-13) placed BA under the selective "Group 6" operator
+  cluster. AUSPEX classifies as criminal-baseline with no
+  doctrinal targeting — Magecart is a criminal e-skimming
+  umbrella spanning multiple jurisdictions and no state-nexus
+  attribution has been made against Group 6.
 attributions:
   - actor_id: criminal/magecart
-    attributing_org: RiskIQ + Flashpoint + ICO
+    attributing_org: RiskIQ + Flashpoint
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2018-09-11
-    attribution_source_id: riskiq/2018-11-13_magecart-inside-and-beyond-report
+    attribution_source_id: riskiq/2018-09-11_magecart-british-airways-breach
+    notes: |
+      RiskIQ attributed the BA breach to the Magecart crime
+      syndicate in its 2018-09-11 technical analysis; the joint
+      RiskIQ/Flashpoint "Inside Magecart" report (2018-11-13)
+      further segmented BA into the selective "Group 6" operator
+      cluster. Activity-cluster level: Magecart Group 6 is a
+      criminal operator cluster, not a named cohesive actor or a
+      state-attributed group.
 doctrine_links: []
 targets:
-  - target_id: sectors/retail
-    role: primary
   - target_id: sectors/transport/aviation
     role: primary
+    country: uk
+  - target_id: sectors/retail
+    role: primary
 sources:
+  - riskiq/2018-09-11_magecart-british-airways-breach
   - riskiq/2018-11-13_magecart-inside-and-beyond-report
+  - bbc/2020-10-16_british-airways-fined-20m-data-breach
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    Phantom-triage outcome: NOT a phantom, but the single cited source was
+    incomplete — RE-SOURCED (badrabbit model) by adding the two genuine primary
+    sources that actually carry the incident facts. The originally-cited RiskIQ/
+    Flashpoint "Inside Magecart" report (sha256 933520b8…75184bf3, 10,565,724 B)
+    is real and DOES carry the BA→Group 6 attribution ("Group 6 - Extremely
+    selective, only going for top-tier targets, such as British Airways and
+    Newegg"; "the identities of the two victims, British Airways and Newegg, are
+    public knowledge") but carries NONE of the technical/victim/ICO specifics the
+    event asserted. Added: (1) riskiq/2018-09-11_magecart-british-airways-breach
+    — RiskIQ's own BA analysis (sha256 a44d7e05…d78e59f0, 183,019 B; snapshot is
+    RiskIQ CEO Dan Schoenbaum's verbatim Medium republication of the dead
+    riskiq.com/blog/labs/magecart-british-airways-breach); (2) bbc/2020-10-16_
+    british-airways-fined-20m-data-breach (sha256 f5d487f2…e2607b21, 249,285 B)
+    for the ICO fine.
+    [a] FACTS: 22-line JS skimmer ✓ ("How 22 Lines of Code Claimed 380,000
+    Victims" / "only 22 lines of JavaScript"). Dwell window ✓ verbatim "Payments
+    were affected from 22:58 BST August 21, 2018, until 21:45 BST September 5,
+    2018" → drives start_date/end_date. ~380,000 ✓ ("around 380,000 customers
+    could have been affected"). CORRECTED the fabricated "baggageclaim.js
+    resource": the source says the skimmer was a modified Modernizr JavaScript
+    library v2.6.2 on the baggage-claim page exfiltrating to baways.com — rewrote
+    accordingly; no file literally named baggageclaim.js exists in the source.
+    CORRECTED the "380,000 to 430,000 payment-card transactions" conflation:
+    380,000 (RiskIQ, card transactions) and 429,612 (ICO, data subjects
+    accessible, ~244,000 with full card+CVV) are different figures — split them in
+    outcome_summary and quantified_impact (cards_compromised 430000→380000; added
+    data_subjects_accessible 429612). ICO GBP 20M / GBP 183M-intent / largest-to-
+    date / 16 Oct 2020 ✓ all carried by BBC ("fined £20m ($26m) by the
+    Information Commissioner's Office"; "considerably smaller than the £183m … it
+    intended to issue"; "still the largest penalty issued by the ICO to date").
+    [b] ATTRIBUTION: RiskIQ+Flashpoint name Magecart / "Group 6" at high
+    confidence; dropped "ICO" from attributing_org (ICO fined BA, it did not
+    attribute the actor). Re-pointed attribution_source_id to the 2018-09-11
+    RiskIQ BA analysis (the source of the Sept-11 Magecart attribution).
+    [c] DATES: start 2018-08-21 / end 2018-09-05 verbatim-carried; disclosure
+    2018-09-06 = BA's public statement (day after skim window, pre-RiskIQ blog);
+    source published_on set to real dates (RiskIQ BA 2018-09-11, Inside-Magecart
+    2018-11-13, BBC 2020-10-16).
+    [d] DOCTRINE_LINKS: [] correct — financially-motivated criminal skimming, no
+    doctrine applies; none invented.
+    [e] ATTRIBUTION_LEVEL: set activity-cluster (Magecart Group 6 = criminal
+    operator cluster; not named-actor/named-unit; no state nexus).
+    [f] ACTOR_ID: criminal/magecart resolves (atlas/actors/criminal/magecart.yaml);
+    primary_service_id null, doctrine alignment []. Actor record looks sound.
+    Also changed initial_vector n-day→unknown: no source establishes the initial-
+    access method (RiskIQ notes the operators likely had access before 21 Aug but
+    the entry vector was never publicly determined; ICO faulted BA's controls
+    without pinning a specific exploited vuln — "n-day" was unsupported). Added
+    country: uk to the aviation target.
+    Residual uncertainty: the RiskIQ BA snapshot is a CEO's Medium republication
+    of the original (dead) RiskIQ Labs post; content is verbatim RiskIQ but not a
+    live first-party URL.

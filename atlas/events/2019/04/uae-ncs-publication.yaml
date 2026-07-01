@@ -1,18 +1,22 @@
 id: 2019-04/uae-ncs-publication
 name: UAE National Cybersecurity Strategy publication
-start_date: 2019-04-01
-disclosure_date: 2019-04-01
-end_date: 2019-04-01
+start_date: 2019-06-23
+disclosure_date: 2019-06-23
+end_date: 2019-06-23
 incident_type:
   - documentary
   - policy
 initial_vector: unknown
 outcome_summary: |
-  UAE Telecommunications Regulatory Authority publishes the
+  The UAE Telecommunications Regulatory Authority (TRA) launches the
   UAE National Cybersecurity Strategy — the country's first
-  comprehensive federal cybersecurity-policy document. Five
-  pillars: governance, CNI protection, capability development,
-  international cooperation, cybercrime / active defence.
+  comprehensive federal cybersecurity-policy document. The strategy
+  sets out ~60 initiatives across five pillars (per the published
+  document): cybersecurity laws & regulations; a vibrant cybersecurity
+  ecosystem; a national cyber incident response plan; a
+  critical-information-infrastructure protection (CIIP) program; and
+  partnerships (public sector, private sector, academia, international
+  consortiums).
 false_flag_risk: none
 summary: |
   Doctrine-anchor event for AUSPEX's ae/ncs-2019 entry.
@@ -23,14 +27,85 @@ summary: |
 attributions: []
 doctrine_links:
   - doctrine_id: ae/ncs-2019
-    pillar_id: ae/ncs-2019/governance
+    pillar_id: null
     program_id: null
     confidence: attested
     reasoning: |
-      Publication of the doctrine itself. Self-attesting.
+      Publication of the doctrine itself — the source IS the NCS 2019
+      document. Self-attesting doctrine-publication anchor for the
+      strategy as a whole (pillar_id null: the publication attests the
+      doctrine, not one pillar; and the doctrine file's current pillar
+      slugs do not match the real document — see qc FLAG).
     attesting_source_id: u-ae/national-cybersecurity-strategy-2019
     contested: false
     analyst: claude
 targets: []
 sources:
   - u-ae/national-cybersecurity-strategy-2019
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    Policy/doctrine-publication anchor event; not an attack →
+    attributions [] correct, incident_type documentary+policy correct,
+    targets [] correct, false_flag_risk none correct.
+
+    SOURCE: u-ae/national-cybersecurity-strategy-2019 was already
+    audited+snapshotted in a prior pass (2026-06-27). Snapshot
+    re-verified on disk this pass: raw
+    atlas/sources/raw/u-ae__national-cybersecurity-strategy-2019.pdf,
+    sha256 f8c46e22…5b930ad0 (f8c46e224be20498b58d9466e9d8f484f4a125d205e02a0c388365b95b930ad0),
+    2,825,224 B — matches the source record's content_sha256. Companion
+    IA-framework PDF (u-ae__national-cybersecurity-strategy-2019-companion-iaf.pdf,
+    sha256 dd9767dc…c11fbbf7) also present. No new snapshot needed.
+
+    [c] DATES — CORRECTED. Event carried the 2019-04-01 placeholder on
+    start/disclosure/end. The prior source audit established the NCS was
+    launched by the TRA on 2019-06-23 (TRA press release; some reporting
+    24 Jun). Set start_date/disclosure_date/end_date = 2019-06-23. NB the
+    file path + id remain 2019-04/uae-ncs-publication (slugs are stable
+    forever; not renamed).
+
+    [a] FACTS — CORRECTED. The prior outcome_summary listed five pillars
+    "governance, CNI protection, capability development, international
+    cooperation, cybercrime / active defence" — these are NOT in the real
+    NCS document. pdftotext of the snapshot PDF (p.10-11) states verbatim:
+    "mobilize the whole ecosystem to deliver ~60 initiatives across 5
+    pillars" = (1) "Cybersecurity laws & regulations", (2) "Vibrant
+    cybersecurity ecosystem", (3) "National Cyber Incident Response plan",
+    (4) "CIIP program", (5) "Partnerships" (public / private / academia /
+    international consortiums). Rewrote outcome_summary to carry the real
+    five pillars + the ~60-initiatives figure. "First comprehensive
+    federal cyber-policy document" characterization retained (consistent
+    with the document's national-strategy framing). Defensive/digital-
+    economy framing in summary is source-supported (the PDF is entirely
+    defensive/resilience posture; no offensive-cyber language).
+
+    [b][e] ATTRIBUTION — n/a (policy event, attributions []).
+
+    [d] DOCTRINE_LINKS — one link, doctrine_id ae/ncs-2019, confidence
+    attested. Justified: this event documents the PUBLICATION of that very
+    doctrine, and attesting_source_id u-ae/national-cybersecurity-strategy-2019
+    IS the doctrine document (a valid self-attesting doctrine-publication
+    anchor). CORRECTED pillar_id ae/ncs-2019/governance → null: (i) a
+    publication attests the doctrine as a whole, not one pillar; (ii) the
+    "governance" pillar slug is a fabricated pillar not present in the real
+    document. FK for doctrine_id resolves (atlas/doctrines/ae/cybersecurity-strategy-2019.yaml).
+
+    [f] ACTOR_ID — n/a (no attributions).
+
+    FLAGS (orchestrator):
+    - DOCTRINE FILE ae/ncs-2019 (atlas/doctrines/ae/cybersecurity-strategy-2019.yaml)
+      carries pillars {governance, cni-protection, capability-development,
+      international-cooperation, cybercrime-active-defence} and issued_on
+      2019-04-01 + summary "Published in April 2019". BOTH are wrong vs the
+      real NCS PDF: real pillars are {cybersecurity laws & regulations,
+      vibrant cybersecurity ecosystem, national cyber incident response
+      plan, CIIP program, partnerships}, and the launch was 2019-06-23.
+      The prior source audit (2026-06-27) already flagged this; it remains
+      unreconciled. Doctrine files are out of scope for this agent — needs
+      human/orchestrator fix (pillar slugs + issued_on + summary month).
+    - Because the doctrine's pillar slugs are all defective, no genuine
+      pillar_id was available to point this link at; hence null.

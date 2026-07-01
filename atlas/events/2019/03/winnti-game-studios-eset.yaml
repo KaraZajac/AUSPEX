@@ -1,60 +1,158 @@
 id: 2019-03/winnti-game-studios-eset
-name: Winnti / APT41 Asian game-publisher supply-chain compromises
-start_date: 2018-12-01
+name: Winnti / APT41 Asian game supply-chain compromises (ESET 2019)
+start_date: 2018-07-10
 disclosure_date: 2019-03-11
-end_date: 2019-02-28
+end_date: null
 incident_type:
   - supply-chain
   - intrusion
 initial_vector: supply-chain
 outcome_summary: |
-  ESET discloses two PRC-nexus supply-chain compromises in
-  which legitimately code-signed binaries from an Asian
-  game-publisher / e-sports platform and two video-game
-  studios were trojanized to deliver an "Auxiliary Manager"
-  in-memory backdoor. Targets included a Thai e-sports
-  platform and gaming studios in South Korea and Hong Kong.
+  ESET disclosed that three products from Asian game
+  developers — two games and one gaming-platform application —
+  were trojanized in a supply-chain compromise: the same small
+  backdoor was embedded at the PE entry point of legitimately
+  signed executables and launched in-memory before the host
+  program. A Winnti second-stage payload (ESET: Win64/Winnti.BN)
+  was delivered to some victims. ESET telemetry placed victims
+  mostly in Asia, chiefly Thailand; the only affected developer
+  ESET named is the Thai studio Electronics Extreme (game
+  "Infestation"), which was still distributing the trojanized
+  build at publication.
 false_flag_risk: none
 summary: |
-  Sits inside the timeline that becomes APT41's "private"
-  side per the August 2019 DOJ indictment and the
-  contemporaneous Mandiant Double Dragon report. ESET
-  attributed the cluster to "Winnti Group" using its
-  pre-2019 lineage labeling. The compromises matter because
-  they document the operator's reliance on stealing
-  legitimate code-signing material from upstream
-  game-publisher victims and reusing it to push backdoors
-  downstream — the exact tradecraft pattern documented in
-  the 2017 NetSarang and CCleaner cases and the 2019 ASUS
-  ShadowHammer operation. Combined, this is the earliest
-  consolidated picture of APT41 supply-chain operations
-  against gaming publishers in the year before formal DOJ
-  indictment.
+  ESET attributed the cluster to the "Winnti Group" using the
+  pre-2019 Kaspersky lineage label ("Winnti – More than just a
+  game"), not to APT41 or any Chinese service; the malware also
+  refused to run on systems set to Chinese or Russian. AUSPEX
+  maps this forward to APT41/BARIUM via the overlapping Winnti
+  alias and the retrospective consolidation of the gaming
+  supply-chain activity into APT41's "private" side by the
+  August 2019 DOJ indictment (Chengdu 404) and Mandiant's
+  contemporaneous "Double Dragon" report. The compromises
+  document the operator's characteristic reuse of legitimately
+  signed game software to distribute in-memory backdoors — the
+  build-environment supply-chain pattern also seen in the 2017
+  NetSarang and 2019 ASUS ShadowHammer operations. ESET was
+  explicit that it did not know the operators' motive
+  (financial gain vs. botnet-for-espionage were both left open).
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: ESET
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2019-03-11
     attribution_source_id: eset/2019-03-11_winnti-gaming-industry
+    notes: |
+      ESET named only the "Winnti Group" (Kaspersky's lineage
+      label), hedged ("it shouldn't be surprising they are the
+      work of the group described in Kaspersky's 'Winnti'"), and
+      named NO Chinese service. "Winnti" is an OVERLAPPING alias
+      of APT41 (per the actor record) — the Winnti umbrella spans
+      APT41 plus related clusters. The cn/mss/apt41 mapping and
+      the MSS placement therefore rest on AUSPEX's editorial
+      equivalence + later DOJ/Mandiant consolidation, not on this
+      source: hence attributing_org_confidence=moderate,
+      attribution_level=named-actor (a named cluster, not a named
+      unit), concur-with-caveat. A Winnti second-stage
+      (Win64/Winnti.BN) corroborates the lineage label.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Same tolerated-financial-gain logic as the August 2019
-      DOJ indictment treatment of APT41. The supply-chain
-      pivot mechanism is also useful for the state-tasked
-      half of the cluster.
+      APT41's dual-use profile (strategic intrusion tooling
+      operated alongside for-profit game/botnet activity) is the
+      kind of blended civilian-commercial / state capability the
+      military-civil-fusion frame encodes. The label is only
+      plausible because ESET explicitly disclaims knowing the
+      motive of this campaign, so no strategic purpose is stated
+      by the source and more than one reading (ordinary financial
+      gain vs. botnet-for-espionage) survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Military-civil-fusion / state-tasked dual use: APT41 is a mixed state-plus-profit contractor whose gaming supply-chain botnets can be repurposed for state collection, fitting the MCF blend."
+        - "Pure financial gain / IP theft: ESET states 'We do not know the motives of the attackers at this point. Is it simply financial gain?' — an ordinary criminal reading with no doctrine tag also survives."
     counter_explanation: |
-      Pure financial / IP-theft framing — doctrine tag could be
-      omitted.
+      Pure financial / botnet framing — the doctrine tag could be
+      omitted; ESET states no motive.
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/media/entertainment
+    country: th
     role: primary
 sources:
   - eset/2019-03-11_winnti-gaming-industry
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    Audited vs ESET "Gaming industry still in the scope of attackers in Asia"
+    (Marc-Etienne M.Léveillé, 11 Mar 2019). Raw snapshot
+    atlas/sources/raw/eset__2019-03-11_winnti-gaming-industry.html,
+    sha256 eb04c803…c4e34152, 84365 bytes. NOT a phantom — URL returns the real
+    article (HTTP 200, title matches, victim/IoC body present); normal 6-point audit.
+
+    [a] FACTS — several corrections. (1) COUNT: source says THREE affected products
+    ("two games and one gaming platform application … Three Cases, Same Backdoor"),
+    not "two … compromises"; fixed outcome_summary. (2) FABRICATED MALWARE NAME:
+    the event called the backdoor "Auxiliary Manager" — that string does NOT appear
+    anywhere in the source (grep -1); the article calls it only a small ~17KB
+    in-memory backdoor (ESET det. Win32/Winnti.AG) with a Winnti second stage
+    (Win64/Winnti.BN). Removed the fabricated name. (3) FABRICATED GEOGRAPHY: event
+    claimed "gaming studios in South Korea and Hong Kong" — source names NEITHER
+    (grep: 'Korea' -1, 'Hong Kong' -1). Source names only the Thai developer
+    Electronics Extreme (game "Infestation") and states telemetry victims are
+    "mostly located in Asia, with Thailand having the largest part." Stripped SK/HK;
+    victims now Thailand-centric per source. (4) "e-sports platform" → source says
+    "gaming platform application" (the XIGNCODE anti-cheat service); reworded.
+    (5) "stealing legitimate code-signing material from upstream game-publisher
+    victims" — this source describes BUILD-ENVIRONMENT compromise of legitimately
+    signed software ("changed a build configuration rather than the source code
+    itself"), NOT code-signing-certificate theft; softened to build-env / signed-
+    software reuse. (6) Removed "CCleaner" from the tradecraft cross-reference:
+    AUSPEX attributes CCleaner 2017 to APT17/BLACKCOFFEE, not APT41 (per the actor
+    record's 2026-06-28 cleanup), so citing it as APT41 tradecraft was internally
+    inconsistent; kept NetSarang 2017 + ASUS ShadowHammer 2019 (those ARE APT41).
+
+    [b] ATTRIBUTION — downgraded. Source attributes to "the Winnti Group" (Kaspersky
+    lineage label) and hedges: "it shouldn't be surprising they are the work of the
+    group described in Kaspersky's 'Winnti – More than just a game'." It names NO
+    Chinese service and does NOT say "APT41". "Winnti" is an OVERLAPPING (not
+    equivalent) alias of APT41 in the actor record. So: attributing_org_confidence
+    high→moderate; added attribution_level=named-actor (a named cluster, not the
+    APT41/MSS named unit); auspex_assessment concur→concur-with-caveat; added notes
+    explaining the cn/mss/apt41 mapping rests on AUSPEX equivalence + DOJ/Mandiant
+    consolidation, not on this source. Winnti second stage (Win64/Winnti.BN)
+    corroborates the lineage.
+
+    [c] DATES — source's published_on 2019-03-11 correct. start_date 2018-12-01 had
+    no source basis; reset to 2018-07-10 (earliest concrete artifact: domain
+    xigncodeservice.com registered 2018-07-10; earliest PE compile 2018-07-11).
+    end_date 2019-02-28 was wrong — the trojanized "Infestation" build was STILL
+    being distributed at publication and ESET was still notifying the developer
+    "since early February"; set end_date null (ongoing/unbounded at disclosure).
+
+    [d] DOCTRINE — cn/mcf kept at plausible (correct floor). Source explicitly
+    disclaims motive ("We do not know the motives of the attackers at this point.
+    Is it simply financial gain?"), so it states no strategic purpose:
+    attested/strongly_inferred are unavailable and attesting_source_id stays null.
+    Tightened reasoning to reflect the source's motive-agnosticism; added
+    inference_basis.alternatives (MCF dual-use vs. pure financial); kept
+    counter_explanation.
+
+    [e] ATTRIBUTION_LEVEL — added: named-actor (see [b]).
+
+    [f] ACTOR_ID — cn/mss/apt41 resolves to atlas/actors/cn/apt41.yaml (file path
+    differs from id, FK is by id). FLAG: this event is a stress case for the MSS
+    placement — the ONLY source names "Winnti Group" and no service; the cn/mss
+    placement is carried entirely by the actor's OTHER sources (DOJ 2020 boast).
+    Not editing the actor; flagging that this event should not be read as
+    independent MSS corroboration. Target sector media/entertainment + country th
+    resolve.

@@ -9,13 +9,20 @@ incident_type:
   - supply-chain
 initial_vector: phishing
 outcome_summary: |
-  DOJ unsealing of indictments against Zhu Hua and Zhang Shilong,
-  members of the "Huaying Haitai" front company acting in
-  association with the MSS Tianjin SSB. Charges cover the
-  Operation Cloud Hopper MSP-pivot campaign (12+ countries,
-  intrusions into HPE, IBM, NTT and other managed service
-  providers) and direct theft of approximately 100,000 US Navy
-  personnel records.
+  DOJ unsealing (2018-12-20) of a Southern District of New York
+  indictment (returned 2018-12-17) against Zhu Hua and Zhang
+  Shilong, who worked for the Huaying Haitai Science and
+  Technology Development Company in Tianjin and acted in
+  association with the MSS Tianjin State Security Bureau. Charges
+  cover the Operation Cloud Hopper campaign of compromising
+  managed service providers and their clients in at least a dozen
+  countries, theft of intellectual property from at least 45
+  technology companies and US government agencies, and direct
+  theft of the personal data of more than 100,000 US Navy
+  personnel. (The DOJ indictment did not publicly name the MSP
+  victim companies; the HPE / IBM / NTT identifications came from
+  contemporaneous Reuters reporting, not the indictment, and are
+  omitted here since no such source is cited.)
 false_flag_risk: none
 campaign_id: cloud-hopper
 operators_named:
@@ -26,33 +33,54 @@ summary: |
   Panda as the operator behind Cloud Hopper — the first PRC
   industrial-espionage indictment after the 2015 Xi-Obama "no
   commercial cyber theft" agreement and a public refutation of
-  that agreement's effectiveness. The indictment catalogues
-  APT10 tradecraft: spear-phishing of MSP employees, harvesting
-  of admin credentials, lateral pivot from MSP into customer
-  environments, deployment of UPPERCUT / ANEL, ChChes,
-  RedLeaves and QuasarRAT implants, theft of trade secrets and
-  PII across aerospace, biotech, mining, finance, oil and gas,
-  telecom, and healthcare verticals. Companion FBI, DHS, FCO
-  and Australian / NZ / Canadian statements made this a
-  Five-Eyes-coordinated naming event.
+  that agreement's effectiveness. The indictment describes APT10
+  tradecraft in substance — spear-phishing of MSP employees,
+  harvesting of administrator credentials, and lateral pivot from
+  the MSP into customer environments — and charges theft of trade
+  secrets and PII across aerospace, finance, oil-and-gas, telecom,
+  healthcare and other verticals. The named implant families
+  (ChChes, RedLeaves, UPPERCUT, QuasarRAT) come from associated
+  vendor and MITRE ATT&CK (G0045) reporting rather than the
+  indictment itself. Companion US-government statements (FBI, and
+  a DHS/CISA advisory) accompanied the unsealing, and the UK and
+  other allied governments issued their own same-day APT10
+  attributions (contextual — not carried by the two cited
+  sources).
 attributions:
   - actor_id: cn/mss/apt10
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2018-12-20
     attribution_source_id: doj/2018-12-20_apt10-indictment
+    notes: "DOJ names the specific MSS unit — the Tianjin State Security Bureau — and the front company Huaying Haitai; hence named-unit, not merely nation/named-actor. Indictment = high confidence."
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      DOJ indictment names targeting of aerospace, biotech,
-      industrial manufacturing, telecom, oil-and-gas — the
-      MIC2025 pillar set. Cited explicitly by FBI / DHS as
-      industrial-policy-aligned collection.
-    attesting_source_id: doj/2018-12-20_apt10-indictment
+      The indictment and MITRE G0045 document APT10 collection
+      against exactly the strategic high-tech manufacturing
+      sectors MIC2025 prioritises — aviation / space / satellite,
+      pharmaceutical / biotech, manufacturing technology, oil-and-
+      gas, maritime and communications — carried out by an MSS
+      Tianjin contractor after the 2015 MIC2025 announcement.
+      Held at strongly_inferred (downgraded from attested,
+      2026-06-30): the DOJ statements frame the purpose as broad
+      economic-competitiveness / IP theft ("replace the US as the
+      world's leading superpower"), not the industrial-modernisation
+      goal MIC2025 encodes at the goal level, and the primary DOJ
+      source is bot-walled (un-snapshottable) so no hashed
+      goal-stating quote could be captured for an attested claim.
+    attesting_source_id: mitre-attack/g0045_apt10
+    inference_basis:
+      signals:
+        - "Target set is the strategic-manufacturing sector menu MIC2025 prioritises (aviation/space/satellite, pharma/biotech, manufacturing tech, oil-and-gas, maritime, communications) — per DOJ charges + MITRE G0045."
+        - "Operator is an MSS Tianjin State Security Bureau contractor (Huaying Haitai), the canonical state-directed industrial-collection model."
+        - "Sustained collection running through and past the 2015 MIC2025 announcement window."
+      ruled_out: "Pure geopolitical/military-modernisation espionage — ruled out because the charged theft targets civilian commercial IP and trade secrets, not weapons-system data, distinguishing it from a defence-modernisation reading."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -93,3 +121,59 @@ targets:
     role: primary
 sources:
   - doj/2018-12-20_apt10-indictment
+  - mitre-attack/g0045_apt10  # AUDIT 2026-06-30: carries the tradecraft/implant/sector claims (ChChes, RedLeaves, UPPERCUT, QuasarRAT; MSP Trusted-Relationship) the DOJ indictment does not itself name
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: partial
+  notes: |
+    Audited against the DOJ press release "Two Chinese Hackers Associated With
+    the Ministry of State Security Charged With Global Computer Intrusion
+    Campaigns…" (justice.gov, 2018-12-20) + MITRE ATT&CK G0045 (raw snapshot
+    mitre-attack__g0045_apt10.html, sha256 1855bacc…2515a9b, 202,611 bytes,
+    hash re-verified). LEVEL = partial: the primary DOJ source is Akamai
+    bot-walled — curl of the justice.gov URL returns HTTP 200 but only a
+    2,575-byte "bm-verify" JS challenge page (no article body); WebFetch → 403;
+    archive.org blocked. No content hash recorded for it (challenge page deleted,
+    not committed). DOJ-specific facts therefore mirror-corroborated (CyberScoop,
+    FBI Wanted, Nextgov/Defense One, 2018-12-20) rather than hashed.
+    [a] FACTS: Zhu Hua + Zhang Shilong, of Huaying Haitai Science & Technology
+    Development Co. (Tianjin), acting in association with the MSS Tianjin State
+    Security Bureau — verbatim in MITRE ("Individual members of menuPass are
+    known to have acted in association with the Chinese Ministry of State
+    Security's (MSS) Tianjin State Security Bureau and worked for the Huaying
+    Haitai Science and Technology Development Company") and DOJ mirrors. Cloud
+    Hopper MSP-pivot campaign + MSP Trusted-Relationship abuse: MITRE ("menuPass
+    has used legitimate access granted to Managed Service Providers in order to
+    access victims of interest") + DOJ. "12+ countries" = DOJ MSP-theft count
+    (MSPs and clients in ≥ a dozen countries); "≥45 tech companies / US govt
+    agencies" + "100,000+ US Navy personnel records / 40+ computers" = DOJ,
+    mirror-corroborated. CORRECTIONS: (1) removed "intrusions into HPE, IBM,
+    NTT" from outcome_summary — the DOJ indictment did NOT name the MSP victim
+    companies (those came from Reuters, which is not cited); (2) reworded the
+    summary so the implant families (ChChes/RedLeaves/UPPERCUT/QuasarRAT) are
+    credited to vendor/MITRE reporting, NOT "the indictment" — the DOJ document
+    does not name them (ANEL dropped: absent from the G0045 snapshot string);
+    (3) tempered the "Five-Eyes-coordinated naming event" line to flag it as
+    context not carried by the two cited sources.
+    [b] ATTRIBUTION: US DOJ, high confidence (indictment), auspex concur — kept.
+    Added attribution_level: named-unit (DOJ names the specific MSS unit, Tianjin
+    SSB, + front company) per the orchestrator NB.
+    [c] DATES: source published_on 2018-12-20 ✓ (press release; grand jury
+    returned the indictment 2018-12-17, unsealed 2018-12-20). Event start_date
+    2006-01-01 ✓ ("active since at least 2006", MITRE); disclosure/end 2018-12-20 ✓.
+    [d] DOCTRINE_LINKS: cn/mic2025 DOWNGRADED attested → strongly_inferred —
+    the prior reasoning claimed it was "cited explicitly by FBI/DHS as
+    industrial-policy-aligned collection," which is unverifiable (neither cited
+    source says that), and the attested bar (a hashed source-quote stating the
+    MIC2025 goal in substance) cannot be met while the DOJ source is
+    un-snapshottable and frames intent as broad economic espionage. Added
+    inference_basis {signals, ruled_out}; attesting_source_id → the hashed MITRE
+    G0045. cn/mcf (strongly_inferred) and cn/national-intelligence-law-2017
+    (plausible, with honest pre-NIL counter_explanation) left as calibrated.
+    [e] ATTRIBUTION_LEVEL: named-unit set (see [b]).
+    [f] ACTOR_ID: cn/mss/apt10 resolves (file atlas/actors/cn/apt10.yaml, id
+    cn/mss/apt10) — no actor edit. FLAG: target orgs/us-navy has no
+    targets-registry entry (same tolerated corpus-wide orgs/ FK gap noted in the
+    navy-sea-dragon audit; targets normalisation deferred — not a per-event defect).

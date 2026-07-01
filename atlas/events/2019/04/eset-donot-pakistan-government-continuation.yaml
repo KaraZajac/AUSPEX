@@ -1,69 +1,193 @@
 id: 2019-04/eset-donot-pakistan-government-continuation
-name: ESET documents continued DoNot Team targeting of Pakistani government and South Asian diplomatic entities
-start_date: 2018-09-01
-disclosure_date: 2019-04-15
-end_date: 2019-03-31
+name: ESET documents continued Donot Team (yty / DarkMusical & Gedit) targeting of South Asian government and military entities
+start_date: 2020-09-01
+disclosure_date: 2022-01-18
+end_date: 2021-10-31
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  ESET continuation reporting through early 2019 documented
-  ongoing DoNot Team / Origami Elephant operations against
-  Pakistani government and military personnel, alongside South
-  Asian diplomatic targets in Bangladesh and Sri Lanka.
-  Tradecraft refreshes included yty-framework Windows updates
-  and the first vendor-documented appearance of Android tooling
-  delivered via WhatsApp social engineering — the Android
-  capability that would become the cluster's distinguishing
-  characteristic in Amnesty's 2021 and 2023 disclosures.
+  ESET Research documented Donot Team (aka APT-C-35, SectorE02)
+  Windows campaigns from September 2020 to October 2021 against
+  government and military organizations, Ministries of Foreign
+  Affairs, and embassies across South Asia — Bangladesh, Sri
+  Lanka, Pakistan, and Nepal. ESET analyzed two variants of the
+  group's signature yty malware framework: Gedit (first observed
+  September 2020 against organizations in Pakistan previously hit
+  with the Jaca framework, then Bangladesh, Nepal, and Sri Lanka)
+  and DarkMusical (first wave June 2021 against Bangladeshi
+  military organizations). The espionage toolset collects and
+  exfiltrates files, screenshots, and keystrokes. ESET noted the
+  group is remarkably persistent, re-targeting the same entities
+  with waves of spearphishing every two to four months, sometimes
+  from compromised accounts of the victim organizations themselves.
 false_flag_risk: none
 summary: |
-  Connective tissue between ESET's 2018 yty-framework naming
-  and the cluster's later Android-prominent profile. The 2019
-  reporting is the earliest open-source documentation of DoNot
-  Team's Android delivery via WhatsApp — the social-engineering
-  vector that has remained operationally central across
-  subsequent reporting on Kashmir-activist targeting.
+  ESET's "DoNot Go! Do not respawn!" (18 Jan 2022) is a deep-dive
+  on Donot Team's Windows toolchain over 2020-2021, tracing
+  DarkMusical and Gedit variants of the yty framework against
+  South Asian government/military targets. It corroborates the
+  cluster's persistent regional-collection profile — Pakistani
+  government targeting continued alongside Bangladesh, Nepal, and
+  Sri Lanka — and notes (citing an Amnesty International report)
+  that the group's malware has been linked to an Indian
+  cybersecurity company selling or operating the spyware for
+  regional governments. ESET itself names no sponsoring state.
 attributions:
   - actor_id: in/unscoped/donot-team
     attributing_org: ESET (WeLiveSecurity)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2019-04-15
+    attribution_date: 2022-01-18
     attribution_source_id: eset/2019-04_donot-pakistan-government-targeting
     notes: |
-      Attribution continues the 2018 ESET yty-framework
-      assessment with refreshed tradecraft; no independent
-      attribution development.
+      ESET attributes the DarkMusical and Gedit campaigns to Donot
+      Team (aka APT-C-35, SectorE02) on the strength of its own
+      telemetry and yty-framework lineage. named-actor, not named-
+      unit or nation: ESET names the group and its aliases but no
+      sponsoring service, and only relays — it does not itself
+      assert — Amnesty International's link between the group's
+      malware and an Indian cybersecurity company. concur-with-
+      caveat: AUSPEX concurs the activity is Donot Team while
+      noting ESET states no India attribution of its own.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani government and military victim set is canonical
-      for the Pakistan-military pillar.
+      ESET documents the Gedit campaign opening in September 2020
+      "against organizations in Pakistan" (government/military),
+      continuous with the cluster's long-running Pakistani-
+      government collection — the core victim set the Pakistan-
+      military/government pillar encodes for India-aligned clusters
+      (DoNot, SideWinder, Patchwork all converge here). strongly_
+      inferred, not attested: ESET names the Pakistani targeting
+      but states no Indian strategic purpose.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET: 'We detected the first attacks of the campaign using Gedit in September 2020, against organizations in Pakistan that had already been targeted with … the Jaca framework.'"
+        - "Donot Team is assessed India-aligned in other reporting; an India-aligned espionage actor persistently collecting on Pakistani government/military fits the regional-collection-vs-Pakistan pillar."
+      ruled_out: "Financially-motivated or hacktivist activity — ruled out by the espionage-only yty toolset (file collection, screenshots, keylogging, exfiltration) with no monetization or public-messaging component."
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Bangladeshi and Sri Lankan diplomatic targeting maps onto
-      the diplomatic-collection pillar.
+      ESET reports the same campaigns focused on "Government and
+      military organizations, Ministries of Foreign Affairs,
+      Embassies" and extending to Bangladesh, Nepal, and Sri Lanka
+      (and those countries' embassies abroad) — the broader South
+      Asian and diplomatic collection the diplomatic-collection
+      pillar encodes. strongly_inferred, not attested: ESET names
+      the diplomatic/regional target mix but states no Indian
+      strategic purpose.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET: targets are 'Government and military organizations, Ministries of Foreign Affairs, Embassies … Bangladesh, Sri Lanka, Pakistan and Nepal', including 'embassies of these countries in other regions'."
+        - "ESET: after the September 2020 Pakistan wave 'Donot Team moved on to focus on targets in Bangladesh, Nepal and Sri Lanka'; DarkMusical's first wave (June 2021) hit 'military organizations in Bangladesh'."
+      ruled_out: "A Pakistan-only reading — ruled out because ESET's telemetry extends the target set across Bangladesh, Nepal, Sri Lanka and their foreign-ministries/embassies, the wider regional-collection lane."
 targets:
-  - target_id: orgs/pakistani-government
+  - target_id: sectors/government
     country: pk
     role: primary
-  - target_id: orgs/bangladesh-foreign-ministry
+  - target_id: sectors/defense
     country: bd
     role: primary
-  - target_id: orgs/sri-lanka-government
+  - target_id: sectors/government
     country: lk
+    role: primary
+  - target_id: sectors/government
+    country: np
     role: primary
 sources:
   - eset/2019-04_donot-pakistan-government-targeting
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION (badrabbit-model RE-SOURCE + fabrication strip). The event was
+    stamped 2019-04 and claimed an ESET April-2019 report on a 2018-09→2019-03 DoNot
+    "continuation" against Pakistan, plus first-ever Android-via-WhatsApp tooling feeding
+    Amnesty's 2021/2023 Kashmir-activist disclosures. STEP 0 triage: the cited source's
+    url (welivesecurity.com/2022/01/18/donot-go-do-not-respawn/) resolves to a REAL ESET
+    article, but it is "DoNot Go! Do not respawn!" published 2022-01-18 covering Sep 2020–
+    Oct 2021 — NOT a 2019-04 report. The sibling event 2018-08/eset-donot-yty-framework-
+    disclosure (audited 2026-06-28) already established that no ESET 2018 or 2019 DoNot
+    article exists and that this 2022-01-18 piece is the only genuine ESET DoNot report.
+    Path taken: RE-SOURCE/correct — the attached source IS the real ESET report, so I
+    re-dated the event to the campaign it actually documents and stripped everything the
+    source does not carry. Raw snapshot eset__2019-04_donot-pakistan-government-targeting
+    .html, sha256 76021fe8…e452b0fd, 136,095 bytes (fetched cleanly).
+
+    [a] FACTS — rewritten to the raw ESET article. CARRIED: Donot Team = APT-C-35 /
+    SectorE02, "operating since at least 2016"; two yty-framework Windows variants
+    "DarkMusical and Gedit"; timeline "from September 2020 to October 2021 according to
+    ESET telemetry"; Gedit "first attacks … in September 2020, against organizations in
+    Pakistan that had already been targeted with … the Jaca framework", then "Bangladesh,
+    Nepal and Sri Lanka"; DarkMusical "first wave … June 2021, targeting military
+    organizations in Bangladesh"; targets = "Government and military organizations,
+    Ministries of Foreign Affairs, Embassies" across "Bangladesh, Sri Lanka, Pakistan and
+    Nepal", incl. their embassies abroad; espionage motive / file-screenshot-keylog
+    collection; persistent spearphishing "every two to four months", sometimes from
+    compromised victim accounts. STRIPPED (fabrication cluster — none in the source):
+    "first vendor-documented appearance of Android tooling delivered via WhatsApp"
+    (WhatsApp x0; the report is Windows-focused, "Android" appears once as generic
+    background); "Amnesty's 2021 and 2023 disclosures" / "Kashmir-activist targeting"
+    (Kashmir x0; Amnesty appears once, only as a relayed background note that the malware
+    is linked to an Indian company); "ESET's 2018 yty-framework naming" (false — yty was
+    named by NETSCOUT/ASERT in 2018-03, not ESET; ESET published no 2018 DoNot piece); the
+    invented 2018-09→2019-03 op window and the entire "connective tissue" Android-lineage
+    framing.
+
+    [b] ATTRIBUTION — ESET attributes to Donot Team on its own telemetry + yty lineage;
+    it names the group and aliases (APT-C-35, SectorE02) but NO sponsoring state or unit,
+    and only relays Amnesty's link to "an Indian cybersecurity company". attribution_level
+    set named-actor (was missing); attributing_org_confidence kept moderate; auspex_
+    assessment kept concur-with-caveat; attribution_date corrected 2019-04-15 → 2022-01-18.
+
+    [c] DATES — source published_on corrected to 2022-01-18 (byline "18 Jan 2022"; tier
+    upgraded secondary→primary as first-party ESET research). Event start_date 2018-09-01 →
+    2020-09-01 (Gedit's first wave), end_date 2019-03-31 → 2021-10-31 (telemetry end),
+    disclosure_date 2019-04-15 → 2022-01-18. The 3-year re-dating means the id/slug/path
+    ("2019-04", "continuation") is now historical — kept per the stable-slug rule and
+    FLAGGED for the orchestrator (same posture as the sibling 2018-08 event).
+
+    [d] DOCTRINE_LINKS — both kept strongly_inferred (correct, not attested): ESET names
+    the Pakistani + regional/diplomatic target set but states no Indian strategic purpose,
+    so no attesting_source_id. Refreshed both reasonings to the real ESET evidence and
+    added inference_basis {signals[], ruled_out}. Actor state (India) matches the doctrine
+    state — no doctrine-state-mismatch.
+
+    [e] ATTRIBUTION_LEVEL — named-actor (group + aliases named; no nation/unit).
+
+    [f] ACTOR_ID — in/unscoped/donot-team resolves to atlas/actors/in/donot-team.yaml.
+    Directionality verified: actor India-aligned; victims = Pakistan, Bangladesh, Sri
+    Lanka, Nepal (South Asia), NOT India.
+
+    TARGETS — replaced three DANGLING orgs/ registry FKs (orgs/pakistani-government,
+    orgs/bangladesh-foreign-ministry, orgs/sri-lanka-government — no files exist, same
+    flag as the sibling event) with valid sector FKs reflecting the source: sectors/
+    government pk + lk + np (primary) and sectors/defense bd (primary; DarkMusical hit
+    Bangladeshi military).
+
+    FLAGS (orchestrator): (1) STALE SLUG/PATH — event id 2019-04/eset-donot-pakistan-
+    government-continuation and its source id eset/2019-04_donot-pakistan-government-
+    targeting are both stamped 2019-04 but describe a 2020-2021 campaign disclosed
+    2022-01-18; kept per stable-slug rule, rename is Kara's call. (2) This is now the
+    corpus's representation of the ESET 2022-01-18 "DoNot Go! Do not respawn!" report —
+    confirm no separate 2022/01 ESET DoNot event is wanted, else this becomes a re-home
+    candidate. (3) Dangling target-registry ids orgs/pakistani-government etc. still
+    referenced by sibling DoNot events — need atlas/targets/orgs/ files or migration to
+    sector FKs corpus-wide.

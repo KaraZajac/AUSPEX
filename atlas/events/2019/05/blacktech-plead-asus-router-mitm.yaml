@@ -1,6 +1,6 @@
 id: 2019-05/blacktech-plead-asus-router-mitm
 name: BlackTech PLEAD router-MitM via ASUS WebStorage updates
-start_date: 2019-04-01
+start_date: 2019-04-25
 disclosure_date: 2019-05-14
 end_date: 2019-05-14
 incident_type:
@@ -8,13 +8,21 @@ incident_type:
   - supply-chain
 initial_vector: supply-chain
 outcome_summary: |
-  ESET discloses a BlackTech-cluster (PRC-nexus, Taiwan-focused)
-  operation in which compromised SOHO-class routers in front
-  of Taiwanese victims were used to MitM the ASUS WebStorage
-  cloud-storage client's update channel, injecting the PLEAD
-  backdoor into legitimate update traffic. Victims primarily
-  in Taiwan; targeting consistent with BlackTech's standing
-  Taiwan-collection portfolio.
+  ESET disclosed activity attributed (via Trend Micro's prior
+  PLEAD->BlackTech linkage) to the BlackTech cyberespionage
+  cluster in which internet-exposed routers in front of
+  Taiwanese victims were used to man-in-the-middle the ASUS
+  WebStorage cloud-storage client's HTTP update channel,
+  swapping the update XML's download URL to serve the PLEAD
+  backdoor (hosted on a compromised gov.tw domain) in place of
+  the legitimate binary. ESET assessed a router-level MitM as
+  the MOST PROBABLE scenario while explicitly considering and
+  downgrading -- but not fully excluding -- a true (server-side)
+  ASUS WebStorage supply-chain compromise. Activity was observed
+  by ESET telemetry at the end of April 2019 and was "most
+  actively deployed" in Taiwan. ESET does not identify the
+  ultimate victim organizations' sectors, and this report itself
+  makes no China / PRC / state-sponsorship claim.
 false_flag_risk: none
 summary: |
   Structurally important as an early instance of PRC-nexus
@@ -30,9 +38,11 @@ attributions:
   - actor_id: cn/unscoped/blacktech
     attributing_org: ESET
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-05-14
     attribution_source_id: eset/2019-05-14_plead-asus-webstorage
+    notes: "ESET names 'the BlackTech group' (a named-actor cluster), linking this activity to it via the shared PLEAD backdoor + code-signing-cert reuse and its concentrated Taiwan deployment, and citing Trend Micro's prior PLEAD->BlackTech attribution ('according to Trend Micro, [PLEAD] is used by the BlackTech group'). ESET makes NO China / PRC / nation-state / state-sponsorship claim anywhere in the article (0 occurrences of China/Chinese/PRC/nation-state in the raw HTML) -- the cn/ placement of the actor rests on the actor record's broader literature (MITRE G0098), not on this source. Named-actor, not named-unit (no service named); high reflects ESET's confident malware-family/cert linkage rather than an independent nation-level attribution."
 doctrine_links:
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/taiwan-island-collection
@@ -44,6 +54,11 @@ doctrine_links:
       makes the Taiwan-island-collection pillar fit on victim
       mix alone.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victims concentrated in Taiwan (ESET: activity 'detected ... in Taiwan, where the Plead malware has always been most actively deployed'; the malicious payload was staged on a compromised gov.tw domain)."
+        - "BlackTech is a long-running China-nexus regional cyberespionage cluster whose standing focus is Taiwan (actor record; MITRE G0098), so PRC-nexus espionage against Taiwanese targets maps to the Taiwan-island-collection pillar."
+      ruled_out: "A financially-motivated or non-Taiwan-directed reading -- PLEAD/BlackTech is an espionage toolset with no revenue motive and its deployment here is concentrated on Taiwanese victims, leaving Taiwan collection the dominant strategic reading."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -57,6 +72,10 @@ doctrine_links:
       capability for collection rather than disruption, so
       doctrine fit is plausible rather than attested.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Intelligentized-warfare pre-positioning: compromising edge routers as a staging/injection and C&C-relay primitive is the pre-positioning lane, and this operation is an early instance of the compromised-SOHO-router primitive that becomes a PRC signature by 2023-24 (Volt/Salt Typhoon)."
+        - "Straight collection tradecraft with no doctrine alignment: in 2019 the router compromise served MitM malware delivery and C&C relaying for espionage collection, not disruptive/destructive pre-positioning, so the pre-positioning fit is behavioural rather than purposive."
     counter_explanation: |
       Could equally be framed as straight collection tradecraft
       without doctrine alignment.
@@ -65,7 +84,86 @@ doctrine_links:
 targets:
   - target_id: sectors/ict/networking
     role: staging
+    country: tw
   - target_id: sectors/government
-    role: primary
+    role: staging
+    country: tw
 sources:
   - eset/2019-05-14_plead-asus-webstorage
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    Audited against the event's sole cited source, ESET/WeLiveSecurity, Anton Cherepanov,
+    "Plead malware distributed via MitM attacks at router level, misusing ASUS WebStorage"
+    (2019-05-14). Raw HTML snapshot on disk (eset__2019-05-14_plead-asus-webstorage.html);
+    sha256 RE-VERIFIED this audit: 4ecdee3e...88d61ad6 (full
+    4ecdee3ee1edea5c9a2577f1e009753b8e46e9907126ba61b8bc70a888d61ad6), 82,470 bytes, matches
+    the source record's recorded hash. Not a phantom -- the URL resolves to the genuine
+    article whose title/body carry the event's claims. Source is first-party vendor research;
+    tier: primary is correct (unchanged).
+
+    [a] FACTS -- all source-carried: PLEAD backdoor delivered by a legitimate signed process
+    AsusWSPanel.exe (ASUS WebStorage client); sample filename "Asus Webstorage Upate.exe"[sic];
+    ASUS WebStorage update requested over HTTP with no authenticity check on the downloaded
+    binary; attackers swap the update XML's guid/link to point at a malicious file hosted on a
+    compromised gov.tw domain; C&C update.asuswebstorage.com.ssmailer[.]com; first-stage
+    downloader -> TSCookie (per JPCERT). REPRESENTED THE HEDGE (the load-bearing correction):
+    ESET lays out two scenarios -- Scenario 1 supply-chain (server-side) compromise, which it
+    calls "a less likely scenario ... however, we can't fully discount it," and Scenario 2
+    router-level MitM, which it concludes is "the most probable scenario" ("most of the
+    affected organizations have routers made by the same producer; moreover, the admin panels
+    of these routers are accessible from the internet"). Rewrote outcome_summary so ESET's
+    leaning (router-MitM most probable) and the downgraded-but-not-excluded supply-chain
+    hypothesis are both explicit, replacing the flat "compromised SOHO-class routers" framing
+    with ESET's own "internet-exposed routers." initial_vector kept supply-chain: the
+    controlled vocab has no MitM value, and update-mechanism abuse is the least-bad bucket and
+    one of ESET's two named scenarios (MITRE technique ESET lists = "Exploitation for Client
+    Execution ... exploits a vulnerable update mechanism") -- the hedge is documented in prose
+    rather than asserted via the enum.
+
+    [b] ATTRIBUTION -- ESET names "the BlackTech group" (named-actor), stating (via Trend
+    Micro's prior PLEAD->BlackTech attribution) that PLEAD "is used by the BlackTech group"
+    and that the group "is primarily focused on cyberespionage in Asia," with PLEAD "most
+    actively deployed" in Taiwan. Added attribution_level: named-actor (was missing) and an
+    explanatory notes field. attributing_org_confidence high retained -- ESET links the new
+    activity confidently via shared malware + code-signing-cert reuse + Taiwan telemetry.
+    CRITICAL EVIDENCE for the actor placement: over the full raw HTML the strings
+    China/Chinese/PRC/nation-state/state-sponsor occur 0 times; "Taiwan" and "gov.tw" once
+    each; "government" 0. So this source makes NO China/PRC attribution -- the actor's cn/
+    placement rests on the actor record's broader literature, not this citation. Consistent
+    with the actor already being cn/UNSCOPED/blacktech (service unresolved).
+
+    [c] DATES -- source published_on 2019-05-14 matches (= disclosure_date). CORRECTED
+    start_date 2019-04-01 -> 2019-04-25: ESET says activity was observed "At the end of April
+    2019," so late-April is the honest observed start (the 2018 D-Link-cert PLEAD activity ESET
+    references is prior, separate context). end_date left at disclosure date (op end unbounded
+    in-source).
+
+    [d] DOCTRINE_LINKS -- both non-attested with attesting_source_id: null, which is correct
+    (this source states no strategic goal and does not even mention China). Link 1
+    (cn/taiwan-reunification/taiwan-island-collection, strongly_inferred) kept: PRC-nexus
+    Taiwan-focused espionage actor hitting Taiwanese victims triangulates to Taiwan collection
+    with no serious competitor; added inference_basis{signals[], ruled_out} (was bare). Link 2
+    (cn/intelligentized-warfare/pre-positioning, plausible) kept honest at plausible with its
+    counter_explanation; added inference_basis{alternatives[]}. Neither upgraded -- the source
+    corroborates no purpose.
+
+    [e] ATTRIBUTION_LEVEL -- set to named-actor (see [b]).
+
+    [f] ACTOR_ID -- cn/unscoped/blacktech resolves to atlas/actors/cn/blacktech.yaml (id
+    inside file = cn/unscoped/blacktech). No actor-file edit made. NOTE (not a flag): the
+    actor was already demoted cn/mss -> cn/unscoped on 2026-06-24 against this same source;
+    placement is consistent and correctly reflects that no cited source names a Chinese
+    service.
+
+    CORRECTIONS MADE: start_date 2019-04-01->2019-04-25; added attribution_level named-actor +
+    notes; rewrote outcome_summary to represent ESET's MitM-vs-supply-chain hedge and drop
+    unsupported "SOHO-class"; targets -- sectors/government demoted role primary->staging
+    (ESET names no government VICTIM; the only government element is a compromised gov.tw
+    domain used to HOST the payload = staging infra), added country: tw to both target rows
+    (routers + gov.tw host); added inference_basis to both doctrine links. Event now carries
+    no primary-victim sector -- correct, since ESET does not identify the ultimate victim
+    organizations' sectors (unnamed Taiwanese orgs).

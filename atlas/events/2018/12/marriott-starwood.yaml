@@ -1,72 +1,172 @@
 id: 2018-12/marriott-starwood
 name: Marriott / Starwood guest-database breach
-start_date: 2014-07-01  # via legacy Starwood compromise predating the Marriott acquisition
+start_date: 2014-01-01  # year-only: US officials/NYT date the intrusion to "at least 2014"; no month sourced
 disclosure_date: 2018-11-30
-end_date: 2018-09-30
+end_date: 2018-09-10  # Marriott (SEC 8-K): reservations "on or before September 10, 2018"; internal alert Sept 2018
 incident_type:
   - intrusion
   - data-theft
+  - espionage
+  - bulk-collection
 initial_vector: unknown
 outcome_summary: |
-  Theft of approximately 500 million guest reservation records
-  from the Starwood guest database (acquired by Marriott in 2016).
-  Travel-pattern data of foreign officials and corporate executives
-  particularly valuable to MSS counterintelligence.
+  Long-dwell intrusion in the Starwood central guest-reservation
+  database. Marriott initially estimated (Nov 2018) that up to
+  approximately 500 million guests were affected; on 4 January 2019
+  it revised the figure to approximately 383 million records as the
+  upper limit (with far fewer unique guests, due to duplicates),
+  including passport numbers. US officials assessed the operation as
+  bulk-PII collection valuable to MSS counterintelligence and HUMINT
+  targeting of foreign travelers and cleared US personnel.
 quantified_impact:
-  records_exfiltrated: 500000000
+  records_exfiltrated: 383000000  # revised upper limit (Marriott, 2019-01-04); initial estimate was ~500M
 false_flag_risk: none
 summary: |
-  Reuters and US official statements (December 2018) attributed the
-  breach to MSS-affiliated actors. No DOJ indictment. Investigators
-  recovered MSS-cluster tradecraft inside the Starwood environment
-  consistent with APT10 / Stone Panda hospitality-collection
-  patterns: PlugX and Cobalt Strike beacons used for command and
-  control, Mimikatz for credential dumping, valid credentials for
-  lateral movement across the Starwood Active Directory, web shells
-  on customer-facing Starwood reservation servers, and large-scale
-  staged exfiltration of the central guest reservation database.
-  The campaign predates the 2016 Marriott acquisition by two years
-  and sat undetected through it, demonstrating long-dwell bulk-PII
-  collection of foreign-traveler itineraries valuable for MSS
-  counterintelligence targeting alongside the OPM, Anthem, and
-  Equifax trinity.
+  Reuters (5 December 2018) and the New York Times, citing people
+  familiar with the US investigation, reported that "preliminary
+  indications" showed the Starwood breach was executed by hackers
+  affiliated with China's Ministry of State Security (MSS); Secretary
+  of State Mike Pompeo appeared to concur in a subsequent interview.
+  Investigators reportedly found hacking tools, techniques and
+  procedures previously used in attacks linked to Chinese actors, but
+  the reporting was explicitly hedged — the analysis was preliminary,
+  some of the tools had been publicly available, and more than one
+  group may have been present in the network — so attribution was not
+  definitive. No cited source named a specific hacking group (e.g.
+  APT10) or any malware for the Marriott breach, and no DOJ indictment
+  was issued for it. The intrusion sat undetected in the Starwood
+  reservation database from at least 2014, through Marriott's 2016
+  acquisition of Starwood, until an internal tool flagged access in
+  September 2018; Marriott disclosed the breach on 30 November 2018.
+  US officials framed the operation as part of a years-long effort
+  "dating to at least 2014 to build a database containing names of
+  executives and American government officials with security
+  clearances" — the same bulk-PII collection pattern as OPM — making
+  the stolen travel-pattern and identity data valuable for MSS
+  counterintelligence targeting.
 attributions:
-  - actor_id: cn/mss/apt10  # working assignment to MSS hospitality-collection cluster
-    attributing_org: US officials (via Reuters)
+  - actor_id: null  # no specific hacking group was ever publicly named for the Marriott breach
+    attributing_org: "US officials / New York Times (reported via Reuters and NPR)"
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
-    attribution_date: 2018-12-11
+    attribution_date: 2018-12-05
     attribution_source_id: reuters/2018-12_marriott-china
+    service_id: cn/mss
     notes: |
-      Country-level attribution only; specific cluster assignment
-      to APT10 / MSS is open-source consensus but not DOJ-attested.
+      Nation/ministry-level attribution only. Reuters (5 Dec 2018) and
+      the NYT, citing people familiar with the US investigation,
+      reported "preliminary indications" that the breach was executed
+      by hackers affiliated with China's MSS; Pompeo appeared to concur.
+      Reporting was explicitly hedged ("most likely", "preliminary"),
+      noted some tools had been publicly available, and that more than
+      one group may have been in the network. NO cited source names a
+      specific hacking group for the Marriott breach — the prior
+      actor_id cn/mss/apt10 was an unsupported working assignment and
+      has been removed (APT10 appears in Dec-2018 reporting only in
+      connection with the *separate* Cloud Hopper indictments, not
+      Marriott). service_id cn/mss encodes the MSS attribution without
+      asserting a named group. No DOJ indictment for this breach.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Bulk travel-pattern data of foreign officials is MCF-aligned
-      HUMINT-enabling collection — same logic as OPM / Anthem /
-      Equifax extended to travel.
+      US officials framed the operation as a years-long effort "to
+      build a database containing names of executives and American
+      government officials with security clearances" (NPR / NYT) —
+      i.e. bulk-PII collection for MSS HUMINT-vetting and
+      counterintelligence targeting, the same pattern the corpus
+      records for OPM / Anthem / Equifax (the cn/mcf bulk-PII pillar
+      names Marriott explicitly). strongly_inferred rather than
+      attested: the purpose is stated by anonymous officials relayed
+      in journalism (not a govt-primary or tier-1 vendor assessment),
+      and the espionage-only, non-monetized character of the theft
+      rules out a criminal reading.
     attesting_source_id: null
-    counter_explanation: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: null
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Intelligence Law's compelled-cooperation regime is the legal
-      counterpart to bulk-PII collection — though the Marriott
-      compromise predates routine MSS use of the law.
-    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target = the central Starwood guest-reservation database (bulk PII: names, travel patterns, passport numbers of foreign travelers and cleared US persons)."
+        - "US-official/NYT framing (via NPR): effort 'dating to at least 2014 to build a database containing names of executives and American government officials with security clearances'."
+        - "Reported as part of the same MSS bulk-collection pattern as OPM; no monetization or data resale reported."
+      ruled_out: "Financial/criminal motive — no fraud, sale, or extortion reported; the data was assessed as feeding state intelligence, consistent with MSS espionage rather than a cybercriminal operation."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/marriott-starwood
+    country: us
     role: primary
 sources:
   - reuters/2018-12_marriott-china
+  - npr/2018-12-12_marriott-china-mss
+  - sec-edgar/2019-01-04_marriott-starwood-update
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: partial
+  notes: |
+    Audited against the cited Reuters report (bot-walled — see below) plus two
+    newly-added snapshotted sources: NPR 2018-12-12 (sha 17b83342…23912f4a, 74,856 B)
+    and Marriott's own SEC 8-K Exhibit 99 of 2019-01-04 (sha 50df4b6a…c78f0d26,
+    16,565 B). level=partial because the load-bearing attribution source (Reuters)
+    is bot-walled (DataDome captcha, 771 B — sha e7cb636c…2333f31a, NOT committed as
+    it is not the article) and archive.org is blocked here; its claims were
+    corroborated via NPR + CBS + Infosecurity mirrors of the same Reuters/NYT
+    reporting.
+
+    [a] FACTS — STRIPPED as fabricated (carried by NO source): "PlugX and Cobalt
+    Strike beacons", "Mimikatz for credential dumping", "valid credentials for
+    lateral movement across the Starwood Active Directory", "web shells on
+    customer-facing Starwood reservation servers", "large-scale staged
+    exfiltration", "MSS-cluster tradecraft recovered inside the environment", and
+    "APT10 / Stone Panda hospitality-collection patterns". Reuters said only that
+    investigators found "hacking tools, techniques and procedures ... used in earlier
+    cyberattacks ... linked to Chinese hackers" — no malware or group named.
+    Rewrote summary to source-carried claims only, adding the hedges the reporting
+    carried (preliminary; tools publicly available; possibly >1 group). VERIFIED:
+    Starwood central reservation DB; intrusion since ~2014 through the 2016 Marriott
+    acquisition; internal alert Sept 2018; disclosed 30 Nov 2018 (NPR + SEC).
+    IMPACT CORRECTED: 500,000,000 -> 383,000,000. Marriott's SEC filing: initial
+    estimate "up to approximately 500 million guests ... on or before September 10,
+    2018"; revised to "approximately 383 million records as the upper limit" on
+    2019-01-04 (far fewer unique guests). quantified_impact now the revised upper
+    limit with a comment noting the initial ~500M.
+
+    [b] ATTRIBUTION — DOWNGRADED. Sources attribute to China/MSS at nation/ministry
+    level only, explicitly hedged ("most likely", "preliminary indications"); Pompeo
+    concurrence is informal. attributing_org_confidence kept moderate; auspex
+    concur-with-caveat. KEY CORRECTION: actor_id cn/mss/apt10 -> null. No cited
+    source names a hacking group for Marriott; the APT10 assignment was an
+    unsupported working assumption (the event's own prior note wrongly called it
+    "open-source consensus"). APT10 shows up in Dec-2018 reporting only re the
+    separate Cloud Hopper indictments. MSS attribution preserved structurally via
+    service_id: cn/mss + prose; state derivation preserved via the cn/mcf
+    attacker-rationale doctrine link. attribution_date corrected 2018-12-11 ->
+    2018-12-05 to match the Reuters source.
+
+    [c] DATES — start_date 2014-07-01 -> 2014-01-01 (year-only; the July precision was
+    unsourced). end_date 2018-09-30 -> 2018-09-10 (Marriott/SEC boundary). Source
+    published_on values verified: Reuters 2018-12-05, NPR 2018-12-12, SEC 2019-01-04.
+
+    [d] DOCTRINE_LINKS — kept cn/mcf/bulk-pii-humint-enabling at strongly_inferred
+    (not attested: purpose stated by anonymous officials via journalism, no
+    govt-primary/tier-1 attesting quote captured), added inference_basis
+    (signals[] + ruled_out). REMOVED the cn/national-intelligence-law-2017 link:
+    anachronistic (the intrusion began 2014, three years before the June-2017 law)
+    and its own reasoning conceded the op "predates routine MSS use of the law"; no
+    source ties this operation to that statute.
+
+    [e] ATTRIBUTION_LEVEL — set to nation (was missing). Sources name the sponsoring
+    ministry (MSS) but no operational group/unit → nation-level.
+
+    [f] ACTOR_ID — n/a (now null). FLAG for orchestrator: see final report — a
+    generic cn/mss placeholder actor (or restoration of a specific group only on
+    non-public basis) is a Kara decision. Also FLAG: the target registry
+    orgs/marriott-starwood already used ~383M, so the corpus was internally
+    inconsistent with this event's 500M until now.
+
+    RESIDUAL UNCERTAINTY: the primary Reuters article could not be hashed (bot-wall);
+    the ~383M is Marriott's own upper-limit of *records*, not unique guests.

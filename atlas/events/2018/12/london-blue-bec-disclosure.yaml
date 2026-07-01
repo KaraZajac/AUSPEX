@@ -5,31 +5,119 @@ disclosure_date: 2018-12-04
 end_date: 2018-12-04
 incident_type:
   - financial-theft
+  - disclosure
 initial_vector: phishing
 outcome_summary: |
-  Agari Cyber Intelligence Division published its profile of
-  "London Blue," a Nigerian-organized BEC group with
-  significant UK-based personnel, targeting CFOs at Fortune
-  500 and mid-market firms worldwide. Attempted-wire-fraud
-  value reached USD 25M+ across campaigns identified. The
-  group was distinguished by mature targeting research — a
-  ~50,000-record curated CFO target database — and routing
-  of mule operations through UK accounts. Multiple Nigerian
-  and US prosecutions of named operators followed through
-  2019–2020.
+  Agari's Cyber Intelligence Division published its profile of
+  "London Blue," a Nigerian-organized business-email-compromise
+  (BEC) group with UK-based leadership and money-mule
+  infrastructure, timed to Black Hat Europe 2018. Agari became
+  aware of the group after it attempted to defraud Agari's own
+  CFO, then engaged the actor to map it. The report's headline
+  finding was the group's mature targeting research: a curated
+  repository of more than 50,000 finance-team executives sourced
+  from commercial lead-generation/data-broker services, of whom
+  71% (~35,000) held the CFO title, the remainder finance
+  directors, controllers and other senior finance staff. Targets
+  were majority US-based, with others in the UK, Spain, Finland,
+  the Netherlands, Mexico and Egypt. Agari estimated the scam had
+  already caused hundreds of thousands of dollars in damage and
+  cited one bank loss-prevention transaction of more than USD
+  20,000 that operators nearly validated.
 false_flag_risk: none
 summary: |
-  London Blue is the canonical Nigerian-organized BEC ring
-  with UK money-mule infrastructure. AUSPEX classifies as
-  criminal-baseline.
+  London Blue is a Nigerian-organized BEC ring with UK-based
+  leadership and Western-European money-mule infrastructure,
+  distinguished by industrial-scale, commercially-sourced CFO
+  targeting. AUSPEX classifies it as criminal-baseline (no
+  documented state nexus).
 attributions:
   - actor_id: null
     attributing_org: Agari Cyber Intelligence Division
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-12-04
-    attribution_source_id: agari/2019-12-18_london-blue-arrest
+    attribution_source_id: agari/2018-12-04_london-blue-report
+    notes: |
+      Agari coined the criminal cluster name "London Blue" and
+      assessed it a Nigerian-British BEC organization (leadership
+      operating out of London; ~25 collaborators plus money mules
+      in the US/Western Europe, some members in Nigeria) after
+      directly engaging the actor when it targeted Agari's own
+      CFO. named-actor (a named criminal cluster), NOT a nation or
+      state unit; no actor file — criminal BEC, actor_id null.
 doctrine_links: []
 targets: []
 sources:
-  - agari/2019-12-18_london-blue-arrest
+  - agari/2018-12-04_london-blue-report
+  - cfo/2018-12-05_london-blue-35000-cfos
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The event previously cited a single
+    phantom source, agari/2019-12-18_london-blue-arrest, whose url was null and
+    whose slug named a 2019 "arrest" piece that did not match its own body
+    (which paraphrased the Dec-2018 report). The underlying event is real and
+    well-documented, so it was re-sourced to the genuine December-2018 Agari
+    London Blue report plus a contemporaneous corroborating secondary; the
+    phantom was removed from sources[] and annotated as an orphan retire-
+    candidate. Two real sources snapshotted:
+      (1) agari/2018-12-04_london-blue-report — "London Blue: The Geography of
+          BEC", sha256 ca940b7c…52ff483c, 81,821 bytes. Agari URL 301-redirects
+          to Fortra; landing page confirms report title/existence (report body
+          is gated).
+      (2) cfo/2018-12-05_london-blue-35000-cfos — CFO.com "Hackers Target
+          35,000 CFOs for Phishing Scam", sha256 5974aa84…dd9f0936, 285,543
+          bytes. Carries the report's specific figures verbatim.
+    [a] FACTS — corrected against the real sources:
+      • Target list: CFO.com "The London Blue list included a total of more than
+        50,000 finance executives, of whom 71% were chief financial officers"
+        (~35,000 CFOs). Reworded the old "~50,000-record curated CFO target
+        database" (which conflated the 50k total with the 35k CFO subset).
+      • REMOVED "USD 25M+" attempted-wire-fraud figure — FABRICATED / carried by
+        NO source. CFO.com states Agari "estimated in its report that the scam
+        has already caused hundreds of thousands of dollars in damage"; the only
+        specific figure is a bank transaction "for more than $20,000". Rewrote to
+        those source-carried amounts.
+      • REMOVED "Fortune 500 and mid-market firms" framing — unsupported;
+        Fortune-500 targeting belongs to Agari's LATER, DIFFERENT actor Cosmic
+        Lynx (2020), not London Blue. London Blue targets are finance-role execs
+        across industries (financial services, construction, real estate,
+        healthcare per MSSP Alert 2018-12-10), "regardless of size or location".
+      • REMOVED "Multiple Nigerian and US prosecutions of named operators
+        followed through 2019–2020" — not carried by the Dec-2018 report or its
+        secondaries and not independently verifiable; the prosecution history of
+        London Blue is not established, so the claim was struck rather than
+        re-sourced.
+      • Kept/confirmed: Nigerian-organized with UK leadership + Western-European
+        money mules (report title "a Nigerian-British BEC cybercrime
+        organization"; MSSP "roughly 25 people … a few members in Nigeria",
+        bosses in London); commercial data-broker/lead-gen sourcing of targets;
+        Agari discovered the group when it targeted Agari's own CFO; timed to
+        Black Hat Europe 2018. Added incident_type: disclosure (this event is a
+        vendor profile/disclosure, not an executed intrusion) and a bounded
+        start_date estimate for the campaign activity.
+    [b] ATTRIBUTION — Agari names the criminal cluster it coined ("London Blue")
+        as Nigerian-British; actor_id stays null (criminal BEC, no actor file, per
+        instruction). Set attribution_level=named-actor; kept
+        attributing_org_confidence=moderate (nationality attribution of a
+        criminal cluster is an assessment, though Agari's direct engagement gives
+        it good grounding); auspex_assessment concur; source re-pointed to the
+        real report.
+    [c] DATES — disclosure_date 2018-12-04 confirmed (CNN 2018-12-04, CFO.com
+        2018-12-05, Black Hat Europe Dec 2018). Both new source published_on set
+        to actual publication dates. Old phantom's published_on (2018-12-04) was
+        coincidentally right despite null url.
+    [d] DOCTRINE_LINKS — [] retained. Criminal BEC with no documented state
+        nexus; no doctrine applies. Correct.
+    [e] ATTRIBUTION_LEVEL — set named-actor (was absent).
+    [f] ACTOR_ID — null (correct); no criminal/london-blue actor file exists in
+        atlas/actors and none is required for criminal-baseline BEC.
+    Residual uncertainty: the Agari report body itself is gated (landing page +
+    secondaries used); figures are corroborated across CFO.com and MSSP Alert but
+    not read from the primary PDF directly. Level=full: every retained claim is
+    source-carried by a snapshotted source.

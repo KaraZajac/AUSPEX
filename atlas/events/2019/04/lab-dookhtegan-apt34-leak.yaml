@@ -1,41 +1,115 @@
 id: 2019-04/lab-dookhtegan-apt34-leak
 name: Lab Dookhtegan Telegram leak of APT34 toolkit and MOIS PII
-start_date: 2019-03-26
+start_date: 2019-03-15  # ZDNet: leaks began "mid-March" 2019; exact day not stated (best estimate)
 disclosure_date: 2019-04-17
-end_date: 2019-05-31
+end_date: null  # ZDNet (2019-04-17) sets no end; no cited source bounds the leak
 incident_type:
-  - data-theft
+  - leak
   - influence-operation
-initial_vector: insider
+initial_vector: unknown  # leaker claimed insider access to DNSpionage but ZDNet says take "with a grain of salt" (possible foreign-intel persona)
+false_flag_risk: suspected  # ZDNet: leaker "could very well be a member of a foreign intelligence agency trying to hide their real identity"
 outcome_summary: |
-  Telegram-based dump of APT34 / OilRig source code (Glimpse,
-  PoisonFrog, HyperShell, HighShell, Fox Panel, Webmask),
-  victim lists, and PII of MOIS officers. Forced TTP change
-  for APT34; intelligence windfall for defenders.
-false_flag_risk: none
+  Telegram dump exposed the source code of six APT34 / OilRig
+  hacking tools (Glimpse, PoisonFrog, HyperShell, HighShell,
+  Fox Panel, Webmask), data from ~66 of the group's victims,
+  and doxxing PDFs of alleged Iranian MOIS officers tied to
+  APT34 operations. Chronicle (Alphabet) confirmed the tools'
+  authenticity.
 summary: |
-  **Counter-regime event, not an Iranian operation.** Included
-  in the Iran event log because it materially exposed APT34's
-  link to MOIS and reshaped vendor attribution. The dump
-  published on a "Lab Dookhtegan" ("sewn lips") Telegram channel
-  contained the source and binaries of APT34 / OilRig's
-  toolkit — Glimpse (DNS-tunneling backdoor), PoisonFrog (PHP
-  web shell), HyperShell and HighShell (ASP / PHP web shells),
-  Fox Panel (C2 controller), and Webmask (DNS-hijacking tool) —
-  along with victim lists and PII identifying alleged MOIS
-  officers. The leak materially exposed OilRig's web-shell
-  tradecraft, DNS-tunneled C2, and credential-dumping workflow
-  and forced a tradecraft shift in subsequent OilRig / APT34
-  operations. Source remained anonymous; assessed Iranian
-  insider or dissident.
+  **Counter-regime event, not an Iranian operation.** Included in
+  the Iran event log because it materially exposed APT34 / OilRig's
+  toolkit and its connection to Iran's Ministry of Intelligence
+  (MOIS). Since mid-March 2019, an individual using the "Lab
+  Dookhtegan" ("sewn lips") pseudonym leaked, on a Telegram
+  channel, the source code of six APT34 / OilRig hacking tools —
+  Glimpse (newer PowerShell-based trojan that Palo Alto Networks
+  calls BondUpdater), PoisonFrog (older version of BondUpdater),
+  HyperShell (web shell Palo Alto calls TwoFace), HighShell
+  (another web shell), Fox Panel (phishing kit), and Webmask (DNS
+  tunneling, the main tool behind DNSpionage) — plus data from the
+  group's backend C2 panels (Chronicle counted ~66 victims, mainly
+  in the Middle East, and named Etihad Airways and Emirates
+  National Oil among them) and doxxing packages (names, images,
+  phone numbers) for alleged Iranian MOIS officers involved in
+  APT34 operations. Chronicle (Alphabet) confirmed the tools'
+  authenticity. The leaker claimed to have worked on APT34's
+  DNSpionage campaign, but ZDNet cautioned this should be taken
+  "with a grain of salt" — the persona could equally be a foreign
+  intelligence officer masking their identity. Origin therefore
+  unresolved (Iranian insider/dissident vs. foreign service).
 attributions:
-  - actor_id: null  # anonymous insider; not Iranian state
+  - actor_id: null  # anonymous "Lab Dookhtegan" leaker; not an actor in the registry, origin unresolved
     attributing_org: ZDNet / Catalin Cimpanu (reporting)
     attributing_org_confidence: moderate
+    attribution_level: null  # ZDNet does not resolve the leaker to any named actor or nation
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: zdnet/2019-04-17_lab-dookhtegan-leak
-doctrine_links: []  # counter-regime; no Iranian doctrine linkage
+    notes: "Exposed subject is APT34 / OilRig (actor ir/mois/apt34); perpetrator of the leak itself is the anonymous Lab Dookhtegan persona, unattributed (null). ZDNet notes the insider claim is unverified and the leaker could be a foreign intelligence officer."
+doctrine_links: []  # counter-regime leak by an anti-Iran persona; no Iranian doctrine linkage
 targets: []
 sources:
   - zdnet/2019-04-17_lab-dookhtegan-leak
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-06-30
+  level: full
+  notes: |
+    Audited against the cited ZDNet article "Source code of Iranian cyber-espionage
+    tools leaked on Telegram" (Catalin Cimpanu, 2019-04-17). RAW snapshot captured:
+    zdnet__2019-04-17_lab-dookhtegan-leak.html, sha256 de595f67…ad34e595, 867,565 bytes.
+    Verified it is the real article (title matches; body carries every load-bearing claim).
+
+    [a] FACTS — corrected several malware mislabels the prose carried that the source
+    contradicts. Source verbatim tool list: "Glimpse (newer version of a PowerShell-based
+    trojan that Palo Alto Networks names BondUpdater); PoisonFrog (older version of
+    BondUpdater); HyperShell (web shell that Palo Alto Networks calls TwoFace); HighShell
+    (another web shell); Fox Panel (phishing kit); Webmask (DNS tunneling, main tool behind
+    DNSpionage)." OLD prose was WRONG on four of six: Glimpse was called a "DNS-tunneling
+    backdoor" (it is the PowerShell BondUpdater trojan; Webmask is the DNS tool);
+    PoisonFrog called a "PHP web shell" (it is the older BondUpdater); Fox Panel called a
+    "C2 controller" (it is a phishing kit); Webmask called a "DNS-hijacking tool" (source
+    says DNS tunneling); HyperShell/HighShell had invented "ASP / PHP" qualifiers. All
+    corrected to the source's own words. Victim count: source says "according to Chronicle,
+    Dookhtegan leaked data from 66 victims, mainly from countries in the Middle East" and
+    names "Etihad Airways and Emirates National Oil" — added, hedged as ~66. Doxxing:
+    "leaker also doxxed Iranian Ministry of Intelligence officers, posting phone numbers,
+    images, and names of officers involved with APT34 operations" — supported. Authenticity:
+    "Chronicle, Alphabet's cyber-security division, confirmed this" — added. STRIPPED
+    unsupported embellishments the single April-17 source does not carry: "Forced TTP change
+    for APT34", "forced a tradecraft shift in subsequent OilRig / APT34 operations", "reshaped
+    vendor attribution", "intelligence windfall for defenders", and the assertion the leaker
+    was "assessed Iranian insider or dissident" (source explicitly floats a foreign-intel
+    persona and says the insider claim is unverified).
+
+    [b] ATTRIBUTION — modeled as a null-actor counter-action per the directionality rule: the
+    EVENT is the leak/doxing OF Iran's APT34, perpetrated by the anonymous Lab Dookhtegan
+    persona (not in the actor registry, origin unresolved). actor_id stays null; attributing_org
+    = ZDNet (reporting body); confidence moderate (ZDNet's own hedge). Added attribution_level:
+    null — the source resolves the leaker to no named actor or nation. Exposed subject APT34 =
+    actor ir/mois/apt34, noted in attribution.notes and summary rather than as an attribution.
+
+    [c] DATES — source published_on 2019-04-17 correct (= disclosure_date). start_date changed
+    2019-03-26 → 2019-03-15: source says leaks began "mid-March"; the 03-26 day had no basis.
+    end_date changed 2019-05-31 → null: the April-17 source bounds no end date and none is cited;
+    the prior May-31 was fabricated precision.
+
+    [d] DOCTRINE_LINKS — [] retained and correct: an anti-Iran-regime leak serves no Iranian
+    doctrine; no attacker-doctrine applies.
+
+    [e] ATTRIBUTION_LEVEL — set to null (leaker unresolved), was missing.
+
+    [f] ACTOR_ID — null (leaker). Exposed subject ir/mois/apt34 resolves to
+    atlas/actors/ir/apt34.yaml (id ir/mois/apt34); no actor-file issue observed. No FK to
+    validate since actor_id is null.
+
+    OTHER CORRECTIONS: incident_type [data-theft, influence-operation] → [leak,
+    influence-operation] (data-theft mischaracterized the act; the mechanism of the leaker's
+    access is unknown, so "leak" is the safe umbrella; influence-operation retained for the
+    anti-MOIS doxxing + promotion to "tens of other reporters"). initial_vector insider →
+    unknown (leaker's insider claim explicitly hedged by source). false_flag_risk none →
+    suspected (source raises a foreign-intel false-persona possibility).
+
+    RESIDUAL UNCERTAINTY: leaker origin genuinely unresolved (Iranian insider/dissident vs.
+    foreign service) per the source itself; exact leak start day approximated as mid-March.
