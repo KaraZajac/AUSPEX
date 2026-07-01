@@ -1,28 +1,37 @@
 id: 2021-01/emotet-operation-ladybird
 name: Operation Ladybird — Emotet botnet takedown
-start_date: 2021-01-26
+start_date: 2021-01-26  # takedown action; Europol frames it as "this week's action", announced 2021-01-27
 disclosure_date: 2021-01-27
-end_date: 2021-04-25  # self-uninstall pushed
+end_date: null  # AUDIT 2026-07-01: was 2021-04-25 (self-uninstall) — the cited Europol release does NOT carry the April-2021 mass-uninstall detail; removed rather than sourced elsewhere
 incident_type:
   - disruption
+  - law-enforcement
 initial_vector: unknown
 outcome_summary: |
-  Europol / Eurojust coordinated multinational seizure of Emotet
-  infrastructure across the Netherlands, Germany, US, UK, France,
-  Lithuania, Canada, Ukraine. Three-tier C2 infrastructure
-  seized; takeover module pushed to infected systems with a
-  delayed self-uninstall scheduled for April 25 2021.
-  Approximately two Ukrainian operators arrested.
+  Europol- and Eurojust-coordinated multinational law-enforcement
+  takedown of the Emotet botnet by authorities in the Netherlands,
+  Germany, United States, United Kingdom, France, Lithuania,
+  Canada and Ukraine, in the EMPACT framework. Investigators
+  gained control of Emotet's infrastructure — described as several
+  hundred servers worldwide with differing functionalities — and
+  "took it down from the inside," redirecting infected victim
+  machines to law-enforcement-controlled infrastructure; affected
+  parties were notified via the CERT network.
 false_flag_risk: none
 summary: |
-  First major "court-authorized self-uninstall via the botnet's
-  own C2" disruption pattern. Template subsequently applied to
-  Qakbot (2023), the multi-loader Operation Endgame (2024), and
-  RedLine / META (Operation Magnus 2024).
+  Coordinated international law-enforcement takedown of Emotet,
+  described by Europol as one of the most significant botnets of
+  the past decade and a leading "loader" service that sold access
+  to top-level criminal groups (TrickBot and Ryuk among the named
+  beneficiaries). Law enforcement gained control of the botnet's
+  infrastructure and dismantled it from the inside — an early
+  template for the later coordinated botnet-takedown operations
+  (Qakbot 2023, Operation Endgame 2024).
 attributions:
   - actor_id: null  # was ru/proxies/emotet — counter-op (state action), actor nulled per AUDIT-2026-05-29
     attributing_org: Europol + Eurojust + 8 partners
     attributing_org_confidence: high
+    attribution_level: named-actor  # Emotet named as the disrupted entity; no state/service attributed (counter-op, actor nulled)
     auspex_assessment: concur-with-caveat
     attribution_date: 2021-01-27
     attribution_source_id: europol/2021-01-27_operation-ladybird-emotet
@@ -37,6 +46,85 @@ doctrine_links:
       March 2023.
     contested: false
     analyst: claude
+    perspective: defender-response  # US NCS-2023 disrupt-dismantle framing on a multinational LE counter-action (null actor), not the attacker's doctrine
 targets: []
 sources:
   - europol/2021-01-27_operation-ladybird-emotet
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the sole cited source, Europol "World's Most Dangerous
+    Malware EMOTET Disrupted Through Global Action (Operation Ladybird)",
+    2021-01-27 (govt-primary, tier primary). Raw snapshot on disk
+    (europol__2021-01-27_operation-ladybird-emotet.html), sha256
+    c405fab1…ab20ce40, 38993 bytes — hash RE-VERIFIED this audit; page is a
+    JS-rendered Drupal/React SPA, substantive article extracted from the
+    embedded JSON "body" field.
+
+    STEP 0 triage: NOT a phantom — the URL resolves to the genuine Operation
+    Ladybird press release matching the event; normal 6-point audit performed.
+
+    [a] FACTS — corrected. VERBATIM-CARRIED and kept: "Law enforcement and
+    judicial authorities worldwide have this week disrupted one of most
+    significant botnets of the past decade: EMOTET. Investigators have now
+    taken control of its infrastructure in an international coordinated
+    action." / the 8-partner list "authorities in the Netherlands, Germany,
+    the United States, the United Kingdom, France, Lithuania, Canada and
+    Ukraine, with international activity coordinated by Europol and Eurojust"
+    (and the full per-country authority roster) / EMPACT framework / "several
+    hundreds of servers located across the world" with "different
+    functionalities" / "gained control of the infrastructure and took it down
+    from the inside. The infected machines of victims have been redirected
+    towards this law enforcement-controlled infrastructure" / loader framing
+    "other malware operators like TrickBot and Ryuk have benefited from it" /
+    CERT-network victim notification. STRIPPED as UNSOURCED (present nowhere in
+    the raw body): (1) "Three-tier C2 infrastructure seized" — the source says
+    only "several hundreds of servers ... different functionalities", never
+    "three-tier"; (2) "takeover module pushed ... delayed self-uninstall
+    scheduled for April 25 2021" — the raw contains NO "uninstall"/"April"
+    string; this is the later (Apr-2021) development the source does not carry
+    (per task NB, not imported); end_date 2021-04-25 nulled accordingly; (3)
+    "Approximately two Ukrainian operators arrested" — the raw contains NO
+    "arrest" string; Ukraine appears only as a participating authority
+    (National Police / Prosecutor General's Office). The summary's "First
+    major court-authorized self-uninstall via the botnet's own C2" claim was
+    likewise removed (self-uninstall is unsourced here); rewrote summary +
+    outcome_summary to source-carried language, keeping only a light editorial
+    forward-reference (template for Qakbot 2023 / Endgame 2024).
+
+    [b] ATTRIBUTION — this is a counter-action: actor_id null (was
+    ru/proxies→ru/unscoped/emotet per prior audits; the state action is BY the
+    coalition, not an attack). attributing_org "Europol + Eurojust + 8
+    partners" and attributing_org_confidence high both source-carried; kept
+    auspex_assessment concur-with-caveat; attribution_date 2021-01-27 =
+    publication date. No over-attestation.
+
+    [c] DATES — source published_on 2021-01-27 confirmed by schema.org
+    datePublished "2021-01-27T12:00:00" and the record already matches.
+    disclosure_date 2021-01-27 solid. start_date 2021-01-26 retained (widely
+    reported takedown date) with a comment noting the source itself says only
+    "this week's action." end_date corrected to null (see [a]).
+
+    [d] DOCTRINE_LINKS — single link us/ncs-2023 / disrupt-dismantle,
+    confidence plausible: HONEST and unchanged — the op predates NCS-2023
+    (Mar-2023) and the Europol release states no US strategic purpose, so the
+    retroactive disrupt-dismantle framing correctly stays plausible (no
+    attesting_source needed/added). Added perspective: defender-response — this
+    is a US defender doctrine on a null-actor multinational LE counter-action,
+    which also resolves the potential doctrine-state-mismatch (US doctrine, no
+    actor state).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor: Emotet is named as the specific
+    disrupted entity; no nation/service is attributed (consistent with the
+    null actor_id).
+
+    [f] ACTOR_ID — null (counter-action), no FK to resolve. Both doctrine FKs
+    (us/ncs-2023, us/ncs-2023/disrupt-dismantle) confirmed present.
+
+    Residual: exact operation date (26 vs 27 Jan) not pinned by this source
+    ("this week"); no second source cited (single-source event) but the sole
+    source is a tier-1 govt-primary release directly on the event, so level
+    full.

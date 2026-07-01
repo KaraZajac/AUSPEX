@@ -1,56 +1,82 @@
 id: 2020-11/covid-vaccine-targeting
-name: COVID-19 vaccine research targeting (Pfizer, AstraZeneca, Cerba)
-start_date: 2020-07-01  # earliest tracked intrusion attempts
-disclosure_date: 2020-11-13  # Microsoft MSTIC disclosure
-end_date: 2021-02-28
+name: "COVID-19 vaccine research targeting (Strontium / Zinc / Cerium; Pfizer, AstraZeneca)"
+start_date: 2020-09-01  # est. — Microsoft: attacks detected "in recent months" as of 2020-11-13
+disclosure_date: 2020-11-13  # Microsoft MSTIC (Tom Burt) blog
+end_date: null  # op end not bounded by sources; disclosures span Nov 2020 (Microsoft/Reuters) – Feb 2021 (ROK NIS)
 incident_type:
+  - espionage
   - intrusion
-  - data-theft
 initial_vector: phishing
+false_flag_risk: suspected
 outcome_summary: |
-  Multi-month spear-phishing campaign by Lazarus and Kimsuky
-  against pharmaceutical and vaccine-research firms across six
-  countries. Impersonation of WHO recruiters; credential
-  harvesting. ROK NIS reported in February 2021 that Pfizer was
-  among the targeted firms. Data exfiltration confirmed; full
-  scope of stolen materials not publicly enumerated.
-false_flag_risk: none
+  Microsoft MSTIC (2020-11-13) detected THREE nation-state actors targeting
+  seven prominent COVID-19 vaccine/treatment firms across five countries
+  (Canada, France, India, South Korea, USA): Strontium (Russia; = APT28) using
+  password-spray / brute-force credential attacks; Zinc (DPRK; = Lazarus) using
+  recruiter-lure spear-phishing (fabricated job descriptions); and Cerium
+  (DPRK; = Ruby Sleet) using COVID-themed spear-phishing that masqueraded as
+  World Health Organization representatives. Microsoft named none of the seven
+  companies and said the majority of the attacks were blocked. Follow-on
+  reporting named specific DPRK targets: AstraZeneca (Reuters/CNN, 2020-11-27 —
+  LinkedIn/WhatsApp recruiter lures; "not thought to have been successful";
+  some attacker accounts used Russian email addresses, a possible false-flag
+  misdirection) and Pfizer (ROK NIS briefing to parliament, disclosed
+  2021-02-16 — documents targeted but systems not breached).
 summary: |
-  Dual-purpose operation: strategic-intelligence collection in
-  service of regime vaccine development (Juche self-reliance
-  framing), with potential downstream monetization (sale or
-  ransomware extortion against pharma victims). Microsoft MSTIC
-  and UK NCSC publicly disclosed the targeting; ROK NIS
-  February 2021 statement provided national-government
-  corroboration.
+  Three nation-state actors independently targeted COVID-19 vaccine and
+  treatment research during the pandemic. Microsoft attributed the activity to
+  Russia's Strontium (= APT28 / GRU) and two DPRK clusters, Zinc (= Lazarus)
+  and Cerium (= Ruby Sleet); it characterized neither collection-vs-revenue
+  intent nor any strategic goal (the piece is a Paris Peace Forum policy blog,
+  not a technical intent attribution). AUSPEX reads the DPRK collection as
+  strategic tech / health-policy collection in service of the regime's domestic
+  COVID response and indigenous vaccine development (Juche self-reliance
+  framing). ROK NIS's February 2021 statement provided national-government
+  corroboration of the DPRK targeting of Pfizer. AstraZeneca-attack accounts
+  registered to Russian email addresses read as a possible false-flag
+  misdirection layered on the DPRK activity (Reuters/CNN).
 attributions:
+  - actor_id: ru/gru/26165/apt28
+    attributing_org: Microsoft MSTIC
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2020-11-13
+    attribution_source_id: microsoft/2020-11-13_vaccine-targeting
+    notes: "Microsoft names 'Strontium, an actor originating from Russia'; STRONTIUM is Microsoft's own alias for APT28 / Fancy Bear (GRU Unit 26165). Method: password spray / brute-force credential attacks. This actor was DROPPED by the prior version of the event, which modeled only DPRK actors — restored here."
   - actor_id: kp/rgb/lazarus
     attributing_org: Microsoft MSTIC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-11-13
     attribution_source_id: microsoft/2020-11-13_vaccine-targeting
-  - actor_id: kp/rgb/kimsuky
+    notes: "Microsoft names 'Zinc', one of two DPRK actors; ZINC is Microsoft's alias for Lazarus. Method: recruiter-lure spear-phishing (fabricated job descriptions). The DPRK recruiter-lure targeting of AstraZeneca (Reuters/CNN 2020-11-27) is consistent Lazarus tradecraft but Reuters attributes it only at nation level ('suspected North Korean')."
+  - actor_id: kp/unscoped/ruby-sleet
     attributing_org: Microsoft MSTIC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-11-13
     attribution_source_id: microsoft/2020-11-13_vaccine-targeting
+    notes: "Microsoft names 'Cerium', the second DPRK actor; CERIUM is Microsoft's predecessor designation for Ruby Sleet (kp/unscoped/ruby-sleet) — a DISTINCT cluster from Kimsuky. CORRECTION: the prior version mis-mapped Cerium to kp/rgb/kimsuky; per Microsoft's own naming schema Kimsuky = Emerald Sleet / THALLIUM, not Cerium. Method: COVID-themed spear-phishing masquerading as WHO representatives."
 doctrine_links:
   - doctrine_id: kp/strategic-information
     pillar_id: kp/strategic-information/policy-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Strategic-tech / health-policy collection in service of regime
-      priorities (domestic COVID response, vaccine development); MSTIC
-      documents the vaccine-research targeting but does not
-      characterize collection-vs-revenue intent, so the
-      strategic-collection framing is AUSPEX's inference.
+      The two DPRK actors (Lazarus / ZINC and Ruby Sleet / CERIUM) spear-phishing
+      vaccine and treatment researchers during the regime's own COVID crisis reads
+      as strategic tech / health-policy collection: vaccine and treatment IP for the
+      DPRK's domestic pandemic response. Microsoft documents the target set and
+      tradecraft but does not characterize collection-vs-revenue intent, so the
+      strategic-collection reading is AUSPEX's inference.
     inference_basis:
       signals:
-        - "MSTIC documents Lazarus/Kimsuky spear-phishing of vaccine-research firms across six countries (target set)"
-      ruled_out: "an explicit MSTIC collection-vs-revenue intent statement — not in the source (a Tom Burt policy blog, not a technical intent attribution)"
+        - "MSTIC documents two DPRK actors (Zinc = Lazarus; Cerium = Ruby Sleet) spear-phishing seven vaccine/treatment firms across five countries (target set + timing during the DPRK's own COVID response)"
+        - "ROK NIS (Feb 2021) corroborates DPRK targeting of vaccine technology (Pfizer), a national-government reading of the activity as technology acquisition"
+      ruled_out: "a monetization reading (Lazarus also runs revenue operations): vaccine-development IP is not a directly monetizable commodity like crypto/SWIFT theft, and both Microsoft and ROK NIS frame the activity as attempts to obtain the vaccine/treatment technology itself, so strategic collection dominates — hence strongly_inferred, not attested (no source states the strategic goal) and not plausible"
     contested: false
     analyst: claude
   - doctrine_id: kp/juche
@@ -58,20 +84,105 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Juche self-reliance framing for regime indigenous vaccine
-      development under hostile-environment conditions.
+      Juche self-reliance framing for regime indigenous vaccine/treatment
+      development under sanctions and a closed-border pandemic posture. No source
+      states this goal; it is one of several strategic readings, hence plausible.
+    inference_basis:
+      alternatives:
+        - "Juche self-reliance: acquiring vaccine/treatment IP to enable indigenous DPRK production fits the self-reliance doctrine."
+        - "Generic strategic-tech collection already captured by the strategic-information link, without a specific Juche self-reliance goal."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/pfizer
-    role: primary
-  - target_id: orgs/astrazeneca
-    role: primary
-  - target_id: orgs/cerba-healthcare
-    role: primary
   - target_id: sectors/healthcare/pharma
     role: primary
   - target_id: sectors/healthcare/research
     role: primary
 sources:
   - microsoft/2020-11-13_vaccine-targeting
+  - cnn/2020-11-27_astrazeneca-north-korea-targeting
+  - aljazeera/2021-02-17_nis-pfizer-north-korea-hack
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the Microsoft MSTIC blog (Tom Burt, "Cyberattacks targeting
+    health care must stop", 2020-11-13) + two re-sourced corroborators. Raw
+    snapshots captured + hashed.
+
+    SOURCES (sha256 first8…last8 · bytes):
+      microsoft/2020-11-13_vaccine-targeting — 5712f584…7fc22f90 · 168203 B
+      cnn/2020-11-27_astrazeneca-north-korea-targeting — 411fa2fc…32fa1632 · 4332807 B
+      aljazeera/2021-02-17_nis-pfizer-north-korea-hack — 894224f9…1864d6dd · 200311 B
+
+    [a] FACTS — Microsoft verbatim: "we've detected cyberattacks from three
+    nation-state actors targeting seven prominent companies … in Canada, France,
+    India, South Korea and the United States. The attacks came from Strontium, an
+    actor originating from Russia, and two actors originating from North Korea that
+    we call Zinc and Cerium." Methods verbatim: Strontium "password spray and brute
+    force login attempts"; Zinc "spear-phishing lures … fabricated job descriptions
+    pretending to be recruiters"; Cerium "spear-phishing email lures using Covid-19
+    themes while masquerading as World Health Organization representatives"; "The
+    majority of these attacks were blocked." CORRECTIONS: (1) removed incident_type
+    'data-theft' and the "Data exfiltration confirmed" claim — the source says most
+    attacks were BLOCKED (AstraZeneca "not thought to have been successful"; Pfizer
+    systems "not breached") → set incident_type [espionage, intrusion]. (2) Fixed
+    country count six→FIVE (source lists five). (3) Removed unsourced "potential
+    downstream monetization (sale or ransomware extortion)" speculation and the
+    unsupported "UK NCSC publicly disclosed the targeting" claim (NCSC appears only
+    as Oxford's defensive engagement in the CNN piece, not as a disclosure of this
+    campaign). (4) Re-sourced the named victims: AstraZeneca via CNN/Reuters
+    (2020-11-27); Pfizer via Al Jazeera/ROK NIS (2021-02-17). "Cerba" is
+    UNSUPPORTABLE — no source names it (searched); dropped from the event name and
+    targets. (5) start_date set to est. 2020-09-01 ("recent months" as of Nov 2020);
+    end_date set null (op end unbounded; only disclosures are dated). (6)
+    false_flag_risk none→suspected: CNN/Reuters reports DPRK AstraZeneca-attack
+    accounts "using Russian email addresses", a possible misdirection.
+
+    [b] ATTRIBUTION — THREE distinct actors, each at its Microsoft-named level
+    (named-actor), attributing_org Microsoft MSTIC, confidence high (Microsoft
+    states each flatly as its own tracked cluster), auspex concur. RESTORED the
+    dropped Russian actor Strontium→ru/gru/26165/apt28 (STRONTIUM is Microsoft's
+    APT28 alias). Zinc→kp/rgb/lazarus (ZINC = Lazarus, Microsoft alias). KEY
+    CORRECTION: Cerium re-mapped kp/rgb/kimsuky→kp/unscoped/ruby-sleet. Microsoft's
+    naming schema maps CERIUM→Ruby Sleet; Kimsuky = Emerald Sleet / THALLIUM — a
+    distinct cluster. The corpus's own kimsuky.yaml and ruby-sleet.yaml headers
+    state this equivalence explicitly (CERIUM alias 'equivalent' on ruby-sleet). ROK
+    NIS corroborates the DPRK targeting at nation level (folded into summary +
+    strategic-information signals, not a separate null-actor row).
+
+    [c] DATES — Microsoft published_on 2020-11-13 (correct). CNN 2020-11-27; Al
+    Jazeera 2021-02-17 (both real, dated from article). Event start est. 2020-09
+    (recent months); disclosure 2020-11-13; end null (see [a]). Prior end_date
+    2021-02-28 conflated the ROK NIS disclosure with an op end — removed.
+
+    [d] DOCTRINE_LINKS — both DPRK-attacker-rationale. strategic-information/
+    policy-collection kept strongly_inferred (updated actor names Lazarus/Ruby
+    Sleet, tightened ruled_out on the Lazarus-revenue competitor; no source states
+    the goal → not attested, no attesting_source_id). juche kept plausible; added
+    inference_basis.alternatives. NB: the restored RU actor (APT28) carries NO RU
+    doctrine link — Microsoft states no purpose for Strontium and any RU link would
+    be speculative; this may surface a verify_atlas doctrine-state-mismatch REVIEW
+    item for ru (a review surface, not an error). Flagged below.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor on all three (was absent). Microsoft
+    names each as a specific tracked cluster with a stated nation of origin; no DPRK
+    service/unit is named (hence ruby-sleet is unscoped, and lazarus stays at named-
+    actor not named-unit here).
+
+    [f] ACTOR_ID — all three resolve: ru/gru/26165/apt28, kp/rgb/lazarus,
+    kp/unscoped/ruby-sleet. No actor files edited.
+
+    RESIDUAL UNCERTAINTY / FLAGS: (i) TARGET REGISTRY — orgs/pfizer, orgs/
+    astrazeneca, orgs/cerba-healthcare referenced by the prior version have NO
+    registry files under atlas/targets/orgs/ and are referenced by no other event
+    (dangling FKs). Left them out (kept only the two resolving sector targets) to
+    keep the event referentially clean, since creating target-registry records is
+    out of this audit's scope (shared registry, like actors). ORCHESTRATOR: create
+    orgs/pfizer and orgs/astrazeneca (now sourced via the two added sources) and
+    re-add them as named-victim targets with country us / uk; do NOT create
+    orgs/cerba-healthcare (unsupported). (ii) The Al Jazeera snapshot renders a JS
+    <title>play</title> shell but the article body (Ha Tae-keung / NIS / Pfizer
+    quotes) is present in the captured HTML and hashed.

@@ -1,41 +1,59 @@
 id: 2020-11/ta416-reddelta-vatican-return
 name: TA416 / RedDelta Vatican-targeting return (Golang PlugX)
-start_date: 2020-05-01
+start_date: 2020-10-10
 disclosure_date: 2020-11-23
-end_date: 2020-11-23
+end_date: null
 incident_type:
   - intrusion
 initial_vector: phishing
 outcome_summary: |
-  Proofpoint discloses TA416 / RedDelta / Mustang Panda return
-  after a brief operational pause following Recorded Future's
-  July / September 2020 RedDelta reports on Vatican and Hong
-  Kong Catholic-diocese targeting. New activity reuses the
-  same Catholic Church target set but rewrites the PlugX
-  loader component in Go, presumably to evade detection
-  signatures that had been published.
+  Proofpoint discloses a resumption of TA416 / RedDelta /
+  Mustang Panda phishing activity following a documented pause
+  (near-total inactivity 2020-09-16 through 2020-10-10, spanning
+  China's National Day / Golden Week) that itself followed
+  disclosures by threat researchers — including Recorded Future's
+  July / September 2020 RedDelta reporting (which the Proofpoint
+  post cites in its references, incl. a "New wave of PlugX targets
+  Hong Kong" ref). The renewed activity reuses the Catholic
+  Church / Vatican-CCP diplomacy target set (plus entities in
+  Myanmar and organizations conducting diplomacy in Africa) but
+  delivers PlugX via a loader newly rewritten in Go — changing the
+  detection surface while preserving links to prior RedDelta
+  tradecraft.
 false_flag_risk: none
 campaign_id: mustang-panda-vatican-religious
 summary: |
   Documents the persistence of PRC interest in the Vatican
-  during the period when Beijing was renegotiating the
-  Holy See bishop-appointment agreement (the 2018 provisional
-  agreement was up for two-year renewal in October 2020).
-  The intelligence value is direct: insight into the Vatican's
-  negotiating posture and the Holy See's evaluation of Hong
-  Kong Catholic dioceses post the 2020 National Security Law.
-  The Golang rewrite of PlugX is also methodologically
-  interesting — early evidence that PRC operators are willing
-  to rewrite established loader pipelines in response to
-  vendor disclosure, a tradecraft response not consistently
-  observed before 2020.
+  during the period when Beijing and the Holy See had just
+  renewed the provisional bishop-appointment agreement (the
+  2018 accord was renewed for two years around October 2020);
+  Proofpoint observed TA416 social-engineering lures that
+  referenced this renewed provisional agreement and spoofed
+  fields imitating journalists from the Union of Catholic Asia
+  News. The intelligence value is direct: insight into the
+  Vatican's negotiating posture on China. (Recorded Future's
+  earlier RedDelta reporting, cited in Proofpoint's references,
+  additionally documented Hong Kong Catholic targeting; that
+  Hong Kong detail is not established in the Proofpoint body
+  itself.) The Golang rewrite of the PlugX loader is also
+  methodologically interesting — early evidence that PRC
+  operators are willing to rewrite established loader pipelines
+  in response to vendor disclosure, a tradecraft response not
+  consistently observed before 2020.
 attributions:
   - actor_id: cn/unscoped/mustang-panda
     attributing_org: Proofpoint
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-11-23
     attribution_source_id: proofpoint/2020-11-23_ta416-golang-plugx
+    notes: |
+      Proofpoint attributes plainly: renewed phishing "can be attributed to
+      the Chinese APT group TA416 (also referred to as Mustang Panda and
+      RedDelta)". Named group + China nation = named-actor; NO Chinese
+      service (MSS/PLA) is named anywhere in the post — consistent with the
+      actor's cn/unscoped placement.
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
@@ -55,9 +73,13 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Hong Kong Catholic-diocese targeting overlaps with
-      post-NSL HK dissident surveillance — though the primary
-      reading is Vatican-state-policy collection.
+      Hong Kong Catholic targeting (documented by the Recorded
+      Future RedDelta reporting cited in Proofpoint's references,
+      not in the Proofpoint body itself) overlaps with post-NSL
+      HK dissident surveillance — though the primary reading of
+      this campaign is Vatican / CCP-diplomacy state-policy
+      collection. Plausible only: the cited source does not
+      establish HK targeting in this renewed activity.
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -69,3 +91,84 @@ targets:
     role: primary
 sources:
   - proofpoint/2020-11-23_ta416-golang-plugx
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Proofpoint "TA416 Goes to Ground and Returns with a Golang PlugX
+    Malware Loader" (2020-11-23). RAW snapshot captured:
+    proofpoint__2020-11-23_ta416-golang-plugx.html, sha256 345b7966…948d310c,
+    713190 bytes; title "TA416's Golang PlugX Malware Loader | Proofpoint US" —
+    REAL article, not a phantom (Golang×36, PlugX×65, TA416×47, Vatican×6,
+    Myanmar present, RedDelta present in body).
+
+    [a] FACTS ✓ — all body-carried:
+      • Golang PlugX loader: title + "Golang PlugX"; loader (not the payload)
+        rewritten in Go to change detection surface. ✓
+      • Targeting: "continuation of previously reported campaigns that have
+        targeted entities associated with diplomatic relations between the
+        Vatican and the Chinese Communist Party, as well as entities in Myanmar.
+        The targeting of organizations conducting diplomacy in Africa has also
+        been observed." → religious + foreign-ministry/government sectors ✓.
+      • Provisional agreement: "continued use of social engineering lures
+        referencing the provisional agreement recently renewed between the
+        Vatican Holy See and the CCP"; spoofed from-fields imitating "journalists
+        from the Union of Catholic Asia News" ✓ (added to summary).
+      • Pause/return: "After nearly a month of inactivity following publications
+        by threat researchers … renewed phishing activity … the Chinese APT
+        group TA416"; "This most recent period of inactivity encompassed
+        September 16, 2020 through October 10, 2020" (National Day / Golden
+        Week). ✓
+      • initial_vector phishing ✓ ("Renewed Phishing Activity").
+      CORRECTION: Hong Kong Catholic-diocese targeting is NOT in the Proofpoint
+      body — it appears only as a referenced RF report title ("New wave of PlugX
+      targets Hong Kong", footnote 4). "diocese"/"dissident"/"Hong Kong" (body)
+      absent. Softened summary + outcome_summary + doctrine-link-2 reasoning to
+      attribute the HK detail to the *referenced* RF reporting, not to this
+      source's body — removed the "Holy See's evaluation of Hong Kong Catholic
+      dioceses post 2020 NSL" over-claim.
+
+    [b] ATTRIBUTION ✓ — Proofpoint: renewed activity "can be attributed to the
+      Chinese APT group TA416 (also referred to as Mustang Panda and RedDelta)".
+      Nation = China, named group = TA416/Mustang Panda/RedDelta. Kept
+      attributing_org_confidence high (stated plainly, infrastructure/TTP
+      continuity). NO Chinese service named (MSS/Ministry/PLA all absent) →
+      consistent with cn/unscoped. Added attribution_level: named-actor
+      (was missing) + attribution notes with the quote.
+
+    [c] DATES — source published_on 2020-11-23 = article dateline "November 23,
+      2020" ✓. CORRECTED event start_date 2020-05-01 → 2020-10-10: the cited
+      source anchors the *return* to the end of the documented inactivity window
+      (2020-09-16→2020-10-10); May-2020 was a conflation with the earlier
+      RedDelta campaign that this source does not document. CORRECTED
+      end_date 2020-11-23 → null: the report describes ongoing/renewed activity,
+      not a bounded op that ended on the disclosure date.
+
+    [d] DOCTRINE_LINKS — neither is `attested`, both attesting_source_id null
+      (correct; no attesting source required). Link 1 (cn/bri /
+      political-intelligence-collection, strongly_inferred): source frames the
+      op as "continued focus on matters pertaining to the evolving relationship
+      between the Catholic Church and the CCP" and "pursuit of espionage
+      objectives" → Vatican/CCP-diplomacy political-intelligence collection; the
+      strategic goal is not stated verbatim (so not attested) but triangulates
+      cleanly → strongly_inferred honest. Link 2 (cn/national-intelligence-law-
+      2017 / diaspora-and-dissident-collection, plausible): rests on HK targeting
+      that this source's body does not establish → kept plausible + reasoning now
+      flags that HK comes from referenced RF reporting only. Both doctrine +
+      pillar FKs resolve.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+
+    [f] ACTOR_ID — cn/unscoped/mustang-panda resolves to
+      atlas/actors/cn/mustang-panda.yaml; LEGIT placement here (TA416 =
+      Proofpoint's name, RedDelta = Recorded Future's name, both established
+      Mustang Panda aliases carried in the actor's aliases[]). Actor already
+      correctly demoted MSS→unscoped (2026-06-24); this source confirms
+      nation-only attribution. No flag.
+
+    Residual uncertainty: start_date 2020-10-10 is the resumption boundary the
+    source gives; individual Golang-PlugX samples referenced carry earlier
+    2020 compile/observation dates (Jun/Aug/Sep), but those predate the "return"
+    this event models.

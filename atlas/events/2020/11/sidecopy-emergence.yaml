@@ -1,43 +1,74 @@
 id: 2020-11/sidecopy-emergence
-name: SideCopy publicly named as Pakistani-aligned cluster mimicking SideWinder
+name: SideCopy named by Seqrite as a Transparent Tribe sub-division mimicking SideWinder TTPs against Indian defence
 start_date: 2019-01-01
-disclosure_date: 2020-11-26
+disclosure_date: 2020-09-23
 end_date: null
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Indian vendor Seqrite (Quick Heal) published a detailed
-  attribution of the SideCopy cluster, naming the actor and
-  documenting its deliberate mimicry of SideWinder (Indian-aligned)
-  tradecraft as an attribution-muddying technique. Targets:
-  Indian Ministry of Defence and Indian Armed Forces.
+  Indian vendor Seqrite (Quick Heal) published "Operation SideCopy!",
+  naming the SideCopy cluster and documenting its deliberate copying
+  of SideWinder (Indian-aligned) TTPs — "copying TTPs that point at
+  Sidewinder APT group" — as an attribution-muddying technique.
+  Seqrite framed SideCopy as a sub-division of / linked to Transparent
+  Tribe (APT36) and named no nation or Pakistani service. Targets:
+  Indian defence units and armed-forces personnel, with decoys themed
+  on military allowance orders, the Defence Production Policy 2020, and
+  a mod.gov.in (Ministry of Defence / DoD) lure. Initial access via LNK
+  malspam and template-injection / equation-editor (CVE-2017-11882).
 false_flag_risk: suspected
 summary: |
-  Notable because the deliberate-mimicry tradecraft is a documented
-  Pakistani contribution to the attribution-fog problem in the
-  India-Pakistan cyber theater. The naming established SideCopy
-  as a distinct cluster from Transparent Tribe in Indian vendor
-  reporting; some Western vendors continue to treat them as
-  overlapping.
+  Notable because the deliberate-mimicry tradecraft — copying
+  SideWinder (Indian-aligned) TTPs to point investigators at the wrong
+  actor — is a documented attribution-fog technique in the
+  India-Pakistan cyber theater. Seqrite framed SideCopy NOT as a group
+  distinct from Transparent Tribe but as "Transparent Tribe's
+  sub-division," stating it "suspect[s] this threat actor has links
+  with Transparent Tribe APT group"; Seqrite named no nation and no
+  Pakistani service. The Pakistan nexus is inferred through the
+  Transparent Tribe / APT36 association (itself a Pakistan-aligned
+  cluster) rather than stated by Seqrite; some Western vendors treat
+  SideCopy and Transparent Tribe as overlapping.
 attributions:
   - actor_id: pk/unscoped/sidecopy
     attributing_org: Seqrite (Quick Heal Technologies)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-11-26
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-09-23
     attribution_source_id: seqrite/2020-11-26_sidecopy-emergence
+    notes: |
+      Seqrite definitively names the SideCopy cluster and its
+      India-defence targeting, but only "suspect[s] this threat actor
+      has links with Transparent Tribe APT group" and names no nation
+      or service (no "Pakistan"/"ISI" in the body). attribution_level
+      named-actor: a named group, no nation/unit stated by Seqrite;
+      the pk/unscoped nation head rests on the (suspected) Transparent
+      Tribe association — hence moderate, concur-with-caveat.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian MoD and Armed Forces targeting fits the canonical
-      doctrinal pillar.
+      Seqrite's captured decoys — "Armed-Forces-Spl-Allowance-Order",
+      "Defence-Production-Policy-2020", "ParaMil-Forces-Spl-Allowance-Order"
+      and a mod.gov.in (DoD) lure — sent to "Indian defence units and
+      armed forces individuals" fit the canonical military-collection
+      pillar (which itself names SideCopy targeting Indian military
+      personnel, defense ministry, and defense research). No source
+      states the strategic purpose, so this is inferred, not attested.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology: lures/decoys themed on Indian military allowance orders, the Defence Production Policy 2020, and a mod.gov.in (Ministry of Defence / DoD) URL, delivered to 'Indian defence units and armed forces individuals' (Seqrite)."
+        - "Actor mission: SideCopy is an espionage cluster in the Pakistan-aligned Transparent Tribe/APT36 orbit operating against India — collection, not disruption or revenue."
+        - "Doctrinal fit: the military-collection pillar explicitly enumerates SideCopy targeting Indian military personnel, defense ministry, and defense research via military-circular-themed phishing."
+      ruled_out: "Kashmir-political collection (the sibling pillar) — the decoys and victims here are military/defence-establishment (allowance orders, Defence Production Policy, MoD), not Kashmir-issue journalists/dissidents or general government, so the military-collection reading dominates."
 targets:
   - target_id: orgs/indian-mod
     role: primary
@@ -45,3 +76,56 @@ targets:
     role: primary
 sources:
   - seqrite/2020-11-26_sidecopy-emergence
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Seqrite (Quick Heal) "Operation SideCopy!" — raw snapshot
+    seqrite__2020-11-26_sidecopy-emergence.html, sha256 fad3c6a6…49ca4792,
+    180064 bytes (hash re-verified, matches source record; page byline
+    "23 September 2020").
+    [a] FACTS: source-carried — "Operation SideCopy is active from early 2019,
+    till date" (→ start_date 2019-01-01); "sent to targets across Indian
+    defence units and armed forces individuals" and decoy URLs
+    Armed-Forces-Spl-Allowance-Order / Defence-Production-Policy-2020 /
+    ParaMil-Forces-Spl-Allowance-Order / drivetoshare[.]com/mod[.]gov[.]in_dod
+    (→ Indian MoD + armed-forces targeting); initial vector "LNK file, that
+    came from a malspam" + "template injection attack and equation editor
+    vulnerability (CVE-2017-11882)" (→ initial_vector phishing); mimicry
+    "This threat actor is misleading the security community by copying TTPs
+    that point at Sidewinder APT group" (→ false_flag_risk suspected). No
+    malware family (AllaKore/ReverseRAT/etc.) is named in THIS 2020 report —
+    those come from later Talos/Cyble reporting — so no malware claim added
+    to the event. CORRECTED summary/outcome_summary: the prior text said the
+    naming "established SideCopy as a distinct cluster from Transparent Tribe"
+    — the source says the OPPOSITE, framing it as "Transparent Tribe's
+    sub-division" and "We suspect this threat actor has links with Transparent
+    Tribe APT group"; also removed the "documented Pakistani contribution"
+    over-claim (Seqrite names no nation).
+    [b] ATTRIBUTION: Seqrite names the SideCopy cluster (its own naming) but
+    only "suspect[s]" the Transparent Tribe link and names NO nation, NO
+    service — body has no "Pakistan"/"ISI"/"Inter-Services Intelligence".
+    Downgraded attributing_org_confidence high→moderate and auspex_assessment
+    concur→concur-with-caveat; the pk/unscoped nation head rests on the
+    suspected TT nexus, not a Seqrite statement.
+    [c] DATES: on-page byline is "23 September 2020" — corrected event
+    disclosure_date 2020-11-26→2020-09-23 and source published_on likewise;
+    source slug retains the legacy 2020-11-26 (slugs immutable). start_date
+    2019-01-01 confirmed ("early 2019").
+    [d] DOCTRINE_LINKS: pk/asymmetric-posture-india/military-collection kept
+    strongly_inferred (correct — no source states the strategic goal, so not
+    attested; attesting_source_id null). Added inference_basis {signals[],
+    ruled_out} — signals = MoD/armed-forces decoys + espionage mission +
+    pillar's explicit SideCopy enumeration; ruled_out = the sibling
+    kashmir-political pillar (victims here are military/defence-establishment,
+    not Kashmir dissidents).
+    [e] ATTRIBUTION_LEVEL: added named-actor (Seqrite names the SideCopy group;
+    no nation or unit stated).
+    [f] ACTOR_ID: pk/unscoped/sidecopy resolves (atlas/actors/pk/sidecopy.yaml,
+    id pk/unscoped/sidecopy) — already demoted from pk/isi on 2026-06-24 for
+    this exact reason (no cited source names the ISI). No actor-file edit.
+    Residual: single-source event; disclosure_date now matches the captured
+    byline but a secondary corroborating report was not required to carry the
+    claims.

@@ -1,59 +1,136 @@
 id: 2020-12/solarwinds-spiral-cluster
-name: SolarWinds "Spiral" cluster (PRC-distinct from SVR Sunburst)
-start_date: 2020-03-01
-disclosure_date: 2020-12-22
-end_date: 2020-12-31
+name: SolarWinds "SPIRAL" cluster (China-nexus, distinct from SVR Sunburst)
+start_date: 2020-11-01  # approx SUPERNOVA deployment on the victim Orion server
+disclosure_date: 2020-12-22  # public disclosure of SUPERNOVA / CVE-2020-10148 (Dec 2020)
+end_date: null
 incident_type:
   - intrusion
-  - supply-chain
-initial_vector: n-day  # CVE-2020-10148 "Supernova" / authentication bypass
-outcome_summary: |
-  PRC-attributed intrusion cluster exploiting CVE-2020-10148
-  ("Supernova" authentication bypass in SolarWinds Orion) for
-  selective second-stage targeting of US government entities.
-  Distinct from the contemporaneous SVR Sunburst supply-chain
-  compromise.
+  - espionage
+initial_vector: n-day  # CVE-2020-10148 SolarWinds Orion API auth-bypass, used to deploy the SUPERNOVA .NET web shell
 false_flag_risk: none
+outcome_summary: |
+  Suspected-China (low-confidence) espionage intrusion that exploited
+  CVE-2020-10148 to deploy the SUPERNOVA web shell on a victim's
+  SolarWinds Orion server for follow-on credential and data
+  collection. Explicitly distinct from the contemporaneous SVR /
+  APT29 SUNBURST supply-chain compromise, with which it shares only
+  the SolarWinds Orion product.
 summary: |
-  Disclosed alongside the SVR Sunburst event but with different
-  intrusion mechanism — the SUPERNOVA web shell, a malicious
-  in-memory .NET DLL (App_Web_logoimagehandler.ashx.b6031896.dll)
-  deployed by exploiting the SolarWinds Orion authentication
-  bypass CVE-2020-10148, not the Sunburst trojanized update.
-  Attributed to TG-3390-adjacent / SPIRAL by Secureworks;
-  Microsoft separately observed PRC TTPs. Post-exploitation
-  tradecraft included credential dumping with Mimikatz, lateral
-  movement via valid credentials, DLL side-loading using signed
-  binaries, ChinaChopper-family ASPX web shells on internet-facing
-  servers, and the PlugX, ShadowPad, and HyperBro implants from
-  the broader TG-3390 / Iron Tiger toolset for follow-on
-  collection at US-government victims.
+  A China-nexus intrusion cluster that Secureworks Counter Threat
+  Unit (CTU) tracks as SPIRAL / BRONZE SPIRAL. In late 2020 the actor
+  exploited an internet-facing SolarWinds Orion server via the
+  CVE-2020-10148 API authentication-bypass to drop SUPERNOVA — a .NET
+  (C#) web shell that is a trojanized version of the legitimate Orion
+  DLL app_web_logoimagehandler.ashx.b6031896.dll. CTU explicitly
+  assessed that this activity is UNRELATED to the contemporaneous
+  SUNBURST supply-chain compromise (trojanized Orion software
+  updates, attributed elsewhere to Russia's SVR / APT29): SUPERNOVA
+  was placed by direct exploitation, not via a poisoned update.
+  Secureworks linked the SUPERNOVA/Orion activity to an earlier
+  (August 2020) intrusion of a Zoho ManageEngine server that it
+  attributes to the same SPIRAL group. Observed post-exploitation
+  tradecraft in the CTU report was limited to living-off-the-land
+  credential and data collection — comsvcs.dll to dump the LSASS
+  process and ntdsutil to dump the Active Directory database. CTU
+  assessed with LOW confidence that SPIRAL is of Chinese origin,
+  chiefly on the basis of a brief, likely-inadvertent EDR check-in
+  from infrastructure geolocated to China.
 attributions:
   - actor_id: cn/unscoped/apt27
     attributing_org: Secureworks CTU
-    attributing_org_confidence: moderate
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
-    attribution_date: 2020-12-22
+    attribution_date: 2021-03-08
     attribution_source_id: secureworks/2020-12_spiral-solarwinds-supernova
     notes: |
-      Vendor attribution to "SPIRAL" / TG-3390-adjacent. Not a DOJ
-      indictment.
+      Secureworks CTU tracks the SUPERNOVA operators as BRONZE SPIRAL
+      / SPIRAL and assessed with LOW confidence that the group is of
+      Chinese origin (basis: a single, likely-inadvertent EDR
+      check-in from a China-geolocated IP). Not a DOJ indictment.
+      CAVEAT / see FLAG: Secureworks does NOT equate SPIRAL / BRONZE
+      SPIRAL with TG-3390 / BRONZE UNION / APT27 — neither "TG-3390"
+      nor "APT27" appears in the SPIRAL reporting; the mapping of
+      this event's actor_id to cn/unscoped/apt27 is an AUSPEX
+      cross-walk, not a source statement. A dedicated
+      cn/unscoped/spiral (BRONZE SPIRAL) actor is the correct home.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Generic MCF-aligned US-government collection; specific
-      doctrine framing not attested.
+      A suspected-China espionage actor conducting credential and
+      data collection after exploiting an internet-facing enterprise
+      server is broadly consistent with Military-Civil Fusion-aligned
+      intelligence collection, but no source states this strategic
+      purpose and the China nexus itself is only low-confidence —
+      hence plausible, not higher.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MCF-aligned state intelligence collection: a China-nexus group harvesting credentials and Active Directory data from enterprise infrastructure fits the routine MSS/PLA-adjacent espionage that Military-Civil Fusion encodes."
+        - "Undifferentiated cyber-espionage: Secureworks attributes SPIRAL to China only at low confidence and names no strategic objective, so a generic espionage reading with no specific doctrinal purpose survives equally."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/solarwinds-supernova
-    role: staging
   - target_id: sectors/government
     role: primary
 sources:
   - secureworks/2020-12_spiral-solarwinds-supernova
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    Audited vs Secureworks CTU "SUPERNOVA Web Shell Deployment Linked
+    to SPIRAL Threat Group" (publisher first-party; url is now
+    Sophos-migrated and Cloudflare bot-walled — HTTP 000 on live curl,
+    archive.org blocked for the fetcher, so NOT snapshottable and no
+    content_sha256 recorded; claims corroborated against BleepingComputer,
+    The Record (therecord.media), Security Magazine, OODAloop, and
+    TechTimes mirrors + the article body via WebFetch) -> level: partial.
+    [a] FACTS: heavy fabrication stripped. The CTU report's
+    post-exploitation tradecraft is comsvcs.dll (LSASS dump) + ntdsutil
+    (AD-database dump) ONLY. Removed as unsupported: "Mimikatz" credential
+    dumping (source uses comsvcs.dll), "DLL side-loading using signed
+    binaries", "ChinaChopper-family ASPX web shells", the entire "PlugX,
+    ShadowPad, and HyperBro implants from the broader TG-3390 / Iron Tiger
+    toolset" sentence (none appear in the CTU report — imported from
+    APT27's general profile), and "Microsoft separately observed PRC TTPs"
+    (no Microsoft source is cited). Confirmed + kept: SUPERNOVA = .NET/C#
+    trojanized app_web_logoimagehandler.ashx.b6031896.dll; CVE-2020-10148
+    Orion API auth-bypass; deployed by DIRECT exploitation (~Nov 2020);
+    CTU explicitly states the activity is UNRELATED to SUNBURST (no
+    conflation — verified); SPIRAL also tied to an Aug 2020 Zoho
+    ManageEngine intrusion. Removed incident_type "supply-chain" (SUPERNOVA
+    is direct n-day exploitation, NOT a supply-chain compromise) and added
+    "espionage". start_date 2020-03-01 (unsourced) -> 2020-11-01; end_date
+    2020-12-31 (fabricated precision) -> null.
+    [b] ATTRIBUTION: over-attestation corrected. CTU assessed China origin
+    with LOW confidence (mirror-verified: "assess with low confidence that
+    the group is of Chinese origin"; sole basis = one likely-inadvertent
+    China-geolocated EDR check-in) -> attributing_org_confidence
+    moderate->low. Added attribution_level: activity-cluster. Notes
+    rewritten to state Secureworks tracks the operators as BRONZE SPIRAL /
+    SPIRAL and does NOT equate them to TG-3390/APT27.
+    [c] DATES: attribution_date 2020-12-22 -> 2021-03-08 and source
+    published_on 2020-12-22 -> 2021-03-08 (the cited SPIRAL/China
+    attribution report is dated Mar 8 2021 per OODAloop / Security Magazine
+    / TechTimes; Dec 2020 was the separate SUPERNOVA/CVE disclosure, kept
+    as disclosure_date).
+    [d] DOCTRINE: cn/mcf kept at plausible (honest floor given the
+    low-confidence nation and no stated purpose); softened reasoning
+    (removed firm "US-government collection"); added inference_basis
+    .alternatives.
+    [e] attribution_level added = activity-cluster.
+    [f] ACTOR: cn/unscoped/apt27 resolves but is MIS-SCOPED (see FLAG).
+    FK-FIX: removed dangling target orgs/solarwinds-supernova (no such
+    registry entry; the real orgs/solarwinds is the SolarWinds Corp /
+    SUNBURST supply-chain victim and does NOT apply to the SUPERNOVA
+    direct-exploitation cluster).
+    RESIDUAL: sectors/government primary target is not carried by the cited
+    CTU report (which names a single unattributed victim org); retained as
+    broadly-reported SUPERNOVA-campaign context but flagged for review.

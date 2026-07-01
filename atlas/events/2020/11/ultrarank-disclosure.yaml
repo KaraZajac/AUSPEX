@@ -1,37 +1,108 @@
 id: 2020-11/ultrarank-disclosure
 name: Group-IB consolidates UltraRank JS-skimming cluster
 start_date: 2015-01-01
-disclosure_date: 2020-11-12
-end_date: 2020-11-12
+disclosure_date: 2020-08-27
+end_date: 2020-08-27
 incident_type:
   - data-theft
 initial_vector: supply-chain
 outcome_summary: |
-  Group-IB published the consolidated analysis of UltraRank,
-  a Russian-speaking JS-skimming actor responsible for
-  compromises across approximately 700 e-commerce sites
-  since 2015, including the Volusion platform attack
-  (Oct 2019) and the ValidCC carding marketplace as
-  monetization channel. Group-IB attributes UltraRank as a
-  single operator group often miscategorized as multiple
-  separate Magecart numbered clusters (originally split
-  by RiskIQ into Groups 1, 2, 5, and 12 at various points).
+  In its August 2020 report, Group-IB consolidated three
+  JS-sniffer campaigns — previously attributed by researchers
+  to three separate Magecart clusters (Group 2, Group 5,
+  Group 12) — into a single financially-motivated operator it
+  named UltraRank. Group-IB identified 691 e-commerce websites
+  plus 13 third-party website service providers infected over
+  the group's five years of activity (the earliest campaign
+  dating to 2015). The group monetized the harvested card data
+  through its own affiliated card shop, ValidCC, whose revenue
+  Group-IB reported exceeded $5,000 per day; Group-IB assessed
+  the ValidCC administrator ("SPR") was probably a Russian
+  speaker. A December 2020 Group-IB follow-up documented a new
+  wave of ~12 further infected sites using the SnifLite
+  sniffer.
 false_flag_risk: none
 summary: |
-  The UltraRank consolidation is the canonical example of
-  cluster-taxonomy reconciliation in the e-skimming
-  ecosystem: separate-cluster reporting by multiple vendors
-  collapsed into a single operator entity through shared
-  TTP and infrastructure analysis. AUSPEX classifies as
-  criminal-baseline.
+  The UltraRank consolidation is a canonical example of
+  cluster-taxonomy reconciliation in the e-skimming ecosystem:
+  activity split across multiple Magecart-numbered clusters
+  (Group 2, Group 5, Group 12) was collapsed by Group-IB into
+  a single operator entity through shared JS-sniffer families,
+  TTPs, and infrastructure. Distinctively, UltraRank both stole
+  the payment-card data and sold it, running its own affiliated
+  ValidCC card shop rather than selling on to other carders.
+  AUSPEX classifies as criminal-baseline (no documented state
+  nexus).
 attributions:
-  - actor_id: null
+  - actor_id: criminal/ultrarank
     attributing_org: Group-IB
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2020-11-12
-    attribution_source_id: group-ib/2020-11-12_ultrarank-clusters
+    attribution_date: 2020-08-27
+    attribution_source_id: group-ib/2020-08-27_ultrarank-triple-threat
+    notes: "Group-IB coined the named cluster 'UltraRank' and attributed the three formerly-separate Magecart campaigns (Group 2/5/12) to it based on shared JS-sniffer families and infrastructure. Named-actor (named criminal group, no state nexus). Confidence moderate: a single vendor's consolidation, presented firmly but not independently corroborated."
 doctrine_links: []
-targets: []
+targets:
+  - target_id: sectors/retail
+    role: primary
 sources:
+  - group-ib/2020-08-27_ultrarank-triple-threat
   - group-ib/2020-11-12_ultrarank-clusters
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCED (phantom/wrong-source remediation). The event's core
+    consolidation claims were attributed only to Group-IB's Dec-2020
+    "New attacks by UltraRank group" blog
+    (group-ib/2020-11-12_ultrarank-clusters), which is a FOLLOW-UP on a
+    new ~12-site wave and does NOT carry those claims. Located and added
+    the foundational source — Group-IB's Aug-27-2020 consolidation report
+    "Group with numerous faces / UltraRank: the unexpected twist of a
+    JS-sniffer triple threat" (group-ib/2020-08-27_ultrarank-triple-threat,
+    snapshot sha256 e8394fbe…e40c612, 508,182 bytes, page datePublished
+    2020-08-27). Re-pointed sources[] and attribution_source_id to it; kept
+    the Dec-2020 blog as a supplementary source.
+    [a] FACTS — corrected to the Aug-2020 report verbatim: "identify a
+    total of 691 websites as well as 13 third-party service providers"
+    (was "approximately 700 e-commerce sites" — imprecise; now 691 + 13
+    suppliers); campaigns "attributed by cybersecurity researchers to three
+    different groups, namely Group 2, Group 5 and Group 12" — REMOVED the
+    "Group 1" the event/actor asserted (unsupported; the report is a
+    "triple threat" = exactly three campaigns, 2/5/12); "The earliest of
+    them, Campaign 2, dates back to 2015"; ValidCC monetization "whose
+    revenue exceeded $5,000 per day"; ValidCC admin SPR "probably managed
+    by a Russian speaker" (re-scoped the "Russian-speaking" claim to the
+    ValidCC administrator, which is what the source actually states).
+    STRIPPED the Volusion-platform (Oct 2019) claim entirely: neither
+    Group-IB source mentions Volusion, and the Volusion breach was publicly
+    attributed by Trend Micro to FIN6 / Magecart Group 6 — a DIFFERENT
+    cluster, not UltraRank (Groups 2/5/12). Also removed the unsupported
+    "6,500+ merchants" figure that traveled with it.
+    [b] ATTRIBUTION — actor_id set null → criminal/ultrarank (resolves to
+    atlas/actors/criminal/ultrarank.yaml). attribution_level=named-actor
+    (Group-IB's own named criminal cluster, no state nexus); confidence
+    kept moderate (single-vendor consolidation). auspex_assessment concur.
+    [c] DATES — disclosure_date 2020-11-12 → 2020-08-27 (the real
+    consolidation-report date); end_date likewise 2020-08-27. The old
+    2020-11-12 matched neither the consolidation (Aug 27) nor the follow-up
+    blog (whose true datePublished is 2020-12-23, corrected in its source
+    record). start_date 2015-01-01 confirmed ("Campaign 2 dates back to
+    2015"). Event id/filepath left under 2020/11 (slugs/ids stable-forever).
+    [d] DOCTRINE_LINKS — [] correct: a profit-motivated criminal cluster
+    with no documented state nexus; no doctrine applies. Not invented.
+    [e] ATTRIBUTION_LEVEL — set named-actor per exactly what Group-IB
+    names (a named group, no unit/service).
+    [f] ACTOR_ID — criminal/ultrarank resolves. FLAG: the actor record
+    atlas/actors/criminal/ultrarank.yaml still asserts the same unsupported
+    claims I stripped here — the "Volusion platform-wide attack (Oct 2019)
+    affecting an estimated 6,500+ merchants" (belongs to FIN6/Magecart
+    Group 6, not UltraRank) and lists alias "Magecart Group 12" only while
+    its ttp/aliases prose elsewhere implies broader; its consolidation is
+    Groups 2/5/12. Recommend Kara: (1) delete the Volusion/6,500-merchant
+    sentence from the actor ttp_summary; (2) note the alias set covers
+    Group 2/5/12 (not 1); (3) add group-ib/2020-08-27_ultrarank-triple-threat
+    to the actor's sources[]. Not edited here (actor edits are out of scope).

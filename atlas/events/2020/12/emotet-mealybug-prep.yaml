@@ -1,41 +1,104 @@
 id: 2020-12/emotet-mealybug-prep
 name: Emotet 2020 — pre-takedown peak operations
-start_date: 2020-07-17  # Emotet returned from 5-month hiatus
-disclosure_date: 2020-07-22
+start_date: 2020-07-17  # widely-reported return date; CISA source says only "July 2020" (dormant since Feb)
+disclosure_date: 2020-07-22  # early-July researcher reporting of the return; not stated verbatim by cited sources
 end_date: 2020-12-31
 incident_type:
   - intrusion
 initial_vector: phishing
 outcome_summary: |
-  After a five-month hiatus, Emotet resumed operations July 17
-  2020 with high-volume malspam delivering TrickBot and Qakbot
-  loaders. CISA AA20-280A (Oct 6 2020) labeled Emotet "one of
-  the most prevalent ongoing threats" to US state, local,
-  tribal, and territorial governments. Operations continued
-  through January 27 2021 when Operation Ladybird seized the
-  botnet's three-tier C2.
+  After a dormant period that began in February, Emotet resurged
+  in July 2020 with high-volume malspam delivering Qakbot and
+  (from September) TrickBot. CISA AA20-280A (Oct 6 2020) labeled
+  Emotet "one of the most prevalent ongoing threats", noting a
+  significant increase in actors using Emotet to target US state,
+  local, tribal, and territorial governments. Operations continued
+  until late January 2021, when Operation Ladybird (Europol,
+  announced Jan 27 2021) took control of the botnet's infrastructure
+  — several hundreds of servers worldwide — from the inside.
 false_flag_risk: none
 summary: |
   Baseline-establishing year for the criminal-loader ecosystem
-  immediately preceding the major 2021 ransomware wave (Colonial,
-  JBS, Kaseya). Emotet → TrickBot → Conti / Ryuk delivery chain
-  was the dominant pre-ransomware-payload pattern of 2020. Emotet
+  immediately preceding the 2021 ransomware surge. The Emotet
+  loader operation was, per Europol, "one of the biggest players
+  in the cybercrime world" — a delivery vehicle other operators
+  such as TrickBot and Ryuk benefited from. Through 2020 Emotet
   malspam delivered weaponized Microsoft Office documents and
-  password-protected ZIPs via reply-chain hijacking from previously
-  compromised inboxes, dropping the Emotet loader which in turn
-  pulled TrickBot or Qakbot for second-stage credential dumping,
-  Cobalt Strike beaconing, and lateral movement across the
-  victim's Active Directory before a hands-on-keyboard ransomware
-  operator (most commonly Conti or Ryuk) was brought in for the
-  domain-wide encryption phase.
+  password-protected ZIPs, using reply-chain (thread) hijacking of
+  existing email conversations stolen from previously compromised
+  inboxes to lure recipients into enabling macros. The Emotet loader
+  then pulled Qakbot (to steal banking credentials) or TrickBot (to
+  deliver ransomware payloads), proliferating within a network by
+  brute-forcing local-admin credentials, dumping credentials with
+  Mimikatz, and moving laterally over the Admin$ SMB share.
 attributions:
   - actor_id: criminal/emotet  # was ru/proxies/emotet; demoted 2026-06-24 (unsourced state-proxy nexus — see actor notes)
     attributing_org: CISA
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-10-06
     attribution_source_id: cisa/2020-10-06_aa20-280a-emotet
-doctrine_links: []  # pre-Feb-2022 doctrinal frame not applicable
-targets: []
+    notes: "CISA/MS-ISAC name the Emotet operation (the malware family + its cybercriminal operators) with high confidence as a prevalent threat; no state and no formal group designation (TA542/Mealybug) is named — named-actor, not named-unit, and no nation."
+doctrine_links: []  # pre-Feb-2022 doctrinal frame not applicable; stateless criminal loader
+targets:
+  - target_id: sectors/government/local
+    country: us
+    role: primary  # CISA: "significant increase in ... actors targeting state and local governments with Emotet"
 sources:
   - cisa/2020-10-06_aa20-280a-emotet
+  - europol/2021-01-27_operation-ladybird-emotet  # AUDIT 2026-07-01: added to carry the late-Jan-2021 Ladybird takedown terminus + TrickBot/Ryuk ecosystem (the Oct-2020 CISA source cannot carry Jan-2021)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs two RAW-snapshotted primary sources. NOT a phantom — the CISA URL
+    resolves to the genuine AA20-280A advisory.
+    SOURCES:
+    - cisa/2020-10-06_aa20-280a-emotet (live-fetched; sha256 f744c541…ce7be247a;
+      75,072 bytes; tier primary retained).
+    - europol/2021-01-27_operation-ladybird-emotet (raw re-verified on disk; sha256
+      c405fab1…ab20ce40; JS-SPA, body in embedded JSON; tier primary).
+
+    [a] FACTS — corrected the event's over-claim. STRIPPED items no cited source
+    carries: "Cobalt Strike beaconing" (0 hits in either source; fabricated
+    tradecraft); "Conti" as the ransomware (neither source names Conti; Europol
+    names only "Ryuk"); "hands-on-keyboard operator ... domain-wide encryption
+    phase" (interpretive, uncited); "Active Directory" lateral movement (CISA
+    describes lateral movement via brute-forced LOCAL-admin creds + the Admin$ SMB
+    share, not AD) → reworded to Admin$/local-admin + Mimikatz per CISA verbatim;
+    "three-tier C2" → "several hundreds of servers" (Europol's actual wording — no
+    "three-tier" in either source); Colonial/JBS/Kaseya named-2021-incident framing
+    dropped ("2021 ransomware surge"). RETAINED + now verbatim-carried: Feb→July
+    2020 resurgence; Qakbot(Aug)+TrickBot(Sep) delivery; reply-chain/thread
+    hijacking (Palo Alto, in CISA); weaponized Office docs + password-protected ZIPs
+    (Microsoft, in CISA); "one of the most prevalent ongoing threats"; SLTT-gov
+    targeting; Mimikatz/LSASS + Admin$ lateral movement; the loader-for-hire
+    ecosystem + late-Jan-2021 Ladybird takedown of "several hundreds of servers ...
+    from the inside" (Europol).
+    [b] ATTRIBUTION — CISA/MS-ISAC name the Emotet operation (malware family + its
+    "cybercriminal"/"cyber actors" operators) with high confidence; no state, no
+    formal group name. attributing_org_confidence high (source does not hedge that
+    this is Emotet), auspex_assessment concur — both correct, unchanged.
+    [c] DATES — source published_on 2020-10-06 correct (CISA advisory date). The
+    NB-flagged conflation checks out: the event is anchored on the Oct-2020 advisory
+    but its window is the 2020 campaign (Feb-dormancy → July resurgence → Dec 31),
+    with the Jan-2021 Ladybird takedown as terminus now carried by the added Europol
+    source rather than mis-attributed to CISA. RESIDUALS (annotated inline, not
+    fabricated): start_date 2020-07-17 is the widely-reported return day but CISA
+    says only "July 2020"; disclosure_date 2020-07-22 reflects early-July researcher
+    reporting and is not stated verbatim by either cited source — both left as
+    best-estimates with inline caveats.
+    [d] DOCTRINE_LINKS — [] correct: stateless criminal loader, pre-Feb-2022; no
+    doctrine genuinely applies. No attested link, so no attesting_source_id needed.
+    [e] ATTRIBUTION_LEVEL — added named-actor (was missing): CISA names the Emotet
+    named cluster but neither a nation nor a service/unit.
+    [f] ACTOR_ID — criminal/emotet resolves (atlas/actors/criminal/emotet.yaml).
+    Placement is sound and already human-decided (Kara 2026-06-24: no cited source
+    documents a Russian-state nexus for the TA542/Mealybug crew itself). No flag.
+    CORRECTIONS MADE: rewrote summary + outcome_summary to source-carried claims;
+    added europol Ladybird source; added sectors/government/local (us, primary)
+    target (was targets: []); added attribution_level named-actor + attribution
+    note; annotated the two soft date fields.

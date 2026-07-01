@@ -2,69 +2,148 @@ id: 2020-11/volexity-oceanlotus-fake-news-sites
 name: Volexity documents OceanLotus / APT32 fake Vietnamese-language news-site infrastructure cluster
 start_date: 2020-01-01
 disclosure_date: 2020-11-06
-end_date: 2020-11-06
+end_date: null
 incident_type:
   - intrusion
-  - influence-operation
-initial_vector: n-day
+  - espionage
+initial_vector: phishing
 outcome_summary: |
   Volexity published a follow-on disclosure to its 2017 watering-
   hole research, documenting an OceanLotus / APT32 infrastructure
-  cluster operating fake Vietnamese-language news websites —
-  including a fake "Hà Nội Times" property — to deliver multi-
-  stage implants to Vietnamese-language readers. The fake-news-site
-  layer functioned both as a profiler and selective-payload
-  delivery vehicle and as a persona-management asset adjacent to
-  the social-media accounts Facebook would publicly take down five
-  weeks later in December 2020.
+  cluster operating multiple fake Vietnamese-language (and
+  wider Southeast Asian) news websites — e.g. baodachieu.com,
+  baomoivietnam.com, nhansudaihoi13.org — that OceanLotus itself
+  created and operated (they were not, as first appeared,
+  compromised legitimate sites). Only a handful of specific
+  articles per site carried malicious code: a web-profiling
+  framework fingerprinted visitors and, on a browser/OS-selective
+  basis, socially engineered them into a fake Flash-update RAR
+  (Adobe_Flash_Install.rar) that dropped a Cobalt Strike implant,
+  or redirected them to credential-phishing pages. The fake-news
+  layer thus functioned both as a visitor profiler and as a
+  selective-payload delivery vehicle, and several of the sites had
+  associated Facebook pages (one predecessor property had ~20,000
+  followers; the 13th-Congress site nhansudaihoi13.org had a
+  Facebook page with 1,000+ interactions and a Messenger account
+  for direct outreach) — the same class of persona/social-media
+  infrastructure that Facebook (Meta) publicly disrupted five weeks
+  later, on 11 December 2020, attributing it to the Vietnamese IT
+  firm CyberOne Group.
 false_flag_risk: none
 summary: |
-  Bridges the November 2017 Volexity watering-hole disclosure and
-  the December 2020 Facebook takedown of APT32 / CyberOne Group
-  infrastructure. The fake-news-site cluster is one of the
-  clearer documented examples of APT32 operating across the
-  intrusion / influence boundary — the same infrastructure that
-  profiled targets for technical implants also served as a
-  Vietnamese-language information-environment shaping asset.
-  Plays to both the regime-stability-surveillance pillar and the
-  cybersovereignty / content-control pillar of Resolution
-  29-NQ/TW.
+  Bridges the November 2017 Volexity watering-hole disclosure
+  (referenced by Volexity as its "2017 discovery" of an OceanLotus
+  "massive digital surveillance campaign") and the December 2020
+  Facebook takedown of APT32 / CyberOne Group persona
+  infrastructure. The fake-news-site cluster is a well-documented
+  example of APT32 espionage watering-hole infrastructure that
+  doubled as a Vietnamese-language persona/social-media asset: the
+  same sites that profiled and selectively implanted visitors also
+  operated fake activist/anti-corruption/13th-National-Congress
+  news brands and associated Facebook pages. The Vietnamese
+  activist/political dimension of the targeting fits the
+  regime-stability-surveillance pillar of Resolution 29-NQ/TW; the
+  parallel Cambodian/Lao/Malay/Filipino news targeting reads as
+  regional foreign collection rather than domestic regime
+  surveillance.
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: Volexity
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-11-06
     attribution_source_id: volexity/2020-11-06_oceanlotus-watering-hole
+    notes: "Volexity states the activity flatly as 'the Vietnamese threat actor OceanLotus' — named-actor (group) + nation (Vietnam); no specific Vietnamese service named, consistent with vn/unscoped/apt32."
 doctrine_links:
   - doctrine_id: vn/resolution-29-nqtw
     pillar_id: vn/resolution-29-nqtw/regime-stability-surveillance
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Vietnamese-language reader-base targeting via fake news sites
-      fits the hostile-forces / diaspora-monitoring pillar of the
-      resolution. Volexity did not cite the resolution by name.
-    contested: false
-    analyst: claude
-  - doctrine_id: vn/resolution-29-nqtw
-    pillar_id: vn/resolution-29-nqtw/cybersovereignty
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      The information-environment / fake-outlet dimension of the
-      campaign aligns with the cybersovereignty pillar's broader
-      content-shaping aspiration — though the resolution
-      operationalizes that pillar primarily through domestic
-      legal compulsion on foreign platforms, not through covert
-      personas, so the link is plausible rather than strongly
-      inferred.
+      OceanLotus's fake-news cluster includes a site dedicated to
+      the 13th National Congress of the Communist Party of Vietnam
+      (nhansudaihoi13.org) plus activist/anti-corruption-themed
+      properties, and Volexity notes targeting of "those within
+      Vietnam." Profiling and selectively implanting a Vietnamese
+      activist / political-opposition reader base is exactly the
+      "hostile forces" monitoring the Resolution 29-NQ/TW
+      regime-stability-surveillance pillar tasks the security
+      services with. Volexity did not cite the resolution by name;
+      the label is strongly_inferred rather than attested because
+      the source states the who and the behaviour but not the
+      strategic goal.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Fake-news cluster includes nhansudaihoi13.org, a site 'dedicated to news surrounding the upcoming 13th National Congress of the Communist Party of Vietnam', with a Facebook page focused on 'corruption within Vietnamese politics'."
+        - "Volexity frames the campaign as continuing OceanLotus's 2017 'massive digital surveillance campaign' and notes targeting of 'those within Vietnam' via profiling and selective implant delivery."
+      ruled_out: "Vietnam's industrial-upgrading cyber-collection doctrine (automotive/aerospace IP theft) — no commercial-IP target appears in this campaign; the audience is news/activist readers, not industry."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/vietnamese-dissident-network
     role: primary
-  - target_id: orgs/vietnamese-language-readers-undisclosed
+  - target_id: sectors/civil-society
     role: primary
 sources:
   - volexity/2020-11-06_oceanlotus-watering-hole
+  - facebook/2020-12-11_apt32-takedown
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Volexity "OceanLotus: Extending Cyber Espionage Operations Through Fake
+    Websites" (2020-11-06) — raw snapshot beee9a04…7064ba30, 78,096 bytes; hash re-verified
+    on disk. Added facebook/2020-12-11_apt32-takedown (dab54266…f6d9bb78, 314,315 bytes;
+    hash re-verified) to carry the Dec-2020 takedown / CyberOne bridge. Not a phantom — the
+    Volexity URL is the real article and carries the core.
+    [a] FACTS: SUPPORTED verbatim — OceanLotus "set up and operated multiple activist, news,
+    and anti-corruption websites"; the sites "were not compromised, instead they were created
+    and operated by OceanLotus"; a "web profiling framework" to "gather information about site
+    visitors and, in some cases, deliver malware"; the baomoivietnam[.]com fake video player →
+    "Adobe_Flash_Install.rar … designed to fool the targeted user into infect[ing] themselves
+    with a Cobalt Strike implant"; Android/iOS visitors redirected to a phishing host
+    (accounts.gservice[.]reviews); "targeting those within Vietnam" + "renewed targeting of
+    OceanLotus's neighbors throughout Southeast Asia"; nhansudaihoi13[.]org 13th-Congress site
+    with a Facebook page (1,000+ interactions, Messenger account) and a predecessor property
+    with "over 20,000 followers". CORRECTIONS: (1) STRIPPED the fabricated fake "Hà Nội Times"
+    property — 0 occurrences of "Hà Nội Times"/"Hanoi Times" in the raw; the sites are
+    baodachieu.com / baomoivietnam.com / ledanvietnam.org / nhansudaihoi13.org / tocaoonline.org
+    / thamcungbisu.org / tinmoivietnam.com / kmernews.com / laostimenews.com / malaynews.org /
+    philiippinesnews.net / khmer-livenews.com / khmerleaks.com, none named "Hà Nội Times".
+    (2) Reworded "multi-stage implants" → the actually-documented Cobalt Strike implant via
+    fake-Flash-update RAR + credential-phishing redirect, and broadened the reader base to the
+    documented Vietnamese + wider Southeast Asian scope. (3) "CyberOne Group" is NOT in the
+    Volexity article (0 hits) — that claim is now carried by the added Facebook/Meta source,
+    which states verbatim it "linked this activity to CyberOne Group, an IT company in Vietnam".
+    [b] ATTRIBUTION: Volexity states it flatly — "the Vietnamese threat actor OceanLotus" —
+    high confidence; added attribution_level=named-actor (OceanLotus named + Vietnam nation, no
+    service). auspex_assessment concur unchanged.
+    [c] DATES: source published_on 2020-11-06 correct; disclosure_date 2020-11-06 correct;
+    start_date 2020-01-01 retained (campaigns "set up within the last year" / "throughout the
+    year"). Changed end_date 2020-11-06 → null: article says "the majority of these websites
+    are still live at the time of this blog post" (operation not bounded at disclosure).
+    [d] DOCTRINE: REMOVED the vn/resolution-29-nqtw/cybersovereignty (plausible) link — it
+    rested on an information-environment / content-control framing the source does not carry
+    (0 occurrences of influence/disinformation/propaganda/narrative in the raw; the sites scrape
+    legitimate news to appear real, one Facebook page even reposts anti-corruption content).
+    Volexity documents espionage watering-holes, not an influence/content-control operation, so
+    the cybersovereignty pillar does not genuinely apply. Kept the regime-stability-surveillance
+    link at strongly_inferred (13th-Congress + activist/anti-corruption targeting of a
+    Vietnamese political reader base = the pillar's "hostile forces" monitoring); added
+    inference_basis (signals + ruled_out). No attested link (no attesting_source_id).
+    [e] ATTRIBUTION_LEVEL: set named-actor (was missing).
+    [f] ACTOR_ID: vn/unscoped/apt32 resolves (file atlas/actors/vn/apt32.yaml, id
+    vn/unscoped/apt32). No actor edits.
+    OTHER CORRECTIONS: incident_type [intrusion, influence-operation] → [intrusion, espionage]
+    (influence-operation unsupported — see [d]). initial_vector n-day → phishing (delivery is
+    social-engineering: fake Flash-update lure + "spear phishing and social media messages"; no
+    n-day exploit is described). targets: replaced dangling FK
+    orgs/vietnamese-language-readers-undisclosed (no such registry file) with sectors/civil-society
+    (broad activist/reader base); kept orgs/vietnamese-dissident-network.
+    RESIDUAL UNCERTAINTY: start_date is an estimate (source says "within the last year" /
+    "throughout the year", no precise start). sectors/civil-society is a broad stand-in for the
+    heterogeneous Vietnamese + Southeast-Asian news-reader victim base the watering-holes profiled.
