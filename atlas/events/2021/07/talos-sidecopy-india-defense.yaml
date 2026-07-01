@@ -1,5 +1,5 @@
 id: 2021-07/talos-sidecopy-india-defense
-name: Cisco Talos extends SideCopy attribution and ties cluster to Transparent Tribe
+name: Cisco Talos documents SideCopy's expanded RAT arsenal against Indian government and defense
 start_date: 2020-01-01
 disclosure_date: 2021-07-07
 end_date: null
@@ -8,37 +8,138 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Cisco Talos published "InSideCopy," documenting SideCopy's
-  continued targeting of Indian defense forces and assessing
-  operational overlap with Transparent Tribe sufficient to
-  characterize SideCopy as a Transparent Tribe sub-cluster. The
-  report extended the tooling inventory (ReverseRAT, ActionRAT,
-  AllaKore variants) and refined the attribution to Pakistani
-  state-aligned activity.
+  Cisco Talos published "InSideCopy," documenting an expansion of
+  SideCopy's malware campaigns targeting government personnel in
+  India. Talos extended the group's tooling inventory — adding the
+  new custom RATs DetaRAT, ReverseRAT, MargulasRAT and ActionRAT
+  alongside the previously known CetaRAT, AllaKore and njRAT and the
+  commodity RATs Lilith and Epicenter — and observed a "high degree
+  of similarity" between SideCopy's targeting tactics/themes and
+  those of the Transparent Tribe APT (aka APT36), which also targets
+  India. Talos continued to track SideCopy as its own named APT
+  group that mimics SideWinder infection chains, and named no
+  Pakistani intelligence service.
 false_flag_risk: suspected
 summary: |
-  The Talos analysis is the most influential Western-vendor
-  consolidation of the SideCopy / Transparent Tribe relationship,
-  effectively bringing SideCopy into the broader APT36 umbrella
-  for editorial purposes while preserving the named distinction.
+  Cisco Talos's analysis documents SideCopy expanding both its RAT
+  arsenal and its post-infection plugin set (file enumerators,
+  credential-stealers, keyloggers) against Indian government and
+  military-linked targets, using decoys posing as operational
+  documents belonging to the military and think tanks. Talos frames
+  SideCopy as sharing a "high degree of similarity" with Transparent
+  Tribe / APT36 in targeting but keeps it as a separately named
+  cluster that mimics SideWinder; the report names no nation and no
+  Pakistani service — the Pakistan nexus rests on the Transparent
+  Tribe / APT36 association rather than a Talos statement.
 attributions:
   - actor_id: pk/unscoped/sidecopy
     attributing_org: Cisco Talos
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-07-07
     attribution_source_id: cisco-talos/2021-07-07_sidecopy-india-defense
+    notes: |
+      Talos definitively tracks SideCopy as its own named APT group
+      ("Cisco Talos is tracking an increase in SideCopy's activities")
+      and attributes this activity to it with high confidence — hence
+      attribution_level named-actor. But Talos names NO nation and NO
+      Pakistani service ("ISI"/"Inter-Services Intelligence" absent;
+      "Pakistan" appears only re: infrastructure interest in "victims
+      in Pakistan and India"); it notes only a "high degree of
+      similarity" to Transparent Tribe / APT36, not that SideCopy is a
+      sub-cluster of it. The pk/unscoped nation head rests on the
+      Transparent Tribe / APT36 association, not a Talos statement —
+      hence concur-with-caveat.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Direct Indian-defense-force targeting.
+      A Pakistan-aligned espionage cluster targeting Indian government
+      personnel with military-themed decoys and RAT-based collection
+      (credential-stealers, keyloggers, file enumerators) fits the
+      military-collection pillar, which itself enumerates SideCopy
+      targeting Indian military/defense. No source states the strategic
+      purpose, so this is inferred, not attested.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology: Talos observes SideCopy 'targeting government personnel in India' with decoys 'posing as operational documents belonging to the military and think tanks'."
+        - "Actor mission: SideCopy is an espionage cluster in the Pakistan-aligned Transparent Tribe/APT36 orbit operating against India; post-infection tooling is credential-stealers, keyloggers and file enumerators (collection, not disruption or revenue)."
+        - "Doctrinal fit: the military-collection pillar explicitly enumerates SideCopy targeting Indian military personnel, defense ministry and defense research."
+      ruled_out: "Kashmir-political collection (the sibling pillar) — the decoys and victims here are military/defence-establishment and general government personnel, not Kashmir-issue journalists/dissidents, so the military-collection reading dominates."
 targets:
   - target_id: orgs/indian-armed-forces
     role: primary
 sources:
   - cisco-talos/2021-07-07_sidecopy-india-defense
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Cisco Talos "InSideCopy: How this APT continues to evolve
+    its arsenal" (Asheer Malhotra & Justin Thattil, 2021-07-07) — raw
+    snapshot cisco-talos__2021-07-07_sidecopy-india-defense.html,
+    sha256 8eb00169…aa8b8967, 69366 bytes (hash re-verified, matches the
+    source record). The stored HTML is JS-rendered but preserves the full
+    article body (~6.3k visible chars); the byline "Wednesday, July 7,
+    2021" confirms published_on. NOT a phantom: URL resolves to the real
+    article and the event's facts appear in the body.
+    [a] FACTS: source-carried and corrected. Talos "tracking an increase
+    in SideCopy's activities targeting government personnel in India";
+    arsenal verbatim — "CetaRAT, Allakore and njRAT" (known) plus "four
+    new custom RAT families" (DetaRAT, ReverseRAT, MargulasRAT, ActionRAT)
+    plus commodity "Lilith and Epicenter"; post-infection plugins "file
+    enumerators to credential-stealers and keyloggers"; initial access
+    "malicious LNK files and documents"/"phishing emails"/"honeytrap-based
+    infections" (→ initial_vector phishing). REMOVED two over-claims the
+    source does NOT carry: (1) prior outcome_summary said Talos assessed
+    overlap "sufficient to characterize SideCopy as a Transparent Tribe
+    sub-cluster" — the blog says only "a high degree of similarity to the
+    Transparent Tribe APT (aka APT36)" in targeting tactics/themes, NOT
+    that SideCopy is a sub-cluster; (2) prior text said Talos "refined the
+    attribution to Pakistani state-aligned activity" — the blog attributes
+    to no nation ("Pakistan" appears only in "special interest in victims
+    in Pakistan and India", i.e. infrastructure/victimology, not
+    attribution). Rewrote the summary, which had unsourced puffery ("most
+    influential Western-vendor consolidation", "bringing SideCopy into the
+    broader APT36 umbrella"). Kept ReverseRAT/ActionRAT/AllaKore (all
+    source-carried).
+    [b] ATTRIBUTION: Talos definitively tracks SideCopy as its own named
+    APT group and attributes this activity to it with high confidence
+    (kept attributing_org_confidence high); but names no nation and no
+    Pakistani service — "ISI"/"Inter-Services Intelligence" absent from the
+    body (consistent with the source record's 2026-06-24 audit note and the
+    pk/unscoped/sidecopy demotion). Changed auspex_assessment concur →
+    concur-with-caveat (the pk nation head rests on the Transparent
+    Tribe/APT36 association, not a Talos statement) and added a note.
+    [c] DATES: disclosure_date 2021-07-07 = the blog's publication date ✓.
+    end_date null ✓. start_date 2020-01-01 retained as an editorial
+    best-estimate within the documented activity window (Talos: commodity
+    RAT use "since as early as 2019"); not contradicted by the source.
+    [d] DOCTRINE_LINKS: pk/asymmetric-posture-india/military-collection kept
+    strongly_inferred (correct — no source states the strategic goal, so
+    not attested; attesting_source_id null). Replaced the one-line reasoning
+    and added inference_basis {signals[], ruled_out}: signals = Talos's
+    "government personnel in India" victimology + military/think-tank decoys
+    + collection-oriented post-infection tooling + the pillar's explicit
+    SideCopy enumeration; ruled_out = the sibling kashmir-political pillar
+    (victims here are military/defence-establishment + general government,
+    not Kashmir dissidents).
+    [e] ATTRIBUTION_LEVEL: added named-actor (Talos names the SideCopy
+    group; no nation or unit stated by Talos itself).
+    [f] ACTOR_ID: pk/unscoped/sidecopy resolves (atlas/actors/pk/sidecopy.yaml,
+    id pk/unscoped/sidecopy) — same actor as 2020-11/sidecopy-emergence;
+    already demoted from pk/isi on 2026-06-24 (no cited source names the
+    ISI). No actor-file edit. Source tier secondary left unchanged: all
+    vendor-research (Seqrite, every Cisco Talos source) is tiered secondary
+    in this corpus by convention, so it is not a miscategorization.
+    Residual: single-source event; Talos's own attribution is high-confidence
+    for the SideCopy cluster but assigns no nation, so the pk head is
+    inherited from the TT/APT36 association rather than independently stated.

@@ -9,15 +9,21 @@ incident_type:
 initial_vector: supply-chain
 outcome_summary: |
   Independent researcher "blackorbird" identified a malicious
-  Notepad++ installer in late November 2021. Minerva Labs
-  analyzed the sample and attributed it to StrongPity / PROMETHIUM
-  based on payload-family overlap with the established
-  trojanized-installer pattern. The installer drops a keylogger
-  (ntuis32.exe) and supporting tooling into
-  C:\\ProgramData\\Microsoft\\Windows Data, alongside a working
-  Notepad++ binary so the victim observes ordinary installation
-  behavior. Distribution-vector specifics (impersonating
-  download mirrors, watering-hole) were not publicly detailed.
+  Notepad++ installer (npp.8.1.7.Installer.x64.exe), tweeting the
+  sample on 30 November 2021. Minerva Labs analyzed the sample and
+  BleepingComputer identified the group as StrongPity (APT-C-41 /
+  PROMETHIUM), noting the trojanized-installer technique matched the
+  group's 2016-2018 trojanized-WinRAR campaigns — i.e. operational-
+  pattern continuity, not fresh victim-set evidence. On execution the
+  installer drops the genuine Notepad++ binary (so the install looks
+  ordinary) plus a keylogger, ntuis32.exe, into
+  C:\\ProgramData\\Microsoft\\WindowsData and a companion component,
+  winpickr.exe, into C:\\Windows\\System32; a "PickerSrv" service
+  runs the keylogger for persistence, winpickr.exe exfiltrates the
+  captured keystroke/file logs to C2 and then deletes them. The
+  distribution vector (how victims obtained the trojanized installer)
+  was not detailed, though the source notes such installers circulate
+  on unofficial sites posing as the official Notepad++ portal.
 false_flag_risk: suspected
 summary: |
   Late-2021 PROMETHIUM tempo data point bridging the post-2020
@@ -32,14 +38,24 @@ attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: Minerva Labs (via BleepingComputer)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2021-12-09
     attribution_source_id: bleepingcomputer/2021-12-09_strongpity-notepad-plus-plus
     notes: |
-      Attribution rests on payload-family overlap rather than
-      fresh victim-set evidence; the original Minerva Labs
-      blog post URL no longer resolves so the BleepingComputer
-      coverage is the primary surviving public record.
+      The group naming ("StrongPity, also known as APT-C-41 and
+      Promethium") is stated by BleepingComputer, citing Minerva Labs'
+      malware analysis; it rests on operational-pattern continuity with
+      the group's 2016-2018 trojanized-installer campaigns, not on fresh
+      victim-set evidence (the article names no victims). attribution_level
+      is named-actor: the cited article names only the group — it does
+      NOT itself name Turkey, a Turkish service, or the MİT, so no
+      nation/unit over-attestation is drawn from this source. The
+      Turkish-state nexus lives at the actor level (from other sources),
+      not this one. The original Minerva Labs primary is now link-rotted
+      (blog.minerva-labs.com unreachable; minerva-labs.com/blog redirects
+      to Rapid7 post-acquisition), so this trade-press coverage is the
+      surviving snapshottable record.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: null
@@ -49,7 +65,14 @@ doctrine_links:
       Doctrinal pillar mapping not isolatable from the public
       reporting; tempo data point sustains the broader
       counter-Gülen-and-Kurdish surveillance posture but does
-      not specifically attest a pillar.
+      not specifically attest a pillar. The cited source states no
+      strategic purpose and names no victims, so the link stays
+      plausible.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Counter-Gülen / Kurdish-diaspora surveillance: PROMETHIUM's established mission is population/dissident surveillance, so a fresh trojanized-installer campaign is most naturally read as continuing that posture."
+        - "Opportunistic broad-audience keylogging: the lure (Notepad++, used across a wide range of organizations) is far broader than the cluster's traditional Kurdish/Syrian/Italian-encryption-user focus, and the source names no victims, so an untargeted data-theft reading survives."
     contested: false
     analyst: claude
 targets:
@@ -57,3 +80,57 @@ targets:
     role: primary
 sources:
   - bleepingcomputer/2021-12-09_strongpity-notepad-plus-plus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs BleepingComputer "Malicious Notepad++ installers push StrongPity malware"
+    (Bill Toulas, 2021-12-09), the ONE cited source. Raw article captured + hashed:
+    sha256 d01db5b0…163d154b, 88,950 bytes — real, complete article (title + byline + body
+    all present); NOT a phantom.
+    [a] FACTS ✓ every claim now source-carried. Verbatim support: "The sophisticated hacking
+    group known as StrongPity is circulating laced Notepad++ installers"; "also known as
+    APT-C-41 and Promethium, was previously seen distributing trojanized WinRAR installers …
+    between 2016 and 2018, so this technique is not new"; discovery "from a threat analyst
+    known as 'blackorbird' … while Minerva Labs reports on the malware"; blackorbird tweet
+    dated "November 30, 2021" with sample npp.8.1.7.Installer.x64.exe; installer "creates a
+    folder named 'Windows Data' under C:\\ProgramData\\Microsoft" and drops the original
+    Notepad++ installer, winpickr.exe (C:\\Windows\\System32) and "ntuis32.exe – malicious
+    keylogger under C:\\ProgramData\\Microsoft\\WindowsData"; "a new service named 'PickerSrv'
+    is created" for persistence; keylogger "records all user keystrokes"; winpickr.exe checks
+    the folder and "establishes a C2 connection to upload the stolen data" then the log "is
+    deleted to wipe the traces". CORRECTIONS: rewrote outcome_summary — removed the unsourced
+    "attributed … based on payload-family overlap" characterization (source states no
+    attribution basis beyond technique/operational-pattern continuity with the 2016-2018
+    campaigns) and added the source-carried winpickr.exe / PickerSrv / exfil detail; fixed
+    path "Windows Data" → "WindowsData" per the source's file paths.
+    [b] ATTRIBUTION: the group naming (StrongPity/APT-C-41/Promethium) is BleepingComputer's,
+    citing Minerva Labs' analysis; kept attributing_org "Minerva Labs (via BleepingComputer)",
+    confidence moderate (secondary trade-press, no victim evidence, naming via pattern
+    continuity), auspex concur-with-caveat. NOT over-attested: this article names ONLY the
+    group — it does not mention Turkey, any Turkish service, or the MİT — so no nation/unit
+    claim is drawn from it; the Turkish-state nexus is an actor-level fact from other sources.
+    [c] DATES ✓ source published_on 2021-12-09 = article date "December 9, 2021". start_date
+    2021-11-01 is a reasonable "late-November 2021" estimate (blackorbird tweet 30 Nov);
+    disclosure/end 2021-12-09 = the report date. No conflation.
+    [d] DOCTRINE_LINKS: tr/counter-gulen-kurdish-surveillance, pillar null, confidence
+    plausible — correct and honest (source states no strategic purpose and names no victims);
+    not attested, so no attesting_source_id required. Added inference_basis.alternatives
+    (counter-Gülen/Kurdish-surveillance continuation vs. opportunistic broad-audience
+    keylogging — the Notepad++ audience is far broader than the cluster's traditional focus).
+    [e] ATTRIBUTION_LEVEL: was missing; set named-actor (group named; no nation/unit in this
+    source).
+    [f] ACTOR_ID: tr/unscoped/promethium resolves (atlas/actors/tr/promethium.yaml, id
+    tr/unscoped/promethium) — consistent with all 7 sibling StrongPity events. No actor edit.
+    RESIDUAL: (1) Minerva Labs PRIMARY is link-rotted — blog.minerva-labs.com unreachable (TLS
+    fail, HTTP 000) and minerva-labs.com/blog 301→Rapid7 homepage post-acquisition; archive.org
+    blocked, so the primary could not be added/snapshotted; the snapshotted secondary carries
+    every claim, so level=full stands. (2) TARGET orgs/strongpity-notepad-plus-victims-unknown
+    is an unregistered placeholder (no atlas/targets file) — but this is tracked as a count, not
+    a hard FK error, and matches the sibling pattern (orgs/strongpity3-various-international,
+    orgs/strongpity-android-shagle-victims-unknown are likewise unregistered); left as-is.
+    (3) false_flag_risk kept "suspected" (matches 3 siblings) — defensible at the cluster level
+    given the documented PROMETHIUM/Stealth-Falcon-UAE attribution ambiguity in the actor
+    record, though THIS source carries no false-flag signal; flagged as borderline.

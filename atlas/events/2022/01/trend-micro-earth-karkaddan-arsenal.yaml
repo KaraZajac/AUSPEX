@@ -1,6 +1,6 @@
 id: 2022-01/trend-micro-earth-karkaddan-arsenal
 name: Trend Micro publishes Earth Karkaddan (APT36) attack-chain and arsenal profile
-start_date: 2021-01-01
+start_date: 2020-01-01
 disclosure_date: 2022-01-24
 end_date: 2022-01-24
 incident_type:
@@ -10,59 +10,117 @@ initial_vector: phishing
 outcome_summary: |
   Trend Micro Research published a technical profile of APT36 —
   internally designated Earth Karkaddan by Trend Micro — tracing
-  the cluster's attack chain from spear-phishing through Crimson
-  RAT and Capra-family implant deployment. The piece documented
-  continued targeting of Indian and Afghan military, diplomatic,
-  and defense-research entities through 2021. Trend Micro's
-  independent naming and corroboration provided a third tier-2
-  vendor lineage on the Pakistani-aligned cluster (after
-  Proofpoint 2016, Secureworks 2017).
+  the cluster's attack chain from spear-phishing emails and a USB
+  worm through Crimson RAT, ObliqueRAT, and the Android CapraRAT
+  implant. Drawing on Smart Protection Network telemetry gathered
+  January 2020 to September 2021, the piece documented continued
+  targeting of Indian military, diplomatic, and government entities
+  (a Centre for Land Warfare Studies document was among the lures),
+  and equated Earth Karkaddan with the Transparent Tribe / Operation
+  C-Major / PROJECTM / Mythic Leopard cluster that has been "stealing
+  information since 2016". Trend Micro's independent naming added a
+  further vendor lineage on the cluster (after Proofpoint 2016 and
+  Secureworks 2017).
 false_flag_risk: none
 summary: |
   Vendor-naming-reconciliation event introducing the Earth
   Karkaddan alias and consolidating mid-period Transparent Tribe
-  tooling documentation. The Afghan targeting documented in this
-  piece supports the doctrine's secondary Afghan-collection
-  pillar.
+  tooling documentation (Crimson RAT, ObliqueRAT, CapraRAT). Trend
+  Micro profiles continued targeting of Indian military and
+  diplomatic resources. NB: the report contains no Afghanistan
+  content — an earlier partial-excerpt Afghan-targeting claim, the
+  afghan-collection doctrine link, and the afghan-government target
+  were removed on audit (2026-07-01).
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Trend Micro Research
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-01-24
     attribution_source_id: trend-micro/2022-01-24_earth-karkaddan-apt36-arsenal
+    notes: "Trend Micro firmly equates its Earth Karkaddan cluster with APT36 / Transparent Tribe / Operation C-Major / PROJECTM / Mythic Leopard (named-actor). It does NOT name Pakistan (or any Pakistani service) as sponsor in this piece — the only Pakistan mention is a lure theme ('Canteen Stores Department', Pakistani MoD). The pk/ nexus derives from the actor record's other sources, not this report."
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian military and defense targeting fits the military-
-      collection pillar canonically.
-    contested: false
-    analyst: claude
-  - doctrine_id: pk/asymmetric-posture-india
-    pillar_id: pk/asymmetric-posture-india/afghan-collection
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Trend Micro's Earth Karkaddan/APT36 profile documents
-      targeting of Indian and Afghan military/diplomatic entities;
-      the Afghan-targeting detail is per the report's victimology
-      (the pre-pass fetched a partial excerpt that did not contain
-      it — re-verify against the full report).
+      Trend Micro profiles APT36 / Earth Karkaddan as a "politically
+      motivated" cluster that "has historically targeted Indian
+      military and diplomatic resources", deploying Crimson RAT /
+      ObliqueRAT / CapraRAT via military-themed lures (a Centre for
+      Land Warfare Studies document among them). Sustained collection
+      against Indian military and diplomatic targets is canonically
+      the military-collection pillar.
+    attesting_source_id: null
     inference_basis:
       signals:
-        - "Trend Micro's APT36 profile documents targeting of Indian and Afghan military/diplomatic entities (per the report's victimology)"
-      ruled_out: "the Afghan-targeting detail in the fetched excerpt — partial fetch; pending re-verification against the full report"
+        - "Trend Micro: APT36/Earth Karkaddan 'has historically targeted Indian military and diplomatic resources'"
+        - "military/defense lure themes (Centre for Land Warfare Studies document) and Crimson RAT/ObliqueRAT/CapraRAT deployment against Indian military and government personnel"
+      ruled_out: "kashmir-political (the other default pillar for this actor) — this arsenal profile documents general military/diplomatic collection, not Kashmir-specific political targeting"
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/indian-mod
     country: in
     role: primary
-  - target_id: orgs/afghan-government
-    country: af
-    role: collateral
 sources:
   - trend-micro/2022-01-24_earth-karkaddan-apt36-arsenal
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Trend Micro "Investigating APT36 or Earth Karkaddan's Attack
+    Chain and Malware Arsenal" (2022-01-24). Raw snapshot captured + hashed:
+    sha256 e76ee4ad…81cbf9c7, 95,543 bytes. NOT a phantom — title/body match
+    the citation. NOT a duplicate of the sibling apt36-pension-portal-lures
+    (2021-12) or zscaler-apt36-updated-arsenal (2023-09): this is the distinct
+    2022-01 arsenal/naming-reconciliation report.
+    [a] FACTS ✓/CORRECTED: verbatim-carried — "APT36, also known as Earth
+    Karkaddan… has historically targeted Indian military and diplomatic
+    resources"; aliases Operation C-Major / PROJECTM / Mythic Leopard /
+    Transparent Tribe; arrival via "spear-phishing emails and a USB worm";
+    Crimson RAT (19 hits), ObliqueRAT (3), CapraRAT/Capra Android RAT (9+);
+    SPN telemetry "gathered from January 2020 to September 2021"; "stealing
+    information since 2016"; Centre for Land Warfare Studies (CLAWS) lure.
+    KEY CORRECTION: the report contains ZERO Afghanistan content ("Afghan"/
+    "Afghanistan" = 0 hits across the full 95.5 KB). Removed the fabricated
+    "Indian AND Afghan… defense-research" claim from outcome_summary, the
+    afghan-collection doctrine link, and the orgs/afghan-government target.
+    The event's own prior reasoning admitted the Afghan detail rested on a
+    "partial excerpt… re-verify against the full report" — re-verified: it is
+    unsupported. (Bonus: orgs/afghan-government was also a DANGLING FK — no
+    such target file exists.) Rewrote outcome_summary/summary to source-carried
+    facts.
+    [b] ATTRIBUTION: Trend Micro firmly equates Earth Karkaddan with APT36/
+    Transparent Tribe et al. → added attribution_level: named-actor; kept
+    attributing_org_confidence high (identity/profile stated as fact),
+    auspex_assessment concur. Added a note: Trend Micro does NOT name Pakistan
+    or any Pakistani service as sponsor here (only a "Canteen Stores Department
+    / Pakistani Ministry of Defence" LURE theme); the pk/ nexus comes from the
+    actor record's other sources, not this report. No over-attestation.
+    [c] DATES: source published_on 2022-01-24 matches the article ("Jan 24,
+    2022") ✓. disclosure_date/end_date 2022-01-24 ✓. Corrected start_date
+    2021-01-01 → 2020-01-01 to match the report's explicit observation window
+    (Jan 2020–Sep 2021).
+    [d] DOCTRINE_LINKS: military-collection kept at strongly_inferred (honest —
+    the source states behaviour/targeting, not an explicit strategic goal;
+    no attested); rewrote reasoning to source wording and added the missing
+    inference_basis {signals[], ruled_out=kashmir-political}. afghan-collection
+    link DELETED (unsupported, see [a]). No attested link, so no
+    attesting_source_id needed.
+    [e] ATTRIBUTION_LEVEL: named-actor (Trend named the cluster + equated the
+    alias set; no unit, and no nation asserted in this piece).
+    [f] ACTOR_ID: pk/unscoped/transparent-tribe resolves to
+    atlas/actors/pk/transparent-tribe.yaml (id inside = pk/unscoped/
+    transparent-tribe) ✓. No actor edit made.
+    RESIDUAL: outcome_summary's "further vendor lineage (after Proofpoint 2016
+    and Secureworks 2017)" is AUSPEX editorial reconciliation (the sibling
+    events exist), not a Trend Micro claim — retained as editorial framing, not
+    an incident fact.
+    FLAGS: (1) orgs/afghan-government is a DANGLING FK still referenced by
+    atlas/events/2020/06/sidewinder-nepal-bhutan-sri-lanka.yaml — orchestrator
+    should create the target or clean that event. (2) None on the actor.

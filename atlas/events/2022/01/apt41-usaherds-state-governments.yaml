@@ -8,44 +8,68 @@ incident_type:
   - data-theft
 initial_vector: 0-day  # CVE-2021-44207 USAHerds + Log4Shell
 outcome_summary: |
-  APT41 compromised at least six US state governments via a
-  zero-day in USAHerds animal-health management software
-  (CVE-2021-44207) and Log4Shell. Potential bulk-PII collection
-  and political-intelligence value.
+  APT41 compromised at least six US state-government networks via a
+  zero-day in the USAHerds animal-health management application
+  (CVE-2021-44207) and Log4Shell (CVE-2021-44228), and was observed
+  exfiltrating PII. Mandiant assessed the victimology as consistent
+  with an espionage operation but could not make a definitive
+  assessment given APT41's history of financially motivated
+  moonlighting; the campaign's overall goals remained unknown.
 false_flag_risk: none
 summary: |
-  Mandiant disclosed in March 2022. APT41 chained an authentication-
-  bypass zero-day in USAHerds animal-health management software
-  (CVE-2021-44207, hard-coded ASP.NET machine keys enabling
-  ViewState deserialization RCE) and Log4Shell (CVE-2021-44228)
-  to obtain initial code execution on internet-facing servers at
-  at least six US state governments. Post-exploitation tooling
-  included the DEADEYE / KEYPLUG modular backdoors with
-  Cloudflare-fronted C2, DUSTPAN / DUSTTRAP in-memory loaders,
-  Mimikatz-style credential dumping, valid credentials reused for
-  lateral movement, DLL side-loading via signed binaries for
-  defense evasion, and the Cobalt Strike beacon for persistence —
-  the same kit Mandiant later catalogued in the 2024 APT41 / DUST
-  reporting. Significant because it documents APT41 pivoting to
-  US state-government targeting in parallel with the post-2021
-  critical-infrastructure / pre-positioning wave.
+  Mandiant disclosed on 2022-03-08 ("Does This Look Infected? A
+  Summary of APT41 Targeting U.S. State Governments") a deliberate
+  APT41 campaign, running May 2021 to February 2022, that
+  compromised at least six US state-government networks. Initial
+  access came from exploiting internet-facing web applications
+  (mostly ASP.NET): a zero-day in the USAHerds animal-health
+  management application (CVE-2021-44207) — a static, shared
+  validationKey/decryptionKey (machineKey) baked into all USAHerds
+  installations, enabling ViewState .NET-deserialization RCE — and
+  the Log4Shell zero-day (CVE-2021-44228); SQL injection and
+  directory traversal were also observed. Post-exploitation tooling
+  included the DEADEYE launcher, the modular KEYPLUG backdoor
+  (including a new KEYPLUG.LINUX variant) with heavy Cloudflare-
+  fronted C2, the new DUSTPAN in-memory ChaCha20 dropper (used to
+  deploy a Cobalt Strike BEACON), BADPOTATO named-pipe privilege
+  abuse, and credential harvesting via SAM/SYSTEM hive dumping and
+  Mimikatz. Mandiant observed APT41 exfiltrating PII and assessed
+  the activity as consistent with espionage, but could not make a
+  definitive assessment given APT41's financially motivated
+  moonlighting; the campaign's overall goals remained unknown.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-03-08
     attribution_source_id: mandiant/2022-03-08_apt41-usaherds
+    notes: |
+      Mandiant names APT41 ("a prolific Chinese state-sponsored
+      espionage group") as the actor; China-nexus named group, NO
+      service/unit named (no "MSS"/"Ministry of State Security" in the
+      post). named-actor, not named-unit. The cn/mss placement rests
+      on the actor record's DOJ Sept-2020 source, not this report.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      US state-government datasets are MCF-aligned bulk-PII
-      collection plus political intelligence; no primary attesting
-      source.
+      US state-government systems hold large citizen-PII datasets, and
+      APT41 was observed exfiltrating PII — activity consistent with
+      the MCF bulk-PII / HUMINT-enabling collection logic. Held at
+      plausible (not higher) because Mandiant explicitly could not
+      determine the campaign's goals and flagged APT41's financially
+      motivated moonlighting as a competing explanation, so more than
+      one strategic reading survives; no primary source states a
+      collection purpose.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MCF bulk-PII / HUMINT-enabling collection: US state-government datasets are citizen-PII-rich and APT41 was observed exfiltrating PII, which Mandiant called consistent with an espionage operation."
+        - "Financially motivated data theft: Mandiant caveated it cannot make a definitive assessment given APT41's history of moonlighting for personal financial gain — a competing, non-doctrinal reading."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -62,6 +86,73 @@ doctrine_links:
     analyst: claude
 targets:
   - target_id: sectors/government/local
+    country: us
     role: primary
 sources:
   - mandiant/2022-03-08_apt41-usaherds
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Mandiant "Does This Look Infected? A Summary of APT41
+    Targeting U.S. State Governments" (2022-03-08). Raw snapshot
+    mandiant__2022-03-08_apt41-usaherds.html re-verified on disk:
+    sha256 475831ad…f9bfa457 (475831addaea…f9bfa457), 317,877 bytes —
+    matches the source record; hash re-verified.
+    [a] FACTS: "compromise at least six U.S. state government
+    networks" ✓; USAHerds "used by 18 states for animal health
+    management" ✓; CVE-2021-44207 (USAHerds) + Log4j CVE-2021-44228
+    both named as zero-days ✓; machineKey defect verbatim ("static
+    validationKey and decryptionKey (collectively known as the
+    machineKey) by default … all installations of USAHerds shared
+    these values" → ViewState .NET deserialization RCE) ✓; ASP.NET
+    web apps, SQL injection + directory traversal ✓; DEADEYE launcher
+    ✓; KEYPLUG + KEYPLUG.LINUX modular C++ backdoor ✓; Cloudflare C2
+    ("It's Always Cloudy in Chengdu") ✓; DUSTPAN in-memory ChaCha20
+    dropper → Cobalt Strike BEACON ✓; BADPOTATO named-pipe abuse ✓;
+    SAM/SYSTEM hive dump + Mimikatz lsadump::sam ✓; PII exfiltration
+    observed, "consistent with an espionage operation" but Mandiant
+    "cannot make a definitive assessment … given APT41's history of
+    moonlighting for personal financial gain," goals "unknown" ✓.
+    CORRECTIONS (stripped as un-carried by THIS source): "DUSTTRAP"
+    (not in the 2022 report — it belongs to the 2024 DUST reporting,
+    which this event does not cite) + the "same kit … 2024 APT41/DUST
+    reporting" forward-reference; "DLL side-loading via signed
+    binaries for defense evasion" (no side-loading/defense-evasion/
+    signed-binary claim in source — only benign dsquery.dll recon);
+    "valid credentials reused for lateral movement" (source states
+    credential harvesting but no lateral-movement/reuse claim → reworded
+    to credential harvesting); outcome_summary "bulk-PII collection and
+    political-intelligence value" (source says PII exfil observed, not
+    "bulk"/"political," and goals "unknown") → rewritten to source
+    wording; dropped the "critical-infrastructure / pre-positioning
+    wave" significance framing (source-unsupported editorializing).
+    [b] ATTRIBUTION: Mandiant names APT41 "a prolific Chinese
+    state-sponsored espionage group"; no MSS/service named. Added
+    attribution_level: named-actor (China-nexus named group, no unit);
+    confidence high (Mandiant asserts APT41 flatly), auspex concur —
+    kept. cn/mss placement rests on the actor record's DOJ 2020 source,
+    not this report (noted on the attribution).
+    [c] DATES: source published_on 2022-03-08 ✓ (blog + Mar-8 update);
+    start_date 2021-05-01 ✓ ("In May 2021 Mandiant responded…";
+    campaign "between May 2021 and February 2022"); end_date
+    2022-02-28 ✓; disclosure_date 2022-03-08 ✓. Event dates reflect
+    the CAMPAIGN (May 2021–Feb 2022), NOT the publish date — correct.
+    [d] DOCTRINE: downgraded cn/mcf/bulk-pii-humint-enabling
+    strongly_inferred → plausible — Mandiant explicitly could not
+    determine goals and named a competing financial-moonlighting
+    reading, so >1 strategic reading survives; removed the
+    source-unsupported "political intelligence" clause; added
+    inference_basis.alternatives (espionage-PII vs financial theft).
+    cn/national-intelligence-law-2017 kept plausible (honest). Both
+    attesting_source_id null — no attested link.
+    [e] ATTRIBUTION_LEVEL: set named-actor.
+    [f] ACTOR_ID: cn/mss/apt41 resolves (atlas/actors/cn/apt41.yaml);
+    actor + MSS placement already audited 2026-06-24 (rests on DOJ
+    2020). No actor edit.
+    FLAG (filing, non-blocking): the event id path is 2022-01/… but the
+    campaign start is 2021-05 and disclosure is 2022-03 — the "2022-01"
+    bucket matches neither. Slug is stable-forever so left unchanged;
+    in-record dates are correct. Flagging for orchestrator awareness.

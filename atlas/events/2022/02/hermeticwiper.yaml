@@ -6,52 +6,80 @@ end_date: 2022-02-24
 incident_type:
   - destructive
   - wiper
-initial_vector: valid-creds
+initial_vector: unknown
 outcome_summary: |
-  Signed-driver disk wiper deployed via Group Policy across
-  hundreds of systems at 5+ Ukrainian organizations (finance,
-  government contractors) on the eve of the 24 February 2022
-  invasion. Paired with the HermeticWizard worm propagator.
+  Disk wiper observed on hundreds of systems at at least five
+  Ukrainian organizations on the eve of the 24 February 2022
+  invasion. ESET confirmed one deployment via Active Directory
+  Group Policy; other initial-access vectors were not established.
+  Paired with the HermeticWizard SMB/WMI worm propagator.
 false_flag_risk: none
 campaign_id: hermetic-wave-feb-2022
 summary: |
-  ESET, Mandiant, and CERT-UA attributed to Sandworm on the basis
-  of tooling and tradecraft consistency. HermeticWiper abuses the
-  legitimately signed EaseUS Partition Master driver (empntdrv.sys)
-  via a bring-your-own-vulnerable-driver loader to obtain raw disk
-  access, then corrupts the MBR, partition tables, and selected
-  file contents to maximize unrecoverability. Operators deployed
-  it through Active Directory Group Policy using valid credentials
-  pre-positioned over months of dwell, paired with the
-  HermeticWizard SMB / WMI worm propagator and the HermeticRansom
-  decoy ransomware to muddy attribution. Coordinated with invasion
-  D-day to maximize disruption of Ukrainian command, control, and
-  continuity-of-government functions across finance and government-
-  contractor estates.
+  On 23 February 2022, hours before Russia's full-scale invasion,
+  ESET detected a destructive campaign using HermeticWiper against
+  at least five Ukrainian organizations, hitting hundreds of
+  systems. The wiper (and the HermeticWizard worm that spread it)
+  was signed with a code-signing certificate issued to Hermetica
+  Digital Ltd, and it abused four legitimate EaseUS Partition
+  Master drivers (signed by CHENGDU YIWO Tech) for low-level disk
+  access. It overwrites the master boot record (MBR), the master
+  file table (MFT), $Bitmap and $LogFile on all drives, the
+  registry-key files (NTUSER*) and the Windows event logs, and
+  recursively wipes further files, to maximize unrecoverability.
+  ESET confirmed one instance of deployment via Active Directory
+  Group Policy — implying prior access to that victim's AD server —
+  but noted that initial-access vectors varied and were largely
+  unknown; malware artifacts suggested the operation had been
+  planned for several months. A HermeticWizard SMB/WMI worm and a
+  Go-language HermeticRansom ransomware accompanied the wiper.
+  ESET's initial reporting did NOT attribute the attacks ("ESET
+  Research has not yet been able to attribute these attacks to a
+  known threat actor"); ESET's February 2023 retrospective later
+  attributed the majority of the 2022 wiper wave — HermeticWiper
+  included — to Sandworm "with varying degrees of confidence."
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: ESET / Mandiant / CERT-UA
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2022-02-24
-    attribution_source_id: eset/2022-02-24_hermeticwiper-isaacwiper
+    attributing_org: ESET
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-02-24
+    attribution_source_id: eset/2023-02-24_year-of-wiper-attacks-ukraine
+    notes: |
+      Attribution LATENCY: ESET's initial HermeticWiper/IsaacWiper
+      report (01 Mar 2022, the eset/2022-02-24_… source) explicitly
+      states "ESET Research has not yet been able to attribute these
+      attacks to a known threat actor" and "IsaacWiper is still
+      unattributed" — i.e. NO actor named at disclosure. The Sandworm
+      attribution comes only from ESET's 24 Feb 2023 retrospective,
+      which "attribute[s] the majority of these attacks to Sandworm,
+      with varying degrees of confidence" (hence moderate /
+      concur-with-caveat, not high). ESET names the group "Sandworm"
+      (= GRU Unit 74455) but does not spell out the unit here, so
+      attribution_level is named-actor. Earlier corpus text naming
+      "ESET / Mandiant / CERT-UA … high" at 2022-02-24 was not carried
+      by either cited ESET source and was removed.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Invasion-D-day-synchronized destructive operations against
-      Ukrainian government; ESET documents the wiper but does not
-      name the Russkiy Mir doctrine (and the Sandworm attribution
-      rests on the broader ESET/Mandiant/CERT-UA consensus, not this
-      source alone), so the linkage is inferred.
+      Invasion-eve destructive operations against Ukrainian
+      organizations, launched hours before Russia's full-scale
+      invasion. ESET documents the wiper and its invasion-eve
+      timing but does not name the Russkiy Mir doctrine or state
+      the strategic purpose, and the Sandworm attribution rests on
+      ESET's later retrospective (with varying confidence), so the
+      Ukraine-theater linkage is inferred rather than attested.
     attesting_source_id: eset/2022-02-24_hermeticwiper-isaacwiper
     inference_basis:
       source_id: eset/2022-02-24_hermeticwiper-isaacwiper
       signals:
-        - "ESET documents the invasion-eve HermeticWiper against Ukrainian government/contractor estates (Ukraine-theater destructive behaviour)"
-      ruled_out: "the Russkiy Mir doctrine — not named by ESET (finance-sector targeting and the Sandworm attribution are not in this source)"
+        - "ESET documents HermeticWiper against at least five Ukrainian organizations on 23 Feb 2022, preceding the invasion by only a few hours (Ukraine-theater destructive behaviour)"
+        - "Malware artifacts suggested the attacks had been planned for several months — deliberate pre-invasion preparation, not opportunistic crime"
+      ruled_out: "the Russkiy Mir doctrine slug is not named by ESET, and this source does not state the strategic purpose or (in its initial report) the Sandworm actor; hence strongly_inferred, not attested"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -60,16 +88,114 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
     reasoning: |
-      Synchronization with kinetic operations is the textbook
+      Synchronization of a destructive cyber operation with the
+      opening hours of the kinetic invasion is the textbook
       non-contact-warfare integration named in the 2014 Military
-      Doctrine.
+      Doctrine. AUSPEX inference — neither cited ESET source
+      discusses Russian military doctrine.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "HermeticWiper deployment timed to the eve of / opening hours of the 24 Feb 2022 kinetic invasion — cyber-kinetic synchronization"
+        - "Nation-state destructive tooling (signed wiper, worm propagator) against Ukrainian organizations, not financially-motivated crime"
+      ruled_out: "a purely criminal / hacktivist reading is rejected given the destructive-only payload, invasion synchronization, and later Sandworm attribution; the competing ru/russkiy-mir territorial-revanchism reading is captured as a separate link"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/ukraine-finance-sector
-    role: primary
-  - target_id: orgs/ukraine-government-contractors
+  - target_id: orgs/ukrainian-state-institutions-various
+    country: ua
     role: primary
 sources:
   - eset/2022-02-24_hermeticwiper-isaacwiper
+  - eset/2023-02-24_year-of-wiper-attacks-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against two ESET WeLiveSecurity sources (both raw-snapshotted + hashed).
+    S1 = eset/2022-02-24_hermeticwiper-isaacwiper "IsaacWiper and HermeticWizard: New
+    wiper and worm targeting Ukraine" (published 01 Mar 2022), sha256 9e7dbcbe…ec645a1,
+    103985 bytes. S2 = eset/2023-02-24_year-of-wiper-attacks-ukraine "A year of wiper
+    attacks in Ukraine" (24 Feb 2023), sha256 30221f95…6579ab57, 90658 bytes.
+
+    [a] FACTS — corrected to S1's exact wording. S1: "On February 23rd, 2022, a
+    destructive campaign using HermeticWiper targeted multiple Ukrainian organizations";
+    "HermeticWiper was observed on hundreds of systems in at least five Ukrainian
+    organizations" → kept "hundreds of systems / at least five Ukrainian organizations."
+    S1 overwrite targets verbatim: "The master boot record (MBR) / The master file table
+    (MFT) / $Bitmap and $LogFile on all drives / The files containing the registry keys
+    (NTUSER*) / C:\\Windows\\System32\\winevt\\Logs" + recursive wipe → summary rewritten
+    to match (was vaguely "MBR, partition tables, and selected file contents"). S1: drivers
+    are "legitimate drivers from the EaseUS Partition Master software signed by CHENGDU
+    YIWO Tech Development Co." and the wiper/wizard are "signed by a code-signing
+    certificate … assigned to Hermetica Digital Ltd" → kept. STRIPPED as not carried by
+    either source: the specific driver filename "empntdrv.sys"; the "bring-your-own-
+    vulnerable-driver loader" framing; "HermeticRansom decoy ransomware to muddy
+    attribution" (S1 lists HermeticRansom only as "ransomware written in Go" — no decoy /
+    attribution-muddying claim); the sector breakdown "finance, government contractors"
+    (S1 says only "five Ukrainian organizations," sector unspecified, plus one "Ukrainian
+    governmental network" for IsaacWiper). S1 on access: "Initial access vectors varied
+    from one organization to another. We confirmed one case of the wiper being dropped by
+    GPO"; "The initial access vector is currently unknown"; "Malware artifacts suggest
+    that the attacks had been planned for several months" → summary/outcome now say GPO
+    confirmed in ONE instance, other vectors unknown, months of planning (was overstated
+    as blanket "valid credentials pre-positioned over months of dwell … deployed via GPO
+    across hundreds of systems").
+
+    [b] ATTRIBUTION — the load-bearing correction. S1 explicitly does NOT attribute:
+    "ESET Research has not yet been able to attribute these attacks to a known threat
+    actor" and "IsaacWiper is still unattributed as well." The prior block (actor Sandworm,
+    "ESET / Mandiant / CERT-UA", high, concur, dated 2022-02-24, sourced to S1) over-
+    attested a claim S1 does not make. RE-SOURCED (badrabbit model) to S2, which states:
+    "We were able to attribute the majority of these attacks to Sandworm, with varying
+    degrees of confidence" and lists HermeticWiper in its 2022 timeline. Kept actor
+    ru/gru/74455/sandworm but reset: attributing_org ESET; confidence moderate (S2's
+    "varying degrees"); auspex_assessment concur-with-caveat; attribution_date 2023-02-24
+    (when ESET actually attributed, not 2022-02-24 when it disclaimed attribution);
+    attribution_source_id → S2; added attribution_level named-actor + a notes field
+    documenting the latency. Dropped Mandiant + CERT-UA from attributing_org (neither is a
+    cited attributing source here; S2 merely notes CERT-UA/Microsoft/SentinelOne as other
+    reporters in the compilation).
+
+    [c] DATES — start_date 2022-02-23 ✓ (S1 "On February 23rd, 2022"). disclosure_date
+    2022-02-24 ✓ (ESET's first tweet/blogpost; S1 references "this ESETResearch tweet and
+    WLS blogpost"). end_date 2022-02-24 ✓. S1 published_on 2022-03-01 already correct in
+    the source record (the slug's "2022-02-24" is the stable id, not the pub date). S2
+    published_on 2023-02-24 ✓.
+
+    [d] DOCTRINE_LINKS — both strongly_inferred (neither attested; no attested gate).
+    russkiy-mir/ukraine-theater: attesting_source_id kept as S1 (primary supporting doc);
+    reworded reasoning + inference_basis.signals to drop the unsupported "government/
+    contractor estates" phrasing (S1 gives no sectors for the five orgs), replaced with
+    "at least five Ukrainian organizations" + invasion-eve timing + months-of-planning;
+    ruled_out records that S1 neither names the doctrine nor states the purpose. military-
+    doctrine-2014/non-contact-warfare: kept strongly_inferred (was already downgraded from
+    attested 2026-06-09); attesting_source_id null (allowed, not attested); ADDED a missing
+    inference_basis {signals, ruled_out} — cyber-kinetic synchronization signal, criminal/
+    hacktivist reading ruled out. Honest that this link is an AUSPEX inference (no cited
+    source discusses RU military doctrine).
+
+    [e] ATTRIBUTION_LEVEL — set to named-actor (S2 names the group "Sandworm"; it does not
+    spell out "GRU Unit 74455" in-text, so not named-unit).
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml
+    (internal id matches). No actor-file edit. NOTE: the actor record's ttp_summary already
+    lists HermeticWiper among Sandworm tooling (citing Mandiant APT44 2024) — consistent
+    with S2's hedged attribution; no flag.
+
+    DEFECTS FIXED beyond [a]-[f]: the two prior target FKs orgs/ukraine-finance-sector and
+    orgs/ukraine-government-contractors were BOTH DANGLING (no such registry files) AND
+    unsupported by S1 (no sector breakdown). Replaced with the single
+    orgs/ukrainian-state-institutions-various (country ua) — the corpus's designated
+    aggregate for the 2022 invasion-coincident wiper waves. initial_vector changed
+    valid-creds → unknown (S1: "The initial access vector is currently unknown").
+
+    RESIDUAL UNCERTAINTY: S1 gives no sectors for the five HermeticWiper victim orgs;
+    later non-cited reporting (e.g. Symantec) described mixed finance/defense-contractor/
+    aviation victims, so the state-institutions aggregate target may under-represent
+    private-sector victims — flagged rather than asserted. The Sandworm attribution is
+    ESET's hedged 2023 assessment ("varying degrees of confidence"); firmer attribution
+    (Mandiant APT44) exists in the corpus but is not cited on this event.

@@ -1,84 +1,189 @@
 id: 2021-08/inkysquid-daily-nk
 name: InkySquid browser-exploit campaign (Daily NK watering-hole)
-start_date: 2021-04-01  # earliest tracked compromise of Daily NK site
+start_date: 2021-04-01  # Volexity first identified activity April 2021; malicious code present on Daily NK from at least late March 2021
 disclosure_date: 2021-08-17
-end_date: 2021-06-30
+end_date: 2021-06-01  # early June 2021 — malicious code observed until early June (Volexity)
 incident_type:
   - intrusion
+  - espionage
   - data-theft
-initial_vector: 0-day
+initial_vector: n-day
 outcome_summary: |
-  Watering-hole compromise of the Daily NK (South Korean
-  DPRK-focused news outlet) website. IE/Edge zero-day chains
-  delivered BLUELIGHT and RokRAT to targeted visitors:
-  defectors, journalists covering the DPRK, and policy
-  researchers. Targeted surveillance compromise.
+  Watering-hole (strategic web compromise) of the Daily NK (South
+  Korean, North-Korea-focused news outlet) website, late March to
+  early June 2021. Recently-patched IE / legacy-Edge exploits
+  (CVE-2020-1380, CVE-2021-26411) delivered a Cobalt Strike stager
+  and then the custom BLUELIGHT backdoor to visitors using
+  Internet Explorer. BLUELIGHT provided host reconnaissance,
+  periodic screenshots, browser-credential harvesting and
+  OneDrive-based data exfiltration — a targeted espionage /
+  surveillance implant. Volexity does not identify which visitors
+  were compromised.
 false_flag_risk: none
 summary: |
-  Canonical Juche-internal-security operation: APT37 sub-cluster
-  (InkySquid per Volexity) using zero-day browser exploits to
-  compromise the precise audience of a defector-focused news
-  outlet. The watering-hole compromise injected obfuscated
-  JavaScript into the Daily NK site that exploited Internet
-  Explorer / Edge zero-days (CVE-2020-1380 and a then-unpatched
-  Internet Explorer vulnerability), then dropped the BLUELIGHT
-  remote-access trojan (a custom Microsoft Graph API / OneDrive
-  C2-channel implant) and the RokRAT backdoor — both established
-  members of the APT37 / ScarCruft toolset alongside DOGCALL,
-  CARROTBALL, and KARAE. Post-compromise tradecraft included
-  credential dumping, scheduled tasks for persistence, and use
-  of valid OneDrive credentials for low-noise data exfiltration.
-  Volexity's reporting centers on Daily NK, a defector-focused
-  outlet (the defector/journalist audience is inferred from the
-  outlet's readership).
+  Strategic web compromise (SWC / watering-hole) of the Daily NK
+  website (www.dailynk.com), a South Korean online newspaper
+  focused on North Korea. Volexity attributes the activity to a
+  threat actor it calls InkySquid, which "broadly corresponds to
+  activity known publicly under the monikers ScarCruft and APT37"
+  (DPRK-nexus). From at least late March until early June 2021 the
+  attacker injected obfuscated JavaScript into legitimate Daily NK
+  files (jquery.min.js) that redirected Internet Explorer users to
+  attacker-controlled jquery[.]services subdomains serving browser
+  exploits. Two recently-patched — not zero-day — exploits were
+  used: CVE-2020-1380 (Internet Explorer) and CVE-2021-26411 (IE /
+  legacy Microsoft Edge); Volexity's own conclusion characterises
+  them as "recently patched exploits for Internet Explorer and
+  Microsoft Edge." Successful exploitation ran a Cobalt Strike
+  stager as the initial payload, which in turn delivered BLUELIGHT,
+  a custom backdoor that used the Microsoft Graph API / OneDrive as
+  its command-and-control channel (hard-coded OAuth2 token).
+  BLUELIGHT gathered host reconnaissance, captured periodic
+  screenshots, harvested browser cookies and saved-password
+  databases (IE / Edge / Chrome / Naver Whale), and exfiltrated
+  files via OneDrive. Volexity documents the compromise of Daily NK
+  and equates InkySquid to APT37 / ScarCruft, but does not identify
+  the specific visitors hit and states no strategic goal; the
+  defector / NK-focused-researcher / journalist audience often
+  associated with the outlet is inferred from its editorial focus,
+  not stated by Volexity.
 attributions:
   - actor_id: kp/unscoped/inkysquid
     attributing_org: Volexity
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-08-17
     attribution_source_id: volexity/2021-08-17_inkysquid
+    notes: "Volexity's own named cluster: 'Volexity attributes the activity described in this post to a threat actor Volexity refers to as InkySquid, which broadly corresponds to activity known publicly under the monikers ScarCruft and APT37.' Named actor + DPRK nation ('North Korean APT'); NO DPRK service/unit named (RGB / MSS / Reconnaissance General Bureau absent) -> named-actor, not named-unit. Volexity defers its attribution method to a follow-up post ('This will be explained further in a follow-up post, so stay tuned!')."
   - actor_id: kp/unscoped/apt37
     attributing_org: Volexity
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-08-17
     attribution_source_id: volexity/2021-08-17_inkysquid
+    notes: "Volexity equates InkySquid to APT37 / ScarCruft; AUSPEX retains InkySquid as a sub-cluster slug of APT37 (see apt37 actor aliases). Nation-level (DPRK) attribution only, no service named."
 doctrine_links:
   - doctrine_id: kp/juche
     pillar_id: kp/juche/internal-security
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Watering-hole compromise of Daily NK (a DPRK-defector-focused
-      outlet) targets its readership; Volexity describes the outlet's
-      editorial focus rather than explicitly naming a 'defectors and
-      journalists' audience, and names no Juche internal-security
-      goal, so the linkage is inferred from the victim profile.
-    attesting_source_id: volexity/2021-08-17_inkysquid
+      APT37 / ScarCruft is a DPRK espionage actor whose mission
+      centres on surveillance of defectors, dissident journalists
+      and NK-focused researchers (the Juche internal-security
+      pillar). A watering-hole on Daily NK — an outlet focused on
+      North Korea — reaches that audience. The label is plausible,
+      not higher: Volexity states no strategic goal and does not
+      identify the compromised visitors, and a second reading
+      (adversary policy-planning collection) fits the same target
+      equally well, so more than one strategic reading survives.
+    attesting_source_id: null
     inference_basis:
-      source_id: volexity/2021-08-17_inkysquid
-      signals:
-        - "Volexity documents a watering-hole on Daily NK, a DPRK-defector-focused news outlet (victim profile)"
-      ruled_out: "an explicit 'defectors and journalists' audience identification / a Juche internal-security goal — not stated by Volexity (inferred from the outlet's focus)"
+      alternatives:
+        - "Juche internal-security surveillance: APT37's core mission is surveilling defectors / NK-focused journalists and researchers; a watering-hole on the NK-focused Daily NK reaches that audience."
+        - "Adversary policy-planning collection (kp/strategic-information/policy-collection): Daily NK is a Korea-watcher outlet whose readership includes policy researchers and journalists shaping positions on the DPRK; the corpus policy-collection pillar names Daily NK explicitly."
     contested: false
     analyst: claude
   - doctrine_id: kp/strategic-information
     pillar_id: kp/strategic-information/policy-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Adjacent target set: DPRK policy researchers and
-      journalists shaping adversary positions on the regime.
+      Daily NK is a Korea-watcher news outlet; compromising its
+      readership can serve DPRK collection on the journalists,
+      researchers and policy audiences that shape adversary
+      positions on Pyongyang (the corpus policy-collection pillar
+      names Daily NK explicitly). Plausible rather than higher
+      because Volexity states no goal and does not identify the
+      visitors, and the competing regime-surveillance reading
+      (Juche internal-security) fits the same target.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Adversary policy-planning collection: Daily NK's readership includes Korea-watcher journalists / policy researchers whose positions the DPRK seeks to collect on."
+        - "Juche internal-security surveillance: the same watering-hole reaches defectors and NK-focused journalists the regime surveils as perceived threats."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/daily-nk
     role: primary
-    outcome: Watering-hole compromise; targeted RAT delivery to defector / journalist visitors.
+    outcome: "Website compromised as a watering hole; obfuscated JavaScript redirected IE visitors to browser exploits delivering a Cobalt Strike stager then BLUELIGHT."
   - target_id: sectors/media/journalism
-    role: primary
-  - target_id: sectors/civil-society/dissident
     role: primary
 sources:
   - volexity/2021-08-17_inkysquid
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Volexity "North Korean APT InkySquid Infects Victims Using Browser
+    Exploits" (2021-08-17). Raw snapshot re-verified on disk:
+    atlas/sources/raw/volexity__2021-08-17_inkysquid.html, sha256
+    da38a38f…9c0b6160 (da38a38fd605fbc4983b91a843da95583bd1ae275a173d4aa60b59249c0b6160),
+    55766 bytes — hash re-verified, matches the source record; source is the real article
+    (full body present), NOT a phantom.
+
+    [a] FACTS — corrected several unsupported/fabricated claims:
+      * REMOVED "RokRAT": the source names NO RokRAT. Delivery chain per Volexity is
+        exploit -> Cobalt Strike stager (initial payload, "used as an initial payload in
+        both exploitation cases") -> BLUELIGHT (secondary). Added Cobalt Strike; RokRAT was
+        fabricated.
+      * REMOVED toolset name-drop "DOGCALL, CARROTBALL, and KARAE" — absent from the cited
+        source (APT37 tooling from other reporting, not carried here).
+      * REMOVED "scheduled tasks for persistence" — not in the source. BLUELIGHT's documented
+        commands are: run shellcode, download/launch EXE + upload output, harvest browser
+        cookies + password DB, recursive file-metadata search, ZIP-and-exfil files, uninstall.
+      * REFRAMED "credential dumping" -> browser cookie + saved-password-database harvesting
+        (source: "Harvest cookies and a password database for supported browsers — Win7 IE,
+        Win10 IE, Edge, Chrome, and Naver Whale").
+      * CVE FIX (major): initial_vector 0-day -> n-day. Both exploits were already patched
+        during the campaign: CVE-2020-1380 (IE) and CVE-2021-26411 (IE / legacy Edge).
+        Volexity's own conclusion: "The use of recently patched exploits for Internet Explorer
+        and Microsoft Edge will only work against a limited audience." Removed all "zero-day" /
+        "then-unpatched" language from summary + outcome_summary.
+      * BLUELIGHT C2 confirmed: "leveraged the Microsoft Graph API for its C2 operations",
+        OneDrive appfolder, hard-coded OAuth2 token, XOR-encoded uploads, ~30s C2 loop,
+        periodic screenshots — all verbatim-supported.
+      * Watering hole confirmed: "strategic web compromise (SWC) of the website of the Daily NK
+        (www.dailynk[.]com), a South Korean online newspaper that focuses on issues relating to
+        North Korea. Malicious code ... from at least late March 2021 until early June 2021."
+    [b] ATTRIBUTION — Volexity: "Volexity attributes the activity ... to a threat actor
+        Volexity refers to as InkySquid, which broadly corresponds to activity known publicly
+        under the monikers ScarCruft and APT37." Headline: "North Korean APT". Nation (DPRK) +
+        named actor; NO DPRK service/unit (RGB/MSS absent). Set attribution_level=named-actor on
+        BOTH attributions (was missing). Kept attributing_org_confidence=high (direct vendor
+        attribution) but noted Volexity DEFERS its attribution method to a follow-up post
+        ("This will be explained further in a follow-up post, so stay tuned!"). Actors resolve:
+        kp/unscoped/inkysquid, kp/unscoped/apt37 (both files present).
+    [c] DATES — source: activity "from at least late March 2021 until early June 2021";
+        "In April 2021 ... Volexity identified suspicious code." start_date left 2021-04-01
+        (Volexity's April identification; comment clarifies late-March presence). end_date
+        corrected 2021-06-30 -> 2021-06-01 (source says "early June", not late June).
+        published_on on the source (2021-08-17) already correct.
+    [d]/[e] DOCTRINE — both links DOWNGRADED strongly_inferred -> plausible. Volexity states
+        no strategic goal and does not identify the compromised visitors (only that the outlet
+        "focuses on issues relating to North Korea"). Two legitimate readings survive — the
+        corpus juche/internal-security pillar names "defectors, dissident journalists, NK-focused
+        researchers" and the strategic-information/policy-collection pillar names "Daily NK"
+        EXPLICITLY — so neither dominates -> plausible for each, with inference_basis.alternatives
+        added to both (converted from the old signals/ruled_out form; removed the stale
+        attesting_source_id on link 1 since no source states the goal). No link qualifies for
+        attested (no attesting source states purpose). Rewrote reasoning to stop asserting the
+        unstated victim identities as fact.
+    [a] TARGETS — REMOVED sectors/civil-society/dissident (sector inflation: the cited source
+        does not identify Daily NK's audience as dissidents/defectors — it calls it "a South
+        Korean online newspaper that focuses on issues relating to North Korea"). Kept
+        orgs/daily-nk (the compromised, named outlet) and sectors/media/journalism (Daily NK is
+        an online newspaper — directly supported). Softened the daily-nk outcome to the
+        source-carried mechanics; the defector/journalist visitor framing is flagged as inferred
+        in the summary.
+    [f] ACTOR — both actor_ids resolve. No actor edits made. Note (already recorded in the
+        apt37/inkysquid records): kp/unscoped placement is correct — Volexity names no DPRK
+        service. Two attribution rows for the same real-world cluster (InkySquid = APT37) are
+        redundant-by-design (AUSPEX keeps InkySquid as a sub-cluster slug); left as-is.
+    Residual uncertainty: exact start day (Volexity says "late March"/"April", no precise date);
+    who among Daily NK's visitors was actually compromised is not stated by the source.

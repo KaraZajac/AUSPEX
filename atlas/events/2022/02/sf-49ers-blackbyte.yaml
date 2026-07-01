@@ -2,45 +2,109 @@ id: 2022-02/sf-49ers-blackbyte
 name: BlackByte ransomware against San Francisco 49ers
 start_date: 2022-02-12
 disclosure_date: 2022-02-13
-end_date: 2022-03-15
+end_date: null
 incident_type:
   - ransomware
   - data-theft
 initial_vector: unknown
 outcome_summary: |
   BlackByte ransomware intrusion against the San Francisco 49ers
-  National Football League franchise on the eve of Super Bowl
-  LVI (Feb 13 2022, hosted in Los Angeles). BlackByte claimed
-  responsibility via its leak site and posted approximately
-  300MB of internal financial documents as proof. The team
-  confirmed the incident in press statements February 13 and
-  reported no impact to ticketing or game-day operations.
-  The intrusion prompted the FBI / US Secret Service joint
-  advisory CU-000159-MW (Feb 11 2022) on BlackByte ransomware
-  against US critical infrastructure.
+  National Football League franchise, disclosed the weekend of
+  Super Bowl LVI (Feb 13 2022, held at SoFi Stadium in the Los
+  Angeles area; the 49ers did not play in it). BlackByte operators
+  listed the team on their dark-web leak site on Feb 12 and posted
+  a ~292MB archive of purported internal financial documents (a
+  folder marked "2020 Invoices") as proof-of-compromise under a
+  double-extortion model. The team confirmed a "network security
+  incident" that disrupted its corporate IT network on Feb 13 and
+  said it had no indication the incident reached systems outside
+  its corporate network, such as Levi's Stadium operations or
+  ticket holders. A separate FBI / US Secret Service joint advisory
+  (CU-000159-MW, Feb 11 2022) warned of BlackByte ransomware against
+  US critical-infrastructure sectors but does not name the 49ers.
 false_flag_risk: none
 summary: |
-  Notable for timing (Super-Bowl-eve, with broad press exposure
-  for the BlackByte brand) and for the FBI / USSS issuing a
-  joint advisory days after — the first US government primary-
-  source documentation of the BlackByte cluster. AUSPEX includes
-  in criminal-baseline because BlackByte tradecraft has Conti
-  code-lineage overlap but no published state-nexus attribution.
+  Notable for timing (disclosed the weekend of Super Bowl LVI, with
+  broad press exposure for the BlackByte brand). A contemporaneous
+  FBI / US Secret Service joint advisory (CU-000159-MW) provided
+  early US-government documentation of the BlackByte cluster, though
+  it is a general critical-infrastructure advisory that does not
+  reference the 49ers. AUSPEX includes in criminal-baseline because
+  BlackByte tradecraft has Conti code-lineage overlap but no
+  published state-nexus attribution.
 attributions:
   - actor_id: criminal/blackbyte
-    attributing_org: San Francisco 49ers + BlackByte (self-claimed) + FBI
+    attributing_org: "BlackByte (self-claimed, leak site) + press reporting (The Record / BleepingComputer / CBS)"
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-02-13
-    attribution_source_id: fbi/2022-02-11_cu-000159-mw-blackbyte
+    attribution_source_id: therecord/2022-02-13_san-francisco-49ers-confirm-ransomware-attack
     notes: |
-      FBI CU-000159-MW BlackByte FLASH is the gang-specific
-      advisory issued the day after the 49ers disclosure; it does
-      not name the 49ers explicitly. attribution_source_id is the
-      nearest primary documentation of BlackByte activity.
+      The 49ers confirmed a ransomware incident on their corporate IT
+      network (Feb 13 2022) but did not themselves name the perpetrator;
+      BlackByte self-claimed the 49ers on its dark-web leak site (Feb 12)
+      and press corroborated. The FBI / USSS FLASH CU-000159-MW is a
+      general BlackByte advisory and does NOT name the 49ers, so it is
+      retained as sources context rather than the attribution source.
+      named-actor: the gang is named, no unit or state-nexus.
 doctrine_links: []
 targets:
   - target_id: sectors/media/entertainment
+    country: us
     role: primary
 sources:
+  - therecord/2022-02-13_san-francisco-49ers-confirm-ransomware-attack
+  - bleepingcomputer/2022-02-13_nfls-san-francisco-49ers-hit-by-blackbyte-ransomware-attack
+  - cisa/2022-02-15_fbi-usss-release-advisory-blackbyte-ransomware
   - fbi/2022-02-11_cu-000159-mw-blackbyte
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCE (badrabbit model). The event previously cited ONLY the FBI/USSS
+    FLASH CU-000159-MW for a 49ers-specific incident, but that advisory is a
+    general BlackByte RaaS critical-infrastructure advisory that does NOT name
+    the 49ers (confirmed via CISA reproduction: names government facilities /
+    financial / food-and-agriculture sectors — sha 08ad0762…7255966f, 52,159 B).
+    The 49ers incident is real and well-documented in press; added three
+    snapshotted sources and re-pointed attribution to press.
+    [a] FACTS: 49ers "network security incident" disrupting the corporate IT
+    network, disclosed Feb 13 2022, no indication of reach beyond corporate
+    network (not Levi's Stadium / ticket holders) — carried verbatim by The
+    Record (sha 3f94f211…08d98b04, 86,209 B) and CBS. BlackByte leak-site
+    listing (Sat Feb 12) + ~292MB "2020 Invoices" archive posted as double-
+    extortion proof — carried by BleepingComputer ("a 292MB archive of files
+    that the threat actors say are stolen 2020 invoices"; sha 30ffa83e…f080bad1,
+    90,010 B) and CBS ("in a file marked '2020 Invoices.'"). Softened the
+    "~300MB" figure to ~292MB per BleepingComputer. CORRECTED the prior claim
+    that the incident "prompted" the FBI FLASH (unsupported causal embellishment)
+    — reframed as a separate/contemporaneous general advisory. Super Bowl LVI:
+    Feb 13 2022, SoFi Stadium (LA area); the 49ers did not play in it — corrected
+    the loose "eve of" framing.
+    [c] DATES: start_date 2022-02-12 (leak-site listing); disclosure_date
+    2022-02-13 (The Record, day of Super Bowl LVI); end_date SET null — no source
+    documents a bounded op end (the prior 2022-03-15 end_date was unsourced,
+    removed). New source published_on dates verified: The Record 2022-02-13,
+    BleepingComputer 2022-02-13, CISA 2022-02-15, FBI FLASH 2022-02-11.
+    [b]/[e] ATTRIBUTION: attributing_org changed from "San Francisco 49ers +
+    BlackByte (self-claimed) + FBI" to "BlackByte (self-claimed, leak site) +
+    press reporting" — the 49ers confirmed an incident but did NOT name the
+    perpetrator, and the FBI FLASH does not name the 49ers. Confidence moderate
+    (self-claim + press corroboration, no independent forensic naming);
+    attribution_level named-actor (gang named, no unit/state-nexus);
+    auspex_assessment concur. attribution_source_id re-pointed FBI FLASH ->
+    The Record.
+    [d] DOCTRINE_LINKS: [] correct — criminal RaaS, financially motivated, no
+    doctrine applies.
+    [f] ACTOR_ID: criminal/blackbyte resolves (atlas/actors/criminal/blackbyte.yaml),
+    primary_service_id null, mission financial; placement under criminal/ (not
+    ru/proxies/) is source-justified in the actor record (Conti code-overlap but
+    no state-nexus attribution). NB the actor's ttp_summary asserts the 49ers hit
+    and cites only the FBI FLASH; the actor record could cite these press sources
+    too, but per protocol I did not edit actor files — flagged below.
+    [FBI FLASH]: url null (ic3.gov PDF not curl-verifiable) — no raw snapshot
+    possible; corroborated via CISA reproduction (captured + hashed). Retained
+    as context, not attribution.

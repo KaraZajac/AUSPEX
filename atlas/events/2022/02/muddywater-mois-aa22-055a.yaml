@@ -16,51 +16,89 @@ outcome_summary: |
 false_flag_risk: none
 summary: |
   Foundational public-attribution event — moves MuddyWater
-  attribution from vendor-consensus to multi-government attested.
-  AA22-055A catalogues MuddyWater / MERCURY / Static Kitten
-  tradecraft: spear-phishing with malicious Microsoft Office
-  documents and PDF lures dropping PowerShell-based payloads
-  (POWERSTATS / Powerstats, PowGoop loader), the MORI backdoor,
-  the SHARPSTATS .NET implant, the canary-test Mori family, and
-  the publicly available remote-management tool ScreenConnect /
-  ConnectWise used for hands-on-keyboard access. Operators
-  habitually used DNS tunneling for C2, web shells on
-  internet-facing Exchange servers, valid credentials and
-  scheduled tasks for persistence, and the open-source SharpHound
-  / BloodHound for Active Directory reconnaissance. Subsequent
-  MuddyWater operations (Technion DarkBit February 2023) build on
-  this attribution.
+  attribution from vendor-consensus to multi-government named-unit
+  attribution. Joint advisory AA22-055A (FBI / CISA / CNMF /
+  NCSC-UK / NSA) states MuddyWater "is a subordinate element
+  within the Iranian Ministry of Intelligence and Security (MOIS)"
+  and is conducting cyber espionage and other malicious cyber
+  operations "as part of" MOIS, targeting government and
+  private-sector organizations across telecommunications, defense,
+  local government, and oil & natural gas in Asia, Africa, Europe,
+  and North America. The advisory notes MuddyWater is also known
+  as Earth Vetala, MERCURY, Static Kitten, Seedworm, and
+  TEMP.Zagros, and catalogues its tradecraft: spearphishing that
+  coaxes victims into downloading ZIP files carrying either an
+  Excel document with a malicious macro or a PDF that drops a
+  payload; exploitation of publicly known vulnerabilities
+  (Zerologon CVE-2020-1472, Exchange CVE-2020-0688); PowerShell
+  and open-source tooling; and the malware families PowGoop,
+  Small Sieve, Canopy (Starwhale), Mori, and POWERSTATS. The Mori
+  backdoor uses DNS tunneling for C2; the actors use the
+  legitimate ScreenConnect remote-management tool to control
+  systems and move laterally, and scheduled tasks for
+  persistence. Subsequent MuddyWater operations (Technion DarkBit,
+  February 2023) build on this attribution.
 attributions:
   - actor_id: ir/mois/muddywater
     attributing_org: CISA + FBI + NSA + CNMF + NCSC-UK
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-02-24
     attribution_source_id: cisa/2022-02-24_aa22-055a-muddywater
+    notes: |
+      AA22-055A names the parent organ: "MuddyWater is a
+      subordinate element within the Iranian Ministry of
+      Intelligence and Security (MOIS)" — named-unit (a specific
+      state intelligence service, MOIS), not merely nation.
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      CISA / FBI / NSA / NCSC joint advisory attributes
-      MuddyWater operations to MOIS and characterizes the
-      target set as adversary government / telecom intelligence.
+      AA22-055A attributes MuddyWater to MOIS and states it
+      conducts cyber espionage "in support of MOIS objectives" —
+      positioned "to provide stolen data and accesses to the
+      Iranian government." That is the proximate purpose
+      (state-directed espionage collection and access-provision);
+      forward defense is the strategic frame AUSPEX reads onto it
+      (projecting Iranian power into adversary networks at
+      near-zero physical risk). The source names the espionage
+      mission but not the forward-defense goal in substance, so
+      this is strongly_inferred, not attested.
     attesting_source_id: cisa/2022-02-24_aa22-055a-muddywater
+    inference_basis:
+      signals:
+        - "AA22-055A: MuddyWater conducts cyber espionage 'as part of' and 'in support of MOIS objectives,' a state intelligence service."
+        - "The advisory says the actors are positioned 'to provide stolen data and accesses to the Iranian government and to share these with other Iranian government actors' — collection feeding the state, the cyber expression of forward defense."
+        - "MuddyWater's documented default alignment includes ir/forward-defense (MOIS foreign cyber espionage against adversary government/telecom/defense networks)."
+      ruled_out: "Financial/criminal motive — the advisory frames the operations as state-tasked espionage serving MOIS objectives, not revenue generation."
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/constitutional-irgc-role
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      MOIS dissident / regime-preservation tasking is implicit
-      in the broader MuddyWater profile though not specifically
-      attested in AA22-055A.
+      Weak/contested link. ir/constitutional-irgc-role is an IRGC
+      doctrine whose regime-preservation pillar targets
+      dissidents, diaspora, and journalists; MuddyWater is an MOIS
+      (not IRGC) actor, and AA22-055A documents foreign espionage
+      against government, telecom, defense, and oil & gas across
+      four continents — not counter-dissident operations. No part
+      of the source states a regime-preservation purpose, and the
+      target set does not fit the pillar. Retained at plausible
+      only as a generic "serves the Iranian state" reading; see
+      FLAG in qc notes recommending removal as mis-scoped.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Generic service-of-the-Islamic-Republic reading: any MOIS espionage broadly advances regime security, so the constitutional mandate could be invoked at a very high level of abstraction."
+        - "No fit: the IRGC constitutional-role doctrine (and its counter-dissident pillar) applies to a different service and a different target set (domestic/diaspora dissidents), neither of which AA22-055A describes — the link likely does not belong on this event."
     counter_explanation: null
-    contested: false
+    contested: true
     analyst: claude
 targets:
   - target_id: sectors/ict/telecom
@@ -71,3 +109,84 @@ targets:
     role: primary
 sources:
   - cisa/2022-02-24_aa22-055a-muddywater
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs CISA/FBI/CNMF/NCSC-UK/NSA joint advisory AA22-055A. NOT a
+    phantom: the cited source is the real advisory. Snapshots: alert-page
+    (source's own url) cisa__2022-02-24_aa22-055a-muddywater.html sha256
+    572ed568...7555120c, 53266 bytes (hash re-verified, matches committed);
+    full joint CSA body (same advisory, .../cybersecurity-advisories/aa22-055a,
+    now reachable HTTP 200 — was 403-walled at prior audit) fetched + hashed
+    for TTP corroboration cisa__2022-02-24_aa22-055a-muddywater-full-csa.html
+    sha256 73fb3e96...e79d3b4c, 104218 bytes.
+
+    [a] FACTS — corrected. The alert page carries verbatim: MuddyWater
+    "conducting cyber espionage and other malicious cyber operations as part
+    of Iran's Ministry of Intelligence and Security (MOIS), targeting a range
+    of government and private-sector organizations across sectors—including
+    telecommunications, defense, local government, and oil and natural gas—in
+    Asia, Africa, Europe, and North America." The full CSA carries: the exact
+    "MuddyWater is a subordinate element within the Iranian Ministry of
+    Intelligence and Security (MOIS)"; spearphishing coaxing victims to
+    download ZIP files "containing either an Excel file with a malicious macro
+    ... or a PDF file that drops a malicious file"; exploitation of CVE-2020-1472
+    (Zerologon) and CVE-2020-0688 (Exchange); malware "variants of PowGoop,
+    Small Sieve, Canopy (also known as Starwhale), Mori, and POWERSTATS"; "the
+    Mori backdoor that uses Domain Name System tunneling to communicate with
+    the group's C2"; "ScreenConnect, to manage systems remotely and move
+    laterally"; and "scheduled tasks to establish persistence." STRIPPED as
+    fabricated / uncited (absent from BOTH snapshots — grep-confirmed): the
+    "SHARPSTATS .NET implant", "SharpHound / BloodHound for Active Directory
+    reconnaissance" (sharp/blood = 0 hits), "web shells on internet-facing
+    Exchange servers" (advisory documents Exchange CVE exploitation, not web
+    shells), "valid credentials ... for persistence" (persistence is via
+    scheduled tasks; no valid-account claim), and the redundant "canary-test
+    Mori family". Summary rewritten to only source-carried tradecraft, with
+    the CSA's own alias list (Earth Vetala, MERCURY, Static Kitten, Seedworm,
+    TEMP.Zagros).
+
+    [b] ATTRIBUTION — verified, unchanged (concur/high). AA22-055A explicitly
+    names MOIS as the parent organ; attributing_org CISA+FBI+NSA+CNMF+NCSC-UK
+    correct; high confidence honest (unqualified govt attribution).
+
+    [c] DATES — source published_on 2022-02-24 = advisory date (correct);
+    disclosure/end 2022-02-24 correct for this announcement event. RESIDUAL:
+    start_date 2017-01-01 ("underlying activity onset") — AA22-055A itself
+    says MuddyWater "conducted broad cyber campaigns in support of MOIS
+    objectives since approximately 2018." 2017 is supported by broader
+    first-reporting (Unit 42, Nov 2017) and matches the actor record's
+    active_since, so LEFT as-is; noting the source-specific 2018 for the record.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set to named-unit (the advisory names
+    a specific state intelligence service, MOIS, as MuddyWater's parent —
+    "subordinate element within ... MOIS"). Added a corroborating notes quote.
+
+    [d] DOCTRINE_LINKS — two corrections.
+    (1) ir/forward-defense DOWNGRADED attested -> strongly_inferred. The
+    advisory names the espionage mission ("in support of MOIS objectives",
+    "provide stolen data and accesses to the Iranian government") but does NOT
+    state the forward-defense goal in substance; per the over-attestation
+    calibration, naming only the proximate purpose the doctrine specializes =
+    strongly_inferred. Added inference_basis {signals, ruled_out(financial)};
+    attesting_source_id kept as the primary supporting source.
+    (2) ir/constitutional-irgc-role DOWNGRADED strongly_inferred -> plausible,
+    contested: true. Added inference_basis.alternatives.
+
+    [f] ACTOR_ID — ir/mois/muddywater RESOLVES (file atlas/actors/ir/muddywater.yaml,
+    id ir/mois/muddywater). Placement source-supported by this same advisory
+    (already audited in the actor record 2026-06-24). No actor edits made.
+
+    FLAGS for orchestrator:
+    - DOCTRINE MIS-SCOPE (recommend removal): ir/constitutional-irgc-role on
+      this event is an IRGC-service doctrine whose regime-preservation pillar
+      targets domestic/diaspora dissidents — MuddyWater is MOIS and this event
+      is global foreign espionage against government/telecom/defense/oil-gas.
+      No source language supports it; the target set contradicts the pillar.
+      Downgraded to plausible + contested rather than deleted (deletion is
+      Kara's call). Only ir/forward-defense is a defensible link here.
+    - Source-vs-record date: AA22-055A says "since approximately 2018";
+      event/actor use 2017 onset (defensible from broader reporting).
