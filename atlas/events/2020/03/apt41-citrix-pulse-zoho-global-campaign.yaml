@@ -1,5 +1,5 @@
 id: 2020-03/apt41-citrix-pulse-zoho-global-campaign
-name: APT41 global N-day campaign (Citrix, Pulse, Zoho)
+name: APT41 global N-day campaign (Citrix, Cisco, Zoho)
 start_date: 2020-01-20
 disclosure_date: 2020-03-25
 end_date: 2020-03-11
@@ -7,52 +7,75 @@ incident_type:
   - intrusion
 initial_vector: n-day
 outcome_summary: |
-  Mandiant discloses an APT41 high-tempo campaign between
-  late January and early March 2020 against 75+ victims in
-  20+ countries. Exploited N-days included CVE-2019-19781
-  (Citrix ADC / NetScaler path traversal), CVE-2019-11510
-  (Pulse Secure SSL VPN arbitrary file read), and
-  CVE-2020-10189 (Zoho ManageEngine Desktop Central
-  deserialization). Verticals: banking, defense, government,
-  healthcare, manufacturing, oil-and-gas, telecom, utilities.
+  Mandiant (FireEye) discloses a high-tempo APT41 campaign
+  between January 20 and March 11, 2020 against 75+ FireEye
+  customers in ~20 countries. APT41 attempted to exploit three
+  appliance/product families: CVE-2019-19781 (Citrix ADC /
+  NetScaler path traversal), CVE-2019-1653 + CVE-2019-1652
+  (Cisco RV320/RV325 small-business routers, combined for RCE),
+  and CVE-2020-10189 (Zoho ManageEngine Desktop Central
+  Java-deserialization RCE, a then-fresh zero-day). Targeted
+  verticals: banking/finance, defense industrial base,
+  government, healthcare, manufacturing, oil & gas,
+  petrochemical, pharmaceutical, telecom, and utilities,
+  among others.
 false_flag_risk: none
 summary: |
-  Defining N-day-velocity event for APT41 — Mandiant frames
-  it as one of the broadest opportunistic N-day campaigns by
-  a single PRC operator ever publicly disclosed. The timing
-  is significant: APT41 ran the wave during the early COVID
-  lockdown weeks when many victims were urgently expanding
-  remote-access infrastructure (Citrix and Pulse Secure
-  appliances in particular) and were therefore delayed on
-  patching. Cross-vertical victim coverage spanning every
-  MIC2025 pillar makes this a textbook case of state-aligned
-  N-day opportunism layered over standing strategic
-  collection tasking; sector mix runs from biotech and
-  healthcare (COVID-research adjacent) through banking and
-  utilities (CII pillar).
+  Defining N-day-velocity event for APT41 — Mandiant frames it
+  as one of the broadest campaigns by a China-nexus cyber
+  espionage actor it had observed in recent years. FireEye
+  observed a lull between roughly January 23 and February 19,
+  2020 that Mandiant links to China's own COVID-19 measures
+  (Lunar New Year plus Hubei/province quarantines) constraining
+  the operators — i.e. the source's COVID discussion concerns
+  the ATTACKERS' tempo, not victim remote-access exposure. The
+  broad cross-vertical, cross-country victim spread (~20
+  countries and ~19 industries, including allied Western states
+  such as Denmark, Finland, Sweden, Canada, Australia and the
+  UK/US) reads as opportunistic mass N-day exploitation of
+  exposed appliances layered over APT41's standing dual
+  espionage + for-profit tasking, rather than a
+  doctrine-specific target set.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: FireEye / Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-03-25
     attribution_source_id: mandiant/2020-03-25_apt41-global-intrusion-multiple-exploits
+    notes: |
+      Mandiant names the group ("Chinese actor APT41") and the
+      nation (China) unequivocally — named-actor level. It does
+      NOT name a service (no MSS claim in this report); the
+      cn/mss placement rests on the actor record's other cited
+      sources (the DOJ Sept-2020 indictment), not on this one.
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Victim mix (defense, manufacturing, healthcare,
-      oil-and-gas, telecom) covers nearly every MIC2025 pillar.
-      Mandiant does not name doctrine; sector mix is
-      sufficiently broad to read as opportunistic-aligned-with-
-      strategic-collection.
+      Victim mix (defense industrial base, manufacturing,
+      healthcare, oil-and-gas, telecom) touches most MIC2025
+      pillars, but the campaign is a broad opportunistic N-day
+      sweep across ~20 countries and ~19 industries (including
+      allied Western states), so more than one strategic reading
+      survives. Mandiant names no doctrine or purpose; a
+      near-indiscriminate mass-exploitation wave hits "every
+      pillar" trivially, which is weak evidence for
+      doctrine-specific tasking.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MIC2025-aligned strategic IP/collection tasking: the defense/manufacturing/pharma/oil-and-gas victims map onto China's military-industrial modernization priorities."
+        - "Pure opportunism: mass N-day exploitation of whatever appliances are internet-exposed, with any doctrine-relevant victims a by-product of breadth rather than selection."
     counter_explanation: |
-      Pure opportunism (N-day vulnerability targeting whatever
-      is exposed) could also be the dominant frame, with
-      MIC2025-aligned post-selection.
+      Pure opportunism (N-day exploitation of whatever is
+      exposed) is at least as strong a frame as doctrine-driven
+      selection; downgraded from strongly_inferred to plausible
+      on 2026-07-01 audit because the source states no purpose
+      and both readings survive.
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
@@ -78,3 +101,67 @@ targets:
     role: primary
 sources:
   - mandiant/2020-03-25_apt41-global-intrusion-multiple-exploits
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Mandiant/FireEye "This Is Not a Test: APT41 Initiates Global
+    Intrusion Campaign Using Multiple Exploits" (2020-03-25). Raw snapshot
+    captured: mandiant__2020-03-25_apt41-global-intrusion-multiple-exploits.html,
+    sha256 562d1dce…e3b55180, 292,406 bytes (article body ~23.6k chars of text;
+    author byline Glyer/Perez/Jones/Miller, dated March 25, 2020 — real article,
+    not a homepage/phantom). This event was flagged as a suspected phantom; it is
+    NOT — the source is genuine and first-party, but the EVENT PROSE carried a
+    fabricated product/CVE. Corrections:
+    [a] FACTS — MAJOR: the event named "CVE-2019-11510 (Pulse Secure SSL VPN)" as
+    one of three exploited families. The raw source contains NO "Pulse Secure" and
+    NO "11510" (grep-verified: 0 hits). Mandiant's three families are verbatim
+    "Citrix NetScaler/ADC, Cisco routers, and Zoho ManageEngine Desktop Central at
+    over 75 FireEye customers." Replaced Pulse Secure/CVE-2019-11510 with the real
+    third family: Cisco RV320/RV325 routers via CVE-2019-1653 + CVE-2019-1652
+    (source: "a Metasploit module that combines two CVE's (CVE-2019-1653 and
+    CVE-2019-1652) to enable remote code execution on Cisco RV320 and RV325").
+    Citrix = CVE-2019-19781 (36 hits) ✓; Zoho ManageEngine Desktop Central =
+    CVE-2020-10189 (Java-deserialization RCE, characterized in-source as a
+    "Zero-Day", PoC published by Steven Seeley 2020-03-05) ✓ (also
+    CVE-2020-10198 in the payload IOCs). Fixed the `name` field (Pulse→Cisco); id
+    slug left stable per schema. Scope: "over 75 FireEye customers"; countries
+    enumerated in-source = 20 (Australia, Canada, Denmark, Finland, France, India,
+    Italy, Japan, Malaysia, Mexico, Philippines, Poland, Qatar, Saudi Arabia,
+    Singapore, Sweden, Switzerland, UAE, UK, USA) → "~20 countries" ✓; industries
+    enumerated = 19 (Banking/Finance, Construction, Defense Industrial Base,
+    Government, Healthcare, High Technology, Higher Education, Legal, Manufacturing,
+    Media, Non-profit, Oil & Gas, Petrochemical, Pharmaceutical, Real Estate,
+    Telecommunications, Transportation, Travel, Utility) — all four event sectors
+    (finance, healthcare, telecom, critical-infrastructure≈utility/oil-gas) are a
+    truthful subset, no inflation. Also STRIPPED the unsupported COVID gloss
+    ("victims urgently expanding remote-access infrastructure … delayed on
+    patching"): the source's only COVID content is a note that a LULL in APT41
+    activity (Jan 23–Feb 19) likely reflects Chinese Lunar New Year + Hubei/province
+    quarantines constraining the OPERATORS — i.e. attacker tempo, not victim
+    exposure. Rewrote summary to say so.
+    [b] ATTRIBUTION — source: "Chinese actor APT41 carry out one of the broadest
+    campaigns by a Chinese cyber espionage actor." Names the group + nation
+    unequivocally, no service. Added attribution_level: named-actor; kept
+    attributing_org_confidence high (unequivocal) and auspex_assessment concur.
+    Added a note that cn/mss rests on the actor record's other sources (DOJ
+    Sept-2020), not this report.
+    [c] DATES — source "Between January 20 and March 11" and published "March 25,
+    2020." start_date 2020-01-20 ✓, end_date 2020-03-11 ✓, disclosure_date /
+    source published_on 2020-03-25 ✓. No conflation.
+    [d] DOCTRINE_LINKS — neither link is attested (no attesting_source needed;
+    both null, correct). DOWNGRADED cn/mic2025 strongly_inferred → plausible: the
+    prior grade's own counter_explanation conceded pure opportunism as a competing
+    frame, and a near-indiscriminate mass-exploitation sweep across ~20 countries /
+    19 industries hits "every pillar" trivially — >1 strategic reading survives, so
+    plausible is the honest label. Added inference_basis.alternatives. cn/mcf
+    (civil-infrastructure-targeting) kept plausible — honest as-is.
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+    [f] ACTOR_ID — cn/mss/apt41 resolves to atlas/actors/cn/apt41.yaml. No actor
+    edit. The cn/mss placement was itself audited/kept on 2026-06-24 (DOJ Sept-2020
+    boast-of-MSS-connection); no flag.
+    Residual: initial_vector kept n-day (dominant campaign character), though the
+    Zoho vuln was a fresh 0-day at time of exploitation — single-value field, n-day
+    is the best fit for the wave overall.

@@ -1,6 +1,6 @@
 id: 2019-12/operation-wocao-apt20
 name: Operation Wocao — APT20 multi-sector intrusions disclosed
-start_date: 2011-01-01
+start_date: 2014-01-01
 disclosure_date: 2019-12-19
 end_date: 2019-12-19
 incident_type:
@@ -9,65 +9,207 @@ incident_type:
 initial_vector: n-day
 outcome_summary: |
   Fox-IT (later NCC Group) publishes multi-year cluster
-  reporting on APT20 / "Wocao" operations against 10+
-  countries: government, MSPs, defense aerospace, energy,
-  finance, healthcare verticals. Distinctive 2FA-bypass
-  tradecraft on RSA SecurID software tokens and persistent
-  use of Pulse Secure VPN appliances as both initial access
-  and staging infrastructure.
+  reporting on APT20 / "Wocao" operations. Fox-IT identified
+  victims in 10 countries (Brazil, China, France, Germany,
+  Italy, Mexico, Portugal, Spain, UK, US) spanning government
+  entities, managed service providers, and a wide variety of
+  industries including aviation, energy, finance, healthcare,
+  construction, insurance, transportation and others.
+  Distinctive tradecraft: theft of RSA SecurID software-token
+  seed material from compromised endpoints and patching the
+  local token check to bypass 2FA, and persistent abuse of
+  stolen corporate VPN credentials for legitimate-looking
+  access after initial entry through vulnerable public-facing
+  webservers.
 false_flag_risk: none
 summary: |
-  Fills the APT20 gap between earlier vendor-historical
-  reporting (TH3Bug, Twivy) and post-2020 cluster work.
-  Fox-IT's distinctive contribution: documentation of the
-  operator stealing RSA SecurID seed material from
-  compromised endpoints and patching the local token check
-  to bypass 2FA — early proof that token-based MFA is not a
-  hard control against persistent state intruders. Targets
-  span MIC2025-relevant industries (aerospace, energy) but
-  with a much larger government-civilian and MSP component
-  than APT10's Cloud Hopper, suggesting either parallel MSS
-  tasking or a separate MSS regional bureau.
+  Fox-IT's "Operation Wocao" report profiles APT20, a
+  publicly under-reported China-nexus espionage actor Fox-IT
+  had dealt with over the two years preceding the report, with
+  actor tooling (CheckAdmin) compiled as early as 2014. Fox-IT
+  assessed with HIGH confidence that the actor is a Chinese
+  group working to support the interests of the Chinese
+  government for espionage, and with MEDIUM confidence that the
+  tradecraft is that of the industry cluster known as APT20.
+  Distinctive contribution: documentation of the operator
+  stealing RSA SecurID seed material from compromised endpoints
+  and patching the local token check to bypass 2FA — early
+  proof that token-based MFA is not a hard control against
+  persistent state intruders. Initial access was typically
+  through a vulnerable public-facing webserver (uploading its
+  own webshells, or re-using JexBoss webshells left by other
+  actors); persistence and lateral movement then ran over
+  stolen corporate VPN credentials. The victim set is broad —
+  government and MSPs prominent, plus a dozen civilian
+  industries — reading as much as broad state political-economic
+  espionage as any single industrial-policy program.
 attributions:
   - actor_id: cn/unscoped/apt20
     attributing_org: Fox-IT / NCC Group
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2019-12-19
     attribution_source_id: ncc-group/2019-12-19_operation-wocao
+    notes: |
+      Two-tier confidence in the source: HIGH confidence the
+      actor is a Chinese group serving Chinese-government
+      espionage interests, but only MEDIUM confidence that the
+      TTPs are those of the industry cluster "APT20." Because
+      the actor_id is the APT20 cluster, attributing_org_confidence
+      is set to the cluster-label confidence (moderate);
+      attribution_level is named-actor (a named group + nation),
+      NOT named-unit — the 41-page report names no MSS/PLA/Guoanbu
+      or any Chinese service or unit anywhere. Nation nexus rests
+      on Chinese-language artifacts, "wocao" Mandarin slang and
+      UTC+8 working hours.
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Aerospace, energy, healthcare verticals fall inside the
-      MIC2025 pillar set; not vendor-attested as such but the
-      sector mix is hard to read otherwise.
-    attesting_source_id: null
-    counter_explanation: |
-      Government / civilian targeting also dominant — could
-      reduce MIC2025 weighting in favor of broader MSS
-      political-intelligence collection.
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/mcf
-    pillar_id: cn/mcf/dual-use-research
-    program_id: null
     confidence: plausible
     reasoning: |
-      Defense-aerospace targeting touches dual-use research
-      collection lane.
+      Several of the victim verticals Fox-IT lists — energy,
+      healthcare, aviation, high-tech/software — sit inside the
+      Made in China 2025 priority-sector set, consistent with
+      industrial-modernization intelligence collection. The
+      label is plausible (not higher) because Fox-IT frames the
+      actor only as "working to support the interests of the
+      Chinese government ... for espionage purposes" without
+      naming an industrial-policy goal, and the victim set is
+      very broad (government, MSPs, finance, insurance, gambling,
+      construction, transportation, physical-lock makers, HR
+      services), so a broad state political-economic espionage
+      reading survives alongside the MIC2025 one.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      alternatives:
+        - "MIC2025 industrial-modernization collection: energy, healthcare, aviation and high-tech victims map onto Made in China 2025 priority sectors."
+        - "Broad MSS political-economic espionage: the government/MSP prominence and the dozen unrelated civilian industries (gambling, insurance, construction, physical-lock manufacturers, HR/payroll) read as general state intelligence collection rather than any single industrial-policy program."
+    counter_explanation: |
+      Government and MSP targeting is the most prominent
+      category and the industry spread is wide and heterogeneous,
+      which could reduce MIC2025 weighting in favour of broader
+      MSS political-intelligence collection.
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government
     role: primary
-  - target_id: sectors/aerospace/defense
+  - target_id: sectors/ict/managed-services
     role: primary
   - target_id: sectors/energy
     role: primary
 sources:
   - ncc-group/2019-12-19_operation-wocao
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the sole cited primary — Fox-IT / NCC Group
+    "Operation Wocao — Shining a Light on One of China's Hidden
+    Hacking Groups" (2019-12-19), raw_snapshot
+    ncc-group__2019-12-19_operation-wocao.pdf, sha256
+    319bc4f3…4032b9e6, 2,811,418 bytes, 41 pages (hash
+    re-verified on disk; already recorded in the source record).
+    Not a phantom — the PDF is the genuine article and carries
+    the event's core claims.
+
+    [a] FACTS — corrections made:
+    • "10+ countries" → "10 countries". Exec summary: "We have
+      identified victims of this actor in 10 countries" and §4
+      lists exactly ten (Brazil, China, France, Germany, Italy,
+      Mexico, Portugal, Spain, UK, US). Corrected.
+    • "defense aerospace" REMOVED (FABRICATION). §4 industry list
+      is: Aviation, Construction, Gambling, Energy, Finance,
+      Health care, Insurance, Offshore engineering, Payroll/HR,
+      Physical lock manufacturers, Software development,
+      Transportation — plus government entities and MSPs. The
+      source says "Aviation" (civil), never "defense" or
+      "aerospace/defense." Outcome/summary reworded to the real
+      list; target sectors/aerospace/defense removed.
+    • "Pulse Secure VPN appliances" and (in the actor file)
+      "Citrix gateway" REMOVED / not asserted here — full-text
+      search of the PDF returns ZERO hits for "Pulse" or
+      "Citrix". The report speaks only of a generic "VPN
+      concentrator" / "corporate VPN solution." Vendor names
+      were unsupported; outcome_summary now says "corporate VPN".
+    • Initial-access framing corrected: §6.1/§3 states "the
+      initial access point into a victim network was a vulnerable
+      webserver, often [with] webshells, placed there by other
+      threat actors" and Fox-IT observed the actor "leveraging
+      already existing JexBoss webshells." VPN (with stolen
+      creds) is persistence/lateral movement, not the primary
+      initial vector. initial_vector kept n-day (vulnerable
+      public webserver exploitation, incl. JexBoss/JBoss).
+    • 2FA / RSA SecurID bypass CONFIRMED verbatim (§6.3.2/6.4):
+      "the actor steals a softtoken for RSA SecurID" and "can
+      actually simply patch the check which verifies if the
+      imported soft token was generated for this SecurID Software
+      Token ... which results in the generation of valid tokens."
+      Retained.
+    • data-theft/intrusion CONFIRMED (WinRAR staging + exfil,
+      password-vault theft, keylogger).
+
+    [b] ATTRIBUTION — corrected. Source is two-tier: "Fox-IT
+    assesses with high confidence that the actor is a Chinese
+    group ... tasked with obtaining information for espionage
+    purposes. With medium confidence, Fox-IT assesses that the
+    tools, techniques and procedures are those of the actor
+    referred to within the industry as APT20." Since actor_id is
+    the APT20 cluster, DOWNGRADED attributing_org_confidence
+    high→moderate (matches the medium-confidence cluster label);
+    auspex_assessment concur→concur-with-caveat; added a note
+    capturing both tiers.
+
+    [c] DATES — corrected. start_date 2011-01-01 had NO support
+    in the cited source (2011 came from the actor's cluster
+    history via non-cited reporting). The report says Fox-IT
+    "dealt with [the actor] over the past two years" (~2017-2019)
+    and that CheckAdmin tooling was "compiled as early as 2014."
+    Set start_date to 2014-01-01 as the earliest source-anchored
+    evidence, with the caveat that this is a tool-compile date,
+    not a confirmed operation-start; the direct IR window was
+    ~2017-2019. disclosure_date/end_date 2019-12-19 = the actual
+    report publication date, correct. Source published_on
+    2019-12-19 correct.
+
+    [d] DOCTRINE_LINKS — cn/mcf (dual-use-research) REMOVED: its
+    entire reasoning ("Defense-aerospace targeting touches
+    dual-use research collection lane") rested on the fabricated
+    defense-aerospace sector; the source documents only civil
+    aviation among generic espionage targets and states no
+    dual-use/military-civil-fusion purpose. cn/mic2025 kept but
+    DOWNGRADED strongly_inferred→plausible: Fox-IT names only a
+    generic "interests of the Chinese government / espionage"
+    purpose, and the very broad heterogeneous victim set leaves
+    more than one strategic reading alive (MIC2025 industrial
+    collection vs. broad MSS political-economic espionage) — added
+    inference_basis.alternatives. Neither link is attested; no
+    attesting_source_id (correct — source states no goal-level
+    purpose).
+
+    [e] ATTRIBUTION_LEVEL — was missing; set to named-actor
+    (named group "APT20" + Chinese nation; no service/unit named).
+
+    [f] ACTOR_ID — cn/unscoped/apt20 RESOLVES (atlas/actors/cn/apt20.yaml,
+    id cn/unscoped/apt20). Already correctly demoted from
+    cn/mss/apt20 on a prior (2026-06-24) audit; the source names
+    no service, so unscoped is right.
+
+    FLAGS for orchestrator (actor file cn/apt20.yaml — not edited
+    per protocol): its ttp_summary and the Wocao alias-note assert
+    tradecraft NOT carried by its sole cited source (this same
+    Fox-IT report) — specifically "Pulse Secure VPN", "Citrix
+    gateway", "Vidar variants", "Cobalt Strike", and "Mimikatz"
+    return ZERO full-text hits in the PDF (only XServer/agent
+    custom backdoors, and BloodHound/SharpHound, are actually
+    documented). The actor's active_since 2011-01-01 is likewise
+    unsupported by that single source (report anchors 2014 tooling
+    + a ~2-year IR window). Recommend either sourcing these
+    specifics from additional reporting or scrubbing them from the
+    actor record. Actor's default_doctrine_alignment_ids
+    [cn/mic2025, cn/mcf] inherit the same over-reach as the
+    removed event mcf link.

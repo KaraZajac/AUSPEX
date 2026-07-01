@@ -4,7 +4,7 @@ start_date: 2020-03-01  # period covered
 disclosure_date: 2020-04-08
 end_date: 2020-04-08
 incident_type:
-  - attribution-publication
+  - documentary
 initial_vector: phishing
 outcome_summary: |
   Joint CISA + NCSC-UK technical advisory documenting widespread
@@ -12,14 +12,15 @@ outcome_summary: |
   groups and cybercriminals — phishing lures, fake VPN /
   collaboration-tool pages, exploitation of n-day vulnerabilities
   in VPN and remote-work infrastructure (Citrix CVE-2019-19781,
-  Pulse Secure CVE-2019-11510). First in a multi-month joint
+  plus known Pulse Secure, Fortinet, and Palo Alto VPN
+  vulnerabilities). First in a multi-month joint
   CISA-NCSC cadence on pandemic threats (followed by AA20-126A
   healthcare-targeting and AA20-201A vaccine-research-targeting).
 false_flag_risk: none
 summary: |
   AA20-099A is doctrinally significant less for the specific
   threats catalogued than as the joint-advisory template that
-  becomes the modal expression of NCS 2016 "deter" pillar
+  becomes a modal expression of NCS 2016 defensive-coordination
   cadence through the pandemic. The advisory does not name
   specific actor clusters; the actor attribution is to
   "APT groups" in the abstract plus opportunistic criminals.
@@ -36,28 +37,37 @@ attributions:
   - actor_id: null
     attributing_org: US CISA + UK NCSC
     attributing_org_confidence: high
+    attribution_level: null
     auspex_assessment: concur
     attribution_date: 2020-04-08
     attribution_source_id: cisa/2020-04-08_aa20-099a-covid-malicious-actors
     notes: |
-      No specific actor attribution; advisory-as-event entry.
-      attribution_date carries publication date.
+      No specific actor attribution; the advisory names only
+      "APT groups and cybercriminals" in the abstract, so no
+      cluster/nation/actor level applies (attribution_level null).
+      Documentary advisory-as-event entry; attribution_date
+      carries publication date.
 doctrine_links:
   - doctrine_id: uk/ncs-2016
     pillar_id: uk/ncs-2016/defend
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: defender-response
     reasoning: |
-      First joint CISA-NCSC advisory of the pandemic period; the
-      technical advisory does not name the NCS 2016 'defend' pillar,
-      so the doctrine linkage is inferred from the joint
-      defensive-coordination act.
+      First joint CISA-NCSC advisory of the pandemic period; a joint
+      technical/mitigation advisory warning UK (and US) networks about
+      COVID-themed threats is a defensive-coordination act that fits
+      the NCS 2016 posture. The advisory does not name any doctrine,
+      pillar, or strategic purpose, and more than one pillar reading
+      survives (defend, i.e. mitigation-led protection of UK networks,
+      vs deter, i.e. the visible joint-attribution cadence as
+      signalling) — hence plausible, tagged defender-response as the
+      discloser's own doctrine on a documentary event.
     attesting_source_id: cisa/2020-04-08_aa20-099a-covid-malicious-actors
     inference_basis:
-      source_id: cisa/2020-04-08_aa20-099a-covid-malicious-actors
-      signals:
-        - "First joint CISA + NCSC pandemic-era technical advisory on COVID-themed threats (joint defensive-coordination act)"
-      ruled_out: "the NCS 2016 'defend' pillar by name — not named in the technical advisory"
+      alternatives:
+        - "NCS 2016 defend pillar: a joint technical advisory that catalogues COVID-themed threats and provides mitigation guidance is a mitigation-led protection of UK networks."
+        - "NCS 2016 deter pillar: the joint UK-US public-advisory cadence (AA20-099A, AA20-126A, AA20-201A) reads as visible signalling/deterrence rather than pure network defence."
     contested: false
     analyst: claude
 targets:
@@ -67,3 +77,69 @@ targets:
     role: primary
 sources:
   - cisa/2020-04-08_aa20-099a-covid-malicious-actors
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs the joint CISA+NCSC advisory AA20-099A "COVID-19
+    Exploited by Malicious Cyber Actors" (cisa.gov). Raw snapshot
+    captured: cisa__2020-04-08_aa20-099a-covid-malicious-actors.html,
+    sha256 3c5673f6…cb42a2aa, 78,191 bytes. NOT bot-walled (HTTP 200,
+    full article body).
+    [a] FACTS ✓: "This is a joint alert from the United States
+    Department of Homeland Security (DHS) Cybersecurity and
+    Infrastructure Security Agency (CISA) and the United Kingdom's
+    National Cyber Security Centre (NCSC)"; "APT groups and
+    cybercriminals are targeting individuals, small and medium
+    enterprises, and large organizations with COVID-19-related scams
+    and phishing emails"; phishing lures (30+ hits), spoofed/fake VPN
+    & collaboration pages (Zoom, Microsoft Teams), and n-day VPN
+    exploitation all verbatim-supported. Citrix CVE-2019-19781 named
+    explicitly. CORRECTION: the record previously named
+    "Pulse Secure CVE-2019-11510" — the advisory body does NOT state
+    that CVE; it names only "known vulnerabilities affecting VPN
+    products from Pulse Secure, Fortinet, and Palo Alto." Rewrote
+    outcome_summary to "(Citrix CVE-2019-19781, plus known Pulse
+    Secure, Fortinet, and Palo Alto VPN vulnerabilities)" to match
+    the source. Healthcare/hospital targeting IS documented (Maze
+    ransomware hitting healthcare units; Spanish hospitals hit with
+    COVID-themed Netwalker lures) → sectors/healthcare kept; ICT
+    (VPN/remote-work/collaboration tooling) is central → sectors/ict
+    kept. Both targets source-carried.
+    [b] ATTRIBUTION ✓: null actor is correct — the advisory attributes
+    to no specific actor, only "APT groups and cybercriminals" in the
+    abstract. attributing_org US CISA + UK NCSC, confidence high,
+    concur — all honest. Added attribution_level: null (no
+    cluster/nation/actor named). No fabricated actor attribution
+    present.
+    [c] DATES ✓: source published_on 2020-04-08 = advisory "Original
+    release date: April 08, 2020" (verbatim). disclosure_date /
+    end_date 2020-04-08 correct. start_date 2020-03-01 is a soft
+    "period covered" estimate (referenced example reporting is dated
+    Mar 2020); acceptable, labelled as such.
+    [d] DOCTRINE_LINK: DOWNGRADED strongly_inferred → plausible. The
+    advisory names no doctrine/pillar/purpose; and the record itself
+    carried a defend-vs-deter tension (summary said "'deter' pillar
+    cadence" while the link used the defend pillar). More than one
+    pillar reading genuinely survives, so plausible is the honest
+    label. Rebuilt inference_basis from the malformed
+    signals/ruled_out into alternatives[] (defend = mitigation-led
+    network protection; deter = the joint-advisory signalling cadence).
+    Added perspective: defender-response (the discloser NCSC's own
+    doctrine on a documentary event; a UK doctrine on a null-actor
+    US+UK advisory). attesting_source_id kept as the primary
+    supporting source (permitted on plausible). Also reconciled the
+    summary to pillar-agnostic "defensive-coordination cadence".
+    [e] ATTRIBUTION_LEVEL: set null (no specific actor named).
+    [f] ACTOR_ID: null — no actor file needed. FKs verified: doctrine
+    uk/ncs-2016 + pillar uk/ncs-2016/defend resolve; sectors healthcare
+    + ict resolve.
+    OTHER CORRECTION: incident_type attribution-publication →
+    documentary — the advisory attributes no operation to any actor;
+    it is a technical/documentary advisory, not an attribution
+    publication.
+    Residual uncertainty: start_date is an estimate; the defend-pillar
+    choice over deter is analyst judgment (now graded plausible with
+    both alternatives recorded).

@@ -2,58 +2,141 @@ id: 2020-03/holy-water-tibetan-water-holing
 name: Holy Water watering-hole campaign against Asian religious sites
 start_date: 2019-05-01
 disclosure_date: 2020-03-31
-end_date: 2020-02-29
+end_date: null  # AUDIT: campaign ONGOING at publication ("still compromised, and
+                # continue to direct selected visitors"); prior 2020-02-29 end_date
+                # was unsupported by the source.
 incident_type:
   - intrusion
-initial_vector: n-day
+initial_vector: phishing  # AUDIT: watering-hole drive-by — compromised community
+                          # websites served a fake Adobe Flash update pop-up the visitor
+                          # ran manually; source documents NO exploit/CVE at initial
+                          # access. Enum has no watering-hole term; phishing = the
+                          # social-engineering bucket (per badrabbit-ransomware precedent).
+                          # Prior n-day was unsupported (no n-day exploitation documented).
 outcome_summary: |
-  Kaspersky discloses a watering-hole campaign active since
-  May 2019 against Asian religious and charity websites
-  (including Tibetan-diaspora-focused sites). Visitors who
-  matched a target IP profile were prompted with a fake Adobe
-  Flash Player update that delivered the "Godlike12" backdoor
-  alongside a Tibetan-themed second-stage payload.
+  Kaspersky (Securelist, 2020-03-31) discloses a watering-hole
+  campaign active since at least May 2019 (watering holes
+  discovered 4 Dec 2019) that targets "an Asian religious and
+  ethnic group." Watering holes were set up on websites
+  belonging to personalities, public bodies, charities and
+  organizations of the targeted group; selectively validated
+  visitors (fingerprinted by IP via a target-validation service)
+  were shown a fake Adobe Flash Player update that delivered the
+  Go-based "Godlike12" backdoor (Google Drive C2) and two
+  modified versions of the open-source Stitch Python backdoor.
 false_flag_risk: none
 summary: |
-  Sits inside the same Tibetan-diaspora collection lane as the
-  Citizen Lab Poison Carp disclosure six months earlier, but
-  using a different delivery primitive (compromised
-  religious-/charity-website watering holes) and a distinct
-  payload family (Godlike12 / Stitch Python-derived backdoor).
-  Kaspersky stops short of asserting PRC-state attribution;
-  AUSPEX assesses the diaspora-and-dissident pillar fit is
-  strong on victim selection (Tibetan religious community)
-  regardless of which MSS-aligned cluster owns the toolset.
+  Kaspersky tracks this as a distinct, previously-unseen cluster
+  it names "Holy Water" and EXPLICITLY DECLINES attribution: it
+  "couldn't identify any overlap with known intrusion sets" and
+  says the actor's operational target "is not clear." The report
+  names no known group, no nation, and no PRC/MSS/Mustang-Panda
+  link; the only China nexus is language-level (Sojson JS
+  obfuscation is a Chinese-language service; a Go routine may
+  derive from a Chinese-authored tutorial), which Kaspersky
+  notes but does not use to attribute. The source describes the
+  victims only as "an Asian religious and ethnic group" — it does
+  NOT identify them as Tibetan or as a diaspora. AUSPEX therefore
+  carries this as an unattributed activity-cluster; the prior
+  Tibetan-diaspora / MSS-collection framing (mirroring Poison
+  Carp) was over-attribution unsupported by the cited source.
 attributions:
-  - actor_id: cn/unscoped/mustang-panda
+  - actor_id: null
     attributing_org: Kaspersky
     attributing_org_confidence: low
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2020-03-31
     attribution_source_id: kaspersky/2020-03-31_holy-water-asia
     notes: |
-      Kaspersky does not assert PRC-state attribution. Working
-      assignment to Mustang Panda based on overlap with prior
-      Tibetan-diaspora collection lanes; could equally be a
-      separate MSS-aligned cluster.
-doctrine_links:
-  - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Target selection (Tibetan religious / charity sites
-      and their visitors) is the diaspora-and-dissident
-      pillar by victim profile alone, regardless of which
-      cluster owns the toolset.
-    attesting_source_id: null
-    counter_explanation: null
-    contested: false
-    analyst: claude
+      AUDIT 2026-07-01: actor_id nulled (was cn/unscoped/mustang-panda —
+      UNSUPPORTED over-attribution). Kaspersky names NO known actor, nation
+      or service and EXPLICITLY declines attribution: "we couldn't identify
+      any overlap with known intrusion sets"; grep of the raw finds zero
+      mentions of China/PRC/MSS/Mustang-Panda/Panda/Tibet. Only weak
+      language-level China hints (Sojson obfuscation service; a Go tutorial)
+      are noted by Kaspersky but not used to attribute. Kaspersky tracks a
+      new, standalone cluster ("Holy Water") — attribution_level
+      activity-cluster.
+doctrine_links: []  # AUDIT 2026-07-01: removed cn/national-intelligence-law-2017
+                    # diaspora-and-dissident link. It rested on (a) a PRC actor the
+                    # source never names and (b) a "Tibetan religious community" victim
+                    # profile the source never states (it says only "an Asian religious
+                    # and ethnic group"). With no actor and no nation attributed, a CN
+                    # doctrine link is unsupported; no doctrine genuinely applies to an
+                    # unattributed activity-cluster. (Mirrors the poison-carp /
+                    # tibetan-budget nulling precedent.)
 targets:
   - target_id: sectors/civil-society/religious
-    role: primary
-  - target_id: sectors/civil-society/diaspora
-    role: primary
+    role: primary  # supported: source targets "an Asian religious ... group";
+                   # watering holes on religious personalities/charities.
+  # AUDIT: removed sectors/civil-society/diaspora — source says "ethnic group",
+  # never "diaspora"; no diaspora targeting is stated (and no ethnic-minority sector exists).
 sources:
   - kaspersky/2020-03-31_holy-water-asia
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Kaspersky/Securelist "Holy water: ongoing targeted water-holing
+    attack in Asia" (2020-03-31). Raw snapshot captured:
+    kaspersky__2020-03-31_holy-water-asia.html, sha256 cf6fed87…d2882444,
+    199,877 bytes. Real article confirmed (title match); NOT a phantom.
+
+    [a] FACTS — corrected. Verbatim-supported: "On December 4, 2019, we discovered
+    watering hole websites that were compromised to selectively trigger a drive-by
+    download attack with fake Adobe Flash update warnings. This campaign has been
+    active since at least May 2019, and targets an Asian religious and ethnic
+    group." Watering holes "set-up on websites that belong to personalities, public
+    bodies, charities and organizations of the targeted group." Payloads: "Godlike12,
+    a Go backdoor that implements a Google Drive based C2 channel" + "Two versions of
+    the open-source Stitch Python backdoor that the threat actor modified." Target
+    validation via IP fingerprint (RTCPeerConnection API + ipify) — "If the visitor
+    is validated as a target, the first JavaScript stage will load a second one."
+    STRIPPED FABRICATIONS: (1) "Tibetan-diaspora-focused sites", "Tibetan-themed
+    second-stage payload", "Tibetan religious community" — the word "Tibet" appears
+    ZERO times in the source; it says only "an Asian religious and ethnic group".
+    The "second-stage payload" in the source is the JavaScript second stage, not a
+    Tibetan payload. (2) Poison-Carp / MSS-collection-lane framing — the source draws
+    no such link.
+
+    [b] ATTRIBUTION — KEY CORRECTION. actor_id cn/unscoped/mustang-panda → null.
+    Kaspersky EXPLICITLY declines: "The threat actor's operational target is not
+    clear because, unfortunately, we haven't been able to observe many live
+    operations, and we couldn't identify any overlap with known intrusion sets."
+    grep of raw: China 0, PRC 0, MSS 0, Mustang 0, Panda 0, Tibet 0. The only China
+    nexus is language-level (Sojson JS obfuscation is "the Chinese-language web
+    service Sojson"; a Go routine "may originate from a Chinese-authored tutorial")
+    — Kaspersky notes but does not attribute on it. Set attribution_level=
+    activity-cluster (Kaspersky tracks a new standalone cluster "Holy Water"),
+    confidence low, auspex_assessment concur-with-caveat.
+
+    [c] DATES — start_date 2019-05-01 ✓ ("active since at least May 2019");
+    disclosure_date 2020-03-31 ✓ (publication). end_date 2020-02-29 → null:
+    campaign ONGOING at publication ("some of these websites … are still
+    compromised, and continue to direct selected visitors to malicious payloads").
+    Source published_on 2020-03-31 ✓.
+
+    [d] DOCTRINE_LINKS — set to []. The cn/national-intelligence-law-2017
+    diaspora-and-dissident link rested on an unnamed PRC actor and a fabricated
+    Tibetan victim profile; with no actor/nation attributed and the source naming
+    only "an Asian religious and ethnic group," no doctrine honestly applies.
+
+    [e] ATTRIBUTION_LEVEL — added: activity-cluster (matches the source: a new
+    cluster, no known-actor/nation link).
+
+    [f] ACTOR_ID — now null (counter to nothing; unattributed op). No actor file
+    referenced. FLAG: cn/unscoped/mustang-panda was wrongly assigned here; this
+    event no longer references it (no actor-file edit made per protocol).
+
+    initial_vector n-day → phishing: source documents no exploit/CVE at initial
+    access; victim delivery is a fake Adobe Flash updater run manually (social
+    engineering). Enum lacks a watering-hole term; phishing is the social-engineering
+    bucket per the badrabbit-ransomware precedent. targets: kept
+    sectors/civil-society/religious (explicitly supported); removed
+    sectors/civil-society/diaspora (source says "ethnic group," never "diaspora").
+
+    Residual: filename/id slug still contains "tibetan" (stable-slug rule — not
+    renamed); the record's data no longer asserts a Tibetan target.

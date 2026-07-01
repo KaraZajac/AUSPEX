@@ -8,30 +8,43 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  FireEye / Mandiant disclosed APT32 spear-phishing operations
-  beginning January 2020 against China's Ministry of Emergency
-  Management and the Wuhan municipal government, with lure
-  documents themed around COVID-19. The campaign coincided with
-  the early Chinese pandemic response and the period of greatest
-  Vietnamese strategic uncertainty about cross-border infection
-  flows and PRC official information-sharing.
+  FireEye / Mandiant disclosed suspected APT32 spear-phishing
+  operations beginning 6 January 2020 against China's Ministry of
+  Emergency Management and the Wuhan government, using tracking
+  links and COVID-19-themed lure content. Mandiant assessed the
+  activity was designed to collect intelligence on China's
+  COVID-19 response.
 false_flag_risk: none
 summary: |
-  A high-signal data point for the regional political-intelligence
-  pillar: APT32 collecting against the PRC during the COVID
-  response is consistent with Hanoi's deep skepticism of Beijing's
-  early case-count reporting and Vietnam's exposure to PRC
-  outbreak dynamics through the shared border. Provides one of
-  the clearer attested examples of Vietnamese cyber tasking
-  aligned to regional security collection rather than industrial
-  IP.
+  A regional political-intelligence data point: APT32 collecting
+  against the PRC during the early COVID response is consistent
+  with Hanoi's interest in Beijing's outbreak reporting and
+  Vietnam's exposure to PRC outbreak dynamics across the shared
+  border. DUPLICATE of 2020-04/apt32-wuhan-municipal-covid (same
+  FireEye 2020-04-22 report / same URL) — retire/merge candidate;
+  see notes.
+notes: |
+  RETIRE/MERGE CANDIDATE (audit 2026-07-01). This event and
+  2020-04/apt32-wuhan-municipal-covid both derive from the single
+  FireEye/Mandiant blog of 2020-04-22 (identical URL), split into
+  two events with two duplicate source records
+  (fireeye/2020-04-22_apt32-china-covid here vs
+  fireeye/2020-04-22_apt32-covid-china-targeting on the sibling).
+  The sibling is the fuller record; this one should be merged into
+  it or retired (Kara's call — not deleted here).
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: FireEye / Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-04-22
     attribution_source_id: fireeye/2020-04-22_apt32-china-covid
+    notes: |
+      FireEye names APT32 (Vietnam-nexus) as the actor; blog wording
+      is "suspected Vietnamese actors APT32" / "Mandiant ... believes".
+      Named-actor (group + nation named), NOT named-unit — no specific
+      Vietnamese service is identified, consistent with vn/unscoped/apt32.
 doctrine_links:
   - doctrine_id: vn/resolution-29-nqtw
     pillar_id: null
@@ -52,3 +65,75 @@ targets:
     role: primary
 sources:
   - fireeye/2020-04-22_apt32-china-covid
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    DUPLICATE + link-rot audit. This event is a DUPLICATE of
+    2020-04/apt32-wuhan-municipal-covid: both derive from the single
+    FireEye/Mandiant blog of 2020-04-22 ("Vietnamese Threat Actors
+    APT32 Targeting Wuhan Government and Chinese Ministry of Emergency
+    Management ..."), split into two events citing two duplicate source
+    records with the IDENTICAL url
+    (mandiant.com/resources/blog/apt32-targeting-chinese-government-in-covid-19-related-espionage).
+    Audited to truthful minimum and set level=partial; FLAGGED as a
+    RETIRE/MERGE candidate (canonical = the fuller sibling). Deletion
+    is Kara's call.
+
+    [SNAPSHOT] The cited url is LINK-ROTTED: curl -L (2026-07-01) returns
+    HTTP 200 but 302-redirects to https://cloud.google.com/security/mandiant
+    (Mandiant/Google Cloud homepage, <title>Mandiant Cybersecurity
+    Consulting | Google Cloud</title>), 0 occurrences of APT32/Wuhan/
+    Emergency Management/COVID — a catalogue/homepage, not the article.
+    No content_sha256 recorded (would hash the wrong page). archive.org
+    is blocked for the fetcher. Claims corroborated instead via reachable
+    mirrors (fireeye.fr copy of the same blog; CCDCOE Cyberlaw Toolkit
+    "APT32 attacks on Chinese government (2020)"; The Diplomat 2020-05;
+    SecurityAffairs; RFA) — hence level=partial.
+
+    [a] FACTS ✓ — corroborated: suspected APT32 (Vietnam) intrusion/
+    spear-phishing vs China's Ministry of Emergency Management + the
+    Wuhan government, at least Jan–Apr 2020; first known instance
+    6 Jan 2020 (email w/ embedded tracking link, sender
+    lijianxiang1870@163.com) — matches start_date 2020-01-06; COVID-19-
+    themed lures; Mandiant assessed the goal was collecting intelligence
+    on China's COVID-19 response. Trimmed unsupported editorial reach in
+    outcome_summary ("period of greatest Vietnamese strategic
+    uncertainty ...") and softened the summary's over-claimed "clearer
+    attested examples" wording (the doctrine link is only plausible).
+    No fabricated malware/tradecraft present in THIS event (the sibling
+    carries the METALJACK/Cobalt Strike claims, not audited here).
+    [b] ATTRIBUTION — FireEye/Mandiant name APT32 (Vietnam-nexus); blog
+    wording "suspected Vietnamese actors APT32" / "Mandiant ... believes".
+    Kept attributing_org_confidence: high (FireEye's established APT32=
+    Vietnam attribution) with a note recording the hedged campaign
+    wording; auspex_assessment concur. ADDED attribution_level:
+    named-actor (group + nation, no service) — consistent with
+    vn/unscoped/apt32.
+    [c] DATES ✓ — source published_on 2020-04-22 (report date) = event
+    disclosure_date; start_date 2020-01-06 = first known instance.
+    end_date 2020-04-30 is an approximation of the "through April 2020"
+    window (sibling uses 2020-04-22); left as-is, non-load-bearing.
+    [d] DOCTRINE ✓ — single link vn/resolution-29-nqtw, confidence
+    plausible (honest: reasoning notes Resolution 29-NQ/TW emphasizes
+    cybersovereignty, not external collection). No attesting_source_id,
+    correct for plausible. Not upgraded.
+    [e] ATTRIBUTION_LEVEL — set to named-actor (was missing).
+    [f] ACTOR_ID ✓ — vn/unscoped/apt32 resolves to
+    atlas/actors/vn/unscoped/apt32.yaml; placement (unscoped, no service
+    named) matches the source. No actor flag.
+
+    DIRECTIONALITY ✓ — Vietnam attacker → China victim (targets are PRC
+    orgs); event correctly NOT bucketed to Vietnam-as-victim.
+
+    FLAGS: (1) RETIRE/MERGE — canonical sibling
+    2020-04/apt32-wuhan-municipal-covid; two duplicate FireEye source
+    records for one report. (2) DANGLING TARGET FK — target_id
+    orgs/prc-ministry-emergency-management has NO registry file
+    (atlas/targets/orgs/); the sibling references the equally-dangling
+    orgs/china-ministry-emergency-management for the same victim. Only
+    orgs/wuhan-municipal-government exists. Left in place (target-file
+    creation is out of audit scope); needs a single canonical
+    ministry-of-emergency-management target org.

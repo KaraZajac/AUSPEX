@@ -1,47 +1,126 @@
 id: 2020-04/maze-cognizant
-name: Maze ransomware against Cognizant — first double-extortion at scale
-start_date: 2020-04-17
+name: Maze ransomware attack on Cognizant
+start_date: 2020-04-17  # best estimate — incident active immediately before the 2020-04-18 confirmation; no cited primary pins the exact onset
 disclosure_date: 2020-04-18
-end_date: 2020-05-31
+end_date: null  # recovery ran into May 2020; no cited source pins a precise op-end date
 incident_type:
   - ransomware
   - data-theft
-initial_vector: valid-creds
-outcome_summary: |
-  Maze ransomware (operated by the cluster later tracked as
-  TA2101 / GOLD VILLAGE) intrusion of Cognizant — one of the
-  largest US IT-services / MSPs. Approximately three-week service
-  disruption. Cognizant disclosed USD 50–70M of impact in
-  subsequent SEC filing. Maze pioneered the double-extortion
-  model (encryption + threat to publish stolen data) at scale
-  with a public leak site beginning late 2019 — the operational
-  template for all subsequent RaaS brands (REvil, Conti,
-  LockBit, ALPHV).
-quantified_impact:
-  disclosed_impact_usd: 70000000
-  downtime_weeks: 3
+initial_vector: unknown  # neither cited source states the initial access vector
 false_flag_risk: none
+outcome_summary: |
+  Cognizant — a large US IT-services / managed-services provider —
+  disclosed on 2020-04-18 that a security incident causing service
+  disruptions for some of its clients "is the result of a Maze
+  ransomware attack." In its Q1-2020 SEC Form 10-Q (filed
+  2020-05-08), Cognizant stated the attack "resulted in unauthorized
+  access to certain data and caused significant disruption to our
+  business," including the disabling of some systems/networks and
+  taking others offline as a precaution; some clients suspended
+  Cognizant's access to their networks as a security precaution.
+  Cognizant engaged outside forensics firms and law enforcement and
+  provided clients with Indicators of Compromise (IOCs). It
+  characterized the lost-revenue, containment, remediation,
+  investigation and legal costs as "significant."
 summary: |
-  Maze ceased operations November 2020. Personnel are widely
-  assessed to have reconstituted as Egregor (which itself was
-  taken down February 2021 with Ukrainian arrests). The
-  double-extortion model Maze introduced is the structural
-  foundation of the entire 2020–2024 RaaS ecosystem.
+  Maze was a criminal, profit-motivated ransomware / data-extortion
+  operation with no documented state nexus. Cognizant publicly
+  confirmed the Maze ransomware attack on 2020-04-18; the incident
+  disrupted internal systems and client-facing services into
+  May 2020. This record is scoped to what Cognizant's own press
+  release and SEC filing carry. Broader narrative claims previously
+  in this record — that Maze "pioneered double-extortion at scale,"
+  the TA2101 / GOLD VILLAGE crew tracking, a specific USD 50–70M
+  impact "in a SEC filing," a three-week disruption, and the Maze →
+  Egregor reconstitution — are documented elsewhere but are NOT
+  carried by the cited first-party sources (the $50–70M figure came
+  from Cognizant's May 2020 earnings call, not the 10-Q), and have
+  been removed pending proper sourcing.
 attributions:
-  - actor_id: ru/proxies/conti  # Maze was not Conti — placeholder; AUSPEX has not yet added a Maze actor
-    attributing_org: vendor consensus
-    attributing_org_confidence: low
-    auspex_assessment: partial
-    attribution_date: 2020-04-20
+  - actor_id: criminal/maze
+    attributing_org: Cognizant Technology Solutions
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2020-04-18
     attribution_source_id: cognizant/2020-04-18_maze-disclosure
     notes: |
-      Maze cluster is not yet present as a separate actor entry
-      in AUSPEX. Conti placeholder is operationally misleading;
-      add a Maze / TA2101 actor in a subsequent pass and re-
-      attribute.
-doctrine_links: []  # pre-Feb-2022
+      Cognizant (the victim) publicly confirmed on 2020-04-18 that
+      the incident "is the result of a Maze ransomware attack" — a
+      definitive first-party self-identification of the ransomware
+      family/crew. named-actor level: names the crew "Maze"; no
+      nation or specific unit is named (Maze is a non-state criminal
+      operation).
+      FLAG (orchestrator): actor_id `criminal/maze` does not yet
+      exist under atlas/actors/. This record previously pointed at
+      `ru/proxies/conti`, which is doubly wrong — Maze is not Conti,
+      and Maze has no documented state nexus, so the ru/proxies
+      bucket falsely credited a Maze op to a Russian state proxy and
+      inflated RU-tempo statistics. Corrected to the intended
+      criminal/maze home per AUSPEX placement rules; the actor file
+      must be created (primary_service_id null; status disbanded —
+      Maze ceased operations Nov 2020) and this FK confirmed.
+doctrine_links: []  # criminal profit-motivated ransomware — no state doctrine applies; also pre-Feb-2022
 targets:
-  - target_id: orgs/cognizant
+  - target_id: sectors/ict/managed-services
+    country: us
     role: primary
 sources:
   - cognizant/2020-04-18_maze-disclosure
+  - cognizant/2020-05-08_10q-security-incident
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against Cognizant's two first-party sources (both raw-snapshotted + hashed).
+    Press release cognizant/2020-04-18_maze-disclosure sha256 469e011a…bc8c9498, 135,935 B
+    (real article present under a generic "Cognizant Press Releases" <title>; NOT a phantom).
+    Q1-2020 Form 10-Q cognizant/2020-05-08_10q-security-incident sha256 1ccc2e73…d40deb6,
+    2,675,956 B (added this audit — SEC EDGAR primary; signed May 8, 2020).
+    [a] FACTS — Press release verbatim: "Cognizant can confirm that a security incident
+    involving our internal systems, and causing service disruptions for some of our clients,
+    is the result of a Maze ransomware attack ... engaged with the appropriate law enforcement
+    authorities ... provided them with Indicators of Compromise (IOCs)." 10-Q verbatim: "The
+    attack resulted in unauthorized access to certain data and caused significant disruption to
+    our business ... disabling of some of our systems and networks ... taking certain other
+    internal systems and networks offline ... some clients opted to suspend our access to their
+    networks ... engaged leading outside forensics and cybersecurity experts ... coordinating
+    with law enforcement. The lost revenue and containment, remediation, investigation, legal
+    and other costs will be significant." data-theft incident_type is carried by the 10-Q's
+    "unauthorized access to certain data." REMOVED as un-source-carried fabrications/embellishments:
+    (1) quantified_impact disclosed_impact_usd 70000000 and downtime_weeks 3 — the cited 10-Q does
+    NOT state $50–70M (the only "$70 million" in it is an unrelated India tax-dispute deposit); the
+    $50–70M Q2 revenue/margin estimate came from Cognizant's May 2020 earnings call, and "3 weeks"
+    is press characterization — neither cited primary carries them, so the whole quantified_impact
+    block was dropped. (2) "operated by the cluster later tracked as TA2101 / GOLD VILLAGE",
+    "pioneered the double-extortion model at scale", the REvil/Conti/LockBit/ALPHV "template" claim,
+    "ceased operations November 2020 ... reconstituted as Egregor ... Ukrainian arrests" — all
+    real-world true but carried by NONE of the cited sources; stripped from name/outcome/summary.
+    (3) initial_vector valid-creds -> unknown (no cited source states the vector). Name de-editorialized
+    ("first double-extortion at scale" removed).
+    [b] ATTRIBUTION — Cognizant itself named Maze with certainty ("can confirm ... is the result of a
+    Maze ransomware attack"): attributing_org Cognizant (was "vendor consensus"), confidence high (was
+    low), auspex_assessment concur (was partial), attribution_level named-actor (added). Criminal crew,
+    no nation/unit named.
+    [c] DATES — disclosure_date 2020-04-18 matches the press-release header ("April 18, 2020"); note the
+    10-Q says "On April 20, 2020, we announced" (a fuller/later statement). start_date kept 2020-04-17 as
+    a labeled best estimate (op active immediately before the 04-18 confirmation; no primary pins onset).
+    end_date 2020-05-31 -> null (invented; recovery ran into May but no source dates the end). Both source
+    published_on dates verified against the documents (press release 2020-04-18; 10-Q signed 2020-05-08).
+    [d] DOCTRINE_LINKS — [] is correct: Maze is a profit-motivated criminal operation with no state nexus,
+    so no state doctrine applies (also pre-Feb-2022). No attested link; no attesting_source_id needed.
+    [e] ATTRIBUTION_LEVEL — set named-actor (Cognizant names the crew "Maze"; not a nation, not a unit).
+    [f] ACTOR_ID — FLAGGED. Corrected actor_id ru/proxies/conti -> criminal/maze (the correct AUSPEX home:
+    non-state criminal crew, primary_service_id null). criminal/maze does NOT yet exist under atlas/actors/
+    — orchestrator must CREATE it (status disbanded, ceased Nov 2020; aliases TA2101 [Proofpoint],
+    GOLD VILLAGE [Secureworks]; Egregor as lineage successor) and confirm this FK. The prior ru/proxies/conti
+    pointer mis-credited a Maze op to a Russian state proxy and corrupted RU-tempo stats.
+    TARGET — orgs/cognizant was a DANGLING FK (no atlas/targets/orgs/cognizant.yaml registry entry). Since
+    I cannot create target registry files, retargeted to the resolving sector sectors/ict/managed-services
+    (accurate — Cognizant is a managed-services provider), country us. FLAG (optional): an orgs/cognizant
+    registry entry would restore the named-org discriminative feature.
+    Level full: every retained claim is carried by a snapshotted first-party source; residual uncertainty is
+    only the unpinned exact op onset/end and the deliberately-omitted (real but uncited-here) $50–70M / TA2101 /
+    Egregor context.

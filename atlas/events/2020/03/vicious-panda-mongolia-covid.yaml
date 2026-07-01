@@ -1,57 +1,159 @@
 id: 2020-03/vicious-panda-mongolia-covid
-name: Vicious Panda COVID-themed campaign against Mongolia
+name: Vicious Panda COVID-themed campaign against the Mongolian public sector
 start_date: 2020-01-01
 disclosure_date: 2020-03-12
-end_date: 2020-03-12
+end_date: null
 incident_type:
   - intrusion
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Check Point discloses a PRC-nexus campaign using
-  COVID-19-themed lures (purported Mongolian Ministry of
-  Foreign Affairs documents about the COVID response) to
-  deliver a custom RAT to Mongolian government targets.
-  Infrastructure overlaps with prior Vicious / Mustang Panda
-  activity; Check Point tracks the cluster as distinct
-  ("Vicious Panda") rather than directly merging it.
+  Check Point Research disclosed a campaign against the
+  Mongolian public sector that used COVID-19-themed lures —
+  two Mongolian-language RTF documents (one purporting to be
+  from the Mongolian Ministry of Foreign Affairs on the
+  coronavirus response) weaponized with version 7.x of the
+  RoyalRoad/8.t RTF exploit-builder — to deliver a previously
+  unknown, custom RAT module via a staged DLL loader. Check
+  Point assessed the operator as "a Chinese-based threat
+  actor" (nation-level; it stated the intel was "not enough
+  to make a clear cut attribution") and, by payload and
+  infrastructure overlap, tied the activity to a recurring
+  unnamed group behind the BYEBY RAT (Palo Alto, 2017, against
+  the Government of Belarus), a 2016 attack on the Mongolian
+  government, and the Enfal Trojan lineage. Check Point tracks
+  the cluster as "Vicious Panda"; it did NOT name Mustang
+  Panda or any known named actor.
 false_flag_risk: none
 summary: |
   Sits at the head of the COVID-era PRC neighborhood-collection
-  wave. Lure documents impersonating the host-country MFA
-  on the host-country's own COVID response is a precise
-  collection-on-collection pattern — the intelligence value
-  is direct insight into how Mongolia perceived and managed
-  PRC pandemic measures along the shared border. The "Vicious
-  Panda" cluster name partially overlaps with Mustang Panda
-  but Check Point did not fully merge the two; AUSPEX
-  attributes to Mustang Panda as the most defensible cluster
-  pending later vendor consolidation.
+  wave. Lure documents impersonating the host-country MFA on the
+  host-country's own COVID response is a precise
+  collection-on-collection pattern — the intelligence value is
+  direct insight into how Mongolia perceived and managed PRC
+  pandemic measures along the shared border. Check Point named
+  neither a service nor a known named actor: it coined the
+  campaign label "Vicious Panda" and linked it to a persistent
+  Chinese-nexus cluster (BYEBY RAT / 2016 Mongolia / 2017 Belarus
+  government / Enfal lineage). MISP-galaxy, the canonical actor
+  reference, records "Vicious Panda" (synonym SixLittleMonkeys)
+  as a DISTINCT actor, not a Mustang Panda synonym; the corpus
+  lacks a Vicious Panda actor record, so this event is left
+  unattributed at the named-actor level pending creation of one.
 attributions:
-  - actor_id: cn/unscoped/mustang-panda
+  - actor_id: null
     attributing_org: Check Point Research
     attributing_org_confidence: moderate
-    auspex_assessment: concur-with-caveat
+    attribution_level: activity-cluster
+    auspex_assessment: contested
     attribution_date: 2020-03-12
     attribution_source_id: checkpoint/2020-03-12_vicious-panda-covid
     notes: |
-      Check Point uses the distinct "Vicious Panda" label;
-      Mustang Panda is the working AUSPEX assignment pending
-      later cluster consolidation in vendor reporting.
+      Check Point attributed only at NATION level ("of what we
+      believe to be a Chinese-based threat actor" / "Chinese APT
+      group") and explicitly hedged on actor attribution ("the
+      naming scheme ... is not enough to make a clear cut
+      attribution"). It reached a self-named activity cluster
+      ("Vicious Panda") linked by payload/infrastructure to a
+      recurring unnamed group (BYEBY RAT — Palo Alto 2017,
+      Government of Belarus; a 2016 Mongolian-government attack;
+      Enfal lineage). It NEVER named Mustang Panda. AUSPEX's prior
+      assignment to cn/unscoped/mustang-panda was an unsupported
+      editorial mapping and is REMOVED: MISP-galaxy (canonical
+      reference) lists Vicious Panda (UUID
+      68d8c25b-8595-4c20-a5c7-a11a2a34b717, synonym
+      SixLittleMonkeys) as a distinct actor. actor_id set null
+      (real intrusion, no named actor) pending a
+      cn/unscoped/vicious-panda actor record — see event/audit flag.
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Mongolian MFA targeting is the BRI political-intelligence
-      collection pillar; COVID-response framing was the
-      collection priority of the moment in early 2020.
+      A Chinese-nexus actor collecting on the Mongolian public
+      sector via MFA-impersonating COVID-response lures reads as
+      political-intelligence collection on a neighbouring BRI
+      partner-country government — the goal the BRI
+      political-intelligence-collection pillar encodes. Held at
+      plausible, not higher: Check Point states no strategic
+      purpose, and with the actor identity unsettled (a distinct
+      "Vicious Panda"/BYEBY cluster, not Mustang Panda) the
+      actor-mission leg that would triangulate BRI specifically is
+      absent, so more than one strategic reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "BRI partner-country political-intelligence collection: Mongolia is a BRI partner and neighbour; MFA-themed lures on the COVID response fit diplomatic/political reporting on a partner government."
+        - "Generic PRC national-intelligence-law political espionage: absent a named actor with a BRI-aligned mission, the op reads equally as routine neighbour-state political collection not tied specifically to the BRI program."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/government/foreign-ministry
+  - target_id: sectors/government
+    country: mn
     role: primary
 sources:
   - checkpoint/2020-03-12_vicious-panda-covid
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against Check Point Research "Vicious Panda: The COVID Campaign"
+    (2020-03-12). RAW snapshot captured + hashed:
+    sha256 20997941…a5159d09, 202,228 bytes
+    (atlas/sources/raw/checkpoint__2020-03-12_vicious-panda-covid.html);
+    it is the REAL article (<title>Vicious Panda: The COVID Campaign - Check
+    Point Research</title>), not a homepage/phantom.
+    [a] FACTS ✓ — every operational claim is source-carried, verbatim:
+    "Check Point Research discovered a new campaign against the Mongolian public
+    sector, which takes advantage of the current Coronavirus scare, in order to
+    deliver a previously unknown malware implant"; "two suspicious RTF documents
+    sent to the Mongolian public sector … one of them allegedly from the
+    Mongolian Ministry of Foreign Affairs"; "These RTF files were weaponized
+    using version 7.x of a tool named RoyalRoad (aka 8.t)"; final stage "the
+    malicious loader downloads and decrypts a RAT module … a custom and unique
+    malware." CORRECTIONS: outcome_summary/summary rewritten to drop the
+    unsupported "infrastructure overlaps with prior Vicious / Mustang Panda
+    activity" — the report never mentions Mustang Panda (0 occurrences). Replaced
+    with the lineage Check Point ACTUALLY draws: BYEBY RAT (Palo Alto 2017,
+    Government of Belarus), a 2016 Mongolian-government attack, and the Enfal
+    Trojan.
+    [b] ATTRIBUTION — MAJOR CORRECTION. Check Point's own words: "of what we
+    believe to be a Chinese-based threat actor" (nation-level); and on actor
+    attribution it HEDGES: "we believe that the naming scheme for intel.wll …
+    is not enough to make a clear cut attribution." It connects the payload "to
+    a known threat group" but never names it, and coins the campaign label
+    "Vicious Panda." It NEVER names Mustang Panda. AUSPEX's prior
+    actor_id=cn/unscoped/mustang-panda (attributing_org "Check Point Research",
+    moderate, concur-with-caveat) was a fabricated pairing — Check Point made no
+    such attribution. Per MEMORY (MISP-galaxy = canonical actor reference),
+    threat-actor.json lists "Vicious Panda" as a DISTINCT actor (UUID
+    68d8c25b-8595-4c20-a5c7-a11a2a34b717, synonym SixLittleMonkeys), NOT a
+    Mustang Panda synonym (Mustang Panda's synonym set does not include it).
+    Set actor_id=null (real intrusion, no named actor reached),
+    attribution_level=activity-cluster, confidence moderate (Chinese-nexus +
+    cluster linkage), auspex_assessment=contested.
+    [c] DATES ✓ — source published_on 2020-03-12 = disclosure_date (matches the
+    article date). start_date kept 2020-01-01 (Check Point frames it as the
+    then-current early-2020 COVID campaign; no precise op-start given). end_date
+    corrected 2020-03-12 → null (unbounded; the op did not end at disclosure).
+    [d] DOCTRINE — kept cn/bri/political-intelligence-collection but DOWNGRADED
+    strongly_inferred → plausible: source states no strategic purpose and the
+    actor identity is unsettled (distinct Vicious Panda/BYEBY cluster, not
+    Mustang Panda), so the actor-mission triangulation is absent and BRI-specific
+    vs. generic PRC neighbour-collection both survive; added
+    inference_basis.alternatives. attesting_source_id stays null (correct — not
+    attested).
+    [e] ATTRIBUTION_LEVEL — set activity-cluster (Check Point reached a self-named
+    cluster "Vicious Panda" + nation=China; no known named actor).
+    [f] ACTOR_ID — was cn/unscoped/mustang-panda (resolves to
+    atlas/actors/cn/mustang-panda.yaml). REMOVED as unsupported. See FLAG.
+    TARGETS — corrected sectors/government/foreign-ministry → sectors/government
+    (country mn): Check Point says the victim is the "Mongolian public sector";
+    the MFA is the IMPERSONATED lure sender, not the confirmed victim org — the
+    prior foreign-ministry sector was lure-theme inflation.
+    Residual: exact operation start is an estimate; the "Vicious Panda"/
+    SixLittleMonkeys ↔ Mikroceen relationship is beyond this source's scope.

@@ -1,54 +1,80 @@
 id: 2020-01/winnti-hong-kong-universities
 name: Winnti / APT41 intrusions into Hong Kong universities
-start_date: 2019-11-01
+start_date: 2019-10-01
 disclosure_date: 2020-01-31
-end_date: 2019-12-31
+end_date: null
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: phishing
+  - espionage
+initial_vector: unknown
 outcome_summary: |
-  ESET discloses Winnti / APT41-lineage intrusions into at
-  least two Hong Kong universities during November 2019,
-  amid the height of the HK pro-democracy protest movement.
-  Updated ShadowPad and Winnti malware variants delivered via
-  spear-phishing of university employees.
+  ESET disclosed a Winnti Group campaign (AUSPEX: the APT41
+  cluster) against at least two Hong Kong universities — with
+  campaign-identifier / C&C-URL indicators suggesting up to
+  three additional HK universities may also have been hit —
+  discovered in November 2019 (Winnti malware present since
+  late October), amid the HK pro-democracy protest movement.
+  New ShadowPad and Winnti malware variants were used. ESET
+  lacked the dropper component and only inferred execution via
+  DLL side-loading (a malicious hpqhvsei.dll side-loaded by a
+  legitimate HP hpqhvind.exe); no initial-access vector was
+  established.
 false_flag_risk: none
 summary: |
-  Targeting Hong Kong universities during the 2019 protest
-  period reads against a pure IP-theft frame; the most
-  defensible reading is collection on student-activist
-  organization and faculty-political-affiliation rather than
-  research IP. ESET refrains from this assessment in their
-  blog; AUSPEX assesses the campaign sits at the intersection
-  of APT41's "private" tooling (ShadowPad / Winnti) being
-  redirected to political-collection use against HK targets —
-  consistent with the broader 2019 MSS surge against HK-
-  affiliated targets in the run-up to the 2020 National
-  Security Law.
+  ESET attributes the intrusions to "the Winnti Group" and,
+  beyond noting the protest context, makes no assessment of
+  the operators' motive. AUSPEX maps the Winnti Group cluster
+  to APT41 (Winnti is an overlapping alias / umbrella term)
+  and adds the WHY as an inference: targeting Hong Kong
+  universities during the 2019 protest period is consistent
+  with political collection on student-activist organization
+  and faculty affiliation, but APT41's pronounced IP-theft
+  profile means research-IP collection (HK universities hold
+  MIC2025/MCF-relevant research) is a serious competing
+  reading — so both are held at plausible only.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: ESET
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2020-01-31
     attribution_source_id: eset/2020-01-31_winnti-hong-kong-universities
+    notes: |
+      ESET names only "the Winnti Group" (stated declaratively —
+      named-actor level, high). It names NO nation (no China), NO
+      service (no MSS), and does NOT use the APT41 label. AUSPEX maps
+      the Winnti Group to its canonical APT41 node (cn/mss/apt41);
+      Winnti is an OVERLAPPING alias / umbrella term (the actor record
+      flags "Winnti Umbrella" spans APT41 plus related clusters), so
+      the caveat: identifying this specific HK-universities campaign
+      as APT41-proper is AUSPEX's mapping, not ESET's. The cn/mss
+      service placement derives from OTHER sources (the DOJ Sep-2020
+      indictment), NOT from this ESET report.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
       Hong Kong university targeting during the 2019 protest
-      period reads most strongly as student-activist /
-      faculty-political-collection rather than research-IP
-      theft — fits the diaspora-and-dissident pillar via
-      its HK-domestic-dissent extension.
+      period is consistent with student-activist /
+      faculty-political collection, fitting the
+      diaspora-and-dissident pillar via its HK-domestic-dissent
+      extension. Held at plausible (downgraded from
+      strongly_inferred on 2026-07-01 audit): ESET names the
+      protest CONTEXT but makes no motive assessment, and
+      APT41's heavy research/IP-theft profile leaves research-IP
+      collection as a serious competing reading — so more than
+      one strategic reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Political / dissident collection: HK-university targeting at the height of the 2019 pro-democracy protests (with campus occupations by student protesters) reads as collection on student-activist organization and faculty affiliation."
+        - "Research-IP theft: APT41 is a prolific IP-theft actor and universities are classic research targets; the same intrusion could be conventional espionage against HK-university research (see the parallel cn/mcf dual-use-research link)."
     counter_explanation: |
-      Could be research-IP collection (HK universities hold
-      some MIC2025-relevant research); the timing makes
-      protest-period political collection more probable.
+      Could be research-IP collection (HK universities hold some
+      MIC2025/MCF-relevant research); ESET establishes no motive.
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
@@ -56,10 +82,15 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      HK universities (HKUST, CUHK) host dual-use research
-      that aligns with MCF interest, though protest-period
-      framing dominates this specific event.
+      HK universities host dual-use research that aligns with
+      MCF interest, and APT41's IP-theft mission makes
+      research collection a live reading of this intrusion —
+      though the protest-period framing competes with it.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Dual-use research collection: HK research universities hold MCF/MIC2025-relevant research that APT41's IP-theft mission routinely targets."
+        - "Protest-period political collection: the 2019 timing points instead at dissident/activist collection (see the parallel national-intelligence-law diaspora-and-dissident link)."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -70,3 +101,75 @@ targets:
     role: primary
 sources:
   - eset/2020-01-31_winnti-hong-kong-universities
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs ESET "Winnti Group targeting universities in Hong Kong"
+    (Mathieu Tartare, 31 Jan 2020). Raw snapshot captured + hashed:
+    eset__2020-01-31_winnti-hong-kong-universities.html, 95,057 bytes,
+    sha256 960d596a…9507c39. Single-source event; the ESET blog is a
+    first-party vendor-research primary (tier kept).
+
+    [a] FACTS — mostly carried, ONE fabrication removed.
+    Verbatim support: "In November 2019, we discovered a new campaign
+    run by the Winnti Group against two Hong Kong universities. We
+    found a new variant of the ShadowPad backdoor … deployed using a
+    new launcher and … Winnti"; "the Winnti malware had already been
+    found at the end of October"; "at least three additional Hong Kong
+    universities may have been compromised using these same ShadowPad
+    and Winnti variants"; "in the context of Hong Kong facing civic
+    protests that started in June 2019". So "at least two universities"
+    (up to five) + "updated ShadowPad/Winnti variants" + protest
+    context are all source-carried. REMOVED the fabrication "delivered
+    via spear-phishing of university employees": ESET explicitly says
+    "we do not have the component that dropped and executed this
+    launcher" and only INFERS "the initial execution of this launcher
+    is done through DLL side-loading" (malicious hpqhvsei.dll
+    side-loaded by legit HP hpqhvind.exe). No phishing anywhere in the
+    report. CORRECTIONS: initial_vector phishing -> unknown;
+    outcome_summary rewritten to DLL-side-loading + drop the phishing
+    claim; incident_type data-theft -> espionage (ESET documents
+    ShadowPad/Winnti backdoor implantation for collection, not any
+    established exfiltration/theft).
+
+    [b] ATTRIBUTION — de-over-attested. ESET names ONLY "the Winnti
+    Group" (declarative), no nation (no China), no service (no MSS),
+    no APT41 label, no confidence wording. Added attribution_level:
+    named-actor. Kept attributing_org_confidence high (ESET states the
+    Winnti-Group attribution as fact) but scoped it in a new notes
+    field: the cn/mss actor node is AUSPEX's canonical mapping (Winnti
+    is an OVERLAPPING alias/umbrella term per the actor record), and
+    the cn/mss placement derives from OTHER sources (DOJ Sep-2020
+    indictment), NOT this ESET report. auspex_assessment concur ->
+    concur-with-caveat (the Winnti->APT41-proper identification is
+    AUSPEX's inference, not ESET's).
+
+    [c] DATES — source published_on 2020-01-31 = byline "31 Jan 2020"
+    ✓; disclosure_date 2020-01-31 ✓. start_date 2019-11-01 -> 2019-10-01
+    (ESET: Winnti present "at the end of October"). end_date 2019-12-31
+    -> null (ESET gives no operation end; remediation was ongoing at
+    disclosure — avoids a fabricated bound).
+
+    [d] DOCTRINE_LINKS — link 1 (national-intelligence-law-2017 /
+    diaspora-and-dissident-collection) DOWNGRADED strongly_inferred ->
+    plausible: ESET gives protest CONTEXT but no motive assessment, and
+    APT41's pronounced IP-theft profile leaves research-IP collection
+    as a serious competitor (the very reading the parallel cn/mcf link
+    encodes) — so "no serious competitor" fails. Link 2 (cn/mcf /
+    dual-use-research) kept plausible. Added inference_basis.alternatives
+    to both (auditable, colon-space items quoted). Neither is attested,
+    so attesting_source_id: null is correct.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (ESET names the Winnti
+    Group cluster; no unit).
+
+    [f] ACTOR_ID — cn/mss/apt41 resolves (atlas/actors/cn/apt41.yaml,
+    id cn/mss/apt41). FLAG (residual, not a defect): this event's sole
+    source names only "Winnti Group," an umbrella term the actor record
+    itself marks as OVERLAPPING (Winnti Umbrella = APT41 + related
+    clusters). Assigning this campaign to APT41-proper is AUSPEX's
+    identification; a Winnti-Umbrella sibling cluster cannot be fully
+    excluded from ESET's evidence alone. Actor record not edited.
