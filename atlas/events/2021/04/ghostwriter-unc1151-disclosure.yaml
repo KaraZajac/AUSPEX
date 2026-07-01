@@ -1,53 +1,181 @@
 id: 2021-04/ghostwriter-unc1151-disclosure
-name: Mandiant attributes Ghostwriter to Belarusian government via UNC1151 disclosure
+name: "Mandiant links the Ghostwriter influence campaign to the UNC1151 cyber-espionage cluster"
 start_date: 2017-01-01
 disclosure_date: 2021-04-28
 end_date: null
 incident_type:
   - influence-operation
   - intrusion
-  - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Mandiant published "UNC1151 Assessed with High Confidence to
-  Have Links to Belarus," attributing the long-running Ghostwriter
-  campaign to the Belarusian government. The campaign — combined
-  credential theft and narrative-seeding influence operations —
-  targeted Polish, Lithuanian, German, and Ukrainian governments
-  and media through 2017–2021. The Mandiant attribution was the
-  technical underpinning for the EU's September 2021 collective
-  statement on Belarusian responsibility.
+  In its "Ghostwriter Update," Mandiant/FireEye published the first
+  high-confidence technical evidence tying the Ghostwriter influence
+  campaign to UNC1151, a suspected state-sponsored cyber-espionage
+  actor that conducts credential harvesting and malware operations.
+  Mandiant assessed that UNC1151 "conducts at least some components
+  of Ghostwriter influence activity" but that intelligence gaps did
+  not allow it to conclusively attribute all aspects of the campaign
+  to the group. The report did NOT attribute UNC1151 or Ghostwriter
+  to any nation — UNC1151 remained "a suspected state-sponsored"
+  actor; the high-confidence Belarus attribution came only in
+  Mandiant's later November 16, 2021 follow-on.
 false_flag_risk: none
 summary: |
-  Foundational public attribution of a Belarusian state-aligned
-  cyber-and-influence campaign. Ghostwriter / UNC1151 had
-  previously been treated by some vendors as Russian-aligned;
-  Mandiant's April 2021 disclosure established the Belarusian
-  attribution that EU member states subsequently endorsed.
+  Mandiant's April 28, 2021 update linked the Ghostwriter influence
+  campaign — a cyber-enabled operation seeding anti-NATO / anti-US-
+  troop narratives at audiences in Lithuania, Latvia and Poland via
+  website compromises, spoofed emails, fabricated content and
+  inauthentic personas — to the UNC1151 credential-theft cluster.
+  The report documented expanded targeting (credential theft against
+  German politicians since early 2021, and compromised social-media
+  accounts of Polish officials) and a case study of a fabricated
+  Polish military prostitution scandal alleging U.S. Military
+  involvement. Mandiant named only a "suspected state-sponsored"
+  actor and offered no nation attribution here; the Ghostwriter
+  narratives are described (per the July 2020 report this updates)
+  as "aligned with Russian security interests." Belarus was not
+  named until the November 2021 follow-on.
 attributions:
   - actor_id: by/unscoped/ghostwriter
-    attributing_org: Mandiant (Gabby Roncone, Sam Riddell, Ryan Serabian)
+    attributing_org: Mandiant (FireEye)
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-04-28
-    attribution_source_id: mandiant/2021-04-28_ghostwriter-unc1151
+    attribution_source_id: mandiant/2021-04-28_ghostwriter-update
+    notes: |
+      HIGH confidence that the named cluster UNC1151 "conducts at least some
+      components of Ghostwriter influence activity" — but explicitly NOT
+      conclusive on all aspects (hence concur-with-caveat), and NO nation
+      named in this source: UNC1151 is only "a suspected state-sponsored cyber
+      espionage actor." attribution_level = named-actor (a named cluster, no
+      nation/unit). The actor_id resolves to the canonical Belarus-nexus
+      record by/unscoped/ghostwriter, but that Belarus placement rests on
+      Mandiant's LATER (Nov 2021) attribution + MISP, NOT on this April source;
+      as of this disclosure the nation was unestablished. See event-level note
+      on the Belarus-vs-Russia contest.
 doctrine_links:
   - doctrine_id: by/concept-info-security-2019
     pillar_id: by/concept-info-security-2019/information-sphere-defense
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Ghostwriter's anti-NATO and pro-Belarusian-regime narrative
-      seeding fits the information-sphere-defense framing the
-      2019 doctrine articulates.
-    contested: false
+      Ghostwriter's anti-NATO and pro-regime narrative seeding fits the
+      information-sphere-defense framing the 2019 Belarusian doctrine
+      articulates. The label is plausible (not higher) because THIS source
+      states no strategic purpose and does not attribute the campaign to
+      Belarus at all — it names only a "suspected state-sponsored" actor and
+      describes the narratives as "aligned with Russian security interests,"
+      so a competing strategic reading (Russian information confrontation)
+      genuinely survives. The Belarusian-doctrine reading follows AUSPEX's
+      canonical actor stance (by/unscoped/ghostwriter), which itself flags the
+      Russia/GRU attribution contest.
+    contested: true
+    counter_explanation: |
+      The two government attributions of Ghostwriter cited on the actor record
+      (German Federal Foreign Office 2021-09-06; EU Council 2021-09-24) name
+      RUSSIA / the GRU, not Belarus, and this April source frames the
+      narratives as serving "Russian security interests." A Russian-doctrine
+      reading is therefore a live competitor to the Belarusian one.
+    inference_basis:
+      alternatives:
+        - "Belarusian information-sphere defense (by/concept-info-security-2019): anti-NATO / pro-regime narrative seeding fits the doctrine, and AUSPEX canonically homes UNC1151/Ghostwriter to Belarus on Mandiant's later high-confidence attribution + MISP."
+        - "Russian information confrontation: this source and the July-2020 report describe the narratives as 'aligned with Russian security interests,' and two Western governments later attributed Ghostwriter to Russia/GRU — so a Russian strategic reading survives."
     analyst: claude
 targets:
   - target_id: orgs/polish-government
+    country: pl
     role: primary
-  - target_id: orgs/lithuanian-government
+  - target_id: sectors/government
+    country: de
     role: primary
-  - target_id: orgs/german-bundestag-members
+  - target_id: sectors/government
+    country: lt
     role: primary
 sources:
-  - mandiant/2021-04-28_ghostwriter-unc1151
+  - mandiant/2021-04-28_ghostwriter-update
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    PHANTOM/WRONG-SOURCE remediation, path = RE-SOURCE (badrabbit model).
+    Audited against Mandiant/FireEye "Ghostwriter Update: Cyber Espionage Group
+    UNC1151 Likely Conducts Ghostwriter Influence Activity" (April 28, 2021),
+    official PDF snapshot mandiant__2021-04-28_ghostwriter-update.pdf
+    (sha256 9301446d…4d6c42c4, 4,619,327 bytes).
+
+    DEFECT FOUND: the event was cited ONLY to mandiant/2021-04-28_ghostwriter-unc1151,
+    whose id/date say 2021-04-28 but whose url/title/snapshot are Mandiant's
+    NOVEMBER 16, 2021 Belarus-attribution report (snapshot datePublished
+    2021-11-16). The event had imported that later report's claims wholesale:
+    old name/outcome/summary said Mandiant "attributes Ghostwriter to the
+    Belarusian government" with "high confidence" on 2021-04-28 and cited the EU
+    Sept-2021 statement — NONE of which the April source carries. RE-SOURCED to a
+    new record mandiant/2021-04-28_ghostwriter-update (the genuine April report),
+    and re-pointed sources[] + attribution_source_id to it. FLAGged the
+    mis-dated sibling record for orchestrator re-slug/merge (it is still cited by
+    2 other events + the actor, which I did not touch).
+
+    [a] FACTS ✓ (all now source-carried, verbatim): "Recently obtained technical
+    evidence now allows us to assess with high confidence that UNC1151, a
+    suspected state-sponsored cyber espionage actor that engages in credential
+    harvesting and malware campaigns, conducts at least some components of
+    Ghostwriter influence activity; current intelligence gaps … do not allow us
+    to conclusively attribute all aspects of the Ghostwriter campaign to UNC1151
+    at this time." Campaign nature: "a cyber-enabled influence campaign which
+    primarily targets audiences in Lithuania, Latvia and Poland and promotes
+    narratives critical of the North Atlantic Treaty Organization's (NATO)
+    presence in Eastern Europe"; TTPs "such as website compromises, spoofed
+    emails or posts from inauthentic personas." Expanded targeting: "Since the
+    start of 2021, UNC1151 has expanded its credential theft activity to target
+    German politicians" (German Tagesschau); "compromised social media accounts
+    of Polish officials." Appendix 2 case study: fabricated Polish military
+    prostitution scandal alleging U.S. Military involvement + Polish/Lithuanian
+    officials. "UNC1151 intrusion activity has been active since at least 2017"
+    → supports start_date 2017-01-01. STRIPPED fabricated/imported claims: the
+    Belarusian-government attribution, the "high confidence links to Belarus"
+    title, and the EU September-2021 statement (all belong to Nov-2021+ events,
+    not this April source).
+
+    [b] ATTRIBUTION: source names the named cluster UNC1151 at HIGH confidence
+    for conducting "at least some components" of Ghostwriter (concur-with-caveat
+    — not conclusive on all aspects), and NO nation ("a suspected state-sponsored
+    actor"). Set attributing_org=Mandiant (FireEye), attributing_org_confidence
+    =high, attribution_level=named-actor. actor_id kept by/unscoped/ghostwriter
+    (canonical, resolves) with a note that its Belarus nation rests on LATER
+    reporting, not this source.
+
+    [c] DATES: disclosure_date 2021-04-28 = actual publication of THIS report
+    (verified against the sibling record's true Nov date, corrected). start_date
+    2017-01-01 = UNC1151 activity "active since at least 2017" per the report.
+    end_date null (ongoing campaign).
+
+    [d] DOCTRINE: downgraded by/concept-info-security-2019/information-sphere-
+    defense from strongly_inferred → plausible and set contested=true. THIS
+    source states no strategic purpose, does not attribute to Belarus, and
+    frames the narratives as "aligned with Russian security interests"; the two
+    government attributions on the actor record name Russia/GRU. So a competing
+    (Russian) strategic reading survives → plausible with alternatives[] + a
+    counter_explanation. No attesting_source_id (not attested). Kept the
+    Belarusian doctrine per AUSPEX's canonical actor homing, honestly flagged.
+
+    [e] ATTRIBUTION_LEVEL: set named-actor (was missing).
+
+    [f] ACTOR_ID: by/unscoped/ghostwriter resolves (atlas/actors/by/ghostwriter.yaml).
+    No actor edit made. NB the actor record itself already flags the
+    Belarus-vs-Russia nation contest and the unscoped-service frontier.
+
+    TARGETS: old targets cited two DANGLING orgs (orgs/lithuanian-government,
+    orgs/german-bundestag-members — neither exists in the registry). Replaced
+    with orgs/polish-government (pl, resolves) + sectors/government for de
+    (German politicians, credential theft) and lt (Lithuanian officials /
+    Lithuanian-CERT-reported ops). Latvia is an influence audience only (no
+    org/sector victim) — omitted.
+
+    RESIDUAL: (1) sibling source mandiant/2021-04-28_ghostwriter-unc1151 is
+    mis-dated/mis-URL'd and needs orchestrator re-slug or merge into
+    mandiant/2021-11-16_unc1151-belarus-link. (2) The Belarus-vs-Russia
+    attribution contest for Ghostwriter is a standing actor-level question,
+    flagged not resolved.

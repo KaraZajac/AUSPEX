@@ -2,19 +2,20 @@ id: 2021-06/kaeri-kimsuky-intrusion
 name: Korea Atomic Energy Research Institute (KAERI) intrusion attributed to Kimsuky
 start_date: 2021-05-14
 disclosure_date: 2021-06-18
-end_date: 2021-06-18
+end_date: null
 incident_type:
   - espionage
-  - data-theft
+  - intrusion
 initial_vector: n-day
 outcome_summary: |
   Intrusion at the Korea Atomic Energy Research Institute
-  (KAERI) via a VPN vulnerability; KAERI's parliamentary
-  oversight disclosure on 18 June 2021 confirmed that 13
-  external IP addresses had accessed the network from
-  14 May 2021. ROK government and vendor reporting
-  attributed the intrusion to the DPRK-aligned Kimsuky
-  cluster.
+  (KAERI) via a VPN-server vulnerability. KAERI's public
+  disclosure — a statement and press conference on 18 June
+  2021 — confirmed that 13 unauthorized external IP addresses
+  had accessed the internal network from 14 May 2021. One of
+  those IPs was reported as overlapping infrastructure used by
+  the DPRK-aligned Kimsuky cluster; KAERI patched the
+  (undisclosed-vendor) VPN device.
 false_flag_risk: none
 summary: |
   Anchor event for DPRK Kimsuky targeting of ROK national
@@ -22,62 +23,173 @@ summary: |
   doctrinal as much as operational: KAERI is the ROK
   national nuclear-research institute, conducting research
   on advanced reactor design and fuel cycle, and its
-  compromise reinforced the NIS counter-DPRK doctrine's
-  critical-infrastructure pillar.
+  compromise sits squarely in the ROK NIS counter-DPRK
+  doctrine's critical-infrastructure pillar (which names
+  energy/nuclear explicitly) — an AUSPEX defender-frame
+  reading, not a claim in the cited reporting.
 
-  KAERI initially declined to confirm the intrusion before
-  the parliamentary oversight committee forced public
-  disclosure; the case became a domestic-politics issue
-  over the institution's communication delay rather than
-  over the attribution itself.
+  KAERI initially confirmed and then denied the attack
+  before officially confirming it via a statement and press
+  conference on 18 June 2021; the case became a
+  domestic-communication issue over the confirm/deny/confirm
+  reversal rather than over the attribution itself.
 
-  AUSPEX assessment: concur on Kimsuky attribution per
-  vendor consensus; false-flag risk rated `low` because
-  the attribution did not result in indictment-grade
-  public evidence and the VPN-IP-overlap basis is
-  consistent with but not exclusive to Kimsuky.
+  AUSPEX assessment: concur-with-caveat on the Kimsuky
+  attribution. The attribution is hedged in the reporting
+  ("one of these IP addresses is linked to"/"believed to
+  work under" the Reconnaissance General Bureau) and rests
+  on a single intruding IP overlapping known Kimsuky
+  infrastructure — consistent with but not exclusive to
+  Kimsuky; it produced no indictment-grade public evidence.
+  False-flag risk rated `none`: no source alleges a planted
+  flag, and the target profile fits DPRK strategic
+  collection.
 attributions:
   - actor_id: kp/rgb/kimsuky
-    attributing_org: ROK National Intelligence Service (informal) + vendor consensus
+    attributing_org: KAERI disclosure + security reporting (one intruding IP overlapping known Kimsuky infrastructure)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-06-18
-    attribution_source_id: wikipedia/kaeri
+    attribution_source_id: bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn
     notes: |
-      NIS attribution was not formally published; the
-      assessment was reported via Korean press citing
-      government sources and reinforced by vendor
-      reporting (e.g., Korean security firms identifying
-      Kimsuky infrastructure overlap). AUSPEX rates
-      attributing-org confidence `moderate` to reflect
-      the informal channel rather than the rigour of a
-      joint advisory.
+      The Kimsuky link surfaced from KAERI's own access-log
+      analysis presented at its 18 June 2021 press conference:
+      one of the 13 intruding IPs was reported as overlapping
+      infrastructure used by Kimsuky, "believed to work under
+      the North Korean Reconnaissance General Bureau." The
+      cited reporting (BleepingComputer, The Record) does not
+      name the NIS, IssueMakersLab, or any lawmaker as the
+      attributing body, and does not name the VPN vendor.
+      AUSPEX rates attributing-org confidence `moderate`:
+      multiple outlets converge on Kimsuky, but the basis is a
+      single hedged IP-infrastructure overlap disclosed through
+      an informal channel, not a formal joint advisory.
+      Named-actor (group + nation named; RGB named only as the
+      believed parent), not named-unit.
 doctrine_links:
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Kimsuky compromising the ROK national nuclear-research
+      institute (advanced reactor design and fuel-cycle
+      research) fits DPRK strategic-technology / strategic-
+      intelligence collection — the attacker-rationale the
+      8th-Congress-defense-plan strategic-tech-collection
+      pillar encodes (it names academic/research-lab and
+      government/defense targets), and one this cluster's own
+      default doctrine alignment already includes. Rated
+      `plausible` rather than higher because neither cited
+      source states any DPRK purpose, and more than one
+      strategic reading survives: theft of the reactor/fuel-
+      cycle technology itself vs. collection of ROK nuclear
+      policy/intentions intelligence (Kimsuky's core mission).
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Strategic-technology collection (8th-Congress defense plan): Kimsuky steals reactor / fuel-cycle technology from KAERI to serve DPRK strategic programs; target is a national nuclear-research institute and this pillar is in the cluster's default alignment."
+        - "Strategic-information / policy-collection: Kimsuky's bread-and-butter is nuclear- and foreign-policy intelligence, so the operation may target ROK nuclear policy/intentions rather than the technology itself."
+    contested: false
+    analyst: claude
   - doctrine_id: kr/nis-counter-dprk
     perspective: defender-response
     pillar_id: kr/nis-counter-dprk/critical-infrastructure
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Target is the ROK national nuclear-research institute (KAERI);
-      the NIS counter-DPRK critical-infrastructure response is
-      inferred from the target — the cited (Wikipedia) source
-      describes the institute and does not name the NIS doctrine, and
-      the NIS attribution was informal/unpublished.
-    attesting_source_id: wikipedia/kaeri
+      Defender-frame context tag: KAERI is the ROK national
+      nuclear-research institute (energy/nuclear, national-CII)
+      — exactly the sector the NIS counter-DPRK
+      critical-infrastructure pillar names (KHNP, KEPCO,
+      defense industrial base, nuclear). A DPRK espionage
+      intrusion into it is squarely the activity that pillar
+      exists to counter, with no competing ROK defender
+      doctrine. `strongly_inferred`, not `attested`: the cited
+      reporting describes the institute and the intrusion but
+      does not name the NIS doctrine, and this event documents
+      a disclosure rather than a documented NIS counter-action.
+    attesting_source_id: bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn
     inference_basis:
-      source_id: wikipedia/kaeri
+      source_id: bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn
       signals:
-        - "Target is KAERI, the ROK national nuclear-research institute (critical-infrastructure target); NIS attribution reported informally"
-      ruled_out: "the NIS counter-DPRK critical-infrastructure doctrine by name — not in the cited source"
+        - "Target is KAERI, the ROK national nuclear-research institute (energy/nuclear, national-CII) — the exact sector the NIS counter-DPRK critical-infrastructure pillar names"
+      ruled_out: "the NIS counter-DPRK critical-infrastructure doctrine by name — not stated in the cited source; and any documented NIS counter-action — the event is a KAERI disclosure"
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/kaeri
     role: primary
     outcome: |
-      Network access via VPN vulnerability; data exfiltration
-      scope not publicly detailed beyond confirmation that
-      13 external IPs accessed the network.
+      Network access via a VPN-server vulnerability by 13
+      unauthorized external IPs from 14 May 2021; data
+      exfiltration scope not publicly detailed. VPN device
+      patched; vendor not disclosed.
 sources:
-  - wikipedia/kaeri
+  - bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn
+  - therecord/2021-06-19_north-korean-hackers-breach-kaeri-vpn
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). Prior sole citation wikipedia/kaeri is a
+    phantom: curl of https://en.wikipedia.org/wiki/Korea_Atomic_Energy_Research_Institute
+    (78,404 bytes) is a general reference page on the institute with ZERO mention of
+    the intrusion, Kimsuky, North Korea, hack/breach, or VPN — so no content hash
+    recorded for it and it was removed from the event's sources[]. Event is REAL and
+    well-documented -> re-sourced to two tier-1 secondary reports, both raw-snapshotted
+    + hashed:
+      * bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn — sha256
+        c2fa5c34…b07317af, 89,272 bytes.
+      * therecord/2021-06-19_north-korean-hackers-breach-kaeri-vpn — sha256
+        0a0fd0f1…c137e2a, 83,656 bytes.
+    [a] FACTS: intrusion 14 May 2021 (The Record, quoting the KAERI spokesperson:
+    "the intrusion took place last month on May 14, through a vulnerability in a
+    virtual private network (VPN) server"); 13 unauthorized IPs ("Thirteen different
+    IPs were seen abusing the vulnerability"); one IP overlapping Kimsuky infra
+    ("One of these IP addresses was linked to attack infrastructure used by Kimsuky").
+    CORRECTIONS: (i) BleepingComputer's lede mis-dates the intrusion as "June 14th";
+    kept 14 May per The Record. (ii) STRIPPED "Pulse Secure" — both sources state the
+    VPN vendor was withheld ("undisclosed VPN device" / "name of the VPN server vendor
+    was redacted"); the prompt's Pulse-Secure detail is unsupported speculation, not
+    imported. (iii) STRIPPED the unsupported "parliamentary oversight committee forced
+    disclosure" specific — sources support only KAERI's own confirm/deny/confirm
+    reversal ("officially confirmed the attack" after "initially confirming and then
+    denying"); lawmaker Ha Tae-keung / IssueMakersLab appear in OTHER outlets, not in
+    the two snapshotted sources. incident_type data-theft -> intrusion (no source
+    quantifies exfiltration).
+    [b] ATTRIBUTION: rewrote attributing_org from the unsupported "ROK National
+    Intelligence Service (informal) + vendor consensus" to what the sources carry —
+    KAERI's access-log disclosure + security reporting of a single IP overlapping
+    Kimsuky infrastructure. Attribution is hedged in-source ("is linked to" /
+    "believed to work under the ... Reconnaissance General Bureau"); kept
+    attributing_org_confidence moderate; auspex_assessment concur -> concur-with-caveat
+    (single hedged IP overlap, informal channel, no indictment-grade evidence). Set
+    attribution_level: named-actor. attribution_source_id re-pointed wikipedia/kaeri ->
+    bleepingcomputer (explicitly names Kimsuky + RGB).
+    [c] DATES: start_date 14 May 2021 ✓; disclosure_date 18 June 2021 ✓ (BC: press
+    conference "held yesterday" from a 19 June article; confirms KAERI press conf =
+    18 June). end_date 2021-06-18 -> null: no source bounds the intrusion's end, so the
+    prior end=disclosure was a conflation.
+    [d] DOCTRINE_LINKS: re-pointed the existing kr/nis-counter-dprk defender-response
+    link's attesting_source_id + inference_basis.source_id off wikipedia/kaeri onto the
+    real BC source; kept strongly_inferred (KAERI = energy/nuclear national-CII, the
+    exact sector that pillar names; honest that no source names the NIS doctrine and the
+    event is a disclosure not a counter-action). ADDED an attacker-rationale link to
+    kp/8th-congress-defense-plan/strategic-tech-collection at `plausible` — grounded in
+    the target (national nuclear-research institute) + this cluster's own
+    default_doctrine_alignment_ids; plausible because no source states DPRK purpose and
+    two readings survive (steal the reactor/fuel-cycle tech vs. collect ROK nuclear
+    policy intelligence). No attested link (no source states a strategic goal).
+    [e] ATTRIBUTION_LEVEL: named-actor (Kimsuky + North Korea named; RGB named only as
+    believed parent; no specific tasking unit).
+    [f] ACTOR_ID: kp/rgb/kimsuky resolves -> atlas/actors/kp/kimsuky.yaml (id
+    kp/rgb/kimsuky). No actor-file edits.
+    PHANTOM DISPOSITION: wikipedia/kaeri is still legitimately cited by
+    atlas/targets/orgs/kaeri.yaml as a tertiary reference for the institute itself (a
+    valid use — it IS a real KAERI article), so it was NOT orphaned/annotated as a dead
+    phantom; it was simply de-cited from THIS event where it never supported the
+    intrusion claims.

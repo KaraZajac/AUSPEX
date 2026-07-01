@@ -5,38 +5,61 @@ disclosure_date: 2021-02-24
 end_date: 2020-11-30
 incident_type:
   - intrusion
+  - surveillance
+  - espionage
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Amnesty International's Security Lab documented APT32 / OceanLotus
-  targeting of Vietnamese human-rights defenders and bloggers in
-  Vietnam, the Philippines, and Germany between February 2018 and
-  November 2020. Two confirmed victims (Bui Thanh Hieu, a Berlin-
-  based blogger, and an unnamed Vietnamese NGO) were targeted with
-  spear-phishing emails delivering custom macOS and Windows
-  implants. Amnesty named the operation "Click and Bait" and
-  publicly assessed Vietnamese government direction.
+  Amnesty International's Security Lab documented a coordinated
+  Ocean Lotus / APT32 spyware campaign against two Vietnamese
+  human-rights bloggers and one non-profit between February 2018
+  and November 2020. The named victims are blogger Bui Thanh Hieu
+  ("Nguoi Buon Gio"), in exile in Germany since 2013, a second
+  Vietnamese blogger, and the NGO VOICE (Vietnamese Overseas
+  Initiative for Conscience Empowerment), which operates out of
+  Manila in the Philippines. Victims received phishing emails
+  pretending to share a document that delivered Ocean Lotus's
+  exclusive Windows spyware (a Kerrdown-family downloader that
+  fetched Cobalt Strike) and Mac OS spyware. Amnesty titled the
+  report "Click and Bait." Crucially, Amnesty stated it "was not
+  able to attribute Ocean Lotus' activities to any company or
+  government entity" and left the link to "Vietnamese state actors"
+  as an open question — it quoted only FireEye's nation-level
+  "aligned with Vietnamese state interests" characterisation.
 false_flag_risk: none
 summary: |
   Canonical evidence for the diaspora-and-dissident surveillance
-  strand of the Vietnamese cyber program. Amnesty's Security Lab
-  is a high-trust civil-society source whose attribution methodology
-  (sample analysis, infrastructure overlap with prior APT32
-  reporting) supports a `concur` AUSPEX assessment. The targets are
-  individuals — civil-society victims rather than corporate or
-  governmental — which fits the MPS A05 lane more comfortably than
-  TC2 military intelligence.
+  strand of the Vietnamese cyber program. Amnesty's Security Lab is
+  a high-trust civil-society source; it attributes the campaign to
+  Ocean Lotus / APT32 on the basis of malware families used
+  exclusively by the group (the Kerrdown Windows downloader and an
+  Ocean Lotus Mac OS implant analysed by Trend Micro), which
+  supports a `concur` AUSPEX assessment of the named-actor
+  attribution. Amnesty itself did NOT reach a service- or
+  government-level attribution — it expressly could not attribute
+  the activity to any company or government entity and left the
+  state link open — so the actor is placed at `vn/unscoped` and no
+  specific Vietnamese service (TC2 vs. MPS/A05) is asserted here.
+  The victims are civil-society individuals and an NGO rather than
+  corporate or governmental targets.
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: Amnesty International Security Lab
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-02-24
     attribution_source_id: amnesty/2021-02-24_click-and-bait-apt32-diaspora
     notes: |
-      Amnesty assesses APT32 as state-aligned without specifying
-      TC2 vs MPS. The diaspora-civil-society victim profile
-      tilts the operational placement toward MPS A05.
+      Amnesty attributes the campaign to the named group Ocean Lotus
+      / APT32 (via malware families used exclusively by the group)
+      but explicitly stated it "was not able to attribute Ocean
+      Lotus' activities to any company or government entity" and left
+      the link to Vietnamese state actors open, quoting only
+      FireEye's nation-level "aligned with Vietnamese state
+      interests." Named-actor level; NO Vietnamese service (TC2 or
+      MPS/A05) is named — hence actor vn/unscoped, not vn/tc2 or
+      vn/mps.
 doctrine_links:
   - doctrine_id: vn/resolution-29-nqtw
     pillar_id: vn/resolution-29-nqtw/regime-stability-surveillance
@@ -46,9 +69,22 @@ doctrine_links:
       Targets fit the "hostile forces" / overseas dissident
       profile the resolution authorizes monitoring of. Amnesty
       did not cite the resolution by name, but the operational
-      pattern is what the resolution licenses.
+      pattern — sustained spyware surveillance of Vietnamese
+      pro-democracy bloggers and a diaspora human-rights NGO — is
+      exactly what the regime-stability-surveillance pillar
+      licenses. No source states the strategic goal, so this stays
+      strongly_inferred (not attested); but the civil-society /
+      dissident victim set leaves regime-stability surveillance as
+      the single dominant reading.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "All identified victims are Vietnamese human-rights defenders / pro-democracy bloggers (Bui Thanh Hieu) and a diaspora rights NGO (VOICE), not commercial or governmental targets."
+        - "Amnesty frames the campaign against the backdrop of a domestic crackdown on online dissent, matching the resolution's overseas/hostile-forces monitoring remit."
+        - "Persistent multi-year (2018-2020) targeting of the same dissident cohort indicates surveillance-for-control, not opportunistic collection."
+      ruled_out: "vn/industrial-upgrading-cyber-collection (APT32's economic-espionage strand): the victims here carry no industrial or IP value, so the automotive/industrial-collection reading does not survive."
 targets:
   - target_id: orgs/vietnamese-dissident-network
     role: primary
@@ -56,3 +92,57 @@ targets:
     role: primary
 sources:
   - amnesty/2021-02-24_click-and-bait-apt32-diaspora
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Amnesty International Security Lab "Click and Bait: Vietnamese Human Rights
+    Defenders Targeted with Spyware Attacks" (2021-02-24). Raw snapshot re-verified:
+    amnesty__2021-02-24_click-and-bait-apt32-diaspora.html, sha256 65045c1a…df20015
+    (153011 bytes; full article body present, live URL). Single source; Amnesty's own
+    forensic lab = primary-tier NGO forensics (tier kept primary).
+    [a] FACTS — all verbatim-supported: "campaign of spyware attacks targeting Vietnamese
+    human rights defenders (HRDs) from February 2018 to November 2020" (= start_date
+    2018-02-01, end_date 2020-11-30); "two HRDs and a non-profit human rights organization
+    from Viet Nam have been targeted by a coordinated spyware campaign"; Bui Thanh Hieu
+    ("Nguoi Buon Gio"), "lived in exile in Germany since 2013"; VOICE "established … in the
+    Filipino capital of Manila … continues to operate out of Manila" (supports the
+    Philippines geography); phishing — "These emails pretended to share an important
+    document"; malware — "The Windows spyware was a variant of a malware family called
+    Kerrdown … used exclusively by the Ocean Lotus group … it downloaded Cobalt Strike";
+    "The Mac OS Spyware was a variant of a malware family for Mac OS developed and used
+    exclusively by Ocean Lotus, analysed by Trend Micro." CORRECTIONS: (1) outcome_summary
+    said the NGO was "unnamed" — it IS named (VOICE) — and said "two confirmed victims" when
+    the source names two bloggers PLUS the NGO; rewritten. (2) DELETED the false claim that
+    Amnesty "publicly assessed Vietnamese government direction" — the report says the exact
+    opposite: "Our investigation was not able to attribute Ocean Lotus' activities to any
+    company or government entity" and "This raises questions about whether Ocean Lotus is
+    linked to Vietnamese state actors" (left open). (3) incident_type: added surveillance +
+    espionage (core: spyware "allows to fully monitor a compromised system"); kept
+    intrusion + data-theft.
+    [b] ATTRIBUTION — Amnesty attributes to the named group Ocean Lotus / APT32 (exclusive
+    malware families) = named-actor, high confidence; but does NOT reach service/government
+    level (quotes only FireEye's nation-level "aligned with Vietnamese state interests").
+    Added attribution_level: named-actor. Rewrote the stale attribution note that claimed
+    "Amnesty assesses APT32 as state-aligned … tilts toward MPS A05" — unsupported; the
+    actor is correctly vn/unscoped and Amnesty names no service. auspex_assessment concur
+    (of the named-actor attribution) retained.
+    [c] DATES — source published_on 2021-02-24 = report date ✓; disclosure_date 2021-02-24
+    ✓; start/end 2018-02 / 2020-11 = the campaign window the source gives ✓.
+    [d] DOCTRINE — vn/resolution-29-nqtw / regime-stability-surveillance, strongly_inferred
+    (honest: no source states the goal, but the civil-society/dissident victim set makes
+    regime-stability surveillance the single dominant reading). Added inference_basis
+    (signals + ruled_out); attesting_source_id null (correctly NOT attested). Perspective
+    attacker-rationale (Vietnam's doctrine on its own op; no cross-state mismatch).
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves (file atlas/actors/vn/apt32.yaml, id
+    vn/unscoped/apt32). Consistent with the actor record's 2026-06-24 demotion.
+    RESIDUAL/FLAGS: (1) target persons/bui-thanh-hieu has no registry file — persons/ is an
+    established unregistered-target convention used by 8 events (no atlas/targets/persons
+    dir); not fixed here. (2) The named NGO VOICE (Manila) is only captured via the generic
+    orgs/vietnamese-dissident-network proxy — a dedicated VOICE org target could be added by
+    the orchestrator. (3) The user's NB mentioned a "Vietnamese Committee on Human Rights
+    (in France)" — that entity/geography does NOT appear in this report; the report's victims
+    are VOICE (Manila) + two bloggers (one, Bui Thanh Hieu, in Germany).

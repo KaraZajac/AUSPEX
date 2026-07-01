@@ -1,20 +1,26 @@
 id: 2021-02/anssi-sandworm-centreon-attribution
-name: ANSSI / CERT-FR attributes 2017-2020 Centreon supply-chain campaign to Sandworm
-start_date: 2017-01-01  # ANSSI documents intrusion-set activity beginning 2017
+name: ANSSI / CERT-FR links 2017-2020 Centreon intrusion campaign to the Sandworm intrusion set
+start_date: 2017-10-01  # ANSSI: "first victim seems to have been compromised from late 2017" (month is an estimate for Q4 2017)
 disclosure_date: 2021-02-15
 end_date: 2021-02-15
 incident_type:
   - documentary
   - espionage
-initial_vector: supply-chain
+initial_vector: unknown  # ANSSI explicitly: "The initial compromise method is not known"; webshells found on internet-exposed Centreon servers — not a software-distribution supply-chain compromise
 outcome_summary: |
   ANSSI / CERT-FR publication CERTFR-2021-CTI-005 (15 February
-  2021, English-language) attributing a multi-year intrusion
-  campaign (2017-2020) exploiting Centreon IT-monitoring software
-  to the Sandworm intrusion set (Russian GRU Unit 74455). Affected
-  French entities included IT-services providers and web-hosting
-  operators; post-exploitation tooling included the P.A.S.
-  webshell and the Exaramel Linux backdoor.
+  2021, English-language) linking a multi-year intrusion campaign
+  (late-2017 to 2020) against internet-exposed Centreon
+  IT-monitoring servers to the Sandworm intrusion set. ANSSI
+  attributes only to the intrusion set — it does NOT name the GRU,
+  Russia, or Unit 74455, and explicitly notes an intrusion set
+  "should not be confused with a threat actor"; the GRU Unit 74455
+  identity rests on separate DOJ/Treasury attribution carried on
+  the actor record. Affected French entities were information-
+  technology providers, especially web-hosting operators; ANSSI
+  stated the initial compromise method was not known. Post-
+  exploitation tooling included the P.A.S. webshell (v3.1.4) and
+  the Exaramel Linux backdoor.
 quantified_impact:
   countries_affected: 1
 false_flag_risk: none
@@ -33,10 +39,26 @@ summary: |
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: ANSSI / CERT-FR
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-02-15
     attribution_source_id: anssi/2021-02-15_sandworm-centreon-campaign
+    notes: |
+      ANSSI names ONLY the "Sandworm" intrusion set (a named cluster),
+      hence attribution_level: named-actor — NOT named-unit. The report
+      never names the GRU, Russia or Unit 74455, and links the campaign
+      via "several similarities with previous campaigns attributed to the
+      intrusion set named Sandworm" plus C2 infrastructure "known by ANSSI
+      to be controlled by the intrusion set"; the P.A.S. webshell is
+      explicitly disclaimed as non-attributive (freely available).
+      attributing_org_confidence downgraded high -> moderate: ANSSI states
+      no explicit confidence level and frames the link on similarities +
+      one infrastructure anchor, consistent with its cautious posture. The
+      GRU / Unit 74455 identity resolves through the actor record
+      (ru/gru/74455/sandworm), sourced to the 2020 DOJ indictment and
+      Treasury GTsST sanctions — not to this ANSSI source. auspex_assessment
+      concur: AUSPEX concurs the operation is Sandworm.
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-defensive
     perspective: defender-response
@@ -44,21 +66,85 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      CERT-FR public attribution of foreign-state intrusion-set
-      activity affecting French entities is the canonical
-      instance of the LID coordination pillar. The report is the
-      first major French exercise of that function on a
-      named-adversary basis.
+      CERT-FR public technical reporting of foreign-state
+      intrusion-set activity affecting French entities — issued to
+      help those entities detect and remediate — is the canonical
+      instance of the LID coordination pillar (CERT-FR incident
+      response and advisory publication). The report is the first
+      major French exercise of that function on a named-adversary
+      basis. defender-response: the doctrine is France's own LID on
+      an event documenting a Russian (Sandworm) operation.
     attesting_source_id: anssi/2021-02-15_sandworm-centreon-campaign
+    inference_basis:
+      source_id: anssi/2021-02-15_sandworm-centreon-campaign
+      source_quote: >-
+        Recommandations (Section 6) and detection methods (Section 7)
+        are suggested to better protect against this kind of attack and
+        remediate eventual compromissions.
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/ict/managed-services
     country: FR
-    role: primary
-  - target_id: sectors/ict/software
+    role: primary  # ANSSI: "mostly affected information technology providers"
+  - target_id: sectors/ict/cloud
     country: FR
-    role: primary
+    role: primary  # ANSSI: "especially web hosting providers" (replaced ict/software — no software firms were named victims; Centreon software was only the affected product)
 sources:
   - anssi/2021-02-15_sandworm-centreon-campaign
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the real ANSSI/CERT-FR report CERTFR-2021-CTI-005
+    (NOT a phantom — the cited URL resolves to the genuine advisory).
+    Snapshotted the HTML landing page (sha256 8af1ba6b…687f007a, 16,635
+    bytes) and the full report PDF (sha256 ab7bf76d…f847299, 1,705,394
+    bytes, 38 pp); PDF recorded as raw_snapshot on the source record.
+    [a] FACTS — all source-carried: campaign "first victim seems to have
+    been compromised from late 2017 … lasted until 2020"; "targeting the
+    monitoring software Centreon distributed by the french company
+    CENTREON"; "mostly affected information technology providers,
+    especially web hosting providers"; P.A.S. webshell "version number
+    3.1.4"; Exaramel Linux backdoor "identical to one described by ESET".
+    CORRECTED: (i) initial_vector supply-chain -> unknown — ANSSI states
+    verbatim "The initial compromise method is not known" and describes
+    webshells on "Centreon servers exposed to the internet", i.e. NOT a
+    software-distribution supply-chain compromise; event name/outcome
+    reworded from "supply-chain" to "intrusion campaign". (ii) start_date
+    2017-01-01 -> 2017-10-01 (ANSSI says "late 2017", not beginning-2017;
+    month is an estimate). (iii) Removed the unsourced "(Russian GRU Unit
+    74455)" parenthetical from outcome_summary — that identity is not in
+    this source.
+    [b] ATTRIBUTION — ANSSI links the campaign to the "Sandworm" INTRUSION
+    SET only: "This campaign bears several similarities with previous
+    campaigns attributed to the intrusion set named Sandworm" + C2 infra
+    "known by ANSSI to be controlled by the intrusion set". It NEVER names
+    the GRU, Russia, or Unit 74455 (0 occurrences in the 38-pp PDF) and
+    explicitly warns an intrusion set "should not be confused with a
+    threat actor which consists in peoples or organisations." CORRECTED:
+    attributing_org_confidence high -> moderate (no explicit confidence
+    stated; similarity-based + one infra anchor; P.A.S. disclaimed as
+    non-attributive). Added attribution notes.
+    [c] DATES — source published_on 2021-02-15 confirmed ("Paris, le 15
+    février 2021", N° CERTFR-2021-CTI-005). disclosure_date correct.
+    [d] DOCTRINE — fr/lutte-informatique-defensive / cert-fr-coordination,
+    perspective defender-response (France's own LID on a documented
+    Russian op — correct per directionality). Kept confidence: attested;
+    the source states the pillar's protective/advisory purpose in
+    substance ("… suggested to better protect against this kind of attack
+    and remediate eventual compromissions"). Added inference_basis
+    {source_id, source_quote} to back the attested link (was missing).
+    [e] ATTRIBUTION_LEVEL — set named-actor (ANSSI names the named cluster
+    "Sandworm", no nation and no unit). Was missing.
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/
+    sandworm.yaml (id matches); well-sourced (DOJ 2020 indictment,
+    Treasury GTsST sanctions, Mandiant APT44). No actor flag. NB: this
+    single ANSSI source does NOT itself carry the GRU/74455 placement —
+    that identity legitimately rests on the actor record's other sources.
+    TARGETS — replaced sectors/ict/software (inflation: no software firms
+    were named victims) with sectors/ict/cloud for "web hosting
+    providers"; kept sectors/ict/managed-services for "IT providers".
