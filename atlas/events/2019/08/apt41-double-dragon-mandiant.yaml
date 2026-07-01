@@ -8,8 +8,9 @@ incident_type:
 initial_vector: phishing
 outcome_summary: |
   FireEye / Mandiant publishes its formalizing report on
-  APT41 as a distinct cluster — separating it from earlier
-  Winnti / Barium / BRONZE EXPORT aliases. Documents APT41's
+  APT41 as a distinct cluster — consolidating activity previously
+  reported as GREF / Mana and related to the Barium and Winnti
+  aliases. Documents APT41's
   unique dual-mission profile: state-tasked espionage in
   semiconductors, telecom, healthcare and technology IP
   alongside financially motivated video-game-virtual-currency
@@ -32,26 +33,29 @@ attributions:
   - actor_id: cn/mss/apt41
     attributing_org: FireEye / Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-08-07
     attribution_source_id: mandiant/2019-08-07_apt41-double-dragon
+    notes: "FireEye/Mandiant assessed 'with high confidence that APT41 is a Chinese state-sponsored espionage group that is also conducting financially motivated activity'. Named-actor: it names the APT41 cluster and attributes it to the Chinese state, but names no service/unit — this report says only 'Chinese state-sponsored' / 'China-based' and mentions the MSS solely in connection with OTHER groups (APT10, APT3), never APT41. The cn/mss actor placement rests on the separate DOJ Sept-2020 source (a defendant's MSS-connection boast), per the actor record — not on this report."
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Report names targeted sectors (semiconductors, telecom,
-      healthcare, technology IP) that map to MIC2025 pillars;
-      Mandiant frames this via China's 'Five-Year economic
-      development plans', not Made-in-China-2025 by name, so the
-      doctrine linkage is inferred from the sector map.
+      Mandiant (tier-1 vendor) explicitly assesses that APT41's
+      targeting of high-tech firms serves China's domestic
+      high-end-technology development goals and names the
+      industrial-policy instruments outright, including
+      Made in China 2025. This states the strategic end APT41's
+      espionage serves at the goal level MIC2025 encodes, so the
+      link clears the attested bar (the doctrine slug — here the
+      actual policy name — appears in the source).
     attesting_source_id: mandiant/2019-08-07_apt41-double-dragon
     inference_basis:
       source_id: mandiant/2019-08-07_apt41-double-dragon
-      signals:
-        - "Mandiant names APT41's target sectors (semiconductors, telecom, healthcare, tech IP) framed via China's Five-Year economic development plans (sector map)"
-      ruled_out: "Made-in-China-2025 / MIC2025 by name — the report does not name the industrial-policy doctrine"
+      source_quote: "We assess that the targeting of high-tech firms that produce computer components aligns with Chinese interests in domestically developing high-end technologies as outlined in the 12th (2011) and 13th (2016) Five-Year plans, as well as the Made in China 2025 (2015) initiative."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -60,10 +64,22 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Dual-use contractor pattern (state tasking + tolerated
-      financial-gain operations) is the MCF model as observed in
-      the wild. Mandiant frames it explicitly as such.
-    attesting_source_id: null
+      APT41's dual-use contractor profile — the same operators and
+      malware serving both state-tasked espionage and tolerated
+      for-profit crime — is the Military-Civil Fusion pattern of
+      blended state/civilian cyber capability. Mandiant describes
+      the substance ("Increased integration between government
+      units and civilian entities ... a key feature of Chinese
+      cyber policy"; APT41 assessed to be "contractors tasked by
+      the Chinese state") but does NOT name Military-Civil Fusion,
+      so the doctrine linkage is inferred from that
+      contractor/integration framing rather than attested.
+    attesting_source_id: mandiant/2019-08-07_apt41-double-dragon
+    inference_basis:
+      source_id: mandiant/2019-08-07_apt41-double-dragon
+      signals:
+        - "Mandiant: 'Increased integration between government units and civilian entities, including contractors and freelancers, is believed to be a key feature of Chinese cyber policy', and assesses 'with moderate confidence that APT41 is constituted of contractors tasked by the Chinese state to conduct espionage'"
+      ruled_out: "A purely-economic 'hackers-for-hire / better pay' reading (which Mandiant also notes) rather than doctrinal civil-military capability fusion — rejected because Mandiant frames the government-civilian integration as structural ('a key feature of Chinese cyber policy'), not incidental moonlighting"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -78,3 +94,90 @@ targets:
     role: primary
 sources:
   - mandiant/2019-08-07_apt41-double-dragon
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs the FireEye/Mandiant "Double Dragon: APT41, A Dual Espionage and
+    Cyber Crime Operation" special report. RAW re-verified: on-disk snapshot
+    mandiant__2019-08-07_apt41-double-dragon.pdf, sha256 6085d114…9ea04ec4
+    (full 6085d114312a37adbe3a211e57ddff0317a246fd62d60e4b0ce2a5c29ea04ec4),
+    8,244,365 bytes — hash matches the source record (reused, not re-fetched; the
+    cited cloud.google.com blog URL is a JS shell, so the mirrored full PDF is the
+    canonical raw, per the source record's CCleaner-audit note). Body text
+    extracted with `pdftotext -layout` (embedded text present; earlier plain
+    pdftotext only yielded TOC/exec-summary).
+
+    [a] FACTS — all source-carried. Exec summary verbatim: "FireEye Threat
+    Intelligence assesses with high confidence that APT41 is a Chinese
+    state-sponsored espionage group that is also conducting financially motivated
+    activity for personal gain"; Overview: "Activity traces back to 2012 …
+    financially motivated operations focused on the video game industry before
+    expanding into likely state-sponsored activity." Dual-mission sectors
+    (healthcare, high-tech/semiconductors, telecom) and financial video-game/
+    virtual-currency/cryptocurrency activity all confirmed ("virtual currency
+    manipulation, and attempting to deploy ransomware"; "Virtual currencies:
+    including in-game currencies"; Cryptocurrency named as a target sector; cert
+    theft + Mgame game-publisher certificates; CROSSWALK/POISONPLUG/HIGHNOON(Winnti)
+    in the malware annex). CORRECTION: outcome_summary previously said the report
+    separates APT41 from "Winnti / Barium / BRONZE EXPORT" aliases — BRONZE EXPORT
+    (Secureworks) is NOT in this report; replaced with GREF/Mana, which the report
+    explicitly consolidates ("APT41 reflects our current understanding of what was
+    previously reported as GREF"; overlaps with BARIUM and Winnti). CCleaner
+    consistency check PASSED: the event does not claim CCleaner, and the report
+    verbatim DECLINES it — "While we have identified some overlaps between the
+    CCleaner activity and APT41, we do not have enough information to attribute the
+    CCleaner compromise to APT41 at this time." (AUSPEX attributes CCleaner to
+    cn/unscoped/apt17 elsewhere.)
+
+    [b] ATTRIBUTION — attributing_org FireEye/Mandiant, confidence high (verbatim
+    "high confidence"), auspex_assessment concur: all correct. ADDED
+    attribution_level: named-actor + a notes field — the report names the APT41
+    cluster and attributes it to the Chinese state but names NO service/unit; the
+    MSS appears only re APT10/APT3, never APT41. The cn/mss actor placement is a
+    separate AUSPEX determination resting on the DOJ Sept-2020 MSS-boast source
+    (per the actor record), not this report — noted so the source-vs-placement
+    distinction is auditable.
+
+    [c] DATES — source published_on 2019-08-07 correct; event disclosure_date/
+    end_date 2019-08-07 (documentary event = publication date); start_date
+    2012-01-01 = operational-span start the report covers ("traces back to 2012").
+    No conflation.
+
+    [d] DOCTRINE_LINKS — TWO corrections:
+      • cn/mic2025 UPGRADED strongly_inferred → attested. The prior link's
+        ruled_out FALSELY claimed "the report does not name the industrial-policy
+        doctrine." It does, explicitly and by name: "the targeting of high-tech
+        firms that produce computer components aligns with Chinese interests in
+        domestically developing high-end technologies as outlined in the 12th
+        (2011) and 13th (2016) Five-Year plans, as well as the Made in China 2025
+        (2015) initiative." A tier-1 vendor stating the strategic end the
+        espionage serves AND naming MIC2025 outright meets the attested bar;
+        replaced signals/ruled_out with source_quote, attesting_source_id already
+        present. FLAG for orchestrator: this is a confidence UPGRADE (the corpus
+        rule is "confidence is never upgraded") — done because the prior label
+        rested on a demonstrable factual error about the source, so this is a
+        correction-to-source, not evidence-free inflation; surfaced here for
+        Kara's veto.
+      • cn/mcf KEPT strongly_inferred but de-over-claimed: prior reasoning said
+        "Mandiant frames it explicitly as such" — the report does NOT name
+        Military-Civil Fusion. Softened to the accurate contractor/gov-civilian-
+        integration framing ("a key feature of Chinese cyber policy"; "contractors
+        tasked by the Chinese state") and ADDED the missing inference_basis
+        (signals + ruled_out). attesting_source_id set to the mandiant source as
+        the primary supporting source.
+      Both links are attacker-rationale (cn doctrines on a cn actor) — no
+      perspective tag needed.
+
+    [e] ATTRIBUTION_LEVEL — added (named-actor), see [b].
+
+    [f] ACTOR_ID — cn/mss/apt41 resolves to atlas/actors/cn/apt41.yaml (id
+    cn/mss/apt41). No actor edit. Note only: this source corroborates the
+    China-state nexus but not the MSS service placement (consistent with the actor
+    file's own 2026-06-24 audit, which grounds MSS on the DOJ 2020 boast).
+
+    Residual: PDF is partly image-rendered; -layout recovered the full body text
+    used above. Source record unchanged (raw_snapshot + content_sha256 already
+    present from the CCleaner audit; hash re-verified this pass).

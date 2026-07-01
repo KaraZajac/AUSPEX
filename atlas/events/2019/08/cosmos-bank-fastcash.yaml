@@ -1,54 +1,171 @@
 id: 2019-08/cosmos-bank-fastcash
-name: Cosmos Bank (India) FASTCash ATM cash-out
-start_date: 2018-08-11  # actual incident date August 2018; CISA disclosure 2020
-disclosure_date: 2020-08-26
+name: Cosmos Bank (India) FASTCash ATM cash-out + SWIFT heist
+start_date: 2018-08-10  # incident window 10-13 Aug 2018 (Securonix); ATM modality 10-11 Aug, SWIFT 13 Aug
+disclosure_date: 2018-08-27  # Securonix / SecurityWeek technical disclosure
 end_date: 2018-08-13
 incident_type:
   - financial-theft
 initial_vector: unknown
 outcome_summary: |
-  FASTCash malware deployed on Cosmos Cooperative Bank's payment
-  switch infrastructure. Coordinated worldwide ATM cash-out
-  across 28 countries simultaneously over a two-day window
-  extracted $13.5M.
+  ~US$13.5M stolen from Cosmos Cooperative Bank: ~US$11.5M via
+  fraudulent ATM cash-out across 28 countries using 450 cloned
+  non-EMV debit cards, plus ~US$2M via three fraudulent SWIFT
+  MT103 wire transfers to Hong Kong.
 quantified_impact:
   usd_stolen: 13500000
+  usd_atm: 11500000
+  usd_swift: 2000000
   countries_atm_cashout: 28
+  cloned_cards: 450
 false_flag_risk: none
 summary: |
-  Canonical APT38 / BeagleBoyz FASTCash operation. CISA AA20-239A
-  details the tradecraft: initial access via spear-phishing of
-  bank employees, lateral movement on valid credentials,
-  installation of the FASTCash malware (an AIX / Linux library
-  on the Cosmos payment switch) which intercepts and modifies
-  ISO 8583 ATM withdrawal messages to authorize attacker cards
-  beyond their actual balance, paired with cloned debit cards
-  used by money mules at ATMs in 28 countries during a two-day
-  cash-out window. Post-exploitation tooling overlapping with
-  prior BeagleBoyz / APT38 operations includes the Manuscrypt
-  remote-access trojan, the FALLCHILL backdoor, Mimikatz-style
-  credential dumping, and PowerShell-based reconnaissance.
+  In August 2018, attackers attributed to the DPRK Lazarus Group /
+  APT38 (BeagleBoyz) stole ~US$13.5M from Cosmos Cooperative Bank
+  (Pune, India) between 10 and 13 August in two modalities
+  documented by Securonix. Initial access was unconfirmed (Securonix
+  assessed it likely spear-phishing and/or a remote/third-party
+  interface). The attackers used malicious ISO 8583 libraries and
+  process-code injection to stand up a malicious ATM/POS proxy switch
+  ("malicious-Central") running in parallel with the bank's real
+  switch; it returned fake ISO 8583 x210 authorization replies so
+  withdrawal requests never reached the Core Banking System,
+  bypassing card, PIN, and balance checks. On 10-11 August this
+  enabled ~US$11.5M across ~2,849 domestic (RuPay) and ~12,000
+  international (Visa) ATM withdrawals in 28 countries using 450
+  cloned non-EMV debit cards. On 13 August the actor abused the
+  bank's SWIFT SAA environment (LSO/RSO compromise) to send three
+  MT103 wire transfers to ALM Trading Limited at Hang Seng Bank,
+  Hong Kong, totaling ~US$2M. Securonix noted Lazarus tradecraft
+  hallmarks (Windows Admin Shares lateral movement, TLS-mimicking
+  custom C2, new-service persistence, timestomping, reflective DLL
+  injection). US CISA/Treasury/FBI/USCYBERCOM later (AA20-239A,
+  2020) attributed the BeagleBoyz FASTCash ATM cash-out pattern —
+  for which India is a listed victim country — to the DPRK
+  Reconnaissance General Bureau; that advisory does not name Cosmos
+  Bank specifically.
 attributions:
+  - actor_id: kp/rgb/apt38
+    attributing_org: Securonix
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2018-08-27
+    attribution_source_id: securonix/2018-08-27_cosmos-bank-swift-atm-attack
+    notes: |
+      Securonix attributed the incident to the "Lazarus Group"
+      umbrella ("Currently attributed to a nation-state-sponsored
+      malicious threat actor (Lazarus Group) by some sources";
+      initial vector "likely"). SecurityWeek corroborates
+      ("Believed to be backed by the North Korean government, the
+      Lazarus group"). AUSPEX files DPRK FASTCash/SWIFT bank heists
+      under the APT38/BeagleBoyz financial cluster (kp/rgb/apt38),
+      consistent with CISA AA20-239A equating BeagleBoyz with
+      Lazarus/APT38/Bluenoroff. Named-actor (group + nation), not
+      named-unit: no specific DPRK service named in 2018.
   - actor_id: kp/rgb/apt38
     attributing_org: US CISA + Treasury + FBI + USCYBERCOM
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2020-08-26
     attribution_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+    notes: |
+      AA20-239A attributes the BeagleBoyz (an element of the DPRK
+      Reconnaissance General Bureau; overlaps Lazarus/APT38/
+      Bluenoroff/Stardust Chollima) FASTCash ATM cash-out pattern to
+      the DPRK with high confidence and lists India among victim
+      countries (2015-2020). It does NOT name Cosmos Bank; the
+      Oct-2018-disclosed FASTCash cash-outs it references were
+      triggered by this incident. Govt attribution is at the
+      pattern/actor level, not incident-specific.
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
     confidence: attested
     reasoning: |
-      CISA AA20-239A explicitly ties BeagleBoyz operations to DPRK
-      WMD financing.
+      DPRK RGB (BeagleBoyz/APT38) financial-theft operations of this
+      kind exist to generate hard currency under sanctions in service
+      of the regime's WMD/missile programs — exactly the goal the
+      Byungjin sanctions-evasion-revenue pillar encodes. The
+      attesting CISA/Treasury/FBI advisory states this purpose in
+      substance at the goal level (revenue for UN-prohibited nuclear
+      and ballistic-missile programs).
     attesting_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
+    inference_basis:
+      source_quote: "it generates substantial revenue for North Korea. North Korea can use these funds for its UN-prohibited nuclear weapons and ballistic missile programs."
+      source_id: cisa/2020-08-26_aa20-239a-beagleboyz
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/cosmos-bank
+    country: in
     role: primary
-    outcome: $13.5M extracted via coordinated ATM cash-out in 28 countries.
+    outcome: ~US$13.5M extracted (~US$11.5M ATM cash-out in 28 countries + ~US$2M via three SWIFT MT103 transfers to Hong Kong).
 sources:
+  - securonix/2018-08-27_cosmos-bank-swift-atm-attack
+  - securityweek/2018-08-27_north-korea-cosmos-bank
   - cisa/2020-08-26_aa20-239a-beagleboyz
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCE (badrabbit model). The event is a real, well-documented
+    incident but its sole cited source (CISA AA20-239A) did NOT carry
+    its specific facts — a facts-not-carried defect, not a homepage
+    phantom. AA20-239A is the real BeagleBoyz/FASTCash advisory
+    (raw re-verified sha256 6dfc26c1…6bd36f37, 114,412 bytes) but it
+    never names Cosmos Bank, "$13.5M", or "28 countries"; it only
+    lists India among BeagleBoyz victim countries and says cash-outs
+    "have affected upwards of 30 countries in a single incident"
+    (generic). Added two genuine incident sources and re-pointed the
+    facts to them.
+    [a] FACTS — rewrote summary against Securonix "Cosmos Bank SWIFT/
+    ATM US$13.5 Million" report (raw sha256 a4b5c8ee…a278e5f3,
+    188,590 bytes) + SecurityWeek corroboration (raw sha256
+    ad0fb7e9…624344c1, 168,738 bytes). Verbatim-carried now: "US$13.5
+    million stolen ... between August 10-13, 2018"; ATM "on August
+    10-11 ... over US$11.5 million in 2849 domestic (Rupay) and
+    12,000 international (Visa) transactions using 450 cloned
+    (non-EMV) debit cards in 28 countries"; malicious ISO8583 proxy
+    switch ("malicious-Central") sending "fake Transaction Reply
+    (TRE)/ISO8583 x210 messages" bypassing the CBS; SWIFT "On August
+    13, 2018 ... three malicious MT103 to ALM Trading Limited at Hang
+    Seng Bank in Hong Kong amounting to around US$2 million"; initial
+    access "Unconfirmed ... likely spear phishing"; Lazarus hallmarks
+    (Windows Admin Shares, TLS-mimicking C2, timestomping, reflective
+    DLL injection). STRIPPED as fabricated (absent from every cited
+    source): "Manuscrypt RAT", "FALLCHILL backdoor", "Mimikatz-style
+    credential dumping", the asserted "AIX / Linux library" framing,
+    and "spear-phishing of bank employees / valid-credential lateral
+    movement" stated as fact (Securonix marks the vector unconfirmed).
+    [b] ATTRIBUTION — split into two honest entries. Securonix 2018:
+    moderate / named-actor ("Lazarus Group ... by some sources").
+    CISA 2020: high / named-unit (RGB), but flagged as pattern-level,
+    NOT Cosmos-specific. Kept actor kp/rgb/apt38 (Securonix said the
+    Lazarus umbrella; corpus files DPRK bank heists under APT38/
+    BeagleBoyz, consistent with AA20-239A equating them and siblings
+    bangladesh-bank / banco-del-austro / tien-phong).
+    [c] DATES — corrected the core defect: the incident is Aug 2018,
+    not 2019 (id slug is legacy/immutable, now documented in-file).
+    start_date 2018-08-11→2018-08-10 (Securonix window), end_date
+    2018-08-13 (SWIFT), disclosure_date 2020-08-26→2018-08-27
+    (Securonix/SecurityWeek). source published_on all verified:
+    Securonix 2018-08-27, SecurityWeek 2018-08-27, CISA 2020-08-26.
+    [d] DOCTRINE — kp/byungjin/sanctions-evasion-revenue kept
+    ATTESTED; attesting AA20-239A states the goal in substance
+    (source_quote added to inference_basis). Valid: the actor/pattern
+    CISA attributes to WMD-revenue is the same BeagleBoyz cluster.
+    [e] ATTRIBUTION_LEVEL — added (was missing): Securonix named-actor,
+    CISA named-unit.
+    [f] ACTOR_ID — kp/rgb/apt38 resolves (file atlas/actors/kp/apt38.
+    yaml, internal id kp/rgb/apt38; BeagleBoyz is a listed equivalent
+    alias). No actor edit.
+    FLAGS: (1) created missing target registry orgs/cosmos-bank
+    (dangling FK — the event referenced it but no file existed);
+    (2) created 2 source records (securonix, securityweek).
+    Residual: exact "simultaneous ~2hr" cash-out framing and $1.76M
+    court-conviction figure seen in later reporting were NOT asserted
+    (not in the snapshotted sources).

@@ -26,6 +26,7 @@ attributions:
   - actor_id: us/unscoped/cmf-actor  # demoted 2026-06-25 (LLM audit): cmf-actor is a structural placeholder, not a sourced operational unit
     attributing_org: NYT (Sanger / Perlroth)
     attributing_org_confidence: low
+    attribution_level: named-actor  # NYT names "United States Cyber Command" as operator; no specific CMF team/sub-unit named -> named-actor, not named-unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2019-06-15
     attribution_source_id: nyt/2019-06-15_russian-grid-implants
@@ -43,6 +44,10 @@ doctrine_links:
       with Defend Forward, but the underlying operation is single-
       sourced and publicly denied.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Defend Forward / deterrent cost-imposition: NYT and mirror coverage frame the implants as 'meant as a warning to Russian President Vladimir Putin' and as readiness for cost-imposition if conflict breaks out — the pre-position-to-deter reading the doctrine encodes."
+        - "Routine intelligence collection / pre-positioning capability with no deterrent-doctrine intent: the reporting is single-sourced, publicly denied by then-POTUS, and the 'signaling' characterization is the journalists' framing rather than an official statement of strategic purpose, so a non-doctrinal reconnaissance reading survives."
     counter_explanation: |
       The NYT report may be misinterpretation of routine intelligence
       collection; the public POTUS denial complicates attestation.
@@ -54,3 +59,94 @@ targets:
     role: primary
 sources:
   - nyt/2019-06-15_russian-grid-implants
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial  # sole cited source (nytimes.com) is bot-walled (DataDome captcha); load-bearing claims mirror-corroborated, not snapshot-hashed
+  notes: |
+    Audited vs NYT (Sanger/Perlroth) "U.S. Escalates Online Attacks on
+    Russia's Power Grid" (2019-06-15). Not a phantom: the cited URL is
+    the genuine article, but nytimes.com hard bot-walls the fetcher —
+    curl returned a 774-byte DataDome captcha stub ("Please enable JS and
+    disable any ad blocker"; host geo.captcha-delivery.com), NOT the
+    article body. Per protocol I did NOT record that stub as a snapshot
+    (no raw_snapshot / content_sha256 for this source) and set level:
+    partial, corroborating every load-bearing claim against reachable
+    mirrors instead.
+
+    [a] FACTS — all corroborated by contemporaneous mirror reporting of
+    the NYT story (SecurityWeek 2019-06-17 "U.S. Planted Powerful Malware
+    in Russia's Power Grid: Report"; NPR 2019-06-17; CNN 2019-06-15
+    headline; Slate/Engadget/MIT Tech Review 2019-06-15/17):
+      * CYBERCOM placed offensive malware/"implants" in the Russian
+        electric grid — SecurityWeek quotes NYT: "potentially crippling
+        malware [...] at a depth and with an aggressiveness that had never
+        been tried before"; recon "since at least 2012", offensive ramp-up
+        under authorities "granted last year".
+      * PLACED, NOT ACTIVATED (the key incident_type=pre-positioning
+        claim): SecurityWeek quotes NYT verbatim — "There is no evidence
+        that the planted malware was actually used to cause any
+        disruption." Matches outcome_summary framing (reported access /
+        reconnaissance, no disruptive effect claimed).
+      * DETERRENT/SIGNALING framing: "meant as a warning to Russian
+        President Vladimir Putin" — carries the summary's "framed by US
+        officials as signaling / deterrent".
+      * TRUMP PUBLIC DENIAL: SecurityWeek + CNN + Slate confirm Trump
+        tweeted the story was "NOT TRUE" (and "a virtual act of Treason");
+        officials also said Trump had not been briefed in detail. Carries
+        outcome_summary's "Then-POTUS Trump publicly denied the report."
+      * Legal-authority context (2018 NDAA clandestine-military-activity
+        authority / new CYBERCOM authorities; NSPM-13 / 2018 DoD Cyber
+        Strategy per the source record notes) corroborated by CNN/NPR.
+      No fabricated tradecraft, malware name, or victim count is asserted
+      in the event — summary is deliberately hedged ("Reported", "single
+      major-outlet", "not corroborated by second-source reporting or
+      official acknowledgement"), which is honest and matches the
+      evidence. Left as-is.
+
+    [b] ATTRIBUTION — this is a US self-acknowledgement via leak: the
+    "attribution" is US officials speaking to NYT about a US operation.
+    attributing_org=NYT (Sanger/Perlroth), attributing_org_confidence=low
+    (single outlet, publicly denied, POTUS not briefed) — honest, kept.
+    ADDED attribution_level: named-actor — NYT names "United States Cyber
+    Command" as the operator but no specific CMF team/sub-unit, consistent
+    with the us/unscoped/cmf-actor (generic CYBERCOM fallback) placement.
+    auspex_assessment=concur-with-caveat kept (single-source + denied).
+
+    [c] DATES — source published_on 2019-06-15 = actual NYT publication
+    date (correct, not the campaign month). Event disclosure_date
+    2019-06-15 correct. start_date 2018-01-01 is a documented estimate for
+    the offensive-implant phase ("authorities granted last year" = 2018),
+    distinct from the pre-2012 reconnaissance the source also mentions;
+    the in-file comment flags it as not-precisely-disclosed. end_date null
+    correct (ongoing/unbounded). No conflation. No change.
+
+    [d] DOCTRINE_LINKS — us/defend-forward kept at confidence: plausible
+    (NOT attested): mirrors carry a deterrent/"warning to Putin" framing,
+    but that is the journalists' characterization of a single-sourced,
+    publicly-DENIED operation, not an authoritative source stating the
+    strategic goal, and a non-doctrinal routine-collection reading
+    survives — so attested is not earned. attesting_source_id stays null
+    (correct for plausible). ADDED inference_basis.alternatives (two
+    competing readings) to make the plausible grade auditable; contested:
+    true retained. Persistent-engagement considered as an adjacent US
+    doctrine but defend-forward's deter-at-source framing is the closer
+    fit; not added.
+
+    [e] ATTRIBUTION_LEVEL — set (was missing): named-actor. See [b].
+
+    [f] ACTOR_ID — us/unscoped/cmf-actor resolves to atlas/actors/us/cmf.yaml
+    (valid FK). FLAG (do not edit here): that actor is itself flagged as a
+    RETIRE-CANDIDATE in its own record (2026-06-25 audit) — a self-described
+    generic "structural placeholder" / CYBERCOM fallback with no source
+    naming the CMF as operator of a discrete op. Open question already
+    logged there for Kara: retain the us/unscoped fallback vs. null these
+    CYBERCOM attributions with the acting body in attributing_org. This
+    event is one of the 5 attributions depending on that decision.
+
+    RESIDUAL UNCERTAINTY: the NYT primary is not hash-captured (bot-wall);
+    verification rests on independent contemporaneous mirrors of the same
+    NYT reporting, not a second independent investigation — the underlying
+    operation remains single-origin and officially denied, exactly as the
+    event's own summary states. Level therefore partial, not full.

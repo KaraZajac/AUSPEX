@@ -1,44 +1,72 @@
 id: 2019-09/eset-stealth-falcon-bits-disclosure
 name: ESET disclosure — Stealth Falcon Win32 backdoor using Windows BITS for C2
-start_date: 2018-01-01  # earliest sample telemetry per ESET
+start_date: 2015-01-01  # Win32/StealthFalcon backdoor "appears to have been created in 2015" per ESET (group active since 2012)
 disclosure_date: 2019-09-09
 end_date: 2019-09-09
 incident_type:
   - intrusion
   - surveillance
-initial_vector: phishing  # assumed; consistent with cluster tradecraft
+initial_vector: unknown  # ESET: distribution/execution "beyond the scope of this investigation"
 outcome_summary: |
-  ESET Research (Matthieu Faou) publishes reverse-engineering of
-  a Stealth Falcon Win32 backdoor that abuses the Windows BITS
-  (Background Intelligent Transfer Service) for command-and-
-  control communications. The technique allows persistence and
-  C2 to blend with legitimate Windows update / download traffic,
-  bypassing many host-based monitoring approaches.
+  ESET Research publishes reverse-engineering of a Stealth Falcon
+  Win32 backdoor (Win32/StealthFalcon) that abuses the Windows
+  BITS (Background Intelligent Transfer Service) for command-and-
+  control. Exposed via a COM interface and commonly permitted by
+  host-based firewalls, BITS lets the backdoor's C&C blend with
+  legitimate background traffic and is harder for security
+  products to detect. ESET saw a small number of targets in the
+  UAE, Saudi Arabia, Thailand and the Netherlands (the last a
+  Middle Eastern diplomatic mission); it states the backdoor's
+  distribution and execution were beyond the scope of the report.
 false_flag_risk: none
 summary: |
-  Extends documented Stealth Falcon activity timeline through
-  2019 and corroborates Citizen Lab + Kaspersky FruityArmor
-  attribution. Tradecraft refinement (BITS-based C2) is
-  consistent with cluster continuity rather than a new operator.
+  ESET reverse-engineered a previously-undocumented Win32 backdoor
+  that "appears to have been created in 2015" and attributed it to
+  the Stealth Falcon group on the strength of code and
+  infrastructure similarities with the PowerShell backdoor Citizen
+  Lab documented in 2016. ESET restates Stealth Falcon's known
+  target profile — journalists, activists and dissidents in the
+  Middle East — and notes Amnesty International's assessment that
+  Stealth Falcon and the UAE-linked "Project Raven" are the same
+  group. ESET names no UAE service or unit; the tradecraft
+  (BITS-based C2) is consistent with cluster continuity.
 attributions:
   - actor_id: ae/unscoped/stealth-falcon
     attributing_org: ESET Research
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-09-09
     attribution_source_id: eset/2019-09-09_stealth-falcon-bits
     notes: |
-      ESET technical clustering to the Citizen Lab Stealth Falcon
-      cluster on code-overlap and victimology.
+      ESET clusters the Win32/StealthFalcon backdoor to the Stealth
+      Falcon group on code and infrastructure similarities with the
+      PowerShell backdoor attributed to the group by Citizen Lab
+      ("strong evidence that Win32/StealthFalcon was created by this
+      group"). Named-actor: ESET names the Stealth Falcon group but
+      no UAE service or unit — hence ae/unscoped.
 doctrine_links:
   - doctrine_id: ae/regime-protection-surveillance
     pillar_id: ae/regime-protection-surveillance/journalists-in-exile
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cluster-continuity attribution to Stealth Falcon implies
-      continuing UAE-state regime-protection-surveillance tasking.
+      ESET attributes this backdoor to the Stealth Falcon group and
+      restates the group's documented mission — targeting
+      journalists, activists and dissidents in the Middle East. That
+      target profile is the substance of the UAE
+      regime-protection-surveillance doctrine (journalists-in-exile
+      pillar). ESET does not itself state a UAE-state strategic
+      purpose, so the link is strongly_inferred, not attested: the
+      actor's entire documented mission plus the named target classes
+      triangulate to one dominant strategic reading.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET restates the actor's mission: 'targeted spyware attacks against journalists, activists and dissidents in the Middle East'."
+        - "Backdoor attributed to Stealth Falcon, whose Citizen Lab-documented purpose is UAE regime-protection surveillance of dissidents/journalists."
+        - "Amnesty International equates Stealth Falcon with UAE-linked Project Raven (same targets/attacks), reinforcing the state-nexus surveillance reading."
+      ruled_out: "Generic foreign-intelligence espionage — the exclusively dissident/journalist/activist target profile and the actor's single documented mission make broad state-on-state collection the weaker reading."
     contested: false
     analyst: claude
 targets:
@@ -48,3 +76,49 @@ targets:
     role: primary
 sources:
   - eset/2019-09-09_stealth-falcon-bits
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against ESET/WeLiveSecurity "No summer vacations for Stealth Falcon —
+    Win32/StealthFalcon backdoor using Windows BITS" (Matthieu Faou, 2019-09-09). RAW snapshot
+    re-verified: eset__2019-09-09_stealth-falcon-bits.html, sha256 7dc2c994…6bfc33c4, 84,149 bytes
+    (hash unchanged from the 2026-06-24 actor-audit capture). Single cited source; no phantom.
+    [a] FACTS — BITS/Background Intelligent Transfer Service abused for C&C: CARRIED verbatim
+    ("uses the standard Windows component Background Intelligent Transfer Service (BITS)"; "Malware
+    uses BITS Jobs for C&C communication"; the COM-interface / host-firewall-evasion framing is the
+    source's own). CORRECTED two fabricated facts: (1) start_date was 2018-01-01 "earliest sample
+    telemetry per ESET" — the report carries NO 2018 telemetry; it says the backdoor "appears to
+    have been created in 2015" — start_date -> 2015-01-01. (2) initial_vector was "phishing
+    (assumed)" — ESET explicitly states "How the backdoor was distributed and executed on the target
+    systems is beyond the scope of this investigation" -> set to unknown. Rewrote summary: removed
+    "Kaspersky FruityArmor" corroboration claim ("kaspersky"/"fruityarmor" = 0 occurrences in raw);
+    the source corroborates Citizen Lab (2016) and connects to Project Raven (Reuters/Amnesty) only.
+    Dropped author name "Matthieu Faou" from outcome_summary prose (byline not present in the
+    captured snapshot; retained in the source record's publisher field). Added the source's real
+    victim set (UAE, Saudi Arabia, Thailand, Netherlands diplomatic mission) to outcome_summary.
+    [b] ATTRIBUTION — ESET: "strong evidence that Win32/StealthFalcon was created by this group" /
+    "drive us to the conclusion that the Win32/StealthFalcon backdoor is also the work of this threat
+    group" = high confidence to the named Stealth Falcon group; KEPT attributing_org_confidence high,
+    auspex_assessment concur. Added attribution_level: named-actor (ESET names the group, no UAE
+    service/unit — consistent with the actor being ae/unscoped). Rewrote the attribution note to the
+    source's actual clustering basis (code + infrastructure similarity, not "victimology").
+    [c] DATES — published_on 2019-09-09 matches raw ("09 Sep 2019"); disclosure_date 2019-09-09 ✓;
+    start_date corrected to 2015 (above); end_date 2019-09-09 retained (disclosure-event convention).
+    [d] DOCTRINE — link is strongly_inferred (attesting_source_id null, valid: no attested gate).
+    ESET states the target profile (journalists/activists/dissidents in the ME) but NOT a UAE-state
+    strategic goal, so attested is correctly withheld. Added inference_basis {signals[], ruled_out}
+    documenting the one-dominant-reading triangulation. Pillar journalists-in-exile is the finer
+    inference (ESET names journalists among the targets; specific exile status not stated) — doctrine
+    fit is solid at the ae/regime-protection-surveillance level. perspective absent = attacker-
+    rationale, correct (UAE doctrine on a UAE actor; no state mismatch).
+    [e] attribution_level added: named-actor.
+    [f] ACTOR_ID ae/unscoped/stealth-falcon RESOLVES (atlas/actors/ae/stealth-falcon.yaml, id
+    ae/unscoped/stealth-falcon; demoted from ae/darkmatter on 2026-06-24 — well-formed, no flag).
+    Pillar FK ae/regime-protection-surveillance/journalists-in-exile resolves; target sector FKs
+    media/journalism + civil-society/dissident resolve.
+    RESIDUAL: this backdoor's small victim set (incl. a Netherlands-based ME diplomatic mission) is
+    broader than pure dissident/journalist targeting; targets[] models the group-level profile ESET
+    restates, not the per-victim breakdown, which is defensible but noted.

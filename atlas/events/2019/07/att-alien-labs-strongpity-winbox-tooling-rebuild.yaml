@@ -6,53 +6,178 @@ end_date: 2019-07-01
 incident_type:
   - intrusion
   - supply-chain
+  - espionage
 initial_vector: supply-chain
 outcome_summary: |
-  AT&T Alien Labs (Tom Hegel) published a StrongPity / PROMETHIUM
-  analysis documenting an apparent toolset rebuild following
-  Q4 2018 public reporting (Citizen Lab "Bad Traffic" in March
-  2018 was the proximate cause). New trojanized-installer samples
-  observed in the wild included WinBox (the MikroTik router-
-  administration GUI — a tool with a network-admin user base
-  attractive to a state-aligned operator), WinRAR (continuity
-  with the 2016 victim-set), and Internet Download Manager.
-  Operational-hours analysis of sample compilation timestamps
-  showed activity confined to a 7 AM – 3 PM UTC workday,
-  consistent with a single-timezone (UTC+3 / Türkiye) operator
-  workforce.
-false_flag_risk: suspected
+  AT&T Alien Labs (Tom Hegel) published "Newly Identified
+  StrongPity Operations," documenting a StrongPity / PROMETHIUM
+  toolset rebuild. Per the report, the new samples "appear to
+  have been created and deployed to targets following a toolset
+  rebuild in response to … public reporting during the fourth
+  quarter of 2018" (the March 2018 Citizen Lab "Bad Traffic"
+  disclosure being the proximate prior report). The refreshed
+  malicious installers observed in the wild included WinBox (the
+  MikroTik router-administration GUI — chosen because "the
+  targets are technically-focused types," i.e. network/IT
+  administrators), WinRAR (continuity with the group's hallmark
+  delivery vehicle), and Internet Download Manager. The delivered
+  StrongPity spyware hunts for documents and retains remote
+  access to the compromised machine, communicating with its C2
+  over SSL. The campaign was assessed as ongoing and successful
+  against at least some targets, with victims located in Turkey.
+  AT&T also observed that the samples' compilation timestamps
+  fell within a roughly 7 AM – 3 PM UTC window — an eight-hour
+  workday consistent with a single-timezone operator (this
+  operational-hours detail is carried only by the walled AT&T
+  primary; AT&T did NOT tie the window to any specific country).
+false_flag_risk: none
 summary: |
-  Notable for two reasons: (1) the WinBox targeting expands the
-  cluster's victim selection toward network-administration
-  personnel — an attractive vector for downstream lateral
-  movement; (2) the operational-hours analysis is one of the
-  stronger circumstantial Turkey-aligned attribution data
-  points in the corpus, since the UTC+3 workday is consistent
-  with a Türkiye-based or Türkiye-time-zone operator. Suspected
-  false-flag-risk preserved from the longer-running Stealth
-  Falcon overlap discussion.
+  A "do the minimum" retooling event: after being publicly
+  called out in 2018, the StrongPity/PROMETHIUM operators made
+  only incremental changes to their malware and continued their
+  hallmark method — trojanized installers of legitimate software
+  (now including WinBox and Internet Download Manager alongside
+  WinRAR) delivered to targets in Turkey. Two audit-relevant
+  points: (1) the WinBox installer signals selection of network/
+  IT-administration personnel, an attractive foothold for
+  downstream access; (2) AT&T's attribution is deliberately
+  UNRESOLVED at the state level — Hegel assessed the operators
+  "likely have access to the capability of mass traffic
+  manipulation and potential government involvement" and are
+  "potentially selling the malware's capability to multiple
+  entities for their own white-labeled use" / "could be selling
+  its tools to multiple government organizations … in keeping
+  with … FinFisher and Pegasus." AT&T attributes the operation to
+  the StrongPity cluster with high confidence but names no nation
+  or service; the Turkish-state reading (encoded by the actor
+  record) is AUSPEX's via the malware family and broader vendor
+  consensus, not AT&T's. The compilation-timestamp workday is a
+  weak single-timezone signal, not a Türkiye attribution.
 attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: AT&T Alien Labs (Tom Hegel)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2019-07-17
     attribution_source_id: att-alien-labs/2019-07-17_strongpity-newly-identified
+    notes: |
+      AT&T attributes the OPERATION to the StrongPity / PROMETHIUM
+      activity cluster with high confidence (via compilation times,
+      infrastructure, and public sample distribution) — hence
+      attribution_level: named-actor. It makes NO nation or service
+      attribution: Hegel frames the state nexus as unresolved,
+      assessing the operators "likely have access to … potential
+      government involvement" and "potentially selling the malware's
+      capability to multiple entities for their own white-labeled
+      use" (Threatpost) / "could be selling its tools to multiple
+      government organizations" (CyberScoop). attributing_org_confidence
+      is set moderate — not high — deliberately: AT&T's high confidence
+      attaches only to the malware-CLUSTER identity, whereas this row's
+      actor (tr/unscoped/promethium) encodes a Turkish-state nexus that
+      AT&T does not assert (and its multi-government-vendor hedge
+      actively softens). The Turkey-nexus placement is AUSPEX's via the
+      malware family + vendor consensus recorded on the actor, not
+      AT&T's — hence concur-with-caveat. No over-attestation of a
+      Türkiye service.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Continuation of the PROMETHIUM operational pattern;
-      specific pillar mapping not isolatable from the AT&T
-      report. The Turkey-time-zone operational-hours finding
-      strengthens the Turkish-state-aligned reading
-      irrespective of pillar fit.
+      A continuation of the StrongPity/PROMETHIUM surveillance-
+      implant pattern (document-hunting spyware, trojanized-installer
+      delivery) against targets in Turkey fits the general shape of
+      the counter-Gülen/Kurdish surveillance doctrine that the corpus
+      attaches to this cluster. But the link is only plausible, not
+      higher: this specific AT&T report identifies no Kurdish- or
+      Gülen-specific victimology (it says only "users located in
+      Turkey" and "technically-focused types"), states no strategic
+      purpose, and — decisively — AT&T does not even firmly place the
+      operator with the Turkish state, hedging instead toward a
+      possible spyware vendor selling to multiple governments. No
+      pillar is isolatable from the report, so pillar_id stays null.
+      More than one strategic reading survives.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Turkish-state counter-Gülen/Kurdish surveillance: consistent with the cluster's documented history (2018 Türk Telekom injection reaching Kurdish-adjacent targets) and the corpus's default doctrine alignment for PROMETHIUM, but this report carries no Kurdish/Gülen-specific indicators of its own."
+        - "Commercial spyware proliferation / white-labeled sale to multiple governments: AT&T's own hedge — the operators may be 'selling the malware's capability to multiple entities for their own white-labeled use' — reads the activity as a PSOA/vendor model rather than a single Turkish-state counter-dissident program, which would decouple it from this doctrine."
 targets:
-  - target_id: orgs/strongpity-winbox-network-admins
+  - target_id: sectors/ict
+    country: tr
     role: primary
 sources:
   - att-alien-labs/2019-07-17_strongpity-newly-identified
+  - bleepingcomputer/2019-07-17_strongpity-winrar-winbox-idm
+  - threatpost/2019-07-17_strongpity-apt-retooled-spyware
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    RE-SOURCE audit (badrabbit model): real, well-documented event; the sole cited source
+    (att-alien-labs/2019-07-17_strongpity-newly-identified) is a HYBRID whose url actually
+    points at CyberScoop secondary coverage, and the AT&T Alien Labs primary
+    (cybersecurity.att.com/blogs/labs-research/newly-identified-strongpity-operations) is
+    403 bot-walled. Added two reachable, snapshotted secondaries so every load-bearing claim
+    is source-carried, and re-audited against them. Snapshots:
+    • att-alien-labs (CyberScoop page) sha256 54c19791…3366ce3a, 95,456 bytes.
+    • bleepingcomputer/2019-07-17_strongpity-winrar-winbox-idm sha256 f47e9ad9…834c0c69f, 89,018 bytes.
+    • threatpost/2019-07-17_strongpity-apt-retooled-spyware sha256 64e45515…166d9a4d, 68,559 bytes.
+    [a] FACTS — corrected/re-grounded. WinBox + WinRAR + Internet Download Manager (IDM):
+    all three carried verbatim (BleepingComputer "Winbox, WinRAR, and Internet Download
+    Manager (IDM)"; Threatpost "newer versions of WinRAR and a tool called Internet Download
+    Manager (IDM)"). Toolset rebuild: BleepingComputer verbatim — "created and deployed to
+    targets following a toolset rebuild in response to the above public reporting during the
+    fourth quarter of 2018." WinBox→network-admin selection: Threatpost "the targets are
+    technically-focused types … given these choices." Spyware capability / document hunting /
+    remote access / SSL C2: Threatpost + CyberScoop. Operational-hours 7AM-3PM UTC workday:
+    genuine but carried ONLY by the walled AT&T primary (surfaced verbatim via web index:
+    "all samples fit into a standard eight hour workday between 7AM UTC and 3PM UTC"); NO
+    reachable mirror reproduces it. Kept as AT&T's observation but STRIPPED the AUSPEX
+    embellishment that had recast it as "one of the stronger circumstantial Turkey-aligned
+    attribution data points in the corpus" / "consistent with (UTC+3 / Türkiye) operator" —
+    AT&T draws no country from the window. STRIPPED the unsupported "Stealth Falcon overlap"
+    false-flag rationale: no cited/reachable source in scope mentions Stealth Falcon, and
+    AT&T's actual attribution posture is vendor-ambiguity (multi-government white-labeling),
+    not deception — so false_flag_risk set none (was suspected). Added incident_type
+    espionage (document-hunting spyware).
+    [b] ATTRIBUTION — set attribution_level: named-actor (was missing). AT&T attributes the
+    operation to the StrongPity cluster with HIGH confidence (BleepingComputer: "attributed
+    with high confidence to StrongPity"), but makes NO nation/service claim and hedges toward
+    a spyware vendor "selling the malware's capability to multiple entities for their own
+    white-labeled use" (Threatpost) / "could be selling its tools to multiple government
+    organizations … FinFisher and Pegasus" (CyberScoop). Kept attributing_org_confidence
+    moderate (NOT high): the high confidence is only to the malware cluster, while this row's
+    actor tr/unscoped/promethium encodes a Turkish-state nexus AT&T does not assert. Added an
+    attribution notes block; auspex_assessment concur-with-caveat retained. No over-attestation.
+    [c] DATES — published_on 2019-07-17 = disclosure_date (source record verified). start_date
+    2018-07-01 anchors the "second half of 2018" activity window; end_date 2019-07-01 ~ ongoing
+    to the July 2019 report. No start/disclosure conflation.
+    [d] DOCTRINE_LINKS — kept tr/counter-gulen-kurdish-surveillance at plausible (honest),
+    pillar_id null (this report isolates no pillar and carries no Kurdish/Gülen victimology).
+    Rewrote the reasoning (removed the false "Turkey-time-zone finding strengthens the
+    Turkish-state reading" claim) and ADDED inference_basis.alternatives (Turkish-state
+    counter-dissident vs commercial spyware-proliferation / white-labeled multi-government
+    sale) — the second is AT&T's own hedge. Not attested; attesting_source_id null.
+    [e] ATTRIBUTION_LEVEL — set named-actor.
+    [f] ACTOR_ID — tr/unscoped/promethium resolves (atlas/actors/tr/promethium.yaml, id
+    tr/unscoped/promethium; same actor as the audited citizenlab-bad-traffic-strongpity and
+    the 2026-06-25 demotion from tr/mit). No actor edit.
+    TARGET DEFECT FIXED — target_id orgs/strongpity-winbox-network-admins was a DANGLING FK
+    (no registry file; referenced only by this event). Re-pointed to sectors/ict (country tr)
+    — the WinBox/IDM tooling and Threatpost's "technically-focused types" support IT/network-
+    administration victims; no named org is documented.
+    LEVEL = partial: the operational-hours 7AM-3PM UTC detail is load-bearing to the event's
+    original framing and its only carrier (the AT&T primary) is 403 bot-walled and could not be
+    snapshotted (claim retained as AT&T's, tempered, and mirror-uncorroborated). Every other
+    claim is now carried by a snapshotted, hashed secondary.
+    FLAG (source-hygiene, orchestrator): att-alien-labs/2019-07-17_strongpity-newly-identified
+    is a mislabeled hybrid (publisher/title = AT&T primary; url = CyberScoop secondary). Left
+    in place and annotated; consider splitting into a proper AT&T-primary record (url_null +
+    note, bot-walled) vs a cyberscoop-secondary record on a future pass.

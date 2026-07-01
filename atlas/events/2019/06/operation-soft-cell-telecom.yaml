@@ -2,56 +2,86 @@ id: 2019-06/operation-soft-cell-telecom
 name: Operation Soft Cell — telecom call-detail-record theft
 start_date: 2012-01-01
 disclosure_date: 2019-06-25
-end_date: 2019-06-25
+end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: n-day
 outcome_summary: |
-  Cybereason Nocturnus disclosure of a multi-year PRC-nexus
-  campaign against telecom providers in approximately 10
-  countries. Operators conducted targeted theft of
-  call-detail records (CDR) tied to specific high-value
-  individuals — a SIGINT collection profile rather than bulk
-  data theft. Persistent web-shell access, PoisonIvy,
-  modified Mimikatz, NBTScan, reGeorg, and Cobalt Strike beacons.
+  Cybereason Nocturnus (2019-06-25) disclosed a persistent,
+  multi-wave campaign against global telecommunications
+  providers by a China-affiliated, likely-state-sponsored
+  threat actor. Operators mainly sought call-detail-record
+  (CDR) data — call logs, cell-tower locations — belonging to
+  specific high-value individuals from various countries, a
+  targeted cyber-espionage / SIGINT profile rather than
+  financially-motivated theft (Cybereason explicitly ruled out
+  a payment-data motive). Tradecraft: modified China Chopper
+  web shell on internet-facing IIS servers, modified Mimikatz
+  credential dumping, PoisonIvy (PIVY) side-loaded into a
+  legitimate Samsung tool, modified nbtscan reconnaissance, and
+  HTran tunneling. Cybereason dated the activity to "at least
+  2012" in the body (its conclusion elsewhere says "at least
+  2017").
 false_flag_risk: none
 summary: |
-  Cybereason attributes Soft Cell with high confidence to APT10
-  / Stone Panda based on tooling overlap; subsequent vendor
-  reporting (Crowdstrike, Mandiant) argues the cluster also
-  overlaps with APT41 / GALLIUM. Regardless of cluster-name
-  resolution, the operation is the canonical pre-2020 PRC
-  telecom-SIGINT-via-CDR pattern that later resurfaces in the
-  2024 Salt Typhoon campaign. Targets included telecom carriers
-  serving regions of MSS political-collection interest (HK
-  diaspora communications, dissident communications); no DOJ
-  indictment followed. The campaign demonstrates persistent
-  MSS interest in telecom-derived SIGINT predating the Volt /
-  Salt Typhoon disclosures by half a decade.
+  Cybereason concluded "with a high level of certainty that the
+  threat actor is affiliated with China and is likely state
+  sponsored" — a firm nation-level attribution. It did NOT
+  firmly attribute the operation to APT10: it stated the tools
+  and techniques are "consistent with several Chinese threat
+  actors, such as APT10, a threat actor believed to operate on
+  behalf of the Chinese Ministry of State Security (MSS)" — a
+  hedged, tooling-overlap association — and cautioned that
+  "attribution is a fickle and delicate art." AUSPEX places the
+  operation under APT10 / MSS as the leading candidate cluster
+  while flagging the vendor's own hedge (auspex_assessment:
+  concur-with-caveat). Editorially, Soft Cell is a canonical
+  pre-2020 PRC telecom-CDR-SIGINT pattern later echoed by the
+  2024 Salt Typhoon telecom intrusions.
 attributions:
   - actor_id: cn/mss/apt10
     attributing_org: Cybereason
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2019-06-25
     attribution_source_id: cybereason/2019-06-25_operation-soft-cell
     notes: |
-      Cybereason's primary attribution is APT10; later
-      reporting attributes overlapping infrastructure to
-      APT41 / GALLIUM. Caveat covers ongoing cluster
-      ambiguity rather than country-level uncertainty.
+      Cybereason's HIGH-certainty attribution is nation-level:
+      "affiliated with China and is likely state sponsored."
+      The APT10 link is HEDGED — tools/techniques "consistent
+      with several Chinese threat actors, such as APT10" — so the
+      named-actor confidence is downgraded to moderate (not the
+      nation-level high). Cybereason names the MSS only as APT10's
+      believed sponsor ("believed to operate on behalf of the
+      Chinese Ministry of State Security (MSS)"), not as a
+      direct service attribution of this operation. The APT41 /
+      GALLIUM overlap sometimes cited elsewhere is NOT in this
+      source and is not carried here.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      CDR theft targeting named individuals is the SIGINT
-      half of HUMINT-enabling collection — the same family
-      as OPM / Anthem / Marriott but on the
-      communications-metadata side.
+      Targeted CDR theft (call logs, cell-tower locations) tied
+      to specific high-value individuals is the SIGINT / comms-
+      metadata side of the same HUMINT-enabling collection family
+      as OPM / Anthem / Marriott. It is TARGETED rather than bulk,
+      so it sits at the selective end of the pillar; the link is
+      strongly_inferred (not attested) because Cybereason names
+      the proximate purpose — targeted state espionage on named
+      individuals, financial motive explicitly excluded — but not
+      the pillar's HUMINT-enabling strategic goal.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Cybereason: operators 'mainly sought to obtain CDR data ... belonging to specific individuals from various countries', i.e. selective SIGINT, not bulk exfil."
+        - "'This type of targeted cyber espionage is usually the work of nation state threat actors' — state-espionage framing."
+        - "China-nexus MSS-adjacent actor (APT10 'believed to operate on behalf of the ... MSS'), whose mission is intelligence collection."
+      ruled_out: "Financial motive — Cybereason's 'Understanding the Motive' section explicitly weighs and rejects payment-data theft as the driver, leaving state espionage / intelligence collection as the surviving reading."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -60,14 +90,22 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Targeted-individual selection aligns with diaspora /
-      dissident communications monitoring authorized under NIL,
-      though Cybereason did not name specific victim
-      identities.
+      Targeted-individual CDR selection is consistent with the
+      diaspora / dissident communications monitoring the NIL
+      pillar encodes, but Cybereason did not identify who the
+      targeted individuals were, so this reading is only plausible.
+      (The report's only diaspora/dissident-adjacent detail is a
+      historical aside that the same PIVY side-loading technique
+      was used in 2016 against Hong Kong pro-democracy activists —
+      not a claim about this campaign's victims.)
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Diaspora / dissident monitoring under the NIL: fits China's use of telecom SIGINT against political targets, but unsupported by named victims in this source."
+        - "Foreign-leadership / defense-attache / business-executive surveillance: 'high-value individuals from various countries' reads equally as classic foreign-intelligence targeting unrelated to the dissident pillar."
     counter_explanation: |
-      Could equally be defense-attache / business-leader
-      surveillance unrelated to dissident pillar.
+      Could equally be defense-attache / business-leader /
+      foreign-official surveillance unrelated to the dissident pillar.
     contested: false
     analyst: claude
 targets:
@@ -75,3 +113,82 @@ targets:
     role: primary
 sources:
   - cybereason/2019-06-25_operation-soft-cell
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Cybereason Nocturnus "Operation Soft Cell: A Worldwide
+    Campaign Against Telecommunications Providers" (2019-06-25). First-
+    party primary vendor research; raw snapshot captured + hashed:
+    sha256 d5be3d76…f7432e35, 137,497 bytes
+    (cybereason__2019-06-25_operation-soft-cell.html). URL live (HTTP 200).
+
+    [a] FACTS — corrected. VERBATIM-SUPPORTED: global telecom-provider
+    targeting; "The threat actor mainly sought to obtain CDR data (call
+    logs, cell tower locations, etc.) belonging to specific individuals
+    from various countries"; targeted-espionage (not financial) motive —
+    the "Understanding the Motive" section weighs and rejects payment-data
+    theft; modified China Chopper web shell on IIS ("Initial Compromise:
+    the Modified China Chopper Web Shell"); PoisonIvy/PIVY DLL side-loaded
+    into a Samsung tool; "Modified Mimikatz"; "Modified 'nbtscan'"; hTran
+    tunneling; "active since at least 2012" (body) vs "active since at
+    least 2017" (conclusion). STRIPPED as UNCITED/fabricated: "reGeorg"
+    and "Cobalt Strike" (neither string appears in the article — confirmed
+    absent); "approximately 10 countries" (article says only "various
+    countries"); "HK diaspora communications, dissident communications"
+    victimology (the article's only Hong Kong mentions are (1) a 2016
+    historical PIVY-vs-HK-activists aside and (2) domain/server
+    registration pointing to China/HK/Taiwan — neither is this campaign's
+    victim set); "no DOJ indictment followed"/"Volt" framing (uncited
+    editorial). Added incident_type: espionage (source: "targeted cyber
+    espionage"). Rewrote outcome_summary + summary to source-grounded text.
+
+    [b] ATTRIBUTION — de-over-attested (the load-bearing correction).
+    Cybereason's HIGH-certainty attribution is NATION level only: "We've
+    concluded with a high level of certainty that the threat actor is
+    affiliated with China and is likely state sponsored." The APT10 link
+    is explicitly HEDGED: "tools and techniques ... consistent with several
+    Chinese threat actors, such as APT10, a threat actor believed to
+    operate on behalf of the Chinese Ministry of State Security (MSS)",
+    plus the standing caveat "Attribution is a fickle and delicate art."
+    Therefore: attributing_org_confidence high -> moderate (the named-actor
+    claim, not the nation claim, is what this entry encodes); added
+    attribution_level: named-actor. Removed the uncited "later reporting
+    attributes overlapping infrastructure to APT41 / GALLIUM" claim from
+    the summary + attribution notes (not in this or any cited source).
+    auspex_assessment kept concur-with-caveat.
+
+    [c] DATES — source published_on 2019-06-25 ✓ (= disclosure_date).
+    start_date 2012-01-01 retained (source: "at least 2012"; noted the
+    internal 2017 discrepancy). end_date 2019-06-25 -> null: the source
+    describes an "ongoing global attack", so the op was unbounded at
+    disclosure; the prior end_date conflated disclosure with op-end.
+
+    [d] DOCTRINE_LINKS — neither link is attested, so no attesting_source
+    gate applies. cn/mcf/bulk-pii-humint-enabling kept strongly_inferred:
+    Cybereason names the proximate purpose (targeted state espionage,
+    financial motive explicitly excluded) but not the HUMINT-enabling
+    strategic goal; added inference_basis {signals[], ruled_out=financial}.
+    Residual caveat: this campaign is TARGETED, not bulk, so it sits at
+    the selective edge of a bulk-PII pillar (noted in reasoning; possible
+    future downgrade if a cleaner targeted-SIGINT pillar exists).
+    cn/national-intelligence-law-2017/diaspora-and-dissident-collection
+    kept plausible: the source gives no victim identities and its sole
+    HK/dissident detail is a historical aside; added inference_basis
+    .alternatives + tightened counter_explanation.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+
+    [f] ACTOR_ID — cn/mss/apt10 RESOLVES (file atlas/actors/cn/apt10.yaml
+    carries id: cn/mss/apt10; MSS placement independently audited
+    2026-06-24 against DOJ/MITRE G0045). No actor-file edit made. NOTE for
+    orchestrator: this source does NOT by itself support the MSS service
+    placement of THIS operation — it only says APT10 is "believed to
+    operate on behalf of the MSS"; the MSS attribution rests on the actor
+    record's other sources, not on Soft Cell.
+
+    Residual uncertainties: initial_vector kept n-day (web shell on
+    internet-facing IIS implies public-facing-app exploitation) but the
+    source names no specific CVE — could equally be unknown.

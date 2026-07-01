@@ -1,30 +1,40 @@
 id: 2019-07/talos-sea-turtle-keeps-going
 name: Cisco Talos publishes Sea Turtle follow-on — operator unfazed by attribution
-start_date: 2019-04-17
+start_date: 2019-04-19
 disclosure_date: 2019-07-09
-end_date: 2019-07-09
+end_date: null
 incident_type:
   - intrusion
   - data-theft
 initial_vector: valid-creds
 outcome_summary: |
-  Cisco Talos published a follow-on Sea Turtle analysis three
-  months after the April 2019 attribution, documenting continued
-  operations and tradecraft refinement. The cluster modified
-  infrastructure but did not change operational pattern. Notable
-  for documenting an operational "doubling-down" response to
-  Western attribution — rare among non-Russian / non-DPRK clusters.
+  Cisco Talos published a follow-on Sea Turtle analysis on 9 July
+  2019, roughly three months after its April 2019 report. Talos
+  states the actors "are not slowing down," "regrouped" after the
+  earlier coverage, and are "redoubling their efforts with new
+  infrastructure," calling the group "unusually brazen." The report
+  documents new victims: the Greek country-code TLD (.gr) registry
+  operator ICS-Forth (compromised 19 April 2019, access held through
+  at least 24 April), three unnamed Greek government entities on the
+  .gr ccTLD, one organization in Syria, and a government organization
+  in the Middle East / North Africa region. Talos also describes a
+  new DNS-hijacking technique it assesses with moderate confidence is
+  linked to the Sea Turtle actors. Talos names no nation-state.
 false_flag_risk: none
 summary: |
-  Notable because most APT clusters reduce operational tempo or
-  rotate infrastructure substantially after public attribution.
-  Sea Turtle's continuation through mid-2019 signaled that
-  Turkish state direction was sufficiently confident in the
-  asset that public exposure did not materially alter tasking.
+  Notable because most exposed clusters reduce operational tempo or
+  rotate infrastructure after public attribution; the Sea Turtle
+  operators instead continued and expanded operations through
+  mid-2019. This Talos source names no nation-state — it describes
+  only "the actors behind the Sea Turtle campaign." The Turkey nexus
+  now attached to the Sea Turtle / Teal Kurma cluster rests on LATER
+  reporting (Reuters, 2020; Hunt & Hackett, 2024), not on this
+  report; the actor is therefore held at tr/unscoped/sea-turtle.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Cisco Talos
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2019-07-09
     attribution_source_id: talos/2019-07-09_sea-turtle-state-sponsored-keeps-going
@@ -32,14 +42,85 @@ doctrine_links:
   - doctrine_id: tr/mavi-vatan
     pillar_id: tr/mavi-vatan/eastern-med-energy
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Continuation of the same victim-set and tradecraft as
-      the April 2019 disclosure.
+      DNS hijacking of Greece's .gr ccTLD registry (ICS-Forth) and
+      Greek government entities during the active Eastern-Mediterranean
+      energy dispute is thematically consistent with the eastern-med-
+      energy pillar. Downgraded from strongly_inferred: this Talos
+      source names no nation-state and states no strategic purpose,
+      the actor is held as an unscoped cluster (tr/unscoped/sea-turtle),
+      and the Turkey nexus rests on later reporting rather than this
+      report — so more than one strategic reading survives.
     contested: false
     analyst: claude
+    inference_basis:
+      alternatives:
+        - "eastern-Med energy/diplomatic collection against a regional rival (Greece), consistent with the later Turkey attribution"
+        - "opportunistic ccTLD-registry compromise for broad DNS-hijacking capability, target nationality incidental — Talos frames the .gr registry as a high-value pivot, not a nation-specific tasking"
 targets:
-  - target_id: orgs/cypriot-ministries
+  - target_id: orgs/ics-forth-gr-cctld
+    country: gr
     role: primary
 sources:
   - talos/2019-07-09_sea-turtle-state-sponsored-keeps-going
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    FLAGGED over-attribution event, audited against the single cited Talos raw
+    (talos__2019-07-09_sea-turtle-state-sponsored-keeps-going.html, sha256
+    b4711f9b…2ad28c1d, 121,569 bytes — hash re-verified on disk, matches source record).
+
+    [a] FACTS — TWO fabrications confirmed and STRIPPED:
+      (1) Prior summary asserted "Turkish state direction was sufficiently confident in the
+          asset…". FALSE: over the whole raw, turk=0, turkey=0, turkish=0, "state-sponsored"=0,
+          "national intelligence"=0. Talos names only "the actors behind the 'Sea Turtle'
+          campaign" / "this group" ("unusually brazen"). Rewrote summary to name no nation and
+          to note the Turkey nexus rests on LATER reporting (Reuters 2020, Hunt & Hackett 2024),
+          not this source.
+      (2) Target set. Event previously listed orgs/cypriot-ministries as primary. FALSE for this
+          report: cyprus=0, cypri=0 in the raw (and iraq=0, kurd=0 — the "Iraqi Kurdistan" the
+          two sibling audits flagged is likewise absent). The report's actual NEW victims are:
+          ICS-Forth = "The Institute of Computer Science of the Foundation for Research and
+          Technology - Hellas (ICS-Forth), the ccTLD for Greece", compromised "on April 19, 2019",
+          access held "through at least April 24"; "three government entities that all used .gr,
+          the Greek ccTLD"; "an organization in Syria"; and "a government organizations in the
+          Middle East and North African region." Repointed target to orgs/ics-forth-gr-cctld
+          (country: gr) — the concrete named victim, matching the sibling 2019-04/sea-turtle-
+          ics-forth-greek-cctld event which cites this same Talos report.
+      Rewrote outcome_summary to the source-carried "not slowing down / regrouped / redoubling
+      their efforts with new infrastructure / unusually brazen" language and the real victim list;
+      removed the unsourced "rare among non-Russian / non-DPRK clusters" editorial.
+    [b] ATTRIBUTION — Talos attributes the continued activity to its own Sea Turtle cluster with
+      high confidence (the new technique is linked "with moderate confidence"). No nation. Kept
+      actor tr/unscoped/sea-turtle, Cisco Talos, confidence high; added attribution_level:
+      activity-cluster (was missing).
+    [c] DATES — source published_on 2019-07-09 confirmed (matches raw + record). Fixed event
+      conflations: start_date 2019-04-17 (that was the April report's pub date) → 2019-04-19 (the
+      documented ICS-Forth compromise date in this raw); end_date 2019-07-09 (had duplicated the
+      disclosure date) → null (Talos states operations were ongoing — "not slowing down").
+    [d]/[e] DOCTRINE — tr/mavi-vatan/eastern-med-energy downgraded strongly_inferred → plausible.
+      This source names no nation and states no strategic purpose, and its prior reasoning
+      ("same victim-set as the April 2019 disclosure") was wrong — the April report's victim set
+      differed. Not attested (no attesting_source_id; correct). Added inference_basis.alternatives
+      (two surviving strategic readings). attribution_level set to activity-cluster per [b].
+    [f] ACTOR — tr/unscoped/sea-turtle resolves to atlas/actors/tr/unscoped/sea-turtle.yaml
+      (referenced by all sibling Sea Turtle events); no change requested, consistent with the
+      "Turkey nexus is later-reporting" framing.
+
+    FLAGS for orchestrator:
+      - TARGET FK: orgs/ics-forth-gr-cctld.yaml does NOT yet exist on disk (only
+        atlas/targets/orgs/cypriot-ministries.yaml exists), yet the sibling
+        2019-04/sea-turtle-ics-forth-greek-cctld event already references orgs/ics-forth-gr-cctld,
+        orgs/greek-prime-ministers-office, orgs/greek-foreign-ministry, and
+        orgs/greek-national-intelligence-service-eyp — none present. These target records need
+        creating (target-file creation is out of audit scope). Removing cypriot-ministries here
+        does NOT orphan it: 2019-04/talos-sea-turtle-dns-hijacking still references it.
+      - MERGE/RETIRE candidate: this event and 2019-04/sea-turtle-ics-forth-greek-cctld are built
+        on the SAME single Talos 2019-07-09 report and cover the same ICS-Forth / Greek-gov new-
+        victim set. This "keeps going" event's only distinct content is the meta-observation
+        (operator did not go quiet after attribution). Kara may wish to merge/retire one; not
+        deleted here.

@@ -1,19 +1,24 @@
 id: 2019-07/apt15-okrum-diplomatic-missions
 name: APT15 / Ke3chang Okrum backdoor against diplomatic missions
-start_date: 2015-12-01
+start_date: 2015-01-01
 disclosure_date: 2019-07-18
 end_date: 2019-05-31
 incident_type:
   - intrusion
   - data-theft
-initial_vector: phishing
+initial_vector: unknown
 outcome_summary: |
-  ESET discloses APT15 / Ke3chang's "Okrum" backdoor and its
-  use against diplomatic missions in Belgium, Brazil, Chile,
-  Guatemala, Mexico, and Slovakia between December 2015 and
-  early 2019. Documents three generations of Ke3chang
-  custom-backdoor evolution (Ketrico, Ketrum, Okrum) with
-  improvements in persistence and steganographic C2.
+  ESET discloses APT15 / Ke3chang's "Okrum" backdoor, first
+  detected in December 2016 and used against diplomatic
+  missions in Slovakia, Belgium, Chile, Guatemala, and Brazil
+  throughout 2017. ESET also documents new 2015-2019 versions
+  of known Ke3chang malware families — the BS2005 backdoors
+  (operation Ke3chang), collectively tracked by ESET as
+  Ketrican, and RoyalDNS — linking them to Okrum and showing
+  the group's continued toolset development in persistence and
+  steganographic payload concealment (Okrum hides its payload
+  inside a PNG image). ESET states the initial infection
+  vector remained unknown.
 false_flag_risk: none
 summary: |
   Documents APT15's sustained collection effort against
@@ -23,28 +28,41 @@ summary: |
   BRI-priority expansion theater from 2017 onward). The
   multi-generation backdoor evolution also matters for AUSPEX
   baselining: it confirms that vendor disclosure of one
-  generation has not in practice halted MSS-aligned operator
-  development of the next, which constrains how much
-  predictive value to assign to public IoC disclosure.
+  generation has not in practice halted the China-nexus
+  (Ke3chang) operator's development of the next, which
+  constrains how much predictive value to assign to public
+  IoC disclosure.
 attributions:
   - actor_id: cn/unscoped/apt15
     attributing_org: ESET
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-07-18
     attribution_source_id: eset/2019-07-18_okrum-ke3chang
+    notes: "ESET claims 'with high confidence that Okrum is operated by the Ke3chang group' (the Okrum↔Ke3chang link); the group is 'also known as APT15' and 'believed to be operating out of China'. Named-actor (named group + China nexus); NO Chinese service (MSS/PLA) named — hence actor is cn/unscoped/apt15, not cn/mss."
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
       Latin American diplomatic-mission targeting (Brazil,
-      Chile, Guatemala, Mexico) aligns with the BRI Latin
-      America expansion theater post-2017; small-EU mission
-      coverage (Belgium, Slovakia) fits the political-
-      intelligence collection pillar by victim profile.
+      Chile, Guatemala) aligns with the BRI Latin America
+      expansion theater and with the pillar's own stated
+      APT15 Latin-America collection lane; small-EU mission
+      coverage (Belgium, Slovakia) fits political-
+      intelligence collection by victim profile. The label
+      is plausible rather than higher because ESET's report
+      is purely technical and states no strategic purpose,
+      and the mixed target set (Latin America plus small EU
+      members outside the BRI core) leaves more than one
+      strategic reading standing.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "BRI partner-country political-intelligence collection: the Latin American diplomatic victims (Chile, Guatemala, Brazil) match the pillar's stated APT15 Latin-America lane."
+        - "Generic China-nexus political espionage against diplomatic missions, not specifically BRI-motivated: Belgium and Slovakia are small EU members outside the BRI core and ESET names no strategic driver."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -53,3 +71,57 @@ targets:
     role: primary
 sources:
   - eset/2019-07-18_okrum-ke3chang
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs ESET/WeLiveSecurity "Okrum: Ke3chang group takes aim at
+    diplomatic missions" (Zuzana Hromcová, 2019-07-18), raw snapshot
+    captured + hashed (sha256 07beac24…5cf01c00, 86,996 bytes). Real
+    first-party article, not a phantom (title/body match; 76x "Okrum",
+    48x "Ke3chang", 31x "Ketrican").
+    [a] FACTS — corrected several. VICTIMS: source says "diplomatic
+    missions in Slovakia, Belgium, Chile, Guatemala and Brazil" — event
+    listed "Mexico" too; "Mexico" appears NOWHERE in the source (0 hits)
+    → REMOVED. DATES: source says "Okrum was first detected in December
+    2016 ... targeted diplomatic missions ... throughout 2017", and the
+    broader Ketrican families "from 2015 to 2019"; event's "December
+    2015" conflated Okrum's Dec-2016 detection with the 2015 family
+    window → outcome_summary fixed and start_date 2015-12-01 → 2015-01-01
+    (year-only "from 2015"). TOOLSET NAMES: event claimed "three
+    generations ... (Ketrico, Ketrum, Okrum)"; "Ketrico"/"Ketrum" appear
+    NOWHERE — actual families named are BS2005 (operation Ke3chang),
+    RoyalDNS, and "Win32/Ketrican ... collectively referred to as
+    Ketrican", plus the new Okrum → rewritten to the real names.
+    STEGANOGRAPHY: source — "The payload of Okrum is hidden in a PNG
+    file ... This steganography technique is an attempt ... to evade
+    detection" (payload concealment, not C2); "steganographic C2"
+    corrected to "steganographic payload concealment". INITIAL VECTOR:
+    event had phishing; source explicitly states "How the Okrum malware
+    was distributed to the targeted machines is a question that remains
+    to be answered" → initial_vector phishing → unknown.
+    [b] ATTRIBUTION — source: "our analysis ... lets us claim with high
+    confidence that Okrum is operated by the Ke3chang group"; group
+    "also known as APT15 ... believed to be operating out of China". No
+    Chinese service named. attributing_org_confidence high retained;
+    auspex_assessment concur retained.
+    [c] DATES — source published_on 2019-07-18 correct (byline date);
+    disclosure_date 2019-07-18 correct; start reset to 2015-01-01;
+    end_date 2019-05-31 kept as a within-range estimate (activity
+    documented "from 2015 to 2019" up to the July-2019 publication).
+    [d] DOCTRINE — cn/bri political-intelligence-collection DOWNGRADED
+    strongly_inferred → plausible: ESET's report is purely technical and
+    states no strategic purpose, and the mixed target set (Latin America
+    + small EU members outside the BRI core) leaves >1 strategic reading
+    (BRI collection vs. generic China political espionage). attested NOT
+    claimed; attesting_source_id null (correct). Added inference_basis.
+    alternatives. Removed fabricated "Mexico" from the reasoning.
+    [e] ATTRIBUTION_LEVEL — was missing; set named-actor (named group +
+    China nexus, no service).
+    [f] ACTOR_ID — cn/unscoped/apt15 RESOLVES (atlas/actors/cn/apt15.yaml,
+    id cn/unscoped/apt15; already demoted from cn/mss on 2026-06-24 —
+    correct, no over-attestation to MSS). Also de-attested "MSS-aligned
+    operator" phrasing in the summary to "China-nexus (Ke3chang)".
+    Residual: end_date is an estimate (source gives no precise op end).

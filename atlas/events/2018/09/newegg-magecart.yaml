@@ -1,38 +1,139 @@
 id: 2018-09/newegg-magecart
-name: Magecart e-skimming attack on Newegg
+name: Magecart Group 6 e-skimming attack on Newegg
 start_date: 2018-08-14
 disclosure_date: 2018-09-19
 end_date: 2018-09-18
 incident_type:
   - intrusion
   - data-theft
-initial_vector: n-day
+initial_vector: unknown
 outcome_summary: |
-  Magecart operators injected payment-card skimming JavaScript
-  into the Newegg checkout flow for over a month (August 14 to
-  September 18, 2018). The skimmer was hosted on a typosquat
-  domain (neweggstats.com) and exfiltrated card data on
-  submission. Newegg confirmed the breach September 19 in
-  customer notifications. Volexity and RiskIQ jointly attributed
-  the campaign to Magecart Group 6 (the same cluster behind the
-  British Airways skimming).
+  Magecart operators injected payment-card skimming JavaScript into
+  the Newegg checkout billing page (secure.newegg.com/GlobalShopping/
+  CheckoutStep2.aspx) for over a month. RiskIQ dated the skimmer
+  placement to around August 14, 2018; Volexity independently
+  confirmed the code live from August 16 (noting the attackers likely
+  started earlier) until it was removed on September 18, 2018. The
+  small (~15-line) skimmer siphoned card data on submission over
+  SSL/TLS to a look-alike domain (neweggstats.com, registered via
+  Namecheap on August 13 with a Comodo cert issued the same day) and
+  worked on both the website and mobile app. RiskIQ and Volexity
+  publicly disclosed the breach on September 19, 2018, noting the
+  campaign was nearly identical to the concurrent British Airways
+  skimming. RiskIQ's later "Inside Magecart" report (November 2018)
+  placed Newegg under the selective "Group 6" operator cluster
+  alongside British Airways.
 false_flag_risk: none
 summary: |
-  Companion case to British Airways: same Magecart Group 6
-  tradecraft (small Javascript skimmer, typosquat-hosted
-  exfiltration domain), short-window high-volume payment-card
-  harvest. AUSPEX classifies as criminal-baseline alongside the
-  British Airways event under `criminal/magecart` umbrella.
+  Companion case to British Airways: same Magecart Group 6 tradecraft
+  (small JavaScript skimmer, look-alike exfiltration domain), a
+  month-long high-volume payment-card harvest at a top-tier retailer.
+  AUSPEX classifies as criminal-baseline alongside the British
+  Airways event under the `criminal/magecart` umbrella — a criminal
+  e-skimming collective with no state nexus and no doctrinal
+  targeting.
 attributions:
   - actor_id: criminal/magecart
-    attributing_org: Volexity + RiskIQ
+    attributing_org: RiskIQ + Volexity
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2018-09-19
-    attribution_source_id: riskiq/2018-11-13_magecart-inside-and-beyond-report
+    attribution_source_id: volexity/2018-09-19_magecart-strikes-again-newegg
+    notes: |
+      RiskIQ and Volexity jointly attributed the Newegg breach to
+      Magecart on 2018-09-19 (Volexity: "nearly identical data theft
+      campaign" to British Airways, conducted "in collaboration with
+      RiskIQ"). RiskIQ's later RiskIQ/Flashpoint "Inside Magecart"
+      report (2018-11-13) further segmented Newegg into the selective
+      "Group 6" operator cluster ("Group 6 - Extremely selective,
+      only going for top-tier targets, such as British Airways and
+      Newegg"). Activity-cluster level: Magecart Group 6 is a criminal
+      operator cluster, not a named cohesive actor or a
+      state-attributed group.
 doctrine_links: []
 targets:
   - target_id: sectors/retail
     role: primary
+    country: us
 sources:
+  - volexity/2018-09-19_magecart-strikes-again-newegg
+  - riskiq/2018-09-19_magecart-newegg
   - riskiq/2018-11-13_magecart-inside-and-beyond-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Phantom-triage outcome: NOT a phantom, but the sole cited source
+    was incomplete — RE-SOURCED (badrabbit model) exactly as the
+    companion british-airways-magecart event was. The originally-cited
+    RiskIQ/Flashpoint "Inside Magecart" report (sha256 933520b8…
+    75184bf3, 10,565,724 B; hash re-verified) is real and carries the
+    Newegg→Group 6 attribution ("Group 6 - Extremely selective, only
+    going for top-tier targets, such as British Airways and Newegg";
+    "the identities of the two victims, British Airways and Newegg,
+    are public knowledge") plus one incident specific ("prove that the
+    Magecart skimmer was live on Newegg's website for over a month"),
+    but NOT the dates, the neweggstats.com domain, the skimmer detail,
+    or the joint disclosure — the report itself links out to the RiskIQ
+    Newegg blog for those. NB CORRECTION: the report says Newegg =
+    Group 6 (verbatim above), NOT "Group 2" as the task note
+    hypothesized.
+    ADDED two genuine primary sources: (1) volexity/2018-09-19_
+    magecart-strikes-again-newegg — Volexity's same-day companion
+    report, real article snapshotted + hashed (sha256 131dc06f…
+    cca7e133, 51,269 B); (2) riskiq/2018-09-19_magecart-newegg —
+    RiskIQ's own Newegg blog (the report's own reference), raw_snapshot
+    null because riskiq.com is dead and the surviving Schoenbaum Medium
+    mirror is JS-rendered (article body absent from raw HTML); its
+    facts are cross-corroborated by Volexity + reachable press.
+    [a] FACTS: skimmer on checkout billing page secure.newegg.com/
+    GlobalShopping/CheckoutStep2.aspx exfiltrating over SSL/TLS to
+    neweggstats.com ✓ (Volexity verbatim). Domain "registered on
+    August 13, 2018 ... via Namecheap", Comodo SSL same day ✓
+    (Volexity). "over a month" ✓ (Volexity + Inside-Magecart). Removed
+    "September 18, 2018" ✓ (Volexity verbatim) → end_date. ~15-line
+    skimmer / website + mobile app / same basecode as BA ✓ (RiskIQ
+    Newegg blog, corroborated). STRIPPED the unsourced claim "Newegg
+    confirmed the breach September 19 in customer notifications" — no
+    cited source carries a Newegg customer-notification act; rewrote as
+    the RiskIQ+Volexity public disclosure of Sept 19. FIXED the
+    conflation "Volexity and RiskIQ jointly attributed the campaign to
+    Magecart Group 6": the Sept-19 joint disclosure named Magecart
+    (same as BA); the "Group 6" segmentation is specifically RiskIQ's
+    Nov-13 Inside-Magecart report — split accordingly in
+    outcome_summary + attribution notes.
+    [b] ATTRIBUTION: RiskIQ+Volexity, high confidence (definitive
+    joint reporting), auspex concur. Re-pointed attribution_source_id
+    from the Nov report to volexity/2018-09-19 (the source of the
+    Sept-19 Magecart attribution). actor_id criminal/magecart kept.
+    [c] DATES: start_date 2018-08-14 kept (RiskIQ's "around August
+    14th" placement; consistent with Volexity's infra-Aug-13 /
+    confirmed-live-Aug-16 "attackers started earlier" window — noted in
+    outcome_summary). end_date 2018-09-18 verbatim. disclosure_date
+    2018-09-19 = the RiskIQ/Volexity blogs. Each source's published_on
+    set to real pub dates (Volexity 2018-09-19; RiskIQ Newegg blog
+    2018-09-19; Inside-Magecart 2018-11-13).
+    [d] DOCTRINE_LINKS: [] correct — financially-motivated criminal
+    skimming, no doctrine applies; none invented.
+    [e] ATTRIBUTION_LEVEL: set activity-cluster (Magecart Group 6 =
+    criminal operator cluster; not named-actor/named-unit; no state
+    nexus).
+    [f] ACTOR_ID: criminal/magecart resolves (atlas/actors/criminal/
+    magecart.yaml); primary_service_id null, default_doctrine_alignment
+    []. Actor record already lists Newegg (Sep 2018) among historical
+    incidents — sound, no flag.
+    Also changed initial_vector n-day→unknown (mirrors the BA audit):
+    no cited source establishes the initial-access method — Volexity
+    notes the attackers "had likely already compromised the Newegg
+    website" but the entry vector was never publicly determined; renamed
+    the event to include "Group 6" for parity with the BA record; added
+    country: us to the retail target (Newegg is a US retailer).
+    Residual uncertainty: the RiskIQ Newegg blog body is not
+    curl-snapshottable (dead riskiq.com + JS-rendered Medium mirror);
+    its Aug-14 date and 15-line detail are corroborated via Volexity
+    and secondary press rather than a first-party hash. All
+    load-bearing facts are carried by the snapshotted Volexity source,
+    so level: full.
