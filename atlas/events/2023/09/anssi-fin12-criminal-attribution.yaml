@@ -1,21 +1,27 @@
 id: 2023-09/anssi-fin12-criminal-attribution
 name: ANSSI / CERT-FR publishes FIN12 ransomware-cluster threat report
-start_date: 2018-01-01  # ANSSI scopes FIN12 activity since 2018
+start_date: 2019-01-01  # ANSSI: FIN12/PISTACHE TEMPEST "actifs depuis au moins 2019"
 disclosure_date: 2023-09-18
 end_date: 2023-09-18
 incident_type:
   - documentary
   - ransomware
-initial_vector: phishing
+initial_vector: valid-creds  # ANSSI: exposed RDP + valid health-professional credentials (infostealer-sourced); "vecteur d'infection privilégié... authentifiants valides"
 outcome_summary: |
   ANSSI / CERT-FR publication CERTFR-2023-CTI-007 (18 September
-  2023) attributing a sustained ransomware-affiliate operation
-  (2018-2023) to the FIN12 intrusion set, which has operated
-  successive ransomware brands including Ryuk, Conti, Hive,
-  Nokoyawa, Royal, and BlackCat / ALPHV. CERT-FR tracks FIN12
-  targeting of French health, retail, manufacturing, and
-  local-government victims with technical detail on the
-  intrusion-to-encryption tradecraft.
+  2023) associating a March 2023 intrusion at the CHU de Brest
+  university hospital — which the hospital contained before any
+  data exfiltration or encryption — with the financially
+  motivated cybercriminal intrusion set FIN12, and, by shared
+  infrastructure and TTPs, with the encryption of roughly thirty
+  French entities between 2020 and 2023. ANSSI tracks the cluster
+  as FIN12 (Mandiant, ex-UNC1878) / PISTACHE TEMPEST (Microsoft
+  DEV-0237) and records its successive use of the Ryuk, Conti,
+  Hive, Nokoyawa, BlackCat / ALPHV, Play, and Royal ransomware
+  brands, a pronounced healthcare focus (at least 20% of victims,
+  per ANSSI citing Mandiant), and a rapid-encryption operating
+  model (Time-To-Ransom ~4 days) that seldom uses double
+  extortion.
 quantified_impact:
   countries_affected: 1
 false_flag_risk: none
@@ -25,48 +31,149 @@ summary: |
   recording ANSSI's willingness to publicly name an organized
   cybercriminal cluster affecting French entities — the
   criminal-side parallel to the state-side APT28 / APT29 /
-  Sandworm attributions. AUSPEX records the actor_id at null
-  because FIN12 sits in the cybercriminal cluster space rather
-  than as a publicly-state-attributed entity; ANSSI is the
-  attributing organization for the doctrinally-relevant LID
-  defensive function.
+  Sandworm attributions. ANSSI frames FIN12 as financially
+  motivated (Big Game Hunting), not state-directed, so no
+  attacker-rationale state doctrine is asserted and
+  doctrine_links is empty. actor_id is left null pending an
+  AUSPEX actor-placement decision: the FIN12 / PISTACHE TEMPEST
+  / DEV-0237 designations ANSSI uses are already carried as
+  equivalent aliases of the existing ru/proxies/conti (Conti /
+  Wizard Spider) actor per the MISP galaxy, yet this ANSSI report
+  itself asserts no Russian-state nexus for the cluster.
 attributions:
   - actor_id: null
     attributing_org: ANSSI / CERT-FR
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-09-18
     attribution_source_id: anssi/2023-09-18_fin12-multiple-ransomware
     notes: |
-      FIN12 is a financially-motivated cybercriminal intrusion
-      set; CERT-FR did not attribute to a state. actor_id null
-      per the AUSPEX criminal-cluster convention; the
-      doctrinally-relevant attribution is ANSSI's CERT-FR
-      naming itself.
-doctrine_links:
-  - doctrine_id: fr/lutte-informatique-defensive
-    pillar_id: fr/lutte-informatique-defensive/cert-fr-coordination
-    program_id: null
-    confidence: attested
-    reasoning: |
-      CERT-FR public threat-cluster attribution is a canonical
-      LID coordination-pillar function. The criminal-cluster
-      naming extends the practice the 2021 Sandworm and 2023
-      APT28 publications established to financially-motivated
-      adversary clusters affecting French entities.
-    attesting_source_id: anssi/2023-09-18_fin12-multiple-ransomware
-    counter_explanation: null
-    contested: false
-    analyst: claude
+      ANSSI associates the March 2023 CHU de Brest intrusion — and
+      ~30 French entity encryptions (2020-2023) — with the
+      financially motivated cybercriminal cluster it names FIN12,
+      adopting Mandiant's FIN12 / ex-UNC1878 and Microsoft's
+      PISTACHE TEMPEST / DEV-0237 designations (a named-actor
+      cluster attribution). ANSSI does NOT attribute to a state.
+      actor_id left null pending AUSPEX placement: FIN12 is an
+      equivalent alias of the existing ru/proxies/conti actor per
+      the MISP galaxy, but this source asserts no state nexus, so
+      the criminal-vs-ru-proxy placement is an orchestrator/Kara
+      call (see FLAG in qc notes).
+# doctrine_links emptied 2026-07-02 (claude-opus-4.8/max): FIN12 is a
+# financially motivated criminal cluster; ANSSI asserts no state
+# attacker-rationale. The prior fr/lutte-informatique-defensive link was
+# mislabeled `attested` with the default attacker-rationale perspective —
+# French defensive doctrine cannot be a criminal actor's attacker rationale.
+# (Sibling ANSSI events carry an LID/cert-fr-coordination *defender-response*
+# link; see FLAG in qc notes for the convention question.)
+doctrine_links: []
+# targets trimmed 2026-07-02 (claude-opus-4.8/max): removed sectors/government/local
+# and sectors/ics/manufacturing — NOT substantiated by this ANSSI report (grep of the
+# raw PDF finds no retail/manufacturing/local-government victims; only the health sector
+# is named — CHU de Brest + "ciblage important du secteur de la santé").
 targets:
   - target_id: sectors/healthcare
     country: FR
     role: primary
-  - target_id: sectors/government/local
-    country: FR
-    role: primary
-  - target_id: sectors/ics/manufacturing
-    country: FR
-    role: primary
 sources:
   - anssi/2023-09-18_fin12-multiple-ransomware
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW ANSSI/CERT-FR report CERTFR-2023-CTI-007
+    "FIN12 — UN GROUPE CYBERCRIMINEL AUX MULTIPLES RANÇONGICIELS"
+    (18 sept 2023, TLP:CLEAR, 15 pp). Snapshots: PDF report sha256
+    5c096d6e…5d6973fc (2,457,887 bytes) = archive_url [audited
+    artifact]; HTML landing sha256 a9cca0f1…5bc25d49 (16,125 bytes)
+    = url. STEP-0 triage: NOT a phantom — the URL/PDF is the real,
+    specific first-party CERT-FR report whose body carries the
+    event's claims. Path taken: RE-VERIFY in place (genuine source,
+    correct target) — no re-source needed.
+
+    [a] FACTS — corrected three unsupported claims. (1) start_date
+    2018-01-01 → 2019-01-01: "2018" appears NOWHERE in the report;
+    ANSSI states "les attaquants... seraient donc actifs depuis au
+    moins 2019" and titles Fig. 2.1 "...activités connues du MOA
+    FIN12 (PISTACHE TEMPEST) depuis 2019". (2) outcome_summary
+    "2018-2023" removed; added that the March 2023 CHU de Brest
+    intrusion was CONTAINED before exfiltration/encryption ("La
+    réactivité de l'établissement de santé a permis d'isoler
+    rapidement le SI... empêchant ainsi l'exfiltration de données et
+    le chiffrement"), and that ANSSI links ~30 French entity
+    encryptions 2020-2023 ("le chiffrement d'une trentaine d'entités
+    entre 2020 et 2023"). Ransomware brands verified verbatim (Ryuk,
+    Conti, Hive, Nokoyawa, BlackCat, Play, Royal) — added Play,
+    which the prior list omitted; all source-carried. Healthcare +
+    fast-deployment profile CONFIRMED: "un ciblage important du
+    secteur de la santé (au moins 20% des victimes du groupe)";
+    "privilégier le chiffrement rapide des réseaux compromis au
+    détriment de l'exfiltration"; "Time-To-Ransom des opérateurs de
+    FIN12, qui est d'environ 4 jours". initial_vector phishing →
+    valid-creds: "phishing" occurs only in a bibliography title
+    (ref [20], Royal); the report's actual vector is exposed RDP +
+    valid health-professional credentials (infostealer-sourced),
+    MITRE T1133 + T1078.002, and "le vecteur d'infection privilégié
+    semble être le recours à des authentifiants valides".
+
+    [b] ATTRIBUTION — ANSSI/CERT-FR, high, named-actor (added; was
+    missing). ANSSI firmly "associe cette attaque au MOA cybercriminel
+    FIN12", adopting Mandiant FIN12/ex-UNC1878 and Microsoft PISTACHE
+    TEMPEST/DEV-0237. Explicitly financially motivated ("groupe
+    cybercriminel", Big Game Hunting) — NO state attribution. Broader
+    history uses the French administrative conditional ("seraient",
+    "auraient", "pourraient"); kept confidence high for the naming
+    act itself, which is stated as accomplished. auspex_assessment
+    concur retained. actor_id kept null (see [f] FLAG).
+
+    [c] DATES — published_on 2023-09-18 correct (PDF header + title).
+    disclosure_date/end_date 2023-09-18 correct. start_date fixed to
+    2019 (above). No conflation remaining.
+
+    [d] DOCTRINE_LINKS — emptied. The prior link
+    (fr/lutte-informatique-defensive/cert-fr-coordination, confidence
+    `attested`, no perspective tag → attacker-rationale default) was
+    wrong: a criminal actor's ransomware operation cannot have French
+    DEFENSIVE doctrine as its attacker rationale, and ANSSI asserts no
+    state purpose the pillar encodes. Per the schema ("doctrine_links:
+    [] is correct when no doctrine genuinely applies") and the
+    orchestrator direction, set to []. FLAG (convention): the closest
+    sibling anssi-apt28-france-attribution carries an
+    LID/cert-fr-coordination link as perspective: defender-response
+    (attested); anssi-panorama-cybermenace-2023 (attested) and
+    anssi-health-sector-state-of-threat (strongly_inferred) carry it
+    but omit the perspective tag. If Kara wants corpus consistency, a
+    single `perspective: defender-response` LID link at
+    strongly_inferred (report never names LID) would be the alternative
+    to empty — orchestrator/Kara call.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (FIN12 is a named,
+    vendor-recognized threat cluster ANSSI adopts). Not nation
+    (criminal), not named-unit (no service).
+
+    [f] ACTOR_ID — kept null. FLAG (actor): the orchestrator's
+    "FIN12 = criminal/" has no backing file — atlas/actors/criminal/fin12
+    does NOT exist (47 criminal actors, FIN12 absent). Meanwhile the
+    EXISTING actor ru/proxies/conti (canonical "Conti / TrickBot /
+    Wizard Spider ecosystem") ALREADY lists FIN12 — and PISTACHE
+    TEMPEST/Pistachio Tempest, DEV-0237, DEV-0193, Periwinkle Tempest,
+    Storm-0230 — as equivalent aliases per the MISP galaxy (WIZARD
+    SPIDER). So the corpus already maps FIN12 → ru/proxies/conti, which
+    contradicts "criminal/". Decision needed (I did NOT edit actor
+    files): (i) create standalone criminal/fin12 and re-point, or (ii)
+    point actor_id → ru/proxies/conti (existing, non-dangling, but pulls
+    FIN12 into the RU-proxy bucket — NOT what THIS ANSSI source asserts),
+    or (iii) keep null. Left null to avoid a dangling FK and to avoid
+    silently choosing (ii) against this source's plain criminal framing.
+    NB if the event is later pointed at ru/proxies/conti, revisit the
+    trimmed targets — that actor profile also lists government/local +
+    ics/manufacturing, but THIS source substantiates only healthcare.
+
+    Residual uncertainties: attributing_org_confidence high vs moderate
+    is arguable given pervasive conditional phrasing; kept high for the
+    definite CHU-Brest→FIN12 association. The ~30-entity and 20%-
+    healthcare figures are ANSSI restating Mandiant [11][12] (cited
+    within the report), not independently re-derived here.

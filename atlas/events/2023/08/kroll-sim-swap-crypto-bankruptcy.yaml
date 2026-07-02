@@ -7,15 +7,22 @@ incident_type:
   - data-theft
 initial_vector: valid-creds
 outcome_summary: |
-  Bankruptcy administrator Kroll disclosed that an employee
-  was SIM-swapped on August 19 2023, exposing PII (names,
-  addresses, claim amounts) of creditors across the FTX,
-  BlockFi, and Genesis Global crypto-bankruptcy estates.
-  The breached data was subsequently used by attackers to
-  conduct targeted phishing of crypto-creditor victims with
-  fake "claims-process" lures. Canonical case of SIM-swap
-  targeting an enterprise employee to reach downstream
-  customer data rather than the victim's personal accounts.
+  Bankruptcy administrator Kroll disclosed that an employee's
+  T-Mobile number was SIM-swapped on August 19 2023; the
+  threat actor used the hijacked number to bypass MFA, take
+  over the employee's account, and access files in Kroll's
+  cloud systems containing personal information of bankruptcy
+  claimants across the FTX, BlockFi, and Genesis Global
+  crypto-bankruptcy estates — per the Genesis claimant notice,
+  full names, physical addresses, email addresses, and debtor
+  claim details. Kroll said the impact was limited to those
+  three estates with no evidence of lateral movement to other
+  systems. The exposed data was subsequently used to phish
+  crypto-creditor victims with fake FTX "claims / withdrawal"
+  lures aimed at stealing wallet seed phrases. Canonical case
+  of SIM-swap targeting an enterprise employee to reach
+  downstream customer data rather than the victim's personal
+  accounts.
 false_flag_risk: none
 summary: |
   The Kroll SIM-swap is the canonical case of using telco-
@@ -24,14 +31,86 @@ summary: |
   AUSPEX classifies as criminal-baseline.
 attributions:
   - actor_id: null
-    attributing_org: Kroll + journalism
+    attributing_org: Kroll (breach disclosure), reported by Krebs on Security and BleepingComputer
     attributing_org_confidence: high
+    attribution_level: null
     auspex_assessment: concur
     attribution_date: 2023-08-25
     attribution_source_id: krebs/2023-08-15_kroll-sim-swap
+    notes: "Unattributed criminal SIM-swap. No vendor or government named a threat actor, cluster, or nation; the reporting describes only generic 'SIM-swapping groups/gangs' — hence actor_id null and attribution_level null. 'high' confidence refers to the well-established fact and mechanism of the incident (Kroll's own statement, quoted verbatim by both outlets), not to any actor identification."
 doctrine_links: []
 targets:
   - target_id: orgs/kroll
     role: primary
 sources:
   - krebs/2023-08-15_kroll-sim-swap
+  - bleepingcomputer/2023-08-25_kroll-data-breach-ftx-blockfi-genesis
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against two independent snapshotted sources, both quoting Kroll's
+    own Aug 25 2023 statement. Krebs "Kroll Employee SIM-Swapped for Crypto
+    Investor Data" (sha256 c72ec8fc…87cd31f7, 71,146 bytes) and BleepingComputer
+    "Kroll data breach exposes info of FTX, BlockFi, Genesis creditors" (sha256
+    e4bc9e18…b5daf705, 91,042 bytes). Triage: NOT a phantom — Krebs URL returns
+    the real article (title + body match). Added BleepingComputer as an
+    independent second source (this was a single-secondary-source event; the
+    verification-plan risk cohort #3).
+
+    [a] FACTS ✓. SIM-swap of a Kroll employee's T-Mobile number on Aug 19 2023:
+    Krebs — "Kroll said it was informed that on Aug. 19, 2023, someone targeted a
+    T-Mobile phone number belonging to a Kroll employee 'in a highly
+    sophisticated "SIM swapping" attack.'" Access to PII of BlockFi/FTX/Genesis
+    bankruptcy claimants: Krebs — "it appears the threat actor gained access to
+    certain files containing personal information of bankruptcy claimants in the
+    matters of BlockFi, FTX and Genesis." Downstream phishing with fake FTX
+    withdrawal lures: Krebs — "phishing emails … that spoofed FTX and claimed,
+    'You have been identified as an eligible client to begin withdrawing digital
+    assets from your FTX account.'"; BleepingComputer — "These messages aim to
+    phish people's seeds that protect their cryptocurrency wallets, and to empty
+    them." CORRECTION: the data-type enumeration "(names, addresses, claim
+    amounts)" was NOT carried by the cited Krebs article (Krebs says only
+    "personal information"). Rather than strip an accurate detail, sourced it to
+    BleepingComputer, which quotes the Genesis claimant notice verbatim — "The
+    attackers bypassed MFA to take over the employer's account and access files
+    stored in Kroll's cloud-based systems, including full names, physical
+    addresses, email addresses, and debtor claim details." Rewrote
+    outcome_summary to match (added email addresses, corrected "claim amounts" ->
+    "debtor claim details", added the MFA-bypass mechanism and the
+    limited-scope/no-lateral-movement finding, both source-carried).
+
+    [b] ATTRIBUTION ✓. Unattributed. Neither source names any threat actor,
+    cluster, or nation — only generic "SIM-swapping groups/gangs" (Krebs).
+    Kept actor_id: null; auspex_assessment concur. No state nexus invented.
+    Confidence stays high but is scoped in notes to the incident's facts/
+    mechanism (Kroll's own statement), not to actor identity.
+
+    [c] DATES. start_date 2023-08-19 ✓ (SIM-swap date). disclosure_date /
+    end_date 2023-08-25 ✓ (both outlets dated Aug 25; Kroll "disclosed today",
+    "already contained and remediated"). SOURCE DATE FIX: Krebs source
+    published_on was 2023-08-15 — impossible (predates the Aug 19 incident).
+    Byline/body read "August 25, 2023"; page timestamps 2023-08-25T14:56:01.
+    Corrected published_on -> 2023-08-25 on the source record. The id slug keeps
+    its erroneous 2023-08-15 date (slugs are stable/never renamed); annotated in
+    the source notes that the slug date is not the publication date.
+
+    [d] DOCTRINE_LINKS ✓. Empty [] is correct — a criminal-baseline financially/
+    data-motivated SIM-swap with no state doctrine. Nothing attested; none
+    invented.
+
+    [e] ATTRIBUTION_LEVEL. Set to null (was missing) — no actor is named at any
+    level (not even an activity-cluster), consistent with actor_id: null.
+
+    [f] ACTOR_ID. null (unattributed) — no actor file to resolve. Target
+    orgs/kroll resolves (atlas/targets/orgs/kroll.yaml). incident_type data-theft
+    ✓; initial_vector valid-creds ✓ (now supported: SIM-swap -> MFA bypass ->
+    account takeover = access via the employee's valid authenticated session).
+
+    Residual uncertainty: neither cited source specifies which system/app the
+    hijacked number unlocked (SMS-MFA vs. password-reset); the "cloud-based
+    systems / bypassed MFA" framing comes from the Genesis notice as quoted by
+    BleepingComputer, not from a Kroll primary I snapshotted directly.
+    No make/commit/git run; no actor files edited.

@@ -4,17 +4,22 @@ start_date: 2022-11-03
 disclosure_date: 2022-11-16
 end_date: 2022-11-16
 incident_type:
+  - law-enforcement
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  US DOJ + FBI seized approximately 250 Z-Library-associated
-  domains and unsealed indictments against Russian nationals
-  Anton Napolsky and Valeriia Ermakova for their operation
-  of Z-Library — a large-scale e-book and academic-paper
-  piracy site hosting approximately 11M books and 84M
-  articles. Pair were arrested in Argentina on US warrants
-  and remained in Argentine custody pending extradition
-  through 2023, when they escaped pretrial supervision.
+  US DOJ (EDNY) + FBI seized approximately 249 Z-Library-
+  associated domains and unsealed an indictment and complaint
+  against Russian nationals Anton Napolsky and Valeriia
+  Ermakova — arrested Nov 3 2022 in Cordoba, Argentina at US
+  request — for their operation of Z-Library, a large-scale
+  e-book and academic-paper piracy site DOJ described as
+  hosting ~11M e-books and millions of research articles.
+  The pair were placed under house arrest in Cordoba in
+  January 2023; in 2024, after an Argentine judge approved
+  their extradition to the US, they escaped house arrest
+  (their absence discovered during a May 2024 compliance
+  visit) and an international arrest warrant was issued.
 false_flag_risk: none
 summary: |
   Z-Library is the largest single piracy-site enforcement
@@ -31,7 +36,98 @@ attributions:
     auspex_assessment: concur
     attribution_date: 2022-11-16
     attribution_source_id: doj/2022-11-16_z-library-takedown
+    notes: "Null-actor counter-action (directionality model): a criminal-baseline law-enforcement takedown — ~249-domain seizure plus a copyright / wire-fraud / money-laundering indictment against two named individuals (Napolsky, Ermakova) — not an AUSPEX-attributed adversary operation, hence no attribution_level (no adversary threat-actor to grade; mirrors bitzlato-takedown). No state nexus asserted: the defendants are Russian nationals but DOJ frames it as ordinary IP crime (criminal baseline). attributing_org_confidence high (unsealed DOJ indictment + US-government domain seizure, with Argentine cooperation on the Nov 3 2022 arrest and an FBI investigation — AD-in-Charge Michael Driscoll quoted); auspex_assessment concur. The attribution announcement is the Akamai-walled DOJ press release; the two named defendants and the five counts are additionally carried by the snapshotted indictment (doj/2022-11-16_z-library-indictment)."
 doctrine_links: []
 targets: []
 sources:
   - doj/2022-11-16_z-library-takedown
+  - doj/2022-11-16_z-library-indictment
+  - torrentfreak/2024-07-08_z-library-admins-escape-house-arrest
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: partial
+  notes: |
+    Audited vs the DOJ EDNY indictment (raw PDF snapshot, sha256
+    a1fc6cd3...cb998ff, 411,503 bytes — a fresh download from the DOJ URL
+    hash-matched the on-disk snapshot) + the Akamai-walled DOJ press release
+    (mirror-corroborated) + TorrentFreak 2024-07-08 for the escape (raw HTML
+    snapshot, sha256 434708cb...a1ae821e, 77,850 bytes). LEVEL partial: the
+    load-bearing DOJ press release — the sole source for the domain count,
+    e-book count and Argentina-arrest framing — is bot-walled and could only
+    be mirror-corroborated, not snapshotted (the /usao-edny/pr/ HTML returns a
+    bm-verify Akamai challenge to curl and 403 to WebFetch; archive.org is
+    blocked for the fetcher). This event died on a transient rate-limit in
+    batch 28 and was unmodified before this audit.
+
+    [a] FACTS — corrections: (i) "approximately 250" domains -> "approximately
+    249": DOJ's enumerated figure is "approximately 249 interrelated web
+    domains" / "249 linked web domains" (The Record, Infosecurity-Magazine);
+    "nearly 250" is DOJ's round-number phrasing. (ii) STRIPPED the unsupported
+    "84M articles": no DOJ source or mirror states an 84-million article count;
+    DOJ says Z-Library hosted "11 million e-books" and "millions of research
+    articles" — 84M is Z-Library's own self-claim, carried by no cited source,
+    so replaced with DOJ's "millions of research articles". (iii) escape claim
+    was DATE-WRONG and mis-framed: event said they "remained in Argentine
+    CUSTODY pending extradition through 2023, when they escaped pretrial
+    supervision" — per TorrentFreak they were placed under HOUSE ARREST (not
+    custody) in Cordoba in January 2023, and the escape was in 2024 (absence
+    discovered during a Patronato del Liberado compliance visit in May 2024),
+    AFTER an Argentine judge approved their US extradition; an international
+    arrest warrant followed. outcome_summary rewritten to the correct 2024
+    timeline and re-sourced to TorrentFreak. Verbatim-supported facts kept:
+    DOJ + FBI seizure (FBI AD-in-Charge Michael Driscoll quoted), unsealed
+    indictment + complaint, defendants Napolsky (a.k.a. Napolskiy) & Ermakova,
+    Z-Library as an e-book/academic-paper piracy site, arrest Nov 3 2022 in
+    Cordoba at US request, operation window Jan 2018-Nov 2022 (indictment Count 1).
+
+    [b] ATTRIBUTION — actor_id null is CORRECT: a law-enforcement counter-action
+    (takedown + indictment), not an attributed adversary op (directionality
+    model). attributing_org "DOJ + FBI + Argentine cooperation" all confirmed
+    (DOJ EDNY charges; FBI Driscoll quote; Argentine arrest at US request). Kept
+    attributing_org_confidence high, auspex_assessment concur; no over-attestation
+    risk (no threat-actor claim). Added an attribution notes block mirroring the
+    bitzlato-takedown precedent.
+
+    [c] DATES — start_date 2022-11-03 (arrest) / disclosure_date 2022-11-16
+    (unsealing) / end_date 2022-11-16 all correct and source-matched; the
+    indictment file-date and the press-release date are both 2022-11-16. The 2024
+    escape is a downstream development recorded in outcome_summary, not the modeled
+    takedown-action's end. Source published_on: press release 2022-11-16, indictment
+    2022-11-16, TorrentFreak 2024-07-08 — all correct.
+
+    [d] DOCTRINE_LINKS — [] is CORRECT and kept: a copyright-piracy criminal-baseline
+    enforcement action; no state doctrine genuinely applies; none invented.
+
+    [e] ATTRIBUTION_LEVEL — intentionally ABSENT (null): a null-actor counter-action
+    naming individual criminal defendants has no adversary threat-actor to grade on
+    the activity-cluster/nation/named-actor/named-unit scale (bitzlato-takedown
+    precedent). Documented in the attribution notes.
+
+    [f] ACTOR_ID — null; resolves to no actor file, correct for a counter-action.
+    No actor FLAG.
+
+    incident_type [disruption] -> [law-enforcement, disruption]: a counter-action
+    takes meta types (bitzlato/hydra precedent); law-enforcement = the indictment +
+    arrests + seizure, disruption = the ~249-domain seizure that took the service
+    offline (mirrors chipmixer-takedown [law-enforcement, disruption, documentary]).
+    "documentary" omitted (an enforcement action, not a research writeup); "policy"
+    omitted (no regulatory designation, unlike bitzlato's FinCEN order). Orchestrator
+    may drop to [law-enforcement] if strict all-meta consistency with bitzlato is
+    preferred.
+
+    SOURCES: added doj/2022-11-16_z-library-indictment (snapshotted primary charging
+    doc, sha256 a1fc6cd3...cb998ff, obtained via the reachable
+    /d9/press-releases/attachments/ route — the file/dl equivalent) and
+    torrentfreak/2024-07-08_z-library-admins-escape-house-arrest (snapshotted, sha256
+    434708cb...a1ae821e). The press-release source was annotated with an AUDIT note
+    (walled; no content_sha256; mirror-corroborated).
+
+    RESIDUAL / FLAGS: exact press-release wording is not hash-captured (walled); the
+    "millions of research articles" phrasing comes from the DOJ press release via
+    WebFetch/mirrors, not a snapshot. Minor: the event slug and the press-release
+    source url embed a trailing "-z-library" variant; the canonical DOJ URL is
+    /pr/two-russian-nationals-charged-running-massive-e-book-piracy-website (no
+    suffix), though the suffixed URL also returns HTTP 200 (both Akamai-walled).
+    Slugs are stable-forever, so left as-is; noted for the orchestrator.

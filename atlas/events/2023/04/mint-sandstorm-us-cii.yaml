@@ -1,50 +1,85 @@
 id: 2023-04/mint-sandstorm-us-cii
 name: Mint Sandstorm targets US critical infrastructure
-start_date: 2022-10-01
+start_date: 2021-11-01  # "late 2021" per MSTIC (best-estimate day-of-month)
 disclosure_date: 2023-04-18
-end_date: 2023-04-18
+end_date: 2022-07-01  # "mid-2022" per MSTIC — end of the US-CII targeting window
 incident_type:
   - intrusion
   - pre-positioning
-initial_vector: n-day  # edge-device exploitation; rapid CVE weaponization
+initial_vector: n-day  # internet-facing application exploitation; rapid N-day/POC weaponization
 outcome_summary: |
-  Persistent access and intelligence collection against US
-  seaports, energy, transit, and defense industrial base.
-  Microsoft documented rapid weaponization of newly-disclosed
-  CVEs by Mint Sandstorm / APT35.
+  Microsoft (MSTIC) observed a mature Mint Sandstorm subgroup move
+  from reconnaissance to direct targeting of US critical
+  infrastructure (seaports, energy companies, transit systems, and
+  a major US utility and gas entity), which Microsoft assessed was
+  potentially in support of retaliatory destructive cyberattacks.
+  The subgroup rapidly weaponized newly disclosed N-day
+  vulnerabilities and deployed custom implants (Drokbk, Soldier,
+  CharmPower).
 false_flag_risk: none
 summary: |
-  Notable shift toward US CII targeting by an actor cluster
-  historically focused on policy / dissident surveillance.
-  Microsoft documents Mint Sandstorm / APT35 / Charming Kitten
-  rapidly weaponizing newly disclosed n-days (Log4Shell
-  CVE-2021-44228, Atlassian Confluence OGNL CVE-2022-26134,
-  Microsoft Exchange ProxyShell, IBM Aspera Faspex) against
-  US seaports, energy utilities, transit operators, and the
-  defense industrial base. Post-exploitation tooling includes
-  the CharmPower / POWERSTAR PowerShell-based backdoor, the
-  Drokbk .NET implant, custom DLL side-loading via signed
-  binaries, web shells on internet-facing servers, valid
-  credentials harvested via credential dumping, and Tor / DNS-
-  tunneled C2. The pre-positioning pattern echoes broader IRGC
-  asymmetric-warfare investment and overlaps in tradecraft with
-  the contemporaneous CyberAv3ngers Unitronics PLC campaign.
+  Microsoft (MSTIC) reported that a mature subgroup of Mint
+  Sandstorm — an Iranian nation-state actor previously tracked as
+  PHOSPHORUS, whose activity overlaps public reporting on APT35,
+  APT42, Charming Kitten, and TA453 — shifted from its historical
+  focus on political dissidents, activists, journalists, the
+  Defense Industrial Base, and government targets toward US
+  critical infrastructure. From late 2021 to mid-2022 the subgroup
+  moved from reconnaissance to direct targeting of US CII including
+  seaports, energy companies, transit systems, and a major US
+  utility and gas entity, which Microsoft assessed was potentially
+  in support of retaliatory destructive cyberattacks and likely in
+  response to attacks that halted maritime traffic at an Iranian
+  seaport (2020), delayed Iranian trains (2021), and crashed
+  Iranian gas-station payment systems (late 2021). The subgroup
+  rapidly weaponized N-day vulnerabilities in internet-facing
+  applications — Log4Shell (CVE-2021-44228 / CVE-2021-45046),
+  Microsoft Exchange ProxyShell, IBM Aspera Faspex (CVE-2022-47986),
+  and Zoho ManageEngine (CVE-2022-47966, exploited the same day the
+  POC became public) — then used a custom PowerShell discovery
+  script, Impacket for lateral movement, and SSH-tunnel or
+  webhook.site C2 with GitHub-hosted domain rotators. Custom
+  post-exploitation tooling included the Drokbk and Soldier .NET
+  implants and the CharmPower modular PowerShell backdoor
+  (delivered via template-injection phishing). In one attack chain
+  the objective was theft of the Active Directory database to
+  harvest and reuse valid credentials. Microsoft assesses Mint
+  Sandstorm is associated with the Islamic Revolutionary Guard
+  Corps (IRGC); the US Treasury sanctioned elements of the group in
+  2022 citing IRGC sponsorship.
 attributions:
   - actor_id: ir/irgc/apt35
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2023-04-18
     attribution_source_id: microsoft/2023-04-18_mint-sandstorm-cii
+    notes: |
+      MSTIC equates the cluster ("overlaps with public reporting on
+      groups known as APT35, APT42, Charming Kitten, and TA453") and
+      names the sponsoring service: "Microsoft assesses that Mint
+      Sandstorm is associated with an intelligence arm of Iran's
+      military, the Islamic Revolutionary Guard Corps (IRGC) ... In
+      2022, the US Department of Treasury sanctioned elements of Mint
+      Sandstorm ... citing sponsorship from the IRGC." Service named
+      (IRGC) → named-unit, high confidence.
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pre-positioning in US CII sectors consistent with Forward-
-      Defense projection.
+      Targeting US critical infrastructure "potentially in support
+      of retaliatory destructive cyberattacks" (MSTIC) is consistent
+      with Iran holding adversary CII at risk under a forward-defense
+      / deterrence-by-punishment posture executed by the IRGC.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "MSTIC: the subgroup 'moved from reconnaissance to direct targeting of US critical infrastructure including seaports, energy companies, transit systems, and a major US utility and gas entity potentially in support of retaliatory destructive cyberattacks' — holding adversary CII at risk is a forward-defense projection behaviour."
+        - "MSTIC names the IRGC as the sponsoring service; the IRGC is the principal Iranian organ executing deterrence/retaliation beyond Iran's borders."
+      ruled_out: "Opportunistic cybercrime: MSTIC frames the CII targeting as strategically motivated (retaliatory, IRGC-linked), not financially driven, so a criminal reading does not survive."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -53,9 +88,20 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Target mix (seaports, energy, transit) aligns with the
-      civilian-CII coercion pillar.
+      MSTIC assessed the US-CII targeting was potentially in support
+      of retaliatory destructive cyberattacks and likely in response
+      to attacks on Iranian ports, rail, and gas-station payment
+      systems — retaliatory coercion of adversary civilian critical
+      infrastructure, the behaviour the civilian-CII-coercion pillar
+      encodes. Held at strongly_inferred (not attested) because
+      MSTIC's purpose language is hedged ("potentially", "likely").
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "MSTIC states the US-CII targeting was 'potentially in support of retaliatory destructive cyberattacks' and 'likely in response to' cyberattacks that 'halted maritime traffic at a major Iranian seaport in May 2020, delayed Iranian trains in July 2021, and crashed gas station payment systems throughout Iran in late 2021' — a coercive, retaliatory purpose aimed at civilian CII."
+        - "The target set is exactly civilian CII (seaports, energy companies, transit systems, a major utility and gas entity), matching the civilian-CII-coercion pillar's sectors."
+        - "MSTIC names the IRGC as the sponsoring service and cites 2022 US Treasury sanctions on Mint Sandstorm elements for IRGC-sponsored cyberattacks."
+      ruled_out: "Espionage / intelligence-collection reading: MSTIC frames this specific CII targeting as preparation for retaliatory destructive attacks rather than data theft, so the coercive civilian-CII reading dominates the espionage alternative."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -69,8 +115,111 @@ targets:
   - target_id: sectors/transport
     country: us
     role: primary
-  - target_id: sectors/defense/contractor
-    country: us
-    role: primary
 sources:
   - microsoft/2023-04-18_mint-sandstorm-cii
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW MSTIC blog "Nation-state threat actor Mint
+    Sandstorm refines tradecraft to attack high-value targets"
+    (2023-04-18). Raw snapshot on disk re-verified: sha256
+    1354cd7f…78b3d0af (317,856 bytes) — matches the source record's
+    content_sha256; hash re-verified 2026-07-02. Single-source
+    event; source is a first-party tier-1 vendor original
+    investigation (own telemetry + full IOC table).
+
+    [a] FACTS — heavy de-fabrication. STRIPPED six claims carried by
+    NO cited source (grep of the raw = 0 hits each):
+      • "Atlassian Confluence OGNL CVE-2022-26134" — not in source
+        (no "Confluence"/"Atlassian"/"OGNL"/"CVE-2022-26134"). The
+        real N-days MSTIC names are Log4Shell (CVE-2021-44228 /
+        CVE-2021-45046), ProxyShell, IBM Aspera Faspex
+        (CVE-2022-47986), Zoho ManageEngine (CVE-2022-47966). Fixed
+        the CVE list and ADDED the omitted ManageEngine CVE (MSTIC's
+        flagship same-day-exploitation example: "began exploiting
+        CVE-2022-47966 in Zoho ManageEngine on January 19, 2023, the
+        same day the POC became public").
+      • "POWERSTAR" — not in source; MSTIC names only CharmPower.
+        Removed the CharmPower/POWERSTAR slash-equation.
+      • "custom DLL side-loading via signed binaries" — not in
+        source (no "side-load"/"DLL side"/"signed binar").
+      • "web shells on internet-facing servers" — not in source
+        (no "web shell"/"webshell").
+      • "Tor / DNS-tunneled C2" — not in source (no "Tor"/"DNS
+        tunnel"). Actual C2 per MSTIC: SSH tunnel (attack chain 1),
+        webhook.site (attack chain 2), GitHub-hosted domain rotators
+        for Drokbk/Soldier, OneDrive for template-injection payloads.
+      • "overlaps ... with the contemporaneous CyberAv3ngers
+        Unitronics PLC campaign" — not in source (no "CyberAv3nger"/
+        "Unitronics"/"PLC") AND anachronistic: the Unitronics
+        campaign was Nov–Dec 2023, ~7 months AFTER this 2023-04-18
+        report, and is a different (IRGC-CEC) cluster. Removed.
+      KEPT (all verbatim-supported): shift from dissident/policy
+      surveillance to US CII; APT35/APT42/Charming Kitten/TA453
+      overlap; rapid N-day weaponization; Log4Shell, ProxyShell,
+      Aspera Faspex, ManageEngine; custom PowerShell discovery
+      script; Impacket lateral movement; SSH-tunnel/webhook.site C2;
+      GitHub domain rotators; Drokbk + Soldier .NET implants;
+      CharmPower modular PowerShell backdoor via template injection;
+      AD-database theft to harvest valid credentials. Rephrased
+      "credential dumping" → MSTIC's own "theft of the Active
+      Directory database" (the term "credential dumping" is not in
+      the source, but the substance is).
+    [a-targets] REMOVED sectors/defense/contractor (sector
+      inflation): MSTIC's CII-campaign list is "seaports, energy
+      companies, transit systems, and a major US utility and gas
+      entity" — the Defense Industrial Base appears only once, in the
+      general "Who is Mint Sandstorm?" historical-profile paragraph,
+      NOT as a target of this late-2021→mid-2022 CII campaign. Kept
+      transport/maritime (seaports), energy (energy companies +
+      utility/gas), transport (transit systems). Summary keeps DIB
+      only as a historical target descriptor, not a campaign target.
+    [b] ATTRIBUTION — MSTIC explicitly NAMES THE IRGC (not merely
+      "Iranian"): "Microsoft assesses that Mint Sandstorm is
+      associated with an intelligence arm of Iran's military, the
+      Islamic Revolutionary Guard Corps (IRGC), an assessment ...
+      corroborated by ... Mandiant, Proofpoint, and SecureWorks. In
+      2022, the US Department of Treasury sanctioned elements of Mint
+      Sandstorm ... citing sponsorship from the IRGC." So high
+      confidence is correct (firm assessment, multi-source
+      corroboration, Treasury sanctions) — NOT over-attestation.
+      Actor_id ir/irgc/apt35 resolves (atlas/actors/ir/apt35.yaml).
+    [c] DATES — corrected two conflations. start_date 2022-10-01 →
+      2021-11-01: 2022-10-01 falls OUTSIDE MSTIC's stated CII window;
+      MSTIC says the targeting ran "From late 2021 to mid-2022."
+      end_date 2023-04-18 → 2022-07-01: the old value conflated
+      op-end with disclosure; MSTIC bounds the CII campaign at
+      mid-2022. disclosure_date 2023-04-18 confirmed = blog date
+      ("April 18, 2023"). Source published_on 2023-04-18 correct.
+    [d] DOCTRINE_LINKS — both kept at strongly_inferred; NOT upgraded
+      to attested despite MSTIC stating a retaliatory purpose,
+      because the purpose language is hedged ("potentially in support
+      of", "likely in response to") — below the attested bar of an
+      explicit, unhedged purpose statement. attesting_source_id
+      stays null (correct for non-attested). Added inference_basis
+      (signals + ruled_out) to both, quoting the raw; enriched both
+      reasoning strings to the source's retaliation framing.
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-unit. MSTIC names
+      the sponsoring service (IRGC), which is more specific than
+      nation and than named-actor (group+nation); mirrors the Agrius
+      worked example's rule ("service named → named-unit").
+    [f] ACTOR_ID — ir/irgc/apt35 resolves to atlas/actors/ir/apt35.yaml
+      (id ir/irgc/apt35); actor record is fully developed and its
+      IRGC placement was itself verified 2026-06-24. No actor edit.
+
+    Residual uncertainties: (1) start/end days-of-month are
+    best-estimates for MSTIC's "late 2021"/"mid-2022". (2) incident
+    type "pre-positioning" is AUSPEX's characterization of MSTIC's
+    "potentially in support of retaliatory destructive cyberattacks"
+    framing (the word "pre-positioning" is not in the source). (3)
+    TIER: source is tagged secondary but is an MSTIC first-party
+    original investigation with own telemetry/IOCs — a sibling MSTIC
+    source (microsoft/2022-09-29_zinc-weaponizing-open-source) was
+    AUDIT-promoted secondary→primary on 2026-07-01 on exactly this
+    rationale. Left secondary to preserve consistency with the
+    near-identical sibling event source (microsoft/2024-01-17_mint-
+    sandstorm-universities, also secondary); FLAGGED for orchestrator
+    to resolve the MSTIC-tier convention corpus-wide.

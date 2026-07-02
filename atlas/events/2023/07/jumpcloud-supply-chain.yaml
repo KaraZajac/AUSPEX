@@ -6,66 +6,200 @@ end_date: 2023-07-12
 incident_type:
   - supply-chain
   - intrusion
+  - financial-theft
 initial_vector: phishing
 outcome_summary: |
-  Spear-phishing into JumpCloud (cloud identity SaaS); lateral
-  pivot through the JumpCloud commands API to compromise
-  approximately five downstream cryptocurrency customer firms.
-  Approximately $147.5M in follow-on crypto thefts from the
-  compromised downstream firms.
+  Sophisticated spear-phishing (2023-06-22) into JumpCloud (zero-trust
+  identity / IAM SaaS); the actor injected malicious data into JumpCloud's
+  commands framework to reach a small set of downstream customers. JumpCloud
+  reported the access impacted "fewer than 5 customers" and "fewer than 10
+  devices" out of 200,000+ organizations, and the impacted customers were in
+  the cryptocurrency vertical. Per the UN Panel of Experts (report released
+  2024-03-07), the JumpCloud access enabled two follow-on cryptocurrency
+  heists netting ~$147.5M.
 quantified_impact:
-  usd_stolen_downstream: 147500000
-  downstream_orgs_affected: 5
+  usd_stolen_downstream: 147500000  # UN Panel of Experts via The Record (2024-03-22): JumpCloud access enabled two crypto heists netting ~$147.5M
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Second canonical 2023 supply-chain pivot operation (after 3CX).
-  Initial access into JumpCloud came via spear-phishing of an
-  engineering employee delivering a TraderTraitor / Citrine Sleet
-  macOS dropper; operators then leveraged valid credentials to
-  pivot into the JumpCloud commands API, injected attacker-
-  controlled commands into customer agents on selected
-  cryptocurrency-firm tenants, and used those commands to
-  exfiltrate hot-wallet key material from approximately five
-  downstream crypto firms. Tradecraft includes the FullHouse.Doored,
-  STRATOFEAR, and TIEDYE Mach-O implants documented by Mandiant
-  / CrowdStrike, credential dumping, and Tor-fronted C2.
-  TraderTraitor's institutionalization of the supplier-to-customer
-  pivot model — JumpCloud was the staging victim; the actual ~$147.5M
-  crypto theft occurred at JumpCloud's downstream customers.
+  DPRK supply-chain pivot operation (a 2023 counterpart to the 3CX
+  compromise). Initial access into JumpCloud came via a sophisticated
+  spear-phishing campaign on 2023-06-22; JumpCloud detected anomalous activity
+  on an internal orchestration system on 2023-06-27 and, on 2023-07-05,
+  unusual activity in its commands framework affecting a small set of
+  customers. Mandiant — which responded to the intrusion at a downstream
+  victim — attributes it to UNC4899, a DPRK-nexus actor it assesses with high
+  confidence to be "a cryptocurrency-focused element within the DPRK's
+  Reconnaissance General Bureau (RGB)," and which "likely corresponds to
+  TraderTraitor." SentinelLabs independently linked the JumpCloud IOCs to a
+  North Korean state-sponsored APT, with infrastructure pivots to the
+  TraderTraitor and AppleJeus clusters; JumpCloud stated it "identified and
+  CrowdStrike confirmed the nation-state actor involved was North Korea." The
+  operators pivoted from JumpCloud into downstream customer agents via data
+  injection into the commands framework (a malicious Ruby script run through
+  the JumpCloud agent); Mandiant documented macOS implants FULLHOUSE.DOORED,
+  STRATOFEAR and TIEDYE and observed UNC4899 targeting macOS keychains and
+  reconnaissance data on executives and internal security teams at the
+  impacted crypto customers. JumpCloud reported fewer than five customers and
+  fewer than ten devices affected; the UN Panel of Experts later found the
+  JumpCloud access enabled two cryptocurrency heists netting ~$147.5M.
+  ATTRIBUTION LATENCY: JumpCloud's 2023-07-12 disclosure named only "a
+  sophisticated nation-state sponsored threat actor" — the North Korea /
+  UNC4899 / TraderTraitor attribution came from SentinelOne (2023-07-20),
+  Mandiant (2023-07-24) and CrowdStrike over the following ~2 weeks.
 attributions:
+  - actor_id: kp/unscoped/tradertraitor
+    attributing_org: SentinelLabs
+    attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur
+    attribution_date: 2023-07-20
+    attribution_source_id: sentinelone/2023-07-20_jumpcloud-intrusion-north-korean-apt
+    notes: "Tom Hegel attributed the JumpCloud IOCs to a North Korean state-sponsored APT / DPRK (nation level); infrastructure pivots overlap the TraderTraitor and AppleJeus clusters, but SentinelLabs stops short of a firm named-actor assignment."
   - actor_id: kp/unscoped/tradertraitor
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-07-24
-    attribution_source_id: jumpcloud/2023-07-12_post-incident
+    attribution_source_id: mandiant/2023-07-24_north-korea-supply-chain-jumpcloud
+    notes: "Mandiant attributes the intrusion to UNC4899 (DPRK-nexus) and assesses with high confidence it is 'a cryptocurrency-focused element within the DPRK's Reconnaissance General Bureau (RGB),' which 'likely corresponds to TraderTraitor.' NB: this RGB naming post-dates the actor's 2026-06-24 kp/unscoped demotion and is not yet cited by the actor record — see actor-scoping flag in qc."
   - actor_id: kp/unscoped/tradertraitor
     attributing_org: CrowdStrike
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2023-07-24
-    attribution_source_id: jumpcloud/2023-07-12_post-incident
+    attribution_source_id: jumpcloud/2023-07-12_incident-details
+    notes: "Per JumpCloud's disclosure: 'we identified and CrowdStrike confirmed the nation-state actor involved was North Korea' — attribution captured second-hand via JumpCloud crediting its IR partner CrowdStrike (which tracks the DPRK cluster as Labyrinth Chollima). Nation level."
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+    confidence: strongly_inferred  # not attested: no cited source states, for THIS op, the WMD/ballistic-missile financing goal (audit 2026-07-02; prior downgrade 2026-06-09)
     reasoning: |
-      Downstream crypto thefts (~$147.5M) explicitly tied to
-      TraderTraitor by Mandiant / CrowdStrike vendor consensus
-      with USG corroboration in subsequent CISA reporting. WMD-
-      financing strategic goal per standard attribution pattern.
+      The intrusion is attributed (Mandiant, high confidence) to UNC4899 /
+      TraderTraitor — "a cryptocurrency-focused element within the DPRK's
+      Reconnaissance General Bureau (RGB)" — whose documented mission is
+      cryptocurrency theft for regime revenue (CISA AA22-108A). The JumpCloud
+      supply-chain pivot specifically reached cryptocurrency customers and, per
+      the UN Panel of Experts, enabled two crypto heists netting ~$147.5M — the
+      crypto-exchange/bridge-theft revenue pattern the 8th-Congress
+      revenue-aggregation pillar encodes. Held at strongly_inferred (not
+      attested): the cited sources state the proximate revenue purpose but none
+      states, for this operation, the ultimate goal of financing the WMD /
+      ballistic-missile program — so there is no attesting_source_id.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Actor mission: Mandiant attributes to UNC4899 / TraderTraitor, assessed high-confidence as a 'cryptocurrency-focused element within the DPRK's RGB'; TraderTraitor's documented remit is crypto theft for regime revenue (CISA AA22-108A)."
+        - "Outcome: the UN Panel of Experts (report released 2024-03-07, via The Record 2024-03-22) found the JumpCloud access enabled 'two cryptocurrency heists that netted them about $147.5 million' — direct revenue capture."
+        - "Method: a supply-chain pivot through an identity-SaaS provider chosen to reach cryptocurrency customers — the crypto-exchange/bridge theft pattern the crypto-bridge-theft program specializes."
+      ruled_out: "Espionage-only or non-DPRK-criminal readings are excluded: funds were stolen (not merely accessed) and the DPRK-state nexus is attested at high confidence by Mandiant/SentinelOne/CrowdStrike. The only surviving competitor — proximate 'revenue generation' vs. the ultimate 'defense/WMD financing' the 8th-Congress plan encodes — is a specialization of the same doctrine, not a rival doctrine."
 targets:
-  - target_id: orgs/jumpcloud
-    role: staging
-    outcome: Identity-SaaS lateral pivot vector; five downstream crypto customers compromised.
-  - target_id: sectors/finance/crypto-exchange
-    role: primary
-    outcome: ~$147.5M in crypto stolen from five downstream JumpCloud customer firms.
   - target_id: sectors/ict/identity
     role: staging
+    outcome: JumpCloud (zero-trust identity / IAM SaaS) was the staging victim — spear-phish (2023-06-22) then data injection into the commands framework to reach downstream customer agents.
+  - target_id: sectors/finance/crypto-exchange
+    role: primary
+    outcome: Fewer than five downstream JumpCloud customers in the cryptocurrency vertical were compromised; the access enabled two follow-on crypto heists netting ~$147.5M (UN Panel of Experts).
 sources:
+  - jumpcloud/2023-07-12_incident-details
   - jumpcloud/2023-07-12_post-incident
+  - mandiant/2023-07-24_north-korea-supply-chain-jumpcloud
+  - sentinelone/2023-07-20_jumpcloud-intrusion-north-korean-apt
+  - therecord/2024-03-22_north-korea-cryptocurrency-hacks-un-experts
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    PHANTOM / WRONG-SOURCE REMEDIATION (RE-SOURCE path, "badrabbit model").
+    Before audit the event cited a SINGLE source (jumpcloud/2023-07-12_post-incident)
+    for BOTH TraderTraitor attributions AND every factual claim. That URL
+    (jumpcloud.com/blog/july-2023-iocs → /support/july-2023-iocs; sha256
+    792b1219…4544bf81, 269,673 B) is JumpCloud's IOC LIST page: raw term scan
+    finds ZERO of nation-state / North Korea / DPRK / Lazarus / TraderTraitor /
+    Mandiant / spear-phishing / $147.5M. Real page, right incident, but carries
+    none of the prose/attribution → wrong-source defect on a REAL, well-documented
+    event. Re-sourced by adding: the JumpCloud narrative disclosure, Mandiant,
+    SentinelOne, and The Record (UN Panel of Experts).
+
+    [a] FACTS — re-grounded claim-by-claim. Spear-phish 2023-06-22 / detection
+    2023-06-27 / commands-framework activity 2023-07-05 / disclosure 2023-07-12:
+    jumpcloud/2023-07-12_incident-details (97e5b226…f1effa31, 219,988 B) —
+    "a sophisticated spear-phishing campaign perpetrated by the threat actor on
+    June 22"; "On June 27 at 15:13 UTC we discovered anomalous activity…"; "On
+    July 5 at 03:35 UTC, we discovered unusual activity in the commands
+    framework…". Scope "fewer than 5 customers / fewer than 10 devices" — same
+    source + Mandiant (5ae7cc74…1ef4611a, 403,910 B: "impacted fewer than five
+    customers and less than 10 devices"). Pivot = "data injection into the
+    commands framework" via a Ruby script run through the JumpCloud agent
+    (Mandiant). Malware FULLHOUSE.DOORED / STRATOFEAR / TIEDYE + macOS keychain
+    & exec/security-team recon — Mandiant (all verbatim in snapshot). Crypto
+    vertical — Mandiant. $147.5M — The Record (f985a1db…a09e8b5, 94,233 B: "the
+    JumpCloud attacks allowed North Korean hackers to launch two cryptocurrency
+    heists that netted them about $147.5 million"), reporting the UN Panel of
+    Experts report released 2024-03-07. CORRECTIONS: removed "Citrine Sleet"
+    (Mandiant names UNC4899≈TraderTraitor, not Citrine Sleet); removed
+    "Tor-fronted C2" (no source); "credential dumping" → "macOS keychain /
+    credential access" (Mandiant wording); "commands API" → "commands framework";
+    "approximately five" → "fewer than five" (sources say <5); malware
+    "documented by Mandiant / CrowdStrike" → Mandiant only; reframed "$147.5M
+    stolen from the five downstream firms" → "JumpCloud access enabled two
+    follow-on crypto heists netting ~$147.5M" (UN framing); dropped
+    quantified_impact.downstream_orgs_affected: 5 (source ceiling is "fewer than
+    5"; the exact integer overstated — prose now carries "fewer than five").
+    incident_type +financial-theft (downstream crypto theft is the documented
+    outcome).
+
+    [b] ATTRIBUTION — the two prior entries (Mandiant + CrowdStrike, both dated
+    2023-07-24, both citing the wrong IOC page) were restructured into THREE
+    dated entries capturing latency, each re-pointed to a source that actually
+    carries it: SentinelLabs 2023-07-20 nation (be46490f…43c24bd4, 326,687 B;
+    fuller PDF 613d6239…d557814d, 2,125,582 B — "we attribute [this] cluster …
+    to a North Korean state sponsored APT", infra pivots to TraderTraitor /
+    AppleJeus); Mandiant 2023-07-24 named-actor (UNC4899, high confidence "a
+    cryptocurrency-focused element within the DPRK's RGB", "likely corresponds
+    to TraderTraitor"); CrowdStrike 2023-07-24 nation, sourced to the JumpCloud
+    incident-details disclosure ("CrowdStrike confirmed the nation-state actor
+    involved was North Korea"). auspex_assessment concur retained on all.
+
+    [c] DATES — start 2023-06-22 (spear-phish, verbatim) and disclosure
+    2023-07-12 (verbatim) confirmed; end 2023-07-12 kept as disclosure/containment
+    proxy (access cut by the July 5 credential rotation). Each source's
+    published_on set to its real publication date: JumpCloud 2023-07-12,
+    SentinelOne 2023-07-20, Mandiant 2023-07-24, The Record 2024-03-22 (page
+    datePublished; the report it covers was "released March 7"). Fixed the
+    mislabeled IOC record (title "Customer Update…" → "…IOCs"; tier
+    secondary→primary as a first-party vendor page).
+
+    [d] DOCTRINE_LINKS — single link kp/8th-congress-defense-plan/
+    revenue-aggregation/crypto-bridge-theft KEPT at strongly_inferred (correctly
+    downgraded from attested 2026-06-09). Verified NOT attested: no cited source
+    states, for THIS op, the WMD/ballistic-missile-financing goal — The Record's
+    weapons/nuclear mentions concern IP-theft TARGETING, not crypto-revenue
+    purpose. Added inference_basis (signals[] + ruled_out); attesting_source_id
+    null. UPGRADE PATH: the UN Panel of Experts report itself (released
+    2024-03-07) is the canonical DPRK-crypto→WMD-financing primary; if its
+    WMD-purpose sentence is cited directly, this link could move to attested
+    (flagged for Kara).
+
+    [e] ATTRIBUTION_LEVEL — set on all three (previously absent): SentinelLabs
+    nation, Mandiant named-actor, CrowdStrike nation.
+
+    [f] ACTOR_ID — kp/unscoped/tradertraitor RESOLVES (actor file
+    atlas/actors/kp/tradertraitor.yaml carries id: kp/unscoped/tradertraitor).
+    FLAG: the newly-added Mandiant source names the RGB at HIGH confidence for
+    UNC4899/TraderTraitor — a citable RGB-naming primary the actor lacked when it
+    was demoted to kp/unscoped on 2026-06-24; recommend actor re-review for a
+    possible kp/rgb re-scoping. Actor file NOT edited (per protocol).
+
+    TARGET FLAG: dropped target orgs/jumpcloud — DANGLING FK (no
+    atlas/targets/orgs/jumpcloud.yaml exists; 112 org files, none jumpcloud).
+    JumpCloud-as-staging preserved via sectors/ict/identity. Recommend the
+    orchestrator create atlas/targets/orgs/jumpcloud.yaml and re-add the
+    named-org linkage if desired.

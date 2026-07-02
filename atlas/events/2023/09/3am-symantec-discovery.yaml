@@ -1,39 +1,120 @@
 id: 2023-09/3am-symantec-discovery
 name: Symantec discovery of 3AM ransomware as LockBit fallback payload
 start_date: 2023-09-01
-disclosure_date: 2023-09-14
-end_date: 2023-09-14
+disclosure_date: 2023-09-13
+end_date: 2023-09-13
 incident_type:
   - documentary
 initial_vector: unknown
 outcome_summary: |
-  Symantec Threat Hunter Team published the first public
-  documentation of the 3AM ransomware family. The discovery
-  emerged from incident-response on a LockBit affiliate
-  intrusion where the LockBit payload was blocked by defenses
-  and the operator deployed 3AM (a previously-unknown Rust-
-  based ransomware) as a fallback. The Symantec publication
-  documented 3AM's encryption format, command-line options,
-  and the fact that 3AM's encryptor was previously unattributed
-  — establishing it as a distinct operator rather than a
-  rebrand.
+  Symantec's Threat Hunter Team published the first public
+  documentation of the 3AM ransomware family. It was observed in
+  a single attack in which a ransomware affiliate attempted to
+  deploy LockBit and — when LockBit was blocked on the target
+  network — switched to 3AM (a 64-bit, Rust-based encryptor) as a
+  fallback; 3AM's own deployment was only partially successful,
+  reaching three machines and being blocked on two of them.
+  Symantec documented 3AM's encryption behaviour (the .threeamtime
+  extension, a "0x666" file marker, and -k/-p/-h/-m/-s command-line
+  options) and assessed it as "a completely new malware family,"
+  while cautioning it was "still unclear whether its authors have
+  any links to known cybercrime organizations" and noting that
+  3AM's -h/-m ("local"/"net") arguments are "very similar to
+  arguments used by Conti."
 false_flag_risk: none
 summary: |
-  Foundational documentary event for the `criminal/3am` cluster.
-  Notable for the operator-language interleaving observation
-  (3AM deployed by a LockBit affiliate when LockBit was blocked)
-  — establishes 3AM as operationally adjacent to the Russian-
-  tolerated RaaS ecosystem without being itself state-attributed.
+  Foundational documentary event for the `criminal/3am` cluster:
+  Symantec's first public report on 3AM, seen in a single attack
+  where a ransomware affiliate deployed it as a fallback after
+  LockBit was blocked. Symantec observed that ransomware affiliates
+  have become increasingly independent of operators and that this
+  was not the first time it had seen an attacker try two different
+  ransomware families in a single attack. AUSPEX places 3AM under
+  `criminal/` with no published state nexus; the LockBit-affiliate
+  use and the Conti-similar command-line arguments Symantec noted
+  are the only ties to the Russian-tolerated RaaS ecosystem, and
+  are editorial context here rather than a state attribution (the
+  source itself names no nation).
 attributions:
   - actor_id: criminal/3am
     attributing_org: Symantec Threat Hunter Team
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur
-    attribution_date: 2023-09-14
+    attribution_date: 2023-09-13
     attribution_source_id: symantec/2023-09-14_3am-ransomware-discovery
+    notes: "Symantec documents 3AM as a new, self-named ransomware family seen in a single attack; it names no nation and states it is 'still unclear whether its authors have any links to known cybercrime organizations' — hence activity-cluster (a named malware/activity cluster), not named-actor/nation. moderate confidence tracks Symantec's own hedge ('appears to be a completely new malware family')."
 doctrine_links: []
-targets:
-  - target_id: sectors/critical-infrastructure
-    role: primary
+targets: []
 sources:
   - symantec/2023-09-14_3am-ransomware-discovery
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs Symantec Threat Hunter Team "3AM: New Ransomware Family Used
+    As Fallback in Failed LockBit Attack" — raw snapshot
+    symantec__2023-09-14_3am-ransomware-discovery.html, sha256
+    f9f886dc…d602d58a, 310,161 bytes. Sole cited source; NOT a phantom — the
+    recorded url 301-redirects to www.security.com/threat-intelligence/
+    3am-ransomware-lockbit and returns the real article (title + body match).
+
+    [a] FACTS: Verbatim-supported — "A new ransomware family calling itself
+    3AM has emerged"; used by "a ransomware affiliate that attempted to
+    deploy LockBit on a target's network and then switched to 3AM when
+    LockBit was blocked"; "3AM is written in Rust" / "64-bit executable
+    written in Rust"; the .threeamtime extension, the "0x666" marker, and the
+    -k/-p/-h/-m/-s command-line options are all present. The two items
+    flagged for verification — the "used-when-LockBit-failed" framing and the
+    Rust-based tradecraft — are CONFIRMED. CORRECTION: the original
+    outcome_summary claimed Symantec documented 3AM "was previously
+    unattributed — establishing it as a distinct operator rather than a
+    rebrand." That OVERSTATES the source, which hedges: "appears to be a
+    completely new malware family" but "It is still unclear whether its
+    authors have any links to known cybercrime organizations," and notes the
+    -h/-m ("local"/"net") arguments are "very similar to arguments used by
+    Conti." Rewrote outcome_summary to quote the hedge + Conti observation
+    and add the partial-deployment fact (deployed to three machines, blocked
+    on two of three). Rewrote summary: the original "operator-language
+    interleaving observation" phrase is not in the source; replaced with
+    Symantec's actual framing (affiliates "increasingly independent from
+    ransomware operators"; not the first two-ransomware-in-one-attack case)
+    and marked the Russia-adjacency as AUSPEX editorial inference (source
+    names no nation).
+
+    [b] ATTRIBUTION: Symantec names only the 3AM malware family — no nation,
+    no known group. attributing_org_confidence kept moderate (honest vs the
+    "appears to be" hedge); auspex_assessment concur kept.
+
+    [c] DATES: CORRECTED. Source JSON metadata: createdDate
+    "2023-09-13T10:00:00+00:00" / "createdFriendly":"09.13.2023" / byline
+    "13 Sept 2023"; "2023-09-14" occurs 0x in the raw. Fixed disclosure_date,
+    end_date, attribution_date and the source record's published_on
+    2023-09-14 -> 2023-09-13. Source id/filename slug left frozen at
+    2023-09-14 (stable-slug rule). start_date 2023-09-01 kept as a
+    within-month editorial anchor — the source dates the report but NOT the
+    underlying intrusion (residual uncertainty).
+
+    [d] DOCTRINE_LINKS: [] correct — criminal/financial ransomware, no state
+    nexus, nothing to attest. Unchanged.
+
+    [e] ATTRIBUTION_LEVEL: was MISSING; set activity-cluster — Symantec names
+    a new self-named malware/activity cluster with no nation and no link to a
+    known org (the Tortoiseshell-2019 pattern in SCHEMA.md). Added a notes
+    rationale on the attribution.
+
+    [f] ACTOR_ID: criminal/3am resolves to atlas/actors/criminal/3am.yaml;
+    the criminal/ placement (not ru/proxies/) is consistent with the source
+    (no published state nexus). No actor-file edit made.
+
+    TARGETS: removed sectors/critical-infrastructure -> targets: []. The
+    source identifies NO victim sector (only "a target's network" / "the
+    organization's network"); critical-infrastructure was sector inflation.
+
+    FLAG (tier): the source tier was left secondary but is arguably primary
+    (Symantec's own first-party original discovery / reverse-engineering).
+    Corpus convention for Symantec discovery blogs is split (Elderwood/
+    Dragonfly/Black Vine primary; Regin/Stuxnet/DarkSeoul secondary) —
+    preserved secondary, flagged for Kara.

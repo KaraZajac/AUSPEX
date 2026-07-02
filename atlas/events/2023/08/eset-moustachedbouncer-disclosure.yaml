@@ -6,48 +6,157 @@ end_date: null
 incident_type:
   - intrusion
   - data-theft
-initial_vector: valid-creds  # ISP-position AITM rather than phishing
+  - espionage
+initial_vector: unknown  # AUDIT 2026-07-02: was valid-creds (unsupported). ESET: NightClub initial access "we don't yet know"; Disco = ISP-level AitM fake-Windows-Update (drive-by / network-injection), not representable in the initial-access vocab
 outcome_summary: |
-  ESET researcher Matthieu Faou published a long-form analysis
-  of MoustachedBouncer, a Belarusian-aligned cluster that
-  intercepts target traffic at the Belarusian ISP layer to
-  deliver fake-Windows-Update payloads to foreign embassy staff
-  stationed in Belarus. ESET documented operations against
-  embassies of at least four countries (including European and
-  South Asian missions), use of the NightClub and Disco
-  implants, and a tradecraft pattern consistent with state-
-  authorized ISP-position adversary-in-the-middle.
+  ESET researcher Matthieu Faou published a long-form analysis of
+  MoustachedBouncer, a Belarusian-aligned cyberespionage cluster
+  that, since 2020, most likely intercepts target traffic at the
+  Belarusian ISP layer to redirect victims to a fake Windows Update
+  page and deliver malware to foreign embassy staff stationed in
+  Belarus. ESET documented targeting of embassy staff from four
+  countries (two European, one South Asian, one African), use of
+  the NightClub (since 2014) and Disco (since 2020) implant
+  families, and a tradecraft pattern consistent with state-
+  authorized ISP-position adversary-in-the-middle (ESET assesses
+  lawful-interception / SORM use with low confidence).
 false_flag_risk: none
 summary: |
-  Among the most operationally distinctive Belarusian cyber
-  disclosures: ISP-position AITM tradecraft is rare globally
-  (the Russian Turla and Iranian Crimson Sandstorm clusters
-  are the other public exemplars). The ESET attribution
-  characterizes Belarusian state direction as the necessary
-  precondition for the ISP-layer position; no public Belarusian
-  attestation exists.
+  Among the most operationally distinctive Belarus-nexus cyber
+  disclosures: ISP-position AitM tradecraft is rare globally —
+  ESET likens it only to Russia's Turla (the Mosquito campaign,
+  tied to Russia's SORM-3 / FSB lawful-intercept apparatus) and
+  to StrongPity (Turkey, via Sandvine DPI per Citizen Lab), the
+  other public exemplars of on-the-fly trojanization at the ISP
+  level. ESET reasons the ISP-layer position requires access
+  inside the ISPs that in practice only state security services
+  hold, and assesses "with low confidence" that MoustachedBouncer
+  uses Belarus's SORM lawful-interception system (router compromise
+  is not fully ruled out). No public Belarusian attestation exists;
+  ESET assesses only "with medium confidence" that the group is
+  "aligned with Belarus's interests" and names no Belarusian service.
 attributions:
   - actor_id: by/unscoped/moustachedbouncer  # demoted from by/kgb 2026-06-24: ESET names only "aligned with Belarus's interests", no service
     attributing_org: ESET (Matthieu Faou)
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate  # AUDIT 2026-07-02: was high; ESET states "medium confidence" for the Belarus alignment
+    attribution_level: named-actor  # ESET's own named cluster "MoustachedBouncer" + a nation (Belarus, medium conf); no service/unit named
+    auspex_assessment: concur-with-caveat
     attribution_date: 2023-08-10
     attribution_source_id: eset/2023-08-10_moustachedbouncer-isp-position
+    notes: |
+      ESET coined the named cluster "MoustachedBouncer" and assessed "with medium
+      confidence that they are aligned with Belarus's interests" — a named-actor-level
+      attribution (named cluster + nation), NOT named-unit: the report names no
+      Belarusian service (KGB / State Security Committee / KDB). Caveats behind
+      concur-with-caveat: nation confidence is medium; ESET further assesses "with low
+      confidence" that the group collaborates with Winter Vivern, and "with low
+      confidence" that it uses Belarus's SORM lawful-interception system.
 doctrine_links:
   - doctrine_id: by/concept-info-security-2019
     pillar_id: by/concept-info-security-2019/regime-stability-monitoring
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # AUDIT 2026-07-02: downgraded from strongly_inferred — see reasoning
     reasoning: |
-      Surveillance of foreign diplomatic staff inside Belarus
-      fits the regime-stability and counterintelligence framing
-      the doctrine licenses; the ISP-position position requires
-      state authority unique to the Belarusian KGB / SORM-style
-      apparatus.
+      Belarus-directed surveillance of foreign diplomatic staff on
+      Belarusian soil is state espionage that the 2019 Information
+      Security Concept's monitoring apparatus can license, and the
+      ISP-position AitM tradecraft requires ISP-level access that in
+      practice only state security services hold (ESET assesses
+      lawful-interception / SORM use with low confidence and names no
+      Belarusian service — so the earlier "unique to the KGB" framing
+      is dropped). The label is plausible, not higher, because
+      (i) no cited source states the strategic purpose of the
+      espionage — ESET documents victimology and tradecraft, not
+      motive; and (ii) the chosen pillar encodes DOMESTIC opposition /
+      dissident / diaspora monitoring (post-2020 NEXTA / Telegram
+      channels, Article 342 prosecutions), whereas this is
+      FOREIGN-diplomatic espionage / counterintelligence — a different
+      mission — so more than one strategic reading survives.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Info-security regime-stability / counterintelligence monitoring: the Belarusian security apparatus surveils foreign missions as part of controlling the security and information environment the 2019 Concept frames."
+        - "Generic foreign-intelligence collection: classic diplomatic espionage (harvesting foreign governments' communications) not specific to the info-security doctrine, which would sit under a dedicated BY foreign-intelligence / counterintelligence framework the corpus does not yet model."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/foreign-embassies-belarus
+  # AUDIT 2026-07-02: was orgs/foreign-embassies-belarus — a DANGLING FK (no such
+  # registry file exists anywhere in atlas/targets/). Repointed to the resolving,
+  # source-accurate sector (ESET: targets foreign embassies in Belarus = foreign-ministry
+  # sector; matches the actor's own target_sector_ids). FLAGGED for orchestrator: create
+  # orgs/foreign-embassies-belarus if the named-target discriminative feature is wanted.
+  - target_id: sectors/government/foreign-ministry
     role: primary
 sources:
   - eset/2023-08-10_moustachedbouncer-isp-position
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW ESET post "MoustachedBouncer — Espionage Against Foreign Diplomats
+    in Belarus via Adversary-in-the-Middle at the ISP Level" (Matthieu Faou, 2023-08-10).
+    Raw snapshot re-verified on disk: sha256 f6677c40…d8b7e2cf (365,575 bytes) — matches the
+    source record; hash re-verified, reused (not re-fetched). Not a phantom: the URL returns
+    the real 29-min article. STEP-0 triage = normal audit (no re-source needed).
+
+    [a] FACTS — corrected. (1) initial_vector valid-creds -> unknown: ESET states plainly
+    "We don't yet know the initial access method MoustachedBouncer uses to install NightClub,"
+    and Disco is delivered by ISP-level AitM via a fake Windows Update page ("MoustachedBouncer
+    operators tamper with their victims' internet access, probably at the ISP level, to make
+    Windows believe it's behind a captive portal … redirects to a seemingly legitimate, but
+    fake, Windows Update URL"; MITRE map: "Drive-by Compromise — Disco is delivered via a fake
+    Windows Update website"). Neither is valid-creds; drive-by/network-injection is not in the
+    8-item initial-access vocab, so unknown is the honest value. (2) outcome_summary "at least
+    four countries (including European and South Asian missions)" was incomplete — ESET:
+    "four different countries whose embassy staff have been targeted: two from Europe, one from
+    South Asia, and one from Africa." Corrected to name all three regions (Africa was dropped).
+    Added the ESET hedges ("since 2020", "most likely", "probably at the ISP level"). Fake
+    Windows Update, ISP-layer interception, NightClub (since 2014, SMTP/IMAP C&C) and Disco
+    (since 2020, AitM) all verbatim-supported. Added incident_type: espionage (ESET: "cyber-
+    espionage group", "specializes in the espionage of foreign embassies"). (3) summary
+    FABRICATION removed: it claimed the ISP-position AitM exemplars are "the Russian Turla and
+    Iranian Crimson Sandstorm clusters." "Crimson Sandstorm" appears ZERO times in the article
+    (verbatim scan); ESET actually likens the tradecraft to Turla (Mosquito, via Russia's SORM-3
+    / FSB) and StrongPity (Turkey, via Sandvine DPI per Citizen Lab): "The AitM scenario reminds
+    us of the Turla and StrongPity threat actors who have trojanized software installers on the
+    fly at the ISP level." Rewritten to match, with ESET's SORM low-confidence + router-not-
+    ruled-out hedges.
+
+    [b] ATTRIBUTION — corrected. attributing_org_confidence high -> moderate: ESET Key Points
+    say verbatim "We assess with medium confidence that they are aligned with Belarus's
+    interests." high was over-attestation. Added attribution_level: named-actor — ESET's own
+    named cluster "MoustachedBouncer" + a nation (Belarus), no service/unit named (mirrors the
+    Agrius/Tortoiseshell schema precedent: vendor-coined named cluster + nation = named-actor;
+    the nation pushes it past activity-cluster, absence of a service keeps it below named-unit).
+    auspex_assessment concur -> concur-with-caveat (medium nation confidence; ESET's low-
+    confidence Winter-Vivern-collaboration and low-confidence SORM assessments). Actor stays
+    by/unscoped/moustachedbouncer, consistent with the 2026-06-24 demotion from by/kgb.
+
+    [c] DATES — verified, no change. Source published_on 2023-08-10 = the post date;
+    disclosure_date 2023-08-10 ✓; start_date 2014-01-01 ✓ ("active since at least 2014";
+    earliest sample uploaded to VirusTotal 2014-11-19). end_date null defensible (activity
+    observed 2014–2022; no explicit end; group tracked active).
+
+    [d] DOCTRINE_LINK — downgraded strongly_inferred -> plausible. No cited source states the
+    espionage's strategic purpose (ESET gives victimology + tradecraft, not motive), and the
+    chosen pillar regime-stability-monitoring encodes DOMESTIC opposition/dissident/diaspora
+    monitoring (NEXTA/Telegram, Article 342), while this is FOREIGN-diplomatic espionage /
+    counterintelligence — a different mission — so >1 strategic reading survives. Rewrote the
+    reasoning to drop the "state authority unique to the Belarusian KGB" claim (inconsistent
+    with the by/unscoped demotion — ESET names no service) and added inference_basis.alternatives
+    (colon-space items quoted). Link kept (closest available BY doctrine) but honestly labelled.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+
+    [f] ACTOR_ID — by/unscoped/moustachedbouncer resolves (file atlas/actors/by/
+    moustachedbouncer.yaml, internal id matches the FK). Record is sound (audited 2026-06-24).
+
+    RESIDUAL / FLAGS: (1) target orgs/foreign-embassies-belarus was a DANGLING FK (defined
+    nowhere in atlas/targets/; only this event referenced it) — repointed to the resolving
+    sectors/government/foreign-ministry to keep the event conformant; orchestrator/Kara may
+    create the named org registry entry to restore the discriminative named target.
+    (2) Doctrine-fit is loose: the regime-stability-monitoring pillar is domestic-opposition-
+    scoped; there is no dedicated BY foreign-intelligence / counterintelligence doctrine in the
+    corpus for diplomatic espionage — flagged for possible new pillar/doctrine.

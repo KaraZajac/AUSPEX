@@ -1,44 +1,118 @@
 id: 2023-07/fin8-alphv-sardonic
 name: FIN8 deployment of ALPHV ransomware via Sardonic backdoor
-start_date: 2023-06-01
+start_date: 2022-12-01
 disclosure_date: 2023-07-18
-end_date: 2023-09-30
+end_date: null
 incident_type:
   - intrusion
   - ransomware
-initial_vector: phishing
+initial_vector: unknown
 outcome_summary: |
-  Bitdefender Labs disclosed July 18, 2023 a FIN8 campaign that
-  deployed the BlackCat / ALPHV ransomware payload via an
-  upgraded variant of FIN8's Sardonic backdoor. The campaign
-  confirmed FIN8's pivot from point-of-sale malware (its
-  original 2016-2020 specialty) into the ransomware-affiliate
-  model, joining Ragnar Locker (2021) and White Rabbit (2022)
-  in the FIN8 payload portfolio. The Sardonic variant added new
-  initialization, in-memory operation, and updated command set
-  to evade endpoint defenses. No specific victim was named in
-  the Bitdefender disclosure but multiple intrusions were
-  observed in the wild during June-July 2023.
+  Symantec's Threat Hunter Team (Broadcom) disclosed on July 18,
+  2023 that in December 2022 it had observed FIN8 (which Symantec
+  tracks as Syssphinx) attempt to deploy the Noberus / ALPHV /
+  BlackCat ransomware via a revamped variant of FIN8's Sardonic
+  backdoor. The revamp rewrote most of the backdoor's code so that
+  it "no longer uses the C++ standard library and most of the
+  object-oriented features have been replaced with a plain C
+  implementation" — a rewrite away from the original 2021 C++-based
+  Sardonic (documented by Bitdefender), apparently to avoid
+  similarities with previously disclosed detail. The activity
+  confirmed FIN8's pivot from point-of-sale malware (PUNCHTRACK /
+  BADHATCH, its original specialty since 2016) into ransomware,
+  following its June 2021 use of Ragnar Locker (against a US
+  financial-services company) and the January 2022 White Rabbit
+  ransomware (also Sardonic-based). Symantec named no specific
+  victim for the December 2022 Noberus intrusion and did not
+  identify its initial-access vector.
 false_flag_risk: none
 summary: |
-  Important AUSPEX criminal-baseline case for documenting
-  cross-cluster tooling reuse: FIN8 is a long-standing financial-
-  cybercrime cluster (`criminal/fin8`) while ALPHV is tracked as
-  Russian-state-tolerated (`ru/proxies/alphv`). FIN8's use of
-  ALPHV as a payload is operational rather than doctrinal — the
-  AUSPEX engine should treat such mixed-class incidents as
-  affiliate-portability noise rather than evidence of FIN8 state
+  AUSPEX criminal-baseline case documenting cross-cluster tooling
+  reuse: FIN8 (`criminal/fin8`), a long-standing financial-
+  cybercrime cluster, here deploys the Noberus / ALPHV / BlackCat
+  ransomware (`criminal/alphv`) as an affiliate payload via its
+  revamped Sardonic backdoor. Both are stateless profit-criminal
+  actors with no documented state nexus (ALPHV carries no cited
+  Russia / state-tolerance evidence — see the criminal/alphv actor
+  audit), so the incident carries no doctrinal or state-alignment
+  signal; the AUSPEX engine should treat it as affiliate-portability
+  / tooling-reuse baseline noise, not evidence of any state
   alignment.
 attributions:
   - actor_id: criminal/fin8
-    attributing_org: Bitdefender Labs
-    attributing_org_confidence: moderate
+    attributing_org: Symantec Threat Hunter Team (Broadcom)
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-07-18
-    attribution_source_id: bitdefender/2023-07-18_fin8-sardonic-alphv
+    attribution_source_id: symantec/2023-07-18_syssphinx-fin8-backdoor
+    notes: "Symantec attributes the December 2022 revamped-Sardonic / Noberus activity to its own tracked cluster Syssphinx (= FIN8) without hedging, on tool-lineage (the backdoor is part of the Sardonic framework 'previously used by the group') and TTP continuity. Named-actor (group named; criminal — no nation-state or unit). Re-attributed from the prior 'Bitdefender Labs' entry: the July 18 2023 disclosure was Symantec's, not Bitdefender's — Bitdefender's role was the original Aug-2021 C++ Sardonic discovery, a separate report."
 doctrine_links: []
-targets:
-  - target_id: sectors/finance/banking
-    role: primary
+targets: []
 sources:
-  - bitdefender/2023-07-18_fin8-sardonic-alphv
+  - symantec/2023-07-18_syssphinx-fin8-backdoor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The event is real and well-documented, but
+    was mis-cited to a defective Bitdefender record (bitdefender/2023-07-18_fin8-sardonic-alphv,
+    url:null). Re-sourced to the genuine primary — Symantec Threat Hunter Team (Broadcom),
+    "FIN8 Uses Revamped Sardonic Backdoor to Deliver Noberus Ransomware", 18 Jul 2023
+    (raw snapshot captured + hashed: sha256 b30a1b9f…af961544, 350,053 bytes; article body
+    present in raw HTML — hash independently re-verifiable). Every claim below is now
+    Symantec-carried (verbatim quotes in the source record).
+
+    [a] FACTS — corrected four fabrications/errors: (i) DISCLOSER Bitdefender Labs -> Symantec
+    Threat Hunter Team (Broadcom). (ii) TIMING — the ALPHV/Noberus deployment attempt was
+    DECEMBER 2022 ("In December 2022, Symantec observed the group attempting to deploy the
+    Noberus (aka ALPHV, BlackCat) ransomware in attacks"), disclosed 2023-07-18 — NOT
+    "June-July 2023"; fixed start_date 2023-06-01 -> 2022-12-01, stripped the fabricated
+    end_date 2023-09-30 -> null and the unsupported "multiple intrusions observed in the wild
+    during June-July 2023" (Symantec describes one Dec-2022 intrusion attempt). (iii) SARDONIC
+    REVAMP — replaced the unsupported "new initialization, in-memory operation, and updated
+    command set to evade endpoint defenses" tradecraft with the source's actual finding: the
+    code "no longer uses the C++ standard library and most of the object-oriented features have
+    been replaced with a plain C implementation" (a C++ -> plain-C rewrite to avoid similarity
+    with the 2021 Bitdefender-documented C++ Sardonic). NB the task framing "C++ revamp" is
+    directionally right but the specifics are a rewrite AWAY from C++ (dropped the C++ std
+    library / OOP) toward plain C. (iv) PIVOT HISTORY (POS PUNCHTRACK/BADHATCH since 2016;
+    Ragnar Locker Jun 2021 vs a US financial-services company; White Rabbit Jan 2022,
+    Sardonic-based) — all verbatim-carried.
+    [b] ATTRIBUTION — attributing_org Bitdefender Labs -> Symantec Threat Hunter Team (Broadcom);
+    Symantec names the actor as its tracked cluster Syssphinx (= FIN8) with no hedge, on
+    tool-lineage + TTP continuity -> attributing_org_confidence moderate -> high;
+    attribution_source_id repointed to symantec/2023-07-18_syssphinx-fin8-backdoor;
+    attribution_date 2023-07-18 retained (= Symantec pub date, in-page "18 Jul 2023").
+    [c] DATES — new source published_on 2023-07-18 (verified in-page). Event start_date ->
+    2022-12-01 (op = the Dec-2022 intrusion; Symantec gives month precision only),
+    disclosure_date 2023-07-18 unchanged, end_date -> null (single attempt; no end stated).
+    Old start/end conflated disclosure-adjacent months + a fabricated Sept-2023 tail.
+    [d] DOCTRINE_LINKS — [] retained and correct: both actors are stateless criminal/, no
+    doctrine genuinely applies (task-confirmed). No attested link -> no attesting_source_id needed.
+    [e] ATTRIBUTION_LEVEL — set named-actor (was absent): Symantec names the group
+    (Syssphinx/FIN8); no nation-state or named unit (criminal).
+    [f] ACTOR_ID — criminal/fin8 resolves to atlas/actors/criminal/fin8.yaml. Corrected the
+    summary's stale "ALPHV = ru/proxies/alphv (Russian-state-tolerated)" -> criminal/alphv (that
+    actor was demoted ru/proxies -> ru/unscoped -> criminal in Jun-2026 audits; no cited Russia
+    nexus). Stripped target sectors/finance/banking (a conflation with the Jun-2021 Ragnar
+    victim; Symantec names NO victim/sector/country for the Dec-2022 Noberus intrusion) ->
+    targets: []. initial_vector phishing -> unknown (Symantec did not identify the Dec-2022
+    intrusion's vector; only the group's general social-engineering/spear-phishing preference is
+    noted).
+
+    FLAGS (for orchestrator/Kara):
+    - SOURCE RETIRE: bitdefender/2023-07-18_fin8-sardonic-alphv is a wrong-source/phantom
+      (annotated in its notes). Its stored title maps to Bitdefender's 2021 BADHATCH deep-dive
+      (JSON-LD datePublished 2021-07-27), not any 2023 Sardonic/ALPHV report; no genuine
+      Bitdefender 2023 report exists. Orphaned from this event.
+    - ACTOR criminal/fin8: still cites the retired Bitdefender source in sources[] AND repeats
+      the wrong "Bitdefender Jul 2023 reporting confirmed FIN8 deployment of BlackCat/ALPHV" claim
+      in ttp_summary; both should be repointed to symantec/2023-07-18_syssphinx-fin8-backdoor.
+      (Subagent may not edit actor files.)
+
+    Residual uncertainty: Symantec gives only month precision ("December 2022") for the
+    intrusion; start_date 2022-12-01 is the best-estimate first-of-month. auspex_assessment kept
+    concur.

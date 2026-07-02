@@ -5,33 +5,167 @@ disclosure_date: 2023-05-16
 end_date: 2023-05-16
 incident_type:
   - documentary
-initial_vector: unknown
+  - law-enforcement
+initial_vector: valid-creds
 outcome_summary: |
-  Joint CISA / FBI / Australian Cyber Security Centre advisory
-  (AA23-136A) on BianLian ransomware. Documents the cluster's
-  pivot from encrypt-and-extort to data-extortion-only after the
-  Avast decryptor release in January 2023. Highlights US healthcare,
-  critical-manufacturing, and professional-services targeting and
-  characteristic Go-language tooling, RDP-credential initial
-  access, and Ngrok / Rsocks tunneling tradecraft.
+  Joint FBI / CISA / Australian Cyber Security Centre
+  #StopRansomware advisory (AA23-136A) on the BianLian ransomware
+  and data-extortion group. Documents the cluster's shift from a
+  double-extortion model (encrypt plus exfiltrate) to
+  exfiltration-based extortion — "primarily" around January 2023
+  and "exclusively" around January 2024 (per the November 2024
+  revision). Records BianLian affecting multiple U.S.
+  critical-infrastructure sectors since June 2022 and, in
+  Australia, private enterprise / critical infrastructure plus
+  professional services and property development. Characteristic
+  tradecraft: valid-RDP-credential initial access (from access
+  brokers), a per-victim custom Go backdoor, and Ngrok / Rsocks
+  SOCKS5 tunneling.
 false_flag_risk: none
 summary: |
   Foundational primary-source documentation of the BianLian
   cluster. AUSPEX includes this advisory as a standalone
   documentary event because it is the canonical multi-government
-  attribution of BianLian as a discrete operator outside the
-  Russian state-tolerated ecosystem (no FSB-tolerance language
-  appears in any AA23-136A revision through 2024).
+  profile of BianLian as a ransomware / data-extortion criminal
+  group (joint FBI + CISA + ASD's ACSC). The advisory's November
+  2024 revision assesses the group as "likely based in Russia,
+  with multiple Russia-based affiliates," but carries no
+  state-sponsorship or FSB-tolerance language. AUSPEX therefore
+  places BianLian under `criminal/`: a documented geographic
+  origin is not a state nexus, and no safe-harbor / tasking
+  attribution has been published. (Verified against the
+  snapshotted November 2024 revision; earlier revisions not
+  independently held.)
 attributions:
   - actor_id: criminal/bianlian
-    attributing_org: CISA + FBI + ACSC
+    attributing_org: FBI + CISA + ASD's ACSC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-05-16
     attribution_source_id: cisa/2023-05-16_aa23-136a-bianlian-advisory
+    notes: |
+      AA23-136A is a joint #StopRansomware advisory: "The Federal
+      Bureau of Investigation (FBI), Cybersecurity and
+      Infrastructure Security Agency (CISA), and Australian Signals
+      Directorate's Australian Cyber Security Centre (ASD's ACSC)
+      are releasing this joint Cybersecurity Advisory to disseminate
+      known BianLian ransomware and data extortion group IOCs and
+      TTPs". attribution_level = named-actor: a named criminal group
+      is identified; no service/unit is named. The Nov-2024 revision
+      adds "likely based in Russia, with multiple Russia-based
+      affiliates" — a geographic-origin assessment, not a
+      state-sponsorship or FSB-tolerance claim; hence criminal/,
+      not ru/proxies/.
 doctrine_links: []
 targets:
-  - target_id: sectors/healthcare/hospital
+  - target_id: sectors/critical-infrastructure
     role: primary
 sources:
   - cisa/2023-05-16_aa23-136a-bianlian-advisory
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the RAW AA23-136A snapshot
+    (cisa__2023-05-16_aa23-136a-bianlian-advisory.html, sha256
+    1b937b45…2945f594, 137,973 bytes — hash re-verified this audit;
+    the snapshotted live page is the Nov-20-2024 revision, original
+    release date 2023-05-16 retained). Single-source documentary
+    event; sole source is the advisory itself.
+
+    [a] FACTS — several corrections for source-fidelity:
+    • RDP initial access CONFIRMED (verbatim): "gains access to
+      victim systems through valid Remote Desktop Protocol (RDP)
+      credentials" / "initial access to networks by leveraging
+      compromised Remote Desktop Protocol (RDP) credentials likely
+      acquired from initial access brokers". Set initial_vector
+      unknown → valid-creds (the advisory's headline definite
+      vector; RDP is also used for lateral movement).
+    • Go tooling CONFIRMED: "implant a custom backdoor specific to
+      each victim written in Go".
+    • Ngrok / Rsocks CONFIRMED: "Ngrok and/or a modified version of
+      the open-source Rsocks utility" … "Rsocks to establish SOCKS5
+      network tunnels … to mask the destination of C2 traffic".
+    • PIVOT CONFIRMED but Avast causation STRIPPED: advisory says
+      "originally employed a double-extortion model … however, they
+      shifted primarily to exfiltration-based extortion around
+      January 2023 and shifted to exclusively exfiltration-based
+      extortion around January 2024." ZERO "Avast" hits in the raw;
+      the only "decryptor" hit is the FBI asking victims to submit
+      decryptor-file samples. Removed "after the Avast decryptor
+      release in January 2023" from outcome_summary (unsupported
+      causal embellishment) and added the Jan-2024 "exclusively"
+      milestone from the Nov-2024 revision.
+    • SECTORS de-inflated: advisory states only "BianLian group
+      actors have affected organizations in multiple U.S. critical
+      infrastructure sectors since June 2022" and "targeted
+      Australian critical infrastructure sectors in addition to
+      professional services and property development". It does NOT
+      name healthcare (0 "healthcare" hits; the lone "medical" hit
+      is a ransom-note quote about leaking "personal and medical
+      information", not a sector-targeting statement) and does NOT
+      name critical-manufacturing as a BianLian sector (the string
+      "Critical Manufacturing Sector" appears only as CISA
+      taxonomy/nav boilerplate). "professional services" is
+      AUSTRALIAN, not US. Rewrote outcome_summary to the advisory's
+      actual sector language.
+
+    [b] ATTRIBUTION — joint govt, high, named-actor. Verbatim:
+    "The Federal Bureau of Investigation (FBI), Cybersecurity and
+    Infrastructure Security Agency (CISA), and Australian Signals
+    Directorate's Australian Cyber Security Centre (ASD's ACSC) are
+    releasing this joint Cybersecurity Advisory to disseminate known
+    BianLian ransomware and data extortion group IOCs and TTPs".
+    Normalized attributing_org → "FBI + CISA + ASD's ACSC"; added
+    attribution_level: named-actor (a named criminal group; no
+    service/unit named) and a notes block. actor_id criminal/bianlian
+    KEPT: the Nov-2024 revision's "likely based in Russia, with
+    multiple Russia-based affiliates" is a geographic-origin line,
+    NOT a state-sponsorship/FSB-tolerance/safe-harbor claim (0 "FSB"
+    hits; the "Pro-Russia Hacktivists" and "Chinese State-Sponsored"
+    strings are related-advisory sidebar boilerplate for AA25-343A /
+    AA25-239A). Geographic origin ≠ state nexus, so criminal/ stands
+    (not ru/proxies/). Rewrote summary: removed the overreaching
+    "discrete operator outside the Russian state-tolerated ecosystem"
+    framing (the advisory is silent on state nexus and actually
+    places the group's base IN Russia) and stated the honest basis
+    for the criminal/ placement.
+
+    [c] DATES — start/disclosure/end = 2023-05-16 (original AA23-136A
+    release) retained; correct for a single-day publication event.
+    Source published_on 2023-05-16 correct (original release; live
+    snapshot is the Nov-2024 revision, noted in the source record).
+
+    [d] DOCTRINE_LINKS — [] retained and correct. BianLian is
+    stateless financially-motivated data-extortion; criminal/bianlian
+    carries default_doctrine_alignment_ids: [] and no doctrine goal
+    is stated by the source. No attested link, nothing to downgrade.
+
+    [e] ATTRIBUTION_LEVEL — added (was missing): named-actor.
+
+    [f] ACTOR_ID — criminal/bianlian resolves to
+    atlas/actors/criminal/bianlian.yaml. No actor edit made.
+
+    TARGETS — corrected sectors/healthcare/hospital (role primary) →
+    sectors/critical-infrastructure (role primary): the healthcare/
+    hospital target was sector inflation not carried by AA23-136A,
+    which names only "multiple U.S. critical infrastructure sectors".
+
+    FLAGS for orchestrator (no edits made to these):
+    • ACTOR criminal/bianlian ttp_summary asserts the pivot happened
+      "after Avast released a free decryptor" and lists initial access
+      "via … SonicWall"; NEITHER is carried by its sole cited source
+      AA23-136A (0 Avast, 0 SonicWall hits — the advisory names only
+      RDP valid-creds + a hedged "possibly leveraging the ProxyShell
+      exploit chain"). Avast/SonicWall need a separate source or
+      removal; actor-file fix is orchestrator/Kara's call.
+    • SOURCE record note is accurate; hash re-verified, tier primary
+      correct (first-party govt cert-advisory).
+
+    RESIDUAL — only the Nov-20-2024 revision was independently held;
+    the original May-2023 text and intermediate revisions were not
+    re-fetched, so the summary's FSB-absence claim is verified for
+    the snapshotted revision, phrased accordingly.

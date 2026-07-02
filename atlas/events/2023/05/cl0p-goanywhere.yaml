@@ -5,39 +5,145 @@ disclosure_date: 2023-02-01
 end_date: 2023-04-30
 incident_type:
   - data-theft
+  - extortion
   - supply-chain
 initial_vector: 0-day
 outcome_summary: |
-  Cl0p exploited a zero-day deserialization vulnerability
-  (CVE-2023-0669) in Fortra's GoAnywhere MFT product January
-  2023. ~130 organizations affected including Community Health
-  Systems (~1M patient records), Hitachi Energy, Procter & Gamble,
-  Crown Resorts, Saks Fifth Avenue, the City of Toronto.
+  Cl0p exploited a pre-authentication remote-code-execution zero-day
+  (CVE-2023-0669, an insecure-deserialization flaw in the GoAnywhere MFT
+  License Response Servlet). Fortra's own investigation dates the
+  earliest unauthorized activity to 18 January 2023 and directly
+  observed data theft from hosted MFTaaS environments between 28-30
+  January 2023; Fortra published its advisory on 1 February and an
+  emergency patch (7.1.2) on 7 February 2023, after a public
+  proof-of-concept appeared on ~6 February.
+
+  On 10 February 2023 Cl0p claimed on its leak site to have stolen data
+  from "over 130 organizations" — a self-claim BleepingComputer "could
+  not independently confirm" and Fortra did not corroborate; the number
+  of INDEPENDENTLY confirmed victims is far smaller. Confirmed victims
+  include Community Health Systems (up to ~1M patients' PHI, per its SEC
+  8-K), Hitachi Energy, Rubrik, and Hatch Bank (~140k Social Security
+  numbers). Other organizations named on Cl0p's leak site (e.g. City of
+  Toronto, Crown Resorts, Procter & Gamble) later acknowledged
+  incidents; Saks Fifth Avenue said the exposed data was mock/test data.
+  Extortion followed Cl0p's data-theft model (files generally not
+  encrypted).
 false_flag_risk: none
 summary: |
-  Cl0p's GoAnywhere campaign was the proof-of-concept exploit-
-  zero-day-in-MFT-product pattern that scaled into the MOVEit
-  campaign four months later. AUSPEX treats the two as
-  sequential phases of a single Cl0p MFT-exploitation
-  campaign (2023-Q1 GoAnywhere → 2023-Q2 MOVEit → 2024-Q4 Cleo).
+  AUSPEX treats the GoAnywhere campaign as the first managed-file-
+  transfer (MFT) zero-day mass-exploitation phase of Cl0p's MFT campaign
+  line (2023-Q1 GoAnywhere -> 2023-Q2 MOVEit CVE-2023-34362 -> 2024-Q4
+  Cleo) — the proof-of-concept pattern that scaled four months later
+  into the far larger MOVEit campaign. Actor attribution to the
+  Cl0p/TA505/FIN11 cluster rests on Mandiant's technical analysis
+  (UNC4857 merged into FIN11); the campaign's scope beyond the confirmed
+  victims rests on Cl0p's own uncorroborated leak-site claims and is
+  therefore recorded as a claim, not a count.
 attributions:
   - actor_id: criminal/clop
-    attributing_org: Mandiant + Fortra
+    attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-02-10
+    attribution_date: 2023-02-23
     attribution_source_id: mandiant/2023-02-23_goanywhere-cl0p
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Same plausible-tolerance reasoning as the MOVEit campaign.
-    contested: false
-    analyst: claude
+    notes: "Mandiant attributed the GoAnywhere CVE-2023-0669 exploitation to UNC4857, subsequently merged into FIN11 (the TA505/Cl0p data-theft-extortion cluster) 'based on targeting, infrastructure, certificate, and data leak site (DLS) overlaps' -> resolves to criminal/clop (FIN11 is a listed alias). Level named-actor (a criminal cluster; no nation-state unit). CORRECTION: attributing_org was 'Mandiant + Fortra' -> 'Mandiant'; Fortra (vuln discloser/remediator) and Palo Alto Unit 42 (incident response) did NOT attribute the actor — Fortra's own post-mortem carries zero Cl0p/Mandiant mentions. attribution_date 2023-02-10 -> 2023-02-23 to match the cited Mandiant report. Mandiant's report is link-rotted (soft-404) and its attribution is mirror-corroborated only -> qc level partial."
+doctrine_links: []
 targets:
   - target_id: orgs/fortra-goanywhere
     role: primary
+  - target_id: sectors/healthcare/hospital
+    country: us
+    role: primary
 sources:
   - mandiant/2023-02-23_goanywhere-cl0p
+  - fortra/2023-04-17_summary-investigation-cve-2023-0669
+  - bleepingcomputer/2023-02-10_clop-claims-130-orgs-goanywhere
+  - hipaajournal/2023-03-10_chs-goanywhere-1m-patients
+  - therecord/2023-03-17_clop-goanywhere-victim-list
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: partial
+  notes: |
+    Phantom/link-rot remediation + full 6-point audit. The sole cited
+    source (Mandiant blog) is LINK-ROTTED: the cloud.google.com URL
+    returns a Google Cloud SPA soft-404 ("...fortra-goanywhere-cl0p was
+    not found on this server. That's all we know."; 404-shell sha
+    116d1bcd...4c2e2da1) with no article prose — curl + WebFetch both
+    confirm. archive.org is blocked for the fetcher. PATH TAKEN:
+    RE-SOURCE (badrabbit model) — the incident is real and heavily
+    documented; added four reachable sources (all snapshotted + hashed)
+    and kept the Mandiant record for attribution (annotated, no content
+    hash). Level PARTIAL because the load-bearing ATTRIBUTION source
+    (Mandiant) is un-snapshottable and mirror-corroborated only.
+
+    [a] FACTS — corrected the central OVER-ATTESTATION. The record
+    presented "~130 organizations affected" as fact carried by Mandiant.
+    It is neither: the 130 figure is Cl0p's OWN leak-site claim, and
+    Mandiant published no victim list. BleepingComputer (2023-02-10, sha
+    dbcea075...4c68013b, 94,473 B): "saying they stole data from over 130
+    organizations" and "BleepingComputer could not independently confirm
+    Clop's claims, and Fortra has not replied". Reframed outcome_summary
+    to record 130 as an uncorroborated self-claim and to separate
+    INDEPENDENTLY-confirmed victims from leak-site listings. Confirmed:
+    Community Health Systems ~1M PHI via its SEC 8-K — HIPAA Journal
+    (2023-03-10, sha 92f8d5ec...37ba8ba, 388,801 B): "protected health
+    information of up to 1 million individuals was potentially"
+    [compromised]; Rubrik + Hatch Bank (~140k SSNs) + Hitachi Energy —
+    The Record (2023-03-17, sha 7d83e5b8...1330a6da, 86,589 B): "Rubrik
+    confirmed to The Record ... using the GoAnywhere bug", "Hatch Bank
+    also said hackers used the Fortra bug to steal 140,000 customer
+    Social Security numbers". Leak-site-listed-then-acknowledged (Toronto,
+    Crown Resorts, P&G) kept but labelled as such; Saks flagged as
+    disputed (test/mock data). Vuln nature + timeline set from Fortra's
+    first-party post-mortem (2023-04-17, sha 9f3c6a2b...d726d42, 91,085
+    B): "between January 28, 2023, and January 30, 2023, an unauthorized
+    party used a previously unknown, zero-day remote code execution (RCE)
+    vulnerability ... assigned CVE-2023-0669" and "this activity pushed
+    the unauthorized activity timeline to January 18." Added incident_type
+    'extortion' (Cl0p's data-theft-extortion model; files generally not
+    encrypted). initial_vector 0-day retained (exploited from ~18 Jan,
+    before the 1 Feb disclosure / 7 Feb patch).
+
+    [b] ATTRIBUTION — attributing_org 'Mandiant + Fortra' -> 'Mandiant'
+    (Fortra's post-mortem attributes no actor: zero Cl0p/Mandiant
+    tokens). attribution_date 2023-02-10 -> 2023-02-23 (the Mandiant
+    report date). Added attribution_level named-actor. Mandiant's
+    UNC4857->FIN11 technical merge = high confidence (mirror-corroborated
+    wording quoted in the Mandiant source record); auspex_assessment
+    concur retained. actor_id criminal/clop resolves (FIN11/TA505 listed
+    aliases).
+
+    [c] DATES — start_date 2023-01-18 CONFIRMED by Fortra ("timeline to
+    January 18"). disclosure_date 2023-02-01 CONFIRMED (Fortra advisory
+    1 Feb). end_date 2023-04-30 retained as an editorial campaign-window
+    bound (discrete exploitation ended ~7 Feb at patch; Fortra closed its
+    investigation mid-April; leak-site extortion tapered into spring) —
+    not a discretely sourced date. Source published_on dates verified
+    (Mandiant 2023-02-23; HIPAA Journal datePublished 2023-03-10 —
+    corrected the raw filename/id to that date).
+
+    [d] DOCTRINE_LINKS — REMOVED the ru/sanctions-response-2022 /
+    criminal-proxy-mobilization link -> []. It was a circular placeholder
+    ("Same plausible-tolerance reasoning as the MOVEit campaign") and is
+    inconsistent with the actor's current state: criminal/clop is a
+    stateless profit-criminal whose default_doctrine_alignment_ids were
+    emptied on 2026-06-25 precisely because no cited source documents a
+    Russia-state nexus (and ru/sanctions-response-2022's roster never
+    names Cl0p/TA505/FIN11). No doctrine genuinely applies -> [] per the
+    criminal/ convention.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (Mandiant named the UNC4857/
+    FIN11 cluster; a criminal group, not a state unit).
+
+    [f] ACTOR_ID — criminal/clop resolves to atlas/actors/criminal/clop.yaml
+    (well-formed, recently audited/de-provisionalized). No actor edit.
+
+    RESIDUAL UNCERTAINTY: Mandiant primary un-snapshottable (link-rot) ->
+    attribution rests on mirror corroboration. orgs/fortra-goanywhere is a
+    dangling target FK (no registry file); kept for parity with the MOVEit
+    sibling's identical dangling orgs/progress-moveit and because I may not
+    create target files — see FLAGS.

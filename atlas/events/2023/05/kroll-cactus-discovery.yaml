@@ -1,37 +1,120 @@
 id: 2023-05/kroll-cactus-discovery
-name: Kroll discovery of Cactus ransomware via Fortinet VPN exploitation
+name: Kroll discovery of Cactus ransomware via VPN-appliance exploitation
 start_date: 2023-03-01
 disclosure_date: 2023-05-09
 end_date: 2023-05-09
 incident_type:
   - documentary
-initial_vector: unknown
+initial_vector: n-day
 outcome_summary: |
-  Kroll Cyber Risk published the first public documentation of
-  the Cactus ransomware family May 9, 2023. The disclosure
-  documented Cactus's distinctive self-encrypting payload
-  technique — the binary encrypts itself during deployment to
-  evade endpoint detection — and the cluster's initial-access
-  pattern of Fortinet VPN credential abuse. Kroll observed
-  Cactus intrusions across multiple incident-response
-  engagements beginning March 2023.
+  Kroll Cyber Threat Intelligence published the first public
+  documentation of the Cactus ransomware family in May 2023,
+  coining the name (from the cAcTuS.readme.txt ransom note). The
+  disclosure documented Cactus's distinctive self-encrypting
+  encryptor — per Kroll the binary "requires a key to decrypt the
+  binary for execution, likely to prevent detection via anti-virus
+  software" (the AES key is planted in a ntuser.dat file loaded via
+  a scheduled task) — and an initial-access pattern of exploiting
+  documented vulnerabilities in VPN appliances. Kroll assessed
+  those to be Fortinet VPN appliances in its statement to
+  BleepingComputer; the Kroll bulletin itself names only "VPN
+  appliances." Kroll observed the activity across several
+  incident-response engagements dating to at least March 2023, with
+  double-extortion (Rclone data theft prior to encryption).
 false_flag_risk: none
 summary: |
   Foundational documentary event for the `criminal/cactus`
-  cluster. Cactus subsequently became one of the most active
-  mid-tier RaaS brands of 2023-24 with Schneider Electric
-  Sustainability Business and Coop Sweden among notable
-  victims. No public state-nexus attribution exists.
+  cluster: Kroll's May 2023 bulletin is the family's first public
+  documentation and the origin of its name. Kroll characterized the
+  victims only as "large commercial entities" and named no specific
+  victim or industry sector at the time of writing. Cactus is
+  financially motivated (data theft + extortion over Tox) with no
+  published state nexus — hence `criminal/` placement and no
+  doctrine link. (Later high-profile victims and the Qlik Sense /
+  Fortinet-CVE tradecraft belong to separate 2023-24 events with
+  their own sourcing and are intentionally not asserted here.)
 attributions:
   - actor_id: criminal/cactus
-    attributing_org: Kroll Cyber Risk
+    attributing_org: Kroll Cyber Threat Intelligence
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-05-09
     attribution_source_id: kroll/2023-05-09_cactus-ransomware-self-encrypting
+    notes: "Kroll coined and named the CACTUS cluster from its own incident-response data ('a new ransomware strain which we're calling CACTUS'). named-actor — a named criminal ransomware group, more than a bare unnamed activity-cluster; no nation/unit applies. Confidence moderate (not upgraded): Kroll is confident it is a distinct new family but makes no actor-identity or state-nexus claim."
 doctrine_links: []
-targets:
-  - target_id: sectors/critical-infrastructure
-    role: primary
 sources:
   - kroll/2023-05-09_cactus-ransomware-self-encrypting
+  - bleepingcomputer/2023-05-07_cactus-ransomware-encrypts-itself
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW Kroll bulletin "CACTUS Ransomware: Prickly New Variant
+    Evades Detection" (kroll snapshot 31b196a5…e83b43a6, 352,077 bytes) plus a
+    newly-added corroborating BleepingComputer report (d9d7e409…cc4f365f,
+    93,397 bytes). Both fetch HTTP 200 with a browser UA and were snapshotted.
+
+    [a] FACTS — several corrections. (i) The Kroll bulletin contains ZERO
+    instances of "Fortinet" (grep=0); it says only "documented vulnerabilities
+    in VPN appliances" and access "obtained from a VPN server with a VPN
+    service account." The Fortinet specificity exists ONLY in BleepingComputer,
+    quoting Kroll ("exploiting known vulnerabilities in Fortinet VPN
+    appliances"). Fixed: event name generalized "Fortinet VPN" -> "VPN-
+    appliance"; outcome_summary now attributes Fortinet to Kroll-via-
+    BleepingComputer and states the bulletin itself says only "VPN appliances."
+    (ii) "credential abuse" was WRONG — both sources describe EXPLOITATION of
+    known/documented vulnerabilities, not credential abuse; corrected, and
+    initial_vector unknown -> n-day. (iii) Self-encryption VERIFIED (Kroll: the
+    encryptor "requires a key to decrypt the binary for execution, likely to
+    prevent detection via anti-virus software"; Iacono/Kroll to BleepingComputer:
+    "CACTUS essentially encrypts itself, making it harder to detect and helping
+    it evade antivirus"). (iv) March-2023 + multiple IR engagements VERIFIED
+    ("active since at least March 2023"; "a common thread across several CACTUS
+    incidents that Kroll has investigated"). (v) STRIPPED unsourced forward
+    claims from summary: "most active mid-tier RaaS brand of 2023-24",
+    "Schneider Electric Sustainability Business", "Coop Sweden" — none appear in
+    either May-2023 source (RaaS/Schneider/Coop grep=0); they are separate
+    2023-24 events, removed rather than fabricated onto this source.
+
+    [b] ATTRIBUTION — Kroll coined + named CACTUS from its own IR data.
+    attributing_org tightened "Kroll Cyber Risk" -> "Kroll Cyber Threat
+    Intelligence" (the bulletin's self-description). Confidence kept moderate
+    (not upgraded); auspex_assessment concur retained.
+
+    [c] DATES — the Kroll page header displays "May 10, 2023" and first press
+    coverage (BleepingComputer) is 2023-05-07, so the bulletin's exact day is
+    uncertain within 05-07..05-10. Kept published_on / attribution_date /
+    disclosure_date at 2023-05-09 (matches the stable source slug; low churn),
+    documenting the spread here + in the source notes. New BC source
+    published_on = 2023-05-07 (verified in-body). start_date 2023-03-01 retained.
+
+    [d] DOCTRINE_LINKS — []. Correct and retained: financially-motivated
+    criminal ransomware; no source names a strategic/state purpose; no doctrine
+    applies (not invented).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (Kroll named the CACTUS
+    group; nation/unit N/A for a criminal family), mirroring the Agrius exemplar.
+
+    [f] ACTOR_ID — criminal/cactus resolves to atlas/actors/criminal/cactus.yaml.
+    FLAG (not edited): that actor's ttp_summary says "Initial access
+    predominantly via Fortinet VPN credential abuse" — same "credential abuse"
+    mischaracterization (it is vulnerability EXPLOITATION), and its Fortinet +
+    Qlik Sense CVEs (CVE-2023-41265/41266/48365) + Schneider/Coop victims are
+    carried by only the Kroll May-2023 bulletin, which names none of them; the
+    actor record needs BleepingComputer + later Qlik/victim sources added (or
+    those specifics sourced) and "credential abuse" -> "vulnerability exploitation."
+
+    TARGETS — removed the sole targets entry (sectors/critical-infrastructure):
+    sector inflation. Both sources characterize victims only as "large
+    commercial entities" — no named victim, no specific industry sector — and
+    the registry has no generic commercial/enterprise sector; a documentary
+    discovery event is better with targets omitted than inflated.
+
+    SOURCE FLAG: the Kroll bulletin is first-party ORIGINAL vendor research and
+    is arguably tier: primary, but tier PRESERVED as secondary per instruction —
+    orchestrator to adjudicate. Residual: exact Kroll pub day (05-07..05-10); BC
+    author byline not confirmable from the snapshot, so publisher left as
+    "BleepingComputer" (no byline fabricated).

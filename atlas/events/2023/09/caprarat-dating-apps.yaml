@@ -1,48 +1,180 @@
 id: 2023-09/caprarat-dating-apps
-name: SentinelLabs documents CapraRAT Android-implant delivery via fake dating apps
-start_date: 2022-06-01
-disclosure_date: 2023-09-13
+name: SentinelLabs (CapraTube) documents Transparent Tribe / APT36 CapraRAT Android spyware in fake YouTube apps using a "Piya Sharma" romance-persona lure
+start_date: 2023-04-01
+disclosure_date: 2023-09-18
 end_date: null
 incident_type:
-  - intrusion
+  - surveillance
+  - espionage
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  SentinelLabs documented Transparent Tribe / APT36 use of fake
-  Android dating applications ("MMM Premium," "MMM Plus") to
-  deliver CapraRAT to Indian military and political targets.
-  The CapraRAT implant gives the actor SMS, call-log, location,
-  microphone, and file-access. The delivery vector — romance-
-  themed social engineering rather than phishing — is unusual
-  for the cluster.
+  In its "CapraTube" report, SentinelLabs (Alex Delamotte) analyzed
+  three Android APKs — yt.apk, YouTube_052647.apk and a "Piya Sharma"
+  app — that deliver Transparent Tribe / APT36's CapraRAT by mimicking
+  the appearance of YouTube (loading YouTube inside a WebView) rather
+  than being fully-featured apps. CapraRAT is a highly invasive RAT
+  giving the actor microphone/camera recording, SMS and multimedia-
+  message and call-log collection, SMS sending/blocking, call
+  initiation, screen capture, GPS/network override, and filesystem
+  file access. One APK reaches out to a YouTube channel for a "Piya
+  Sharma" persona; SentinelLabs assesses this reflects continued
+  romance-based social engineering. The report also notes, as
+  background, that earlier in 2023 the group distributed CapraRAT
+  apps disguised as a dating service.
 false_flag_risk: none
 summary: |
-  Notable for documenting a behavioral / social-engineering
-  delivery vector outside the cluster's traditional email-phishing
-  pattern. CapraRAT itself is a fork of the open-source AndroRAT.
-  The targeting of Indian military personnel via dating apps is
-  consistent with longstanding ISI honey-trap operational
-  practice, recast in mobile / cyber form.
+  Documents Transparent Tribe / APT36's distribution of CapraRAT
+  Android spyware through self-run websites and social-engineering
+  lures outside the Google Play store. The new element SentinelLabs
+  highlights is the YouTube-mimicking app disguise; romance-based
+  social engineering (here via the "Piya Sharma" persona) is described
+  as a continuation of the group's known behaviour, not a novelty.
+  CapraRAT was, per Trend Micro's original naming, possibly "loosely
+  based on the AndroRAT source code," though SentinelLabs notes present-
+  day similarities to AndroRAT are minimal. Infrastructure overlaps
+  (shareboxs[.]net, used by the group since at least 2019; CrimsonRAT-
+  style version conventions; the WIN-P9NRMH5G6M8 certificate) tie the
+  samples to Transparent Tribe. Targeting Indian military personnel
+  via mobile social engineering is consistent with the group's
+  long-running India-collection focus.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: SentinelLabs (Alex Delamotte)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-09-13
+    attribution_date: 2023-09-18
     attribution_source_id: sentinellabs/2023-09-13_caprarat-dating-apps
+    notes: "SentinelLabs links the APKs to 'Transparent Tribe's CapraRAT' and backs the group attribution with infrastructure overlap (shareboxs[.]net associated with the group since 2019; CrimsonRAT version conventions; WIN-P9NRMH5G6M8 cert) — high confidence in the named-actor attribution. The NATION is hedged: 'Transparent Tribe is a suspected Pakistani actor.' No specific Pakistani service/unit is named (consistent with actor id pk/unscoped) — hence attribution_level named-actor, not named-unit."
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian military targeting via mobile social engineering;
-      consistent with the broader Pakistani asymmetric-posture
-      collection doctrine.
+      A Pakistani-aligned actor (Transparent Tribe / APT36) whose
+      defining mission is collection against Indian military and
+      diplomatic personnel, delivering mobile surveillance spyware via
+      romance-themed social engineering, fits the asymmetric-posture-
+      India military-collection pillar. The source does not state a
+      strategic goal, so this is inferred rather than attested; but the
+      group's India-military targeting reputation plus the
+      military/diplomatic victimology give a single dominant reading.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "SentinelLabs: 'Transparent Tribe is a suspected Pakistani actor known for targeting military and diplomatic personnel in both India and Pakistan.'"
+        - "CapraRAT is a surveillance RAT (microphone, SMS, call logs, location, files) — a collection tool matching the military-collection pillar."
+        - "Romance-persona (Piya Sharma) social engineering aimed at inducing installation by targeted individuals fits collection against personnel."
+      ruled_out: "Domestic surveillance of Pakistani dissidents / human-rights activists — the source notes the group also targets activists 'working on matters related to Pakistan', but that is secondary to the group's India-collection core and this campaign's India-military framing."
 targets:
   - target_id: persons/indian-military-personnel
     role: primary
+    country: in
 sources:
   - sentinellabs/2023-09-13_caprarat-dating-apps
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW cited source — SentinelLabs "CapraTube | Transparent Tribe's
+    CapraRAT Mimics YouTube to Hijack Android Phones" (Alex Delamotte), raw snapshot
+    sentinellabs__2023-09-13_caprarat-dating-apps.html, sha256 20b3bd03…5a2ac84
+    (337,562 bytes), hash RE-VERIFIED against the on-disk snapshot (matches the recorded
+    content_sha256; not re-fetched).
+
+    HEADLINE DEFECT — WRONG FRAMING / FABRICATED SPECIFICS (corrected in place, "badrabbit
+    model" not needed — the cited source is real and load-bearing): the event previously
+    read "delivery via fake DATING apps ('MMM Premium,' 'MMM Plus')" dated 2022-06. The
+    cited source is the CapraTube report about fake YOUTUBE apps. "MMM" = 0 hits in the raw;
+    "MMM Premium"/"MMM Plus" are FABRICATED app names carried by no source (and not the real
+    ESET MeetsApp/MeetUp names either — that is the separate 2022-08/caprarat-android-kashmir
+    event). The source's ONLY dating reference is one background sentence: "Earlier in 2023,
+    the group distributed CapraRAT Android apps disguised as a dating service." Re-framed the
+    name/outcome_summary/summary to the campaign the source actually documents (three YouTube-
+    themed APKs — yt.apk, YouTube_052647.apk, Piya Sharma.apk — + the Piya Sharma romance
+    persona). Event id / file slug ("caprarat-dating-apps") KEPT per the stable-slug rule; the
+    dating framing is legacy.
+
+    [a] FACTS — YouTube-mimicking APKs: RAW "SentinelLABS identified three Android application
+    packages (APK) linked to Transparent Tribe's CapraRAT… These apps mimic the appearance of
+    YouTube" + "load_web method launches a WebView object to load YouTube's website" ✓.
+    Capabilities verbatim-supported: "Recording with the microphone, front & rear cameras;
+    Collecting SMS and multimedia message contents, call logs; Sending SMS messages, blocking
+    incoming SMS; Initiating phone calls; Taking screen captures; Overriding system settings
+    such as GPS & Network; Modifying files on the phone's filesystem" — event's SMS/call-log/
+    location/microphone/file-access list ✓. AndroRAT: SOFTENED — RAW only says "when the tool
+    was initially named by Trend Micro, their research team noted that CapraRAT may be loosely
+    based on the AndroRAT source code" and "similarities between CapraRAT and AndroRAT are
+    seemingly minimal at this point" — the prior flat claim "CapraRAT itself is a fork of the
+    open-source AndroRAT" was an overstatement, corrected. "political" targets → corrected to
+    "military and diplomatic" (RAW: "targeting military and diplomatic personnel in both India
+    and Pakistan"; no "political"). "romance… unusual for the cluster" → corrected: RAW frames
+    romance SE as a continuation ("continues to use romance-based social engineering") and the
+    YOUTUBE-app disguise as "a new addition to a known trend"; removed the self-contradictory
+    "rather than phishing" clause. incident_type [intrusion, data-theft] → [surveillance,
+    espionage, data-theft] (mobile surveillance RAT vs military/diplomatic personnel).
+    initial_vector: KEPT phishing — RAW distribution is "self-run websites and social
+    engineering"/"through social media" (app-lure social engineering, not email phishing and
+    not an exploit); the schema initial_vector vocab has no "social-engineering" value, so
+    phishing is used as the human-deception bucket.
+
+    [b] ATTRIBUTION — attributing_org SentinelLabs (Alex Delamotte) ✓ (byline confirmed).
+    attribution_level ADDED = named-actor: RAW names the group (Transparent Tribe / APT36) and
+    hedges the nation ("a suspected Pakistani actor"); no service/unit named (→ pk/unscoped).
+    attributing_org_confidence KEPT high: the group linkage is asserted and evidenced by
+    infrastructure overlap (shareboxs[.]net since 2019; CrimsonRAT version syntax; WIN-
+    P9NRMH5G6M8 cert) — the "suspected" hedge attaches to the NATION, not the group. auspex
+    concur ✓.
+
+    [c] DATES — CORRECTED. Source published_on 2023-09-13 → 2023-09-18 (RAW JSON-LD
+    "datePublished":"2023-09-18T13:00:03+00:00" + visible byline "September 18, 2023"; zero
+    occurrences of Sept 13 in the raw). Propagated to event disclosure_date and
+    attribution_date (2023-09-13 → 2023-09-18). start_date 2022-06-01 → 2023-04-01: unsupported
+    June-2022 date was conflated with CapraRAT's general 2022 Android debut; the earliest sample
+    THIS report analyzes is Piya Sharma.apk "uploaded to VirusTotal in April 2023" (yt.apk July
+    2023, YouTube_052647.apk August 2023; report also references ESET's March-2023 samples).
+    Source id slug and raw_snapshot filename retain "2023-09-13" (stable slug/filename) — NOT
+    renamed; only published_on corrected.
+
+    [d] DOCTRINE — link kept strongly_inferred (NOT attested; the source states targeting/
+    victimology but no strategic GOAL, so no attesting_source_id — correct). Added structured
+    inference_basis {signals[], ruled_out} (was absent). ruled_out = domestic activist
+    surveillance (RAW notes activists "working on matters related to Pakistan"), secondary to
+    the India-collection core. perspective absent → attacker-rationale (Pakistani actor's own
+    doctrine on a Pakistani op — no cross-state mismatch). Doctrine pk/asymmetric-posture-india
+    + pillar /military-collection FK-resolve ✓.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+
+    [f] ACTOR_ID — pk/unscoped/transparent-tribe RESOLVES (record at
+    atlas/actors/pk/transparent-tribe.yaml declares id: pk/unscoped/transparent-tribe; the
+    2026-06-24 audit demoted it from pk/isi and FK-propagated). No actor-file edit made.
+
+    TARGET — persons/indian-military-personnel: no targets-registry entry exists (only orgs/*),
+    but validate.ts FK-checks only sectors/orgs/infra and conformance tolerates persons/* (2
+    such ids corpus-wide); kept, and ADDED country: in (directionality: victims are in INDIA —
+    NOT the attacker's home pk). Residual: the source describes the GROUP's general victimology
+    (India + Pakistan military/diplomatic/activists), not THIS campaign's specific victims, so
+    the Indian-military-personnel target is an actor-reputation inference (noted, not fabricated).
+
+    SOURCE-RECORD FIXES (same source file): title corrected from the partly-fabricated
+    "CapraRAT Mimics YouTube to Hijack Android Devices — Transparent Tribe Dating-App Lure
+    Campaign" to the real "CapraTube | Transparent Tribe's CapraRAT Mimics YouTube to Hijack
+    Android Phones"; published_on 09-13 → 09-18; AUDIT line added. raw_snapshot + content_sha256
+    + tier PRESERVED.
+
+    FLAGS: (1) SOURCE TIER — sentinellabs/2023-09-13_caprarat-dating-apps is tier: secondary but
+    is first-party vendor original research (SentinelLabs' own identification + static analysis
+    of the APKs); arguably primary. LEFT secondary and flagged because corpus vendor-research
+    tiering is genuinely split (~170 primary / ~175 secondary), so not "clearly" miscategorized
+    per protocol (matches the conservative 2026-07-02 precedent). (2) actor primary_service_id
+    is the pk/unscoped placeholder (QC frontier) — noted, not edited.
+
+    level: full — every retained claim is now carried by the snapshotted, hash-verified RAW
+    source; no load-bearing source is un-snapshottable.

@@ -1,52 +1,169 @@
 id: 2023-05/sidecopy-allakore-india-defense
-name: Cyble documents SideCopy AllaKore RAT targeting Indian defense research
+name: SideCopy AllaKore RAT campaign against Indian defence (DRDO / Ministry of Defence)
 start_date: 2023-01-01
-disclosure_date: 2023-05-09
-end_date: 2023-05-09
+disclosure_date: 2023-03-21
+end_date: null
 incident_type:
   - intrusion
+  - espionage
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Cyble published a technical analysis of SideCopy operations
-  in early 2023 against Indian defense-research entities,
-  documenting deployment of the AllaKore RAT (open-source remote
-  access trojan repurposed by SideCopy), ReverseRAT, and
-  ActionRAT implants. Lures themed on Indian Ministry of Defence
-  circulars, DRDO communications, and Indian Army recruitment
-  documents. The campaign confirmed SideCopy's continued
-  operational tempo against Indian defense targets following the
-  2021 Cisco Talos foundational disclosure.
+  In early 2023 the Pakistan-linked SideCopy APT ran a spear-phishing
+  campaign against Indian defence targets, centred on the Defence Research
+  and Development Organisation (DRDO) and the Ministry of Defence. Cyble
+  (21 Mar 2023) documented DRDO-themed lures — notably a "DRDO – K4 Missile
+  Clean room" decoy delivered via a ZIP -> LNK chain — deploying the Action
+  RAT backdoor and AuTo Stealer. Team Cymru (19 Apr 2023) then mapped the
+  campaign's command-and-control and reported the AllaKore RAT (an
+  open-source remote-access trojan modified for SideCopy operations)
+  alongside Action RAT: 236 distinct AllaKore-RAT victims and 18 Action-RAT
+  victims, all located in India, with management traffic sourced from
+  Pakistani mobile-provider IPs and Proton VPN nodes. The two documented
+  decoys were a DRDO K-4 missile document and a Ministry-of-Defence "Cyber
+  Advisory" document.
 false_flag_risk: none
 summary: |
-  Continuity case for SideCopy through 2023, a useful tempo data
-  point between the 2021 Talos disclosure and the Pahalgam-cycle
-  intensification expected in 2025. The AllaKore RAT family — an
-  open-source RAT widely available — is the operational staple
-  alongside ReverseRAT and ActionRAT.
+  Continuity data point for SideCopy's operational tempo against Indian
+  defence between the 2021 Cisco Talos foundational disclosure and the
+  Pahalgam-cycle intensification expected in 2025. AllaKore RAT — an
+  open-source RAT modified by the group — is the operational staple here,
+  alongside Action RAT. SideCopy is Pakistan-linked and widely reported as a
+  Transparent Tribe (APT36) sub-cluster; no specific Pakistani intelligence
+  service is named in the primary reporting, so the actor is carried as
+  pk/unscoped.
 attributions:
   - actor_id: pk/unscoped/sidecopy
-    attributing_org: Cyble
-    attributing_org_confidence: high
+    attributing_org: Team Cymru
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-05-09
-    attribution_source_id: cyble/2023-05-09_sidecopy-india-defense-targeting
+    attribution_date: 2023-04-19
+    attribution_source_id: team-cymru/2023-04-19_allakore-sidecopy-train
+    notes: |
+      Team Cymru (the load-bearing AllaKore report): "attributed to
+      SideCopy, a Pakistani-linked threat group"; "SideCopy may be a
+      subdivision of Transparent Tribe (APT36)"; "a Pakistani-linked threat
+      actor group, involved state-level espionage" — hedged wording, hence
+      moderate. Cyble (21 Mar 2023) independently and more directly calls
+      SideCopy "a Threat Actor(TA) from Pakistan that has been active since
+      2019". Neither primary report names a specific Pakistani service (no
+      ISI / Inter-Services Intelligence), so the actor stays pk/unscoped and
+      the level is named-actor (group + nation, no unit).
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian Ministry of Defence and DRDO targeting fits the
-      Pakistani-asymmetric military-collection pillar precisely.
+      SideCopy espionage against DRDO and the Indian Ministry of Defence —
+      keylogging/screenshotting/exfiltrating from defence-research and
+      military targets — is precisely the intelligence-collection activity
+      the Pakistani asymmetric-posture military-collection pillar encodes.
+      Team Cymru frames it as "state-level espionage", which names the
+      proximate purpose (collection) rather than the doctrinal goal in
+      words, so the link is strongly_inferred rather than attested (no
+      attesting source states the strategic end).
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology is Indian defence R&D and the MoD (DRDO, Ministry of Defence) — a military-collection target set, not a political or economic one."
+        - "Actor is Pakistan-attributed (Team Cymru: Pakistani-linked; Cyble: a Threat Actor from Pakistan) and espionage-missioned (keylogging, screenshots, file exfiltration via AllaKore/Action RAT)."
+        - "Timing sits within the sustained Pakistan-India cyber-tension cycle SideCopy has operated in since 2019."
+      ruled_out: "kashmir-political pillar — the documented victims are defence-research/military (DRDO, MoD), not Kashmir political/separatist targets; financial-crime motive is also ruled out (no ransomware/theft-for-profit, state-espionage tooling)."
 targets:
   - target_id: orgs/indian-mod
     country: in
     role: primary
-  - target_id: orgs/drdo
+  - target_id: sectors/academic/research-lab
     country: in
     role: primary
 sources:
-  - cyble/2023-05-09_sidecopy-india-defense-targeting
+  - team-cymru/2023-04-19_allakore-sidecopy-train
+  - cyble/2023-03-21_sidecopy-drdo
+  - thehackernews/2023-05-08_sidecopy-action-allakore-rat
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The event's sole prior source,
+    cyble/2023-05-09_sidecopy-india-defense-targeting, is a confirmed phantom:
+    its url (cyble.com/blog/) is Cyble's generic blog INDEX. Re-verified the
+    on-disk snapshot (sha256 5a959668…f8b2a390, 864,195 bytes; title "Best
+    Cybersecurity Blog"): 0x "SideCopy", 0x "AllaKore", 0x "DRDO". Real event,
+    phantom source -> RE-SOURCED against three genuine reports fetched and
+    hashed 2026-07-02.
+
+    SOURCES CAPTURED (all HTTP 200, raw snapshots in atlas/sources/raw/):
+    - team-cymru/2023-04-19_allakore-sidecopy-train (PRIMARY, AllaKore facet):
+      sha256 43840d46…99d293af, 72,972 bytes. Body post-date "April 19, 2023"
+      (JSON-LD datePublished "Apr 08, 2025" is a bogus Webflow template value).
+    - cyble/2023-03-21_sidecopy-drdo (PRIMARY, DRDO/Action RAT facet): sha256
+      7f435209…1858dbad, 922,304 bytes. article:published_time 2023-03-21.
+      This is the GENUINE Cyble SideCopy/DRDO article the phantom pointed away
+      from.
+    - thehackernews/2023-05-08_sidecopy-action-allakore-rat (tertiary,
+      corroborating + May-2023 anchor): sha256 e0ee43da…9f6d8ea1, 167,038 bytes.
+
+    [a] FACTS. AllaKore RAT "open-source remote access tool ... modified for
+    the purposes of SideCopy operations" ✓ (Team Cymru; 24x "AllaKore").
+    Action RAT ✓ (both primaries). AuTo Stealer ✓ (Cyble). Victim counts
+    236 AllaKore + 18 Action RAT, "all located in India" ✓ (Team Cymru; THN
+    corroborates) — ADDED to summary. DRDO K-4 missile lure ✓ (Cyble 31x "K4";
+    Team Cymru "DRDO - K4 Missile Clean room.pptx.lnk") and MoD "Cyber Advisory"
+    lure ✓ (Team Cymru). Pakistani mobile-IP + Proton VPN management ✓ (Team
+    Cymru) — ADDED. CORRECTIONS: (1) STRIPPED "ReverseRAT" — 0 occurrences in
+    BOTH primary snapshots (fabricated tradecraft; it lives only in the actor's
+    general TTP prose, not this 2023 campaign). (2) STRIPPED "Indian Army
+    recruitment documents" lure — 0x "recruit"/"AIANGO"/"Non-Gazetted" in both
+    primaries; the only two documented decoys are the DRDO K-4 doc and the MoD
+    "Cyber Advisory" doc. (3) FIXED the false claim that "Cyble ... documented
+    ... the AllaKore RAT": Cyble's article has ZERO "AllaKore" — AllaKore is
+    Team Cymru's finding; re-attributed accordingly. (4) name de-Cyble-ified.
+    (5) Added incident_type espionage (Team Cymru "state-level espionage").
+
+    [b] ATTRIBUTION. Was Cyble / high / (no level). Corrected to Team Cymru /
+    moderate / named-actor / 2023-04-19, source team-cymru/2023-04-19. Team
+    Cymru hedges ("Pakistani-linked", "may be a subdivision", "would
+    hypothesize") -> moderate, not high. named-actor: names SideCopy (group) +
+    Pakistan (nation) + Transparent Tribe (APT36) overlap, but NO service/unit.
+    Cyble's more direct "a Threat Actor from Pakistan" recorded in the note as
+    corroboration. No ISI in any source -> pk/unscoped preserved.
+
+    [c] DATES. disclosure_date 2023-05-09 (phantom artifact) -> 2023-03-21
+    (Cyble, first public disclosure of the campaign). end_date 2023-05-09 ->
+    null (campaign not documented as concluded; Team Cymru observed active
+    C2). start_date kept 2023-01-01 as best estimate — Team Cymru's earliest
+    observed victim C2 connection was 2023-01-06 (second C2 2023-02-22).
+    Source published_on set per each article's own timestamp (Cyble 2023-03-21;
+    Team Cymru 2023-04-19; THN 2023-05-08).
+
+    [d] DOCTRINE_LINKS. pk/asymmetric-posture-india / military-collection kept
+    at strongly_inferred (NOT attested — no source states the strategic goal;
+    Team Cymru names only the proximate purpose "state-level espionage" that
+    the collection pillar specializes). attesting_source_id stays null; added
+    inference_basis {signals[], ruled_out} (ruled out kashmir-political +
+    financial-crime). perspective absent = attacker-rationale (pk actor, pk
+    doctrine; no cross-state mismatch). Colon-space list items quoted.
+
+    [e] ATTRIBUTION_LEVEL. Set named-actor (was missing) — see [b].
+
+    [f] ACTOR_ID. pk/unscoped/sidecopy resolves (file atlas/actors/pk/
+    sidecopy.yaml, internal id pk/unscoped/sidecopy; thoroughly audited
+    2026-06-24). Consistent with sources naming no Pakistani service.
+
+    TARGETS. orgs/indian-mod ✓ (registry). Broken FK orgs/drdo (NOT in the
+    targets registry) re-pointed to sectors/academic/research-lab ("National
+    labs & research institutes") — DRDO is a national defence-research
+    institute; matches the actor's own target_sector_ids. DRDO is the primary
+    named victim (Cyble 144x "DRDO"); FLAGGED for creation of a dedicated
+    orgs/drdo registry entry (orchestrator/Kara).
+
+    RESIDUAL. Attribution rests on vendor assessment (Team Cymru/Cyble), no
+    government attribution; confidence held at moderate accordingly. Cyble
+    page is JS-heavy (922KB) but the article body, dateline, and all quoted
+    strings are present in the snapshot.
