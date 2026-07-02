@@ -1,90 +1,171 @@
 id: 2022-05/apt28-coldriver-post-invasion-phishing
-name: APT28 + COLDRIVER post-invasion credential-phish wave (Ukrainian media, US defense)
-start_date: 2022-03-01
+name: APT28 post-invasion credential-phishing of Ukrainian media (Google TAG May 2022 update)
+start_date: 2022-04-19
 disclosure_date: 2022-05-03
 end_date: 2022-05-03
 incident_type:
-  - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Google TAG May 2022 update documented continued GRU APT28
-  credential-phish operations against Ukrainian media organisations
-  and Ukrainian government Gmail accounts, alongside FSB COLDRIVER
-  / Star Blizzard phishing of US-based defense contractors and
-  serving / retired military officials. TAG enforced against
-  attacker-controlled domains and pushed Government-Backed
-  Attacker warnings. Continued the operational pattern attested in
-  TAG's March 2022 disclosure.
+  Google TAG's May 3, 2022 update ("An update on the threat
+  landscape") reported that FancyBear/APT28 — a threat actor TAG
+  attributes to Russia's GRU — had run several large credential-
+  phishing campaigns against ukr.net users (UkrNet is a Ukrainian
+  media company). The phishing emails were sent from many
+  compromised non-Google accounts and linked to attacker-controlled
+  domains; in two recent campaigns the attackers used newly created
+  Blogspot domains as landing pages that redirected to credential-
+  phishing sites. Google took down the known attacker-controlled
+  Blogspot domains. The same bulletin documented parallel
+  Ghostwriter/UNC1151 (Belarusian) phishing of Polish and Ukrainian
+  government and military organizations and Mustang Panda / Temp.Hex
+  (China-based) targeting of European entities with invasion-themed
+  lures, plus ongoing DDoS attempts. TAG noted it had issued
+  hundreds of Government-Backed Attacker warnings to Ukrainian users
+  over the prior year.
 false_flag_risk: none
 campaign_id: apt28-coldriver-credential-phishing
 summary: |
-  Doctrinally important as continued, deliberate broadening of
-  Russian credential-collection beyond Ukraine into US-based
-  Ukraine-supporting defense and military targets. The COLDRIVER
-  pivot to US defense contractors and serving / retired military
-  officials prefigures the later (Dec 2023) DOJ Star Blizzard
-  indictment and FCDO sanctions, where the campaign target set is
-  explicitly characterised as supporting Russian intelligence
-  preparation of the strategic environment.
+  A distinct entry in Google TAG's invasion-phase bulletin cadence
+  (the second, after the March 30, 2022 disclosure): GRU-attributed
+  APT28 conducting credential collection against Ukrainian media
+  (ukr.net) in the opening months of the full-scale invasion.
+  Doctrinally an in-theater espionage-access operation against the
+  Ukrainian information space, consistent with APT28's mission and
+  the wider post-invasion Russian cyber tempo TAG was tracking.
 attributions:
   - actor_id: ru/gru/26165/apt28
     attributing_org: Google TAG
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-05-03
     attribution_source_id: google-tag/2022-05-03_threat-landscape-ukraine-update
-  - actor_id: ru/fsb/center-18/star-blizzard
-    attributing_org: Google TAG
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2022-05-03
-    attribution_source_id: google-tag/2022-05-03_threat-landscape-ukraine-update
+    notes: |
+      TAG states "FancyBear/APT28, a threat actor attributed to
+      Russia GRU". Named-actor (TAG's own cluster FancyBear/APT28 +
+      the GRU service), not named-unit — no specific GRU unit
+      (e.g. 26165) is named in the bulletin.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Continuing post-invasion targeting of Ukrainian media and
-      government; the TAG update documents the targeting but does
-      not name the Russkiy Mir doctrine, so the linkage is inferred
-      from the Ukraine-theater target.
+      Post-invasion APT28 credential-phishing of a Ukrainian media
+      company (ukr.net) is in-theater targeting of the Ukrainian
+      information space. The TAG update documents the targeting but
+      does not name the Russkiy Mir doctrine or state a strategic
+      goal, so the linkage is inferred from the Ukraine-theater
+      target set and timing.
     attesting_source_id: google-tag/2022-05-03_threat-landscape-ukraine-update
     inference_basis:
       source_id: google-tag/2022-05-03_threat-landscape-ukraine-update
       signals:
-        - "Google TAG documents continued APT28 credential-phishing of Ukrainian media + government (Ukraine-theater behaviour)"
+        - "Google TAG documents GRU-attributed APT28 credential-phishing of ukr.net, a Ukrainian media company, during the invasion's opening months (Ukraine-theater behaviour)"
       ruled_out: "the Russkiy Mir doctrine / strategic goal — not named in the update"
     contested: false
     analyst: claude
-  - doctrine_id: ru/nato-ultimatum-2021
-    pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      COLDRIVER targeting of US-based defense contractors and
-      serving military officials during the invasion fits the
-      Ukraine-support-interdiction pillar.
-    attesting_source_id: google-tag/2022-05-03_threat-landscape-ukraine-update
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/aid-state-targeting
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      US defense contractor targeting aligns with the
-      aid-state-targeting pillar.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
 targets:
-  - target_id: orgs/ukraine-government
-    role: primary
   - target_id: sectors/media/journalism
-    role: primary
-  - target_id: sectors/defense/contractor
+    country: ua
     role: primary
 sources:
   - google-tag/2022-05-03_threat-landscape-ukraine-update
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the RAW Google TAG bulletin "An update on the
+    threat landscape" (2022-05-03), snapshot
+    google-tag__2022-05-03_threat-landscape-ukraine-update.html,
+    sha256 c004e195…7ba9adeb, 367,910 bytes. Title verbatim: "An
+    update on the threat landscape".
+
+    PHANTOM/WRONG-SOURCE PATH → RE-SCOPE (not re-source; not retire).
+    The cited source is the REAL May 3 article, but it does NOT carry
+    most of what the event claimed. curl+text-extract shows the
+    bulletin's actual actor content in full: (1) 'FancyBear/APT28, a
+    threat actor attributed to Russia GRU, has conducted several
+    large credential phishing campaigns targeting ukr.net users,
+    UkrNet is a Ukrainian media company … used newly created Blogspot
+    domains as the initial landing page, which then redirected
+    targets to credential phishing pages. All known attacker-
+    controlled Blogspot domains have been taken down.' (2)
+    'Ghostwriter/UNC1151, a Belarusian threat actor … against Polish
+    and Ukrainian government and military organizations.' (3)
+    'Mustang Panda or Temp.Hex, a China-based threat actor, targeted
+    European entities with lures related to the Ukrainian invasion.'
+    (4) a DDoS section. String counts in the raw: COLDRIVER=0,
+    Callisto=0, FSB=0, "Star Blizzard"=0, defense=0, contractor=0,
+    Curious=0, Turla=0.
+
+    [a] FACTS — the prior outcome/summary claimed COLDRIVER/Star
+    Blizzard phishing of "US-based defense contractors and serving/
+    retired military officials" and APT28 hitting "Ukrainian
+    government Gmail accounts." NONE of that is in this source. The
+    COLDRIVER US-defense narrative is a conflation with the March 30
+    and July 19, 2022 TAG bulletins and later (Fog of War / Dec 2023
+    indictment) reporting; the July 19 bulletin only says COLDRIVER
+    targeted "government and defense officials," not US defense
+    contractors. STRIPPED all COLDRIVER/US-defense/Star-Blizzard
+    prose and the forward-looking "prefigures the Dec 2023 indictment"
+    embellishment. Re-scoped outcome/summary to the APT28→ukr.net
+    (Ukrainian media) campaign the source actually documents, with
+    the Ghostwriter + Mustang Panda parallel activity noted as
+    context (both source-carried).
+
+    [b] ATTRIBUTION — REMOVED the ru/fsb/center-18/star-blizzard
+    (COLDRIVER) attribution: the source never names COLDRIVER. Kept
+    APT28 (ru/gru/26165/apt28); TAG's wording "attributed to Russia
+    GRU" → attributing_org_confidence high, attribution_level
+    named-actor (TAG's FancyBear/APT28 cluster + GRU service; no
+    specific unit named), auspex_assessment concur. Added the
+    verbatim-quote note.
+
+    [c] DATES — source published_on 2022-05-03 confirmed (= the
+    disclosure/end date). Reset start_date 2022-03-01 → 2022-04-19:
+    the bulletin frames the observed activity as "over the past two
+    weeks," so ~two weeks before publication is the source-honest
+    best estimate (residual uncertainty: "several large campaigns"
+    may have begun somewhat earlier; no exact start given).
+
+    [d] DOCTRINE_LINKS — REMOVED two links that rested on the now-
+    deleted COLDRIVER claim: ru/nato-ultimatum-2021/
+    ukraine-support-interdiction and ru/sanctions-response-2022/
+    aid-state-targeting (both cited US defense-contractor targeting
+    that no source here supports; the latter already had
+    attesting_source_id: null). Kept ru/russkiy-mir/ukraine-theater
+    at strongly_inferred (honest — TAG names the target, not the
+    goal), rewrote its reasoning/signals to reference the ukr.net
+    Ukrainian-media target rather than "government."
+
+    [e] ATTRIBUTION_LEVEL — set named-actor on the surviving
+    attribution (was missing).
+
+    [f] ACTOR_ID — ru/gru/26165/apt28 resolves to
+    atlas/actors/ru/apt28.yaml. FLAG (minor): TAG here names only
+    "Russia GRU," not unit 26165; the 26165 placement is corroborated
+    by other sources on the actor record, so it is not wrong, but this
+    particular source supports only nation+service granularity.
+
+    incident_type reduced [intrusion, data-theft] → [espionage]:
+    the source describes credential-phishing attempts (largely taken
+    down), with no confirmed intrusion or data exfiltration; TAG
+    frames the activity as "espionage to phishing campaigns."
+
+    OVERLAP CHECK vs sibling 2022-03/google-tag-eastern-europe-
+    disclosure: NOT a duplicate. The March event is the March 30
+    bulletin (Sandworm + COLDRIVER + Ghostwriter); this is the
+    distinct May 3 bulletin (APT28 + Ghostwriter + Mustang Panda).
+    Removing COLDRIVER here also removes the only real overlap risk —
+    COLDRIVER is already modeled in the March event.
+
+    RESIDUAL: campaign_id kept as "apt28-coldriver-credential-
+    phishing" (shared editorial string with 2023-12/star-blizzard-
+    fsb-indictment-sanctions; not edited to avoid splitting the
+    cluster and I must not touch the other event) — the "coldriver"
+    token is now a slight misnomer for this APT28-only event; flag for
+    orchestrator if a rename is wanted.

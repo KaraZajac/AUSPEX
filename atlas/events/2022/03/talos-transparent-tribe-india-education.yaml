@@ -2,20 +2,25 @@ id: 2022-03/talos-transparent-tribe-india-education
 name: Cisco Talos documents Transparent Tribe shift toward Indian education sector
 start_date: 2021-06-01
 disclosure_date: 2022-03-29
-end_date: 2022-03-01
+end_date: null
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Cisco Talos documented Transparent Tribe's expansion of
-  targeting to Indian educational institutions, with phishing
-  lures themed on student documents and admissions
-  communications. Tradecraft included Crimson RAT variants and
-  obfuscated VBA-macro-laden Office documents. Talos assessed
-  the education-sector pivot as either preparation for
-  defense-research collection (DRDO-adjacent universities) or
-  for general influence / coercive purposes.
+  Cisco Talos documented Transparent Tribe expanding its
+  targeting to Indian educational institutions and students — a
+  deviation from the group's usual government/military focus and,
+  per Talos, an expansion of its victim set to include civilian
+  users. Operators delivered maldocs via spear-phishing emails
+  using malicious VBA macros to deploy CrimsonRAT (the group's
+  Windows implant of choice since at least 2020, seen here in an
+  updated/obfuscated build), with attacker-registered domains
+  named to appear relevant to students and educational entities.
+  Talos assessed the pivot "might be in accordance with their
+  nation-state's goal to establish long-term access and steal
+  valuable and restricted research from premier research
+  institutions associated with the Indian government."
 false_flag_risk: none
 summary: |
   Notable for documenting a victim-set expansion beyond the
@@ -26,22 +31,109 @@ attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Cisco Talos (Asheer Malhotra, Justin Thattil)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-03-29
     attribution_source_id: cisco-talos/2022-03-29_transparent-tribe-india-education
+    notes: "Talos attributes the campaign to its tracked group Transparent Tribe without hedging ('a campaign operated by the Transparent Tribe APT group'); the Pakistan nexus is stated as 'suspected Pakistan-linked' and NO Pakistani service (ISI) is named — hence named-actor (group + suspected nation), not named-unit, and actor is pk/unscoped/transparent-tribe. The 'high confidence' phrasing in the article attaches to the Zain Hosting infrastructure finding."
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: plausible
     reasoning: |
-      Defense-research-adjacent universities fit the doctrine,
-      but the education-sector expansion is broader than the
-      military-collection pillar strictly licenses.
+      Talos frames the education-sector pivot as possibly serving
+      the group's nation-state goal of long-term access to steal
+      restricted research from premier research institutions
+      associated with the Indian government — strategic/government
+      research collection consistent with the asymmetric-posture-
+      india military-collection pillar. Kept plausible rather than
+      higher because Talos hedges ("this might be in accordance
+      with...") and frames the shift as an expansion to
+      civilian/education victims broader than military collection
+      strictly, so more than one strategic reading survives.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Strategic research collection: Talos assesses the pivot 'might be in accordance with their nation-state's goal to establish long-term access and steal valuable and restricted research from premier research institutions associated with the Indian government', fitting the government/military-collection pillar."
+        - "Broad victim-set expansion: Talos frames the campaign as the APT 'actively expanding its network of victims to include civilian users', a widening of targeting not necessarily tied to a specific military-collection goal."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/indian-education-sector
+  - target_id: sectors/academic/university
+    country: in
     role: primary
 sources:
   - cisco-talos/2022-03-29_transparent-tribe-india-education
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Cisco Talos "Transparent Tribe begins targeting education
+    sector in latest campaign" (2022-03-29). Raw snapshot on disk hash
+    RE-VERIFIED: b85971ac…f8f3ec8d (sha256), 90,119 bytes; matches the
+    source record's content_sha256. Not a phantom — live URL is the real
+    article, body carries every audited claim.
+
+    [a] FACTS — corrected. Source-carried: "targeting of educational
+    institutions and students in the Indian subcontinent, a deviation from
+    the adversary's typical focus on government entities"; "new campaign
+    dating back to December 2021, the adversary is targeting students of
+    universities and colleges in India"; "actively expanding its network
+    of victims to include civilian users"; maldoc "delivered ... via a
+    spear-phishing email ... malicious VBA macros"; "CrimsonRAT,
+    Transparent Tribe's malware of choice ... since at least 2020" with
+    "obfuscating the implant"; attacker "domains ... named so that they
+    would appear relevant to students and educational entities ... earliest
+    domain registered in June 2021". STRIPPED FABRICATIONS from the old
+    outcome_summary: (1) "admissions communications" — no such phrasing in
+    the source; (2) "DRDO-adjacent universities" — DRDO appears NOWHERE in
+    the article; (3) the "either preparation for defense-research collection
+    ... OR for general influence / coercive purposes" dichotomy — invented;
+    Talos gives ONE reading (research theft) with no influence/coercion
+    alternative and the words "influence"/"coercive" do not appear.
+    Rewrote outcome_summary to the source's actual Conclusion quote.
+
+    [b] ATTRIBUTION — Talos attributes to its tracked group without hedge
+    ("a campaign operated by the Transparent Tribe APT group"); Pakistan
+    nexus is "suspected Pakistan-linked"; NO service (ISI) named. Kept
+    attributing_org_confidence: high (definitive on the group), added
+    attribution_level: named-actor and an explanatory note. Not
+    over-attested — no service claimed, actor stays pk/unscoped.
+
+    [c] DATES — published_on/disclosure_date 2022-03-29 correct (matches
+    article). start_date 2021-06-01 kept: anchored to the earliest attacker
+    domain registration (June 2021); campaign itself "dating back to
+    December 2021" — defensible op-start estimate, noted. CORRECTED
+    end_date 2022-03-01 -> null: Talos describes an active/ongoing campaign
+    and states no end date; the old value conflated disclosure with op-end.
+
+    [d] DOCTRINE — link kept plausible (honest). Source states a strategic
+    purpose but hedges ("might be in accordance with their nation-state's
+    goal to ... steal valuable and restricted research from premier research
+    institutions associated with the Indian government") and frames the
+    pivot as broad civilian expansion, so >1 reading survives → not
+    attested. Refined reasoning to the source quote; added
+    inference_basis.alternatives (competing readings). No attesting_source_id
+    (correct for plausible).
+
+    [e] ATTRIBUTION_LEVEL — was missing; set named-actor per above.
+
+    [f] ACTOR — pk/unscoped/transparent-tribe resolves
+    (atlas/actors/pk/transparent-tribe.yaml, id pk/unscoped/transparent-tribe;
+    demoted from ISI 2026-06-24, well-sourced). Same actor as the
+    earth-karkaddan / apt36 sibling events. No actor flag.
+
+    TARGET DEFECT FIXED: target_id was orgs/indian-education-sector — a
+    DANGLING FK (no such file in atlas/targets/; used by this event only).
+    Repointed to sectors/academic/university (the standard sector FK, 13
+    prior uses; Talos targets "students of universities and colleges"),
+    country: in.
+
+    DUPLICATE CHECK: distinct from sibling TT/APT36 events — this is the
+    unique Talos (2022-03) education-sector-expansion report (Dec-2021
+    universities/colleges/students campaign). Trend Micro's Earth Karkaddan
+    arsenal report (2022-01) and the ObliqueRAT/CapraRAT events cover
+    different material. NOT a duplicate/merge candidate.

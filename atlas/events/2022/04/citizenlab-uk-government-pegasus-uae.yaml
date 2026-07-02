@@ -7,21 +7,20 @@ incident_type:
   - intrusion
   - surveillance
   - documentary
-initial_vector: 0-day
+initial_vector: unknown  # AUDIT 2026-07-01: cited CL report does not describe the infection vector; 0-day removed as not source-carried
 outcome_summary: |
-  Citizen Lab discloses that between 2020 and 2021 it observed
-  and notified the UK government of multiple suspected Pegasus
-  spyware infections within official UK networks. Citizen Lab
-  attributes the 10 Downing Street (Prime Minister's Office)
-  suspected infection from 2020 to a Pegasus operator it assesses
-  as the United Arab Emirates. Suspected infections at the UK
-  Foreign and Commonwealth Office (FCO) were attributed to
-  operators assessed as UAE, India, Cyprus, and Jordan. The
-  attribution rests on Citizen Lab's longstanding Pegasus
-  operator-infrastructure tracking methodology — the same
-  methodology that grounded the Hide and Seek (2018) operator-
-  state identifications.
-false_flag_risk: none  # Citizen Lab operator-infrastructure tracking methodology established by prior disclosures
+  Citizen Lab discloses that in 2020 and 2021 it observed and
+  notified the UK government of multiple suspected Pegasus spyware
+  infections within official UK networks, including the Prime
+  Minister's Office (10 Downing Street) and the Foreign and
+  Commonwealth Office (FCO, now the FCDO). Citizen Lab links the
+  suspected 10 Downing Street infection to a Pegasus operator it
+  associates with the United Arab Emirates. The suspected FCO
+  infections were associated with Pegasus operators Citizen Lab
+  links to the UAE, India, Cyprus, and Jordan. Citizen Lab frames
+  the infections as suspected rather than confirmed and does not
+  name a specific NSO customer service.
+false_flag_risk: none  # Pegasus is a single-vendor commercial implant; CL links the operator infrastructure to the UAE — no false-flag indication
 summary: |
   The Downing Street / FCO disclosure is the clearest example in
   the AUSPEX corpus of UAE-attributed Pegasus deployment against
@@ -43,41 +42,43 @@ attributions:
   - actor_id: null
     service_id: ae/state-security
     attributing_org: The Citizen Lab
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2022-04-18
     attribution_source_id: citizenlab/2022-04-18_uk-government-officials-targeted-pegasus
     notes: |
-      Citizen Lab operator-infrastructure-tracking attribution.
-      UAE customer-state identification rests on infrastructure
-      patterns consistent with the previously-tracked Pegasus-
-      UAE clusters. Confidence at high reflects Citizen Lab's
-      consistent prior accuracy on UAE Pegasus operator
-      identifications.
+      Citizen Lab links the Pegasus operator(s) behind the
+      suspected UK-government infections to "the UAE" (nation
+      level) — no specific UAE service, unit, or named operator
+      cluster is identified in the report. AUDIT 2026-07-01:
+      attribution_level set to nation (CL names only the nation).
+      Confidence downgraded high -> moderate: CL uses the firm but
+      unquantified phrasing "a Pegasus operator we link to the
+      UAE" with no explicit confidence adjective, and pervasively
+      frames the infections as "suspected". The prior "high"
+      rested on CL's cross-report track record rather than the
+      confidence stated in this report.
 doctrine_links:
   - doctrine_id: ae/procurement-led-capability
     pillar_id: ae/procurement-led-capability/commercial-spyware
     program_id: null
     confidence: attested
     reasoning: |
-      Citizen Lab explicitly attributes Pegasus operator
-      infrastructure used in the Downing Street and FCO
-      suspected infections to UAE state operators — directly
-      attesting commercial-spyware procurement.
+      Citizen Lab links the Pegasus operator behind these
+      suspected UK-government infections to the UAE — i.e. it
+      identifies the UAE as an operator of NSO's Pegasus, the
+      commercial mobile-implant capability this pillar encodes
+      (procurement + deployment of commercial spyware, with
+      government/foreign-ministry among the pillar's target
+      sectors). The doctrine's own guidance sets the attested bar
+      at "a vendor source explicitly named UAE procurement of the
+      specific capability"; CL naming a UAE Pegasus operator meets
+      it for the commercial-spyware pillar.
     attesting_source_id: citizenlab/2022-04-18_uk-government-officials-targeted-pegasus
-    contested: false
-    analyst: claude
-  - doctrine_id: ae/regional-influence-realigned
-    pillar_id: ae/regional-influence-realigned/post-accords-cooperation
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      UAE-state targeting of a partner-state's Prime Minister's
-      Office and Foreign Ministry sits in tension with the open
-      post-Accords cooperation framing. Doctrine link is appropriate
-      because the targeting set explicitly involves a UAE
-      partner-state's leadership.
-    attesting_source_id: null
+    inference_basis:
+      source_id: citizenlab/2022-04-18_uk-government-officials-targeted-pegasus
+      source_quote: "The suspected infection at the UK Prime Minister's Office was associated with a Pegasus operator we link to the UAE."
     contested: false
     analyst: claude
 targets:
@@ -89,3 +90,90 @@ targets:
     role: primary
 sources:
   - citizenlab/2022-04-18_uk-government-officials-targeted-pegasus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against the sole cited source, Citizen Lab, "UK
+    Government Officials Infected with Pegasus" (2022-04-18),
+    raw snapshot sha256 dd37a8cf…07310c13, 93,731 bytes (HTTP 200;
+    url citizenlab.ca/2022/04/... 301-redirects to the canonical
+    citizenlab.ca/research/... path — real article, not a phantom).
+
+    [a] FACTS — all core claims verbatim-carried. RAW: "We confirm
+    that in 2020 and 2021 we observed and notified the government
+    of the United Kingdom of multiple suspected instances of
+    Pegasus spyware infections within official UK networks. These
+    included: The Prime Minister's Office (10 Downing Street) The
+    Foreign and Commonwealth Office (FCO) (Now the Foreign
+    Commonwealth and Development office – FCDO)"; "The suspected
+    infections relating to the FCO were associated with Pegasus
+    operators that we link to the UAE, India, Cyprus, and Jordan.
+    The suspected infection at the UK Prime Minister's Office was
+    associated with a Pegasus operator we link to the UAE."
+    CORRECTIONS: (1) initial_vector 0-day -> unknown — the report
+    does NOT describe the infection vector (no "zero-click",
+    "exploit", "0-day", or CVE anywhere in the text); the vector
+    was not source-carried. (2) outcome_summary reworded: removed
+    the "10 Downing Street suspected infection from 2020"
+    year-pin — the report dates the whole observation window to
+    "2020 and 2021" and does NOT assign the No.10 case to a
+    specific year; also removed the unsupported "operator-
+    infrastructure tracking methodology / same methodology that
+    grounded Hide and Seek (2018)" lineage — this article contains
+    no methodology description or Hide-and-Seek cross-reference
+    (that was AUSPEX editorial, not source-carried).
+
+    [b] ATTRIBUTION — the OPERATOR is a state (UAE); the TOOL is
+    NSO's Pegasus (private mercenary-spyware vendor). The event
+    correctly models actor_id: null + service_id: ae/state-security
+    (customer-side) and treats NSO/Pegasus as vendor/tool, not the
+    attributed actor — matches the source. CORRECTION:
+    attributing_org_confidence high -> moderate. The report uses
+    the firm-but-unquantified phrasing "a Pegasus operator we link
+    to the UAE" with NO explicit confidence adjective ("confidence"
+    appears nowhere in the text) and pervasively frames the
+    infections as "suspected"; the prior "high" rested on CL's
+    cross-report track record, not this report's stated confidence.
+    Kept auspex_assessment: concur.
+
+    [c] DATES — source published_on 2022-04-18 (RAW "Date Published
+    April 18, 2022") ✓. Event disclosure_date 2022-04-18 ✓.
+    start_date 2020-01-01 / end_date 2021-12-31 bound the "2020 and
+    2021" observation/notification window ✓ (kept; comments left).
+
+    [d] DOCTRINE_LINKS — link #1 ae/procurement-led-capability/
+    commercial-spyware KEPT attested: the doctrine's own
+    cyber_relevance sets the attested bar at "a vendor source
+    explicitly named UAE procurement of the specific capability",
+    and CL naming a UAE Pegasus operator meets it; added
+    inference_basis.source_quote ("…a Pegasus operator we link to
+    the UAE"). attesting_source_id present (gate satisfied).
+    CORRECTION: REMOVED link #2 ae/regional-influence-realigned/
+    post-accords-cooperation as mis-scoped — that pillar is
+    "Open cybersecurity cooperation with Israel post-September
+    2020… Not a target-set so much as a cooperation framing", and
+    the doctrine restricts itself to UAE ops against REGIONAL
+    adversary states; the UK is neither a regional adversary nor an
+    Abraham-Accords party, so the pillar does not genuinely apply.
+    No second UAE doctrine fits (regime-protection-surveillance is
+    for dissident/journalist targeting), so one attested link
+    stands.
+
+    [e] ATTRIBUTION_LEVEL — added `nation`: CL names only "the UAE",
+    not a service, unit, or named operator cluster.
+
+    [f] ACTOR_ID — null (unattributed to a named group), with
+    service_id ae/state-security which resolves to
+    atlas/services/ae/state-security.yaml. Both doctrine pillar FKs
+    resolve.
+
+    FLAGS: (1) MODELING — service_id ae/state-security is an AUSPEX
+    modeling choice for the customer-side; CL attributes only to
+    "the UAE" (nation), naming no service. Left as-is (documented
+    in the summary) but flag for orchestrator review. (2) SOURCE —
+    retiered the CL source secondary -> primary (first-party
+    originating investigation) and added raw_snapshot +
+    content_sha256.

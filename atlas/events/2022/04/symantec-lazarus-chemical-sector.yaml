@@ -1,67 +1,148 @@
 id: 2022-04/symantec-lazarus-chemical-sector
 name: Symantec disclosure of Lazarus Operation Dream Job chemical-sector targeting
-start_date: 2022-01-01  # Symantec dates campaign onset to early 2022
+start_date: 2022-01-17  # first attacker activity in Symantec's case study; campaign detected Jan 2022
 disclosure_date: 2022-04-14
-end_date: 2022-04-14
+end_date: null  # AUDIT: Symantec does not bound the campaign end; 2022-04-14 was the disclosure, not op end
 incident_type:
   - intrusion
   - espionage
 initial_vector: phishing
 outcome_summary: |
-  Symantec Threat Hunter Team disclosed a Lazarus
-  "Operation Dream Job" campaign targeting South Korean
-  chemical-sector and IT-sector firms via LinkedIn
-  fake-recruiter pretext with trojanized job-description
-  attachments dropping BLINDINGCAN-family implants. Same
-  operational pattern subsequently documented against
-  multiple Western defense-industrial-base and
-  cryptocurrency victims.
+  Symantec (Threat Hunter Team / Broadcom) disclosed a
+  continuation of Lazarus's "Operation Dream Job" (tracked by
+  Symantec as Pompilus) targeting South Korean chemical-sector
+  organizations for espionage; some IT-sector firms were
+  compromised as a means to reach the chemical-sector targets.
+  Delivery used fake-job-offer lures leading to a malicious HTM
+  file copied to a Trojanized signed DLL (scskapplink.dll)
+  injected into legitimate software (INISAFE Web EX Client),
+  followed by shellcode loaders (Trojanized ComparePlus / XZ
+  Utils tools), WMI lateral movement, credential dumping, and
+  post-compromise tools (SiteShoter, IP Logger, FastCopy).
+  Symantec linked the activity to prior Dream Job campaigns by
+  shared file hashes, file names, and tools.
 false_flag_risk: none
 summary: |
-  Early-2022 documentation of the access primitive that
-  underwrites both the strategic-tech-collection and
-  revenue-aggregation pillars of the 8th-Congress defense
-  plan. Same LinkedIn fake-recruiter pretext that delivers
-  TraderTraitor's crypto-exchange payloads (Stake.com,
-  CoinEx, Atomic Wallet) also delivers Lazarus's
-  defense-collection payloads (chemical sector here, Spanish
-  aerospace via LightlessCan in 2023). The dual-use of the
-  pretext is the doctrinal point: one social-engineering
-  primitive serves multiple pillars of the same defense plan.
+  Documentation of the access primitive underwriting the
+  strategic-technology-collection pillar of the post-2021
+  (8th Congress) defense plan: an RGB/Lazarus fake-job-offer
+  social-engineering primitive — the same Operation Dream Job
+  pretext used elsewhere against defense targets and, in other
+  AUSPEX events, cryptocurrency targets — here turned against
+  South Korean chemical-sector firms. The doctrinal point is
+  the dual-use of one social-engineering primitive across
+  multiple pillars of the same defense plan; this event
+  evidences the strategic-tech-collection application. (This
+  single Symantec source documents only the chemical-sector
+  espionage; the cross-pillar comparison draws on sibling
+  AUSPEX events, not on this report.)
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: Symantec Threat Hunter Team
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-14
     attribution_source_id: symantec/2022-04-14_lazarus-chemical
     notes: |
-      Symantec attribution by infrastructure overlap,
-      malware-family lineage (BLINDINGCAN), and TTP
-      consistency with prior published Lazarus operations
-      including the long-running Operation Dream Job
-      cluster.
+      Symantec states flatly that the "North Korea-linked APT
+      group known as Lazarus" conducted the campaign, and ties
+      this January-2022 chemical-sector activity to prior
+      Operation Dream Job campaigns by shared file hashes, file
+      names, and tools (tooling/TTP continuity). The source
+      names Lazarus (named group) and North Korea (nation) but
+      names no RGB unit or service — hence attribution_level
+      named-actor; the RGB service placement rests on the actor
+      record's own government sources, not on this report. NB:
+      the source does not state "infrastructure overlap" or
+      name BLINDINGCAN (prior event prose, corrected).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Chemical-sector intrusion is consistent with the
-      strategic-tech-collection pillar's tasking for
-      dual-use precursor chemistry and CBRN-relevant
-      manufacturing intelligence. Operation Dream Job
-      bundling with defense-industrial-base targeting
-      across multiple geographies attests the cross-pillar
-      utility of the access primitive.
+      An RGB/Lazarus espionage intrusion into South Korean
+      chemical-sector firms — continuing Operation Dream Job,
+      whose prior campaigns targeted defense, government, and
+      engineering sectors — reads as strategic dual-use
+      technology collection for the post-2021 defense plan.
+      The label is plausible rather than higher because the
+      Symantec source states only "espionage" and names no
+      strategic purpose, and the strategic-tech-collection
+      pillar as scoped enumerates defense/aerospace/naval/
+      satellite targets, not the chemical sector — so the
+      chemical -> pillar connection is an interpretive leap and
+      more than one strategic reading survives.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "8th-Congress strategic-tech-collection: an RGB/Lazarus espionage intrusion into chemical-sector firms, continuing Dream Job's prior defense/government/engineering targeting, reads as strategic dual-use technology collection for the post-2021 defense plan."
+        - "Chemical/CBRN-program collection: chemical-sector espionage could serve a chemical-weapons or precursor-chemistry program rather than the defense/aerospace-scoped strategic-tech-collection pillar, which does not enumerate the chemical sector."
+        - "General state espionage / access development: Symantec documents only espionage tooling and lateral movement, with no exfiltration objective or strategic purpose stated, so undirected intelligence collection also survives."
 targets:
   - target_id: sectors/chemicals
     role: primary
     country: kr
   - target_id: sectors/ict/software
-    role: primary
+    role: staging  # AUDIT: source says IT firms "likely used as a means to gain access to chemical sector organizations"
     country: kr
 sources:
   - symantec/2022-04-14_lazarus-chemical
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Symantec Threat Hunter Team "Lazarus Targets Chemical Sector"
+    (14 Apr 2022). Source is REAL (not a phantom): URL 302-> www.security.com/
+    threat-intelligence/lazarus-dream-job-chemical, HTTP 200, 314582 bytes,
+    raw snapshot sha256 b602aba1...c19aad69 (first8...last8).
+    [a] FACTS: verbatim-supported — "North Korea-linked ... group known as
+    Lazarus conducting an espionage campaign targeting organizations operating
+    within the chemical sector"; "continuation of ... Operation Dream Job, which
+    was first observed in August 2020"; "Symantec tracks this sub-set ... under
+    the name Pompilus"; "In January 2022, Symantec detected attack activity on
+    the networks of a number of organizations based in South Korea ... mainly in
+    the chemical sector, with some being in the information technology (IT)
+    sector. However, it is likely the IT targets were used as a means to gain
+    access to chemical sector organizations"; delivery chain (malicious HTM ->
+    scskapplink.dll injected into INISAFE Web EX Client -> shellcode loaders,
+    Trojanized ComparePlus / XZ-Utils tools), WMI lateral movement, credential
+    dumping, SiteShoter/IP Logger/FastCopy all present. CORRECTIONS: stripped
+    three unsupported embellishments the source never states — (1) "LinkedIn
+    fake-recruiter pretext" (source says only "fake job offers"; LinkedIn count
+    = 0), (2) "BLINDINGCAN-family implants" (BLINDINGCAN count = 0; the malware
+    is Trojanized signed tools + shellcode loaders), (3) "trojanized job-
+    description attachments" (delivery was a malicious HTM file/link). Also
+    removed the forward-reference "subsequently documented against multiple
+    Western DIB and cryptocurrency victims" (not in this source) and rewrote the
+    doctrinal summary to flag that the cross-pillar comparison draws on sibling
+    events, not this report.
+    [b] ATTRIBUTION: source attributes flatly ("North Korea-linked APT group
+    known as Lazarus"), continuation-evidence = "file hashes, file names, and
+    tools that were observed in previous Dream Job campaigns" (no hedge, no
+    "infrastructure overlap" language). Kept confidence high; ADDED
+    attribution_level named-actor (Lazarus + North Korea named; no RGB/service
+    named in source). Rewrote notes to remove the fabricated "infrastructure
+    overlap"/BLINDINGCAN basis. RGB placement rests on the actor record, per NB.
+    [c] DATES: start_date 2022-01-01 -> 2022-01-17 (earliest attacker activity
+    in Symantec's case study; campaign detected Jan 2022). end_date 2022-04-14
+    -> null (that was the disclosure date, not op end; source does not bound the
+    campaign end) — de-conflated. disclosure_date 2022-04-14 confirmed (article
+    dated 14 Apr 2022). Source published_on 2022-04-14 confirmed.
+    [d] DOCTRINE_LINKS: DOWNGRADED strongly_inferred -> plausible. Source states
+    only "espionage" with no strategic purpose, and the strategic-tech-collection
+    pillar as scoped (defense/aerospace/naval/satellite; chemicals NOT enumerated)
+    means the chemical->pillar link is an interpretive leap with >1 surviving
+    reading. Removed the unsupported "dual-use precursor chemistry / CBRN-relevant
+    manufacturing" specificity (source does not say this). Added inference_basis.
+    alternatives (3). Not attested (correctly no attesting_source_id).
+    [e] ATTRIBUTION_LEVEL: set named-actor.
+    [f] ACTOR_ID: kp/rgb/lazarus resolves to atlas/actors/kp/lazarus.yaml (id
+    kp/rgb/lazarus; RGB placement documented by the actor's own OFAC/DOJ/MITRE/
+    Mandiant sources). No actor-file edit. Source retiered secondary->primary
+    (first-party Symantec investigation) + raw_snapshot/content_sha256 added.

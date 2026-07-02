@@ -10,10 +10,12 @@ initial_vector: unknown
 outcome_summary: |
   Industroyer2 + CaddyWiper combo deployed against a Ukrainian
   high-voltage electrical substation with IEC 60870-5-104
-  manipulation. Attempted blackout of ~2M customers thwarted by
-  ESET / Microsoft / CERT-UA collaboration before execution.
+  manipulation. Attempted blackout of a grid serving ~2 million
+  people thwarted by ESET / Microsoft / CERT-UA collaboration before
+  execution (scale + Microsoft's role per CyberScoop; the ESET blog
+  anonymizes the victim and states neither).
 quantified_impact:
-  customers_at_risk: 2000000
+  customers_at_risk: 2000000  # "a grid serving 2 million people" (CyberScoop 2022-04-12)
   outage_hours: 0  # thwarted
 false_flag_risk: none
 campaign_id: sandworm-ukraine-grid-wave
@@ -27,16 +29,20 @@ summary: |
   the engineering workstation alongside CaddyWiper (to destroy
   Windows hosts), ORCSHRED, SOLOSHRED and AWFULSHRED (to wipe
   Linux servers and Solaris servers in the ICS environment), and
-  ArguePatch (a modified ESET HSLP component used as a launcher).
-  Lateral movement and persistence used valid credentials and
-  scheduled tasks; the operation was scheduled to fire and then
-  wipe the network behind it. ESET, Microsoft, and CERT-UA
-  intercepted execution before the IEC 60870-5-104 commands could
-  trip an estimated 2 million customers offline.
+  ArguePatch/ARGUEPATCH (a patched version of a legitimate Hex-Rays
+  IDA Pro remote-debugger component, win32_remote.exe, used as a
+  launcher). Lateral movement used SSH with attacker-supplied
+  credentials, and the destructive actions were launched via a
+  scheduled task; the operation was scheduled to fire and then wipe
+  the network behind it. ESET and CERT-UA (with Microsoft aiding the
+  Ukrainian response) intercepted execution before the IEC 60870-5-104
+  commands could cut power in the targeted Ukrainian region — a grid
+  reported to serve some 2 million people.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: ESET / CERT-UA
     attributing_org_confidence: high
+    attribution_level: named-actor  # ESET: "high confidence that the APT group Sandworm is responsible"; the group is named, not the GRU unit. Unit 74455 rests on the actor record + the 2020 DOJ indictment (which ESET cites as prior US-govt confirmation).
     auspex_assessment: concur
     attribution_date: 2022-04-12
     attribution_source_id: eset/2022-04-12_industroyer2-ukrenergo
@@ -51,6 +57,9 @@ doctrine_links:
       kinetic missile strikes on the same grid. Continuous
       energy-weaponization-via-cyber pattern.
     attesting_source_id: eset/2022-04-12_industroyer2-ukrenergo
+    inference_basis:
+      source_id: eset/2022-04-12_industroyer2-ukrenergo
+      source_quote: "16:10 UTC: Scheduled execution of Industroyer2 to cut power in an Ukrainian region"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -68,3 +77,66 @@ targets:
     role: primary
 sources:
   - eset/2022-04-12_industroyer2-ukrenergo
+  - cyberscoop/2022-04-12_industroyer2-ukraine-grid-thwarted
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited against ESET WeLiveSecurity "Industroyer2: Industroyer
+    reloaded" (2022-04-12; raw sha256 f29471ac…a8a07d1a, 94,167 bytes)
+    + newly-added CyberScoop "Russian hackers thwarted…" (2022-04-12;
+    raw sha256 7b881499…3d4799d9, 113,150 bytes).
+    [a] FACTS: verbatim-confirmed by ESET — Industroyer2 "only
+    implements the IEC-104 (aka IEC 60870-5-104) protocol"; deployed
+    "against high-voltage electrical substations in Ukraine"; combo
+    with CaddyWiper + ORCSHRED + SOLOSHRED + AWFULSHRED (Windows/
+    Linux/Solaris wipers); "destructive actions were scheduled for
+    2022-04-08"; timeline shows a Sandworm operator "creates the
+    scheduled task to launch Industroyer2" and "16:10 UTC: Scheduled
+    execution … to cut power in an Ukrainian region"; SSH lateral
+    movement with "credentials from a list provided with the malicious
+    script … the attacker had credentials prior to the attack".
+    CORRECTIONS: (1) ArguePatch was wrongly described as "a modified
+    ESET HSLP component" — ESET states ARGUEPATCH is "a patched version
+    of a legitimate component of Hex-Rays IDA Pro software, specifically
+    the remote IDA debugger server win32_remote.exe"; fixed. (The
+    ESET-component ArguePatch variant is a *later* (May 2022) report,
+    not this source.) (2) The "2 million" scale and Microsoft's role
+    were NOT in the ESET blog (which anonymizes the victim as "an
+    energy provider in Ukraine"); re-sourced to CyberScoop, which
+    states "a grid serving 2 million people" and "Analysts with Slovak
+    cybersecurity firm ESET and Microsoft helped the Ukrainian
+    government respond". Reworded summary/outcome to "~2 million people"
+    (was "customers") and to credit ESET+CERT-UA response with Microsoft
+    aiding.
+    [b] ATTRIBUTION: ESET — "We assess with high confidence that the
+    APT group Sandworm is responsible for this new attack" → high
+    confidence retained; added attribution_level=named-actor (Sandworm
+    the group is named; ESET cites the 2020 DOJ indictment of "six
+    officers of the Russian Military Unit 74455 of the GRU" as prior
+    US-govt confirmation, so the named-unit 74455 rests on the actor
+    record, not on ESET's own assessment of this op). auspex concur ✓.
+    [c] DATES: start_date 2022-04-08 = the scheduled destructive-action
+    date (ESET) ✓; disclosure/published 2022-04-12 ✓ (both sources);
+    end_date 2022-04-12 left as the disclosure/neutralization boundary
+    (op was defeated at/around the 2022-04-08 scheduled execution —
+    exact remediation date not stated by either source).
+    [d] DOCTRINE: ru/energy-weaponization/grid-attack kept `attested` —
+    ESET states the operation's goal in substance ("to cut power in an
+    Ukrainian region"), which is exactly the pillar's goal; added
+    inference_basis.source_quote. ru/russkiy-mir/ukraine-theater left
+    `strongly_inferred` (no source states that purpose) — honest.
+    [e] ATTRIBUTION_LEVEL: set named-actor (was missing).
+    [f] ACTOR_ID: ru/gru/74455/sandworm resolves (atlas/actors/ru/
+    sandworm.yaml) ✓.
+    RESIDUAL UNCERTAINTY / FLAG: neither cited source names the specific
+    victim as Ukrenergo (ESET: "an energy provider in Ukraine";
+    CyberScoop: "an unidentified electrical facility"). The orgs/
+    ukrenergo target + the event name are the atlas's editorial
+    identification (well-documented elsewhere, e.g. Mandiant APT44).
+    Kept as-is but flagged — a source that explicitly names Ukrenergo
+    (or the regional oblenergo) would firm this up; some 2022 reporting
+    described the target as a *regional* distribution utility rather
+    than the Ukrenergo transmission operator.

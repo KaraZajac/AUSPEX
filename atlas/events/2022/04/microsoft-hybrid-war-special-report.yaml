@@ -6,68 +6,105 @@ end_date: 2022-04-27
 incident_type:
   - disclosure
   - attribution-publication
+  - documentary
 initial_vector: unknown
+false_flag_risk: none  # restored 2026-07-01: dropped during the batch-25 audit edit; a Microsoft summary report with open attribution, no misattribution/deception
 outcome_summary: |
-  Microsoft (Brad Smith) published "The hybrid war in Ukraine"
-  alongside an MSTIC technical "Special Report: Ukraine"
-  documenting at least 237 Russian state cyber operations against
-  100+ Ukrainian organisations between mid-February and mid-April
-  2022. Operations spanned 8+ destructive malware families
-  (FoxBlade / HermeticWiper, IsaacWiper, CaddyWiper, DesertBlade,
-  Lasainraw / IsaacWiper, others), Sandworm pre-positioning, APT29
-  espionage on Ukraine-aiding governments, and APT28 / STRONTIUM
-  phishing of Ukrainian media and government.
-false_flag_risk: none
+  On 2022-04-27 Microsoft released, in tandem, Tom Burt's blog
+  "The hybrid war in Ukraine" and an MSTIC technical "Special
+  Report: Ukraine — An overview of Russia's cyberattack activity."
+  Together they documented at least six Russia-aligned nation-state
+  actors launching no less than 237 operations against Ukraine
+  between 23 February and 8 April 2022, including 38 discrete
+  destructive attacks (32% against Ukrainian government at national/
+  regional/city level, 40%+ against critical-infrastructure sectors).
+  The technical report catalogued multiple destructive malware
+  families — including WhisperGate, FoxBlade/HermeticWiper,
+  CaddyWiper, Industroyer2 and IsaacWiper/Lasainraw — and named the
+  actor clusters behind the activity: IRIDIUM (Sandworm),
+  STRONTIUM (Fancy Bear / APT28), NOBELIUM (the SolarWinds actor /
+  APT29) and the WhisperGate cluster DEV-0586, among others.
 summary: |
-  Critical doctrinal disclosure: established the public baseline
-  for the scale and tempo of Russian cyber operations in the
-  invasion's opening phase. Microsoft observed coordinated
-  cyber-kinetic timing — destructive malware against Ukrainian
-  government followed by missile strikes against the same victim
-  sectors within 48 hours — which the report explicitly framed as
-  integrated hybrid warfare. The pairing of public disclosure with
-  legal action (Trustworthy Computing, civil suits against
-  STRONTIUM domains) became the template for Western private-
-  sector response to invasion-phase Russian cyber activity.
+  Foundational doctrinal disclosure: it established the public
+  baseline for the scale and tempo of Russian cyber operations in
+  the invasion's opening phase. Microsoft framed the campaign as a
+  "hybrid war," reporting that Russia's cyberattacks were "strongly
+  correlated and sometimes directly timed" with kinetic military
+  operations against the same civilian services and institutions —
+  e.g. a cyberattack on a major broadcaster on 1 March, the same day
+  the Russian military announced its intent to destroy "disinformation"
+  targets and struck a Kyiv TV tower with a missile. Russia-aligned
+  actors were reported pre-positioning as early as March 2021, with
+  destructive wiper activity intensifying from early 2022. This is a
+  summary/documentary event: the actor-cluster and malware specifics
+  are drawn from the MSTIC technical report, not any single sub-
+  operation. Microsoft explicitly attributed the previously disclosed
+  wiper attacks to the actor it calls IRIDIUM (Sandworm).
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-27
-    attribution_source_id: microsoft/2022-04-27_hybrid-war-ukraine
+    attribution_source_id: microsoft/2022-04-27_special-report-ukraine
+    notes: "Blog: 'our report attributes wiper malware attacks we previously disclosed to a Russian nation-state actor we call Iridium.' Technical report attributed HermeticWiper/CaddyWiper/Industroyer2 to Sandworm (aka Iridium) with MODERATE confidence (per mirrors quoting the PDF) — downgraded from the record's prior 'high'. named-actor: names the cluster + GRU affiliation, not the specific numbered unit."
   - actor_id: ru/gru/26165/apt28
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-27
-    attribution_source_id: microsoft/2022-04-27_hybrid-war-ukraine
+    attribution_source_id: microsoft/2022-04-27_special-report-ukraine
+    notes: "Report names STRONTIUM (Fancy Bear / APT28), a GRU-connected actor, conducting phishing of Ukrainian military/government. Not named in the summary blog — carried by the MSTIC technical report. No explicit 'high confidence' language found in reachable sources; set moderate."
   - actor_id: ru/svr/apt29
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-27
-    attribution_source_id: microsoft/2022-04-27_hybrid-war-ukraine
+    attribution_source_id: microsoft/2022-04-27_special-report-ukraine
+    notes: "Report names NOBELIUM (the SolarWinds actor / APT29) attempting to breach IT firms serving government customers in NATO member states (espionage). Carried by the MSTIC technical report, not the summary blog. No explicit 'high confidence' language found; set moderate."
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
     confidence: attested
     reasoning: |
-      Microsoft explicitly documented coordinated cyber-kinetic
-      operations against Ukrainian targets, framing them as the
-      operational expression of integrated non-contact warfare.
+      Microsoft explicitly documented Russian cyberattacks as
+      "strongly correlated and sometimes directly timed" with the
+      kinetic invasion — cyber operations degrading the same civilian
+      services and institutions the military struck — and framed the
+      whole as a "hybrid war." That is a direct statement of the
+      integrated cyber-kinetic (non-contact-warfare) purpose the
+      pillar encodes, at the goal level, by the attributing authority.
     attesting_source_id: microsoft/2022-04-27_hybrid-war-ukraine
+    inference_basis:
+      source_quote: "Russia's use of cyberattacks appears to be strongly correlated and sometimes directly timed with its kinetic military operations targeting services and institutions crucial for civilians."
+      source_id: microsoft/2022-04-27_hybrid-war-ukraine
     contested: false
     analyst: claude
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Comprehensive disclosure of the Ukraine-theater destructive
-      and espionage campaign.
+      The disclosed campaign is the cyber dimension of the full-scale
+      invasion of Ukraine, whose strategic driver is the Russkiy-Mir
+      project's claim over Ukraine. Actor (Russian state services),
+      target (the Ukrainian state and its critical infrastructure) and
+      timing (synchronised with the invasion) triangulate to the
+      Ukraine-theater pillar. Downgraded from attested: Microsoft
+      documents the campaign and its cyber-kinetic integration but
+      does not state a Russkiy-Mir ideological goal, so the source does
+      not carry the WHY at the goal level.
     attesting_source_id: microsoft/2022-04-27_hybrid-war-ukraine
+    inference_basis:
+      signals:
+        - "Campaign is explicitly the cyber component of the 2022 full-scale invasion of Ukraine (report title: 'The hybrid war in Ukraine')."
+        - "Primary targets are the Ukrainian state, government at all levels, and Ukrainian critical infrastructure."
+        - "Executed by Russian state intelligence/military services (GRU, SVR) in synchrony with kinetic operations."
+      ruled_out: "A purely military-strategic reading with no ideological/territorial driver — captured instead by the non-contact-warfare link; the Ukraine-theater pillar names the WHY-Ukraine that non-contact-warfare does not."
     contested: false
     analyst: claude
 targets:
@@ -75,3 +112,59 @@ targets:
     role: primary
 sources:
   - microsoft/2022-04-27_hybrid-war-ukraine
+  - microsoft/2022-04-27_special-report-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    Documentary/summary event audited against Microsoft's 2022-04-27 disclosure. Two
+    sources now cited: the Tom Burt blog "The hybrid war in Ukraine" (raw snapshot
+    7a65dfd8…b172b5cc1, 172,335 bytes, real article, fully readable) and the MSTIC
+    technical "Special Report: Ukraine" (NEWLY ADDED; canonical PDF RE4Vwwd is bot-walled,
+    snapshot 14b91d28…08d335 / 129,929 bytes is Microsoft's live Security Insider web
+    edition which no longer prints the codename tables — technical specifics
+    mirror-corroborated). level=partial for that reason.
+    [a] FACTS — corrected several. Blog verbatim: "at least six separate Russia-aligned
+    nation-state actors launch more than 237 operations against Ukraine"; destructive
+    attacks "numbering close to 40" ("38 discrete" per report mirrors), "32% ... targeted
+    Ukrainian government organizations at the national, regional and city levels", "More
+    than 40% ... critical infrastructure"; pre-positioning "as early as March 2021";
+    example of a broadcaster hit on 1 March the same day as a missile strike on a Kyiv TV
+    tower; blog "attributes wiper malware attacks we previously disclosed to a Russian
+    nation-state actor we call Iridium." STRIPPED FABRICATIONS: (1) author "Brad Smith" —
+    blog byline is Tom Burt (fixed in source record too; Brad Smith only appears in the
+    sidebar's Related Stories); (2) "within 48 hours" — blog says "strongly correlated and
+    sometimes directly timed", no 48h figure; (3) "The pairing of public disclosure with
+    legal action (Trustworthy Computing, civil suits against STRONTIUM domains)" — appears
+    in neither Microsoft document; the STRONTIUM domain civil suit is the SEPARATE
+    2022-04-07 "Disrupting cyberattacks targeting Ukraine" action — removed as imported
+    embellishment; (4) trimmed the "100+ Ukrainian organisations" claim (blog says
+    "hundreds of systems", not organisations) and the loose "8+ malware families" /
+    duplicated "Lasainraw / IsaacWiper" list to the families corroborated by mirrors.
+    [b] ATTRIBUTION — the blog names only IRIDIUM; STRONTIUM/APT28 and NOBELIUM/APT29 were
+    cited to the blog but the blog does not name them. Re-pointed all three attributions'
+    attribution_source_id to the MSTIC technical report, which does name IRIDIUM (Sandworm,
+    GRU), STRONTIUM (Fancy Bear/APT28, GRU) and NOBELIUM (SolarWinds actor/APT29). DOWNGRADED
+    confidence high -> moderate on all three: the only explicit confidence statement located
+    is "HermeticWiper/CaddyWiper/Industroyer2 attributed to Sandworm/Iridium with MODERATE
+    confidence" (The Hacker News / Malwarebytes quoting the PDF); no "high confidence"
+    wording found for any cluster. Added attribution_level: named-actor to all three (report
+    names the cluster + service, not the numbered unit). Report also names DEV-0586,
+    ACTINIUM et al.; kept the three headline clusters rather than importing every sub-actor.
+    [c] DATES — published_on 2022-04-27 correct for both sources; retrieved_on updated to
+    2026-07-01. Op window 23 Feb–8 Apr 2022; start_date 2022-02-23 retained (237-op window
+    start), disclosure/end 2022-04-27 (report date). No conflation.
+    [d] DOCTRINE_LINKS — non-contact-warfare kept ATTESTED with attesting_source_id + a
+    source_quote naming the cyber-kinetic integration goal ("strongly correlated and
+    sometimes directly timed with its kinetic military operations"). russkiy-mir DOWNGRADED
+    attested -> strongly_inferred: Microsoft documents the Ukraine campaign but never states
+    a Russkiy-Mir ideological goal, so it cannot carry attested; added inference_basis
+    signals + ruled_out.
+    [e] ATTRIBUTION_LEVEL — set named-actor on all three (was missing).
+    [f] ACTOR_ID — ru/gru/74455/sandworm, ru/gru/26165/apt28, ru/svr/apt29 all resolve to
+    real actor files (ids match despite differently-named files). No actor flags.
+    FLAG: none blocking. Residual uncertainty: the codename/malware/confidence specifics
+    rest on mirror-corroboration of a bot-walled first-party PDF (hence partial); if the
+    original RE4Vwwd PDF becomes fetchable it should be re-snapshotted to upgrade to full.

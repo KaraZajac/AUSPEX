@@ -1,58 +1,146 @@
+# AUDIT 2026-07-01 (claude-opus-4.8/max, phantom-remediation RE-SOURCE):
+# This event previously cited a NONEXISTENT ESET 2022 report ("OceanLotus tooling
+# evolution: PubLoad…", url null) and attributed the PUBLOAD downloader to APT32.
+# PUBLOAD is a Mustang Panda / Earth Preta / Bronze President (China-nexus) stager
+# first disclosed by Cisco Talos in May 2022 — it is NOT an APT32 tool, and no such
+# ESET APT32/PubLoad post exists. The fabricated specifics (ESET source, PubLoad,
+# KhRAT/KerrDown-successor claims, Facebook/Bitdefender/Amnesty narrative, the
+# dangling target orgs/asean-government-targets-various) were removed and the event
+# was re-pointed to genuine 2021-2022 APT32 tooling-refresh reporting (Netskope
+# Threat Labs, 2022-01-12). FLAG for Kara: the STABLE id/path/filename
+# (2022-05/eset-apt32-pubload-modernization) still encode the fabricated
+# ESET/PubLoad/May-2022 premise and are now misleading — consider re-slugging to
+# e.g. 2022-01/netskope-apt32-web-archive-backdoor, or retiring. See qc notes.
 id: 2022-05/eset-apt32-pubload-modernization
-name: ESET documents APT32 tooling modernization with PubLoad and KhRAT successors
-start_date: 2021-01-01
-disclosure_date: 2022-05-26
-end_date: 2022-05-26
+name: Netskope documents OceanLotus (APT32) web-archive (.MHT) backdoor campaign with Glitch C2
+start_date: 2021-08-01
+disclosure_date: 2022-01-12
+end_date: null
 incident_type:
   - intrusion
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  ESET researchers published an analysis of APT32's tooling shifts
-  through 2021-2022, documenting deployment of new loader chains
-  (PubLoad family) and successors to the long-running KerrDown
-  loader and Denis backdoor. ESET observed continued operations
-  against Vietnamese diaspora and South-East Asian government
-  targets, with refreshed infrastructure following the December
-  2020 Facebook takedown of APT32 infrastructure. Tradecraft
-  remained recognizably OceanLotus despite the tooling refresh.
+  Netskope Threat Labs documented an OceanLotus (APT32) campaign that
+  abused the web-archive file format (.MHT / .MHTML) to smuggle a
+  malicious Word document past Microsoft Office and antivirus defenses.
+  A RAR-compressed, 35-65 MB web-archive carried a macro-laden document
+  (the ZoneID metadata set to "2" to suppress the Office
+  mark-of-the-web warning); execution dropped a 64-bit DLL backdoor
+  injected into rundll32.exe that collected host and network
+  reconnaissance and used the Glitch cloud-hosting platform for
+  encrypted command-and-control. Netskope linked the technique and a
+  similar backdoor first spotted in August 2021 to APT32 by tradecraft
+  overlap, and reported the campaign as still active with narrow
+  targeting at the time of publication.
 false_flag_risk: none
 summary: |
-  Marks the continuity of APT32 operations into the 2021-2022
-  window despite Facebook's takedown, the Bitdefender macOS
-  disclosure, and Amnesty's diaspora-targeting reporting. The
-  cluster continued to refresh tooling rather than going dormant.
+  Illustrates OceanLotus (APT32) continuing to refresh its covert
+  delivery tradecraft into the 2021-2022 window — abusing the .MHT
+  web-archive format and a legitimate cloud service (Glitch) for C2 to
+  evade detection. Netskope attributes the activity to APT32 by TTP and
+  backdoor overlap rather than by first-party high-confidence
+  attribution.
 attributions:
   - actor_id: vn/unscoped/apt32
-    attributing_org: ESET (Mathieu Tartare)
-    attributing_org_confidence: high
+    attributing_org: Netskope Threat Labs
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-05-26
-    attribution_source_id: eset/2022-05-26_apt32-pubload-tooling
+    attribution_date: 2022-01-12
+    attribution_source_id: netskope/2022-01-12_oceanlotus-web-archive-backdoor
+    notes: |
+      Netskope attributes by TTP/backdoor overlap: the web-archive
+      delivery was "previously seen and linked to APT32 (a.k.a. Ocean
+      Lotus and Cobalt Kitty)", and "a similar backdoor used in this
+      campaign was spotted in August 2021 and also linked to this same
+      threat group." An association, not a first-party high-confidence
+      attribution — hence moderate, named-actor (group + Vietnam-nexus
+      cyber-espionage characterization; no service named → vn/unscoped).
 doctrine_links:
-  - doctrine_id: vn/industrial-upgrading-cyber-collection
-    pillar_id: null
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Continued APT32 operations with refreshed tooling consistent
-      with sustained collection across the doctrine's automotive
-      and aerospace pillars; specific victim mix not detailed
-      enough to assign a single pillar.
-    contested: false
-    analyst: claude
   - doctrine_id: vn/resolution-29-nqtw
     pillar_id: vn/resolution-29-nqtw/regime-stability-surveillance
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      ESET observed continued diaspora and regional government
-      targeting consistent with the regime-stability-surveillance
-      pillar.
+      Netskope characterizes APT32 as "a cyber espionage group known for
+      targeting governments and journalists," and this campaign refreshes
+      covert-delivery tradecraft consistent with that espionage mission.
+      The specific victims of this campaign are not named (Netskope
+      reports "narrow" targeting) and the source states no strategic
+      goal, so the link is plausible rather than higher — a
+      regime-stability / press-surveillance reading and a foreign-
+      intelligence / regional-government espionage reading both survive.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Regime-stability / press surveillance: APT32's documented targeting of journalists fits the Resolution-29 regime-stability-surveillance pillar."
+        - "Foreign-intelligence / regional-government espionage: APT32's targeting of governments reads as external collection rather than domestic regime stability, and this campaign names no specific victims."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/asean-government-targets-various
+  - target_id: sectors/government
+    country: null
+    role: primary
+  - target_id: sectors/media/journalism
     country: null
     role: primary
 sources:
-  - eset/2022-05-26_apt32-pubload-tooling
+  - netskope/2022-01-12_oceanlotus-web-archive-backdoor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Phantom-remediation RE-SOURCE (badrabbit model). ORIGINAL DEFECTS: the
+    event cited eset/2022-05-26_apt32-pubload-tooling (url null, no such
+    article) and tied the PUBLOAD downloader to APT32. VERIFIED via web search
+    that PUBLOAD is a Mustang Panda / Earth Preta / Bronze President
+    (China-nexus) stager first disclosed by Cisco Talos in May 2022 (MITRE
+    S1228) — NOT an APT32/OceanLotus tool; and that no ESET 2022 APT32/PubLoad
+    post exists (ESET's OceanLotus corpus is 2018-2019 + a recent 2024-2026
+    domestic-targeting piece). The KhRAT/KerrDown-successor claims, the
+    Facebook-takedown / Bitdefender-macOS / Amnesty narrative, and the target
+    orgs/asean-government-targets-various (a DANGLING FK — real id is
+    orgs/asean-governments) were all fabricated/unsupported and removed.
+    RE-SOURCED to Netskope Threat Labs "Abusing Microsoft Office Using
+    Malicious Web Archive Files" (2022-01-12), the genuine 2021-2022 APT32
+    tooling-refresh primary. Raw snapshot captured + hashed: sha256
+    724ffa2e…94f0d93c, 1,187,774 bytes.
+    [a] FACTS ✓ — all now source-carried by the snapshot: .MHT/.MHTML
+      web-archive delivery of a macro Word doc; RAR-compressed 35-65 MB
+      container; ZoneID="2" mark-of-the-web bypass; 64-bit DLL backdoor in
+      rundll32.exe; host/network recon; Glitch used for C2; campaign "still
+      active" with "narrow" targeting; a similar backdoor spotted August 2021.
+      initial_vector=phishing is a reasonable classification of the described
+      weaponized-document lure (delivery-to-victim mechanism not literally
+      stated by the source) — residual minor inference.
+    [b] ATTRIBUTION — Netskope "linked to APT32 (a.k.a. Ocean Lotus and Cobalt
+      Kitty), a cyber espionage group"; the August-2021 backdoor "also linked
+      to this same threat group." Association by TTP/backdoor overlap, not
+      first-party high-confidence → attributing_org_confidence moderate,
+      attribution_level named-actor, auspex_assessment concur.
+    [c] DATES — source published 2022-01-12 (verbatim datePublished in
+      snapshot). start_date set 2021-08-01 (source: similar backdoor "spotted
+      in August 2021"); disclosure 2022-01-12; end_date null (campaign still
+      active). Original 2021-01-01 start / 2022-05-26 dates were tied to the
+      phantom ESET report and corrected.
+    [d] DOCTRINE_LINKS — removed vn/industrial-upgrading-cyber-collection
+      (Netskope names governments/journalists, NO automotive/aerospace
+      targeting → unsupported). Kept a single vn/resolution-29-nqtw /
+      regime-stability-surveillance link, DOWNGRADED strongly_inferred →
+      plausible (source states no goal; this campaign's victims unnamed);
+      added inference_basis.alternatives. No attested link (no attesting
+      source states a strategic goal).
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves; consistent with the 2026-06-24
+      TC2→unscoped demotion (no source here names a Vietnamese service either).
+    RESIDUAL / FLAGS: (1) the stable event id/path/filename still say
+    "eset-apt32-pubload-modernization" / 2022/05 — now misleading vs. the real
+    Netskope/Jan-2022 event; re-slug or retire is Kara's call. (2) target
+    sectors reflect the source's general APT32 characterization
+    ("governments and journalists"), not campaign-specific named victims.
+    (3) The orphaned phantom source record was annotated (not deleted).
+    (4) QiAnXin "Operation Typhoon" (Nov 2022, "Caja" trojan) is an additional
+    genuine 2021-2022 APT32 primary if Kara wants to strengthen sourcing.
