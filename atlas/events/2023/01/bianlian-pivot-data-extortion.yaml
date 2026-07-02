@@ -1,42 +1,142 @@
 id: 2023-01/bianlian-pivot-data-extortion
-name: BianLian pivots to data-extortion-only after Avast decryptor release
-start_date: 2023-01-15
+name: BianLian pivots to data-extortion after Avast decryptor release
+start_date: 2023-01-16
 disclosure_date: 2023-01-16
-end_date: 2023-03-31
+end_date: 2023-03-19
 incident_type:
   - documentary
 initial_vector: unknown
 outcome_summary: |
-  In mid-January 2023 Avast publicly released a free decryptor
-  for BianLian-encrypted files, neutralizing the cluster's
-  ransomware-encryptor monetization. BianLian operators
-  responded within weeks by removing the encryptor stage from
-  their intrusion playbook entirely and pivoting to a data-
-  exfiltration-only extortion model — keeping the network-
-  reconnaissance and data-theft phases of their tradecraft
-  but threatening leak-site publication of stolen data rather
-  than file-level encryption. The pivot is documented in CISA
-  AA23-136A and a Redacted analyst report May 2023.
+  On January 16, 2023 Avast publicly released a free decryptor
+  for files encrypted by BianLian's Go-language ransomware,
+  undercutting the value of the group's file-encryption
+  extortion. Over the following weeks BianLian moved away from
+  the encrypt-and-extort (double-extortion) model toward
+  exfiltration-based extortion — retaining its network-
+  reconnaissance and data-theft tradecraft but threatening
+  leak-site publication of stolen data rather than file-level
+  encryption. Reporting attributed to Avast (via The Register,
+  Mar 2023) found the free decryptor "apparently convinced the
+  miscreants that there was no future for them on the ransomware
+  side of things"; in the two months after release, 53% of the
+  group's leak-site postings were extortion-only (up from 16%).
+  The joint FBI / CISA / ASD's-ACSC advisory AA23-136A (May 2023)
+  records that BianLian "shifted primarily to exfiltration-based
+  extortion around January 2023"; a later revision of that
+  advisory notes a further shift to exclusively exfiltration-
+  based extortion around January 2024.
 false_flag_risk: none
 summary: |
-  Useful AUSPEX criminal-baseline case for documenting how
-  defender countermeasures (free decryptor release) reshape
-  criminal-operator tradecraft. The BianLian pivot is the
-  cleanest documented case of a major RaaS cluster abandoning
-  encryption in favor of pure data-extortion in response to a
-  cryptographic loss — establishing the model that later
-  operators (Karakurt, Hunters International "World Leaks"
-  rebrand) followed.
+  AUSPEX criminal-baseline case documenting how a defender
+  countermeasure — Avast's free public decryptor — reshaped a
+  major RaaS cluster's tradecraft. The BianLian pivot is a
+  well-documented case of a ransomware crew de-emphasizing
+  file-encryption extortion in favor of data-exfiltration
+  extortion following the public release of a decryptor that
+  defeated its encryptor, illustrating how successful decryptor
+  development can push groups toward extortion-only tactics.
 attributions:
   - actor_id: criminal/bianlian
-    attributing_org: Avast + CISA + FBI
+    attributing_org: "FBI, CISA, ASD's ACSC (joint advisory AA23-136A)"
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-05-16
     attribution_source_id: cisa/2023-05-16_aa23-136a-bianlian-advisory
+    notes: "The AA23-136A joint advisory names BianLian as the ransomware / data-extortion group at high confidence (a named criminal group — not a nation and not a named service/unit, hence named-actor). Avast independently identified and named BianLian earlier, releasing a decryptor on 2023-01-16 (avast/2023-01-16_decrypted-bianlian-ransomware); the group is also self-named on its leak site (per its actor record). No state nexus is attributed, so the actor stays criminal/bianlian."
 doctrine_links: []
 targets:
   - target_id: sectors/critical-infrastructure
     role: primary
 sources:
+  - avast/2023-01-16_decrypted-bianlian-ransomware
+  - theregister/2023-03-19_bianlian-crew-goes-100-extortion-after-decryptor
   - cisa/2023-05-16_aa23-136a-bianlian-advisory
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    RE-SOURCE (PHANTOM-REMEDIATION path). The event is REAL and well-documented
+    but rested on a single source (CISA AA23-136A) that does NOT carry its
+    central causal claim. The cited CISA advisory is a genuine article (not a
+    phantom) and DOES document the pivot, but contains ZERO "Avast" hits and only
+    one "decryptor" hit (the FBI asking victims to submit decryptor files) — so
+    the "Avast decryptor -> pivot" causation, and the decryptor fact itself, were
+    un-sourced. Added the two genuine primaries and audited against all three RAW
+    snapshots.
+
+    SOURCES (all snapshotted this session; none bot-walled -> level full):
+    - avast/2023-01-16_decrypted-bianlian-ransomware — Avast Threat Research Team,
+      "Decrypted: BianLian ransomware", 2023-01-16 (decoded.avast.io 301 ->
+      gendigital.com). raw 340,976 bytes, sha256 a91473c3...41b1d090. Carries the
+      decryptor release + the Go-language file-encryptor.
+    - theregister/2023-03-19_bianlian-crew-goes-100-extortion-after-decryptor —
+      The Register, 2023-03-19. raw 162,455 bytes, sha256 fb177f9f...e98ed639.
+      Carries the CAUSAL link (Avast decryptor -> extortion pivot) + the 16%->53%
+      figures.
+    - cisa/2023-05-16_aa23-136a-bianlian-advisory — joint FBI / CISA / ASD's-ACSC
+      advisory, original 2023-05-16 (LIVE PAGE = the Nov-20-2024 revision). raw
+      137,973 bytes, sha256 1b937b45...2945f594. Carries the pivot ("shifted
+      primarily to exfiltration-based extortion around January 2023") + the
+      named-actor attribution.
+
+    [a] FACTS — corrected. (i) "Avast released a free decryptor" now sourced to
+    Avast (verbatim "The team at Avast has developed a decryptor for the BianLian
+    ransomware and released it for public download") + dated 2023-01-16 (Avast
+    byline), replacing the vague "mid-January". (ii) OVERSTATEMENT FIXED: the
+    event said BianLian removed the encryptor "entirely" / went
+    "data-exfiltration-only" at the Jan-2023 pivot; CISA says they "shifted
+    PRIMARILY to exfiltration-based extortion around January 2023" and only
+    "shifted to EXCLUSIVELY exfiltration-based extortion around January 2024" —
+    reworded to "primarily ... over the following weeks" with the 2024 exclusivity
+    noted separately. (iii) Removed the uncited "a Redacted analyst report May
+    2023" reference (no such source in sources[]; unverifiable) — replaced by the
+    Avast + Register cites. (iv) Removed the unsupported genealogy claim that
+    BianLian "established the model that later operators (Karakurt, Hunters
+    International 'World Leaks') followed" — no cited source carries it and it is
+    chronologically wrong for Karakurt (a Conti-linked extortion-only crew active
+    from ~2021, before BianLian's 2023 pivot). Replaced with the general,
+    Register-supported point that decryptor success can push groups toward
+    extortion-only tactics. (v) Kept "network-reconnaissance / data-theft retained
+    + leak-site publication threat" (CISA: "extorts money by threatening to
+    release data if payment is not made").
+
+    [b] ATTRIBUTION — actor_id criminal/bianlian resolves
+    (atlas/actors/criminal/bianlian.yaml). Corrected attributing_org
+    "Avast + CISA + FBI" -> "FBI, CISA, ASD's ACSC (joint advisory AA23-136A)" to
+    match attribution_source_id; added a note recording Avast's earlier Jan-2023
+    identification + the leak-site self-naming. Confidence high / concur unchanged
+    (a joint government advisory naming a criminal group = high). No state nexus is
+    attributed -> the actor correctly stays criminal/ (not ru/proxies/).
+
+    [c] DATES — source published_on verified: Avast 2023-01-16 (byline), Register
+    2023-03-19 (byline), CISA 2023-05-16 (original release; live page is the
+    Nov-2024 revision — published_on retained as original). Event: start_date
+    2023-01-15 -> 2023-01-16 (the Avast decryptor release = the documented
+    trigger); disclosure_date 2023-01-16 kept; end_date 2023-03-31 (unsourced) ->
+    2023-03-19, bounding the decryptor-driven shift-to-primarily-exfiltration as
+    documented by The Register (the later "exclusively" milestone ~Jan 2024 is a
+    separate state captured in outcome_summary, not this event's window).
+
+    [d] DOCTRINE_LINKS — [] correct and kept. A criminal RaaS tradecraft pivot in
+    response to a defender countermeasure; no state doctrine applies (criminal/
+    actor, no state nexus).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (BianLian is a named
+    criminal group; no nation and no specific service/unit is named).
+
+    [f] ACTOR — criminal/bianlian is sound (criminal/ placement justified: no
+    public state-nexus attribution; primary_service_id null per criminal
+    convention). MINOR FLAG (not edited — actor files out of scope): the actor's
+    ttp_summary says "pivoted to exfiltration-only extortion in January 2023",
+    which overstates the same way the event did — CISA dates "exclusively" to
+    ~Jan 2024, "primarily" to Jan 2023; worth a one-line actor fold-in.
+
+    RESIDUAL UNCERTAINTY: the precise "end" of a gradual behavioural shift is
+    inherently fuzzy; end_date 2023-03-19 is an evidence-anchored bound (Register
+    documents majority-extortion by then), not a hard stop. incident_type kept
+    [documentary] (a meta event documenting a tradecraft shift, not a discrete
+    intrusion); targets kept sectors/critical-infrastructure primary (CISA:
+    BianLian targets critical infrastructure organizations).

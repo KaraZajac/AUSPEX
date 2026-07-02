@@ -8,13 +8,20 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Joint CISA / FBI advisory (AA22-335A) on Cuba ransomware,
-  updating an earlier December 2021 advisory. Documents
-  approximately USD 60M cumulative ransom received as of August
-  2022, doubling of victim count year-over-year, and persistent
-  targeting of US critical-infrastructure sectors (financial
-  services, healthcare, IT, manufacturing). Advisory documents
-  Cuba's Hancitor / RomCom loader ecosystem and Microsoft
-  Exchange ProxyShell initial-access profile.
+  updating the December 2021 FBI Flash. As of August 2022 the
+  advisory documents 101 entities compromised (65 in the US, 36
+  outside the US), USD 145M in ransom demanded and USD 60M
+  received, and a doubling of compromised US entities since the
+  2021 Flash. Cuba ransomware actors persistently targeted five
+  US critical-infrastructure sectors: financial services,
+  government facilities, healthcare and public health, critical
+  manufacturing, and information technology. Documented initial
+  access via known vulnerabilities in commercial software,
+  phishing campaigns, compromised credentials, and legitimate RDP
+  tools; post-access distribution via the Hancitor loader, with
+  third-party / open-source reporting noting an apparent link
+  between Cuba ransomware actors, the RomCom RAT (used for C2),
+  and Industrial Spy ransomware.
 false_flag_risk: none
 summary: |
   Foundational primary-source documentation of the Cuba
@@ -27,12 +34,75 @@ attributions:
   - actor_id: criminal/cuba
     attributing_org: CISA + FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-12-01
     attribution_source_id: cisa/2022-12-01_aa22-335a-cuba-ransomware-advisory
 doctrine_links: []
 targets:
   - target_id: sectors/critical-infrastructure
+    country: us
     role: primary
 sources:
   - cisa/2022-12-01_aa22-335a-cuba-ransomware-advisory
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the CISA/FBI joint advisory "#StopRansomware: Cuba
+    Ransomware (AA22-335A)", 2022-12-01. RAW snapshot captured:
+    cisa__2022-12-01_aa22-335a-cuba-ransomware-advisory.html,
+    sha256 d27c503c…3cecc512, 96578 bytes; page live (HTTP 200),
+    NOT bot-walled — normal audit, not a phantom.
+
+    [a] FACTS — corrected. RAW carries: "Demanded 145 million U.S.
+    Dollars (USD) and received 60 million USD in ransom payments"
+    and "Compromised 101 entities, 65 in the United States and 36
+    outside the United States" (both under "As of August 2022, FBI
+    has identified that Cuba ransomware actors have:"), and "the
+    number of U.S. entities compromised by Cuba ransomware has
+    doubled" since the Dec-2021 Flash. All now reflected in
+    outcome_summary. Five CII sectors verbatim: "Financial
+    Services, Government Facilities, Healthcare and Public Health,
+    Critical Manufacturing, and Information Technology" (event
+    previously listed only four; added Government Facilities).
+    Initial-access techniques verbatim: "Known vulnerabilities in
+    commercial software [T1190] Phishing campaigns [T1566]
+    Compromised credentials [T1078] Legitimate remote desktop
+    protocol (RDP) tools [T1563.002]". Hancitor described as "a
+    loader"; RomCom as "a custom RAT ... for command and control
+    (C2)" with only "a possible link" / "an apparent link" per
+    "third-party and open-source reports".
+    STRIPPED FABRICATION: prior outcome_summary asserted a
+    "Microsoft Exchange ProxyShell initial-access profile" —
+    case-insensitive search of the RAW for proxyshell/exchange/
+    CVE-2021-3447x/OWA returns ZERO hits; AA22-335A never mentions
+    Exchange or ProxyShell. Removed. Also corrected "Hancitor /
+    RomCom loader ecosystem" (RomCom is a RAT/C2, and the Cuba↔
+    RomCom link is hedged, not settled) and "December 2021
+    advisory" → "December 2021 FBI Flash" (source: "This advisory
+    updates the December 2021 FBI Flash").
+    [b] ATTRIBUTION — FBI+CISA name "Cuba ransomware actors" as the
+    operators of the Cuba-branded ransomware; attributing_org_
+    confidence high is faithful for a govt naming the crew behind
+    its own brand. auspex_assessment concur.
+    [c] DATES — documentary/publication event: start = disclosure =
+    end = 2022-12-01 = source published_on. Correct.
+    [d] DOCTRINE_LINKS — [] is correct: purely financial cybercrime,
+    no doctrine applies (advisory: no state connection).
+    [e] ATTRIBUTION_LEVEL — added named-actor (a named criminal
+    crew; no service/unit named — consistent with criminal/ actor).
+    [f] ACTOR_ID — criminal/cuba resolves (atlas/actors/criminal/
+    cuba.yaml). No Cuba-the-STATE conflation: both the event
+    summary and the actor record state the operation is "unrelated
+    to the Republic of Cuba despite branding", matching the RAW:
+    "there is no indication Cuba ransomware actors have any
+    connection or affiliation with the Republic of Cuba." Correct
+    placement under criminal/ (no documented state nexus).
+    Added country: us to the critical-infrastructure target
+    (source: FBI observed actors "continuing to target U.S.
+    entities" in five US CII sectors).
+    Residual: the RomCom/Industrial Spy links are the advisory's
+    own hedged, third-party-sourced associations, carried as such.

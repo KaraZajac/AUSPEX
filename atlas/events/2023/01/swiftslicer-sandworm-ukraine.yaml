@@ -1,54 +1,75 @@
 id: 2023-01/swiftslicer-sandworm-ukraine
-name: SwiftSlicer wiper deployment against Ukrainian target (Sandworm)
+name: SwiftSlicer wiper deployment against Ukrainian local government (Sandworm)
 start_date: 2023-01-25
 disclosure_date: 2023-01-27
 end_date: 2023-01-25
 incident_type:
   - destructive
   - wiper
-initial_vector: valid-creds
+initial_vector: unknown
 outcome_summary: |
   Sandworm deployed SwiftSlicer — a previously unknown Go-language
-  destructive wiper — against a Ukrainian target on 25 January
-  2023. Disclosed by ESET 27 January 2023. Operators used Active
-  Directory Group Policy with valid credentials to push the wiper,
-  consistent with the tradecraft used for HermeticWiper, IsaacWiper,
-  CaddyWiper and Industroyer2 in 2022.
+  destructive wiper — against Ukrainian local government entities on
+  25 January 2023. Disclosed by ESET 27 January 2023; ESET's later
+  "A Year of Wiper Attacks in Ukraine" retrospective (24 Feb 2023)
+  named the victim sector (Ukrainian local government) and confirmed
+  the deployment method. The wiper was pushed via Active Directory
+  Group Policy — indicating the attackers had taken control of the
+  victim's AD environment — the same fashion in which ESET observed
+  HermeticWiper and CaddyWiper planted in 2022.
 false_flag_risk: none
 summary: |
-  SwiftSlicer overwrites files in critical system paths
-  (Windows\NTDS, Windows\System32\drivers) and on attached
-  non-system drives with cryptographically random 4096-byte blocks,
-  then reboots the host. ESET attributed it to Sandworm on the
-  basis of deployment tradecraft (AD Group Policy with valid
-  credentials) and codebase resemblance to earlier Sandworm wiper
-  families. SwiftSlicer continues the wiper cadence against
-  Ukrainian state and infrastructure organisations that runs from
-  WhisperGate / HermeticWiper / IsaacWiper / CaddyWiper /
-  Industroyer2 / Prestige.
+  SwiftSlicer (detected by ESET as WinGo/KillFiles.C) deletes shadow
+  copies and recursively overwrites files in Windows\System32\drivers
+  (%CSIDL_SYSTEM%\drivers), Windows\NTDS and other non-system drives
+  with 4096-byte blocks of randomly generated data, then reboots the
+  host. ESET attributed the attack to the Sandworm APT group. It was
+  pushed through Group Policy — the same fashion ESET observed for
+  HermeticWiper and CaddyWiper — continuing the destructive wiper
+  cadence Sandworm has run against Ukraine (HermeticWiper, CaddyWiper
+  and the RansomBoggs ransomware wave, alongside the older BlackEnergy
+  / GreyEnergy / Industroyer / Industroyer2 operations documented by
+  ESET).
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: ESET
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-01-27
     attribution_source_id: eset/2023-01-27_swiftslicer-sandworm
+    notes: |
+      ESET attributes SwiftSlicer directly, without hedge: "ESET
+      researchers have uncovered a new wiper attack in Ukraine that
+      they attribute to the Sandworm APT group." Contrast the 2022
+      wiper wave, which ESET could only attribute to Sandworm
+      retrospectively "with varying degrees of confidence" (hence
+      the sibling HermeticWiper/IsaacWiper events are moderate) —
+      SwiftSlicer is attributed at disclosure, so high. ESET names
+      the group "Sandworm" (= GRU Unit 74455) but does not spell out
+      the GRU/unit in-text, so attribution_level is named-actor; the
+      GRU/Unit-74455 identity rests on the actor record.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Continuing destructive operations against Ukrainian targets;
-      ESET documents the wiper deployment but does not name the
-      Russkiy Mir doctrine, so the linkage is inferred from the
-      Ukraine-theater target.
+      A Sandworm (GRU) destructive wiper deployed against Ukrainian
+      local government entities during the full-scale invasion —
+      destructive Ukraine-theater operations of the kind the
+      russkiy-mir Ukraine-theater pillar encodes. ESET documents the
+      wiper and its Sandworm attribution but does not name the
+      Russkiy Mir doctrine or state the strategic purpose, so the
+      linkage is inferred rather than attested.
     attesting_source_id: eset/2023-01-27_swiftslicer-sandworm
     inference_basis:
       source_id: eset/2023-01-27_swiftslicer-sandworm
       signals:
-        - "ESET documents a destructive wiper against a Ukrainian target (Ukraine-theater behaviour)"
-      ruled_out: "the Russkiy Mir doctrine / its strategic goal — not named by ESET"
+        - "ESET attributes a destructive Go-language wiper to Sandworm, deployed 25 Jan 2023 against Ukrainian local government entities (victim sector named in ESET's 24 Feb 2023 retrospective) — Ukraine-theater destructive behaviour"
+        - "SwiftSlicer continues an unbroken Sandworm wiper cadence against Ukraine (HermeticWiper, CaddyWiper, RansomBoggs) documented by ESET"
+      ruled_out: "a purely criminal/opportunistic reading is rejected given the destructive-only payload and the sustained GRU-attributed Ukraine wiper campaign; neither cited ESET source names the Russkiy Mir doctrine or states its strategic goal, so strongly_inferred, not attested"
+    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
@@ -56,14 +77,116 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cyber-destructive operations integrated with ongoing kinetic
-      hostilities against Ukraine — the 2014 doctrine's non-contact
-      warfare integration pattern.
+      A GRU-attributed destructive cyber operation conducted during
+      active kinetic hostilities against Ukraine — the cyber-kinetic
+      integration the 2014 Military Doctrine's non-contact-warfare
+      pattern describes. AUSPEX inference — neither cited ESET source
+      discusses Russian military doctrine.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "A GRU-attributed destructive wiper deployed during active kinetic war against Ukraine — cyber operations integrated with ongoing military hostilities"
+        - "Nation-state destructive tooling (a Go wiper pushed via Active Directory Group Policy), not financially-motivated crime"
+      ruled_out: "a criminal/hacktivist reading is rejected given the destructive-only payload and Sandworm attribution; the competing ru/russkiy-mir Ukraine-theater reading is captured as a separate link; neither cited ESET source discusses Russian military doctrine, so strongly_inferred, not attested"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/ukraine-government
+  - target_id: sectors/government/local
+    country: ua
     role: primary
 sources:
   - eset/2023-01-27_swiftslicer-sandworm
+  - eset/2023-02-24_year-of-wiper-attacks-ukraine
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against two ESET WeLiveSecurity sources (both raw-snapshotted + hashed).
+    S1 = eset/2023-01-27_swiftslicer-sandworm "SwiftSlicer: New destructive wiper malware
+    strikes Ukraine" (27 Jan 2023, the disclosure post, "1 min. read"), sha256
+    d610c1e1…66a7f5a8, 69981 bytes. S2 = eset/2023-02-24_year-of-wiper-attacks-ukraine
+    "A Year of Wiper Attacks in Ukraine" (24 Feb 2023 retrospective), sha256
+    30221f95…6579ab57, 90658 bytes (hash re-verified against the sibling HermeticWiper
+    audit; S2 source record already snapshotted, left untouched). S2 ADDED as a second
+    source to carry the victim-sector claim (S1 does not name the victim); S1 is real and
+    on-topic — NOT a phantom (title/body match the event).
+
+    [a] FACTS — corrected to source wording. S1 verbatim: "ESET researchers have uncovered
+    a new wiper attack in Ukraine that they attribute to the Sandworm APT group. Dubbed
+    SwiftSlicer, the destructive malware was spotted on the network of a targeted
+    organization on January 25th. It was deployed through Group Policy, which suggests that
+    the attackers had taken control of the victim's Active Directory environment"; "The
+    malware was written in Go"; "SwiftSlicer is detected by ESET products as
+    WinGo/KillFiles.C"; destruction quote: "Once executed it deletes shadow copies,
+    recursively overwrites files located in %CSIDL_SYSTEM%\\drivers,
+    %CSIDL_SYSTEM_DRIVE%\\Windows\\NTDS and other non-system drives and then reboots
+    computer. For overwriting it uses 4096 bytes length block filled with randomly
+    generated byte." CORRECTIONS: (1) "cryptographically random 4096-byte blocks" →
+    "4096-byte blocks of randomly generated data" (S1 says "randomly generated byte", not
+    "cryptographically"); (2) STRIPPED "codebase resemblance to earlier Sandworm wiper
+    families" as an attribution basis — S1 attributes to Sandworm but states NO codebase
+    rationale (and SwiftSlicer is Go, unlike the C/C++ 2022 wipers); (3) the wiper-cadence
+    list "WhisperGate / HermeticWiper / IsaacWiper / CaddyWiper / Industroyer2 / Prestige"
+    trimmed to S1-carried names — S1 names HermeticWiper + CaddyWiper (planted "in the same
+    fashion" = Group Policy), the RansomBoggs wave ("also linked to Sandworm"), and
+    BlackEnergy/GreyEnergy/Industroyer/Industroyer2 as Sandworm's track record; WhisperGate,
+    IsaacWiper and Prestige are NOT in S1 (removed); (4) the GPO-tradecraft comparison
+    restricted to HermeticWiper + CaddyWiper (S1's only named "same fashion" examples) —
+    IsaacWiper and Industroyer2 were NOT stated by S1 as GPO-deployed. Added S1-carried
+    facts: detection name WinGo/KillFiles.C and "deletes shadow copies". VICTIM SECTOR:
+    S1 says only "a targeted organization" (unnamed); S2 resolves it verbatim: "On January
+    25th, 2023, we detected a new wiper, written in Go and that we named SwiftSlicer, being
+    deployed against Ukrainian local government entities." S2 also generalizes the
+    deployment: "In almost all the above-mentioned cases, Sandworm used Active Directory
+    Group Policy (T1484.001) to deploy its wipers and ransomware, specifically using the
+    POWERGAP script", and lists "WinGo/KillFiles.C … SwiftSlicer wiper".
+
+    [b] ATTRIBUTION — S1 attributes directly and without hedge to "the Sandworm APT group"
+    (quoted above); no explicit confidence word, but an unqualified tier-1 attribution at
+    disclosure → attributing_org_confidence high, auspex_assessment concur. This differs
+    from the sibling HermeticWiper/IsaacWiper events (moderate), whose Sandworm attribution
+    came only from S2's hedged "varying degrees of confidence" retrospective — SwiftSlicer
+    is named same-day. Added a notes field recording this contrast.
+
+    [c] DATES — start_date 2023-01-25 ✓ (S1 "January 25th"; S2 "On January 25th, 2023").
+    disclosure_date 2023-01-27 ✓ (S1 dated 27 Jan 2023). end_date 2023-01-25 ✓ (single-day
+    detection). attribution_date 2023-01-27 ✓ (attributed at disclosure). S1 published_on
+    2023-01-27 ✓; S2 published_on 2023-02-24 ✓.
+
+    [d] DOCTRINE_LINKS — both strongly_inferred; no attested gate triggered. russkiy-mir/
+    ukraine-theater: kept strongly_inferred; tightened reasoning + inference_basis (signals
+    now cite the S2-named local-government victim and the documented wiper cadence; ruled_out
+    records that neither ESET source names the doctrine or its goal). military-doctrine-2014/
+    non-contact-warfare: kept strongly_inferred; attesting_source_id null (allowed, not
+    attested); ADDED the missing inference_basis {signals, ruled_out} (cyber-kinetic
+    integration signal; criminal/hacktivist reading ruled out; competing russkiy-mir link
+    noted). Honest that both links are AUSPEX inferences — neither ESET source discusses
+    Russian doctrine.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set to named-actor. S1 names the group "Sandworm";
+    it does not spell out "GRU"/"Unit 74455" in-text, so not named-unit.
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml
+    (internal id matches). No actor-file edit. No flag.
+
+    CORRECTIONS beyond facts/attribution: (i) TARGET orgs/ukraine-government →
+    sectors/government/local (country ua). orgs/ukraine-government is the registry's slug
+    for CENTRAL Ukrainian government ministries/agencies; S2 states the victim was Ukrainian
+    LOCAL government entities — a sector mismatch. Retagged to the source-exact
+    sectors/government/local (a valid, widely-used FK; the victims are unnamed local-govt
+    entities, so a sector tag is more honest than any single named org). (ii) initial_vector
+    valid-creds → unknown. Neither source states the INITIAL access vector; Group Policy /
+    AD control is the DEPLOYMENT mechanism (now in summary/outcome), not documented initial
+    access — same principled treatment as the audited sibling HermeticWiper (which ESET
+    likewise disclosed as GPO-deployed with initial access unknown). (iii) name refined to
+    reflect the S2-sourced victim (local government). (iv) ADDED S2 to sources[].
+
+    RESIDUAL UNCERTAINTY: S1 does not name the victim at all; the local-government sector
+    rests entirely on S2's one-line retrospective. "Valid credentials" for the GPO push is
+    an implicit read of "taken control of the victim's Active Directory environment" (S1) /
+    POWERGAP+T1484.001 (S2); left out of initial_vector as it describes deployment, not
+    initial access. S2's "varying degrees of confidence" caveat is a wave-level statement,
+    not specific to SwiftSlicer, which S1 attributes flatly.

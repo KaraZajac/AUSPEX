@@ -2,58 +2,157 @@ id: 2023-01/lockbit-royal-mail
 name: LockBit ransomware against Royal Mail UK
 start_date: 2023-01-10
 disclosure_date: 2023-01-11
-end_date: 2023-02-14
+end_date: 2023-02-23
 incident_type:
   - ransomware
   - disruption
-initial_vector: valid-creds
+initial_vector: unknown
 outcome_summary: |
-  LockBit affiliate intrusion at Royal Mail International (UK
-  state-owned-then-privatized postal operator) disabled international
-  outbound mail processing at Heathrow Worldwide Distribution
-  Centre. Approximately five weeks of severe international postal
-  disruption; small UK exporters disproportionately affected.
-  Royal Mail publicly refused the USD 80M ransom demand
-  (negotiation transcripts later leaked by LockBit on the leak
-  site).
+  A LockBit affiliate's ransomware intrusion disabled Royal Mail's
+  international export operations, leaving the UK postal operator
+  temporarily unable to despatch items to overseas destinations.
+  Royal Mail faced roughly six weeks of severe international-shipping
+  disruption before it finally restored export services to all
+  destinations (full reinstatement reported 23 February 2023). LockBit
+  demanded an initial USD 80M (about GBP 66M) ransom; Royal Mail
+  refused, its negotiator stating it would "under no circumstances"
+  pay "the absurd amount of money" demanded. After the refusal LockBit
+  published the negotiation transcript and some of the stolen Royal
+  Mail data on its dark-web leak site.
 false_flag_risk: none
 summary: |
-  Highest-profile UK ransomware incident of 2023. Initial access
-  used valid credentials against a remote-management endpoint;
-  affiliate tradecraft consistent with CISA AA23-075A LockBit
-  reporting included Cobalt Strike beacons, Mimikatz credential
-  dumping, lateral movement via SMB and RDP, BloodHound /
-  SharpHound for Active Directory reconnaissance, abuse of the
-  legitimate remote-access tools AnyDesk and Atera, data
-  exfiltration via rclone / MEGA, and the LockBit 3.0 (LockBit
-  Black) ChaCha20 encryptor deployed across the Heathrow
-  Worldwide Distribution Centre estate. The negotiation-
-  transcript leak on LockBit's data-leak site exposed the
-  cluster's operator slang ("LockBitSupp") and gave rare public
-  visibility into affiliate posture.
+  The highest-profile UK ransomware incident of 2023. Royal Mail first
+  detected the attack on 10 January 2023 and hired outside forensic
+  experts; the company publicly reported "disruption to our
+  international export services" and an inability to despatch items to
+  overseas destinations. Printed ransom notes found during the attack
+  were the "LockBit Black" (LockBit 3.0) variant and carried links to
+  LockBit's Tor negotiation and data-leak sites. LockBit's public
+  representative "LockBitSupp" initially denied that the group had
+  attacked Royal Mail, blaming other actors using the LockBit 3.0
+  builder leaked in September 2022, but later confirmed on a
+  Russian-speaking hacking forum that one of LockBit's affiliates had
+  deployed the gang's payloads on Royal Mail's systems. LockBit
+  subsequently leaked the full negotiation transcript (an initial USD
+  80M demand, later lowered to USD 40M) and published some of the
+  stolen data after Royal Mail refused to pay. The publicly disclosed
+  reporting does not identify the initial-access vector for this
+  specific intrusion.
 attributions:
   - actor_id: ru/proxies/lockbit
-    attributing_org: UK NCSC + LockBit (self-claimed via leak site)
+    attributing_org: 'LockBit (self-claimed on a Russian-speaking forum + printed "LockBit Black" ransom notes), reported by BleepingComputer'
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-01-12
-    attribution_source_id: ncsc-uk/2023-01-12_royal-mail-lockbit
+    attribution_source_id: bleepingcomputer/2023-02-07_lockbit-royal-mail-cyberattack
+    notes: "LockBit was first linked via the printed 'LockBit Black' ransom notes (mid-Jan 2023); LockBitSupp initially DENIED involvement, then confirmed on a Russian-speaking forum (reported 7 Feb 2023) that an affiliate had deployed LockBit's payloads. attribution_level=named-actor (the LockBit RaaS group, Russia-linked), NOT named-unit: no individual was named at the time (Khoroshev / 'LockBitSupp' was unmasked only in May 2024)."
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
     program_id: null
     confidence: plausible
     reasoning: |
-      LockBit operations are nominally apolitical and affiliate-
-      driven; Royal Mail target selection appears opportunistic
-      rather than state-directed. Doctrine tag is at plausible
-      confidence on the basis of LockBit's broader operational
-      tolerance from Russian territory rather than any incident-
-      specific attestation.
+      LockBit is a nominally apolitical, affiliate-driven RaaS, and the
+      Royal Mail hit reads as opportunistic big-game hunting rather than
+      state-directed targeting; no cited source ties this incident to a
+      Russian strategic goal. The link is carried at plausible confidence
+      ONLY because the actor is placed in the ru/proxies namespace on a
+      source-documented safe-harbor nexus (its default doctrine alignment
+      is criminal-proxy-mobilization), not on any incident-specific
+      attestation. If LockBit were reclassified as criminal/ (no state
+      nexus), doctrine_links should become [].
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Criminal-proxy mobilization under Russian safe harbor: LockBit operates with tolerance from Russian territory (per the actor record's OFAC-based ru/proxies placement), so its disruptive hits on Western CII passively serve the harboring state even absent tasking."
+        - "Purely opportunistic financial crime: target selection was affiliate-driven and revenue-motivated with no state direction evident, on which reading no state doctrine applies to the incident."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/royal-mail
+  - target_id: sectors/transport/logistics
+    country: gb
     role: primary
 sources:
-  - ncsc-uk/2023-01-12_royal-mail-lockbit
+  - bleepingcomputer/2023-02-07_lockbit-royal-mail-cyberattack
+  - techcrunch/2023-02-23_royal-mail-restores-shipping
+  - computerweekly/2023-02-15_royal-mail-refused-66m-ransom
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The sole cited source
+    ncsc-uk/2023-01-12_royal-mail-lockbit is a CONFIRMED PHANTOM: url:null,
+    the record's own notes state the cited URL was the ncsc.gov.uk homepage
+    and "Canonical statement URL needs to be located" — no such NCSC Royal
+    Mail statement was ever identified. The Royal Mail / LockBit incident is
+    real and heavily documented, so re-sourced to three reachable, snapshotted
+    primaries and re-pointed sources[] + attribution_source_id off the phantom
+    (which was orphaned; annotated its notes). Phantom carried NO content hash.
+
+    SOURCES snapshotted 2026-07-02 (sha256 first8..last8 / bytes):
+     - bleepingcomputer/2023-02-07_lockbit-royal-mail-cyberattack 7e6a0dd0..11e851ea / 90418
+     - techcrunch/2023-02-23_royal-mail-restores-shipping 7e1b3689..d18b5c6b / 238059
+     - computerweekly/2023-02-15_royal-mail-refused-66m-ransom ecf1f9bd..f9c6717d / 384958
+
+    [a] FACTS — every retained claim now source-carried:
+     - detected 10 Jan 2023 (BC: "Royal Mail first detected the attack on
+       January 10"); disclosure 11 Jan (next-day public statement).
+     - international export disruption (BC quotes the company: "disruption to
+       our international export services ... unable to despatch items to
+       overseas destinations").
+     - ~six weeks, restored to all destinations 23 Feb 2023 (TechCrunch: "severe
+       disruption for six weeks after a January 10 cyberattack"; "finally
+       restored international shipping ... for over a month"). CHANGED end_date
+       2023-02-14 -> 2023-02-23 and "approximately five weeks" -> "roughly six
+       weeks".
+     - LockBit Black / LockBit 3.0 builder + printed ransom notes with Tor
+       negotiation/leak-site links (BC).
+     - initial DENIAL then affiliate CONFIRMATION on a Russian-speaking forum (BC).
+     - USD 80M (=GBP 66M) demand, later USD 40M; refused "under no circumstances /
+       absurd amount" (TechCrunch + Computer Weekly, verbatim); transcript + some
+       stolen data leaked (TechCrunch).
+     STRIPPED as unsupported (no cited source carries them for THIS incident):
+      the entire tradecraft laundry-list (Cobalt Strike, Mimikatz, BloodHound/
+      SharpHound, SMB/RDP lateral movement, AnyDesk, Atera, rclone/MEGA, ChaCha20)
+      attributed vaguely to "CISA AA23-075A LockBit reporting" — a GENERIC LockBit
+      advisory that was not even cited and never documents these at Royal Mail;
+      BC explicitly names no incident-specific tradecraft. Also removed the
+      "LockBitSupp operator-slang exposed by the leak" embellishment and the
+      "Heathrow Worldwide Distribution Centre" facility name (true per BBC but NOT
+      in any of the three cited sources — dropped to keep every claim carried).
+    [b] ATTRIBUTION — LockBit self-claimed (forum + LockBit Black ransom notes),
+      corroborated by BC/TechCrunch ("Russia-linked LockBit"). Kept high confidence
+      (self-claim + physical ransom-note evidence). ADDED attribution_level:
+      named-actor (was missing). Rewrote attributing_org (dropped the removed NCSC
+      reference). attribution_date 2023-01-12 = first public LockBit linkage via
+      the ransom note; qc/notes record the 7 Feb formal self-claim.
+    [c] DATES — start 2023-01-10 (kept, verbatim). disclosure 2023-01-11 (kept).
+      end 2023-02-23 (FIXED from 02-14). Source published_on set to each page's own
+      date (BC 02-07, TechCrunch 02-23, ComputerWeekly 02-15), not the campaign month.
+    [d] DOCTRINE — link is plausible (not attested), so no attesting_source_id
+      required; kept []-eligible reasoning honest and ADDED inference_basis.
+      alternatives. NOTE the link is coupled to the actor's ru/proxies placement;
+      see FLAG below.
+    [e] ATTRIBUTION_LEVEL — set named-actor (LockBit group + Russia-linked; no unit).
+    [f] ACTOR_ID — ru/proxies/lockbit RESOLVES (id of atlas/actors/ru/lockbit.yaml).
+
+    FLAGS for orchestrator/Kara:
+     1) ACTOR/DOCTRINE COUPLING vs TASK NB. The task NB directed actor
+        criminal/lockbit + doctrine_links []. criminal/lockbit DOES NOT EXIST; the
+        on-disk actor is ru/proxies/lockbit, DELIBERATELY audited & KEPT there on
+        2026-06-24 (claude-opus-4.8/max) on an OFAC by-name safe-harbor finding,
+        with default_doctrine_alignment = criminal-proxy-mobilization. Per protocol
+        I did NOT edit the actor file or point at a dangling FK, so I KEPT
+        ru/proxies/lockbit and its default proxy-mobilization doctrine link (plausible,
+        honest). If Kara instead reclassifies LockBit to criminal/, THIS event's
+        doctrine_links must be emptied to [] and the actor's default alignment cleared.
+     2) MISSING TARGET REGISTRY ENTRY. Event originally targeted orgs/royal-mail,
+        which is a DANGLING FK (no atlas/targets/orgs/royal-mail.yaml exists; only
+        this event referenced it). Cannot create registry files under this protocol,
+        so re-pointed target to the resolving sectors/transport/logistics (country
+        gb, primary). RECOMMEND Kara create orgs/royal-mail (name "Royal Mail",
+        sector transport/logistics, nation gb, criticality national-cii) and switch
+        the target back to the named org.

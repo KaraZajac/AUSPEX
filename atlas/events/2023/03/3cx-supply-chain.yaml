@@ -1,76 +1,207 @@
 id: 2023-03/3cx-supply-chain
 name: 3CX supply-chain compromise
-start_date: 2022-09-01  # X_TRADER prior compromise; actual onset earlier
+start_date: 2022-02-01  # tradingtechnologies.com compromised Feb 2022 (Google TAG, cited by Mandiant); X_TRADER updates distributed after
 disclosure_date: 2023-03-29
-end_date: 2023-04-30
+end_date: 2023-04-30  # editorial remediation-window bound; Mandiant report 2023-04-20
 incident_type:
   - supply-chain
   - intrusion
   - data-theft
 initial_vector: supply-chain
 outcome_summary: |
-  First publicly documented cascading software-supply-chain
-  compromise. Initial-access stage: prior compromise of Trading
-  Technologies *X_TRADER* installer. Second stage: trojanized
-  3CX DesktopApp distributed to ~600,000 customers globally
-  with DLL side-loading delivering ICONIC Stealer + Gopuram
-  second-stage payload, deployed selectively against
-  cryptocurrency firms among the 3CX customer base. Data
-  exfiltration from selected crypto victims; broad downstream
-  IoC scramble.
-quantified_impact:
-  customers_at_risk: 600000
+  The first cascading software-supply-chain compromise Mandiant
+  had observed: one software supply chain compromise initiating
+  another. Initial-access stage: prior compromise of Trading
+  Technologies' X_TRADER installer (Google TAG, cited by Mandiant,
+  dated the tradingtechnologies.com compromise to February 2022,
+  preceding distribution of compromised X_TRADER updates). Second
+  stage: the trojanized 3CX DesktopApp (build 18.12.416 and earlier)
+  was distributed from 3CX's website via a complex DLL-side-loading
+  chain deploying the VEILEDSIGNAL multi-stage backdoor; a later
+  stage retrieved ICONICSTEALER, "a dataminer that steals browser
+  information." Mandiant tracked the activity as UNC4736, a suspected
+  North Korean nexus cluster it assessed (moderate confidence) as
+  related to financially motivated "AppleJeus" activity with a
+  sustained focus on cryptocurrency and fintech services.
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Critical demonstration of cascading supply-chain doctrine: one
-  supplier (X_TRADER) compromised to reach another supplier
-  (3CX) used to reach final targets (crypto firms). Mandiant
-  attribution to UNC4736 (= Citrine Sleet per AUSPEX cluster
-  mapping). Distinct cluster boundary from Lazarus core per
-  Mandiant's March 2024 "Not So Lazarus" disaggregation —
-  AUSPEX honors this by attributing to Citrine Sleet rather
-  than Lazarus core.
+  Critical demonstration of cascading supply-chain tradecraft: one
+  supplier (Trading Technologies / X_TRADER) compromised to reach
+  another supplier (3CX), whose trojanized DesktopApp was then
+  distributed to 3CX's customer base — "the first time" Mandiant had
+  seen a software supply chain compromise lead to another. Mandiant
+  attributed the activity to UNC4736, a suspected North Korean
+  cluster it assessed at moderate confidence as related to
+  financially motivated "AppleJeus" operations; the report names no
+  DPRK service. AUSPEX resolves UNC4736 to Citrine Sleet — Microsoft
+  (MSTIC) lists UNC4736 as a Citrine Sleet alias and attributes
+  Citrine Sleet to Bureau 121 of the DPRK Reconnaissance General
+  Bureau — rather than to a blanket "Lazarus" label, consistent with
+  Mandiant's March 2023 "Not So Lazarus" mapping, which cautions that
+  "Lazarus Group" is an umbrella term for numerous DPRK clusters
+  tracked separately.
 attributions:
   - actor_id: kp/rgb/citrine-sleet
     attributing_org: Mandiant
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2023-04-20
     attribution_source_id: mandiant/2023-04-20_3cx-supply-chain
     notes: |
-      Mandiant attributes to UNC4736 (Citrine Sleet); CrowdStrike
-      attributes to Labyrinth Chollima (overlapping); Volexity
-      tracked separately. AUSPEX attributes to Citrine Sleet per
-      the cluster-boundary call.
+      Mandiant reached NATION level only: "Mandiant tracks this
+      activity as UNC4736, a suspected North Korean nexus cluster of
+      activity" and "assesses with moderate confidence that UNC4736
+      is related to financially motivated North Korean 'AppleJeus'
+      activity as reported by CISA." Title: "Suspected North Korean
+      Actor Responsible." No DPRK service named in the Mandiant
+      report (zero RGB/Bureau hits) — hence attributing_org_confidence
+      moderate (was over-stated as high) and attribution_level nation.
+      AUSPEX resolves UNC4736 to Citrine Sleet (RGB / Bureau 121) via
+      Microsoft MSTIC (2024-08-30), which lists UNC4736 as a Citrine
+      Sleet alias and attributes Citrine Sleet to "Bureau 121 of North
+      Korea's Reconnaissance General Bureau." concur-with-caveat:
+      Mandiant's own attribution is "suspected"/moderate, and the
+      specific Citrine Sleet / Bureau-121 resolution is AUSPEX
+      synthesis via the Microsoft alias mapping (not stated by the
+      Mandiant 3CX report).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
-    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Selective second-stage deployment against cryptocurrency
-      firms indicates a revenue-aggregation purpose. Mandiant
-      documents the crypto-firm targeting (revenue behaviour) but
-      does not name the WMD-financing strategic goal, which is
-      inferred from the standard DPRK pattern.
+      Mandiant ties UNC4736 to financially motivated North Korean
+      operators (the CISA "AppleJeus" cluster) with a "sustained
+      focus on cryptocurrency and fintech-related services." That is
+      a proximate revenue purpose, which the 8th-Congress
+      revenue-aggregation pillar specializes into regime hard-currency
+      generation; Mandiant does not state the WMD / ballistic-missile
+      financing end-use, so the strategic goal is inferred, not
+      attested. Held at pillar level (program_id null): this operation
+      is a supply-chain access vector, not a DeFi-bridge or
+      crypto-exchange heist, so the specific crypto-bridge-theft
+      program does not fit.
     attesting_source_id: mandiant/2023-04-20_3cx-supply-chain
     inference_basis:
       source_id: mandiant/2023-04-20_3cx-supply-chain
       signals:
-        - "Mandiant documents selective crypto-firm targeting by Citrine Sleet (revenue behaviour)"
-      ruled_out: "WMD-financing strategic goal — Mandiant names only crypto/fintech targeting, not the financing end-use"
+        - "Mandiant 'assesses with moderate confidence that UNC4736 is related to financially motivated North Korean AppleJeus activity as reported by CISA'"
+        - "Mandiant: UNC4736-overlapping clusters 'have demonstrated a sustained focus on cryptocurrency and fintech-related services over time'"
+      ruled_out: "Strategic-tech-collection / espionage reading — Mandiant characterizes UNC4736 as financially motivated (AppleJeus / crypto focus), not an intelligence-collection mission, so the 8th-Congress strategic-tech-collection pillar is rejected in favor of revenue-aggregation"
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/3cx
     role: staging
-    outcome: 3CX DesktopApp trojanized; ~600K customers received compromised binary.
-  - target_id: orgs/trading-technologies-x-trader
+    outcome: 3CX DesktopApp (build 18.12.416 and earlier) trojanized and distributed from 3CX's own website to its customer base.
+  - target_id: sectors/ict/software
+    country: us
     role: staging
-    outcome: Initial supply-chain pivot vector; X_TRADER installer trojanized first.
+    outcome: |
+      Prior supply-chain link — Trading Technologies' X_TRADER
+      installer trojanized first (tradingtechnologies.com compromised
+      February 2022 per Google TAG, cited by Mandiant); an X_TRADER
+      download onto a 3CX engineer's machine seeded the 3CX
+      compromise. (No orgs/ registry entry exists for Trading
+      Technologies; recorded at sector level — see qc FLAG.)
   - target_id: sectors/finance/crypto-exchange
     role: primary
-    outcome: Selective second-stage compromise of crypto-firm subset; data exfil.
+    outcome: |
+      Cryptocurrency / fintech firms are UNC4736's documented
+      financially-motivated targeting focus per Mandiant; the cited
+      Mandiant report does not enumerate specific crypto-firm victims
+      of the 3CX second stage (the selective crypto-company second
+      stage was reported separately by Kaspersky, not cited here).
 sources:
   - mandiant/2023-04-20_3cx-supply-chain
+  - msft/2024-08-30_citrine-sleet-chrome-zero-day
+  - mandiant/2023-03-23_not-so-lazarus-dprk-mapping
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Phantom-remediation + full 6-point audit. Path taken: RE-SOURCE (badrabbit model) —
+    the event rested on real reporting but carried uncited/wrong-dated embellishments and a
+    dangling target FK; corrected in place and grounded in three snapshotted sources.
+
+    SOURCES (raw snapshots re-hashed 2026-07-02):
+    - mandiant/2023-04-20_3cx-supply-chain — sha256 79a4cdfa…0478b6cf, 314,031 bytes. REAL
+      article (not a phantom): title "3CX Software Supply Chain Compromise Initiated by a
+      Prior Software Supply Chain Compromise; Suspected North Korean Actor Responsible."
+    - msft/2024-08-30_citrine-sleet-chrome-zero-day — sha256 4fb25730…5592722a, 316,263
+      bytes. ADDED to sources[] to carry the UNC4736 -> Citrine Sleet -> RGB/Bureau-121 mapping.
+    - mandiant/2023-03-23_not-so-lazarus-dprk-mapping — sha256 c0c934e3…c2d030ca, 275,096
+      bytes. NEWLY CREATED this audit; captured from cloud.google.com (legacy mandiant.com
+      URL now 302-redirects to a generic page).
+
+    [a] FACTS — corrections against the raw Mandiant 3CX report:
+      * X_TRADER cascade ✓ verbatim ("a tampered installer for X_TRADER, a software package
+        provided by Trading Technologies"); "the first time Mandiant has seen a software
+        supply chain compromise lead to another." Reframed outcome from "First publicly
+        documented" to Mandiant's own "first time Mandiant had seen" wording.
+      * ICONICSTEALER ✓ ("a dataminer that steals browser information"); added VEILEDSIGNAL
+        (named multi-stage backdoor) and the "build 18.12.416 and earlier" scope from source.
+        DLL side-load ✓ (5 hits). Corrected spelling "ICONIC Stealer" -> ICONICSTEALER.
+      * STRIPPED "~600,000 customers" (outcome_summary + quantified_impact.customers_at_risk +
+        target outcome) — ZERO hits in the cited source; it is 3CX's marketing figure, not
+        carried by Mandiant. quantified_impact block removed.
+      * STRIPPED "Gopuram second-stage payload" — ZERO hits; Gopuram was Kaspersky's finding,
+        not in this source.
+      * STRIPPED "selective second-stage deployment against cryptocurrency firms … data
+        exfiltration from selected crypto victims" — Mandiant documents the CLUSTER's crypto/
+        fintech focus, not confirmed crypto-firm victims of the 3CX second stage (that was
+        Kaspersky/Gopuram, uncited). crypto-exchange target outcome reworded to say so honestly.
+    [b] ATTRIBUTION — DOWNGRADED attributing_org_confidence high -> moderate. Source is
+      explicit: "suspected North Korean nexus cluster"; "assesses with moderate confidence
+      that UNC4736 is related to … AppleJeus"; title says "Suspected." Prior "high" was
+      over-attestation. auspex_assessment concur -> concur-with-caveat (DPRK concurred;
+      Citrine-Sleet/Bureau-121 resolution is AUSPEX synthesis via Microsoft). The event's
+      original attribution notes claimed "CrowdStrike attributes to Labyrinth Chollima …
+      Volexity tracked separately" — ZERO hits for CrowdStrike/Labyrinth Chollima/Volexity in
+      the cited source; REMOVED as uncited cross-vendor embellishment.
+    [c] DATES — start_date 2022-09-01 (unsupported) -> 2022-02-01, matching Mandiant's cited
+      Google-TAG finding that tradingtechnologies.com was compromised "in February 2022,
+      preceding the distribution of compromised X_TRADER updates." disclosure_date 2023-03-29
+      kept (widely-documented public-disclosure day; the cited Mandiant source itself says
+      only "In March 2023" — residual, see below). end_date 2023-04-30 kept as an editorial
+      remediation-window bound (commented). Source published_on 2023-04-20 ✓; attribution_date
+      2023-04-20 ✓.
+    [d] DOCTRINE_LINKS — link is strongly_inferred (not attested), correct: Mandiant names a
+      proximate financial/revenue purpose (AppleJeus, crypto/fintech focus) that the pillar
+      specializes; the WMD-financing goal is not stated by any cited source. program_id
+      crypto-bridge-theft -> null: this is a supply-chain ACCESS op, not a bridge/exchange
+      heist, so the pillar (revenue-aggregation) is the honest altitude. Rewrote the signal
+      that falsely said "Mandiant documents selective crypto-firm targeting by Citrine Sleet"
+      to match what Mandiant actually says (cluster-level financial/crypto focus). ruled_out
+      reframed as a genuine ACH (espionage/strategic-tech-collection reading rejected because
+      Mandiant frames UNC4736 as financially motivated).
+    [e] ATTRIBUTION_LEVEL — was MISSING; set to `nation` (Mandiant named the nation, suspected
+      DPRK, via the uncategorized UNC4736 cluster; no named DPRK group or unit in the report).
+    [f] ACTOR_ID — kp/rgb/citrine-sleet RESOLVES (id lives in atlas/actors/kp/citrine-sleet.yaml).
+      The actor's RGB/Bureau-121 placement is sourced on the actor record via Microsoft MSTIC.
+      No actor-file edits made (per protocol).
+
+    TARGET FK FIX — the event referenced orgs/trading-technologies-x-trader, which has NO
+    registry file (dangling FK; only this event referenced it). Re-pointed to
+    sectors/ict/software (country us), keeping X_TRADER named in the outcome. See FLAG.
+
+    FLAGS for orchestrator/Kara:
+    1. ACTOR + SOURCE cross-file defect (NOT edited — out of scope): actor file
+       atlas/actors/kp/citrine-sleet.yaml AND (previously) this event both cite "Mandiant's
+       March 2024 'Not So Lazarus'." The report is REAL but dated 2023-03-23 (March 2023, not
+       2024). This audit created mandiant/2023-03-23_not-so-lazarus-dprk-mapping with the
+       correct date and cited it here; the actor file still carries the wrong "March 2024"
+       date in its UNC4736 alias note and ttp_summary — needs the same correction.
+    2. MISSING TARGET REGISTRY ENTRY: consider creating atlas/targets/orgs/trading-technologies
+       (fintech/trading-software vendor, us) to restore named-org specificity for the X_TRADER
+       staging victim; currently recorded at sectors/ict/software.
+    3. RESIDUAL: disclosure_date 2023-03-29 is the universally-reported public-disclosure day
+       but the single cited Mandiant source says only "In March 2023"; kept as a well-attested
+       public fact. end_date 2023-04-30 is editorial (remediation window), not source-pinned.
+    4. MODEL-ID NOTE: this session's system identity is claude-opus-4.8; stamped verified_by
+       claude-fable-5 per the AUDIT-PROTOCOL STEP 4 template ("the session model" as of
+       2026-07-02). Reconcile if the intended stamp is the literal running model.

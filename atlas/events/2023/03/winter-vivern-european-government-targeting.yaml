@@ -1,84 +1,200 @@
 id: 2023-03/winter-vivern-european-government-targeting
-name: Winter Vivern (TA473 / UAC-0114) European government credential-phish campaign
-start_date: 2022-04-01  # SentinelLabs: campaign observed from early 2022
+name: Winter Vivern (TA473 / UAC-0114) government credential-phish espionage campaign
+start_date: 2022-06-01  # SentinelLabs dates the recent linked campaign to "mid 2022" (govt email credential-phish pages); the APT is described targeting governments "since 2021"
 disclosure_date: 2023-03-16
 end_date: null
 incident_type:
+  - espionage
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  SentinelLabs disclosed a sustained Winter Vivern campaign
-  targeting Polish, Italian, Indian, and Ukrainian government and
-  defense entities, plus a parallel arm focused on UK and EU
-  parliamentary infrastructure. Operators used credential
-  phishing, doc-themed lure pages mimicking government login
-  portals, and webmail XSS exploitation (Zimbra CVE-2022-27926,
-  later Roundcube CVE-2023-5631) for mailbox access. Russia /
-  Belarus-aligned with no named-service public link.
+  SentinelLabs (Tom Hegel, 16 March 2023), building on technical
+  detail released by Poland's CBZC and Ukraine's CERT-UA (which
+  tracks the cluster as UAC-0114), documented sustained
+  credential-phishing and malicious-document espionage against
+  Polish government agencies, the Ukrainian and Italian Ministries
+  of Foreign Affairs, and individuals within the Indian government,
+  plus earlier (from 2021) government targets in Lithuania, India,
+  the Vatican, and Slovakia and, in a rarer instance, a private
+  telecommunications company supporting Ukraine in the war. Access
+  was pursued via fake government login pages, macro-enabled
+  documents, and "fake virus scanner" batch-loader chains delivering
+  the APERETIF trojan — not a named endpoint implant. SentinelLabs
+  assesses the activity as aligning with Belarusian and Russian
+  government interests and names no state intelligence service.
 false_flag_risk: none
 summary: |
-  Winter Vivern's targeting matrix tracks the political-military
-  priorities of Russia / Belarus through the post-invasion phase —
-  Ukrainian foreign and defense ministries, Polish government,
-  Italian defense, and UK / EU parliamentary infrastructure. The
-  webmail-XSS pivot in 2023 is doctrinally novel: rather than
-  endpoint-implant tradecraft typical of GRU/SVR clusters, Winter
-  Vivern weaponised browser-side credential capture against
-  unpatched government webmail. Continued through 2024 per
-  Recorded Future TAG-70 reporting.
+  SentinelLabs disclosed a set of Winter Vivern espionage campaigns
+  whose targeting "aligns closely with global objectives that support
+  the interests of Belarus and Russia's governments." Confirmed
+  targets include Polish government agencies, the Ukrainian Ministry
+  of Foreign Affairs, the Italian Ministry of Foreign Affairs, and
+  individuals within the Indian government; the report also notes
+  government targeting since 2021 in Lithuania, India, the Vatican,
+  and Slovakia, and — of particular interest — a private
+  telecommunications firm supporting Ukraine. Tradecraft is
+  credential-phishing pages that mimic legitimate government portals
+  (Poland's CBZC, the Ukrainian MFA and Security Service, and India's
+  email.gov.in webmail), macro-enabled documents (including a lure
+  themed on Ukraine's "I Want to Live" / Hochu Zhit surrender
+  project), batch-script "fake virus scanner" loaders, and the
+  APERETIF trojan hosted on compromised WordPress sites. SentinelLabs
+  characterises Winter Vivern as a resource-limited but creative APT
+  and names no specific intelligence service; the public attribution
+  is a Belarus/Russia strategic alignment, not a named-service link.
 attributions:
   - actor_id: ru/proxies/winter-vivern
-    attributing_org: SentinelLabs / Proofpoint / Recorded Future
+    attributing_org: SentinelLabs
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-03-16
     attribution_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
     notes: |
-      Vendor attribution to "Russia / Belarus aligned" without a
-      named-service link. AUSPEX tags as proxy with FSB/KGB
-      additional service IDs to capture the alignment without
-      overclaiming.
+      SentinelLabs (Tom Hegel) names the Winter Vivern activity
+      cluster and states its activities "aligns closely with global
+      objectives that support the interests of Belarus and Russia's
+      governments" / "operates with pro-Russian objectives." It makes
+      NO firm single-nation attribution (it aligns the cluster with
+      BOTH Belarus and Russia's interests) and names NO intelligence
+      service — hence attribution_level: activity-cluster, not
+      nation / named-actor / named-unit. attributing_org_confidence
+      moderate: the source states the alignment as an analytic
+      conclusion but uses no explicit confidence term and names no
+      service. FLAG: the actor record's ru/proxies placement assumes
+      a Russian nexus; this source frames the alignment jointly as
+      Belarus + Russia (RU-vs-BY was Kara-resolved KEEP ru/ on
+      2026-06-24). See qc.notes for the actor-placement flag.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Sustained targeting of Ukrainian foreign and defense
-      ministries during active hostilities aligns with the
-      Ukraine-theater pillar.
+      SentinelLabs documents Winter Vivern targeting the Ukrainian
+      Ministry of Foreign Affairs, a private telecommunications firm
+      supporting Ukraine "in the ongoing war," and individuals tied to
+      Ukraine's "I Want to Live" (Hochu Zhit) surrender project, and
+      states the activity "aligns closely with global objectives that
+      support the interests of Belarus and Russia's governments"
+      against targets "directly and indirectly involved in the war."
+      Sustained collection against Ukrainian foreign-affairs and
+      war-support targets during active hostilities is the operational
+      core of the Russkiy-Mir Ukraine-theater pillar.
     attesting_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
+    inference_basis:
+      signals:
+        - "Ukraine Ministry of Foreign Affairs and Security Service of Ukraine among the mimicked/targeted government portals"
+        - "targeting of a private telecommunications firm that supports Ukraine 'in the ongoing war'"
+        - "December 2022 targeting of individuals tied to Ukraine's 'I Want to Live'/Hochu Zhit surrender project"
+        - "SentinelLabs frames the whole target set as 'directly and indirectly involved in the war' and aligned with Russia's government interests"
+      ruled_out: "Financially-motivated cybercrime ruled out — credential-phish and document-based espionage against government foreign ministries and a war-support telco, with no monetization, extortion, or ransomware."
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      UK Parliament, Polish government, Italian defense, EU
-      parliamentary infrastructure — canonical NATO-degradation
-      target set.
-    attesting_source_id: sentinelone/2023-03-16_winter-vivern-global-espionage
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/info-security-2016
-    pillar_id: ru/info-security-2016/information-sphere-as-domain
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Diplomatic and parliamentary intelligence collection through
-      webmail compromise is canonical information-sphere-as-domain
-      tradecraft.
+      Winter Vivern also targeted several NATO-member governments and
+      foreign ministries — Polish government agencies, the Italian
+      Ministry of Foreign Affairs, and (from 2021) Lithuania and
+      Slovakia — consistent with the NATO-degradation pillar's focus
+      on member-state political institutions. The label is plausible,
+      not higher, because SentinelLabs frames the activity as
+      intelligence collection aligned with Belarus/Russia government
+      interests and states no NATO-consensus- or aid-pipeline-
+      degradation purpose; general war-related diplomatic collection
+      against NATO members is an equally strong reading, and part of
+      the target set (India, the Vatican) is outside NATO entirely.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "NATO-cohesion degradation: espionage against NATO-member governments/foreign ministries (Poland, Italy, Lithuania, Slovakia) fits the pillar's member-state-political-institution scope."
+        - "General war-related intelligence collection: SentinelLabs frames the activity as espionage aligned with Belarus/Russia interests and states no consensus/aid-pipeline goal; the same targeting reads as straightforward diplomatic collection, and India/Vatican targeting falls outside NATO."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government/foreign-ministry
     role: primary
-  - target_id: sectors/government/defense-ministry
-    role: primary
   - target_id: sectors/government
+    role: primary
+  - target_id: sectors/ict/telecom
     role: primary
 sources:
   - sentinelone/2023-03-16_winter-vivern-global-espionage
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the sole cited source — SentinelLabs (Tom Hegel), "Winter Vivern | Uncovering
+    a Wave of Global Espionage," 16 Mar 2023 — raw snapshot captured + hashed (sha256
+    96b7e199…36531a04, 333,565 bytes; raw_snapshot recorded in the source record). NOT a phantom:
+    the URL returns the real article (title "Winter Vivern | Uncovering a Wave of Global Espionage").
+
+    [a] FACTS — major de-fabrication. The source SUPPORTS: targeting of "Polish government agencies,
+    the Ukraine Ministry of Foreign Affairs, the Italy Ministry of Foreign Affairs, and individuals
+    within the Indian government"; government targeting "since 2021 … in Lithuania, India, Vatican,
+    and Slovakia"; "a private telecommunication organization" / "telecommunications organizations
+    that support Ukraine in the ongoing war"; credential-phish pages mimicking Poland's CBZC, the
+    Ukraine MFA and Security Service, and India's email.gov.in; a macro-enabled XLS (Hochu Zhit /
+    "I Want to Live" surrender project, Dec 2022); "fake virus scanner" batch loaders; and the
+    APERETIF trojan on compromised WordPress. The source does NOT contain (verbatim keyword scan
+    over the full article = ZERO hits): "parliament", "UK", "United Kingdom", "EU", "European",
+    "Zimbra", "Roundcube", "CVE", "XSS", "webmail", "defense"/"defence", "2024", "Recorded Future",
+    "TAG-70". Removed as unsupported by the cited source: (i) "UK / EU parliamentary infrastructure"
+    / "UK Parliament" (a Recorded Future TAG-70 2024 claim; RF is not in sources[]); (ii) "webmail
+    XSS exploitation (Zimbra CVE-2022-27926, later Roundcube CVE-2023-5631)" (Proofpoint / ESET
+    reporting, not this source); (iii) "defense entities" / "Italian defense" / "defense ministries"
+    (source names Foreign Affairs ministries only); (iv) "Continued through 2024 per Recorded Future
+    TAG-70 reporting" (uncited). Rewrote summary + outcome_summary to source-carried claims; added
+    the source-stated private-telco target; added incident_type "espionage" (the article is titled
+    and framed as espionage).
+
+    [b] ATTRIBUTION — attributing_org corrected "SentinelLabs / Proofpoint / Recorded Future" ->
+    "SentinelLabs" (the only cited attribution source). Verbatim alignment wording: "Our analysis
+    indicates that Winter Vivern's activities are closely aligned with global objectives that support
+    the interests of Belarus and Russia's governments" and "operates with pro-Russian objectives."
+    No confidence term used; no service named. Kept attributing_org_confidence moderate. Rewrote the
+    stale attribution note that claimed "FSB/KGB additional service IDs" — those were removed from the
+    actor record on 2026-06-24 (primary_service_id null, additional_service_ids []).
+
+    [c] DATES — source published_on 2023-03-16 confirmed (byline "March 16, 2023", Tom Hegel) =
+    disclosure_date (correct). start_date 2022-04-01 ("early 2022", not source-stated) -> 2022-06-01:
+    the earliest concretely-dated recent-campaign activity is "In mid 2022" (govt email
+    credential-phish pages); the APT is described as targeting governments "since 2021". end_date null
+    (source does not bound it). Source record raw_snapshot/content_sha256 added; tier primary preserved
+    (first-party vendor research).
+
+    [d] DOCTRINE_LINKS — three RU links -> two, all de-fabricated and re-graded. (1)
+    ru/russkiy-mir/ukraine-theater KEPT strongly_inferred: Ukraine MFA + war-support telco + Hochu
+    Zhit + "directly and indirectly involved in the war" + RU/BY-interest alignment triangulate to the
+    Ukraine-theater reading; reasoning corrected ("defense ministries" -> Ukrainian foreign ministry);
+    added inference_basis.signals + ruled_out. (2) ru/nato-ultimatum-2021/nato-degradation DOWNGRADED
+    strongly_inferred -> plausible: the original reasoning rested on fabricated "UK Parliament / EU
+    parliamentary / Italian defense"; rebuilt on the source-supported NATO-member targets (Poland,
+    Italy MFA, Lithuania, Slovakia); the source states no consensus/aid-pipeline goal and general
+    intelligence collection is an equally strong reading (India/Vatican fall outside NATO), so plausible
+    with inference_basis.alternatives; attesting_source_id set null. (3)
+    ru/info-security-2016/information-sphere-as-domain REMOVED: its reasoning was 100%
+    fabrication-dependent ("parliamentary intelligence collection through webmail compromise" — neither
+    term appears in the source), and the pillar's domain (media / social-platform / NGO
+    info-psychological confrontation) does not fit government-foreign-ministry credential-phishing
+    espionage. (Note: the actor record still lists this pillar in default_doctrine_alignment_ids —
+    actor-level context, not event-level evidence; actor file not edited.)
+
+    [e] ATTRIBUTION_LEVEL — set activity-cluster (was missing). SentinelLabs names the Winter Vivern
+    cluster but attributes only a soft dual-state alignment ("interests of Belarus AND Russia's
+    governments") with no firm single-nation attribution and no named service — below
+    nation / named-actor / named-unit on the ladder.
+
+    [f] ACTOR_ID — ru/proxies/winter-vivern RESOLVES (file atlas/actors/ru/winter-vivern.yaml, id
+    ru/proxies/winter-vivern). FLAG (placement; actor file NOT edited): Winter Vivern is a
+    state-aligned ESPIONAGE APT (mission: espionage/influence; primary_service_id null), but the
+    ru/proxies namespace per SCHEMA models FINANCIALLY-MOTIVATED crews with a documented state nexus —
+    ru/unscoped/ (state assessed, service unresolved) fits better than ru/proxies/. Also RU-vs-BY nation
+    is genuinely contested (this source says "Belarus and Russia" jointly; ESET 2023-10 leans Belarus)
+    — already Kara-resolved KEEP ru/ on 2026-06-24. Raised for orchestrator review.

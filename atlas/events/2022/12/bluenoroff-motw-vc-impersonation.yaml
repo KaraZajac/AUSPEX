@@ -2,60 +2,177 @@ id: 2022-12/bluenoroff-motw-vc-impersonation
 name: Kaspersky disclosure of BlueNoroff VC-impersonation MoTW-bypass campaign
 start_date: 2022-09-01  # Kaspersky dates campaign onset to autumn 2022
 disclosure_date: 2022-12-27
-end_date: 2022-12-27
+end_date: null  # AUDIT 2026-07-02: source calls this "an ongoing operation" (domain regs trace to 2021; "attacks by this group are unlikely to decrease") — not bounded at disclosure
 incident_type:
   - intrusion
   - financial-theft
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky GReAT disclosed a BlueNoroff campaign
-  registering approximately 70 fake domains impersonating
-  venture-capital firms and major banks (ABF Capital,
-  Angel Bridge, Mitsubishi UFJ, etc.) to deliver
-  trojanized investment-document droppers to
-  cryptocurrency-startup executives. The campaign
-  introduced novel Mark-of-the-Web bypass techniques on
-  Windows. Victims span the global Web3 startup ecosystem;
-  Kaspersky did not quantify total proceeds but documented
-  the operational scale.
+  Kaspersky GReAT (Seongsu Park) documented BlueNoroff
+  adopting new malware-delivery methods observed from
+  ~end of September / October 2022, atop infrastructure
+  whose domain registrations trace to 2021 (an ongoing
+  operation). Kaspersky found more than 70 domains used by
+  the group — fake cloud-hosting domains plus domains
+  impersonating venture-capital firms and banks,
+  predominantly Japanese (Beyond Next Ventures, Sumitomo
+  Mitsui Banking Corporation, Mitsubishi UFJ, ANOBAKA,
+  Z Venture Capital, ABF Capital, Angel Bridge, Mizuho;
+  also Bank of America (US) and Trans-Pacific Technology
+  Fund (Taiwan)). It delivered trojanized investment-themed
+  decoy documents using two new techniques: (1) ISO (.iso)
+  and VHD (.vhd) container files plus a password-protected
+  archive containing a "Password.txt.lnk" shortcut to evade
+  the Windows Mark-of-the-Web (MOTW) flag, and (2) new
+  scripts and a novel downloader. Kaspersky confirmed one
+  victim in the UAE (probably a home-financing company)
+  compromised by classic BlueNoroff malware, assessed the
+  group had recently been attacking various
+  cryptocurrency-related businesses and other financial
+  companies, and judged with low confidence that Japanese
+  entities were on its radar. Kaspersky did not quantify
+  proceeds from this campaign (its "cryptocurrency worth
+  millions" figure is attributed to a prior report).
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Tradecraft documentation event for the BlueNoroff
-  financially-motivated leg of the Lazarus / RGB
-  portfolio. Where TraderTraitor operations target
-  exchanges and custodians (DMM, Stake, CoinsPaid),
-  BlueNoroff targets the upstream startup-executive
-  population — pre-revenue Web3 startups, individual
-  founders, and senior developers. The VC-impersonation
-  pretext established here is the canonical 2023-2024
-  BlueNoroff access primitive subsequently observed in
-  multiple individual-victim drains.
+  Tradecraft-documentation event for BlueNoroff, the
+  financially-motivated DPRK threat cluster (Kaspersky's
+  own designation; placed under the Reconnaissance General
+  Bureau per OFAC's 2019 designation carried in the actor
+  record — this report itself names no RGB or unit). In
+  this Securelist report Kaspersky GReAT detailed
+  BlueNoroff's shift to new malware-delivery tradecraft —
+  Mark-of-the-Web bypass via ISO/VHD container files and
+  LNK shortcuts, plus new scripts and a downloader — atop
+  an infrastructure of 70+ domains impersonating
+  venture-capital firms and banks (predominantly Japanese)
+  used to lure targets in the financial and cryptocurrency
+  sectors. Kaspersky characterizes BlueNoroff as a
+  profit-seeking actor that "steals cryptocurrency"; the
+  report states no state-strategic purpose. The
+  VC-impersonation pretext documented here became a
+  recurring BlueNoroff access primitive in later
+  cryptocurrency-firm intrusions.
 attributions:
   - actor_id: kp/rgb/bluenoroff
     attributing_org: Kaspersky GReAT
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-12-27
     attribution_source_id: kaspersky/2022-12-27_bluenoroff-motw-bypass
+    notes: "Kaspersky names 'BlueNoroff group' (its own named cluster) flatly and without hedging = high confidence; it ties the group to Lazarus lineage but names NO service/unit (no RGB, Lab 110, or Bureau in the report) — hence named-actor, not named-unit. The kp/rgb service placement rests on the actor record's OFAC 2019 sourcing, not on this source."
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
-    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
+    program_id: null  # AUDIT 2026-07-02: was crypto-bridge-theft, which covers the DeFi-bridge/exchange heists run by TraderTraitor (Ronin/Harmony/DMM/Bybit) — mis-scoped for this VC-impersonation access-tradecraft campaign; pillar is the correct granularity
     confidence: strongly_inferred
     reasoning: |
-      Victim set (Web3 startup executives and developers)
-      is the upstream-funnel population for the same
-      revenue-aggregation pillar attested by Treasury OFAC
-      for the larger exchange thefts. BlueNoroff is the
-      smaller-victim leg of the same defense-plan revenue
-      stream.
+      BlueNoroff is the financially-motivated leg of the
+      DPRK Lazarus/RGB portfolio, and this VC-impersonation
+      access campaign against financial and cryptocurrency
+      firms feeds the hard-currency revenue-aggregation
+      pillar of the 8th-Congress defense plan. This
+      Kaspersky source establishes only the PROXIMATE
+      purpose — the group is "financially motivated" and
+      "steals cryptocurrency" — and names no WMD, missile,
+      sanctions or state purpose, so the strategic-end link
+      is inferred, not attested: it rests on BlueNoroff's
+      OFAC-designated RGB state-control (actor record) and
+      on Treasury/FBI's standing attribution of DPRK
+      crypto-theft proceeds to the WMD / ballistic-missile
+      programs.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Kaspersky attributes the campaign to BlueNoroff and characterizes it as a 'financially motivated threat actor eager to profit' that 'steals cryptocurrency' — a proximate revenue purpose the revenue-aggregation pillar specializes."
+        - "BlueNoroff is a state-controlled DPRK/RGB cluster per OFAC's 2019-09-13 designation (carried in the actor record), not an independent criminal crew, so its proceeds accrue to the DPRK state."
+        - "Treasury/FBI consistently attribute post-2020 DPRK crypto/financial-theft proceeds to the WMD and ballistic-missile programs — the strategic end this pillar encodes; this campaign's financial/crypto-firm targeting is of that same revenue stream."
+      ruled_out: "Pure apolitical criminal profit with no state-strategic end — ruled out by BlueNoroff's OFAC-designated RGB state-control (proceeds flow to the DPRK state). Note this source itself states only the proximate financial motive and names no WMD/state purpose (hence strongly_inferred, not attested)."
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/finance/crypto-exchange
-    role: primary
-  - target_id: sectors/finance/crypto-custody
+  # AUDIT 2026-07-02: was [finance/crypto-exchange, finance/crypto-custody] both primary —
+  # sector inflation. The source names NO crypto exchange or custodian victim; the only
+  # confirmed victim is "one victim in the UAE, probably a home financing company", and the
+  # group's recent MO is stated generically as "cryptocurrency-related businesses … but also
+  # other financial companies". Collapsed to the finance parent (which is the parent of the
+  # crypto sub-sectors) tied to the one confirmed victim (ae). Japan interest is "low confidence".
+  - target_id: sectors/finance
+    country: ae
     role: primary
 sources:
   - kaspersky/2022-12-27_bluenoroff-motw-bypass
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs Kaspersky GReAT "BlueNoroff introduces new methods bypassing MoTW" (Securelist,
+    Seongsu Park, 27 Dec 2022). RAW snapshot captured + hashed: sha256
+    7e2d9f5d…c1fcc0fd (7e2d9f5dca3a2145b975bd44dac423816ac76bdd37024b7204cf9e6ac1fcc0fd),
+    241,840 bytes. PHANTOM TRIAGE (task flagged suspected phantom): NOT a phantom — the URL
+    (securelist.com/bluenoroff-methods-bypass-motw/108383/) returns the real full article
+    (title + body + IoC + MITRE map), NOT a homepage/catalogue. No re-sourcing needed.
+
+    [a] FACTS — corrected. VERIFIED verbatim: "more than 70 domains used by this group"
+    (event said "approximately 70" -> "more than 70"); "they also created fake domains
+    disguised as legitimate companies in the financial industry and investment companies …
+    imitate venture capital names or big bank names. Most of the companies are Japanese";
+    impersonation table lists ABF Capital, Angel Bridge, Mitsubishi UFJ (all Japanese VC/
+    banks) + Beyond Next Ventures, SMBC, ANOBAKA, Z Venture Capital, Mizuho, Bank of America
+    (US), Trans-Pacific Technology Fund (Taiwan); MOTW bypass via ".iso"/".vhd" containers +
+    "Password.txt.lnk" shortcut; onset "At the end of September 2022 … this October";
+    "domain registration could be traced back to earlier in 2021, so this is an ongoing
+    operation"; confirmed victim "one victim in the UAE, probably a home financing company …
+    compromised by classic BlueNoroff group malware"; general MO "attacking various
+    cryptocurrency-related businesses lately, but also other financial companies"; low-conf
+    "we assume, with low confidence, that the entities in Japan are on the radar". STRIPPED
+    unsourced embellishments: "cryptocurrency-startup executives", "Victims span the global
+    Web3 startup ecosystem", and the summary's "pre-revenue Web3 startups, individual founders,
+    and senior developers" + "canonical 2023-2024 … multiple individual-victim drains" +
+    TraderTraitor "DMM, Stake, CoinsPaid" — none carried by this source. Rewrote summary +
+    outcome_summary to the source. "did not quantify proceeds" retained (the "cryptocurrency
+    worth millions" line is Kaspersky citing "a recent report", not this campaign).
+
+    [b] ATTRIBUTION — Kaspersky GReAT names "BlueNoroff group" flatly, no hedge = high
+    (retained). auspex_assessment concur retained.
+
+    [c] DATES — source published_on 2022-12-27 confirmed (article dated "27 Dec 2022").
+    start_date 2022-09-01 retained (onset "end of September 2022 / October 2022"; infra to
+    2021). end_date 2022-12-27 -> null: source explicitly calls it "an ongoing operation"
+    and says attacks are "unlikely to decrease" — it was not bounded at disclosure.
+
+    [d] DOCTRINE — kp/8th-congress-defense-plan / revenue-aggregation kept at
+    strongly_inferred (honest). Term-scan of the RAW: WMD=0, missile=0, ballistic=0,
+    nuclear=0, weapon=0, regime=0, sanction=0, "North Korea"=0, DPRK=0, Pyongyang=0 — the
+    source states ONLY a proximate financial purpose ("financially motivated … eager to
+    profit", "steals cryptocurrency"), so `attested` is unavailable (no attesting quote of
+    the strategic end). program_id crypto-bridge-theft -> null (that program is the DeFi-
+    bridge/exchange heist stream run by TraderTraitor — mis-scoped for a VC-impersonation
+    access campaign; pillar is the right granularity). Added inference_basis {signals[],
+    ruled_out} and rewrote reasoning to state the proximate-vs-strategic gap honestly.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor. Kaspersky names its own cluster
+    (a named group) but no service/unit ("RGB"/"Reconnaissance General Bureau"/"Bureau"/
+    "Lab 110"/"Unit 121" all absent from the RAW; the single "RGB" byte-match is a CSS asset
+    filename "k_Next_RGB_black_i", not the intelligence bureau).
+
+    [f] ACTOR_ID — kp/rgb/bluenoroff RESOLVES to atlas/actors/kp/bluenoroff.yaml (id
+    kp/rgb/bluenoroff, status sanctioned, primary_service kp/rgb/lab-110). Record is already
+    audited (2026-06-25) with OFAC-2019 RGB sourcing; the RGB nexus rests there, NOT on this
+    Kaspersky source. No actor flag.
+
+    TARGETS — corrected sector inflation: [finance/crypto-exchange, finance/crypto-custody]
+    both-primary -> single sectors/finance (parent of the crypto sub-sectors), country ae.
+    The source names NO exchange or custodian victim; the sole confirmed victim is the UAE
+    home-financing company, and crypto targeting is a generic MO aside. Japan is only
+    "low confidence" (impersonation infra is Japan-heavy), so no jp target added.
+
+    RESIDUAL UNCERTAINTY: this source alone does not evidence a specific crypto exchange/
+    custodian victim; the crypto-theft framing is the actor's general MO plus one confirmed
+    UAE financial-company compromise. Source tier corrected secondary -> primary (Kaspersky
+    GReAT first-party original telemetry research; matches corpus convention / Carbanak AUDIT
+    precedent).

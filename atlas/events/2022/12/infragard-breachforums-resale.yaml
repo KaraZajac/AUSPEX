@@ -2,36 +2,115 @@ id: 2022-12/infragard-breachforums-resale
 name: BreachForums actor "USDoD" exfiltrates FBI InfraGard membership data
 start_date: 2022-12-10
 disclosure_date: 2022-12-13
-end_date: 2022-12-13
+end_date: null
 incident_type:
   - data-theft
-initial_vector: phishing
+initial_vector: valid-creds
 outcome_summary: |
-  An actor using the handle "USDoD" claimed compromise of the
-  FBI InfraGard information-sharing portal via a forged-CFO
-  application that passed manual review, and offered the
-  resulting ~87,000-record member dataset for sale on
-  BreachForums for USD 50,000. The breach exposed names,
-  email addresses, employers, and contact data of vetted
-  US-CII security personnel. The InfraGard incident was
-  foundational to BreachForums' rise as the principal
-  successor venue to RaidForums and was a structural input
-  to the March 2023 FBI arrest of BreachForums administrator
-  Conor Fitzpatrick.
+  An actor using the handle "USDoD" (avatar: the U.S.
+  Department of Defense seal) claimed compromise of the FBI
+  InfraGard information-sharing portal by submitting, in
+  November 2022, a fraudulent membership application in the
+  identity (name, Social Security Number, date of birth) of a
+  chief executive officer of a major U.S. financial company —
+  an application the FBI approved in early December without
+  ever contacting the real CEO to vet it. After the account
+  was approved, USDoD had a friend write a Python script to
+  query a built-in InfraGard API and retrieve all available
+  member data, then offered the resulting dataset — "more
+  than 80,000 members" per Krebs — for sale on the cybercrime
+  forum BreachForums (which Krebs refers to as "Breached") for
+  USD 50,000. The exposed data was names and contact
+  information; per Krebs only about half the accounts held an
+  email address and the Social-Security-Number and
+  date-of-birth fields were mostly empty. The members are
+  vetted US critical-infrastructure security personnel. Access
+  was still live at publication — the actor proved it by
+  messaging an InfraGard member through the portal. Krebs
+  described BreachForums as widely considered the second
+  incarnation of RaidForums, the forum the U.S. DOJ shuttered
+  in April 2022.
 false_flag_risk: none
 summary: |
-  Canonical case of breach-data-marketplace ecosystem
+  Canonical case of the breach-data-marketplace ecosystem
   monetizing access to US-government partnership data via
-  social-engineering of vetting processes. AUSPEX
-  classifies as criminal-baseline.
+  social-engineering of a vetting process. AUSPEX classifies
+  as criminal-baseline.
 attributions:
   - actor_id: null
     attributing_org: Krebs on Security (journalism)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-12-13
     attribution_source_id: krebs/2022-12-13_infragard-hacked
+    notes: |
+      Krebs names the self-proclaimed persona/handle "USDoD"
+      (named-actor granularity) and interviewed them directly;
+      the FBI confirmed "a potential false account". actor_id is
+      null because AUSPEX carries no actor record for this
+      criminal persona — a self-chosen handle with no
+      established real-world identity in the source. moderate
+      confidence: the handle self-claimed the breach and Krebs
+      corroborated live access, but the persona↔person link is
+      unestablished.
 doctrine_links: []
-targets: []
+targets:
+  - target_id: sectors/government
+    country: us
+    role: primary
 sources:
   - krebs/2022-12-13_infragard-hacked
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs Krebs on Security "FBI's Vetted Info Sharing Network 'InfraGard' Hacked"
+    (raw snapshot krebs__2022-12-13_infragard-hacked.html, sha256 515d65da…406a0c3c,
+    100,195 bytes; URL live and body matches the citation — NOT a phantom).
+    [a] FACTS: three pre-audit fabrications corrected. (1) "forged-CFO" -> CEO — the raw says
+    the impersonated identity was a "chief executive officer" of "a major U.S. financial
+    corporation" ("CEO" ×13, "chief executive officer" ×1; "CFO" ×0). (2) "~87,000-record"
+    -> "more than 80,000" — verbatim "database of contact information on more than 80,000
+    members go up for sale" (×2); 87,000 appears nowhere. (3) DELETED "was a structural input
+    to the March 2023 FBI arrest of BreachForums administrator Conor Fitzpatrick" — this
+    Dec-13-2022 article predates that event and mentions neither Fitzpatrick nor an arrest (the
+    admin/escrow guarantor is named only as "Pompompurin"); uncited forward claim. Softened
+    "passed manual review" -> "the FBI approved … without ever contacting the real CEO to vet
+    it" (raw: account "vetted by the FBI itself"; the CEO "told KrebsOnSecurity they were never
+    contacted by the FBI seeking to vet an InfraGard application"). Corrected exposed-fields:
+    raw says "names and contact information", "only about half of the user accounts contain an
+    email address, and most of the other database fields — like Social Security Number and Date
+    of Birth — are completely empty" — dropped unsupported "employers". Added source-carried
+    detail: application submitted in November, approved early December; "asked a friend to code
+    a script in Python to query that API and retrieve all available InfraGard user data";
+    "$50,000 asking price"; access still live at publication. RaidForums-successor claim
+    attributed to Krebs (raw: Breached "widely considered to be the second incarnation of
+    RaidForums … shuttered by the U.S. Department of Justice in April"); dropped the unsupported
+    "foundational to BreachForums' rise" editorialization.
+    [b] ATTRIBUTION: Krebs names the self-proclaimed handle "USDoD" and interviewed them
+    directly; FBI confirmed "a potential false account". Kept attributing_org_confidence
+    moderate (self-claim + corroborated live access; persona↔person link unestablished),
+    auspex_assessment concur.
+    [c] DATES: source published_on 2022-12-13 confirmed (dateline "December 13, 2022" ×5; body
+    ref "as of publication time Tuesday evening" = Tue Dec 13 2022). start_date kept 2022-12-10
+    (raw: "On Dec. 10, 2022 … featured a bombshell new sales thread") — the concrete anchor; the
+    fraudulent application was Nov 2022 but no precise date is given, so no date invented.
+    end_date 2022-12-13 -> null: the raw states access was ongoing ("To prove they still had
+    access to InfraGard as of publication time Tuesday evening"), so the op is not bounded.
+    [d] DOCTRINE_LINKS: [] retained — correct. Criminal data-theft/resale, no state nexus, no
+    doctrine genuinely applies; no attested link so no attesting_source_id required.
+    [e] ATTRIBUTION_LEVEL: set named-actor (was missing) — Krebs names a specific persona/handle
+    ("USDoD"), i.e. named-actor granularity, not a nation or unit.
+    [f] ACTOR_ID: null is correct — no criminal/usdod (or any USDoD) actor record exists under
+    atlas/actors/; the persona is a self-chosen handle with no established real-world identity.
+    No actor FLAG.
+    OTHER: initial_vector phishing -> valid-creds — no phishing occurred; access was via a
+    fraudulently-obtained but legitimately-issued InfraGard account (identity impersonation
+    defeating the vetting) plus a built-in API; valid-creds is the closest of the 8-value vocab
+    (unknown would understate a well-documented vector). targets [] -> sectors/government
+    (us, primary) — the breached entity is the FBI's InfraGard portal (US government); members'
+    CII sectors deliberately NOT added (the portal, not those orgs, was breached — that would be
+    sector inflation).

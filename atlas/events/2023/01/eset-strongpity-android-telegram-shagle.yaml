@@ -5,59 +5,87 @@ disclosure_date: 2023-01-10
 end_date: 2023-01-10
 incident_type:
   - intrusion
+  - surveillance
   - data-theft
+  - espionage
 initial_vector: supply-chain
 outcome_summary: |
-  ESET WeLiveSecurity disclosed an active StrongPity / PROMETHIUM
+  ESET WeLiveSecurity disclosed an active StrongPity (PROMETHIUM)
   Android campaign distributing a trojanized build of the
-  legitimate Telegram messenger via a website impersonating the
-  Shagle random-video-chat service. Active since November 2021,
-  the campaign used a website (shaglechat[.]com) presenting a
+  legitimate Telegram messenger via a copycat website impersonating
+  the Shagle random-video-chat service (shagle.com). Active since
+  November 2021, the campaign served the malicious APK from a
+  copycat site — ESET reported the copycat domain "contained the
+  word 'dutch'" but did not publish it in full — presenting a
   non-existent Shagle Android app whose APK was a fully-functional
-  Telegram client repackaged with eleven dynamically-loaded
-  StrongPity surveillance modules — phone-call recording, SMS
-  collection, contact-list and call-log exfiltration, location
-  tracking, and message-content exfiltration from 17 apps
+  Telegram client (Telegram 7.5.0) repackaged with eleven
+  dynamically-loaded, C&C-delivered StrongPity backdoor modules:
+  phone-call recording, SMS collection, contact-list and call-log
+  exfiltration, device location, and — via accessibility /
+  notification abuse — message-content exfiltration from 17 apps
   including Viber, Skype, Gmail, Messenger, and Tinder. ESET
-  telemetry showed very narrow distribution consistent with
-  targeted-victim operations rather than mass deployment.
-false_flag_risk: suspected
+  telemetry identified no victims, consistent with a very narrowly
+  targeted operation rather than mass deployment.
+false_flag_risk: none
 summary: |
-  First well-documented mobile-platform PROMETHIUM tooling and a
-  meaningful evolution from the long-running Windows-installer
-  watering-hole pattern. The Shagle-impersonation lure is
-  consistent with the cluster's pattern of weaponizing user
+  First public documentation of PROMETHIUM's Android backdoor
+  module set — ESET notes only one prior StrongPity Android
+  campaign (a 2021 trojanized Syrian e-gov app) — and a meaningful
+  evolution from the cluster's long-running Windows trojanized-
+  installer / watering-hole pattern. The Shagle-impersonation lure
+  is consistent with the cluster's pattern of weaponizing user
   trust in commodity software, adapted to a mobile-app context.
-  Suspected false-flag-risk reflects the cluster-level Stealth
-  Falcon overlap discussion rather than fresh evidence in this
-  report. Doctrinal pillar attribution is plausible but not
-  strongly-inferred because ESET telemetry did not surface any
-  identified victims — narrow targeting consistent with
-  diaspora / dissident operations but not specifically
-  attested.
+  false_flag_risk is none: this ESET report carries no false-flag
+  signal (it raises no Stealth Falcon / UAE overlap; the single
+  third-party misattribution it mentions — a Twitter claim of
+  Bahamut, which ESET corrects — is an analyst error, not evidence
+  of deliberate false-flagging). Doctrine-link confidence is
+  plausible with no pillar isolated: ESET identified no victims and
+  states no strategic purpose, so this report cannot distinguish
+  Gülenist- from Kurdish-diaspora targeting.
 attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: ESET (Lukas Stefanko)
-    attributing_org_confidence: moderate
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-01-10
     attribution_source_id: eset/2023-01-10_strongpity-android-telegram
     notes: |
-      ESET ties the campaign to StrongPity / PROMETHIUM via
-      code-overlap with the Windows StrongPity family; the
-      Turkish-aligned reading rests on prior cluster attribution
-      rather than fresh evidence in this report.
+      ESET attributes the campaign to the StrongPity APT group
+      "with high confidence" (verbatim) on two concrete grounds in
+      this report: the fake Shagle APK is signed with the SAME
+      code-signing certificate as a 2021 trojanized Syrian e-gov app
+      that Trend Micro also attributed to StrongPity, and its
+      backdoor shares code and obfuscated class names with prior
+      StrongPity mobile tooling. attribution_level is named-actor:
+      ESET names only the group — this report makes NO nation or
+      service attribution (no mention of Turkey, the MİT, or
+      "government-sponsored"), so no nation/unit claim is drawn from
+      it. The Turkish-state nexus is an actor-level inference from
+      other sources (Bitdefender 2020 etc.), not this report; hence
+      auspex_assessment stays concur-with-caveat and the actor
+      remains tr/unscoped.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
-    pillar_id: tr/counter-gulen-kurdish-surveillance/gulen-diaspora
+    pillar_id: null
     program_id: null
     confidence: plausible
     reasoning: |
-      Narrow distribution, mobile-platform-pivot, and 17-app
-      messaging-exfiltration breadth are consistent with
-      diaspora-and-dissident operations; specific victim
-      identification was not surfaced in the public report so
-      pillar fit is plausible rather than strongly inferred.
+      PROMETHIUM's established mission is population / dissident
+      surveillance, and a narrowly-targeted mobile backdoor with
+      17-app messaging-exfiltration breadth fits that posture, so
+      the doctrine applies at the posture level. No specific pillar
+      is isolated (pillar_id null): ESET identified no victims and
+      states no strategic purpose, so this report cannot distinguish
+      Gülenist- from Kurdish-diaspora targeting. Confidence is
+      plausible rather than strongly_inferred precisely because no
+      victim was identified.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Counter-Gülen / Kurdish-diaspora surveillance: PROMETHIUM's documented targeting (Kurdish opposition, Syrian dissidents) makes a fresh narrowly-targeted mobile backdoor a natural continuation of the cluster's diaspora-surveillance posture; ESET, however, names no victims here."
+        - "Opportunistic / broader espionage: the fake Shagle lure plus a fully-functional Telegram clone could serve a wider targeting set than the diaspora pillars, and with zero identified victims a non-diaspora reading survives."
     contested: false
     analyst: claude
 targets:
@@ -65,3 +93,77 @@ targets:
     role: primary
 sources:
   - eset/2023-01-10_strongpity-android-telegram
+qc:
+  verified_by: claude-opus-4.8  # normalized 2026-07-02: the verifying SUBAGENT model is opus-4.8 (orchestrator session is fable-5 but does not perform the audit)
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs ESET WeLiveSecurity "StrongPity espionage campaign targeting Android
+    users" (Lukas Stefanko, 10 Jan 2023), the ONE cited source. Raw article captured +
+    hashed: sha256 b4d496da…06962149, 106,868 bytes — real, complete first-party article
+    (title + byline + body + IoCs + ATT&CK table all present); NOT a phantom.
+    [a] FACTS — nearly all source-carried; ONE fabrication removed. Verbatim support:
+    "an active campaign that we have attributed to the StrongPity APT group"; "Active
+    since November 2021"; app "impersonating Shagle – a random-video-chat service";
+    "modified version of the open-source Telegram app, repackaged with StrongPity backdoor
+    code"; "Telegram version 7.5.0 (22467)"; "its 11 dynamically triggered modules"; the
+    module list confirms call recording (libarm.jar), SMS (resources.jar), contacts
+    (toolkit.jar), call logs (wearkit.jar), location (services.jar); "exfiltrate
+    communication from 17 apps such as Viber, Skype, Gmail, Messenger as well as Tinder"
+    (17-app package list present); "ESET telemetry still doesn't identify any victims …
+    likely very narrowly targeted". CORRECTION 1 (fabrication): the event claimed the
+    distribution domain was "shaglechat[.]com" — the string "shaglechat" appears 0× in
+    the source; ESET states only that the backdoor was "delivered from a domain containing
+    the word 'dutch'" and impersonated "the legitimate service named Shagle at shagle.com",
+    deliberately NOT publishing the copycat domain. Removed the fabricated domain; rewrote
+    outcome_summary to ESET's wording (legit shagle.com; copycat domain "contained the word
+    'dutch'"; Telegram 7.5.0; C&C-delivered modules; accessibility/notification abuse).
+    CORRECTION 2: summary said "first well-documented mobile-platform PROMETHIUM tooling" —
+    ESET says "Only one other Android campaign has been previously attributed to StrongPity"
+    and "this appears to be the second version of StrongPity's Android malware", but "the
+    first time that the described modules … have been documented publicly"; reworded to
+    "first PUBLIC documentation of the module set (second Android campaign)". incident_type:
+    added surveillance + espionage (ESET titles it an "espionage campaign"; tooling is
+    call/SMS/location/message surveillance) alongside existing intrusion + data-theft.
+    [b] ATTRIBUTION — attributing_org_confidence moderate → HIGH: ESET states verbatim "we
+    believe with high confidence that this operation belongs to the StrongPity group",
+    backed by the SAME code-signing certificate as a 2021 Trend-Micro-attributed trojanized
+    Syrian e-gov app + shared backdoor code/obfuscated class names (mirrors the audited
+    bitdefender-2020 sibling, also high + named-actor). Added attribution_level=named-actor
+    (was missing): ESET names ONLY the group — 0 mentions of Turkey/Turkish/MİT/
+    "government-sponsored" in the article — so no nation/unit is drawn from this source; the
+    Turkish nexus is an actor-level fact from other sources. auspex_assessment kept
+    concur-with-caveat.
+    [c] DATES ✓ source published_on 2023-01-10 = "10 Jan 2023". start_date 2021-11-01 =
+    "Active since November 2021" / copycat HTML copied + malicious domain registered
+    "November 1st, 2021". disclosure/end 2023-01-10 = report date (op not definitively
+    bounded — sample was inactive at research time via API_ID_PUBLISHED_FLOOD but "might
+    change anytime"; end=disclosure kept as the sibling convention). No conflation.
+    [d] DOCTRINE_LINKS — pillar_id gulen-diaspora → NULL. The event was the ONLY StrongPity
+    sibling asserting the gulen-diaspora pillar; ESET identifies no victims and states no
+    purpose, so neither Gülenist nor Kurdish targeting is isolable (the rest of the cluster
+    uses kurdish-diaspora or null; the victim-less siblings kaspersky/att/minerva use null).
+    Kept confidence=plausible (honest — no purpose stated); added attesting_source_id: null
+    and inference_basis.alternatives (diaspora-surveillance continuation vs. broader
+    opportunistic espionage). Not attested, so no attesting source required.
+    [e] ATTRIBUTION_LEVEL set named-actor (see [b]).
+    [f] ACTOR_ID tr/unscoped/promethium resolves → atlas/actors/tr/promethium.yaml (id
+    tr/unscoped/promethium), consistent with all 7 sibling StrongPity events; no actor edit.
+    KEY CHANGE — false_flag_risk suspected → NONE: this ESET report carries NO false-flag
+    signal ("Stealth Falcon" appears 0×; no UAE overlap). The only misattribution mentioned
+    is a third party's Twitter claim of Bahamut, which ESET explicitly corrects — evidence
+    AGAINST a false flag, not for one. The prior "suspected" was an unsourced cluster-level
+    echo from the actor record's PROMETHIUM/Stealth-Falcon ambiguity, which is not present
+    in this source.
+    RESIDUALS / FLAGS: (1) target orgs/strongpity-android-shagle-victims-unknown is an
+    UNREGISTERED placeholder (no atlas/targets file) — matches the sibling victims-unknown
+    pattern (minerva, strongpity3); ESET names no victims so a placeholder is apt, but the
+    FK is dangling — flagged for the orchestrator to register/retire (outside this event's
+    edit scope). (2) initial_vector kept supply-chain (trojanized/repackaged legitimate app,
+    cluster-consistent) though ESET states it "do[es] not know how potential victims were
+    lured to … the fake website" — borderline; noted. (3) CLUSTER FLAG: false_flag_risk is
+    inconsistent across the StrongPity subtree — talos-2020-06 and minerva-2021-12 still
+    carry "suspected" on the same unsourced cluster echo; only the 2020-12
+    stealth-falcon-overlap event genuinely warrants it. Recommend the orchestrator reconcile
+    the cluster to none except the overlap event.
