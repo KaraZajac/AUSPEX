@@ -568,8 +568,12 @@ export class Atlas {
 
   /** Actors that have this sector listed in their target_sector_ids. */
   actorsForTargetSector(sectorId: string): Actor[] {
+    // Canonical sector ids are bare (e.g. "government"); a few actor entries carry a
+    // legacy "sectors/" prefix. Normalize both sides so neither form is silently dropped.
+    const norm = (s: string) => s.replace(/^sectors\//, '');
+    const want = norm(sectorId);
     return [...this.actors.values()]
-      .filter((a) => (a.target_sector_ids ?? []).includes(sectorId))
+      .filter((a) => (a.target_sector_ids ?? []).some((s) => norm(s) === want))
       .sort((a, b) => a.canonical_name.localeCompare(b.canonical_name));
   }
 

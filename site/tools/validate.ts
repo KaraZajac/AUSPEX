@@ -199,8 +199,12 @@ for (const act of a.actors.values()) {
     }
   }
   for (const sec of act.target_sector_ids ?? []) {
-    if (fkMissing(a.sectors as Map<string, unknown>, sec)) {
-      add('warning', 'dangling-fk', `actors/${act.id}`, `target sector not found: ${sec}`);
+    const slug = sec.replace(/^sectors\//, '');
+    if (sec !== slug) {
+      add('warning', 'noncanonical', `actors/${act.id}`, `target_sector_id should be bare (drop sectors/ prefix): ${sec}`);
+    }
+    if (fkMissing(a.sectors as Map<string, unknown>, slug)) {
+      add('warning', 'dangling-fk', `actors/${act.id}`, `target sector not found: ${slug}`);
     }
   }
   for (const sid of act.sources ?? []) {

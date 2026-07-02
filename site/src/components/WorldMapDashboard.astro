@@ -88,7 +88,8 @@ const dossiers = ACTOR_STATES.map((sid) => {
 const targetCounts = a.targetCountryCounts();
 const maxTarget = Math.max(...targetCounts.values(), 1);
 const targetCountryClass = new Map<string, string>(); // iso2 → tier label
-for (const [iso2, n] of targetCounts) {
+for (const [code, n] of targetCounts) {
+  const iso2 = isoForState(code); // map atlas country code to SVG ISO (e.g. uk → gb), same as the attacker path
   if (attackerIsoSet.has(iso2)) continue; // attacker states have their own color
   if (n >= maxTarget * 0.6) targetCountryClass.set(iso2, 'target-tier-high');
   else if (n >= maxTarget * 0.25) targetCountryClass.set(iso2, 'target-tier-mid');
