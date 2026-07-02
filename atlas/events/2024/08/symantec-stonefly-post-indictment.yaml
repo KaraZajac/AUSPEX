@@ -1,61 +1,212 @@
 id: 2024-08/symantec-stonefly-post-indictment
 name: Symantec documents Stonefly extortion post-indictment
-start_date: 2024-08-01  # Symantec investigation window
-disclosure_date: 2024-08-30
-end_date: 2024-08-30
+start_date: 2024-08-01  # August 2024 attack window per Symantec ("intrusions ... in August")
+disclosure_date: 2024-10-02  # Symantec / security.com blog publication date (byline "2 Oct 2024")
+end_date: 2024-08-31  # August-2024 window per Symantec; exact dates not stated
 incident_type:
   - intrusion
-  - financial-theft
-initial_vector: unknown
+  - extortion
+initial_vector: unknown  # Symantec does not state the initial-access vector for the August intrusions
 outcome_summary: |
-  Symantec/Broadcom Threat Hunter Team documented continued
-  Andariel / Stonefly extortion operations against three US
-  organizations in the weeks following the July 2024 Rim
-  Jong Hyok DOJ indictment. Establishes operational
-  resilience: indictment did not deter activity.
+  Symantec / Broadcom Threat Hunter Team found evidence that the
+  Andariel / Stonefly group mounted financially-motivated
+  intrusions against three US organizations in August 2024 —
+  roughly one month after the 25 July 2024 Rim Jong Hyok DOJ
+  indictment. The attackers did not succeed in deploying
+  ransomware on any of the affected networks; Symantec assessed
+  the activity was likely financially motivated (all victims were
+  private companies "with no obvious intelligence value").
+  Deterrence-baseline data point: the indictment and $10M
+  Rewards-for-Justice offer had not, as of this reporting, led to
+  a cessation of Andariel / Stonefly activity.
 false_flag_risk: none
 campaign_id: andariel-rim-jong-hyok-cluster
 operators_named:
-  - rim-jong-hyok  # Andariel, DOJ Kansas Jul 2024 (Symantec references the indictment)
+  - rim-jong-hyok  # Andariel, DOJ Kansas Jul 2024 (Symantec's "Background" references the indictment)
 summary: |
-  Important AUSPEX deterrence-baseline data point. Indictment-and-
-  rewards-for-justice has not, to date, affected Andariel
-  operational tempo. Symantec documents continued Andariel /
-  Stonefly tradecraft in the post-indictment window: the
-  Preft / Dtrack remote-access trojans, the YamaBot Go-based
-  backdoor, the 3PROXY tunneling tool, web shells on internet-
-  facing servers, credential dumping with Mimikatz, lateral
-  movement on valid credentials, PowerShell-based reconnaissance,
-  and either Maui ransomware deployment (against healthcare /
-  energy) or longer-dwell strategic-tech collection (against
-  defense / aerospace). The cluster's revenue→operations loop
-  remains structurally resilient to US legal action so long as
-  the laundering venues in PRC remain available.
+  Symantec / Broadcom documented continued Andariel / Stonefly
+  operations in the weeks following the July 2024 Rim Jong Hyok
+  DOJ indictment, characterising a recent shift by this normally
+  espionage-focused RGB cluster into financially-motivated
+  extortion. Symantec found intrusions against three US private
+  companies in August 2024; ransomware was not successfully
+  deployed. Named tradecraft (per Symantec): the custom
+  Backdoor.Preft (aka Dtrack / Valefor) implant, "exclusively
+  associated with the group"; the leaked-source Nukebot backdoor
+  (not previously tied to Stonefly); a malicious batch file
+  enabling WDigest plaintext-credential caching followed by
+  credential dumping with a custom Mimikatz variant; two custom
+  keyloggers; and a set of dual-use / open-source tooling —
+  Sliver, Chisel, PuTTY / Plink, Megatools (Mega.nz exfiltration),
+  Snap2HTML, and FastReverseProxy (FRP). AUSPEX retains this as a
+  deterrence-baseline data point: US legal action (indictment +
+  Rewards-for-Justice) had not, to date, halted Andariel tempo.
 attributions:
   - actor_id: kp/rgb/andariel
     attributing_org: Symantec / Broadcom
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-08-30
+    attribution_date: 2024-10-02
     attribution_source_id: symantec/2024-08-30_stonefly-post-indictment
+    notes: |
+      Symantec attributes to the "Stonefly group (aka Andariel,
+      APT45, Silent Chollima, Onyx Sleet)" with high confidence,
+      resting on the custom Backdoor.Preft ("exclusively associated
+      with the group") plus Microsoft-documented Stonefly IOCs
+      (incl. a fake Tableau certificate). Named-actor: Symantec
+      names the specific group and (in its "Background", relaying
+      the DOJ indictment) states Stonefly is "linked to the North
+      Korean military intelligence agency, the Reconnaissance
+      General Bureau (RGB)", but its own cluster attribution is
+      group-level.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Symantec documents continued extortion operations by an
-      OFAC-sanctioned + DOJ-indicted DPRK cluster whose
-      proceeds (per the July 2024 indictment) fund the
-      strategic-tech-collection mission. Same canonical
-      attestation chain as the indictment itself.
+      An OFAC-sanctioned, DOJ-indicted DPRK RGB cluster mounting
+      financially-motivated extortion against US targets is the
+      hard-currency-generation behaviour the 8th-Congress
+      revenue-aggregation pillar specializes. The label is
+      strongly_inferred, NOT attested: neither cited source states
+      the TERMINAL WMD / ballistic-missile-financing goal. Symantec
+      frames the August 2024 activity only as "financially
+      motivated" against private companies "with no obvious
+      intelligence value" (a proximate revenue purpose), and the
+      July 2024 DOJ indictment it references states that the ransom
+      proceeds were used "to fund additional computer intrusions
+      into defense, technology, and government entities" — i.e.
+      revenue funding further espionage (proximate), not the WMD /
+      missile end-use. Per the doctrine's per-event attestation
+      rule (corrected 2026-07-02) and the AUSPEX WHY-ladder, a
+      proximate-goal source earns strongly_inferred. The terminal
+      military / nuclear framing for Andariel lives in the companion
+      CISA/FBI advisory AA24-207A, which this event does not cite.
     attesting_source_id: doj/2024-07-25_andariel-rim-jong-hyok-indictment
+    inference_basis:
+      signals:
+        - "Actor identity: kp/rgb/andariel is an RGB military-intelligence cluster (OFAC-sanctioned 2019; DOJ-indicted Jul 2024), not a criminal-for-profit crew — its revenue operations serve the regime."
+        - "Symantec verbatim: the August 2024 intrusions were 'financially motivated' against private US companies 'with no obvious intelligence value' — hard-currency generation, the core behaviour of the revenue-aggregation pillar."
+        - "Timing: activity in August 2024, squarely within the 8th-Congress plan window (2021-2025)."
+        - "DOJ indictment (referenced by Symantec): ransom proceeds were 'used to fund additional computer intrusions into defense, technology, and government entities' — a state-directed revenue-for-operations loop, not private enrichment."
+      ruled_out: "Purely-criminal / self-enrichment extortion with no state-strategic purpose is ruled out: the operator is an RGB state cluster and the DOJ indictment frames the proceeds as funding further DPRK state cyber operations, not private gain. The competing terminal reading (revenue directly financing WMD / missiles) is not source-stated here, so the link is capped at strongly_inferred rather than attested."
     contested: false
     analyst: claude
-targets:
-  - target_id: sectors/retail
-    role: primary
-    outcome: 3 US organizations targeted with extortion attempts.
+targets: []
 sources:
   - symantec/2024-08-30_stonefly-post-indictment
   - doj/2024-07-25_andariel-rim-jong-hyok-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: partial
+  notes: |
+    Audited against Symantec / Broadcom Threat Hunter Team "Stonefly:
+    Extortion Attacks Continue Against U.S. Targets" (security.com). Raw
+    snapshot symantec__2024-08-30_stonefly-post-indictment.html, sha256
+    2e887fb7…3822309c, 308,061 bytes — hash re-verified against the
+    source record (matches); confirmed the real article (headline +
+    "2 Oct 2024" byline + IOC table present), not a bot-wall. The second
+    cited source, the DOJ Rim Jong Hyok indictment PR, is BOT-WALLED
+    (justice.gov/archives returns a 2,588-byte Akamai "bm-verify" stub,
+    HTTP 200, no article body) → NOT snapshotted; its content was
+    mirror-corroborated (CyberScoop, The Record, AHA, and Symantec's own
+    "Background" summary) → qc level: partial.
+
+    [a] FACTS — STRIPPED fabricated tradecraft not carried by Symantec
+    (0 raw occurrences of each, checked in cleaned text + raw HTML):
+    "YamaBot Go-based backdoor" (0× "YamaBot"; the source's newly-seen
+    backdoor is Nukebot, 4×), "3PROXY tunneling tool" (0×; the source's
+    tunneling/proxy tools are Chisel + FastReverseProxy/FRP), "web shells
+    on internet-facing servers" (0× "web shell"), "PowerShell-based
+    reconnaissance" (0× "PowerShell"), and the "Maui ransomware
+    deployment (healthcare/energy) vs. strategic-tech collection
+    (defense/aerospace)" dichotomy (0× "Maui"; Symantec states ransomware
+    was NOT successfully deployed and victims were "private companies …
+    with no obvious intelligence value"). This is the same fabricated
+    boilerplate the aa23-040a audit stripped. KEPT / verified verbatim:
+    continued Andariel/Stonefly intrusions against three US organizations
+    in August 2024 "a month after the indictment"; "financially
+    motivated" (4×); ransomware not deployed; Backdoor.Preft "exclusively
+    associated with the group"; Nukebot (leaked source); WDigest
+    plaintext-cred batch file + custom Mimikatz credential dumping; two
+    keyloggers; Sliver, Chisel, PuTTY/Plink, Megatools (Mega.nz exfil),
+    Snap2HTML, FRP (all present in body + IOC table). Rewrote
+    summary/outcome_summary to carry only these; dropped the unsourced
+    "PRC laundering venues" structural claim.
+
+    [b] ATTRIBUTION — Symantec attributes to "Stonefly (aka Andariel,
+    APT45, Silent Chollima, Onyx Sleet)" with high confidence (custom
+    Preft "exclusively associated with the group" + Microsoft-documented
+    IOCs incl. a fake Tableau certificate). ADDED attribution_level:
+    named-actor (was missing). Symantec relays (in "Background", from the
+    indictment) that Stonefly is "linked to the … Reconnaissance General
+    Bureau (RGB)" but its own cluster attribution is group-level →
+    named-actor, not named-unit. auspex_assessment concur, confidence
+    high retained.
+
+    [c] DATES — CORRECTED. The report was published 2 October 2024 (raw
+    byline "2 Oct 2024"; corroborated by Help Net Security 2024-10-03,
+    The Hacker News, SC Media, The Record), NOT 30 August. Fixed
+    disclosure_date 2024-08-30 → 2024-10-02 and attribution_date
+    2024-08-30 → 2024-10-02; also fixed the Symantec source record
+    published_on 2024-08-30 → 2024-10-02 (source id/filename left
+    unchanged per the stable-slug rule; the "2024-08-30" in the slug is
+    the mis-dated guess). start_date 2024-08-01 / end_date 2024-08-31 =
+    the August-2024 attack window Symantec states ("intrusions … in
+    August").
+
+    [d] DOCTRINE_LINKS — DOWNGRADED kp/8th-congress-defense-plan/
+    revenue-aggregation from attested → strongly_inferred. `attested`
+    requires a cited source stating the TERMINAL WMD/ballistic-missile-
+    financing goal; neither cited source does. Symantec names only a
+    proximate purpose ("financially motivated" / hard currency), and the
+    DOJ indictment it references states proceeds were used "to fund
+    additional computer intrusions into defense, technology, and
+    government entities" — revenue → more espionage (proximate), not the
+    WMD/missile end-use (the terminal framing is in AA24-207A, not cited
+    here). The prior link's "Same canonical attestation chain as the
+    indictment itself" was exactly the default-attested pattern the
+    doctrine's 2026-07-02 correction removed. Rewrote reasoning; added
+    inference_basis {signals[], ruled_out}; kept the DOJ indictment as
+    the primary supporting source (attesting_source_id). Batch-instruction
+    attesting-source check: doj/2024-07-25 IS in this event's own
+    sources[] (attesting_source_id valid-in-set) — but its goal-statement
+    is proximate, so the correct remedy is downgrade, not removal.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]; was missing).
+
+    [f] ACTOR_ID — kp/rgb/andariel resolves (file
+    atlas/actors/kp/andariel.yaml, internal id kp/rgb/andariel; status
+    indicted). Stonefly is a listed equivalent alias. No actor-file
+    edits; no actor flag.
+
+    [targets] — REMOVED fabricated sectors/retail (0× "retail"; Symantec
+    names no sector, only "private companies … with no obvious
+    intelligence value"). No generic private-sector bucket exists in
+    sectors.yaml, so targets set to [] with the victim facts (three US
+    private companies; ransomware not deployed) carried in prose.
+
+    SOURCE-RECORD FIXES: symantec record — published_on → 2024-10-02;
+    title → actual headline "Stonefly: Extortion Attacks Continue Against
+    U.S. Targets"; tier secondary → primary (first-party vendor original
+    research — Symantec discovered these intrusions in its own telemetry;
+    the RGB attribution it relays remains OFAC-2019-primary). DOJ record —
+    added AUDIT 2026-07-02 line documenting the re-confirmed bot-wall and
+    the proximate-goal wording.
+
+    RESIDUAL / FLAGS: (1) level partial solely because the cited DOJ
+    indictment is un-snapshottable (bot-wall) and mirror-corroborated —
+    every factual claim in the event rests on the snapshotted Symantec
+    primary. (2) FLAG for orchestrator: sibling event
+    2024-07/andariel-rim-jong-hyok-indictment still carries a
+    revenue-aggregation link at confidence: attested on the SAME DOJ
+    source ("Maui … proceeds … purchase further attack infrastructure for
+    defense-network intrusions") — by the same proximate-vs-terminal
+    standard applied here that link is over-attested and should be
+    re-graded strongly_inferred (its strategic-tech-collection link may
+    remain attested, since the indictment does name the defense/aerospace
+    target set). Not edited (out of scope).

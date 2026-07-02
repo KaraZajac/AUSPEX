@@ -19,34 +19,37 @@ false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
   CISA AA21-048A (February 2021) consolidated the campaign
-  attribution and named DPRK actors. Continuing operation under
-  the Microsoft "Citrine Sleet" designation; the August 2024
-  Chrome zero-day campaign sits in the same operational lineage.
+  attribution and named DPRK actors. The operation continues into
+  the post-2021 period under the actor AUSPEX tracks as Citrine
+  Sleet (a later Microsoft designation for the same DPRK lineage;
+  the two CISA advisories cited here do not use that name).
   AppleJeus distributes trojanized cryptocurrency trading
   applications (Celas Trade Pro, JMTTrading, Union Crypto Trader,
   Kupay Wallet, CoinGoTrade, Dorusio, Ants2Whale) signed with
   valid code-signing certificates obtained via shell-company front
   pages — a recurring DPRK supply-chain pattern. The installers
-  drop the FALLCHILL / Manuscrypt remote-access trojans on Windows
-  and macOS, with macOS variants among the earliest publicly
-  documented North Korean Mach-O backdoors. Post-installation,
-  operators harvest wallet keys and exchange API credentials via
-  credential dumping and clipper modules, staging the theft of
-  the targeted crypto assets to attacker wallets later laundered
-  through mixers tracked by Chainalysis.
+  drop the FALLCHILL and Manuscrypt remote-access trojans on
+  Windows and macOS, including documented macOS Mach-O variants.
+  Post-installation, operators harvest wallet keys and exchange
+  credentials, staging the theft of the targeted crypto assets to
+  attacker wallets and laundering the proceeds.
 attributions:
   - actor_id: kp/rgb/citrine-sleet
     attributing_org: US CISA + FBI + Treasury
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-02-17
     attribution_source_id: cisa/2021-02-17_aa21-048a-applejeus
+    notes: "AA21-048A attributes AppleJeus to 'Lazarus Group' / 'North Korean state-sponsored APT actors' / 'HIDDEN COBRA' (nation + named cluster) and names NO DPRK service — no Reconnaissance General Bureau / Bureau 121 string appears, and it predates and does not use the Microsoft 'Citrine Sleet' name. attribution_level=named-actor (not named-unit); auspex_assessment=concur-with-caveat because AUSPEX maps this to the RGB-scoped kp/rgb/citrine-sleet actor, but that unit placement rests on a later Microsoft source not cited in this event, not on AA21-048A."
   - actor_id: kp/unscoped/tradertraitor
     attributing_org: US CISA + FBI + Treasury
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-18
     attribution_source_id: cisa/2022-04-18_aa22-108a-tradertraitor
+    notes: "AA22-108A: 'North Korean State-Sponsored APT Targets Blockchain Companies', 'commonly tracked by the cybersecurity industry as Lazarus Group, APT38, BlueNoroff, and Stardust Chollima' — nation + named cluster (TraderTraitor), NO service named, so kp/unscoped is correct. attribution_level=named-actor."
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
@@ -68,12 +71,33 @@ doctrine_links:
     analyst: claude
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
-    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
-    confidence: attested
+    program_id: null
+    confidence: strongly_inferred
     reasoning: |
-      Post-2021 continuation of the campaign serves the active
-      defense-plan revenue requirements.
+      AppleJeus is a long-running DPRK crypto-theft campaign that
+      continues past 2021 under the actor AUSPEX tracks as Citrine
+      Sleet / TraderTraitor; per AUSPEX convention its post-2021
+      continuation is doctrinally re-anchored to the active 8th
+      Congress five-year defense plan (byungjin, linked separately,
+      carries the 2018 origin). DOWNGRADED attested -> strongly_inferred
+      (2026-07-02): the cited AA22-108A states only the PROXIMATE goal —
+      the actors "generate and launder funds to support the North
+      Korean regime" — and never names the terminal WMD / ballistic-
+      missile financing end-use the doctrine encodes (0 WMD / ballistic /
+      missile-program strings in the raw advisory). Per the SCHEMA
+      attestation boundary and this doctrine's own per-event rule, a
+      proximate-revenue source earns strongly_inferred, not attested.
+      program_id set null: AppleJeus is trojanized-trading-app supply-
+      chain theft, not the DeFi/exchange bridge-theft program (scoped
+      2022+; Ronin/Harmony/etc.), so the link sits at the revenue-
+      aggregation pillar rather than that program.
     attesting_source_id: cisa/2022-04-18_aa22-108a-tradertraitor
+    inference_basis:
+      signals:
+        - "AA22-108A names only the proximate goal: the actors 'generate and launder funds to support the North Korean regime' (no WMD / ballistic-missile / missile-program wording in the raw advisory)."
+        - "Long-running campaign (2018 origin) continuing post-2021; per AUSPEX convention the active-era continuation is anchored to the 8th Congress defense plan while byungjin carries the pre-2021 origin (linked separately on this event)."
+        - "Actor is the DPRK RGB financial-tasking lineage (Lazarus / APT38 / BlueNoroff / TraderTraitor), whose crypto-theft proceeds the US IC consistently assess as underwriting the strategic-weapons program."
+      ruled_out: "Terminal WMD/ballistic-missile financing is NOT stated by AA22-108A, so attested is unavailable; the competing reading that the proceeds are non-strategic / general regime revenue is set aside because DPRK state crypto-theft is consistently IC-attributed to weapons-program funding — but that end-use inference is AUSPEX's, not the advisory's, hence strongly_inferred."
     contested: false
     analyst: claude
 targets:
@@ -84,3 +108,82 @@ targets:
 sources:
   - cisa/2021-02-17_aa21-048a-applejeus
   - cisa/2022-04-18_aa22-108a-tradertraitor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    8th-Congress attestation re-check + full 6-point audit. Both cited CISA advisories
+    were already snapshotted; both hashes RE-VERIFIED on disk 2026-07-02.
+    Source A = cisa/2021-02-17_aa21-048a-applejeus (AppleJeus), sha256 1e3dde69…5afefc54,
+    133,262 bytes. Source B = cisa/2022-04-18_aa22-108a-tradertraitor (TraderTraitor),
+    sha256 8c1bfad1…756afcfd, 83,739 bytes. Neither is a phantom — both are the real,
+    on-point CISA advisories carrying the core AppleJeus/TraderTraitor facts.
+
+    [d] DOCTRINE_LINKS — the headline correction. The kp/8th-congress-defense-plan link
+    was `attested` to Source B. Source B states ONLY the proximate goal — verbatim: "These
+    actors will likely continue exploiting vulnerabilities of cryptocurrency technology
+    firms, gaming companies, and exchanges to generate and launder funds to support the
+    North Korean regime." Raw grep of Source B for the terminal end-use returns ZERO hits:
+    no 'weapons of mass destruction', 'WMD', 'ballistic missile', 'nuclear program', or
+    'missile program'. Per the SCHEMA attestation boundary (a source naming only a
+    proximate/regime-funding goal earns strongly_inferred, not attested) and this
+    doctrine's OWN per-event rule ("attested ONLY where the event's cited source states the
+    TERMINAL WMD / ballistic-missile-financing goal in substance"), DOWNGRADED
+    attested -> strongly_inferred and added inference_basis {signals[], ruled_out}.
+    Temporal cross-check reinforces this: AppleJeus starts 2018 but the 8th-Congress plan
+    was issued 2021-01-09, so a 2018-origin op cannot be "attested" to a 2021 plan; the
+    link is retained (not deleted) because the campaign is long-running and continues
+    post-2021 — AUSPEX convention re-anchors the active-era continuation to the 8th-Congress
+    plan while the separately-linked kp/byungjin/sanctions-evasion-revenue carries the 2018
+    origin. Also set program_id null: the previous program crypto-bridge-theft is scoped in
+    the doctrine file to 2022+ DeFi/exchange bridge heists (Ronin/Harmony/…), which AppleJeus
+    (trojanized-trading-app supply-chain theft) is not; the honest granularity is the
+    revenue-aggregation pillar. The byungjin link (already strongly_inferred) was verified
+    correct: Source A carries its cited proximate goal "circumvent international sanctions on
+    North Korea" (1 hit) and no WMD wording — left unchanged.
+
+    [a] FACTS — corrected against the raw. KEPT (source-carried): all 7 app variants
+    (Celas Trade Pro, JMTTrading, Union Crypto Trader, Kupay Wallet, CoinGoTrade, Dorusio,
+    Ants2Whale — all present in Source A), FALLCHILL (Source A, 6 hits), Manuscrypt as a
+    macOS+Windows RAT (Source B: "updated macOS and Windows variants of Manuscrypt, a custom
+    remote access trojan"), valid code-signing certificates (Source A: code-sign 5 / certificate
+    18 / signed 7), macOS Mach-O variants (Source A: macOS 41 / Mach-O 1), Celas-LLC front
+    (Source A, 9 hits), "steal private keys" (Source B), "launder funds" (Source B). STRIPPED
+    (carried by NO cited source): "clipper modules" (0 hits both), "mixers tracked by
+    Chainalysis" (Chainalysis 0 / mixer 0 — softened to "laundering the proceeds", which
+    Source B carries), the "August 2024 Chrome zero-day" claim and the "Microsoft Citrine
+    Sleet designation" narrative (both 0 hits in the cited advisories — reframed as the
+    later AUSPEX/Microsoft actor name with an explicit note that the cited sources do not use
+    it), and the "among the earliest publicly documented" superlative (unsourced). Dollar
+    figure "tens of millions cumulative" is conservative vs Source A's "$100 Million" /
+    "hundreds of millions" — left. disclosure_date 2018-08-23 is the real Kaspersky
+    "Operation AppleJeus" date but Kaspersky is not among the two cited sources (minor
+    residual sourcing gap; date is historically accurate — left, flagged below).
+
+    [b] ATTRIBUTION / [e] ATTRIBUTION_LEVEL — both attributions lacked attribution_level; set.
+    Attribution 1 (kp/rgb/citrine-sleet <- Source A): Source A reaches "Lazarus Group" (2) /
+    "HIDDEN COBRA" (12) / "North Korean state-sponsored" — named-actor + nation, and names NO
+    RGB/Bureau 121. Set attribution_level=named-actor and auspex_assessment concur ->
+    concur-with-caveat, with a note that the RGB/Citrine-Sleet unit placement rests on a later
+    Microsoft source not cited here (mirrors the source record's own audit note). Attribution 2
+    (kp/unscoped/tradertraitor <- Source B): "North Korean State-Sponsored APT" / "Lazarus
+    Group, APT38, BlueNoroff, and Stardust Chollima" — nation + named cluster, no service; the
+    kp/unscoped placement is correct; set attribution_level=named-actor, concur retained.
+
+    [c] DATES — verified. Source A published_on 2021-02-17, Source B 2022-04-18 (both match
+    advisory dates). Event start_date 2018-01-01 (AppleJeus since 2018, per Source A), end_date
+    null (continuing), attribution_dates 2021-02-17 / 2022-04-18 all correct.
+
+    [f] ACTOR_ID — both resolve: kp/rgb/citrine-sleet -> atlas/actors/kp/citrine-sleet.yaml;
+    kp/unscoped/tradertraitor -> atlas/actors/kp/tradertraitor.yaml. Not edited (per protocol).
+
+    FLAGS for orchestrator: (1) Attribution-1 anachronism — the event pins an RGB/Bureau-121-
+    scoped Citrine Sleet actor onto a 2021 CISA source that only reaches Lazarus/nation; the
+    unit-level placement depends on an uncited Microsoft source. Consider adding that Microsoft
+    source to the event, or the actor record must carry it (not verified here — actor files not
+    edited). (2) disclosure_date rests on a Kaspersky disclosure not in the cited sources.
+    (3) Source-record fix applied to cisa/2021-02-17_aa21-048a-applejeus: its top note claimed
+    "ties proceeds to WMD financing" — false per the raw (0 WMD hits; only "circumvent
+    international sanctions") and contradicted by its own 2026-06-24 audit note; corrected.
