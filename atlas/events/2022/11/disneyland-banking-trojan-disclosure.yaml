@@ -1,37 +1,169 @@
 id: 2022-11/disneyland-banking-trojan-disclosure
-name: Krebs profiles "Disneyland" banking-trojan / IcedID-variant operation
-start_date: 2021-06-01
-disclosure_date: 2022-11-21
-end_date: 2022-11-21
+name: Krebs profiles "Disneyland Team" punycode / Gozi 2.0 banking-fraud operation
+start_date: 2022-03-01  # earliest concrete activity in the source: ushank[.]com "used since March 2022"; panel showed domains operated "for the better part of 2022"
+disclosure_date: 2022-11-16
+end_date: null
 incident_type:
   - financial-theft
-initial_vector: phishing
+  - disclosure
+initial_vector: unknown
 outcome_summary: |
-  Krebs on Security published an investigation into the
-  "Disneyland Malware Team" — a Russian-speaking criminal
-  group running IcedID banking-trojan variants against US
-  and Canadian banking customers via punycode-spoofed
-  domains imitating Disneyland-themed homoglyphs (e.g.,
-  bаnkof-аmericа.com using Cyrillic а). Operational since
-  approximately mid-2021; targets included Citibank, Capital
-  One, Chase, and Royal Bank of Canada. The investigation
-  exposed operator internal chats and target-bank
-  preferences.
+  Krebs on Security profiled the self-styled "Disneyland Team," a
+  Russian-speaking financial cybercrime group that registers visually
+  deceptive look-alike bank domains — Punycode domains whose non-Latin
+  (homoglyph) characters render in the browser URL bar as e.g.
+  ạmeriprisẹ[.]com (Ameriprise), cliẹntșchwab[.]com (Charles Schwab),
+  singlepoint.ụșbamk[.]com (U.S. Bank) and login2.ẹmirạtesnbd[.]com
+  (Emirates NBD, Dubai), plus plain misspellings such as ushank[.]com —
+  used not as conventional phishing lures but in tandem with existing
+  Gozi 2.0/Ursnif Windows banking-malware infections on victims'
+  computers. The malware overlays a fake bank site that relays the
+  victim's browser activity through to the real bank site, letting
+  operators forward secondary login and multi-factor-authentication
+  challenges and facilitate fraudulent bank transfers, managed via a
+  web-based control panel with bot-claiming ("TAKE"/"SKIP") buttons and
+  scripted victim-stalling prompts. The findings came from Hold Security
+  founder Alex Holden, whose analysts gained access to the group's
+  control panel; it revealed dozens of Punycode-based phishing domains
+  operated for the better part of 2022.
 false_flag_risk: none
 summary: |
-  The Disneyland team is the canonical post-Emotet IcedID-
-  affiliate banking-trojan operator in the public record.
-  AUSPEX classifies as criminal-baseline.
+  The Disneyland Team is a Russian-speaking, profit-motivated
+  banking-fraud crew pairing Punycode/homoglyph look-alike bank domains
+  with Gozi 2.0/Ursnif banking-trojan infections — an adaptation to
+  browser and OS protections that broke classic in-browser web injects.
+  AUSPEX classifies it as criminal-baseline: no documented state nexus,
+  and "Russian-speaking — if not also based in Russia" is Hold
+  Security's hedged assessment, not a state attribution.
 attributions:
   - actor_id: null
     attributing_org: Krebs on Security (journalism)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-11-21
+    attribution_date: 2022-11-16
     attribution_source_id: krebs/2022-11-21_disneyland-malware-team
+    notes: |
+      Krebs, reporting Hold Security (Alex Holden) analysis based on
+      analyst access to the group's own web control panel, names the
+      crew by its self-styled name "Disneyland Team" and characterizes
+      it as "Russian-speaking — if not also based in Russia."
+      named-actor: a named criminal cluster; no nation-state or service
+      attribution is made. actor_id null — criminal-baseline with no
+      actor file (no criminal/disneyland-team record exists).
 doctrine_links: []
 targets:
   - target_id: sectors/finance/banking
     role: primary
+    country: us
+  - target_id: sectors/finance/banking
+    role: primary
+    country: ae
 sources:
   - krebs/2022-11-21_disneyland-malware-team
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the sole cited source, Krebs on Security "Disneyland
+    Malware Team: It's a Puny World After All" (krebsonsecurity.com
+    /2022/11/disneyland-malware-team/) — NOT a phantom: the URL serves
+    the real article matching the event. Raw snapshot captured
+    (krebs__2022-11-21_disneyland-malware-team.html), sha256
+    f0ab75b1…579cd007, 73,430 bytes. Article body extracted and grepped
+    claim-by-claim.
+    [a] FACTS — the prior record was heavily fabricated; corrected:
+      • REMOVED "IcedID banking-trojan variants" (event name,
+        outcome_summary, summary) — IcedID: 0 hits in the raw. The
+        article names the malware as "a powerful strain of Microsoft
+        Windows-based banking malware known as Gozi 2.0/Ursnif" (used
+        "to help the group steal money from victims"; Gozi "facilitate[s]
+        fraudulent bank transfers"). (NB: the article says "Ursnif", not
+        the ISFB alias — recorded as the source words it.)
+      • REMOVED fabricated victim list "Citibank, Capital One, Chase,
+        and Royal Bank of Canada" — 0 hits each; "Canad*": 0 hits. The
+        brands the article actually names as spoofed: U.S. Bank
+        (ushank[.]com; singlepoint.ụșbamk[.]com), Ameriprise
+        (ạmeriprisẹ[.]com), Charles Schwab (cliẹntșchwab[.]com,
+        cliẹrtschwạb[.]com), Emirates NBD Bank in Dubai
+        (login2.ẹmirạtesnbd[.]com), plus a fake PNC overlay screenshot.
+        Targets re-scoped to sectors/finance/banking country us + ae
+        (US brands + Emirates NBD); the "US and Canadian banking
+        customers" framing struck.
+      • REMOVED "punycode-spoofed domains imitating Disneyland-themed
+        homoglyphs (e.g., bаnkof-аmericа.com using Cyrillic а)" —
+        doubly wrong: "Disneyland" is the crew's self-name ("calling
+        itself the Disneyland Team"), the domains imitate BANK brands;
+        and bankof-america/bаnkof-аmericа appears nowhere (0 hits) —
+        a fabricated example. Cyrillic appears only in the article's
+        definition of Punycode ("render domain names with non-Latin
+        alphabets like Cyrillic"); the concrete examples shown use
+        dotted-Latin homoglyphs. Replaced with the article's own
+        defanged examples.
+      • REMOVED "Operational since approximately mid-2021" and
+        start_date 2021-06-01 — "2021" has 0 hits. Source-carried
+        timing: domains operated "for the better part of 2022"; the
+        earliest concrete date is ushank[.]com "used since March 2022".
+        start_date set 2022-03-01 (commented as an estimate basis).
+      • REMOVED "exposed operator internal chats and target-bank
+        preferences" — "chat": 0 hits. What Holden's analysts accessed
+        is the gang's web-based control panel and its user manual /
+        instructions (SKIP "in case the account is not interesting to
+        us"; TAKE bot-claiming; stalling prompts; the manual's "ddos
+        will kill their network" line). Rewritten to those specifics.
+      • REMOVED summary claim "canonical post-Emotet IcedID-affiliate
+        banking-trojan operator in the public record" — Emotet: 0 hits,
+        IcedID: 0 hits; unsupported editorial superlative. Replaced
+        with the article's actual framing: look-alike domains as the
+        crew's adaptation to browser protections that broke web injects
+        ("The reason that it is infeasible for them to use in-browser
+        injects include browser and OS protection measures…" — Holden).
+      • initial_vector phishing -> unknown: Krebs states the group "is
+        not a phishing gang per se" and pairs the domains with
+        "malicious software that is already secretly installed on a
+        victim's computer"; the Gozi infection route is never stated.
+      • Deliberately NOT imported: the "tens of millions of dollars"
+        figure — it refers to "a similar malware crew" Krebs tracked in
+        years past, not the Disneyland Team; DDoS-distraction is
+        expressly unconfirmed for this crew ("unclear if the Disneyland
+        Team employs this tactic"). No quantified_impact.
+    [b] ATTRIBUTION — attributing_org kept "Krebs on Security
+        (journalism)" per corpus convention for Krebs-profile events,
+        with the underlying analysis credited in notes to Hold Security
+        (Alex Holden), whose panel access is the evidence base.
+        Confidence moderate kept — the actor characterization is
+        hedged: "the Disneyland Team is Russian-speaking — if not also
+        based in Russia". Russian-SPEAKING is not inflated to a Russia
+        state nexus (criminal-baseline; no proxies/ placement — no
+        documented state link). auspex_assessment concur.
+        attribution_date corrected 2022-11-21 -> 2022-11-16.
+    [c] DATES — source published_on corrected 2022-11-21 -> 2022-11-16
+        (dateline "November 16, 2022"; meta article:published_time
+        2022-11-16T13:40:49-05:00; footer "posted on Wednesday 16th of
+        November 2022"); source id slug retained (slugs stable).
+        disclosure_date 2022-11-21 -> 2022-11-16. end_date 2022-11-21
+        -> null: the operation was ongoing at publication ("currently
+        and previously used" domain list); the disclosure does not
+        bound it. start_date 2021-06-01 -> 2022-03-01 (see [a]).
+    [d] DOCTRINE_LINKS — [] confirmed correct: profit-motivated
+        criminal fraud with no documented state nexus; no state
+        doctrine genuinely applies and none was invented.
+    [e] ATTRIBUTION_LEVEL — added named-actor (was absent): Krebs/Hold
+        Security name the specific self-styled crew; no nation or unit.
+    [f] ACTOR_ID — null, consistent with corpus convention for
+        criminal-baseline events lacking an actor record; verified no
+        atlas/actors/criminal/disneyland* file exists. FLAG for
+        orchestrator: criminal/disneyland-team could be minted if the
+        crew recurs, but is not required by this single-source profile.
+    Residual uncertainties: (1) start_date 2022-03-01 is the earliest
+    source-carried date — actual operations could predate it (the
+    article does not say when the crew formed); (2) Ameriprise and
+    Charles Schwab are wealth-management/brokerage rather than banks
+    strictly — sectors/finance/banking retained as the nearest sector,
+    carried by the named banks (U.S. Bank, PNC, Emirates NBD); (3) the
+    article links a supplementary PDF of the crew's phishing domains
+    (krebsonsecurity.com/wp-content/uploads/2022/11/punydomains.pdf),
+    not snapshotted separately — all retained claims are carried by the
+    article body itself.
