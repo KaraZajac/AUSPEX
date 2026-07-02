@@ -116,6 +116,8 @@ if gaps:
 print("\n── 5. Doctrine co-occurrence (top pairs tagged on the same op) ──")
 pair = Counter()
 for e in events.values():
+    its=set(e.get("incident_type") or [])
+    if its and its <= META: continue                       # skip pure-meta events (sections 1-4 filter; section 5 previously did not, counting doctrine-publication/policy link pairs as op co-occurrences)
     dls = sorted({dl.get("doctrine_id") for dl in (e.get("doctrine_links") or []) if dl.get("doctrine_id") and dl.get("perspective") in (None,"attacker-rationale")})
     for i in range(len(dls)):
         for j in range(i+1, len(dls)):

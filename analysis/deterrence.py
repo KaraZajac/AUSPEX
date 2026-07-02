@@ -50,11 +50,9 @@ for e in events:
     if its and its<=META: continue
     y=yr(e.get("start_date") or e.get("disclosure_date"))
     if not y: continue
-    for a in (e.get("attributions") or []):
-        aid=a.get("actor_id")
-        if aid:
-            st=aid.split("/")[0]
-            ops[st][y]+=1;
+    states_here={a.get("actor_id").split("/")[0] for a in (e.get("attributions") or []) if a.get("actor_id")}
+    for st in states_here:
+        ops[st][y]+=1   # count each event once per distinct attacker-state, not once per attribution (multi-org attributions were inflating tempo ~8%)
     if any(a.get("actor_id") for a in (e.get("attributions") or [])):
         allops[y]+=1
 
@@ -79,7 +77,11 @@ def spark(counter, lo, hi):
 # Right-censoring guard (2026-06-09 C4a): an action whose ±W post-window runs past the
 # data's last year is dropped, not silently half-windowed (actor_deterrence.py had this
 # guard; this script previously did not — 2025 actions were inflating "defiance").
-MAXY = max(y for c in ops.values() for y in c)
+# Right-censoring boundary = last COMPLETE year, NOT the last year present. The newest year in
+# the corpus is partial + collection-lagged, so admitting post-windows that reach into it biases
+# DiD toward false "deceleration" (2026-06-09 C4a; recurred 2026-07 because the guard used "last
+# year present"). Set this to an explicit data-complete-through year at freeze if preferred.
+MAXY = max(y for c in ops.values() for y in c) - 1
 
 # Pseudo-replication guard (C4b): actions against the same state within W years of each
 # other share overlapping windows and are NOT independent observations. We cluster them —
@@ -153,10 +155,23 @@ if overall_cl:
     for st in sorted(per_state_cl, key=lambda s:-len(per_state_cl[s])):
         recs=per_state_cl[st]
         print(f"     {st:9} clusters={len(recs)} (sizes {[c for _,c,_ in recs]})  mean DiD {S.mean([d for _,_,d in recs]):+.2f}")
-    verdict = ("acceleration — targeted states' op tempo tends to rise FASTER than the world after punitive action "
-               "(defiance/escalation-consistent, NOT deterrence)" if mdc>0.15 else
-               "deceleration — consistent with deterrence (but see endogeneity caveat)" if mdc<-0.15 else
-               "≈ no net effect — targeted states track the global trend; no detectable deterrence")
+    # Sign test on cluster DiD signs (H0: deceleration and acceleration equally likely). A
+    # directional reading is only licensed if N is adequate AND the sign isn't chance — otherwise
+    # the script must not print "consistent with deterrence" off a handful of clusters.
+    from math import comb
+    n_cl=len(overall_cl); k_neg=sum(1 for d in overall_cl if d<0)
+    tail=sum(comb(n_cl,i) for i in range(0, min(k_neg, n_cl-k_neg)+1))
+    p_sign=min(1.0, 2*tail/(2**n_cl)) if n_cl else 1.0
+    if n_cl < 6 or p_sign > 0.10:
+        verdict = (f"n={n_cl} independent (state,window) clusters is too small for inference — clustered mean "
+                   f"DiD {mdc:+.2f} is DESCRIPTIVE ONLY (two-sided sign test p={p_sign:.2f}; not significant). "
+                   f"Do NOT read as deterrence or defiance.")
+    elif mdc>0.15:
+        verdict = f"acceleration — op tempo rises FASTER than the world after punitive action (defiance-consistent, NOT deterrence; sign test p={p_sign:.2f})"
+    elif mdc<-0.15:
+        verdict = f"deceleration — consistent with deterrence (sign test p={p_sign:.2f}; but see endogeneity caveat)"
+    else:
+        verdict = "≈ no net effect — targeted states track the global trend; no detectable deterrence"
     print(f"  reading (clustered): {verdict}")
 
 print("\n── CAVEATS (carry these into any claim) ──")

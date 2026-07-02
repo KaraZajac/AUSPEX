@@ -49,7 +49,7 @@ for e in events:
     y=yr(e.get("start_date") or e.get("disclosure_date"))
     if not y: continue
     is_meta = bool(its) and its<=META
-    aids=[a.get("actor_id") for a in (e.get("attributions") or []) if a.get("actor_id")]
+    aids=sorted({a.get("actor_id") for a in (e.get("attributions") or []) if a.get("actor_id")})  # distinct actors: an event is one op / one naming regardless of how many orgs attribute it
     if is_meta:
         indictment = ("law-enforcement" in its) or bool(e.get("operators_named"))
         for aid in aids: namings[aid].append((y, indictment))
@@ -60,7 +60,7 @@ for e in events:
 def cnt(years, lo, hi): return sum(1 for y in years if lo<=y<=hi)
 def cyr(lo,hi): return sum(corpus_ops.get(y,0) for y in range(lo,hi+1))
 
-MAXY = max(list(corpus_ops) + [y for ys in op_years.values() for y in ys])  # last year with data
+MAXY = max(list(corpus_ops) + [y for ys in op_years.values() for y in ys]) - 1  # last COMPLETE year (drop the partial/collection-lagged final year; see deterrence.py C4a)
 rows=[]   # (actor, T, indicted_first, preA, postA, did, named_at_peak)
 censored=0
 for aid, nlist in namings.items():
