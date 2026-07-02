@@ -1,41 +1,51 @@
 id: 2022-09/mstic-zinc-weaponizing-open-source
 name: MSTIC disclosure of ZINC weaponized open-source software campaign
-start_date: 2022-04-01  # MSTIC dates campaign onset to spring 2022
+start_date: 2022-04-01  # MSTIC: campaign observed "from late April to mid-September 2022"
 disclosure_date: 2022-09-29
-end_date: 2022-09-29
+end_date: 2022-09-15  # AUDIT 2026-07-01: campaign end per MSTIC ("mid-September 2022"); was conflated with disclosure_date
 incident_type:
   - intrusion
-  - supply-chain
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Microsoft Threat Intelligence disclosed a ZINC (Lazarus
-  core) campaign weaponizing multiple open-source software
-  packages — PuTTY, KiTTY, TightVNC, Sumatra PDF Reader,
-  muPDF/Subliminal Recording installer. Delivered via
-  LinkedIn / WhatsApp fake-recruiter pretext targeting
-  media, defense, and IT-services personnel across multiple
-  geographies. Documented the operational primitive that
-  subsequently supported the JumpCloud (June 2023) and
-  CyberLink (October 2023) full-fledged supply-chain
-  pivots.
+  Microsoft Threat Intelligence disclosed a ZINC campaign
+  that trojanized multiple open-source packages — PuTTY,
+  KiTTY, TightVNC, Sumatra PDF Reader, and a
+  muPDF/Subliminal Recording installer — and delivered them
+  via LinkedIn / WhatsApp fake-recruiter social engineering.
+  MSTIC observed activity against employees at organizations
+  in media, defense and aerospace, and IT services in the
+  US, UK, India, and Russia, and stated the actors had
+  "successfully compromised numerous organizations since
+  June 2022." Attributed with high confidence to ZINC
+  (Microsoft's pre-2023 name for the Lazarus core, later
+  retracked as Diamond Sleet), a North Korean state-
+  sponsored group.
 false_flag_risk: none
 summary: |
-  Mid-2022 documentation of the access primitive maturation.
-  Where the early-2022 Symantec chemical-sector disclosure
-  documented the LinkedIn fake-recruiter pretext at the
-  victim-selection stage, MSTIC's September 2022 disclosure
-  documents the next stage: the trojanized open-source
-  installer as the payload-delivery vehicle. This pairing —
-  fake recruiter pretext + trojanized open-source installer
-  — is the canonical 2022-2024 Lazarus/TraderTraitor
-  tradecraft chain and supports both the revenue-aggregation
-  (crypto-developer victims) and strategic-tech-collection
-  (defense / IT-services victims) pillars of the
-  8th-Congress defense plan.
+  MSTIC's 29 September 2022 disclosure documents ZINC
+  (Microsoft's pre-2023 name for the Lazarus core)
+  weaponizing legitimate open-source software — trojanized
+  builds of PuTTY, KiTTY, TightVNC, Sumatra PDF Reader, and
+  a muPDF/Subliminal Recording installer. From late April
+  2022 (weaponized-installer compromises from June 2022),
+  ZINC used fake LinkedIn recruiter profiles impersonating
+  technology, defense, and media-entertainment firms to
+  build trust with targets, then moved them to the encrypted
+  messaging app WhatsApp to deliver the trojanized
+  installers. MSTIC assessed ZINC's objectives as espionage,
+  data theft, financial gain, and network destruction. The
+  fake-recruiter pretext paired with a trojanized
+  open-source installer is a signature Lazarus access
+  primitive; the victim set here — media, defense/aerospace,
+  and IT-services personnel — maps to strategic-technology
+  collection rather than the crypto-revenue side of DPRK
+  cyber tasking.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-09-29
     attribution_source_id: microsoft/2022-09-29_zinc-weaponizing-open-source
@@ -49,16 +59,101 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Victim set (media, defense, IT-services) maps to
-      strategic-tech-collection pillar. Access primitive
-      subsequently re-used for revenue-aggregation
-      operations (JumpCloud, CyberLink).
+      MSTIC documents ZINC (Lazarus core) targeting media,
+      defense/aerospace, and IT-services personnel for
+      espionage and data theft. This victim profile —
+      defense and aerospace organizations plus their
+      IT-service providers — maps to the
+      strategic-technology-collection pillar of the
+      8th-Congress defense plan, which encodes DPRK
+      collection against defense contractors and aerospace
+      to underwrite the 13-system weapons program. The
+      source states ZINC's objectives (espionage, data
+      theft) but not the specific WMD/defense-plan purpose,
+      so the link is inferred rather than attested.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victims are media, defense and aerospace, and IT-services organizations (MSTIC), matching the strategic-tech-collection pillar's defense-contractor / aerospace / government scope."
+        - "MSTIC attributes the campaign with high confidence to a North Korean state-sponsored group (ZINC / Lazarus core) with espionage and data-theft objectives, consistent with state-directed technology collection."
+      ruled_out: "Revenue-aggregation pillar — this campaign's observed victims are espionage targets (media / defense / aerospace / IT services), not cryptocurrency or financial-sector victims, so the hard-currency revenue reading does not fit despite ZINC's broader financial motive."
 targets:
   - target_id: sectors/defense
     role: primary
+  - target_id: sectors/aerospace/defense
+    role: primary
   - target_id: sectors/ict/managed-services
+    role: primary
+  - target_id: sectors/media
     role: primary
 sources:
   - microsoft/2022-09-29_zinc-weaponizing-open-source
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs MSTIC "ZINC weaponizing open-source software" (2022-09-29),
+    raw snapshot captured + hashed (sha256 17103095…8324b20f, 312,985 bytes).
+    Real first-party article — NOT a phantom.
+
+    [a] FACTS: Trojanized open-source packages PuTTY, KiTTY, TightVNC, Sumatra
+    PDF Reader, muPDF/Subliminal Recording installer — all verbatim in source.
+    LinkedIn fake-recruiter pretext → WhatsApp delivery: "creating fake profiles
+    claiming to be recruiters … moving targets away from LinkedIn and to the
+    encrypted messaging app WhatsApp for the delivery of malware." Objectives:
+    "espionage, data theft, financial gain, and network destruction." Corrections:
+    (1) incident_type supply-chain → espionage — this source frames the op as
+    cyberespionage/data-theft via trojanized tooling delivered by social
+    engineering, NOT a compromise of a legitimate software supply chain (the
+    event's own prose reserved "full-fledged supply-chain" for the later
+    JumpCloud/CyberLink ops); intrusion kept. (2) Stripped the outcome_summary
+    forward-reference asserting this Sept-2022 report "documented the primitive
+    that supported JumpCloud (2023) / CyberLink (2023)" — not carriable by a
+    2022 source. (3) Stripped the summary's "revenue-aggregation (crypto-developer
+    victims)" claim — this campaign's victims are media/defense/aerospace/IT, no
+    crypto/financial victims appear in the source. (4) Rewrote summary/
+    outcome_summary to source-grounded facts incl. geographies (US, UK, India,
+    Russia) and campaign window.
+
+    [b] ATTRIBUTION: source says "MSTIC attributes this campaign with high
+    confidence to ZINC, a state-sponsored group based out of North Korea."
+    attributing_org=Microsoft Threat Intelligence ✓, confidence=high ✓,
+    auspex_assessment=concur ✓. Added attribution_level=named-actor: source
+    names a group (ZINC) + nation (North Korea) but NO service/unit (RGB not
+    mentioned by MSTIC). ZINC=Lazarus mapping is sound — actor record
+    kp/rgb/lazarus carries "ZINC" (Microsoft pre-2023) and "Diamond Sleet"
+    (post-April-2023) as equivalent aliases; the article itself states "ZINC is
+    now tracked as Diamond Sleet," reconciling the taxonomy retirement.
+
+    [c] DATES: source published_on=2022-09-29 ✓. start_date 2022-04-01 fits
+    MSTIC's "from late April … 2022" (comment corrected to quote the range).
+    Corrected end_date 2022-09-29 → 2022-09-15: it had been conflated with the
+    disclosure date; MSTIC bounds the campaign to "mid-September 2022."
+
+    [d] DOCTRINE: kp/8th-congress-defense-plan / strategic-tech-collection kept
+    at strongly_inferred (honest — source names espionage/data-theft objectives
+    and DPRK attribution but NOT the WMD/defense-plan goal, so NOT attested;
+    attesting_source_id stays null). Rewrote reasoning to source-grounded terms
+    and added inference_basis {signals[], ruled_out} — ruled out the
+    revenue-aggregation pillar because the observed victims are espionage
+    targets, not crypto/financial. attacker-rationale (default); actor-state kp
+    matches doctrine-state kp — no mismatch.
+
+    [e] ATTRIBUTION_LEVEL: set named-actor (see [b]).
+
+    [f] ACTOR_ID: kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml). No
+    actor-file edit. Note: THIS source only names "North Korea" (nation), not
+    the RGB — the kp/rgb service placement rests on the actor's own OFAC/DOJ/
+    MITRE sources per its audited record, not on this MSTIC blog.
+
+    TARGETS: expanded to match the source's enumerated victim industries —
+    added sectors/aerospace/defense and sectors/media alongside the existing
+    sectors/defense and sectors/ict/managed-services (all four FK-verified;
+    source: "media, defense and aerospace, and IT services").
+
+    SOURCE: promoted tier secondary → primary (MSTIC first-party original
+    investigation with its own telemetry/IOCs); snapshot + sha256 added.

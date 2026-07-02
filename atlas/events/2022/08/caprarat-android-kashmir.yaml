@@ -1,64 +1,161 @@
 id: 2022-08/caprarat-android-kashmir
-name: SentinelLABS / ESET document CapraRAT Android implant for Kashmir-area targeting
-start_date: 2022-04-01
-disclosure_date: 2022-08-04
-end_date: 2022-08-04
+name: ESET documents Transparent Tribe (APT36) CapraRAT Android delivery via trojanized MeetsApp/MeetUp messaging apps
+start_date: 2022-07-01
+disclosure_date: 2023-03-07
+end_date: null
 incident_type:
   - intrusion
+  - surveillance
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  SentinelLABS and ESET independently documented Transparent
-  Tribe's expansion onto Android via the CapraRAT implant
-  family — initially distributed through trojanized YouTube and
-  app-clone delivery in the spring and summer of 2022. CapraRAT
-  is an Android port of the AndroRAT framework adapted by APT36
-  for Kashmir-area civil-society and Indian military mobile
-  targeting. Subsequent SentinelLABS reporting (September 2023)
-  documented use of cloned dating apps for CapraRAT delivery
-  against Indian military personnel.
+  ESET (WeLiveSecurity) documented a Transparent Tribe / APT36 campaign
+  distributing the CapraRAT Android backdoor through two trojanized
+  "secure" messaging/calling apps — branded MeetsApp and MeetUp — served
+  from attacker-run websites posing as official distribution pages.
+  Victims were most likely lured via a honey-trap romance scam and
+  convinced to install the supposedly more-secure apps manually (the
+  apps were not on Google Play). CapraRAT is a modified version of the
+  open-source AndroRAT that the group adopted for Android in 2021; on
+  command it exfiltrates call logs, contacts, SMS messages, recorded
+  phone calls and surrounding audio, screenshots, photos, device
+  location, a file listing / arbitrary files, running apps, and other
+  apps' notifications. ESET geolocated over 150 victims across India,
+  Pakistan, Russia, Oman, and Egypt, presumed to have a military or
+  political orientation, and described the campaign as narrowly targeted.
+  It was most likely active since July 2022 (the two delivery domains
+  were registered on 9 and 25 July 2022).
 false_flag_risk: none
 summary: |
-  Operationally significant cross-platform expansion for
-  Transparent Tribe and the most consequential Pakistani-
-  aligned mobile-tooling development of the period. The
-  Kashmir civil-society and Indian-military-mobile victim sets
-  span both the military-collection and Kashmir-political
-  doctrinal pillars. CapraRAT continues to be observed
-  operationally through 2024-2025.
+  A consequential mobile-tooling development for Transparent Tribe: a
+  honey-trap-driven CapraRAT distribution campaign delivered through
+  fake "secure" Android messaging/calling apps rather than the cluster's
+  usual spear-phishing maldocs, documenting APT36's continued Android
+  expansion against Indian and Pakistani military/political personnel.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
-    attributing_org: SentinelLABS (Tom Hegel)
+    attributing_org: ESET (Lukáš Štefanko)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-08-04
-    attribution_source_id: sentinellabs/2022-08-04_caprarat-android
+    attribution_date: 2023-03-07
+    attribution_source_id: eset/2023-03-07_love-scam-espionage-transparent-tribe
+    notes: "ESET names 'Transparent Tribe, also known as APT36' as a known operator of CapraRAT (named-actor) and 'strongly believe[s]' both trojanized apps were built by the same actor. It does NOT name Pakistan or any Pakistani service (e.g. ISI); the pk/ nexus derives from the actor record's other cited sources, not this report."
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian-military mobile targeting via CapraRAT fits the
-      military-collection pillar; mobile reach extends the
-      cluster's signal coverage.
-    contested: false
-    analyst: claude
-  - doctrine_id: pk/asymmetric-posture-india
-    pillar_id: pk/asymmetric-posture-india/kashmir-political
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Kashmir-area civil-society targeting via CapraRAT fits
-      the Kashmir-political pillar.
+      ESET assesses the campaign targeted over 150 Android users
+      "presumably with a military or political orientation," mostly in
+      India and Pakistan, using CapraRAT surveillance tooling delivered
+      through honey-trap social engineering. Sustained mobile collection
+      against Indian military and political personnel is the
+      military-collection pillar of Pakistan's asymmetric posture toward
+      India.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET: victims are 'presumably with a military or political orientation', targeting 'mostly Indian and Pakistani Android users'"
+        - "CapraRAT's exfiltration set (call logs, SMS, recorded calls/audio, screenshots, location, files) is intelligence-collection tooling, not revenue-motivated"
+      ruled_out: "kashmir-political — ESET names no Kashmir nexus (zero mentions) and the victim geography spans India, Pakistan, Russia, Oman and Egypt, so a Kashmir-specific political reading is unsupported by this source"
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/indian-military-mobile-users
-    country: in
+  - target_id: sectors/defense
     role: primary
-  - target_id: orgs/kashmir-civil-society
-    country: in
+  - target_id: sectors/government
     role: primary
 sources:
-  - sentinellabs/2022-08-04_caprarat-android
+  - eset/2023-03-07_love-scam-espionage-transparent-tribe
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    PHANTOM RE-SOURCED (badrabbit model). The event previously rested
+    entirely on sentinellabs/2022-08-04_caprarat-android — a NONEXISTENT
+    SentinelLabs post: its URL (https://www.sentinelone.com/labs/
+    caprarat-android-implant-targets-indian-government-and-military/)
+    returns HTTP 404 (re-confirmed 2026-07-01), the slug is cribbed from a
+    Feb-2022 TheHackerNews headline, and the source record's own title was
+    a mangle of an unrelated SentinelLabs report ("Russian Organizations
+    Investigated by APT36"). SentinelLabs published NO CapraRAT report in
+    Aug 2022 — its CapraRAT work is 2023-09-13 (CapraTube) and 2024-07
+    (CapraTube Remix), both of which anchor OTHER existing events. The
+    "SentinelLABS / ESET ... 2022-08-04 ... Kashmir-area" framing was
+    unsupported on every axis (no such joint Aug-2022 disclosure; no
+    Kashmir content anywhere). Re-pointed the single citation to the
+    GENUINE primary that documents a real 2022 CapraRAT campaign: ESET
+    (WeLiveSecurity) "Love scam or espionage? Transparent Tribe lures
+    Indian and Pakistani officials" (2023-03-07). Raw snapshot captured +
+    hashed: sha256 9571dd2b…127b5d19, 88,041 bytes.
+    [a] FACTS — rewritten to ESET's verbatim content: "Transparent Tribe,
+    also known as APT36, is a cyberespionage group known to use CapraRAT";
+    "In 2021, the group started to target the Android platform, using a
+    modified version of an open-source RAT named AndroRAT" (confirms the
+    AndroRAT-fork claim); delivery via "trojanized secure messaging and
+    calling apps branded as MeetsApp and MeetUp" served from attacker
+    websites, manual sideload (not Google Play); "Victims were probably
+    targeted through a honey-trap romance scam"; capability list (call
+    logs, contacts, SMS, recorded phone calls, surrounding audio,
+    screenshots, photos, device location, file listing/arbitrary files,
+    running apps, notifications) all verbatim; "over 150 victims in India,
+    Pakistan, Russia, Oman, and Egypt"; "presumably with a military or
+    political orientation"; "Most likely active since July 2022" (domains
+    registered July 9 & 25, 2022). Removed the fabricated CapraRAT-was-
+    disguised-as-YouTube / "app-clone" / "spring and summer 2022" prose and
+    the "Subsequent SentinelLABS Sept-2023" cross-reference (that is a
+    different event, 2023-09/caprarat-dating-apps).
+    [b] ATTRIBUTION — ESET names Transparent Tribe / APT36 as a known
+    CapraRAT operator; attributing_org corrected SentinelLABS(Tom Hegel)
+    → ESET (Lukáš Štefanko, the report author), attribution_date
+    2022-08-04 → 2023-03-07. Kept confidence high (stated as known-actor
+    fact + "strongly believe" same-actor for both apps), auspex concur.
+    ESET does NOT name Pakistan/ISI → pk nexus is from the actor record's
+    other sources (added note); no over-attestation.
+    [c] DATES — source published_on 2023-03-07 (matches "Lukas Stefanko 07
+    Mar 2023" byline). start_date 2022-04-01 → 2022-07-01 (ESET "most
+    likely active since July 2022"; domains 9/25 Jul 2022). disclosure_date
+    2022-08-04 → 2023-03-07. end_date set null. NB: the event id/path stays
+    2022-08 (ids are stable, never renamed) though the disclosure is now
+    2023-03 — see FLAG.
+    [d] DOCTRINE_LINKS — DROPPED the kashmir-political link (unsupported:
+    "Kashmir" appears zero times in ESET; geography spans 5 countries).
+    Kept military-collection at strongly_inferred (honest — ESET states
+    targeting/behaviour, not an explicit strategic goal; no attested);
+    rewrote reasoning to ESET wording and added inference_basis {signals[],
+    ruled_out=kashmir-political}. No attested link → no attesting_source_id.
+    [e] ATTRIBUTION_LEVEL — set named-actor (ESET names the group; no unit;
+    ESET does not itself assert a nation).
+    [f] ACTOR_ID — pk/unscoped/transparent-tribe resolves to
+    atlas/actors/pk/transparent-tribe.yaml (internal id = pk/unscoped/
+    transparent-tribe) ✓. No actor edit.
+    TARGETS — both prior targets were DANGLING FKs (orgs/kashmir-civil-
+    society and orgs/indian-military-mobile-users — neither registry file
+    exists). Replaced with resolvable sector targets sectors/defense +
+    sectors/government (matching ESET "military or political orientation").
+    FLAGS for orchestrator/Kara:
+      (1) MERGE/OVERLAP: this event now describes the same actor + malware
+          (CapraRAT/AndroRAT) + trojanized-Android-app social-engineering
+          vector + 2022 period as 2023-09/caprarat-dating-apps (SentinelLabs
+          MMM dating apps) and abuts 2022-01/trend-micro-earth-karkaddan-
+          arsenal (first CapraRAT documentation). It is DISTINCT (different
+          vendor + different app family: MeetsApp/MeetUp messaging vs MMM
+          dating), so retained as a stand-alone ESET-anchored event, but
+          Kara should decide whether to merge these CapraRAT-2022 events.
+      (2) The event id/slug still reads "caprarat-android-kashmir" and lives
+          under 2022/08, but the accurate disclosure is 2023-03-07 and there
+          is no Kashmir nexus — id kept per the stable-id rule; consider a
+          human rename or note.
+      (3) PHANTOM still live elsewhere: sentinellabs/2022-08-04_caprarat-
+          android is ALSO cited by atlas/events/2019/08/apt36-post-article-
+          370-kashmir-tempo.yaml (out of my remit) — that event needs the
+          same phantom removal/re-source. I annotated the phantom source
+          record's notes accordingly but did NOT delete it.
+      (4) DANGLING FK: orgs/kashmir-civil-society (removed here) is still
+          referenced by atlas/events/2019/08/apt36-post-article-370-kashmir-
+          tempo.yaml with no registry file — orchestrator should create the
+          target or clean that event.

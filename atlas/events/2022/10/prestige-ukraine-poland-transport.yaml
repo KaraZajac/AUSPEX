@@ -4,40 +4,61 @@ start_date: 2022-10-11
 disclosure_date: 2022-10-14
 end_date: 2022-10-11
 incident_type:
+  - ransomware
   - destructive
   - disruption
 initial_vector: valid-creds
 outcome_summary: |
-  Sandworm deployed a previously unknown ransomware family Microsoft
-  labeled "Prestige" against transportation and logistics
-  organisations in Ukraine and Poland on 11 October 2022. Wave of
-  deployments completed in approximately one hour using highly
-  privileged credentials, encrypting victim systems and disrupting
-  cross-border wartime logistics operations. First publicly
-  documented Russian destructive operation targeting NATO-member
-  territory infrastructure since the invasion began.
+  Sandworm (tracked by Microsoft as IRIDIUM) deployed a previously
+  unidentified ransomware family Microsoft labeled "Prestige"
+  against transportation and logistics organisations in Ukraine and
+  Poland on 11 October 2022. Deployments across all victims occurred
+  within approximately one hour, using already-acquired highly
+  privileged (Domain Admin) credentials, AES-encrypting victim
+  files. Microsoft assessed the campaign may signal increased risk
+  to organisations directly supplying or transporting humanitarian
+  or military assistance to Ukraine, and more broadly to Eastern
+  European organisations seen by the Russian state as supporting the
+  war.
 false_flag_risk: none
 summary: |
   Microsoft Threat Intelligence (MSTIC) disclosed the campaign on
-  14 October 2022, attributing it to the actor Microsoft then
-  tracked as IRIDIUM — equivalent to Sandworm / GRU Unit 74455.
-  Prestige is a single-file C++ ransomware that uses CryptoPP AES
-  for file encryption and was deployed using either Default Domain
-  Policy, RemoteExec via WMI, or Impacket WMIexec; deployment relied
-  on pre-positioned domain-admin credentials rather than initial
-  compromise on the day of impact. Polish targeting marked a
-  doctrinal step — the first publicly attested Sandworm destructive
-  action against a NATO member-state's territory in the
-  invasion-support window, framing logistics organisations
-  facilitating Ukraine aid as part of the same target set as
-  Ukrainian organisations.
+  14 October 2022. The initial disclosure did NOT attribute the
+  activity — it tracked it as the unattributed cluster DEV-0960; in
+  a 10 November 2022 update MSTIC assessed that IRIDIUM — a
+  Russia-based actor Microsoft describes as publicly overlapping
+  with Sandworm (AUSPEX: GRU Unit 74455) — "very likely" executed
+  the attack. Prestige is a C++ ransomware that uses the CryptoPP
+  library for AES file encryption and was deployed via one of three
+  methods: Impacket-created scheduled tasks, an encoded PowerShell
+  command, or a Default Domain Group Policy Object. Microsoft did
+  not identify the initial access vector but noted the attacker had,
+  in observed deployments, already obtained highly privileged
+  credentials, possibly from a prior compromise. Polish targeting is
+  notable as a Russian destructive-style action against the
+  territory of a NATO member during the invasion window; Microsoft
+  framed the campaign as extending risk to logistics organisations
+  supplying Ukraine and to Eastern European entities seen as
+  supporting the war.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: Microsoft MSTIC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-10-14
+    attribution_date: 2022-11-10
     attribution_source_id: microsoft/2022-10-14_prestige-ukraine-poland
+    notes: |
+      The 14 Oct 2022 initial disclosure did NOT attribute the campaign;
+      MSTIC tracked it as the unattributed development cluster DEV-0960.
+      The IRIDIUM attribution was added in the blog's 10 Nov 2022 update
+      ("MSTIC has updated this blog to document assessed attribution of
+      DEV-0960 as IRIDIUM"), assessed "very likely" (= high). Microsoft
+      named IRIDIUM — "a Russia-based threat actor ... publicly overlapping
+      with Sandworm" — a named actor; it did NOT name GRU Unit 74455, so
+      attribution_level is named-actor (the unit resolution is AUSPEX's,
+      corroborated elsewhere). Apr 2023: Microsoft renamed IRIDIUM to
+      Seashell Blizzard.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
@@ -48,6 +69,9 @@ doctrine_links:
       campaign, extended into the Western logistics chain that
       supplies Ukrainian operations.
     attesting_source_id: microsoft/2022-10-14_prestige-ukraine-poland
+    inference_basis:
+      source_id: microsoft/2022-10-14_prestige-ukraine-poland
+      source_quote: "IRIDIUM ... has been consistently active in the war in Ukraine and has been linked to destructive attacks since the start of the war ... The Prestige campaign may highlight a measured shift in IRIDIUM's destructive attack calculus, signaling increased risk to organizations directly supplying or transporting humanitarian or military assistance to Ukraine."
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
@@ -55,9 +79,11 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      First publicly documented Sandworm destructive operation on
-      NATO territory during the invasion window — the explicit
-      operational expression of the support-interdiction pillar.
+      A Russian destructive-style operation reaching the territory of
+      a NATO member (Poland) during the invasion window; Microsoft
+      framed it as signaling increased risk to organisations supplying
+      or transporting assistance to Ukraine — the operational
+      expression of the support-interdiction pillar.
     attesting_source_id: microsoft/2022-10-14_prestige-ukraine-poland
     contested: false
     analyst: claude
@@ -74,11 +100,69 @@ doctrine_links:
     contested: false
     analyst: claude
 targets:
+  - target_id: sectors/transport
+    role: primary
   - target_id: sectors/transport/logistics
     role: primary
-  - target_id: sectors/transport/rail
-    role: primary
-  - target_id: orgs/ukraine-government
-    role: collateral
 sources:
   - microsoft/2022-10-14_prestige-ukraine-poland
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs Microsoft MSTIC "New 'Prestige' ransomware impacts
+    organizations in Ukraine and Poland" (2022-10-14, updated). Raw
+    snapshot atlas/sources/raw/microsoft__2022-10-14_prestige-ukraine-poland.html,
+    sha256 7fca6f44…219cdb83, 306,312 bytes; extracted text 18,238 chars.
+    [a] FACTS ✓ verbatim: "novel ransomware campaign targeting organizations
+    in the transportation and related logistics industries in Ukraine and
+    Poland"; "deployed on October 11"; "within an hour of each other across
+    all victims"; "the attacker had already gained access to highly privileged
+    credentials, like Domain Admin"; "Prestige leverages the CryptoPP C++
+    library to AES-encrypt each eligible file"; three deployment methods
+    (Impacket scheduled task / encoded PowerShell / Default Domain GPO);
+    remote-exec utilities RemoteExec + Impacket WMIexec. CORRECTIONS:
+    (1) removed the un-sourced superlative "First publicly documented Russian
+    destructive operation targeting NATO-member territory" from outcome_summary
+    AND summary — the source never claims a "first"; it says only that the
+    campaign "may represent an increased risk to organizations in Eastern
+    Europe ... considered by the Russian state to be providing support relating
+    to the war." Reframed to the sourced "notable ... territory of a NATO
+    member." Softened the same "first" claim in the nato-ultimatum reasoning.
+    (2) Dropped "single-file" (not in source). (3) initial_vector kept
+    valid-creds but flagged: source states "Initial access vector has not been
+    identified at this time, but ... the attacker might have already had
+    existing access to the highly privileged credentials from a prior
+    compromise" — valid-creds reflects the observed deployment mechanism, not a
+    confirmed initial vector. (4) incident_type: added `ransomware` (source
+    calls it a "ransomware campaign"/"ransomware-style attack" throughout);
+    kept destructive (Microsoft's "destructive attack calculus" / IRIDIUM
+    "destructive attacks") + disruption.
+    [b][c][e] ATTRIBUTION — KEY FIX: attribution_date 2022-10-14 → 2022-11-10.
+    The 14 Oct initial blog did NOT attribute; it tracked the activity as the
+    unattributed cluster DEV-0960. The IRIDIUM attribution is a documented
+    10 Nov 2022 update: "MSTIC has updated this blog to document assessed
+    attribution of DEV-0960 as IRIDIUM" / "As of November 2022, MSTIC assesses
+    that IRIDIUM very likely executed the Prestige ransomware-style attack."
+    Confidence high honest ("very likely"). Added attribution_level=named-actor:
+    Microsoft named IRIDIUM, "publicly overlapping with Sandworm" — a named
+    actor; it did NOT name GRU Unit 74455 (the unit is AUSPEX's resolution).
+    Added actor `notes` recording DEV-0960→IRIDIUM→(Apr-2023)Seashell Blizzard.
+    [d] DOCTRINE — russkiy-mir/ukraine-theater kept `attested`: source states
+    the strategic purpose in substance (war-in-Ukraine destructive campaign
+    targeting orgs supplying/transporting assistance to Ukraine); added
+    inference_basis.source_quote. nato-ultimatum/ukraine-support-interdiction
+    and sanctions-response/aid-state-targeting kept strongly_inferred (honest;
+    the support-interdiction goal is source-stated and could arguably support
+    attested, left conservative). Poland-as-aid-corridor for the third link is
+    analyst context (attesting_source_id null), not source-carried.
+    TARGETS: removed sectors/transport/rail (source names "transportation and
+    related logistics" generically, not rail — anti-inflation) → replaced with
+    top-level sectors/transport; removed orgs/ukraine-government collateral
+    (source documents only transportation/logistics orgs, not government).
+    [f] ACTOR ru/gru/74455/sandworm resolves → atlas/actors/ru/sandworm.yaml
+    (id ru/gru/74455/sandworm, IRIDIUM + Seashell Blizzard both listed as
+    aliases). No actor defects. Dates start/disclosure/end (2022-10-11 /
+    2022-10-14 / 2022-10-11) confirmed correct.

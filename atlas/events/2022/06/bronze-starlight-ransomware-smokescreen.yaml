@@ -9,44 +9,81 @@ incident_type:
   - ransomware
 initial_vector: n-day
 outcome_summary: |
-  BRONZE STARLIGHT / DEV-0401 used LockFile, AtomSilo, Rook,
-  Night Sky, and Pandora ransomware as smokescreen / cover for
-  state-aligned IP theft. ~15 of 21 known victims align with
-  state-tasked espionage interest (pharma, electronics design,
-  aerospace and defense — including a major Indian conglomerate
-  — and media).
+  BRONZE STARLIGHT / DEV-0401 deployed LockFile, AtomSilo, Rook,
+  Night Sky, and Pandora post-intrusion ransomware as a likely
+  smokescreen / cover for espionage and IP theft rather than for
+  financial gain. As of mid-April 2022, 21 victims were listed
+  across the AtomSilo/Rook/Night Sky/Pandora leak sites; Secureworks
+  CTU estimated ~75% (~16 of 21) would be of interest to Chinese
+  government-sponsored groups focused on espionage, based on victim
+  geography and industry (pharmaceuticals in Brazil and the U.S., a
+  U.S. media organization with China/Hong Kong offices, electronic
+  component designers/manufacturers in Lithuania and Japan, a U.S.
+  law firm, and the aerospace-and-defense division of an Indian
+  conglomerate). The five non-espionage-interest victims were real
+  estate, small financial, and interior-design firms.
 false_flag_risk: suspected  # ransomware as smokescreen for espionage
 summary: |
-  Secureworks documented the cluster's "ransomware as cover"
-  pattern in a June 2022 threat profile.
+  Secureworks Counter Threat Unit documented BRONZE STARLIGHT's
+  "ransomware as cover" pattern in a June 2022 technical report
+  ("BRONZE STARLIGHT Ransomware Operations Use HUI Loader") and a
+  companion threat profile: short-lived ransomware families deployed
+  post-intrusion, with victimology and access to malware used by
+  government-sponsored groups suggesting IP theft / cyberespionage
+  as the true motive. CTU assesses with MODERATE confidence that the
+  group is located in China (based on tradecraft — HUI Loader, PlugX);
+  no Chinese service (MSS/PLA) is named.
 attributions:
   - actor_id: cn/unscoped/bronze-starlight
     attributing_org: Secureworks CTU
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-06-23
     attribution_source_id: secureworks/bronze-starlight-profile
+    notes: "AUDIT 2026-07-01: confidence DOWNGRADED high->moderate. Secureworks CTU assesses the China location with explicit MODERATE confidence ('CTU researchers assess with moderate confidence that BRONZE STARLIGHT is located in China based on observed tradecraft'); the smokescreen/espionage motive is stated as plausible ('It is plausible that BRONZE STARLIGHT deploys ransomware as a smokescreen rather than for financial gain'). attribution_level=named-actor: a named China-nexus cluster (BRONZE STARLIGHT), NOT named-unit — the HUI Loader report associates BRONZE RIVERSIDE (APT10) with the MSS but does NOT place BRONZE STARLIGHT under any Chinese service (hence actor cn/unscoped)."
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Victim sectors (pharma, electronics design, aerospace, defense)
-      align with multiple MIC2025 pillars; Secureworks framing of
-      ransomware-as-cover supports espionage-not-criminal interpretation.
+      Secureworks CTU explicitly rules out financial gain as the likely
+      motive and frames the operation as IP theft / cyberespionage on
+      behalf of Chinese government-sponsored interests. The named victim
+      sectors — pharmaceuticals, electronic component design/manufacture,
+      and aerospace & defense — map directly onto Made in China 2025
+      priority industries (biomedicine, next-gen IT/electronics, aerospace
+      equipment), giving one dominant strategic reading (industrial-IP
+      acquisition to advance indigenous priority sectors) once the criminal-
+      profit reading is set aside. Not attested: no cited source names the
+      MIC2025 goal in substance.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Secureworks CTU: '~75% [of 21 victims] would be of interest to Chinese government-sponsored groups focused on espionage', naming pharma, electronics component design, and aerospace/defense victims."
+        - "CTU assesses the smokescreen motive is 'intellectual property theft or cyberespionage rather than financial gain'."
+        - "Victim industry set overlaps MIC2025 priority sectors (biomedicine/pharma, next-gen IT/electronics, aerospace)."
+      ruled_out: "Purely criminal ransomware-for-profit — Secureworks explicitly assesses the ransomware is a smokescreen 'rather than for financial gain', and the short-lived, one-per-family leak-site pattern is inconsistent with a sustained profit operation."
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      MCF-aligned dual-use research collection across the pharma
-      and aerospace targets.
+      The aerospace-and-defense and electronics-component victims are
+      consistent with Military-Civil Fusion dual-use technology
+      collection, but no cited source states a military-modernization
+      purpose, and the pharma/media victims fit a broader industrial-
+      espionage reading (MIC2025) at least as well — so more than one
+      strategic reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MCF dual-use collection: the aerospace/defense division of an Indian conglomerate and the electronic-component designers are militarily-relevant technology targets consistent with military-civil fusion tasking."
+        - "General MIC2025 industrial-IP acquisition: the same targets plus pharma and media read as broad priority-sector IP theft with no specific military end-use established by any cited source."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -57,5 +94,85 @@ targets:
     role: primary
   - target_id: sectors/aerospace/defense
     role: primary
+  - target_id: sectors/media
+    role: primary
 sources:
+  - secureworks/2022-06-23_bronze-starlight-ransomware-operations-use-hui-loader
   - secureworks/bronze-starlight-profile
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCE path (badrabbit model). The originally-cited source
+    (secureworks/bronze-starlight-profile) is a REAL Secureworks CTU
+    threat profile, NOT a phantom — its raw snapshot was already on disk
+    (sha256 6068979b…caf4be76, 357,252 B) and re-verified this audit. It
+    supports the core thesis but is a generic profile that does NOT carry
+    the load-bearing victimology (21 victims, ~75% espionage-interest,
+    specific sectors). Those claims come from the companion CTU technical
+    report "BRONZE STARLIGHT Ransomware Operations Use HUI Loader"
+    (2022-06-23), which was uncited. ADDED that report as a new primary
+    source (secureworks/2022-06-23_bronze-starlight-ransomware-operations-use-hui-loader,
+    live-fetched 2026-07-01 → redirects to sophos.com, HTTP 200,
+    JSON-LD datePublished 2022-06-23; snapshot sha256 a7cb7247…a33820e4,
+    701,456 B).
+
+    [a] FACTS — now all source-carried. HUI report verbatim: "As of
+    mid-April, a total of 21 victims had been listed across the AtomSilo,
+    Rook, Night Sky, and Pandora leak sites. CTU researchers estimate
+    that approximately 75% would be of interest to Chinese government-
+    sponsored groups focused on espionage ... The victims include
+    pharmaceutical companies in Brazil and the U.S., a U.S.-based media
+    organization with offices in China and Hong Kong, electronic
+    component designers and manufacturers in Lithuania and Japan, a law
+    firm in the U.S., and an aerospace and defense division of an Indian
+    conglomerate. The five victims that were not likely targeted for
+    espionage include two real estate companies ... two small financial
+    institutions ... and a small interior design company." CORRECTION:
+    outcome_summary said "~15 of 21"; the source gives ~75% and names 5
+    non-espionage victims (21−5 = 16) → corrected to "~75% (~16 of 21)".
+    Families "LockFile, AtomSilo, Rook, Night Sky, and Pandora post-
+    intrusion ransomware" ✓ (profile Tools list corroborates). LockBit
+    was NOT asserted in the event and is correctly absent — CTU states a
+    third-party LockBit link has "not enough evidence ... to validate".
+    Smokescreen thesis ✓: "main motivation may be intellectual property
+    theft or cyberespionage rather than financial gain. The ransomware
+    could distract incident responders ... and reduce the likelihood of
+    attributing the malicious activity to a government-sponsored Chinese
+    threat group." Added sectors/media target (U.S. media victim).
+
+    [b] ATTRIBUTION — CORRECTION: attributing_org_confidence DOWNGRADED
+    high→moderate. The profile states "CTU researchers assess with
+    moderate confidence that BRONZE STARLIGHT is located in China based
+    on observed tradecraft, including the use of HUI Loader and PlugX".
+    The event previously over-attested. Added attribution_level=named-actor
+    (named China-nexus cluster; no service). Kept auspex_assessment=concur.
+
+    [c] DATES — both CTU items published 2022-06-23 (JSON-LD verified on
+    the HUI report); disclosure_date 2022-06-23 ✓. start_date 2021-06-01
+    matches profile "active since mid 2021". RESIDUAL: end_date 2022-12-31
+    is an editorial bound — the cited sources document activity through
+    mid-April 2022 only; no cited source establishes end-2022. Left as-is
+    (group remained active) but flagged as not directly source-carried.
+
+    [d] DOCTRINE_LINKS — no attested links (both attesting_source_id null,
+    correct — no source names the MIC2025/MCF goal in substance). Kept
+    cn/mic2025 strongly_inferred (victim sectors map to MIC2025 priority
+    industries; criminal-profit reading ruled out by CTU's own "rather
+    than financial gain"); added inference_basis.signals + ruled_out.
+    DOWNGRADED cn/mcf strongly_inferred→plausible (dual-use military
+    reading survives alongside the broader MIC2025 industrial reading;
+    no source states a military end-use); added inference_basis.alternatives.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+
+    [f] ACTOR_ID — cn/unscoped/bronze-starlight resolves to
+    atlas/actors/cn/bronze-starlight.yaml (demoted from cn/mss on
+    2026-06-24; this audit confirms the demotion — HUI report places the
+    MSS tie on BRONZE RIVERSIDE/APT10, NOT on BRONZE STARLIGHT). No actor
+    edit needed. Minor FLAG: the actor's ttp_summary lists "LockBit-clone
+    variants" which the cited Secureworks report explicitly declines to
+    validate — orchestrator may wish to source or soften that in the
+    actor file.

@@ -1,49 +1,130 @@
 id: 2022-08/morphisec-donot-yty-framework-refresh
 name: Morphisec documents refreshed DoNot Team yty Windows framework
-start_date: 2022-03-01
-disclosure_date: 2022-08-04
+start_date: 2022-07-01
+disclosure_date: 2022-08-11
 end_date: 2022-07-31
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Morphisec published "APT-C-35 — New Windows Framework Revealed,"
-  documenting a refresh of the DoNot Team / yty modular Windows
-  toolchain. The post detailed updated loaders, droppers, and
-  C2 infrastructure observed in operations through mid-2022
-  against Pakistani and Bangladeshi government targets,
-  alongside continued South Asian civil-society victims. The
-  refresh was operationally minor (compatibility, evasion
-  updates) rather than architecturally new.
+  Morphisec Labs published "APT-C-35: New Windows Framework
+  Revealed" (in-body heading "APT-C-35 Gets a New Upgrade"),
+  documenting updates to the DoNot Team / yty (a.k.a. Jaca)
+  modular Windows framework. The post details the shellcode-loader
+  delivery chain (RTF remote-template injection -> Office macros ->
+  staged shellcode with an AV-driver / expiry-date evasion check),
+  a new DLL variant of the reverse-shell module, and an upgraded
+  browser stealer that now offloads Chrome/Firefox credential and
+  history theft to four separate helper executables. C2 addresses
+  are resolved via a Google Drive-hosted encrypted document.
+  Morphisec attributes the samples to DoNot / APT-C-35 and states
+  the latest spear-phishing campaign "targeted government
+  departments, including Pakistan's defense sector." The modular
+  architecture is unchanged; the update adds/refactors modules
+  rather than re-architecting the framework.
 false_flag_risk: none
 summary: |
   Continuity-tradecraft event for the DoNot Team's Windows
-  collection lane. yty refreshes appear roughly annually in
-  vendor reporting; the 2022 Morphisec post is the canonical
-  mid-2022 reference. Notable for not surfacing meaningful
-  Android tooling, which Amnesty had documented under the
-  Innefu / DoNot framing the prior year.
+  collection lane. The 2022 Morphisec Labs post is a canonical
+  mid-2022 reference for the yty framework and its evasion and
+  browser-stealer upgrades. NB: this source documents the Windows
+  framework only — it names no Indian intelligence service and
+  makes no Android / Innefu-Labs claim (that contractor link is a
+  separate 2021 Amnesty finding and is deliberately NOT imported
+  here).
 attributions:
   - actor_id: in/unscoped/donot-team
     attributing_org: Morphisec
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-08-04
+    attribution_date: 2022-08-11
     attribution_source_id: morphisec/2022-08_donot-yty-framework-refresh
+    notes: |
+      Morphisec names the DoNot Team / APT-C-35 named actor without
+      hedging (named-actor level). It does NOT name a nation-sponsor
+      or Indian service; India is mentioned only among the group's
+      target countries. The India-nexus is a nation-level assessment
+      carried by the actor record's other sources, not this post.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pakistani government and military victim set is canonical
-      for the Pakistan-military pillar.
+      Morphisec states the latest DoNot spear-phishing campaign
+      "targeted government departments, including Pakistan's defense
+      sector" — squarely the victim set the Pakistan-military pillar
+      encodes (the pillar text names DoNot Team as a converging
+      actor). Morphisec assigns no strategic motive, so this is
+      strongly_inferred, not attested.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Source names the current-campaign target as Pakistani government departments incl. the defense sector."
+        - "DoNot Team is an India-aligned espionage actor; India->Pakistan collection is its canonical mission."
+        - "Pillar text explicitly lists DoNot Team as converging on the Pakistani military/foreign-ministry victim set."
+      ruled_out: "in/regional-collection-pakistan-china/china-collection — no PRC/China target appears in this campaign, so the China-collection pillar does not fit."
 targets:
-  - target_id: orgs/pakistani-government
+  - target_id: orgs/pakistani-military
     country: pk
     role: primary
 sources:
   - morphisec/2022-08_donot-yty-framework-refresh
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    Audited vs the RAW Morphisec Labs post "APT-C-35: New Windows Framework
+    Revealed" (redirects to www.morphisec.com/blog/apt-c-35-new-windows-framework-revealed/;
+    sha256 64260420…a1e8d6fe, 842,730 bytes). NOT a phantom — real first-party
+    article confirmed by page <title> and body byline.
+    [a] FACTS: Corrected/tightened outcome_summary to what the source carries. RAW
+    supports: DoNot Team a.k.a. APT-C-35, active "since at least 2016"; Windows
+    framework "a.k.a. YTY, Jaca"; initial access "spear phishing emails" using RTF +
+    "remote template injection" + Office macros; shellcode loader chain with an
+    AV-driver (.sys) + expiry-date evasion check; main DLL beacon; Google Drive-hosted
+    encrypted C2 address; upgraded browser stealer that "uses four additional
+    executables" for Chrome/Firefox theft; reverse shell "recompile[d] … as a DLL".
+    STRIPPED unsupported claims: (1) "droppers" (not detailed); (2) "Bangladeshi
+    government targets" for THIS campaign — Bangladesh appears only in the group's
+    general target-country list; the current campaign's named target is "government
+    departments, including Pakistan's defense sector"; (3) "continued South Asian
+    civil-society victims" — the source lists only "government and military
+    organizations, ministries of foreign affairs, and embassies," no civil society;
+    (4) the summary's Amnesty/Innefu/Android sentence — per audit NB the Innefu-Labs
+    contractor link is a separate 2021 Amnesty finding and this Morphisec post says
+    nothing of Android or Innefu; replaced with an explicit non-import note.
+    [b] ATTRIBUTION: Morphisec names the DoNot Team / APT-C-35 named actor flatly, no
+    hedge. Added attribution_level: named-actor; kept attributing_org_confidence high
+    (asserted as established). Source names NO nation-sponsor / Indian service —
+    added a note recording that the India-nexus is nation-level from the actor
+    record's OTHER sources, not this post. auspex_assessment concur retained.
+    [c] DATES: source byline is "11 Aug 2022" — corrected disclosure_date and
+    attribution_date 2022-08-04 -> 2022-08-11, and source published_on likewise.
+    start_date reset 2022-03-01 -> 2022-07-01 and end_date kept 2022-07-31: the source
+    gives no campaign start; the only dated artifacts are the embedded AV-expiry config
+    values (2022-07-11/15/17/19/23) plus the 11-Aug publication, i.e. a mid-2022
+    window. Dates are best-estimate, not source-stated — flagged.
+    [d] DOCTRINE_LINKS: kept strongly_inferred (correct — source states no strategic
+    goal/motive and no India-nexus, so NOT attested). Rewrote reasoning to quote the
+    source ("targeted government departments, including Pakistan's defense sector") and
+    added inference_basis.signals + ruled_out (china-collection pillar rejected — no
+    PRC target). attesting_source_id stays null.
+    [e] ATTRIBUTION_LEVEL: set to named-actor (was missing).
+    [f] ACTOR_ID: in/unscoped/donot-team resolves (atlas/actors/in/donot-team.yaml,
+    id in/unscoped/donot-team) — consistent with the 2026-06-24 NTRO->unscoped demotion.
+    FLAGS:
+    - TARGET FK DEFECT: orgs/pakistani-government is DANGLING (no target file defines
+      it) yet is referenced by 3 OTHER events (2013/05 operation-hangover-disclosure,
+      2018/08 eset-donot-yty-framework-disclosure, 2019/04 eset-donot-pakistan-government-continuation).
+      Re-pointed THIS event to orgs/pakistani-military (exists; sector government/
+      defense-ministry; matches "Pakistan's defense sector"). Orchestrator should
+      either create orgs/pakistani-government or re-point the other 3 events.
+    - SOURCE tier corrected secondary -> primary (first-party Morphisec Labs original
+      research); raw_snapshot + content_sha256 added to the source record.

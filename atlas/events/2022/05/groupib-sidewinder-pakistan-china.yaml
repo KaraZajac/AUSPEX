@@ -1,53 +1,94 @@
 id: 2022-05/groupib-sidewinder-pakistan-china
-name: Group-IB documents SideWinder targeting Pakistan and China over 12 months
-start_date: 2021-04-01
+name: "Group-IB documents SideWinder's 2021 campaign and phishing infrastructure (Pakistan primary, China among targets)"
+start_date: 2021-06-01
 disclosure_date: 2022-05-17
-end_date: 2022-04-30
+end_date: 2021-11-30
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Group-IB published a year-long view of SideWinder operations
-  documenting 1,000+ attacks against Pakistani military and
-  government targets, Bangladeshi government, Chinese targets,
-  and adjacent victims. The report includes infrastructure
-  inventory (~92 domains, ~692 sub-domains), TTPs, and
-  victim-by-sector breakdown. The China-targeting strand
-  intensified across the reported period in step with the
-  post-Galwan India-China cyber posture.
+  Group-IB's "Old Snake, New Skin" report detailed a previously
+  undocumented SideWinder spear-phishing campaign conducted between
+  June and November 2021, with 61 identified targets across the
+  government, military, law-enforcement, financial, and political
+  sectors of Afghanistan, Bhutan, Myanmar, Nepal, and Sri Lanka.
+  Group-IB's Threat Intelligence system identified 92 IP addresses
+  used for SideWinder phishing and documented domains/servers
+  mimicking government organizations in Pakistan, China, and India.
+  The report added new tooling analysis, YARA rules, and ATT&CK
+  mapping, assessed BabyElephant as most likely the same or a closely
+  related APT, and attributed a 2020 attack on the Maldivian
+  government to SideWinder. Group-IB's follow-on
+  "SideWinder.AntiBot.Script" blog (June 2022) reaffirmed Pakistan as
+  the primary target — especially Pakistani government organizations —
+  with China among the group's targets.
 false_flag_risk: none
 summary: |
-  One of the largest single public quantifications of SideWinder
-  operational volume. Notable for documenting the China-targeting
-  pivot — Indian-aligned operations against Chinese state targets
-  had been documented at lower volume by Patchwork; SideWinder's
-  China collection is more recent.
+  A detailed public view of SideWinder's 2021 operations and phishing
+  infrastructure by Group-IB, which describes the actor as "believed to
+  be an Indian nation-state threat actor." The Pakistan-primary /
+  China-and-India government-domain-mimicry pattern is consistent with
+  India-aligned regional collection against Pakistan and China.
+  (Contemporaneously and separately, Kaspersky reported at Black Hat
+  Asia 2022 that SideWinder had conducted 1,000+ attacks since April
+  2020 using no fewer than 400 domains/subdomains — a larger-scope
+  figure that is NOT from the Group-IB reporting cited here and is not
+  claimed as such.)
 attributions:
   - actor_id: in/unscoped/sidewinder
     attributing_org: Group-IB
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-05-17
     attribution_source_id: groupib/2022-05-17_sidewinder-pakistan-china-targeting
+    notes: |
+      Group-IB attributes the activity to the named SideWinder cluster and describes it as
+      "believed to be an Indian nation-state threat actor" / "believed to be originating from
+      India" (Group-IB "SideWinder.AntiBot.Script", 2022-06-01). The public "Old Snake, New
+      Skin" landing page (the cited URL) is gated and names only "state-sponsored" without a
+      country; the India nexus is hedged ("believed") and no specific Indian service (e.g.
+      NTRO) is named — hence attributing_org_confidence: moderate and attribution_level:
+      named-actor (named group + nation, not named-unit), and actor in/unscoped/sidewinder.
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Direct Pakistani military targeting at scale.
+      Group-IB (and its June-2022 AntiBot follow-on) document Pakistan as SideWinder's
+      primary target, with particular interest in Pakistani government and military
+      organizations. For an actor Group-IB assesses as India-aligned, sustained collection
+      against Pakistani military/government is the strategic reading with no serious
+      competitor — the pakistan-military pillar of India's inferred regional-collection
+      posture.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Group-IB names Pakistan as the primary target and the Pakistani government/military as the focus of interest (Old Snake New Skin, 2022-05-17; AntiBot, 2022-06-01)."
+        - "SideWinder is India-aligned (Group-IB: believed Indian nation-state), and India->Pakistan military/government collection is a long-running, cross-vendor-documented pattern."
+      ruled_out: "Financially-motivated or hacktivist targeting of Pakistan — ruled out by the espionage tooling, state-sponsored assessment, and government/military victim focus."
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/china-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Chinese-target intensification post-Galwan; pattern-consistent
-      with the regional-collection pivot.
+      Group-IB documents SideWinder servers/domains mimicking Chinese government
+      organizations and names China among the group's targets. An India-aligned actor
+      collecting against Chinese state targets fits the china-collection pillar of India's
+      inferred regional-collection posture; no competing strategic reading survives for
+      India-nexus targeting of Chinese government entities.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Group-IB documents domains/servers mimicking government organizations in China (Old Snake New Skin, 2022-05-17); China is listed among SideWinder targets (AntiBot, 2022-06-01)."
+        - "The actor is India-aligned (Group-IB: believed Indian nation-state); India->China state collection is the coherent reading."
+      ruled_out: "This is government-organization domain-mimicry, NOT academic/research-institute targeting — the sources name Chinese GOVERNMENT orgs; the academic angle asserted elsewhere is not carried by Group-IB and is excluded here."
 targets:
   - target_id: orgs/pakistani-military
     role: primary
@@ -55,3 +96,70 @@ targets:
     role: primary
 sources:
   - groupib/2022-05-17_sidewinder-pakistan-china-targeting
+  - groupib/2022-06-01_sidewinder-antibot-script
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: partial
+  notes: |
+    Audited against Group-IB "Old Snake, New Skin" (2022-05-17, cited primary) and Group-IB
+    "SideWinder.AntiBot.Script" (2022-06-01, added as reachable corroborating primary).
+    LEVEL partial: the cited Old Snake New Skin URL resolves only to a GATED landing/summary
+    page (raw snapshot bc37b284…6ace491d09, 435,560 bytes; hash re-verified — matches on
+    disk); the full report sits behind a lead-gen "Download report" form. Standalone-word
+    search of that snapshot returns ZERO hits for "China"/"Chinese"/"Pakistan"/"Bangladesh"
+    and the "692"/"92 domains" figures, so the event's China/Pakistan claims are corroborated
+    via the reachable AntiBot blog (groupib__2022-06-01_sidewinder-antibot-script.html,
+    sha256 dfd20a6e…ef2ab516, 605,641 bytes, 51,694 chars body) plus public mirrors.
+
+    [a] FACTS — corrected multiple conflations/fabrications:
+      * The gated landing page's own "key highlights" state: 61 targets in government/
+        military/financial/law-enforcement/political sectors across 5 countries "(Afghanistan,
+        Bhutan, Myanmar, Nepal, Sri Lanka)"; "spear phishing campaign ... between June and
+        November 2021"; BabyElephant "most likely the same or closely related"; "2020 attack
+        on the Maldivian government attributed to SideWinder"; Central Bank of Myanmar fakes.
+        outcome_summary rewritten to these source-carried facts.
+      * DELETED "~92 domains, ~692 sub-domains": both Group-IB sources say "92 IP ADDRESSES",
+        not 92 domains; NO source carries "692 sub-domains" (closest is Kaspersky's "no fewer
+        than 400 domains and subdomains"). Fabricated infra counts removed.
+      * MOVED the "1,000+ attacks since April 2020" figure out of Group-IB attribution: per
+        The Hacker News / SecurityAffairs mirrors (2022-05) that figure is KASPERSKY's,
+        presented at Black Hat Asia 2022 — NOT the Group-IB report cited here. Now stated in
+        summary as a separate, clearly-attributed Kaspersky figure, not folded into outcome.
+      * DELETED the "post-Galwan intensification" / "China-targeting pivot" / Patchwork-
+        comparison editorial from outcome_summary and summary — not carried by either cited
+        source (editorial inference, not documented fact).
+      * Confirmed the fabricated "academic/university/defense-research" angle (stripped from
+        the retired duplicate) is ABSENT here and stays absent: AntiBot names China via
+        GOVERNMENT-org domain-mimicry; zero hits for "academic"/"university" in its body.
+    [b] ATTRIBUTION — downgraded attributing_org_confidence high -> moderate (Group-IB:
+      "believed to be an Indian nation-state threat actor" — hedged nation, no service named);
+      added attribution_level: named-actor (named cluster + nation, not named-unit); added
+      notes with the gated-page + hedge caveat. auspex_assessment concur retained.
+    [c] DATES — start/end were 2021-04-01 / 2022-04-30 (a ~12-month framing matching neither
+      source cleanly). Reset to Group-IB's documented campaign window 2021-06-01 – 2021-11-30
+      ("between June and November 2021"). disclosure_date 2022-05-17 retained. Source
+      published_on dates correct (Old Snake New Skin 2022-05-17; AntiBot 2022-06-01).
+    [d] DOCTRINE_LINKS — both links kept at strongly_inferred (neither attested; no
+      attesting_source_id, correct — the doctrine's own cyber_relevance calibrates SideWinder
+      links as strongly_inferred, "target mix unambiguous", not attested). Rewrote both
+      reasonings to be source-grounded and added inference_basis{signals[], ruled_out} to
+      each (were missing). Removed the "post-Galwan" claim from the china link (source does
+      not say it) and pinned the china link to GOVERNMENT-org targeting (not academic).
+    [e] ATTRIBUTION_LEVEL — set named-actor (was absent).
+    [f] ACTOR_ID — in/unscoped/sidewinder resolves (atlas/actors/in/sidewinder.yaml); the
+      moderate/named-actor/no-service treatment is consistent with that record's 2026-06-24
+      demotion from in/ntro/sidewinder. No actor edit made.
+
+    FLAGS for orchestrator:
+      * TARGET-REGISTRY GAP: orgs/chinese-government has NO file in atlas/targets/orgs/
+        (dangling, but validator treats orgs/* as informational — "targets normalization
+        deferred"). Used by 4 events (this, patchwork-post-galwan, dropping-elephant,
+        monsoon); kept here for cross-event consistency. Needs a registry entry.
+      * DOCTRINE TEXT: pillar in/regional-collection-pakistan-china/china-collection summary
+        says "SideWinder targeting of Chinese academics and research institutes (Group-IB
+        2022)". Group-IB (both 2022 reports) names Chinese GOVERNMENT organizations, not
+        academics/research institutes — the pillar text imports the same fabricated angle
+        that was stripped from the retired duplicate. Recommend correcting the pillar summary.
+      * orgs/pakistani-military target file has empty sources: [] — minor.

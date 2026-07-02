@@ -1,28 +1,39 @@
 id: 2022-08/twilio-cloudflare-0ktapus
 name: 0ktapus SMS-phishing campaign against Twilio, Cloudflare, ~130 SaaS tenants
 start_date: 2022-07-01
-disclosure_date: 2022-08-04
-end_date: 2022-09-30
+disclosure_date: 2022-08-07
+end_date: null
 incident_type:
   - intrusion
   - data-theft
-initial_vector: phishing  # SMS-phishing of employee Okta credentials
+initial_vector: phishing  # SMS-phishing (smishing) of employee Okta credentials + MFA codes
 outcome_summary: |
-  Coordinated SMS-phishing (smishing) campaign by the cluster
-  Group-IB named "0ktapus" — later operationally contiguous
-  with Scattered Spider — targeted approximately 130
-  organizations using a single phishing kit impersonating Okta
-  identity-provider login pages. Twilio confirmed August 4
-  2022 that 163 customers' data was accessed via a successful
-  social engineering of Twilio employees. Cloudflare disclosed
-  the same day that the campaign attempted but failed to
-  compromise Cloudflare employees because of FIDO2 hardware-
-  key MFA. Downstream confirmed victims included DoorDash,
-  Mailchimp, Klaviyo, and several cryptocurrency-exchange
-  customer-support BPOs.
+  Coordinated SMS-phishing (smishing) campaign that Group-IB
+  named "0ktapus", targeting employees of organizations that use
+  Okta as their single-sign-on provider. Group-IB reported that
+  over 130 organizations were compromised via a single phishing
+  kit impersonating each victim org's Okta login page, harvesting
+  9,931 user credentials and 5,441 MFA codes across 169 phishing
+  domains, with campaigns running since March 2022. Twilio became
+  aware on 4 August 2022 that its internal systems had been
+  accessed after current and former employees were smished into
+  entering Okta credentials and 2FA codes; Twilio's concluded
+  investigation reported 209 customers and 93 Authy 2FA-app users
+  impacted, and tied the intrusion to a June-29-2022 voice-phishing
+  precursor. Cloudflare disclosed a near-identical attack (76
+  employees texted from 2022-07-20) in which three employees
+  entered credentials but the intrusion failed because every
+  employee holds a FIDO2 hardware security key (YubiKey) with
+  origin binding — no Cloudflare systems were compromised.
+  Downstream supply-chain victims named by Group-IB included the
+  email/marketing platforms Mailchimp and Klaviyo, breached to
+  reach cryptocurrency-related customer lists.
 quantified_impact:
   organizations_targeted: 130
-  twilio_customers_compromised: 163
+  credentials_harvested: 9931
+  mfa_codes_harvested: 5441
+  twilio_customers_compromised: 209
+  twilio_authy_users_compromised: 93
 false_flag_risk: none
 campaign_id: scattered-spider-cluster
 summary: |
@@ -31,20 +42,32 @@ summary: |
   of IT-adjacent staff, SaaS-tenant pivoting, and credential-
   harvesting at scale. Notable for Cloudflare's successful
   FIDO2-key defense as a case study in MFA-format hardening
-  reducing the attack-surface to authentic-only credentials.
-  Operator base is the Anglophone Western-jurisdictional
-  cluster later tracked as Scattered Spider with no state nexus.
+  reducing the attack surface to authentic-only credentials. The
+  operator base is the Anglophone, Western-jurisdictional criminal
+  cluster later consolidated by multiple vendors under the
+  "Scattered Spider" identity, with no state nexus. Group-IB's
+  contemporaneous label for the campaign was "0ktapus"; the
+  identity with Scattered Spider (UNC3944) is a later, "overlapping"
+  vendor consolidation (CrowdStrike / Mandiant / Microsoft, and
+  CISA AA23-320A, which lists "Oktapus" as a Scattered Spider alias).
 attributions:
   - actor_id: criminal/scattered-spider
-    attributing_org: Group-IB + Twilio + Cloudflare
+    attributing_org: Group-IB
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2022-08-25
-    attribution_source_id: cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+    attribution_source_id: group-ib/2022-08-25_0ktapus-okta-phishing
     notes: |
-      Group-IB used the "0ktapus" label; CISA AA23-320A
-      retrospectively places the campaign as operationally
-      contiguous with Scattered Spider.
+      Group-IB directly investigated the campaign and named the
+      cluster "0ktapus" (named-actor: a specific named cluster, not
+      a mere activity-cluster; no state unit, so not named-unit).
+      AUSPEX maps 0ktapus to criminal/scattered-spider per the later
+      vendor consolidation — CISA AA23-320A lists "Oktapus" as a
+      Scattered Spider alias — but the actor record itself grades the
+      0ktapus<->Scattered-Spider alias as "overlapping" (campaign-era
+      label), hence concur-WITH-CAVEAT rather than plain concur.
+      Group-IB did not itself use the "Scattered Spider" name.
 doctrine_links: []
 targets:
   - target_id: sectors/ict/identity
@@ -52,4 +75,68 @@ targets:
   - target_id: sectors/ict/cloud
     role: collateral
 sources:
-  - cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+  - group-ib/2022-08-25_0ktapus-okta-phishing
+  - cloudflare/2022-08-09_smishing-attack
+  - cybersecuritydive/2022-08-08_twilio-phishing-attack
+  - bitdefender/2022-10-31_twilio-earlier-compromise
+  - cisa/2023-11-16_aa23-320a-scattered-spider-advisory  # supports the 0ktapus->Scattered-Spider alias mapping ONLY; does not document the 2022 campaign facts
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-01
+  level: full
+  notes: |
+    RE-SOURCED (badrabbit model). The event was mis-cited to a single
+    source — CISA AA23-320A (2023-11-16 Scattered Spider advisory) — which
+    does NOT document the Aug-2022 Twilio/Cloudflare 0ktapus campaign at all.
+    Raw snapshot of AA23-320A (sha256 e0dc1004…add0f64, 123,149 bytes)
+    confirms: zero hits for "Twilio", "Cloudflare", "Group-IB", "130", "163",
+    "209", "DoorDash"; it lists "Oktapus" only as one of Scattered Spider's
+    aliases. So AA23-320A supports the actor-identity MAPPING but carries none
+    of the campaign facts. Re-sourced to the genuine primaries.
+    [a] FACTS — all now source-carried. Group-IB (sha256 2da602f7…b3a8eed1,
+    561,850 bytes): "Over 130 organizations have been compromised"; "9931"
+    credentials + "5441" MFA codes; "169 unique domains"; campaigns "since
+    March 2022"; Okta-SSO-impersonating kit; names Mailchimp + Klaviyo as
+    supply-chain victims. Cloudflare (sha256 6b082453…7b00fc74, 366,189 bytes):
+    "three Cloudflare employees fell for the phishing message and entered their
+    credentials" but FIDO2/YubiKey "origin binding" meant "no Cloudflare
+    systems were compromised"; "at least 76 employees" texted from "2022-07-20
+    22:50 UTC"; "Yesterday, August 8, 2022, Twilio shared that they'd been
+    compromised". Cybersecuritydive (sha256 df4c3c38…dff308, 302,434 bytes):
+    Twilio "gained access to some of Twilio's internal systems ... on Aug. 4",
+    "current and former employees", Okta creds + 2FA via spoofed
+    "Twilio"/"Okta"/"SSO" URLs. Bitdefender (sha256 fef4fc9d…ee879c86, 64,154
+    bytes): "209 customers and 93 end users of its Authy" impacted; June-29-2022
+    vishing precursor. CORRECTIONS: quantified_impact.twilio_customers_
+    compromised 163 -> 209 (163 was the initial figure; 209 is Twilio's
+    CONCLUDED tally per bitdefender — no reachable source carried 163, so used
+    the sourced final number) + added authy_users 93, credentials 9931, mfa 5441.
+    Removed "DoorDash" from the named downstream victims (no cited source here
+    carries it; kept Mailchimp + Klaviyo, which Group-IB names).
+    [b] ATTRIBUTION — was "Group-IB + Twilio + Cloudflare" sourced to CISA
+    (wrong). Fixed to attributing_org: Group-IB, attribution_source_id:
+    group-ib/2022-08-25_0ktapus-okta-phishing (the org that named/scoped the
+    campaign). Confidence high (direct investigation). auspex_assessment
+    concur -> concur-with-caveat: the actor record grades the
+    0ktapus<->Scattered-Spider alias "overlapping", so mapping to
+    criminal/scattered-spider carries a genuine caveat.
+    [c] DATES — disclosure_date 2022-08-04 -> 2022-08-07 (Aug-4 was Twilio's
+    internal awareness; the public Sunday blog disclosure was Aug 7).
+    end_date 2022-09-30 -> null (no source bounds the campaign; Group-IB says it
+    may continue). start_date kept 2022-07-01 (SMS wave; Group-IB dates infra to
+    March 2022, noted in outcome_summary). Source published_on dates verified:
+    Group-IB 2022-08-25, Cloudflare 2022-08-09, cybersecuritydive 2022-08-08,
+    bitdefender 2022-10-31 (from page datePublished metadata).
+    [d] DOCTRINE_LINKS — [] is correct: criminal/financial actor, no state
+    nexus, no doctrine applies. Unchanged.
+    [e] ATTRIBUTION_LEVEL — set named-actor (Group-IB named the "0ktapus"
+    cluster; no state unit).
+    [f] ACTOR_ID — criminal/scattered-spider resolves and is the corpus's
+    canonical consolidation of 0ktapus (MISP-galaxy + CISA-alias-backed). No
+    actor FLAG; the "overlapping"-alias caveat is captured in auspex_assessment.
+    RESIDUAL: the 163-vs-209 Twilio customer count — 163 was widely reported at
+    disclosure but no reachable snapshot carried it, so the sourced concluded
+    figure 209 is used. Twilio's own incident-report blog URL is link-rotted
+    (404); qualitative + quantitative Twilio facts corroborated via
+    cybersecuritydive + bitdefender, so level=full stands.
