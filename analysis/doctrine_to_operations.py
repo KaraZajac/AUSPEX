@@ -21,6 +21,7 @@ Read-only, source-derived, no modelling.  python3 analysis/doctrine_to_operation
 import glob, math, os, random
 from collections import Counter, defaultdict
 import yaml
+from _fingerprint import fp_line
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = {"documentary","disclosure","doctrine-publication","attribution-publication","policy","law-enforcement"}
@@ -127,6 +128,7 @@ def information(attested_only, K_null=40):
     return {**base, "MI_naive":base["Ha"]-base["Had"], "null_Had":null_Had,
             "MI_real":real_MI, "H_corr":H_corr}
 
+print(fp_line())
 print(f"\n===== DO CYBER OPERATIONS COME OUT OF STRATEGIC DOCUMENTS? =====")
 print(f"operational events: {NOP}   (doctrines: {len(doctrines)}, actors in corpus: {len(actors)})")
 

@@ -25,6 +25,7 @@ Honouring the user's "if not a false flag": the chain runs on false_flag_risk ==
 import glob, math, os, random
 from collections import Counter, defaultdict
 import yaml
+from _fingerprint import fp_line
 
 random.seed(0)                                                   # reproducible null
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,6 +90,7 @@ def null_condH(labels, feats, keyfn, K=40):
 actors=[r[0] for r in rows]; feats=[r[1] for r in rows]; states=[r[2] for r in rows]
 H_actor=H(Counter(actors))
 
+print(fp_line())
 print(f"\n===== MO-CHAIN: does doctrine → target → outcome narrow the actor? =====")
 print(f"population: {N} operational events (single attributed actor, false_flag_risk=none)")
 print(f"  excluded: {excl_ff} flagged as suspected/confirmed false-flag, {excl_multi} multi-actor")
@@ -154,7 +156,7 @@ if ds_r<=doc_r+0.1 and dsm_r<=ds_r+0.1:
     print(f"    but it is largely REDUNDANT with doctrine — a doctrine already implies its target & outcome profile.")
 print(f"  • So your theory holds at the TAILS, not the bulk: MO is a clean fingerprint where it is non-modal")
 print(f"    (KP=money is the sharpest in the corpus), but espionage/data-theft is the universal default, so MO")
-print(f"    is a weak AVERAGE discriminator. At 547 events the deep doctrine→target→MO super-narrowing is underpowered.")
+print(f"    is a weak AVERAGE discriminator. At {N} events the deep doctrine→target→MO super-narrowing is underpowered.")
 
 print(f"\n── CAVEATS ──")
 print("  • CIRCULARITY (the big one): analysts USE the MO/target/doctrine to attribute, so 'these features")

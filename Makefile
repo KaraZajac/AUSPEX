@@ -1,6 +1,6 @@
 # AUSPEX — verification gate + helpers. See audit/README.md and docs/SCHEMA.md.
 
-.PHONY: verify install-hooks audit conformance schema help
+.PHONY: verify install-hooks audit conformance schema findings help
 
 help:                ## list targets
 	@grep -hE '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | sort
@@ -21,3 +21,8 @@ audit:               ## full consistency report (referential / source hygiene / 
 
 schema:              ## re-derive the empirical schema profile (keeps docs/SCHEMA.md honest)
 	@python3 audit/introspect_schema.py
+
+findings:            ## regenerate the analysis ledger numbers (each script prints a corpus fingerprint)
+	@for s in doctrine_to_operations mo_narrowing doctrine_trends deterrence actor_deterrence; do \
+		python3 analysis/$$s.py; echo; \
+	done

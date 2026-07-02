@@ -23,6 +23,7 @@ small N, year granularity, collection bias. Association, not effect.
 import glob, math, os, statistics
 from collections import Counter, defaultdict
 import yaml
+from _fingerprint import fp_line
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = {"documentary","disclosure","doctrine-publication","attribution-publication","policy","law-enforcement"}
@@ -82,6 +83,7 @@ for aid, nlist in namings.items():
     rows.append((aid, T, first_indict, preA, postA, math.log(rS)-math.log(rC), named_at_peak))
 
 ind = [r for r in rows if r[2]]; dis = [r for r in rows if not r[2]]
+print(fp_line())
 print(f"\n===== ACTOR-LEVEL DETERRENCE — does naming an actor change its tempo? =====")
 print(f"actors with a usable before/after window: {len(rows)}  (named-by-indictment/individual: {len(ind)} · disclosure-only: {len(dis)})")
 print(f"DiD<0 = actor decelerated vs the world after being named (deterrence-consistent); >0 = kept escalating\n")

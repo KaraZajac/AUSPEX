@@ -15,6 +15,7 @@ Descriptive, source-derived; no modelling. Independent of the TS engine.
 import datetime, glob, os
 from collections import Counter, defaultdict
 import yaml
+from _fingerprint import fp_line
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = {"documentary","disclosure","doctrine-publication","attribution-publication","policy","law-enforcement"}
@@ -53,6 +54,7 @@ def spark(counter):
     m = max(vals) or 1
     return "".join(SPARK[min(7, v*7//m)] for v in vals)
 
+print(fp_line())
 print(f"\n===== AUSPEX who×why trends =====")
 print(f"{len(rows)} doctrine-links across operations, {Y0}–{Y1} ({len(doctrines)} doctrines, {len({r['state'] for r in rows})} states)\n")
 

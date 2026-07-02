@@ -26,6 +26,7 @@ This measures association, not effect.
 import glob, math, os
 from collections import Counter, defaultdict
 import yaml
+from _fingerprint import fp_line
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = {"documentary","disclosure","doctrine-publication","attribution-publication","policy","law-enforcement"}
@@ -129,6 +130,7 @@ for st, acts in pun.items():
 
 allyears=sorted(y for c in ops.values() for y in c)
 LO,HI=min(allyears),max(allyears)
+print(fp_line())
 print(f"\n===== DETERRENCE / NAMING-AND-SHAMING (event study + DiD) =====")
 print(f"punitive policy-actions analysed: {sum(len(v) for v in per_state.values())} (of {sum(pun_count.values())} total, those with usable ±{W}yr windows)")
 print(f"DiD < 0 = target decelerated vs the world after action (deterrence-consistent); > 0 = accelerated (defiance)\n")
