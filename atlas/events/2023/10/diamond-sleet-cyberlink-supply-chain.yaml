@@ -1,8 +1,8 @@
 id: 2023-10/diamond-sleet-cyberlink-supply-chain
 name: Diamond Sleet CyberLink supply-chain compromise
-start_date: 2023-10-20  # MSTIC dates trojan distribution to mid-late October
+start_date: 2023-10-20  # MSTIC: modified installer observed "as early as October 20, 2023"
 disclosure_date: 2023-11-22
-end_date: 2023-11-22
+end_date: null  # AUDIT 2026-07-02: MSTIC calls it an "active and ongoing campaign" — no operation-end date is citable; prior 2023-11-22 merely duplicated disclosure_date
 incident_type:
   - supply-chain
   - intrusion
@@ -10,39 +10,53 @@ initial_vector: supply-chain
 outcome_summary: |
   Diamond Sleet (Microsoft taxonomy for Lazarus / ZINC)
   compromised CyberLink Corp's software supply chain and
-  distributed a trojanized CyberLink installer (LambLoad) via
-  legitimate update infrastructure starting late October 2023.
-  Compromise affected machines across more than 100 countries
-  in education, IT, government, and defense sectors.
-  Microsoft notified affected customers and revoked the
-  weaponized certificate. The campaign represented Diamond
-  Sleet's largest software supply-chain reach to date,
-  pre-dating the same cluster's role in subsequent 2024-2025
-  operations.
+  distributed a trojanized CyberLink installer (tracked by
+  Microsoft as LambLoad) via legitimate CyberLink update
+  infrastructure, signed with a valid CyberLink Corp.
+  code-signing certificate. Microsoft observed the modified
+  installer as early as October 20, 2023 on over 100 devices
+  in multiple countries, including Japan, Taiwan, Canada, and
+  the United States. Microsoft had not yet identified
+  hands-on-keyboard activity following compromise. In response,
+  Microsoft notified affected Microsoft Defender for Endpoint
+  customers, reported the second-stage payload to GitHub (which
+  removed it), and added the CyberLink Corp. certificate to its
+  disallowed certificate list.
 false_flag_risk: none
 summary: |
-  Major Microsoft-attested Lazarus supply-chain compromise
-  bridging the financial-theft and strategic-tech-collection
-  pillars. CyberLink victims include sectors of strategic
-  collection interest (education, defense, IT-managed
-  services) but also crypto-developer workstations consistent
-  with the 2023-2024 revenue-aggregation tempo. The
-  Taiwan-headquartered software-vendor staging is itself
-  doctrinally interesting — DPRK leveraging Taiwan-supply-chain
-  positioning to reach a global victim pool.
+  Microsoft-attributed Lazarus (Diamond Sleet) software
+  supply-chain compromise. Microsoft describes Diamond Sleet
+  as targeting media, defense, and information-technology (IT)
+  industries and as focused on espionage, data theft,
+  financial gain, and network destruction; it published no
+  per-victim sector breakdown for the ~100 affected devices
+  and observed no hands-on-keyboard activity for this campaign.
+  AUSPEX links the access to both the revenue-aggregation and
+  strategic-tech-collection pillars at plausible confidence
+  only — the source states no strategic purpose for the
+  campaign. The staging vendor CyberLink is headquartered in
+  Taiwan (per the target registry), positioning DPRK to reach
+  a global victim pool via a legitimate software update
+  channel.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-11-22
     attribution_source_id: microsoft/2023-11-22_diamond-sleet-cyberlink
     notes: |
-      MSTIC attribution by tradecraft, infrastructure
-      overlap, and code-signing certificate lineage to
-      prior Diamond Sleet operations. "Diamond Sleet" is
-      Microsoft's cluster name for the Lazarus /
-      Labyrinth Chollima superset.
+      MSTIC "attributes this activity with high confidence to
+      Diamond Sleet, a North Korean threat actor." Basis: the
+      second-stage payload communicates with infrastructure
+      previously compromised by Diamond Sleet, and the activity
+      overlaps with what other vendors track as Temp.Hermit and
+      Labyrinth Chollima. "Diamond Sleet" (formerly ZINC) is
+      Microsoft's cluster name for the Lazarus superset. Level
+      named-actor: MSTIC names the group + nation but no DPRK
+      service/unit (the RGB placement is an AUSPEX actor-record
+      assessment, not stated in this source).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
@@ -51,12 +65,14 @@ doctrine_links:
     reasoning: |
       Diamond Sleet's broader operations include crypto-wallet
       drainage, but Microsoft observed no hands-on-keyboard activity
-      for this CyberLink campaign and lists media/defense/IT victims;
-      the revenue-aggregation link rests on the cluster's general
-      pattern, not this campaign's documented outcome.
+      for this CyberLink campaign and names media/defense/IT as the
+      group's general target industries (the source never mentions
+      cryptocurrency or revenue); the revenue-aggregation link rests
+      on the cluster's general pattern, not this campaign's
+      documented outcome.
     inference_basis:
       alternatives:
-        - "Microsoft observed no hands-on-keyboard / crypto-drainage for this campaign (lists media/defense/IT victims) — the revenue link rests on Diamond Sleet's general pattern"
+        - "Microsoft observed no hands-on-keyboard / crypto-drainage for this campaign and never mentions cryptocurrency or revenue — the revenue link rests on Diamond Sleet's general pattern"
       ruled_out: "crypto-wallet drainage documented for THIS CyberLink campaign — not in the source (no hands-on-keyboard observed yet)"
     contested: false
     analyst: claude
@@ -65,10 +81,13 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Victim set spans education, government, and defense
-      sectors — possible strategic-collection use of the same
-      access primitive parallel to the revenue-aggregation
-      payoff.
+      Microsoft associates Diamond Sleet with targeting of
+      defense, IT, and media industries — possible
+      strategic-collection use of the same access primitive
+      parallel to the revenue-aggregation payoff. No per-victim
+      sectors were published for this campaign and no follow-on
+      collection was observed, so the link is plausible and
+      contested (source names no education/government victims).
     counter_explanation: |
       Microsoft did not document follow-on espionage tasking
       against the affected machines specifically; the
@@ -84,3 +103,89 @@ targets:
     role: primary
 sources:
   - microsoft/2023-11-22_diamond-sleet-cyberlink
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the sole cited source, MSTIC "Diamond Sleet supply chain compromise
+    distributes a modified CyberLink installer" (2023-11-22). RAW snapshot captured this
+    audit: microsoft__2023-11-22_diamond-sleet-cyberlink.html, sha256 bfbe7f7e…0f12819a,
+    300,735 bytes. NOT a phantom — page title and article body match the event (title
+    "Diamond Sleet supply chain compromise distributes a modified CyberLink installer |
+    Microsoft Security Blog"). Normal 6-point audit.
+
+    [a] FACTS — corrected several fabrications/errors against the raw:
+      • VICTIM SCOPE fixed. Event said "affected machines across MORE THAN 100 COUNTRIES."
+        Source (verbatim, appears TWICE): "the malicious activity has impacted over 100
+        DEVICES in multiple countries, including Japan, Taiwan, Canada, and the United
+        States." The "100" is DEVICES, and only four countries are named. Rewrote
+        outcome_summary to "over 100 devices in multiple countries, including Japan,
+        Taiwan, Canada, and the United States."
+      • SECTORS "education … government" STRIPPED — fabricated. grep of the raw: "education"
+        and "government" appear ONLY in Microsoft's site-nav boilerplate, never in the
+        article body. The article's only sector language: Diamond Sleet "known to target
+        media, defense, and information technology (IT) industries" / "target organizations
+        in information technology, defense, and media" — and these are the GROUP'S GENERAL
+        industries, not a per-victim breakdown of the ~100 CyberLink devices (none was
+        published). summary + both doctrine reasonings corrected to media/defense/IT.
+      • "crypto-developer workstations consistent with the 2023-2024 revenue-aggregation
+        tempo" STRIPPED from summary — fabricated. grep: "crypto"=0 hits, "revenue"=0 hits.
+        Source explicitly: "Microsoft has NOT YET identified hands-on-keyboard activity
+        carried out after compromise via this malware."
+      • "Diamond Sleet's LARGEST software supply-chain reach to date" STRIPPED — unsupported.
+        grep: "largest"=0 hits. Also dropped the "pre-dating … subsequent 2024-2025
+        operations" forward-reference (not source-carried).
+      • "revoked the weaponized certificate" → corrected to the source's actual action:
+        Microsoft "added the CyberLink Corp. certificate used to sign the malicious file
+        to its disallowed certificate list" (Microsoft did not revoke; it disallowed).
+        Added the GitHub second-stage-payload takedown, also in the source.
+      • VERIFIED-TRUE facts kept: CyberLink Corp multimedia-software vendor; trojanized
+        legitimate installer downloading/decrypting/loading a second-stage payload; signed
+        with "a valid certificate issued to CyberLink Corp." hosted on "legitimate update
+        infrastructure owned by CyberLink"; malware tracked as LambLoad (source:
+        "Trojan:Win32/LambLoad" / "Microsoft currently tracks the malicious application and
+        associated payloads as LambLoad"); no hands-on-keyboard observed. incident_type
+        (supply-chain, intrusion) and initial_vector (supply-chain) hold.
+    [b] ATTRIBUTION — matches source exactly. "Microsoft attributes this activity with HIGH
+      confidence to Diamond Sleet, a North Korean threat actor." → attributing_org Microsoft
+      Threat Intelligence, confidence high, auspex concur, date 2023-11-22. Corrected the
+      attribution NOTES: the old note's "code-signing certificate lineage to prior Diamond
+      Sleet operations" is NOT the stated basis — MSTIC's basis is C2 overlap ("the
+      second-stage payload … communicates with infrastructure that has been previously
+      compromised by Diamond Sleet") plus vendor overlap with Temp.Hermit / Labyrinth
+      Chollima. Rewrote accordingly.
+    [c] DATES — start_date 2023-10-20 confirmed ("suspicious activity … as early as October
+      20, 2023"); disclosure_date 2023-11-22 = source publication ✓. end_date CHANGED
+      2023-11-22 → null: it merely duplicated disclosure_date, and the source calls this an
+      "active and ongoing campaign" — no operation-end date is citable. Source
+      published_on/tier unchanged (see FLAG).
+    [d] DOCTRINE_LINKS — both to kp/8th-congress-defense-plan, both confidence: plausible,
+      neither attested (no attesting_source_id) — CORRECT and left as plausible. Per the
+      8th-congress doctrine's per-event attestation rule (corrected 2026-07-02) and the
+      SCHEMA attestation boundary, attested would require THIS source to state the terminal
+      WMD/ballistic-missile-financing goal; MSTIC states no strategic purpose at all
+      ("WMD"=0, "missile"=0, "revenue"=0 hits) → attested is impossible; the ceiling would
+      be strongly_inferred. I did NOT upgrade plausible→strongly_inferred: the source itself
+      enumerates multiple motivations ("espionage, theft of personal and corporate data,
+      financial gain, and corporate network destruction") and observed no hands-on-keyboard,
+      so more than one strategic reading genuinely survives — plausible is the honest label
+      (confidence is never upgraded). Fixed the strategic-tech reasoning's fabricated
+      "education, government" sector claim → defense/IT/media; tightened the revenue link's
+      wording (no crypto/revenue in source). counter_explanation + contested:true retained.
+    [e] ATTRIBUTION_LEVEL — was MISSING; ADDED named-actor. MSTIC names the group (Diamond
+      Sleet) + nation (North Korea) but no DPRK service/unit; the RGB placement lives in the
+      actor record, not this source, so named-actor (not named-unit) is correct.
+    [f] ACTOR_ID — kp/rgb/lazarus resolves to atlas/actors/kp/lazarus.yaml (id: kp/rgb/
+      lazarus). Actor record is well-sourced and RGB placement is independently justified in
+      its own AUDIT notes (OFAC 2019, DOJ 2021, MITRE, Mandiant). No actor edit. No FLAG.
+
+    RESIDUAL: sectors/ict/software kept as the primary target (the compromised product is
+    multimedia software; supply-chain vector) — deliberately NOT inflated with defense/media
+    victim sectors, since MSTIC gave no per-victim sector breakdown for the ~100 devices.
+    FLAG (source tier): microsoft/2023-11-22_diamond-sleet-cyberlink is tier: secondary, but
+    this is Microsoft's own first-party investigation of its own discovery — arguably
+    primary. PRESERVED as-is per orchestrator instruction (known corpus-wide MSTIC
+    secondary-vs-primary inconsistency; do not fix one in isolation). FLAG for the
+    orchestrator to normalize corpus-wide.

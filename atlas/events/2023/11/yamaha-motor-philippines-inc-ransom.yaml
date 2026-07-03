@@ -2,43 +2,137 @@ id: 2023-11/yamaha-motor-philippines-inc-ransom
 name: INC Ransom ransomware against Yamaha Motor Philippines
 start_date: 2023-10-25
 disclosure_date: 2023-11-16
-end_date: 2023-12-30
+end_date: null
 incident_type:
   - ransomware
   - data-theft
 initial_vector: unknown
 outcome_summary: |
-  INC Ransom claimed responsibility for a ransomware intrusion
-  against Yamaha Motor Philippines, the regional motorcycle-
-  manufacturing subsidiary of Yamaha Motor Company. The company
-  confirmed in a November 16, 2023 statement that employee data
-  had been compromised. INC Ransom subsequently posted the
-  exfiltrated dataset on its leak site after no ransom was
-  paid. The incident is the earliest publicly attributed major
-  INC Ransom victim outside North America.
+  A ransomware attack on Yamaha Motor Philippines, Inc. (YMPH), the
+  motorcycle-manufacturing and sales subsidiary of Yamaha Motor
+  Company, was detected on October 25, 2023 and reported to Philippine
+  authorities on October 27. Yamaha confirmed in a November 16, 2023
+  statement that some employees' personal information stored by YMPH
+  had been leaked, and that the intrusion was limited to a single YMPH
+  server without affecting Yamaha Motor group headquarters or other
+  group companies. The INC Ransom gang added YMPH to its dark-web leak
+  site on November 15 and published roughly 37 GB of allegedly stolen
+  data (employee ID information, backup files, and corporate/sales
+  documents). Yamaha itself did not attribute the attack to any group.
 false_flag_risk: none
 summary: |
-  Notable as one of the first publicly attributed INC Ransom
-  campaigns following the cluster's July 2023 emergence.
-  Establishes the INC Ransom geographic distribution as
-  international from inception rather than concentrated in any
-  single jurisdiction.
+  An early, high-profile victim of the INC Ransom data-extortion
+  cluster, which emerged around July-August 2023. Attribution rests on
+  INC Ransom's own leak-site self-claim — corroborated by the group's
+  publication of ~37 GB of Yamaha data — not on any government advisory
+  or first-party naming; Yamaha confirmed the ransomware incident and
+  the employee-data leak but declined to name the perpetrator. INC
+  Ransom is a financially-motivated criminal cluster with no documented
+  state nexus, so no doctrine link applies.
 attributions:
   - actor_id: criminal/inc-ransom
-    attributing_org: Yamaha Motor Philippines + INC Ransom (self-claimed)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2023-11-16
-    attribution_source_id: ncsc-uk/2024-03-27_nhs-dumfries-galloway-statement
+    attributing_org: INC Ransom (leak-site self-claim), reported by BleepingComputer / SecurityWeek
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-11-15
+    attribution_source_id: bleepingcomputer/2023-11-17_yamaha-motor-confirms-ransomware-attack-philippines
     notes: |
-      Yamaha Motor Philippines confirmed the incident in a public
-      statement; INC Ransom self-claimed via its leak site. No
-      primary government advisory specific to this case;
-      attribution_source_id is the nearest contemporaneous primary
-      documentation of INC Ransom activity.
+      Attribution is an INC Ransom leak-site self-claim, made when the
+      group added YMPH to its dark-web leak site on 2023-11-15 and
+      published ~37 GB of data. Yamaha confirmed the ransomware attack
+      and the employee-data leak but "has yet to attribute the attack to
+      a specific operation" (BleepingComputer). No government advisory or
+      independent forensic report ties the intrusion to INC Ransom, so
+      confidence is moderate and the assessment is concur-with-caveat
+      (self-claim corroborated by the actual data publication).
+      attribution_level named-actor: INC Ransom is a named criminal
+      cluster; no nation or unit is named.
 doctrine_links: []
 targets:
   - target_id: orgs/yamaha-motor-philippines
     role: primary
 sources:
-  - ncsc-uk/2024-03-27_nhs-dumfries-galloway-statement
+  - yamaha/2023-11-16_unauthorized-access-server-philippines-subsidiary
+  - bleepingcomputer/2023-11-17_yamaha-motor-confirms-ransomware-attack-philippines
+  - securityweek/2023-11-20_yamaha-motor-confirms-data-breach
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION path: RE-SOURCE (badrabbit model). The event's
+    sole prior citation (both the only source and the attribution_source_id)
+    was ncsc-uk/2024-03-27_nhs-dumfries-galloway-statement — a real primary
+    document about a DIFFERENT INC Ransom victim (NHS Dumfries & Galloway,
+    Scotland, March 2024). Wrong-source defect, not a fabricated event: the
+    Yamaha Motor Philippines incident is real and well documented. Removed
+    the NHS source from this event and re-pointed to three genuine sources,
+    all curl-snapshotted to atlas/sources/raw/ and content-verified:
+      - yamaha/2023-11-16_unauthorized-access-server-philippines-subsidiary
+        (first-party press release), sha256 552b5351...0b45ed71, 54,480 bytes.
+      - bleepingcomputer/2023-11-17_yamaha-motor-confirms-ransomware-attack-philippines
+        (journalism, Sergiu Gatlan), sha256 4eb1bf33...c0ce7b27, 89,979 bytes.
+      - securityweek/2023-11-20_yamaha-motor-confirms-data-breach
+        (journalism, Ionut Arghire), sha256 cdcd8f06...bf4a1e04, 156,106 bytes.
+
+    [a] FACTS — all now source-carried. start_date 2023-10-25 = detection
+    (Yamaha: "October 25 It was confirmed that YMPH was being hit by a
+    ransomware attack."; BleepingComputer: "the breach was first detected on
+    October 25"). disclosure_date 2023-11-16 = Yamaha's statement (Yamaha:
+    "November 16 It was confirmed that some employees' personal information
+    stored by YMPH had been leaked."). Data leak scope ~37 GB (BleepingComputer:
+    "roughly 37GB of allegedly stolen data containing employee ID info, backup
+    files, and corporate and sales information"). Incident contained to one
+    YMPH server, no group-HQ impact (Yamaha, verbatim). CORRECTIONS: (1)
+    end_date 2023-12-30 -> null — no source supports a Dec-30 end; that date
+    is the disclosure_date of the sibling Xerox INC Ransom event and appears
+    to be a copy artifact. (2) STRIPPED outcome_summary's "earliest publicly
+    attributed major INC Ransom victim outside North America" — an unsourced
+    superlative. (3) STRIPPED summary's "Establishes the INC Ransom geographic
+    distribution as international from inception" — unsourced analytic claim;
+    softened "one of the first publicly attributed campaigns" to "an early,
+    high-profile victim." (4) Reordered the leak/statement sequence: the
+    leak-site listing (Nov 15) preceded Yamaha's statement (Nov 16); removed
+    the unsourced "after no ransom was paid." initial_vector kept `unknown`
+    — no source establishes the vector for THIS intrusion (BleepingComputer
+    cites only INC Ransom's general TTPs: spearphishing / Citrix NetScaler
+    CVE-2023-3519).
+
+    [b] ATTRIBUTION — this is a leak-site SELF-CLAIM, not a confirmed
+    attribution. Yamaha "has yet to attribute the attack to a specific
+    operation" (BleepingComputer); INC Ransom self-claimed by posting YMPH
+    to its leak site. CORRECTIONS: attributing_org "Yamaha Motor Philippines
+    + INC Ransom (self-claimed)" -> "INC Ransom (leak-site self-claim),
+    reported by BleepingComputer / SecurityWeek" (Yamaha did not name the
+    group, so it should not be credited as an attributing org);
+    attributing_org_confidence high -> moderate (over-attestation: criminal
+    self-claim, no govt/forensic confirmation; matches sibling Xerox event);
+    auspex_assessment concur -> concur-with-caveat (caveat = self-claim,
+    though corroborated by the 37 GB data dump); attribution_date 2023-11-16
+    -> 2023-11-15 (date the claim was made = leak-site listing);
+    attribution_source_id re-pointed from the NHS phantom to the
+    BleepingComputer record that carries the self-claim.
+
+    [c] DATES — source published_on set to each article's real date (Yamaha
+    2023-11-16, BleepingComputer 2023-11-17, SecurityWeek 2023-11-20), all
+    distinct from the campaign dates. Event start (detection) vs disclosure
+    (statement) correctly distinguished.
+
+    [d] DOCTRINE_LINKS — [] retained and correct. INC Ransom is criminal/
+    with default_doctrine_alignment_ids [] and no documented state nexus; no
+    doctrine genuinely applies. None invented.
+
+    [e] ATTRIBUTION_LEVEL — was missing; added named-actor (a named criminal
+    cluster; no nation/unit named).
+
+    [f] ACTOR_ID — criminal/inc-ransom resolves to
+    atlas/actors/criminal/inc-ransom.yaml; placement under criminal/ is
+    justified (no public state-nexus attribution). Not edited.
+
+    RESIDUAL UNCERTAINTY: attribution depends on INC Ransom's own leak-site
+    claim plus the observed 37 GB data publication; no independent forensic
+    or government confirmation exists (hence moderate / concur-with-caveat).
+    No archived (archive.org) copies added — fetcher is blocked for
+    web.archive.org; disk snapshots + sha256 substitute.

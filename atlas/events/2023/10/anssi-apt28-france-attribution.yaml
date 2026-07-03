@@ -1,68 +1,182 @@
 id: 2023-10/anssi-apt28-france-attribution
 name: ANSSI / CERT-FR attributes 2021-2023 intrusion campaign against French entities to APT28
-start_date: 2021-01-01  # sustained activity since 2021 per CERT-FR
+start_date: 2021-01-01  # activity "depuis la seconde moitié de l'année 2021" per CERTFR-2023-CTI-009
 disclosure_date: 2023-10-26
-end_date: 2023-10-26
+end_date: 2023-10-26  # publication/attribution act; underlying APT28 activity ongoing per the report
 incident_type:
   - espionage
   - documentary
 initial_vector: phishing
 outcome_summary: |
   ANSSI / CERT-FR publication CERTFR-2023-CTI-009 (26 October 2023)
-  attributing a sustained intrusion campaign against French
-  government, diplomatic, research, and think-tank entities
-  (active since 2021) to the APT28 / Fancy Bear / Forest Blizzard
-  intrusion set. CERT-FR walks tradecraft including Outlook NTLM
-  relay exploit chains, Ubiquiti EdgeOS router-compromise
-  infrastructure, and credential-theft tooling against Microsoft
-  Exchange / Outlook endpoints.
+  characterizing sustained APT28 intrusion campaigns against
+  French entities — government bodies, businesses, universities,
+  research institutes, and think tanks (activity since the second
+  half of 2021), for espionage. CERT-FR walks tradecraft including
+  the CVE-2023-23397 Outlook zero-click 0-day (a crafted email /
+  Outlook meeting request triggers automatic SMB authentication,
+  yielding a Net-NTLMv2 hash the operators relay onward), an
+  attack infrastructure built on 11 compromised Ubiquiti routers
+  and 12 compromised business mailboxes, brute-force against
+  exposed webmail / firewalls, and credential-theft tooling
+  (Mimikatz, CredoMap, reGeorg) — including CVE-2020-0688 /
+  CVE-2020-17144 against an exposed Microsoft Exchange OWA server.
 quantified_impact:
   countries_affected: 1
 false_flag_risk: none
 operators_named: []
 summary: |
   AUSPEX records the event as a French defensive-attribution
-  action — ANSSI publicly naming an adversary intrusion set
-  affecting French entities. The doctrine linkage is to LID
-  (French defensive doctrine, the act of public attribution) and
-  to the Russian adversary doctrine (which lives in the ru/
-  hierarchy and is referenced via the actor row). Tradecraft
-  detail is unusually specific for a CERT-FR public report and is
-  editorially significant: ANSSI is one of the few European
-  CERTs that names adversary clusters publicly at the intrusion-
-  set level.
+  action — ANSSI / CERT-FR publicly characterizing the APT28
+  "mode opératoire" (intrusion set) affecting French entities.
+  ANSSI attributes at the intrusion-set level only: CTI-009 names
+  the "APT28" activity cluster but does NOT itself state a nation
+  or service (the "Russian GRU" descriptor appears only in the
+  bibliography, as an NSA citation) — the GRU / Unit 26165 mapping
+  in the actor row is the established MISP-galaxy / analyst
+  placement, not ANSSI's claim. Two doctrine linkages are
+  recorded: LID (France's defensive doctrine — the CERT-FR
+  coordination / public-attribution function, defender-response)
+  and the Russian FPC-2023 counter-"unfriendly-states" pillar
+  (the GRU's strategic-intelligence rationale, attacker-rationale).
+  Editorially significant: ANSSI is one of the few European CERTs
+  that publishes adversary tradecraft at this level of detail.
 attributions:
   - actor_id: ru/gru/26165/apt28
     attributing_org: ANSSI / CERT-FR
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
     attribution_date: 2023-10-26
     attribution_source_id: anssi/2023-10-26_apt28-campagnes-attaques
+    notes: |
+      ANSSI/CERT-FR attributes with high confidence to the "mode
+      opératoire APT28" (the APT28 intrusion set / activity cluster)
+      but does NOT itself name a nation or service in CTI-009 — the
+      only "Russian GRU" reference is a bibliography citation to an
+      NSA advisory, not ANSSI's own attribution. Hence
+      attribution_level: activity-cluster (named cluster, no
+      ANSSI-stated nation), NOT named-actor/named-unit. The actor_id
+      ru/gru/26165/apt28 reflects the established MISP-galaxy /
+      analyst placement of APT28; auspex_assessment is
+      concur-with-caveat because that GRU-Unit-26165 specificity is
+      AUSPEX's, beyond what ANSSI stated in this report.
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-defensive
     perspective: defender-response
     pillar_id: fr/lutte-informatique-defensive/cert-fr-coordination
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      CERT-FR public attribution of foreign adversary activity is
-      a canonical instance of the LID coordination pillar.
-      ANSSI's published threat-intelligence reports operationalize
-      the defensive attribution function the Revue stratégique
-      codified.
+      A CERT-FR public report characterizing a foreign adversary's
+      intrusion set affecting French entities — and issuing
+      defensive recommendations (CTI-009 section 3) — is a canonical
+      instance of the LID CERT-FR-coordination / advisory-publication
+      pillar. Downgraded from attested to strongly_inferred: the
+      report operationalizes the defensive function but does not name
+      "lutte informatique défensive (LID)" or state that doctrinal
+      purpose, so the doctrine-document linkage is AUSPEX's inference
+      (mirrors the 2024-06 ANSSI/Nobelium sibling event).
     attesting_source_id: anssi/2023-10-26_apt28-campagnes-attaques
+    inference_basis:
+      source_id: anssi/2023-10-26_apt28-campagnes-attaques
+      signals:
+        - "ANSSI/CERT-FR publicly characterizes the APT28 intrusion set affecting French entities and issues defensive recommendations (the CERT-FR coordination / advisory-publication function)"
+        - "The report is an instance of the CERTFR-NNNN-CTI advisory series the pillar names (CERTFR-2023-CTI-009)"
+      ruled_out: "the LID doctrine by name — not named in the report"
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/fpc-2023
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      GRU (APT28 / Unit 26165) sustained espionage against a NATO/EU
+      state's government bodies, universities, research institutes,
+      and think tanks is strategic-intelligence collection against an
+      "unfriendly state" — the FPC-2023 anti-unfriendly-states
+      pillar's doctrinal license for operations against Western
+      government and think-tank ecosystems "perceived as instruments
+      of Western policy" (the pillar's own words; its target_sectors
+      include government/foreign-ministry and civil-society/think-tank).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ANSSI states the purpose is espionage ('utilisées à des fins d'espionnage') and observed exfiltration 'concentrées uniquement sur la récupération de courriels' — covert intelligence collection, no leak/influence component"
+        - "Actor is GRU military intelligence (APT28 / Unit 26165); victims are a NATO/EU state's government, academic, research and think-tank institutions — France is on Russia's 'unfriendly states' list under FPC-2023"
+        - "Target profile matches the anti-anglo-saxon pillar's enumerated sectors (government, think-tank), and this pillar is in APT28's default_doctrine_alignment_ids"
+      ruled_out: "ru/military-doctrine-2014/destabilization-via-info (information-enabled destabilization / hack-and-leak): ruled out because this campaign is covert email-collection espionage with no leak, influence, or destabilization component"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government
-    country: FR
+    country: fr
     role: primary
-  - target_id: sectors/government/foreign-ministry
-    country: FR
+  - target_id: sectors/academic/university
+    country: fr
     role: primary
   - target_id: sectors/academic/research-lab
-    country: FR
+    country: fr
+    role: primary
+  - target_id: sectors/civil-society/think-tank
+    country: fr
     role: primary
 sources:
   - anssi/2023-10-26_apt28-campagnes-attaques
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs ANSSI/CERT-FR CERTFR-2023-CTI-009 "Campagnes d'attaques du mode opératoire
+    APT28 depuis 2021" (26 Oct 2023). RAW captured: landing-page HTML (sha256
+    224ba614…f17a2143, 16,272 B) + the linked 23-page PDF report (raw_snapshot; sha256
+    08b62bfd…4725efa7, 2,487,153 B) — all facts verified against the PDF.
+    [a] FACTS ✓ (corrected). CVE-2023-23397 confirmed 10× and explicitly a "vulnérabilité
+    0-day … affectant le produit Outlook pour Windows … de mars 2022 … jusqu'en juin 2023";
+    ZERO-CLICK confirmed twice: §2.3 "Certaines vulnérabilités ne nécessitent pas d'action de
+    la part de l'utilisateur" (footnote: "Dont la CVE-2023-23397") and the mechanism "Les
+    comptes ciblés réalisent automatiquement une tentative d'authentification auprès d'un
+    service SMB contrôlé par l'attaquant … récupérer le condensat … Net-NTLMv2 … relayer" =
+    Outlook NTLM-relay. Infra "onze routeurs Ubiquiti compromis" + "au moins douze comptes de
+    messagerie" (Fig. 2.1). Exchange OWA: CVE-2020-0688 + CVE-2020-17144; tooling Mimikatz,
+    reGeorg, CredoMap, Graphite/DriveOcean (OneDrive/Google Drive C2). CORRECTIONS: removed
+    "Ubiquiti EdgeOS" — "EdgeOS" appears 0× in the source (only "routeurs Ubiquiti"); removed
+    "diplomatic" victim framing — 0 matches for diplomat/affaires-étrangères/ministère/
+    ambassade in the report; named CVE-2023-23397 explicitly in outcome_summary.
+    [b] ATTRIBUTION (corrected). ANSSI attributes ONLY to "le mode opératoire APT28" (intrusion
+    set); it never states a nation or service in its own voice — the sole "Russian GRU" text is
+    a bibliography citation to NSA. Set attribution_level: activity-cluster (was missing);
+    changed auspex_assessment concur → concur-with-caveat and added attribution notes: the
+    ru/gru/26165/apt28 actor_id is the established MISP-galaxy/analyst placement, beyond ANSSI's
+    in-report specificity. attributing_org_confidence high retained (a confident intrusion-set
+    attribution).
+    [c] DATES ✓. published_on/attribution_date/disclosure_date = 2023-10-26 (report date).
+    start_date 2021-01-01 carries "depuis 2021"/"seconde moitié de 2021". end_date kept at the
+    publication date per the documentary-event convention (cf. 2024-06 ANSSI/Nobelium sibling);
+    underlying activity is ongoing ("les attaquants poursuivent leurs campagnes").
+    [d] DOCTRINE_LINKS (corrected + added). LID/cert-fr-coordination (defender-response)
+    DOWNGRADED attested → strongly_inferred: the report performs but does not name the LID
+    doctrine or state its purpose — mirrors the audited 2024-06 ANSSI/Nobelium sibling's
+    identical link; added inference_basis (signals + ruled_out), kept attesting_source_id as
+    the primary supporting source. ADDED the ru attacker-rationale link ru/fpc-2023/
+    anti-anglo-saxon (strongly_inferred, attesting_source_id null): ANSSI states only the
+    proximate purpose (espionage), so not attested; GRU vs a NATO/EU state's govt/academic/
+    think-tank ecosystem triangulates to strategic collection against an "unfriendly state"
+    (the pillar's own target_sectors include government + think-tank, and it is in APT28's
+    default alignment). ruled_out: military-doctrine-2014/destabilization-via-info (no
+    leak/influence here — exfiltration "concentrées uniquement sur la récupération de courriels").
+    [e] ATTRIBUTION_LEVEL set to activity-cluster (see [b]).
+    [f] ACTOR_ID ru/gru/26165/apt28 resolves → atlas/actors/ru/apt28.yaml (id matches); actor
+    record is well-sourced (DOJ/NCSC/UK-gov), not provisional. No actor edit made.
+    TARGETS (corrected): removed sectors/government/foreign-ministry (unsupported — no
+    diplomatic/MFA mention); kept sectors/government (entités gouvernementales) + academic/
+    research-lab (instituts de recherche); ADDED academic/university (universités) + civil-
+    society/think-tank (groupes de réflexion / think tanks); lowercased country FR → fr.
+    RESIDUAL: CTI-009 also names "entreprises" (businesses) as victims, but the sector taxonomy
+    has no generic private-sector node and the report names no vertical, so it is omitted rather
+    than mis-mapped (no sector inflation). Level: full — load-bearing source fully snapshotted
+    and every retained claim source-carried.

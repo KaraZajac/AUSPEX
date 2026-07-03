@@ -6,24 +6,35 @@ end_date: 2023-11-30
 incident_type:
   - intrusion
   - disruption
-  - data-theft
-initial_vector: phishing  # IT help-desk social engineering
+initial_vector: phishing  # IT help-desk social engineering (voice phishing)
 outcome_summary: |
-  Clorox Company (US consumer-goods manufacturer, ~USD 7B annual
-  revenue) disclosed via SEC 8-K filing August 14, 2023 a
-  cybersecurity incident that forced shutdown of significant
-  portions of its IT environment. Production and shipping
-  disruption persisted into October 2023, with Clorox subsequently
-  disclosing USD 356M of impact in fiscal-year 2024 financial
-  results — the largest disclosed financial impact from any
-  Scattered-Spider-attributed intrusion against a consumer-goods
-  manufacturer. Tradecraft fit Scattered Spider's IT help-desk
-  voice-phishing MFA-bypass profile; no ransomware payload
-  publicly confirmed. Subsequent civil litigation (Clorox v.
-  Cognizant) alleges the IT help desk was operated by Cognizant
-  under contract.
+  The Clorox Company (large US consumer-goods manufacturer, ~USD 7.5B
+  FY2023 revenue) disclosed via SEC 8-K on August 14, 2023 that it had
+  "identified unauthorized activity" on some of its IT systems and had
+  taken certain systems offline, causing disruption to parts of its
+  business. A September 18, 2023 8-K stated the activity was contained
+  but had "damaged portions of the Company's IT infrastructure, which
+  caused widescale disruption," with an elevated level of consumer
+  product-availability issues and a material impact on Q1 FY2024
+  results; production had resumed at the vast majority of manufacturing
+  sites by mid/late September and recovery extended into the Oct–Dec
+  2023 quarter. Clorox's Q1 FY2024 earnings showed a ~USD 356M (~20%)
+  year-over-year net-sales decline, MOST of which the company
+  attributed to the attack (a revenue shortfall, not a direct cost);
+  separately Clorox disclosed ~USD 49M of direct incremental costs
+  (third-party IT recovery, forensics, consulting) through end-2023.
+  Tradecraft fit Scattered Spider's IT help-desk voice-phishing /
+  MFA-bypass profile; no ransomware payload or data exfiltration was
+  publicly confirmed. Subsequent civil litigation — Clorox v.
+  Cognizant, filed July 2025 in California Superior Court — alleges
+  Cognizant, which operated Clorox's IT help desk, handed over
+  credentials / password resets to the attackers without proper
+  authentication; Clorox claims ~USD 380M in total damages (≈USD 50M
+  remediation, remainder lost sales).
 quantified_impact:
-  disclosed_impact_usd: 356000000
+  direct_incremental_cost_usd: 49000000       # company-disclosed thru Dec 2023 (Q2 FY24 earnings)
+  q1_fy2024_net_sales_decline_usd: 356000000  # ~20% YoY quarterly decline; MOST (not all) attributed to the attack
+  litigation_claimed_damages_usd: 380000000   # Clorox v. Cognizant complaint (Jul 2025): ~50M remediation + lost sales
 false_flag_risk: none
 campaign_id: scattered-spider-cluster
 summary: |
@@ -33,23 +44,128 @@ summary: |
   criminal collective with no state nexus (`criminal/scattered-
   spider`). The Clorox case extends the SS victim profile beyond
   the better-documented hospitality and identity-provider targets
-  into consumer-goods manufacturing.
+  into consumer-goods manufacturing. Attribution is journalistic and
+  SUSPECTED — Clorox itself never named an operator.
 attributions:
   - actor_id: criminal/scattered-spider
-    attributing_org: Mandiant + journalism consensus
-    attributing_org_confidence: moderate
+    attributing_org: Bloomberg (citing four people familiar); corroborated by CNBC + BleepingComputer
+    attributing_org_confidence: low
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2023-10-15
-    attribution_source_id: cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+    attribution_date: 2023-10-04
+    attribution_source_id: bloomberg/2023-10-04_clorox-scattered-spider
     notes: |
-      Attribution rests on tradecraft pattern-matching and
-      contemporaneous journalist reporting (Reuters, BleepingComputer);
-      Clorox's SEC filings do not name an operator. The Cognizant
-      civil litigation has produced additional documentary support
-      for the Scattered Spider attribution.
-doctrine_links: []
+      Attribution is SUSPECTED, not confirmed. It originates with a
+      Bloomberg scoop (Oct 4, 2023) citing "four people familiar";
+      Clorox's SEC 8-Ks (Aug 14 + Sept 18, 2023) name no operator and
+      mention no ransomware. Corroborated by CNBC (Oct 4, 2023,
+      "suspected ... Bloomberg reported") and BleepingComputer (Feb
+      2024, "believed to have been conducted by ... Scattered
+      Spider"); the July 2025 Clorox v. Cognizant complaint is
+      "linked to Scattered Spider" and its recorded help-desk calls
+      fit SS's voice-phishing MO, but no government or vendor has
+      formally attributed the Clorox breach on the record. Confidence
+      set low (was moderate); attribution rests on a single
+      un-snapshottable origin — hence event qc level: partial. The
+      CISA AA23-320A advisory documents SS's general TTP profile but
+      does NOT mention Clorox and is not the attribution source.
+doctrine_links: []  # Scattered Spider is a pure criminal actor with no defensible doctrine alignment
 targets:
   - target_id: sectors/manufacturing
     role: primary
+    country: us
 sources:
-  - cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+  - sec/2023-08-14_clorox-8k-unauthorized-activity
+  - sec/2023-09-18_clorox-8k-material-impact
+  - bloomberg/2023-10-04_clorox-scattered-spider
+  - cnbc/2023-10-04_clorox-cyberattack-sales-hit
+  - industryweek/2023-11-07_clorox-cyberattack-cost-356m
+  - bleepingcomputer/2024-02-03_clorox-49-million-expenses
+  - cybersecuritydive/2025-07-23_clorox-cognizant-suit
+  - cisa/2023-11-16_aa23-320a-scattered-spider-advisory  # retained: general SS-TTP-profile reference only; does NOT document Clorox
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: partial
+  notes: |
+    PHANTOM RE-SOURCE (badrabbit model). The event previously cited a
+    SINGLE source — CISA AA23-320A (sha e0dc1004…3add0f64, 123149 B) —
+    as both its only sources[] entry AND the attribution_source_id.
+    Verified against the raw snapshot: that advisory is a general
+    Scattered Spider TTP advisory containing NO "Clorox", "356",
+    "consumer", or "Cognizant" (only one generic "manufacturer"); it
+    does not document this incident. Re-sourced to genuine primaries.
+
+    [a] FACTS — all now source-carried. SEC 8-K Aug 14 2023
+    (sec/2023-08-14…; sha 223a99ca…82aff1a0, 24260 B): "identified
+    unauthorized activity on some of its Information Technology (IT)
+    systems ... taking certain systems offline ... disruption to parts
+    of the Company's business operations." SEC 8-K Sept 18 2023
+    (sec/2023-09-18…; sha 0cfe74d4…af7a789d, 22558 B): "the
+    cybersecurity attack damaged portions of the Company's IT
+    infrastructure, which caused widescale disruption ... resumed
+    production at the vast majority of its manufacturing sites ... the
+    impact will be material on Q1 financial results." ~$7.5B revenue +
+    Aug-11 start from BleepingComputer (sha c84766fd…62124069, 89479 B:
+    "On August 11th, Clorox suffered a cyberattack"; "almost $7.5
+    billion in revenue for 2023"). CORRECTIONS: (1) REMOVED
+    incident_type: data-theft — NO source claims Clorox data
+    exfiltration; the "hackers stole corporate data" line in the
+    BleepingComputer piece describes JOHNSON CONTROLS, a separate
+    Sept-2023 incident. (2) $356M REFRAMED — it is a Q1 FY2024
+    NET-SALES DECLINE (~20% YoY), "most of which it blamed on the
+    cyberattack" (IndustryWeek, sha 618494ee…53bc98eb, 209817 B), NOT a
+    flat "disclosed impact"; quantified_impact restructured into
+    direct_incremental_cost_usd 49M (company-disclosed thru Dec 2023),
+    q1_fy2024_net_sales_decline_usd 356M, litigation_claimed_damages_usd
+    380M. (3) REMOVED unsourced superlative "largest disclosed
+    financial impact from any Scattered-Spider-attributed intrusion
+    against a consumer-goods manufacturer." (4) Cognizant litigation
+    confirmed + expanded via Cybersecurity Dive (sha b7569a2d…c02bca95,
+    302006 B): "filed in California Superior Court ... Cognizant ...
+    handing over credentials to the attackers without proper
+    authentication", $380M.
+
+    [b] ATTRIBUTION — was over-attributed. attribution_source_id
+    CISA→bloomberg/2023-10-04 (origin scoop: "Officials suspect ...
+    according to four people familiar"); attributing_org "Mandiant +
+    journalism consensus"→Bloomberg+CNBC+BleepingComputer (found NO
+    evidence Mandiant named Clorox); confidence moderate→LOW (language
+    is "suspected"/"believed", Clorox never confirmed an operator, both
+    8-Ks name none); attribution_date 2023-10-15→2023-10-04 (Bloomberg
+    scoop date per CNBC "Bloomberg reported Wednesday"; CNBC sha
+    97fa8eeb…5e85840d, 746296 B). auspex_assessment kept
+    concur-with-caveat.
+
+    [c] DATES — disclosure_date 2023-08-14 = 8-K #1 Date of Report
+    (verified). start_date 2023-08-11 = op-start per BleepingComputer
+    (secondary). end_date 2023-11-30 kept as an APPROXIMATE recovery
+    bound (8-K #2: production resuming week of Sept 25, "cannot estimate
+    ... fully normalized operations"; recovery ran into the Oct–Dec
+    2023 quarter) — residual uncertainty, not a precisely-sourced date.
+    Each new source's published_on = its true publication date.
+
+    [d] DOCTRINE_LINKS — [] retained (correct). Scattered Spider is a
+    financially-motivated criminal collective with no doctrine (actor
+    default_doctrine_alignment_ids: []); no attested link → no
+    attesting_source_id required.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (Bloomberg names the group
+    "Scattered Spider"; not a nation, not a service/unit).
+
+    [f] ACTOR_ID — criminal/scattered-spider resolves to
+    atlas/actors/criminal/scattered-spider.yaml (no state nexus; status
+    indicted). No actor-file issue; not edited.
+
+    SOURCES: 7 real sources added (2 SEC 8-K primaries + 5 journalism
+    secondaries; all snapshotted+hashed EXCEPT Bloomberg, bot-walled
+    HTTP 403 → no hash, only mirror-corroborated). CISA AA23-320A
+    RETAINED in sources[] ONLY as the general SS-TTP-profile reference
+    (hash re-verified e0dc1004…3add0f64); it does not document Clorox
+    and is no longer the attribution source, and remains correctly
+    cited by the MGM/Caesars event + the actor record (not orphaned).
+    targets: added country: us. LEVEL = partial: the load-bearing
+    attribution rests on a single un-snapshottable Bloomberg scoop
+    (mirror-corroborated); every other claim is carried by a
+    snapshotted primary/secondary.

@@ -1,55 +1,69 @@
 id: 2023-11/midnight-blizzard-microsoft-corporate
 name: Midnight Blizzard / SVR intrusion into Microsoft corporate environment
-start_date: 2023-11-01  # MSRC: late November 2023
-disclosure_date: 2024-01-19
-end_date: 2024-01-13  # MSRC stated when access was cut
+start_date: 2023-11-01  # MSRC: "beginning in late November 2023" (month-granular; day approximate)
+disclosure_date: 2024-01-19  # public disclosure; Microsoft detected the intrusion 2024-01-12
+end_date: null  # not bounded: detected 2024-01-12, but MSRC 2024-03-08 reports password-spray volume up ~10x in Feb 2024 (activity ongoing); no source states an eviction/end date
 incident_type:
   - intrusion
   - data-theft
-initial_vector: valid-creds  # password spray against legacy non-production test tenant without MFA
+  - espionage
+initial_vector: valid-creds  # password spray against a legacy non-production test tenant lacking MFA (MSRC 2024-01-19 + MSTIC 2024-01-25)
 outcome_summary: |
-  SVR (APT29 / Midnight Blizzard) compromised a legacy
-  non-production Microsoft test tenant lacking MFA via password
-  spray, then abused an OAuth application granted full_access_as_app
-  on Exchange Online to read corporate email of Microsoft senior
-  leadership and cybersecurity, legal, and other functions. HPE
-  disclosed a parallel SVR intrusion the same week. Microsoft
-  disclosed the breach in a 19 January 2024 MSRC blog and contemporaneous
-  SEC 8-K filing under the post-2023 incident disclosure rules.
+  Midnight Blizzard (APT29 / SVR) used a password-spray attack to
+  compromise a legacy, non-production Microsoft test tenant account
+  that did not have MFA enabled, then abused a legacy OAuth application
+  to grant itself the Office 365 Exchange Online full_access_as_app
+  role and pivot into the Microsoft corporate environment, reading and
+  exfiltrating email and attachments from a small percentage of
+  corporate mailboxes — including members of senior leadership and
+  staff in cybersecurity, legal, and other functions. MSRC's 2024-03-08
+  update disclosed that the actor then used secrets found in that email
+  to access some Microsoft source-code repositories and internal
+  systems. Microsoft detected the intrusion on 2024-01-12 and publicly
+  disclosed it in a 2024-01-19 MSRC blog.
 false_flag_risk: none
 campaign_id: apt29-midnight-blizzard
 summary: |
-  A canonical attested example of SVR cloud-identity-supply-chain
-  tradecraft: legacy-tenant compromise → OAuth app abuse → tenant-
-  hopping to corporate Exchange. Strategic significance is the
-  victim — Microsoft corporate, including the leadership and the
-  identity- and security-tooling staff defending Microsoft customers.
-  HPE's parallel disclosure (24 January 2024) reinforced the campaign
-  shape. The incident drove the post-Microsoft CSRB report (Apr
-  2024) on Microsoft cloud security.
+  A canonical example of SVR cloud-identity tradecraft: legacy-tenant
+  compromise via password spray → abuse of a legacy OAuth application
+  granted full_access_as_app on Exchange Online → lateral movement into
+  corporate Exchange. Strategic significance is the victim — Microsoft
+  corporate, including senior leadership and the identity- and
+  security-tooling staff who defend Microsoft's customers — and MSRC's
+  assessment that the actor was "initially targeting email accounts for
+  information related to Midnight Blizzard itself" (counter-intelligence
+  collection). The intrusion began in late November 2023 and was
+  detected and disclosed in January 2024; a 2024-03-08 MSRC update
+  revealed follow-on access to source-code repositories and internal
+  systems.
 attributions:
   - actor_id: ru/svr/apt29
     attributing_org: Microsoft MSRC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-01-19
     attribution_source_id: msrc/2024-01-19_midnight-blizzard-microsoft-corporate
+    notes: "MSRC states 'Microsoft has identified the threat actor as Midnight Blizzard, the Russian state-sponsored actor also known as Nobelium' — a named actor (group + Russian state), NOT a named unit: this source does not name the SVR service. The SVR = APT29 = Nobelium/Midnight Blizzard equivalence rests on the actor's US/UK government sources (White House 2021-04-15, Treasury EO-14024, CISA AA23-347A)."
 doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      SVR strategic foreign-intelligence collection against the
-      provider of identity/email services to much of US/EU
-      government and enterprise; MSRC names the SVR actor and the
-      collection target but not the 2016 Information Security
-      Doctrine, so the doctrine frame is inferred.
+      SVR strategic foreign-intelligence collection against the provider
+      of identity/email services to much of US/EU government and
+      enterprise, with MSRC assessing the actor was "initially targeting
+      email accounts for information related to Midnight Blizzard itself"
+      (counter-intelligence collection). MSRC names the actor (Midnight
+      Blizzard / Nobelium, "Russian state-sponsored") and the collection
+      target, but neither the SVR service by name nor the 2016
+      Information Security Doctrine, so the doctrine frame is inferred.
     attesting_source_id: msrc/2024-01-19_midnight-blizzard-microsoft-corporate
     inference_basis:
       source_id: msrc/2024-01-19_midnight-blizzard-microsoft-corporate
       signals:
-        - "MSRC: SVR accessed senior-leadership corporate email and sought 'information related to Midnight Blizzard itself' (strategic collection)"
+        - "MSRC: the actor accessed senior-leadership corporate email and was 'initially targeting email accounts for information related to Midnight Blizzard itself' (counter-intelligence / strategic collection)"
       ruled_out: "the 2016 Information Security Doctrine / its strategic goal — not named in the post"
     counter_explanation: null
     contested: false
@@ -57,25 +71,142 @@ doctrine_links:
   - doctrine_id: ru/fpc-2023
     pillar_id: ru/fpc-2023/anti-anglo-saxon
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Targeting the US identity-provider hyperscaler whose
-      vulnerability disproportionately affects US and Anglo-Saxon
-      governments fits the FPC-2023 anti-Anglo-Saxon priority.
+      Targeting the US identity-provider hyperscaler whose compromise
+      disproportionately affects US and Anglo-Saxon governments fits the
+      FPC-2023 anti-Anglo-Saxon priority, but no source states this
+      purpose and the evidenced target (information about Midnight
+      Blizzard itself) reads first as foreign-intelligence collection, so
+      more than one strategic reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Foreign-intelligence / counter-intelligence collection (info-security-2016): MSRC says the actor sought 'information related to Midnight Blizzard itself', which is the dominant operational reading."
+        - "FPC-2023 anti-Anglo-Saxon confrontation: Microsoft is a US hyperscaler whose compromise disproportionately affects Anglo-Saxon governments — a broader geopolitical framing that no source states for this operation."
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/microsoft-corporate
+  - target_id: orgs/microsoft
     role: primary
     outcome: |
-      Emails of senior leadership, cybersecurity, and legal teams
-      exfiltrated; some source-code repositories and internal
-      systems accessed in follow-on intrusions disclosed Mar 2024.
-  - target_id: orgs/hpe-corporate
-    role: primary
-    outcome: |
-      Parallel intrusion disclosed Jan 24 2024 SEC 8-K; SharePoint
-      and email of cybersecurity and other functions accessed.
+      Email and attachments of a small percentage of corporate mailboxes
+      — senior leadership and cybersecurity, legal, and other staff —
+      exfiltrated; MSRC's 2024-03-08 update disclosed follow-on access to
+      some source-code repositories and internal systems.
 sources:
   - msrc/2024-01-19_midnight-blizzard-microsoft-corporate
+  - mstic/2024-01-25_midnight-blizzard-guidance-for-responders
+  - msrc/2024-03-08_update-midnight-blizzard-microsoft
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Full 6-point audit against the RAW first-party Microsoft sources.
+    RE-SOURCE path (badrabbit model): the event rested on a single Jan-19
+    MSRC blog that does NOT carry most of its tradecraft/outcome claims;
+    added the two genuine Microsoft first-party follow-ups that do, and
+    stripped two unsupported claims (HPE, CSRB). Sources snapshotted:
+    (S1) msrc/2024-01-19_midnight-blizzard-microsoft-corporate — sha256
+    0dbc132b…fdf3ec8b, 88014 bytes, HASH RE-VERIFIED on disk.
+    (S2) mstic/2024-01-25_midnight-blizzard-guidance-for-responders —
+    sha256 1d98b340…4c79ecc4, 301701 bytes, NEW (fetched live).
+    (S3) msrc/2024-03-08_update-midnight-blizzard-microsoft — sha256
+    715661cf…b684790e, 88186 bytes, NEW (fetched live).
+
+    [a] FACTS. Password spray → legacy non-production test tenant foothold:
+    S1 verbatim "Beginning in late November 2023, the threat actor used a
+    password spray attack to compromise a legacy non-production test tenant
+    account and gain a foothold". No-MFA detail is NOT in S1; S2 carries it
+    verbatim: "compromised a legacy, non-production test tenant account that
+    did not have multifactor authentication (MFA) enabled" + "a distributed
+    residential proxy infrastructure". OAuth lateral path is NOT in S1; S2
+    verbatim: "The threat actor then used the legacy test OAuth application
+    to grant them the Office 365 Exchange Online full_access_as_app role,
+    which allows access to mailboxes" and "created additional malicious
+    OAuth applications … a new user account to grant consent in the Microsoft
+    corporate environment". Corporate-email exfiltration: S1 verbatim "access
+    a very small percentage of Microsoft corporate email accounts, including
+    members of our senior leadership team and employees in our cybersecurity,
+    legal, and other functions, and exfiltrated some emails and attached
+    documents". Source-code + internal-systems access is NOT in S1 (S1 in
+    fact says as of Jan-19 "there is no evidence that the threat actor had
+    any access to … source code"); S3 carries it verbatim: "access to some
+    of the company's source code repositories and internal systems". All
+    surviving claims are now source-carried. CORRECTIONS: added incident_type
+    `espionage` (SVR foreign-intel collection; actor mission=espionage);
+    rewrote outcome_summary + summary to attribute each claim to the source
+    that carries it. STRIPPED as unsupported/erroneous: (i) the entire HPE
+    parallel-intrusion claim — a SEPARATE victim/incident not in any cited
+    source and modeled elsewhere (aa24-057a) — see FLAG; (ii) "the incident
+    drove the post-Microsoft CSRB report (Apr 2024)" — factual conflation:
+    the Apr-2 2024 CSRB report reviewed the SUMMER-2023 Storm-0558 (China)
+    Exchange Online intrusion, not Midnight Blizzard — see FLAG; (iii) the
+    "contemporaneous SEC 8-K … post-2023 disclosure rules" clause — not
+    carried by any cited source (softened to "publicly disclosed in a
+    2024-01-19 MSRC blog", which S1 carries).
+
+    [b] ATTRIBUTION. S1 verbatim: "Microsoft has identified the threat actor
+    as Midnight Blizzard, the Russian state-sponsored actor also known as
+    Nobelium." Definitive → attributing_org_confidence high (kept),
+    auspex_assessment concur (kept). CORRECTION: added attribution_level
+    `named-actor` (group + Russian state named; the SVR service is NOT named
+    in S1/S2/S3 — they say "Cozy Bear"/"NOBELIUM"/"Russian state-sponsored").
+    Added attributions[].notes recording that the SVR=APT29 linkage rests on
+    the actor's govt sources, not this event's sources.
+
+    [c] DATES. start_date 2023-11-01 kept (S1 "late November 2023";
+    month-granular, day approximate — comment fixed to be honest).
+    disclosure_date 2024-01-19 correct (= S1 publication; detection was
+    2024-01-12 per S1 "detected a nation-state attack on our corporate
+    systems on January 12, 2024"). CORRECTION: end_date 2024-01-13 was
+    UNSUPPORTED — S1 gives no eviction date and its comment ("MSRC stated
+    when access was cut") is false; S3 shows the campaign ESCALATED ~10x in
+    Feb 2024, so the op is not bounded → set end_date null with note. The
+    orchestrator's start-vs-disclosure caution is satisfied: Nov-2023 op /
+    Jan-2024 disclosure kept distinct. Source published_on dates verified:
+    S1 2024-01-19, S2 2024-01-25, S3 2024-03-08 (page bodies match).
+
+    [d] DOCTRINE_LINKS. Link 1 (info-security-2016/information-sphere-as-
+    domain): kept strongly_inferred (SVR foreign-intel collection is the
+    dominant reading; S1 names the actor + collection target but not the
+    goal/doctrine → correctly NOT attested). CORRECTED the reasoning, which
+    wrongly claimed "MSRC names the SVR actor" — MSRC names Midnight
+    Blizzard/Nobelium, not the SVR; reworded. Reworded signals[0] so it no
+    longer puts "SVR" in MSRC's mouth; quote "information related to Midnight
+    Blizzard itself" is S1-verbatim. attesting_source_id kept as supporting
+    source (permitted on strongly_inferred). Link 2 (fpc-2023/anti-anglo-
+    saxon): DOWNGRADED strongly_inferred → plausible — it had no
+    inference_basis and more than one strategic reading survives (foreign-
+    intel collection vs. anti-Anglo-Saxon confrontation); added
+    inference_basis.alternatives; attesting_source_id null (correct). No
+    link is `attested`, so the attesting-source gate is satisfied.
+
+    [e] ATTRIBUTION_LEVEL. Set named-actor (was missing) — see [b].
+
+    [f] ACTOR_ID. ru/svr/apt29 resolves to atlas/actors/ru/apt29.yaml
+    (id ru/svr/apt29, primary_service_id ru/svr, canonical "APT29 / Cozy
+    Bear / Midnight Blizzard", status sanctioned, mission espionage). Record
+    looks sound — no actor flag.
+
+    FK FIXES: target_id `orgs/microsoft-corporate` was a DANGLING FK →
+    corrected to `orgs/microsoft` (atlas/targets/orgs/microsoft.yaml,
+    "Microsoft Corporation", us, ict/cloud). Target `orgs/hpe-corporate` was
+    a DANGLING FK (no such registry entry) AND a separate incident → removed.
+
+    FLAGS for orchestrator:
+    • HPE — the SVR intrusion into HPE (disclosed Jan 2024) was bundled into
+      this Microsoft event via a dangling `orgs/hpe-corporate` target and
+      prose. Removed here (separate victim/incident). It is currently only
+      contextually referenced in 2024-02/aa24-057a-svr-cloud-access-advisory
+      (via sector targets) with NO orgs/hpe registry entry. RECOMMEND a
+      dedicated HPE event (+ orgs/hpe target) if HPE is to be first-class.
+    • CSRB conflation — removed a claim tying this event to the Apr-2024 CSRB
+      report; that report is about Storm-0558 (China), summer-2023 Exchange
+      Online, a DIFFERENT incident. Watch for the same conflation elsewhere.
+    • SEC 8-K — dropped an unsourced regulatory claim. Microsoft did file an
+      8-K on 2024-01-19, but no cited source carries it; add an EDGAR/8-K
+      source later if that detail is wanted.

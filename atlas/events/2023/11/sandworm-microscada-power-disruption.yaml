@@ -7,48 +7,72 @@ incident_type:
   - intrusion
   - destructive
   - disruption
+  - cyber-physical
+  - wiper
 initial_vector: unknown
 outcome_summary: |
-  Sandworm used a native ICS binary (MicroSCADA) on a Ukrainian
-  critical-infrastructure operator's hypervisor to issue a
-  substation disconnection command in October 2022, causing an
-  unplanned power outage that coincided with kinetic missile
-  strikes against Ukrainian energy infrastructure. Two days later,
-  Sandworm deployed a CaddyWiper variant against the same victim.
+  In October 2022 Sandworm abused a native MicroSCADA utility
+  (scilc.exe) on the hypervisor-hosted SCADA/MicroSCADA management
+  instance of a Ukrainian critical-infrastructure operator to run
+  unauthorised SCIL commands — which Mandiant assesses were probably
+  intended to open the victim's substation circuit breakers (the
+  exact commands were not recoverable). The attack resulted in an
+  unscheduled power outage that coincided with the start of mass
+  Russian missile strikes on critical infrastructure across several
+  Ukrainian cities, though Mandiant states it lacks sufficient
+  evidence to confirm a cyber-kinetic link. Two days later Sandworm
+  deployed a new CaddyWiper variant in the victim's IT environment.
   Disclosed by Mandiant on 9 November 2023.
 false_flag_risk: none
 campaign_id: sandworm-ukraine-grid-wave
 summary: |
   Doctrinally significant for two reasons. First, the operation
-  pioneered Sandworm's living-off-the-land OT tradecraft: instead
-  of deploying purpose-built ICS malware (Industroyer / Industroyer2),
-  operators abused a native MicroSCADA control binary already on
-  the engineering workstation to issue a 60870-5-104
-  disconnect-via-OPC command — much harder to detect and signature.
-  Second, the cyber substation disconnect was coordinated with
-  kinetic missile strikes on Ukrainian energy infrastructure,
-  giving a candidate case of cyber-kinetic synchronisation in
-  the post-invasion energy campaign (Mandiant notes the timing
-  overlap but hedges the causal link). The 2022 operation was held
-  in disclosure until the APT44 promotion arc (which culminated
-  April 2024).
+  marked a significant shift in Sandworm's OT tradecraft: instead
+  of deploying purpose-built ICS malware (as in the Industroyer /
+  Industroyer2 incidents), operators abused scilc.exe — a native
+  binary of the victim's own MicroSCADA control system — to run
+  unauthorised SCIL commands that, Mandiant assesses, were probably
+  meant to open substation circuit breakers, relayed to the
+  substation RTUs over IEC-60870-5-104 (TCP/IP) or -101 (serial).
+  Living-off-the-land OT abuse of this kind is lighter-weight and
+  harder for defenders to detect than dedicated ICS malware.
+  Second, the resulting power outage coincided with the start of
+  mass Russian missile strikes on critical infrastructure across
+  several Ukrainian cities (including the victim's city), a
+  candidate case of cyber-kinetic co-timing — though Mandiant notes
+  the overlap while stating it lacks sufficient evidence to assess
+  a possible link. Mandiant initially tracked the intrusion as
+  UNC3810 before merging it into Sandworm, and disclosed the
+  October 2022 operation roughly thirteen months later, on
+  9 November 2023.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2023-11-09
     attribution_source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+    notes: "Mandiant attributes the activity directly to Sandworm (initially tracked as UNC3810, then merged into the Sandworm cluster), 'a full-spectrum threat actor that has carried out espionage, influence and attack operations in support of Russia's Main Intelligence Directorate (GRU) since at least 2009', and states 'Government indictments have linked the group to the Main Center for Special Technologies (also known as GTsST and Military Unit 74455)'. Firm attribution, no hedge on the actor -> high; the specific unit is named -> named-unit."
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/grid-attack
     program_id: null
     confidence: attested
     reasoning: |
-      Cyber substation disconnect coordinated with kinetic strikes
-      on energy infrastructure — direct attested instance of the
-      grid-attack pillar.
+      Mandiant documents a Sandworm operation that disrupted electric
+      power — abusing a native MicroSCADA binary to issue unauthorised
+      control commands that (probably) tripped the victim's substation
+      circuit breakers and caused an unscheduled outage — a direct
+      instance of the grid-attack pillar (attacking the electric grid
+      itself). Attested rests on the power-disruption Mandiant states
+      outright (report title: 'Sandworm Disrupts Power in Ukraine');
+      the separate cyber-kinetic-coordination reading is carried by
+      the non-contact-warfare link, which Mandiant explicitly hedges.
     attesting_source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+    inference_basis:
+      source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+      source_quote: "The actor first used OT-level living off the land (LotL) techniques to likely trip the victim's substation circuit breakers, causing an unplanned power outage that coincided with mass missile strikes on critical infrastructure across Ukraine."
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
@@ -65,24 +89,51 @@ doctrine_links:
     inference_basis:
       source_id: mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
       signals:
-        - "Mandiant notes the attack timing 'overlaps with Russian kinetic' strikes but hedges the causal link"
+        - "Mandiant: 'the timing of the attack overlaps with Russian kinetic operations' — the OT disconnect coincided with the start of coordinated missile strikes on Ukrainian cities including the victim's, fitting the non-contact-warfare pillar"
       ruled_out: "the 2014 Military Doctrine / confirmed cyber-kinetic synchronisation — Mandiant explicitly lacks sufficient evidence"
     contested: false
     analyst: claude
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+    confidence: plausible  # downgraded 2026-07-02 (audit): single-source op, Mandiant states no russkiy-mir purpose, and a military-degradation reading survives alongside the civilizational-subjugation one
     reasoning: |
-      Continuous coercive-blackout campaign against Ukrainian
-      civilian energy infrastructure during active hostilities.
+      A Sandworm attack on a Ukrainian civilian electric-power
+      operator during active hostilities fits the russkiy-mir
+      Ukraine-theater pillar (breaking Ukraine's civilian
+      infrastructure as part of subjugating the country). Only
+      plausible, not higher: Mandiant states no strategic purpose,
+      and the same operation reads equally as war-fighting
+      infrastructure degradation (the non-contact-warfare link)
+      rather than a distinctly civilizational-subjugation aim, so
+      more than one strategic reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Russkiy-mir Ukraine-theater subjugation: disrupting a Ukrainian civilian power operator during the invasion fits Sandworm's decade-long anti-Ukraine grid-attack pattern and the actor's default russkiy-mir/ukraine-theater alignment."
+        - "War-fighting infrastructure degradation (non-contact warfare): the same act reads as degrading the adversary's critical infrastructure to support conventional operations, with no distinctly civilizational-subjugation purpose stated by Mandiant."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/energy/electric-power/transmission
     role: primary
+    country: ua
   - target_id: sectors/energy/electric-power/grid-ot
     role: primary
+    country: ua
 sources:
   - mandiant/2023-11-09_sandworm-disrupts-power-ukraine-ot
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the RAW Mandiant primary report "Sandworm Disrupts Power in Ukraine Using a Novel Attack Against Operational Technology" (9 Nov 2023). Snapshot mandiant__2023-11-09_sandworm-disrupts-power-ukraine-ot.html, sha256 74337e4c…f3cc66ea, 376629 bytes. NOT a phantom — the URL returns the genuine article (title + datePublished 2023-11-09 + full body all match).
+    [a] FACTS — several corrections. (1) Stripped FABRICATED tradecraft: the source contains NO "OPC" (grep count 0) and NO "engineering workstation" (grep count 0); the old "60870-5-104 disconnect-via-OPC command … on the engineering workstation" was rewritten to the sourced mechanism — operators leveraged an ISO ("a.iso") to run scilc.exe, "a native utility that is part of the MicroSCADA software suite" (in \sc\prog\exec of the MicroSCADA install) on the hypervisor-hosted SCADA/MicroSCADA management instance, executing SCIL commands that "would have caused the MicroSCADA server to relay the commands to the substation RTUs via either the IEC-60870-5-104 protocol for TCP/IP connections or the IEC-60870-5-101 protocol for serial connections." (2) De-overstated the disconnect: Mandiant hedges — "we were unable to identify the SCIL commands executed, we believe they were probably commands to open circuit breakers"; "a likely attempt … to switch off substations." Reworded from the flat "issue a substation disconnection command" to the hedged form. The outage itself IS affirmed: "we are aware that the attack resulted in an unscheduled power outage." (3) "energy infrastructure" → "critical infrastructure": Mandiant says the missile strikes hit "critical infrastructure across … several Ukrainian cities, including the city in which the victim was located," never "energy infrastructure" — fixed in summary + outcome_summary. (4) Removed the unsourced/anachronistic "held in disclosure until the APT44 promotion arc (culminated April 2024)": this Nov-2023 report PRECEDED the April-2024 APT44 promotion, so it was not "held until" it; replaced with the sourced UNC3810→Sandworm merge and the ~13-month disclosure lag. (5) VERIFIED and kept: living-off-the-land / "significant shift in techniques" / "novel technique"; the Industroyer/INDUSTROYER.V2 contrast (source names both); CaddyWiper — "a new variant of CADDYWIPER in the victim's IT environment," "two days after the OT event" (added the IT-environment precision); the hypervisor-hosted SCADA management instance; intrusion "began on, or prior to, June 2022." initial_vector unknown ✓ ("unable to identify the initial access vector into the IT environment"). Added incident_type cyber-physical + wiper (Mandiant's own "cyber physical" framing; CADDYWIPER deployment). Added targets country: ua (victim explicitly a "Ukrainian critical infrastructure organization").
+    [b] ATTRIBUTION — Mandiant firmly attributes with no hedge on the actor ("the Russia-linked threat actor Sandworm targeted…"; "initially tracked … as UNC3810 before merging the cluster with Sandworm"); attributing_org_confidence high supported. Added attribution notes carrying the verbatim GRU/unit language. auspex_assessment concur retained.
+    [c] DATES — all correct, no change. start_date 2022-10-10 = the OT disruptive event ("culminated in two disruptive events on October 10 and 12, 2022"); end_date 2022-10-12 = the CaddyWiper follow-on; disclosure_date 2023-11-09 = the report's datePublished; source published_on 2023-11-09 ✓. Op month (Oct-2022) vs disclosure (Nov-2023) correctly separated, per the task's date-care flag.
+    [d] DOCTRINE — energy-weaponization/grid-attack KEPT attested: Mandiant states the grid-disruption outright (title "Sandworm Disrupts Power in Ukraine"; "unplanned power outage" from tripping "substation circuit breakers"); re-anchored the reasoning on that stated power-disruption (not the hedged cyber-kinetic coordination) and added inference_basis.source_quote. military-doctrine-2014/non-contact-warfare KEPT strongly_inferred; corrected the signal fragment to the accurate quote "the timing of the attack overlaps with Russian kinetic operations"; the reasoning's "we lack sufficient evidence to assess a possible link" is verbatim-correct. russkiy-mir/ukraine-theater DOWNGRADED strongly_inferred→plausible: single-source op, Mandiant states no strategic purpose, and a war-fighting-degradation reading (non-contact-warfare) survives alongside the civilizational-subjugation one; fixed the overstated "continuous … campaign" wording and added inference_basis.alternatives.
+    [e] ATTRIBUTION_LEVEL — added named-unit: the source names the specific unit — "Government indictments have linked the group to the Main Center for Special Technologies (also known as GTsST and Military Unit 74455)" — consistent with the unit-scoped actor id.
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml (id matches; GRU Unit 74455/GTsST; status sanctioned). No actor problem; no actor-file edit. (Task NB's "ru/gru/sandworm" slug is slightly off — the event's ru/gru/74455/sandworm is the correct, resolvable id.)
+    RESIDUAL: single-source event (one Mandiant primary report); every remaining claim is now carried by that source. The cyber-kinetic-synchronisation reading stays explicitly hedged by Mandiant and is modeled as strongly_inferred/plausible, never attested.

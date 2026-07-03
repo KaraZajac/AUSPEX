@@ -8,13 +8,16 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Approximately USD 54M drained from CoinEx hot wallets
-  across BTC, ETH, TRX, MATIC, and other chains via
-  private-key compromise. SlowMist published on-chain
-  analysis the following day attributing the theft to
-  Lazarus based on wallet-clustering overlap with the
-  Stake.com hot-wallet drain from one week prior
-  (4 September). CoinEx suspended withdrawals and
-  reimbursed affected users.
+  across nine chains (Ethereum, Tron, BSC, Bitcoin, Ripple,
+  Solana, XDAG, Bitcoin Cash, Polygon) after the hot-wallet
+  private keys were compromised. SlowMist (13 Sept) and
+  Elliptic (15 Sept) attributed the theft to the Lazarus
+  Group at a "suspected" level, on wallet-clustering overlap
+  with the Stake.com hot-wallet drain one week prior
+  (4 September) — some CoinEx proceeds were sent to an address
+  Lazarus had used to launder Stake.com funds, then bridged to
+  Ethereum. CoinEx suspended withdrawals (12 Sept), pledged
+  100% compensation, and resumed services on 21 September.
 quantified_impact:
   usd_stolen: 54000000
   asset_classes:
@@ -28,22 +31,48 @@ summary: |
   Second leg of the September 2023 Lazarus crypto-exchange
   burst (Stake.com on 4 September, CoinEx on 12 September,
   combined ~$95M across two operations in eight days).
-  Vendor attribution to Lazarus via wallet-cluster overlap;
-  FBI did not publish a parallel attribution PSA for CoinEx,
-  so AUSPEX records this as Tier-2-attested (SlowMist,
-  Elliptic) rather than government-attested. Doctrinally
-  part of the same revenue-aggregation tempo as Stake.com.
+  Vendor attribution to Lazarus at a "suspected" level via
+  wallet-cluster overlap with the FBI-attested Stake.com
+  drain; the FBI did not publish a parallel attribution PSA
+  for CoinEx, so AUSPEX records this as Tier-2 vendor-attributed
+  (SlowMist, Elliptic) rather than government-attested.
+  Doctrinally part of the same revenue-aggregation tempo as
+  Stake.com.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: SlowMist
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2023-09-13
     attribution_source_id: slowmist/2023-09-13_coinex-incident-analysis
     notes: |
       Wallet-clustering attribution via overlap with Stake.com
       proceeds (FBI-attested to Lazarus on 6 September 2023).
-      No US-government PSA specific to CoinEx published.
+      No US-government PSA specific to CoinEx published. Source
+      is Cloudflare/JS bot-walled (not directly snapshottable);
+      SlowMist's role corroborated by secondary reporting and by
+      the co-cited Elliptic snapshot. "Suspected"-level on-chain
+      attribution (named-actor: Lazarus Group + DPRK; no RGB
+      sub-unit pinned) -> concur-with-caveat.
+  - actor_id: kp/rgb/lazarus
+    attributing_org: Elliptic
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-09-15
+    attribution_source_id: elliptic/2023-06-13_atomic-wallet
+    notes: |
+      Elliptic (running blog post, September-2023 revision)
+      attributed CoinEx to Lazarus at a "suspected" level:
+      "in the absence of information suggesting the CoinEx hack
+      was conducted by any other threat group, Elliptic agrees
+      that Lazarus Group should be suspected". Basis: some CoinEx
+      proceeds routed to an address Lazarus used to launder
+      Stake.com funds, then bridged to Ethereum. attribution_date
+      is the September revision; the source record's published_on
+      (2023-06-13) reflects the earlier Atomic Wallet revision of
+      the same URL/snapshot (hash-verified 32d5624e...4ca60214).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
@@ -55,6 +84,13 @@ doctrine_links:
       revenue-aggregation flow. No standalone WMD-financing
       attestation specific to CoinEx, but the operational
       pattern is identical.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "On-chain wallet-cluster overlap (Elliptic, SlowMist, ZachXBT) routes CoinEx proceeds through an address Lazarus used to launder Stake.com funds, which the FBI attributed to Lazarus/APT38 on 2023-09-06."
+        - "CoinEx (12 Sept) is the second leg of a same-month DPRK crypto-exchange burst (Stake.com 4 Sept), matching the revenue-aggregation pillar's maximum-tempo hard-currency pattern run by the Lazarus/RGB cluster."
+        - "Treasury and FBI consistently attribute DPRK crypto-theft proceeds to the WMD and ballistic-missile programs the 8th-Congress plan enumerates, though no CoinEx-specific statement names that terminal goal."
+      ruled_out: "Independent financially-motivated cybercrime with no state nexus — rejected because the proceeds route through Lazarus-controlled laundering infrastructure tied to an FBI-attributed DPRK operation (Stake.com), not a standalone crew."
     contested: false
     analyst: claude
 targets:
@@ -63,3 +99,103 @@ targets:
     outcome: ~$54M drained from hot wallets across multiple chains.
 sources:
   - slowmist/2023-09-13_coinex-incident-analysis
+  - elliptic/2023-06-13_atomic-wallet
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Phantom-remediation audit. Path taken: NOT a phantom and NOT
+    unsupportable — a REAL, well-documented incident whose sole cited
+    source (SlowMist Medium) is Cloudflare/JS BOT-WALLED. Re-sourced by
+    ADDING the co-published Elliptic report (hash-verified snapshot) so
+    every load-bearing claim is now snapshot-carried; SlowMist kept as
+    corroborating. Level=full (all claims source-carried against a hashed
+    snapshot; SlowMist's participation independently corroborated).
+
+    SOURCES / SNAPSHOTS:
+    - slowmist/2023-09-13_coinex-incident-analysis: BOT-WALLED. curl of the
+      Medium permalink returned only a Cloudflare/JS shell (article body
+      absent: 0x "Lazarus", 0x "Stake", 0x "private key"; page embeds the
+      canonical slug in its app-argument -> URL confirmed real, not a
+      phantom homepage/catalogue). No content_sha256 recorded (shell is
+      not the article). tier secondary retained.
+    - elliptic/2023-06-13_atomic-wallet: REUSED existing record — same URL
+      + byte-identical snapshot as the CoinEx-relevant Elliptic post (this
+      is a RUNNING/LIVING blog spanning Atomic Wallet Jun -> Stake.com/CoinEx
+      Sept). Snapshot hash re-verified sha256 32d5624e...4ca60214, 329,504
+      bytes. Did NOT create a new dated record (would trip verify_atlas
+      source-dup WARN on the shared URL); documented the CoinEx quotes +
+      date caveat in that record's notes instead. tier secondary.
+
+    [a] FACTS — all now source-carried. Elliptic (raw 32d5624e...4ca60214):
+    "CoinEx was the victim of a hack, in which $54 million was stolen"
+    (=> usd_stolen 54M; NB the precise on-chain forensic sum is ~$52.8M per
+    the dn.institute 9-chain breakdown and early CoinEx estimates ranged up
+    to ~$70M — kept Elliptic's ~$54M as the cited figure, approximate).
+    Chains corrected/expanded to the verified 9 (ETH $18.3M, TRX $11.1M,
+    BSC $6.3M, XRP $6.1M, BTC $6.1M, SOL $2.5M, XDAG $1.7M, BCH $0.45M,
+    MATIC $0.29M; dn.institute per-chain sums). Root cause = "compromise of
+    the private key for CoinEx's hot wallets" (dn.institute; CoinEx statement)
+    -> "private-key compromise" confirmed; initial_vector kept `unknown` as
+    the mechanism of key theft was never established. Suspension (12 Sept) +
+    100% compensation pledge + 21 Sept resumption confirmed (CCN, dn.institute,
+    CoinEx). Stake.com $41M on 4 Sept and the ~$95M/8-day framing check out
+    ($41M+$54M, 4->12 Sept).
+
+    [b] ATTRIBUTION — the key nuance the task flagged (attribution latency).
+    CoinEx->Lazarus is "SUSPECTED"-level, on-chain-only. Elliptic verbatim:
+    "in the absence of information suggesting the CoinEx hack was conducted
+    by any other threat group, Elliptic agrees that Lazarus Group should be
+    suspected for the theft of funds from CoinEx" and "some of the funds
+    stolen from CoinEx were sent to an address which was used by the Lazarus
+    Group to launder funds stolen from Stake.com, albeit on a different
+    blockchain ... bridged to Ethereum, using a bridge previously used by
+    Lazarus". Attributing cluster = Elliptic + SlowMist + ZachXBT + CertiK
+    (secondary reporting; early reports said ~$31M "suspected" — attribution
+    latency confirmed). CORRECTIONS: added attribution_level=named-actor to
+    the SlowMist entry (was missing); downgraded auspex_assessment concur ->
+    concur-with-caveat on the strength of the "suspected" hedge (mirrors the
+    exemplar's moderate/medium-confidence handling); ADDED an Elliptic
+    attribution entry (2023-09-15, moderate, named-actor). Named-actor not
+    named-unit: "Lazarus Group"/DPRK named, no specific RGB bureau pinned.
+    Actor kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml, status
+    sanctioned) — correct post the TraderTraitor/Lazarus RGB re-homing.
+
+    [c] DATES — start/disclosure 2023-09-12, end 2023-09-13 OK. SlowMist
+    published_on 2023-09-13 OK (attribution_date matches). Elliptic
+    attribution_date set 2023-09-15 (its Sept revision); the shared source
+    record's published_on stays 2023-06-13 (Atomic Wallet revision) — see
+    FLAG below. FBI Stake.com PSA date verified 2023-09-06 (fbi.gov PSA
+    title + Elliptic: "The FBI issued a press release on September 6th
+    confirming that the Lazarus Group was behind this attack").
+
+    [d] DOCTRINE_LINK — kept strongly_inferred (NOT attested), correct per
+    the 8th-Congress/Byungjin per-event rule: NO CoinEx-specific source
+    states the terminal WMD/weapons-financing goal (Elliptic/SlowMist trace
+    funds + attribute the actor only). Added inference_basis (signals[] +
+    ruled_out) and attesting_source_id: null. FK verified: doctrine
+    kp/8th-congress-defense-plan, pillar .../revenue-aggregation, program
+    .../revenue-aggregation/crypto-bridge-theft all exist. perspective
+    absent = attacker-rationale (correct).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor on both entries (was absent).
+
+    [f] ACTOR_ID — kp/rgb/lazarus resolves; no actor-file issues.
+
+    FLAGS for orchestrator/Kara:
+    1) SOURCE (running-document): the Elliptic post "How the Lazarus Group is
+       stepping up crypto hacks..." is ONE living URL now cited by
+       Atomic-Wallet/Harmony (Jun framing) AND CoinEx/Stake.com (Sept
+       content), represented by the single record elliptic/2023-06-13_
+       atomic-wallet whose published_on (2023-06-13) understates the
+       snapshotted >=2023-09-15 revision. Consider a running-document date
+       convention or per-revision split. No new source-dup created.
+    2) SOURCE: slowmist/2023-09-13_coinex-incident-analysis is bot-walled
+       (Medium+Cloudflare) and un-snapshottable by curl; a headless/manual
+       capture would let it be hashed.
+    RESIDUAL UNCERTAINTY: exact stolen total is source-dependent
+    ($52.8M forensic / ~$54M Elliptic / up to ~$70M early estimates) — kept
+    Elliptic's $54M; asset_classes list (ETH/BTC/TRX/MATIC) is a
+    representative subset of the 9 affected chains (all 4 confirmed).

@@ -1,6 +1,6 @@
 id: 2023-09/eset-lightlesscan-spain-aerospace
 name: ESET disclosure of Lazarus LightlessCan implant on Spain aerospace target
-start_date: 2022-09-01  # ESET dates initial outreach to late 2022
+start_date: 2022-01-01  # ESET states only that initial access was obtained 'last year' (2022); no month disclosed — year-granularity anchor (Jan 1), not a source-stated date
 disclosure_date: 2023-09-29
 end_date: 2023-09-29
 incident_type:
@@ -8,49 +8,97 @@ incident_type:
   - espionage
 initial_vector: phishing
 outcome_summary: |
-  ESET disclosed a Lazarus social-engineering operation
-  against an employee of an unnamed Spanish aerospace
-  company. Vector: LinkedIn fake-recruiter pretext with
-  trojanized coding-challenge LNK file dropping the new
-  LightlessCan implant — a second-generation BlindingCan
-  successor that emulates native Windows commands
-  in-process to evade EDR. Same tradecraft as the
-  parallel TraderTraitor crypto-exchange operations of the
-  same period (Stake.com, CoinEx, CoinsPaid).
+  ESET Research disclosed a Lazarus (Operation DreamJob)
+  social-engineering operation against an employee of an
+  unnamed Spanish aerospace company. Initial access was
+  obtained "last year" (2022) via LinkedIn Messaging, the
+  attacker masquerading as a Meta recruiter and sending two
+  trojanized C++ coding-challenge executables (Quiz1.exe /
+  Quiz2.exe) delivered inside ISO images (Quiz1.iso /
+  Quiz2.iso) from a third-party cloud-storage platform. ESET
+  identified four execution chains that used DLL side-loading
+  to deliver three payload types, most notably the new
+  LightlessCan backdoor — a successor to BlindingCan that
+  emulates a wide range of native Windows commands in-process
+  (rather than spawning noisy console executions) to hinder
+  real-time security monitoring and analysis. ESET states the
+  final goal of the attack was cyberespionage.
 false_flag_risk: none
 summary: |
-  Cross-pillar disclosure. The LinkedIn-fake-recruiter
-  pretext that delivers TraderTraitor's crypto-exchange
-  payload is the same pretext that delivers Lazarus's
-  defense-industrial-base implants — ESET's Spain
-  disclosure documents the dual-use of the access
-  primitive. Doctrinally, this operation belongs to the
-  strategic-tech-collection pillar of the 8th-Congress
-  plan rather than revenue-aggregation, but the access
-  primitive is the same.
+  ESET Research attributes this intrusion with a high level
+  of confidence to the Lazarus group (linked to North Korea),
+  specifically its Operation DreamJob job-lure campaigns, on
+  the basis of shared intrusion-set tradecraft (the LinkedIn
+  coding-challenge lure; new variants of the DreamJob "Dutch
+  case" loaders and the BlindingCan backdoor; shared AES-128 /
+  RC6-256 encryption with the Amazon-themed campaign),
+  infrastructure behaviour, and cui bono. ESET frames North
+  Korean aerospace targeting explicitly around missile
+  technology: per UN Security Council monitoring reports it
+  cites, North Korea-aligned APT groups attack aerospace
+  companies to access sensitive technology and aerospace
+  know-how relevant to intercontinental ballistic missiles,
+  and proceeds from such cyberattacks help fund North Korea's
+  missile development. AUSPEX places this operation in the
+  strategic-tech-collection pillar of the 8th-Congress defense
+  plan (defence-technology collection) rather than the
+  revenue-aggregation pillar; the missile-program tasking is
+  an AUSPEX inference — ESET states the specific operational
+  goal only as generic cyberespionage and does not identify
+  the unnamed victim's product line — not an ESET attestation.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: ESET Research
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-09-29
     attribution_source_id: eset/2023-09-29_lightlesscan-spain-aerospace
     notes: |
-      ESET attribution by malware-family lineage
-      (BlindingCan / LightlessCan) and TTPs (LinkedIn
-      coding-challenge pretext) consistent with prior
-      published Lazarus operations.
+      ESET: "We attribute this activity with a high level of
+      confidence to Lazarus, particularly to its campaigns
+      related to Operation DreamJob." Basis is three-factor:
+      (1) intrusion set — LinkedIn coding-challenge lure (a
+      known Lazarus/DreamJob tactic), new variants of the
+      DreamJob "Dutch case" intermediate loaders and the
+      BlindingCan backdoor, and shared AES-128 / RC6-256
+      encryption; (2) infrastructure (compromised third-party
+      servers — ESET's own "weak-confidence" signal); (3) cui
+      bono. ESET links Lazarus to North Korea but names no
+      specific service/unit → attribution_level named-actor
+      (the actor's kp/rgb service placement is carried by other
+      govt sources in the actor record, not by this report).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
     program_id: kp/8th-congress-defense-plan/strategic-tech-collection/missile-modernization
     confidence: strongly_inferred
     reasoning: |
-      Spanish aerospace company is a defense-industrial-base
-      target; Lazarus tasking against aerospace and missile
-      technology is consistent with the 8th-Congress
-      13-system list. ESET did not explicitly cite WMD-financing
-      so this is inference rather than attestation.
+      The victim is a Spanish aerospace company and ESET
+      attributes the intrusion with high confidence to Lazarus
+      (Operation DreamJob), giving as its own cui-bono factor
+      that "pilfering the know-how of an aerospace company is
+      aligned with long-term goals manifested by Lazarus." The
+      report frames North Korean aerospace targeting as
+      collection of sensitive aerospace / ICBM-relevant
+      technology and ties cyber proceeds to missile-development
+      funding (citing UN Security Council reports) — the goal
+      the strategic-tech-collection pillar and its
+      missile-modernization program encode. It is
+      strongly_inferred, not attested, because ESET states the
+      specific goal of THIS operation only as generic
+      cyberespionage and frames the missile rationale as general
+      context about North Korean aerospace targeting rather than
+      a per-operation assessment; the victim is unnamed and its
+      product line undisclosed.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ESET frames North Korean aerospace targeting around missiles: North Korea-aligned APT groups attack aerospace companies to access sensitive technology and aerospace know-how relevant to ICBMs, and proceeds help fund missile development (ESET citing UN Security Council reports)."
+        - "ESET cui-bono factor, verbatim: 'Pilfering the know-how of an aerospace company is aligned with long-term goals manifested by Lazarus.'"
+        - "High-confidence ESET attribution to Lazarus / Operation DreamJob, whose ClearSky-coined scope is defense and aerospace companies with a cyberespionage objective."
+        - "The missile framing (rather than satellite/UAV or maritime) is the reading ESET's own report supplies for why North Korea targets aerospace firms."
+      ruled_out: "Revenue-aggregation pillar (the financial track, e.g. TraderTraitor crypto theft): ESET states this operation's goal is cyberespionage / technology theft, not financial gain, and does not invoke the crypto-revenue playbook — the report never mentions TraderTraitor or cryptocurrency."
     contested: false
     analyst: claude
 targets:
@@ -59,3 +107,98 @@ targets:
     country: es
 sources:
   - eset/2023-09-29_lightlesscan-spain-aerospace
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited vs the RAW ESET WeLiveSecurity report "Lazarus luring
+    employees with trojanized coding challenges: The case of a
+    Spanish aerospace company" (Peter Kálnai, 29 Sep 2023) —
+    raw_snapshot eset__2023-09-29_lightlesscan-spain-aerospace.html,
+    sha256 7e6576f3…508142c8, 163801 bytes. Not a phantom: page
+    title + meta-description + body match the citation exactly;
+    real first-party article.
+
+    [a] FACTS — TWO fabrications removed. (1) The prior outcome_summary
+    said the coding challenge was a "trojanized coding-challenge LNK
+    file"; the raw says the payloads were two executables (Quiz1.exe /
+    Quiz2.exe) "delivered via the Quiz1.iso and Quiz2.iso images hosted
+    on a third-party cloud storage platform," executed via DLL
+    side-loading (four execution chains, three payload types). No "LNK"
+    appears in the source (0 hits) — corrected to ISO-delivered .exe +
+    DLL side-loading. (2) The prior summary/outcome asserted "Same
+    tradecraft as the parallel TraderTraitor crypto-exchange operations
+    … (Stake.com, CoinEx, CoinsPaid)" and a "cross-pillar … dual-use
+    access primitive" that "ESET's Spain disclosure documents."
+    UNSOURCED: the raw contains 0 hits for TraderTraitor, Stake.com,
+    CoinEx, CoinsPaid, or cryptocurrency; ESET makes no crypto/dual-use
+    claim. The whole TraderTraitor cross-link was stripped from summary
+    and outcome_summary. VERIFIED facts retained: unnamed Spanish
+    aerospace company ("an aerospace company in Spain"); LinkedIn
+    Messaging fake recruiter "masquerading as a recruiter for Meta";
+    LightlessCan "publicly undocumented backdoor we named LightlessCan";
+    it "mimics the functionalities of a wide range of native Windows
+    commands, enabling discreet execution within the RAT itself instead
+    of noisy console executions" and is "a significant advancement
+    compared to its predecessor, BlindingCan" ("EDR" softened to "real-
+    time security monitoring", ESET's phrasing); "The final goal of the
+    attack was cyberespionage."
+
+    [b] ATTRIBUTION — verbatim: "We attribute this activity with a high
+    level of confidence to Lazarus, particularly to its campaigns
+    related to Operation DreamJob." attributing_org_confidence: high ✓
+    (unchanged). Refined notes to ESET's actual three-factor basis
+    (intrusion set incl. BlindingCan lineage + DreamJob LinkedIn lure +
+    shared AES-128/RC6-256; infrastructure; cui bono). ESET calls
+    Lazarus "linked to North Korea" and names no unit.
+
+    [c] DATES — published_on 2023-09-29 ✓ (byline "29 Sep 2023").
+    disclosure_date / end_date 2023-09-29 ✓. start_date CORRECTED
+    2022-09-01 → 2022-01-01: the raw dates initial access only as "last
+    year" (=2022) with no month; the prior "# ESET dates initial
+    outreach to late 2022" comment was unsupported (the only "September
+    2022" strings in the source are a referenced Microsoft blogpost and
+    an Amazon-themed case, not this compromise). Set to a year-
+    granularity anchor with an honest comment.
+
+    [d] DOCTRINE — kept strongly_inferred (NOT attested). ESET does
+    supply the missile/ICBM rationale for North Korean aerospace
+    targeting ("North Korea-aligned APT groups attack aerospace
+    companies in attempts to access sensitive technology and aerospace
+    know-how, as intercontinental ballistic missiles spend their
+    midcourse phase in the space … money gained from cyberattacks
+    accounts for a portion of North Korea's missile development costs")
+    and a cui-bono ("Pilfering the know-how of an aerospace company is
+    aligned with long-term goals manifested by Lazarus") — strong
+    support for the strategic-tech-collection pillar / missile-
+    modernization program. But it stays strongly_inferred because ESET
+    states THIS operation's specific goal only as generic
+    cyberespionage and frames the missile rationale as general UN-report
+    context, and the victim/product line is undisclosed. Program kept
+    (missile-modernization) because ESET's own framing is missile/ICBM-
+    specific, not satellite or maritime. Added inference_basis
+    {signals[], ruled_out} (was absent). attesting_source_id: null
+    (correct — not attested). FKs resolve: doctrine kp/8th-congress-
+    defense-plan, pillar strategic-tech-collection, program
+    missile-modernization all present; pillar target_sectors include
+    aerospace/defense. Attacker-rationale (kp actor ↔ kp doctrine), no
+    perspective tag / state-mismatch needed.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor (ESET names
+    the Lazarus group + North Korea, no service/unit; the actor's
+    kp/rgb service placement is carried by other govt sources in the
+    actor record, not by this ESET report).
+
+    [f] ACTOR_ID — kp/rgb/lazarus resolves to atlas/actors/kp/lazarus.yaml
+    (id kp/rgb/lazarus). No actor-file edit. Actor looks sound (RGB
+    placement independently sourced in-file; aerospace/defense already
+    in its target_sector_ids). No flag.
+
+    SOURCE RECORD: added raw_snapshot + content_sha256; corrected tier
+    secondary → primary (ESET Research's own first-party investigation,
+    clearly miscategorized); appended AUDIT note recording that the
+    report does not mention TraderTraitor/crypto. Single-source event,
+    but the source is a tier-1 vendor primary that carries every
+    retained claim → level: full.

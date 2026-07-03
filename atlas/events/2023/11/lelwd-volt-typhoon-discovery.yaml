@@ -1,78 +1,195 @@
 id: 2023-11/lelwd-volt-typhoon-discovery
 name: Littleton Electric Light & Water (LELWD) Volt Typhoon 300-day-dwell discovery
-start_date: 2023-02-01  # estimated initial access per Dragos case study
-disclosure_date: 2025-03-12  # Dragos case-study publication
-end_date: 2023-11-30  # eviction
+start_date: 2023-02-01  # initial access ~Feb 2023 per Dragos (via SecurityWeek/ITPro); estimate
+disclosure_date: 2025-03-12  # Dragos case-study publication / coordinated public disclosure
+end_date: 2023-11-30  # discovered Nov 2023 (Thanksgiving week); eradication followed
 incident_type:
   - intrusion
   - pre-positioning
-initial_vector: valid-creds  # living-off-the-land per Dragos
+initial_vector: n-day  # unpatched FortiGate 300D (Fortinet patched Dec 2022) per The Register
 outcome_summary: |
-  Volt Typhoon presence inside the Littleton Electric Light &
-  Water Department (LELWD), a small Massachusetts municipal
-  utility, discovered in November 2023 after approximately 300
-  days of dwell (initial access estimated February 2023). Dragos
-  case study reported lateral movement and data exfiltration but
-  no compromise of customer-sensitive data per the investigation.
+  Volt Typhoon — the group Dragos tracks as VOLTZITE, which it says
+  "overlaps with the Volt Typhoon collective" — was found inside the
+  Littleton Electric Light and Water Departments (LELWD), a small
+  Massachusetts municipal public power utility serving Littleton and
+  Boxborough. The intrusion was discovered in November 2023 (just
+  before Thanksgiving) after the FBI notified LELWD and Dragos OT
+  sensors flagged anomalous China-bound traffic; investigation showed
+  the actor had been in the network since about February 2023 — more
+  than 300 days. Initial access was via an unpatched FortiGate 300D
+  firewall (Fortinet had patched the flaw in December 2022; LELWD's
+  managed service provider had not applied it). Observed tradecraft
+  was living-off-the-land: SMB traversal and RDP lateral movement, no
+  malware. Dragos assessed the adversary aimed to exfiltrate OT
+  operating-procedure and energy-grid spatial-layout data; the
+  compromised information did not include customer-sensitive data, and
+  LELWD re-architected its network to remove adversary advantage.
   Significant because LELWD is a small municipal utility — not a
-  national CII operator — which underscores the breadth of Volt
-  Typhoon's pre-positioning targeting against second-tier US
-  energy assets.
+  national CII operator — underscoring the breadth of Volt Typhoon
+  pre-positioning against second-tier US energy assets.
 false_flag_risk: none
 campaign_id: volt-typhoon-cii-prepositioning
 summary: |
-  One of the first publicly documented post-AA23-144a Volt
-  Typhoon victim case studies with operational specificity. The
-  small-utility profile makes the case doctrinally important: a
-  300-day dwell at a municipal electric / water utility with no
-  obvious immediate intelligence value is most parsimoniously
-  explained by pre-positioning against a Taiwan-contingency-era
-  US homeland disruption mission rather than collection.
+  Among the first publicly documented post-AA23-144A Volt Typhoon
+  victim case studies with operational specificity, and the first
+  disclosed VOLTZITE compromise of a US electric utility. The
+  small-utility profile makes the case doctrinally salient: a
+  300-plus-day dwell at a municipal electric/water utility whose
+  attackers collected grid-operations targeting data — which Dragos
+  said would let the adversary "know exactly where to attack" for a
+  future "Stage 2 capability" — reads as collection in service of
+  pre-positioning for grid disruption rather than conventional
+  intelligence collection. A competing espionage-only reading
+  survives (the LELWD GM described it as "reconnaissance and
+  espionage," and Dragos noted Volt Typhoon has not been observed
+  causing disruption), which is why the Taiwan-contingency link is
+  inferred rather than attested here.
 attributions:
   - actor_id: cn/unscoped/volt-typhoon
     attributing_org: Dragos
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-03-12
     attribution_source_id: dragos/2025-03_lelwd-volt-typhoon
+    notes: |
+      Dragos attributes the LELWD intrusion to VOLTZITE, "a
+      Dragos-identified threat group that overlaps with Volt Typhoon"
+      (named-actor: a named group; no Chinese service named — actor is
+      cn/unscoped). The case-study PDF itself does not say "China"; the
+      Chinese-state nexus is stated by SecurityWeek ("an intrusion
+      attributed to the notorious Chinese threat actor Volt Typhoon")
+      and is established at nation level in the actor record's cited
+      Microsoft/CISA sources.
 doctrine_links:
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/coercive-options
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Consistent with the broader Volt Typhoon
-      Taiwan-contingency-pre-positioning doctrine articulated
-      by CISA AA23-144a / AA24-038A and Wray's January 2024
-      HSC testimony. LELWD-specific intent not publicly
-      attested.
+      Volt Typhoon's US-government-attributed mission is pre-positioning
+      in US critical infrastructure to enable disruption in a
+      Taiwan-conflict contingency (CISA AA23-144A / AA24-038A; FBI
+      Director Wray's January 2024 House Select Committee testimony).
+      A VOLTZITE/Volt Typhoon intrusion into a US electric utility that
+      collected grid-operations targeting data fits that campaign, but
+      no LELWD-specific source names Taiwan, so the contingency link is
+      inferred from actor-mission + target rather than attested here.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "US-govt attribution frames Volt Typhoon as pre-positioning in US CII to enable disruption in a Taiwan-conflict scenario (CISA AA23-144A / AA24-038A; FBI Wray, Jan 2024)."
+        - "Target is US electric-grid CII and the stated exfil goal was grid-operations targeting data — the asset class that campaign prioritizes."
+      ruled_out: "Conventional economic/political espionage — no commercial/PII collection was found (customer data untouched); the data sought was grid-operations / attack-enabling. The residual Taiwan-specific-vs-generic-CII ambiguity is why this is inferred, not attested."
     contested: false
     analyst: claude
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/pre-positioning
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Small-utility 300-day-dwell with no apparent collection
-      payoff is the canonical pre-positioning signature.
-    attesting_source_id: null
+      Dragos — the attributing vendor — stated the intrusion's
+      strategic purpose: the adversary aimed to exfiltrate OT
+      operating-procedure and energy-grid spatial-layout data that
+      "can be pivotal for helping the adversary know exactly where to
+      attack when, or if, they decide to utilize a Stage 2 capability."
+      That is pre-positioning to enable a future disruptive attack on
+      the grid — the goal this pillar encodes — stated by the
+      attributing authority rather than merely inferred from the
+      target set.
+    attesting_source_id: securityweek/2025-03-12_volt-typhoon-300-days-us-electric-grid
+    inference_basis:
+      source_id: securityweek/2025-03-12_volt-typhoon-300-days-us-electric-grid
+      source_quote: "the adversary ... were aiming to exfiltrate specific data related to OT operating procedures and spatial layout data relating to energy grid operations ... pivotal for helping the adversary know exactly where to attack when, or if, they decide to utilize a Stage 2 capability (Dragos, quoted by SecurityWeek)"
+    counter_explanation: |
+      LELWD's GM characterized the activity as "reconnaissance and
+      espionage," and Dragos noted Volt Typhoon has "not been observed
+      hacking ICS and causing disruption" — the disruptive intent is
+      Dragos's assessment of the collected data's purpose, not an
+      observed destructive act.
     contested: false
     analyst: claude
 anticipated_timeline_markers:
   - marker_id: cn/taiwan/davidson-window-2027
     confidence: strongly_inferred
     reasoning: |
-      Time-horizon-consistent with the broader Volt Typhoon
-      campaign's anticipation of the Davidson Window.
+      Time-horizon-consistent with the broader Volt Typhoon campaign's
+      anticipation of the Davidson Window (2027 earliest-credible PLA
+      Taiwan window); no public statement names the Davidson Window in
+      connection with the LELWD intrusion.
 targets:
   - target_id: orgs/lelwd
     role: primary
     outcome: |
-      ~300-day dwell discovered November 2023; lateral movement
-      and data exfiltration observed; customer-sensitive data
-      not believed compromised per investigation.
+      More than 300-day intrusion (initial access ~Feb 2023) discovered
+      Nov 2023; SMB traversal + RDP lateral movement; adversary sought
+      OT operating-procedure and grid spatial-layout data; no
+      customer-sensitive data compromised per the investigation.
   - target_id: sectors/energy/electric-power
+    country: us
     role: primary
 sources:
   - dragos/2025-03_lelwd-volt-typhoon
+  - securityweek/2025-03-12_volt-typhoon-300-days-us-electric-grid
+  - theregister/2025-03-12_fbi-china-volt-typhoon-on-your-network
+  - itpro/2025-03-13_volt-typhoon-300-days-electric-grid
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Phantom-triage + full 6-point audit of 2023-11/lelwd-volt-typhoon-discovery. PATH: RE-SOURCE
+    (badrabbit model). The single cited source (Dragos case-study PDF) is REAL and LIVE — re-fetched
+    HTTP 200, application/pdf, 1,071,371 B, sha256 8e6f6d30…d20a009c — NOT a phantom and NOT a 404
+    (the source record's prior "PDF currently 404s" note was stale; corrected). But the PDF is thin:
+    it supports only the utility profile, VOLTZITE-"overlaps with Volt Typhoon" persistence,
+    "server message block traversal maneuvers and remote desktop protocol lateral movement,"
+    "the compromised information did not include any customer-sensitive data," and eradication. It
+    does NOT contain the event's load-bearing facts (grepped: no "300"/"dwell", no "February 2023",
+    no "November", no "exfiltrat", no China/PRC/Taiwan/pre-position, no FortiGate, no "living off
+    the land"; its only date token is "since the start of 2023" about VOLTZITE's broad campaign).
+    Those facts were re-sourced from three reachable reports, snapshotted + hashed 2026-07-02:
+      • SecurityWeek 2025-03-12 (secondary) sha256 0e84be4f…e35d25f7, 165,845 B.
+      • The Register 2025-03-12 (secondary) sha256 a0c6ee9f…405962bc, 163,125 B.
+      • ITPro       2025-03-13 (secondary) sha256 e3f0e2e3…56274199, 975,998 B.
+    [a] FACTS — grounded/corrected. Dwell "more than 300 days" + initial access "since February 2023"
+    + discovery "November 2023, just before Thanksgiving" are verbatim in SecurityWeek & ITPro (NOT
+    the Dragos PDF). initial_vector CHANGED valid-creds → n-day (The Register GM interview: "gained
+    initial access via a buggy FortiGate 300D firewall … Fortinet patched this flaw in December 2022,
+    but as of August 2023 LELWD's managed services provider still hadn't updated the firmware"). The
+    bare "data exfiltration" claim was replaced with the sourced framing — Dragos (via SecurityWeek):
+    adversary "aiming to exfiltrate specific data related to OT operating procedures and spatial
+    layout data relating to energy grid operations"; ITPro: "compromised information did not impact
+    any customer data." LOTL/no-malware + FBI-notification discovery added (The Register/ITPro). SMB +
+    RDP lateral movement carried by the Dragos PDF.
+    [b] ATTRIBUTION — attributing_org Dragos, high, concur; attribution_source_id kept = Dragos case
+    study. Added note: the PDF says only "VOLTZITE … overlaps with Volt Typhoon" (no "China"); the
+    Chinese-state nexus is stated by SecurityWeek ("the notorious Chinese threat actor Volt Typhoon")
+    and established at nation level in the actor record. No over-attestation.
+    [c] DATES — start_date 2023-02-01 ✓; disclosure_date 2025-03-12 ✓ (SecurityWeek: case study
+    published "Wednesday" = 2025-03-12; The Register same day — resolves the source record's
+    "Last updated February 2025" footer, which is an internal revision date); end_date 2023-11-30 ✓
+    month-end proxy for the Nov-2023 Thanksgiving-week discovery. Source published_on dates checked
+    against bylines (Kovacs/Lyons 03-12, Klappholz 03-13).
+    [d] DOCTRINE_LINKS — cn/intelligentized-warfare/pre-positioning UPGRADED strongly_inferred →
+    ATTESTED: the attributing vendor (Dragos, quoted by SecurityWeek) states the strategic purpose —
+    the collected OT/grid-layout data is "pivotal for helping the adversary know exactly where to
+    attack when, or if, they decide to utilize a Stage 2 capability" (= pre-positioning for future
+    grid disruption, the pillar's goal, stated not merely inferred). attesting_source_id set to the
+    SecurityWeek source; inference_basis.source_quote added; counter_explanation records the surviving
+    espionage reading. cn/taiwan-reunification/coercive-options KEPT strongly_inferred (attesting
+    null) — no LELWD-specific source names Taiwan; added inference_basis.signals + ruled_out. (The
+    sibling 2023-05 disclosure event has the Taiwan link ATTESTED via Wray; that testimony is not
+    LELWD-specific, so it is honestly downgraded here.)
+    [e] ATTRIBUTION_LEVEL — set named-actor (Dragos names the group VOLTZITE≈Volt Typhoon; no Chinese
+    service named — consistent with actor cn/unscoped/volt-typhoon).
+    [f] ACTOR_ID — cn/unscoped/volt-typhoon resolves to atlas/actors/cn/volt-typhoon.yaml (deliberately
+    demoted from cn/mss on 2026-06-24; no cited source names a service). The tasking hint said
+    "cn/mss"; the corpus's own audited placement is cn/unscoped — NOT changed, no actor edit.
+    FLAGS: (1) target orgs/lelwd is a DANGLING FK — no atlas/targets/orgs/lelwd.yaml exists. Kept in
+    the event (correct named victim) and flagged for the orchestrator to CREATE the registry record
+    (content supplied in the audit report); out of subagent scope to create target files. (2) Dragos
+    source record notes corrected (stale 404 / wayback-in-archive_url claims).
+    Level: full — all 6 points complete and every event claim now source-carried against captured +
+    hashed raw; the only residual is the orgs/lelwd registry-file creation (orchestrator action).

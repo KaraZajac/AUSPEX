@@ -1,41 +1,143 @@
 id: 2023-10/hunters-international-bitdefender-disclosure
 name: Bitdefender attribution of Hunters International as Hive-code successor
 start_date: 2023-10-01
-disclosure_date: 2023-10-20
-end_date: 2023-10-20
+disclosure_date: 2023-11-09
+end_date: 2023-11-09
 incident_type:
   - documentary
 initial_vector: unknown
 outcome_summary: |
-  Bitdefender Labs published analysis identifying approximately
-  60% code overlap between the newly-active Hunters International
-  ransomware payload and the previously disrupted Hive
-  ransomware operation. Hive infrastructure had been seized in
-  January 2023 by an FBI / DOJ / German BKA operation; Hunters
-  International first appeared on leak sites in October 2023.
-  The Bitdefender disclosure was the basis for industry consensus
-  that Hunters International either acquired Hive source code
-  or comprised Hive personnel post-takedown, although operator
-  continuity remains contested and Hunters operators publicly
-  denied direct lineage.
+  Bitdefender Labs (Martin Zugec, 9 November 2023) published analysis
+  of the newly-active Hunters International ransomware, corroborating
+  that its payload is derived from the previously-disrupted Hive
+  ransomware code base. Independent researcher @BushidoToken had
+  reported "at least a 60% match between the two sets of code" and
+  malware analyst rivitna assessed the sample as "Hive ransomware
+  version 6". Hive infrastructure had been seized in January 2023 by
+  the FBI with German and Dutch law enforcement; Hunters International
+  first appeared on leak sites in October 2023. Crucially, Bitdefender
+  did NOT conclude that Hunters is a Hive rebrand: it found "believable"
+  the group's own claim to be an independent ransomware group that
+  "acquired the source code and infrastructure from Hive", noting
+  Hunters places a greater emphasis on data exfiltration than on
+  encryption. Hunters operators publicly denied being a rebrand,
+  stating the Hive source code was sold and "we are those who purchased
+  them". Operator continuity remains contested; the "possible rebrand"
+  framing originated with other researchers (BleepingComputer/rivitna),
+  not with Bitdefender, whose own reading favours a distinct group that
+  acquired the code.
 false_flag_risk: none
 summary: |
-  Foundational documentary event for `criminal/hunters-
-  international`. AUSPEX places under `criminal/` rather than
-  carrying over the `ru/proxies/hive` classification because
-  operator continuity is contested and no specific FSB-tolerance
-  attribution has been made about Hunters International. The
-  Hive predecessor is tracked separately at `ru/proxies/hive`.
+  Foundational documentary event for `criminal/hunters-international`.
+  Both Hunters International and its Hive predecessor are tracked under
+  the `criminal/` namespace (the predecessor at `criminal/hive`, moved
+  there from an earlier `ru/proxies/hive` / `ru/unscoped/hive`
+  classification once no source-documented Russian-state nexus was
+  found). AUSPEX keeps the two as SEPARATE actor records rather than
+  merging Hunters into Hive because operator continuity is contested —
+  Bitdefender found credible Hunters' claim to be an independent group
+  that acquired Hive's source code, and no state-nexus attribution has
+  been made about either group.
 attributions:
   - actor_id: criminal/hunters-international
     attributing_org: Bitdefender Labs
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-10-20
+    attribution_date: 2023-11-09
     attribution_source_id: bitdefender/2023-10-20_hunters-international-hive-overlap
+    notes: "Bitdefender (Zugec, 2023-11-09) identifies Hunters International as a distinct named actor running a Hive-derived payload. It corroborates the code overlap (@BushidoToken's 'at least a 60% match'; rivitna's 'Hive ransomware version 6' sample) but explicitly does NOT call it a Hive rebrand: 'After our analysis, we find the statement from Hunters International believable' — i.e. an 'independent ransomware group that acquired the source code and infrastructure from Hive', with 'greater emphasis on data exfiltration'. High confidence on actor identity + code lineage; the rebrand-vs-acquisition origin question is hedged by the source. attribution_level = named-actor (a specific group is named; no nation or unit — criminal/, no state nexus)."
 doctrine_links: []
 targets:
   - target_id: sectors/critical-infrastructure
     role: primary
 sources:
   - bitdefender/2023-10-20_hunters-international-hive-overlap
+  - bleepingcomputer/2023-10-29_hunters-international-possible-hive-rebrand
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    RE-SOURCE (badrabbit model). The event previously rested on ONE mislabeled
+    Bitdefender citation with url:null and a FABRICATED title ("Unpacking Hunters
+    International: Hive Ransomware's Code Lineage" — no such article). The real
+    Bitdefender article was located, live-fetched, hashed, and its metadata fixed
+    in place (id/slug unchanged per the stable-slug rule); a second corroborating
+    source (BleepingComputer) was created. Both sources HTTP 200, snapshotted +
+    hashed. Sources audited:
+      S1 bitdefender/2023-10-20_hunters-international-hive-overlap — "Hive
+         Ransomware's Offspring: Hunters International Takes the Stage" (Martin
+         Zugec), sha256 7936583a…544b44c9, 117,809 bytes.
+      S2 bleepingcomputer/2023-10-29_hunters-international-possible-hive-rebrand —
+         "New Hunters International ransomware possible rebrand of Hive" (Ionut
+         Ilascu), sha256 5df77fb1…e8522755, 90,965 bytes.
+
+    [a] FACTS — all now source-carried.
+      * "~60% / at least a 60% code overlap": S1 verbatim — "@BushidoToken also
+        found multiple code overlaps and similarities, reporting at least a 60%
+        match between the two sets of code"; S2 — "code overlaps and similarities
+        that match more than 60% of the code in Hive ransomware". CORRECTED the
+        prose so the 60% figure is attributed to @BushidoToken (cited/corroborated
+        by Bitdefender), not originated by Bitdefender. Added rivitna's "Hive
+        ransomware version 6" assessment (S2 verbatim).
+      * Hive Jan-2023 takedown: S1 verbatim — "In January 2023, the FBI
+        collaborated with law enforcement agencies in Germany and the Netherlands
+        to successfully dismantle … Hive". CORRECTED "FBI / DOJ / German BKA" ->
+        "FBI with German and Dutch law enforcement" (the original omitted the
+        Netherlands).
+      * Hunters emergence "October 2023": supported by S2 (published 2023-10-29,
+        describing the brand as newly emerged). start_date 2023-10-01 kept as an
+        October-2023 month-anchor best estimate.
+      * Hunters' denial: S2 verbatim — group is "a new service on the ransomware
+        scene who purchased the encryptor source code from the Hive developers …
+        'All of the Hive source codes were sold … and we are those who purchased
+        them'". Carried.
+    [b] ATTRIBUTION — KEY NUANCE CORRECTED. The event framed Bitdefender as
+        attesting Hunters "either acquired Hive source code OR comprised Hive
+        personnel post-takedown". S1 does NOT support the personnel/rebrand limb:
+        verbatim — "After our analysis, we find the statement from Hunters
+        International believable"; the statement being that "rather than being a
+        rebranded iteration of Hive, they are an independent ransomware group that
+        acquired the source code and infrastructure from Hive", with "primary focus
+        on data exfiltration". Bitdefender's own reading FAVOURS a distinct group
+        that bought the code, not a rebrand/personnel continuity. outcome_summary,
+        summary and attribution notes rewritten to reflect this; "possible rebrand"
+        framing correctly re-attributed to other researchers (S2 headline/rivitna),
+        not Bitdefender. attributing_org_confidence kept high (Bitdefender is
+        confident on actor identity + Hive code lineage; the origin question is the
+        hedged part, now stated).
+    [c] DATES — CORRECTED. S1 published_on was 2023-10-20 (wrong) -> 2023-11-09
+        (S1 verbatim byline "Martin Zugec November 09, 2023"). Event
+        disclosure_date and end_date 2023-10-20 -> 2023-11-09 (the Bitdefender
+        publication this event is named for). attribution_date 2023-10-20 ->
+        2023-11-09. S2 published_on set to 2023-10-29 (verbatim body byline
+        "October 29, 2023"). NOTE: the source id slug keeps 2023-10-20 (stable-slug
+        rule) and is now a legacy date artifact — flagged in the source notes.
+    [d] DOCTRINE_LINKS — [] retained and correct. Hunters International is a
+        financially-motivated criminal actor with no source-documented state nexus
+        (placed criminal/); no doctrine genuinely applies. No attested link, so no
+        attesting_source_id required. Not invented.
+    [e] ATTRIBUTION_LEVEL — added `named-actor` (was absent): Bitdefender/S2 name a
+        specific group ("Hunters International"); no nation-state or unit is named,
+        consistent with the criminal/ placement.
+    [f] ACTOR_ID — criminal/hunters-international resolves to a real file. Hive
+        predecessor resolves to criminal/hive (NOT ru/proxies/hive). CORRECTED the
+        two stale `ru/proxies/hive` references in the event summary. tier of S1
+        upgraded secondary -> primary (first-party tier-1 vendor's own research).
+
+    FLAGS for orchestrator/Kara (no actor edits made here):
+      * ACTOR criminal/hunters-international.yaml: (1) its alias note says
+        "~60% match per Bitdefender Oct 2023 analysis" — the real Bitdefender
+        analysis is 2023-11-09 (November), fix the month; (2) its `notes` still say
+        "The Hive predecessor is separately tracked at `ru/proxies/hive`" — stale;
+        should read `criminal/hive`. (3) active_until 2025-01-01 with a World Leaks
+        rebrand comment is plausible but unverified in these two sources — the
+        World-Leaks shift was publicly reported ~2025 (Group-IB/BleepingComputer);
+        confirm the exact date if that field is load-bearing.
+      * SOURCE metadata fix on bitdefender/2023-10-20_hunters-international-hive-overlap
+        also improves two OTHER events that cite it
+        (2024-03/hoya-hunters-international, 2024-02/integris-hunters-international-doxing)
+        and the actor record — id unchanged so no FK churn, but those events were
+        NOT otherwise audited here.

@@ -7,10 +7,15 @@ incident_type:
   - financial-theft
 initial_vector: unknown
 outcome_summary: |
-  Undisclosed wallet/key compromise drained approximately $41M
-  in BNB, ETH, and Polygon-chain assets from the Stake.com
-  online casino. FBI publicly attributed the theft to Lazarus
-  Group on 6 September 2023.
+  Approximately $41M in virtual currency was drained from
+  Stake.com, an online casino and betting platform, on or about
+  4 September 2023. The FBI publicly attributed the theft to the
+  Lazarus Group (also known as APT38), comprised of DPRK cyber
+  actors, on 6 September 2023, and traced the stolen funds across
+  the Ethereum, Binance Smart Chain, and Polygon networks (with
+  downstream consolidation into Bitcoin addresses it published
+  for defenders). The FBI did not disclose the initial-access
+  vector.
 quantified_impact:
   usd_stolen: 41000000
   asset_classes:
@@ -20,47 +25,142 @@ quantified_impact:
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Multi-chain hot-wallet drain at a major online crypto casino.
-  Investigators (Elliptic, ZachXBT) traced the operation to
-  TraderTraitor / Lazarus social-engineering of a Stake.com
-  engineer over LinkedIn / Telegram, with delivery of a
-  trojanized macOS / Windows developer-tool dropper consistent
-  with the AppleJeus / Citrine Sleet supply-chain pattern,
-  followed by harvesting of the hot-wallet private keys and
-  programmatic drainage across the BNB Smart Chain, Ethereum,
-  and Polygon hot-wallet pools. Funds were subsequently
-  chain-hopped via cross-chain bridges and the Sinbad mixer —
-  the same laundering primitives sanctioned by OFAC in November
-  2023 for Atomic Wallet and Harmony Horizon proceeds. FBI's 6
-  September 2023 attribution invokes the standard WMD-financing
-  attestation pattern.
+  Multi-network drain of approximately $41M in virtual currency
+  from Stake.com, an online casino and betting platform, on or
+  about 4 September 2023. The FBI attributed the theft to the
+  Lazarus Group (also known as APT38), comprised of DPRK cyber
+  actors, and stated the stolen funds were associated with the
+  Ethereum, Binance Smart Chain (BSC), and Polygon networks,
+  tracing them into a set of ETH / BSC / Polygon and downstream
+  Bitcoin addresses it published for defenders to block. The FBI
+  situated the theft within a broader DPRK campaign — more than
+  $200M stolen in 2023, including ~$60M from Alphapo and CoinsPaid
+  and ~$100M from Atomic Wallet — and cross-referenced its prior
+  Harmony Horizon and Ronin Bridge reporting, the TraderTraitor
+  cybersecurity advisory, and OFAC's 2019 Lazarus Group sanctions.
+  The FBI did not describe the intrusion vector, and characterized
+  the DPRK motive as generating "revenue for the regime" — a
+  proximate revenue goal; the PSA does not name a WMD /
+  ballistic-missile-financing end.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: US FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-09-06
     attribution_source_id: fbi/2023-09-06_stake-attribution
+    notes: |
+      FBI PSA: "attributes it to the Lazarus Group (also known as
+      APT38) which is comprised of DPRK cyber actors." Names the
+      group (Lazarus/APT38) and the nation (DPRK) at high
+      confidence ("The FBI has confirmed ... and attributes it
+      to"), but no service or unit (no RGB / bureau) — hence
+      attribution_level named-actor, not named-unit.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
     confidence: strongly_inferred
     reasoning: |
-      FBI's 6 September 2023 PSA attributes the ~$41M theft to
-      Lazarus but does not name the WMD goal; the financing
-      linkage is inferred from the standard DPRK revenue pattern.
+      The FBI's 6 September 2023 PSA attributes the ~$41M theft to
+      the DPRK Lazarus Group and names the motive only as
+      generating "revenue for the regime" — a proximate revenue
+      goal, not the terminal WMD / ballistic-missile-financing end
+      the doctrine encodes. The 8th-Congress revenue-aggregation
+      pillar specializes exactly this DPRK crypto-theft revenue
+      stream, so the link is strongly_inferred (not attested: the
+      PSA never states the WMD goal; per this doctrine's per-event
+      attestation rule, only a source naming the terminal goal in
+      substance — typically OFAC's WMD language — earns attested).
     attesting_source_id: fbi/2023-09-06_stake-attribution
     inference_basis:
       source_id: fbi/2023-09-06_stake-attribution
       signals:
-        - "FBI PSA attributes the ~$41M Stake.com drain to Lazarus (revenue behaviour)"
-      ruled_out: "WMD-financing / 8th-Congress defense plan — not named in the FBI PSA"
+        - "FBI PSA attributes the ~$41M Stake.com theft to the DPRK Lazarus Group / APT38 (a state-sponsored actor)"
+        - "FBI names the DPRK motive as generating 'revenue for the regime' — the proximate revenue goal the 8th-Congress revenue-aggregation pillar specializes"
+        - "FBI situates it in a >$200M-in-2023 DPRK theft campaign (Alphapo/CoinsPaid, Atomic Wallet) — a sustained state revenue stream"
+      ruled_out: "Pure criminal enrichment with no state nexus — ruled out by the FBI's DPRK state attribution and 'revenue for the regime' framing. Not attested, because the PSA states only the proximate revenue goal and never the terminal WMD / ballistic-missile-financing end (SCHEMA attestation boundary; doctrine per-event rule)."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/stake-com
     role: primary
-    outcome: ~$41M drained across BNB, ETH, and Polygon hot wallets.
+    outcome: |
+      ~$41M in virtual currency drained; the FBI traced the funds
+      across the Ethereum, Binance Smart Chain, and Polygon
+      networks and into downstream Bitcoin addresses.
 sources:
   - fbi/2023-09-06_stake-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the sole cited source — FBI National Press Office PSA "FBI Identifies
+    Lazarus Group Cyber Actors as Responsible for Theft of $41 Million from Stake.com"
+    (6 Sept 2023). Raw snapshot fbi__2023-09-06_stake-attribution.html, sha256
+    5bd9a240…fc19a1cc, 81966 bytes (hash re-verified this audit; matches the source record).
+    NOT a phantom: the PSA is the real article and carries the core facts — the STRIP path was
+    taken for fabricated embellishment (no re-source needed).
+
+    [a] FACTS — heavy de-fabrication of summary + outcome_summary. PSA carries verbatim: "theft
+    of approximately $41 million in virtual currency from Stake.com, an online casino and betting
+    platform"; "this theft took place on or about September 4, 2023"; "DPRK cyber actors moved
+    stolen funds associated with the Ethereum, Binance Smart Chain (BSC), and Polygon networks"
+    (+ a published list of ETH/BSC/Polygon/Bitcoin addresses); "more than $200 million" DPRK
+    theft in 2023 incl. "~$60 million ... Alphapo and CoinsPaid" and "~$100 million ... Atomic
+    Wallet"; cross-refs to Harmony Horizon, Ronin Bridge, "a cybersecurity advisory on
+    TraderTraitor", and "OFAC sanctioned the Lazarus Group in 2019". REMOVED as uncited /
+    fabricated (present NOWHERE in the PSA): "Elliptic, ZachXBT" tracing; "social-engineering of
+    a Stake.com engineer over LinkedIn / Telegram"; "trojanized macOS / Windows developer-tool
+    dropper"; "AppleJeus / Citrine Sleet supply-chain pattern"; "harvesting of the hot-wallet
+    private keys"; "chain-hopped via cross-chain bridges and the Sinbad mixer"; "laundering
+    primitives sanctioned by OFAC in November 2023". The private-key / wallet-compromise VECTOR
+    asserted in the old outcome_summary is NOT in the PSA and contradicted initial_vector:
+    unknown — stripped (the PSA discloses no vector). CORRECTED the false claim "FBI's
+    attribution invokes the standard WMD-financing attestation pattern": the PSA states motive
+    ONLY as "the DPRK's use of illicit activities to generate revenue for the regime" — no WMD /
+    ballistic-missile language anywhere. quantified_impact.usd_stolen 41000000 ✓ PSA-supported;
+    asset_classes [BNB,ETH,MATIC] kept as the native-asset shorthand for the PSA's three NETWORKS
+    (Ethereum/BSC/Polygon) — minor framing residual, not a token itemization the PSA carries.
+
+    [b] ATTRIBUTION — PSA: "The FBI has confirmed that this theft took place ... and attributes
+    it to the Lazarus Group (also known as APT38) which is comprised of DPRK cyber actors."
+    Unhedged + "confirmed" ⇒ attributing_org_confidence: high ✓. actor_id kp/rgb/lazarus,
+    attributing_org US FBI, attribution_date 2023-09-06, auspex_assessment concur — all ✓/kept.
+
+    [c] DATES — start/end 2023-09-04 ✓ ("on or about September 4, 2023"); attribution_date
+    2023-09-06 ✓ (PSA dated September 6, 2023); source published_on 2023-09-06 ✓ matches. Kept
+    disclosure_date 2023-09-04 (the on-chain drain was inherently same-day public; distinct from
+    the Sept-6 FBI attribution). Residual: the sole cited source (Sept 6) does not itself pin the
+    Sept-4 public disclosure — that rests on the inherently-public on-chain event, not the PSA.
+
+    [d] DOCTRINE_LINKS — kp/8th-congress-defense-plan / revenue-aggregation / crypto-bridge-theft,
+    strongly_inferred: CORRECT, label unchanged. Per this doctrine's per-event attestation rule
+    (doctrine file lines 39-50) and the SCHEMA attestation boundary, a source naming only the
+    PROXIMATE goal ("revenue for the regime") is strongly_inferred, NOT attested (attested needs
+    the terminal WMD / ballistic-missile goal in substance, e.g. OFAC's standardized language).
+    Refined reasoning + inference_basis.signals to quote the PSA's "revenue for the regime"
+    proximate goal and the >$200M-2023 campaign; refined ruled_out to name the competing reading
+    (pure criminal enrichment) rejected by the DPRK state attribution. attesting_source_id kept
+    (allowed on strongly_inferred as the primary supporting source). FKs verified: pillar
+    (doctrine line 52) + program (line 95) resolve; doctrine_id resolves.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor. PSA names the group (Lazarus/APT38)
+    and the nation (DPRK) but no service/unit (no RGB / bureau) ⇒ named-actor, not named-unit.
+
+    [f] ACTOR_ID — kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml, id kp/rgb/lazarus; the
+    kp/rgb service placement was verified 2026-06-25). FBI equates "Lazarus Group (also known as
+    APT38)"; AUSPEX models Lazarus as the umbrella (kp/rgb/lazarus) — the correct choice for the
+    PSA's headline actor. No actor-file edits.
+
+    TARGET GAP (informational): target_id orgs/stake-com has NO registry file
+    (atlas/targets/orgs/stake-com.yaml absent; no other event references it). site/tools/
+    validate.ts buckets orgs/* under "Target FK gaps (informational — targets/ normalization
+    deferred)" — NOT an error, does not fail the gate. Kept orgs/stake-com (corpus-consistent
+    with sibling crypto-victim org targets: orgs/ronin-bridge, orgs/atomic-wallet, orgs/alphapo,
+    orgs/coinspaid, orgs/drift-protocol). Fixed the target outcome text (dropped uncited "hot
+    wallets"). ORCHESTRATOR: create atlas/targets/orgs/stake-com.yaml (sector
+    finance/crypto-custody, criticality commercial) to normalize.

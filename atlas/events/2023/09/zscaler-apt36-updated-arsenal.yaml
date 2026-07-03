@@ -1,58 +1,204 @@
 id: 2023-09/zscaler-apt36-updated-arsenal
-name: Zscaler documents APT36 Linux and Crimson RAT tooling refresh
-start_date: 2023-03-01
+name: "Zscaler documents APT36 (Transparent Tribe) ElizaRAT Windows RAT and new Linux desktop-entry attack vectors"
+start_date: 2023-05-01
 disclosure_date: 2023-09-12
-end_date: 2023-09-12
+end_date: null
 incident_type:
+  - espionage
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Zscaler ThreatLabz published a technical analysis of Transparent
-  Tribe / APT36 tooling refresh observed in mid-2023, documenting
-  updated Crimson RAT variants, new Linux desktop-entry-file
-  delivery chains targeting Indian government desktops running
-  BOSS Linux (the Indian-government-mandated Linux distribution),
-  and continued credential-phishing lures themed on Indian Ministry
-  of Defence and Indian Army communications. The Linux-implant
-  development is the noteworthy tradecraft development; the
-  cluster has historically been Windows-and-Android-focused.
+  Zscaler ThreatLabz (activity discovered July 2023; disclosed
+  2023-09-12) documented an updated APT36 / Transparent Tribe
+  arsenal targeting the Indian government and defense sectors for
+  cyber espionage. The headline finding is a previously
+  undocumented Windows RAT that Zscaler dubbed "ElizaRAT" — a .NET
+  backdoor packaged as a Control Panel applet (.cpl), delivered in
+  password-protected archives via Google Drive links, that uses the
+  Telegram API for command-and-control. Zscaler also documented a
+  new attack vector against Linux: malicious desktop-entry
+  (.desktop) files distributed inside ZIP archives (reached via a
+  redirector on an APT36 credential-phishing site) that download
+  and execute Linux ELF payloads. The retrieved Linux payloads were
+  identified as Mythic "Poseidon" agents (the open-source Mythic C2
+  framework), alongside two new PyInstaller-compiled Python
+  espionage utilities: GLOBSHELL (file exfiltration) and PYSHELLFOX
+  (Firefox session-stealing targeting email.gov.in and WhatsApp
+  Web). Related credential phishing impersonated the National
+  Informatics Centre (NIC) login portal (email9ov[.]in), and a
+  decoy PDF impersonated an Indian Ministry of Defence document.
+  Google Drive and Telegram were abused across the attack chain.
 false_flag_risk: none
 summary: |
-  Significant tradecraft-expansion event. BOSS Linux targeting is
-  meaningful because Indian government policy has pushed
-  migration of sensitive desktops onto BOSS, narrowing the
-  Windows-based attack surface; APT36's adaptation is a textbook
-  example of cyber-actor cross-platform expansion tracking
-  defender-policy moves.
+  Tradecraft-expansion event. The notable development is APT36's
+  move against Linux — the never-before-documented malicious
+  desktop-entry-file vector, Mythic Poseidon ELF backdoors, and the
+  GLOBSHELL / PYSHELLFOX Python espionage utilities — for a cluster
+  historically focused on Windows and Android. Zscaler ties the
+  Linux push to the widespread use of the Debian-based BOSS (Bharat
+  Operating System Solutions) distribution across Indian state
+  ministries and the Indian defense forces, and to the Indian
+  government's announced Maya OS (Debian) rollout to replace Windows
+  across government and defense — expanding the pool of Linux
+  targets. On Windows, the new ElizaRAT backdoor (a Telegram-C2 .NET
+  Control Panel applet) is the fresh tooling. Zscaler attributes the
+  activity to Pakistan with very high confidence, noting the actor
+  took deliberate steps to make the operations appear India-based.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Zscaler ThreatLabz
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-09-12
     attribution_source_id: zscaler/2023-09-12_apt36-updated-arsenal
+    notes: |
+      Zscaler states "APT36 is an advanced persistent threat (APT)
+      group which we attribute to Pakistan with very high
+      confidence." Names the country (Pakistan) and the named
+      cluster (APT36 / Transparent Tribe); no specific Pakistani
+      service is named — consistent with the actor's pk/unscoped
+      placement. "Very high confidence" is compressed to the top of
+      the attributing_org_confidence enum (high).
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian MoD, Indian Army, and Indian government desktop
-      targeting via BOSS Linux fits the military-collection
-      pillar; the cross-platform expansion extends the cluster's
-      reach against Indian-policy-mandated desktop environments.
+      A Pakistan-attributed (very high confidence) APT conducting
+      cyber espionage against the Indian government and defense
+      sectors — credential phishing against the NIC government login
+      portal, Firefox / email.gov.in session theft, and Linux
+      espionage implants (GLOBSHELL exfiltration, Mythic Poseidon
+      backdoors) planted on government / defense desktops — is
+      military/government intelligence collection against India, the
+      activity the asymmetric-posture-india military-collection
+      pillar encodes. The cross-platform (Linux) expansion tracks
+      the Indian government / defense migration toward Linux (BOSS,
+      Maya OS), extending the same collection mission to a new target
+      surface.
     contested: false
     analyst: claude
+    attesting_source_id: zscaler/2023-09-12_apt36-updated-arsenal
+    inference_basis:
+      signals:
+        - "Zscaler attributes the activity to Pakistan with very high confidence and documents targeting of the Indian government and defense sectors for cyber espionage (NIC credential phishing; email.gov.in session theft)."
+        - "The Linux implants — GLOBSHELL (file exfiltration), PYSHELLFOX (Firefox / email.gov.in and WhatsApp session stealing), and Mythic Poseidon backdoors — are collection tooling aimed at Indian government / defense desktops, matching a military/government-collection mission."
+      ruled_out: "The doctrine's other India pillar (kashmir-political mobilization) has no purchase here: the activity carries no political-messaging, hack-and-leak, or Kashmir-narrative component — it is pure espionage collection against government/defense, so military-collection is the dominant reading with no serious competitor."
 targets:
-  - target_id: orgs/indian-mod
+  - target_id: sectors/government
     country: in
     role: primary
-  - target_id: orgs/indian-army
-    country: in
-    role: primary
-  - target_id: orgs/indian-government
+  - target_id: sectors/defense
     country: in
     role: primary
 sources:
   - zscaler/2023-09-12_apt36-updated-arsenal
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-02
+  level: full
+  notes: |
+    Audited against the RAW Zscaler ThreatLabz report "APT36's Updated Arsenal"
+    (raw snapshot atlas/sources/raw/zscaler__2023-09-12_apt36-updated-arsenal.html;
+    sha256 67b3d370…c897b02f; 454,972 bytes; url live HTTP 200; published_on
+    2023-09-12 confirmed via JSON-LD datePublished). This event was a
+    Transparent-Tribe fabrication-cluster case — the prose was substantially
+    mis-sourced.
+
+    [a] FACTS — MAJOR CORRECTIONS.
+    • FABRICATED "Crimson RAT": the old name + outcome_summary claimed "updated
+      Crimson RAT variants" / a "Crimson RAT tooling refresh." The string
+      "Crimson" appears ZERO times in the source. The actual new Windows RAT is a
+      previously-undocumented .NET backdoor Zscaler itself named: "We assigned the
+      moniker 'ElizaRAT' to this new Windows-based backdoor" — a Control Panel
+      applet (.cpl) that uses "the Telegram API ... for C2 communication,"
+      delivered in "password-protected archive files hosted on Google Drive
+      links." The old event never mentioned ElizaRAT. Renamed the event and
+      rewrote outcome_summary/summary around ElizaRAT + the Linux tooling.
+    • Added the real Linux findings: "The utilization of Linux desktop entry files
+      by APT36 as an attack vector has never been documented before"; the payloads
+      were identified — "A quick technical analysis determined these Linux payloads
+      as Mythic Poseidon binaries" — plus two Python utilities, "GLOBSHELL -
+      Custom-built File exfiltration Linux utility" and "PYSHELLFOX - Custom-built
+      Firefox session stealing Linux utility" (targets email.gov.in / web.whatsapp.com).
+    • FABRICATED "Indian Army": the old event claimed "credential-phishing lures
+      themed on Indian Ministry of Defence and Indian Army communications." The
+      string "army" appears ZERO times. Real phishing impersonated the "National
+      Informatics Center (NIC), India ... official login portal" (email9ov[.]in);
+      a decoy PDF "appears to be a document from the Indian Ministry of Defence
+      describing the visit of ... a delegation from Saudi Arabia." Corrected to
+      NIC phishing + MoD-themed decoy PDF; removed the Indian Army claim.
+    • BOSS framing corrected: source says "The Debian-based operating system, BOSS
+      ... is used across various state ministries and even the Indian defense
+      forces," and that the announced "Maya OS, a Debian Linux-based operating
+      system ... will replace Microsoft Windows OS across government and defense
+      sectors." The old summary's "Indian-government-mandated ... migration onto
+      BOSS" over-stated BOSS's status and misattributed the Windows-replacement
+      mandate (that is Maya OS in the source). Softened to track the source. (Used
+      the canonical expansion "Bharat Operating System Solutions"; the source's own
+      gloss reads "Bharat Online Software Solution.")
+
+    [c] DATES — start_date 2023-03-01 was UNSUPPORTED; earliest observed activity is
+    May 2023 ("We first observed an occurrence in May 2023 when a credential
+    phishing website ..."), discovery July 2023, infra June 2023, decoy PDFs served
+    August 2023 → start_date set 2023-05-01. end_date had been set to the disclosure
+    date (conflation); source says "The infrastructure continues to be active at the
+    time of this blog publication" → end_date set null (ongoing at disclosure).
+    disclosure_date 2023-09-12 and source published_on 2023-09-12 confirmed.
+
+    [b]/[e] ATTRIBUTION — "APT36 is an advanced persistent threat (APT) group which
+    we attribute to Pakistan with very high confidence." attributing_org_confidence
+    kept high (enum tops out at high; "very high" noted). Added
+    attribution_level: named-actor (names APT36 cluster + Pakistan nation; NO
+    specific service — consistent with pk/unscoped). auspex_assessment concur kept.
+    Directionality correct: attacker Pakistan (pk), victims Indian gov/defense (in);
+    the publisher/actor-country asymmetry is expected, not a defect.
+
+    [d] DOCTRINE — kept pk/asymmetric-posture-india/military-collection at
+    strongly_inferred (NOT attested: the source documents espionage collection
+    against Indian gov/defense but states no strategic-goal sentence, so it does not
+    clear the attested bar). Rewrote reasoning to remove the fabricated "Indian
+    Army" and align to real evidence (NIC phishing, email.gov.in session theft,
+    Linux collection implants). Added inference_basis.signals[] + ruled_out (ruled
+    out the kashmir-political pillar — no political / hack-and-leak / Kashmir
+    component). Set attesting_source_id to the Zscaler source as primary supporting
+    source (permitted on strongly_inferred). Link is attacker-rationale (pk doctrine
+    on pk op) — no perspective tag, no state mismatch.
+
+    [targets] — CORRECTED. Removed orgs/indian-army (BOTH a dangling FK — no
+    atlas/targets file declares orgs/indian-army — AND unsupported by the source)
+    and orgs/indian-government (also a dangling FK — no such registry file).
+    Replaced with sector-level targets that resolve and are source-carried:
+    sectors/government (primary — NIC, email.gov.in, "Indian government
+    sector/officials/organizations") and sectors/defense (primary — "government,
+    defense ... sectors"; "Indian defense forces" run BOSS; MoD-themed decoy).
+    Dropped the general "education" sector (source lists it only in APT36's
+    historical profile, not as a victim of THIS campaign — avoided sector
+    inflation). The specifically-named victim entity (NIC / National Informatics
+    Centre) has no orgs/ registry file, and creating target files is out of scope.
+
+    [f] ACTOR — actor_id pk/unscoped/transparent-tribe resolves to
+    atlas/actors/pk/transparent-tribe.yaml (file sits at pk/ but its id is
+    pk/unscoped/...; FK resolves by id). Actor already audited 2026-06-24
+    (Pakistan / unscoped; no service named by sources) — consistent with this
+    source. No actor edit.
+
+    incident_type: added espionage (source framing is "cyber espionage" throughout)
+    alongside intrusion + data-theft (RAT/backdoor + GLOBSHELL/PYSHELLFOX
+    exfiltration). initial_vector phishing kept (credential-phishing sites + the
+    phishing-site redirector distributing the .desktop ZIPs).
+
+    SOURCE RECORD — added raw_snapshot + content_sha256; upgraded tier
+    secondary→primary: first-party Zscaler ThreatLabz original research (they
+    discovered the activity and coined "ElizaRAT"), matching the corpus convention
+    that first-party vendor original-research disclosures are primary.
+
+    RESIDUAL / FLAGS: (1) "very high confidence" compressed to enum high (no higher
+    bucket). (2) orgs/indian-government (8 events) and orgs/indian-army (2 events)
+    are dangling target-registry FKs corpus-wide — flagged for the orchestrator;
+    fixed only within this event. (3) end_date left null as ongoing; last concrete
+    observed activity was August 2023.
