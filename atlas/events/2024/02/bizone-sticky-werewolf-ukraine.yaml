@@ -1,61 +1,168 @@
 id: 2024-02/bizone-sticky-werewolf-ukraine
-name: BI.ZONE consolidates Sticky Werewolf attribution and Ukraine targeting picture
-start_date: 2023-01-01
-disclosure_date: 2024-02-19
-end_date: 2024-02-01
+name: BI.ZONE details Sticky Werewolf phishing of public organizations in Russia and Belarus
+start_date: 2023-04-01
+disclosure_date: 2023-10-13
+end_date: null
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
-outcome_summary: |
-  Russian vendor BI.ZONE published an expanded analysis of the
-  Sticky Werewolf (UAC-0050) cluster, documenting continued
-  spear-phishing against Ukrainian state institutions, Belarusian
-  opposition targets, and Russian organizations critical of
-  the war. Tooling rotation observed: Remcos RAT remained the
-  staple, with Rhadamanthys stealer, NetWire, and DarkCrystal
-  RAT rotated through. The "Belarusian-aligned" framing was
-  formalized in BI.ZONE's reporting.
 false_flag_risk: none
 summary: |
-  Notable as the most extensive Russian-vendor public reporting
-  on a Belarusian-aligned cluster — BI.ZONE's positioning gives
-  the analysis weight despite its origin in a state-adjacent
-  Russian commercial vendor. The inclusion of Belarusian
-  opposition targets and war-critical Russian organizations
-  in the same victim set extends UAC-0050's profile beyond
-  pure Ukraine-theater support into broader regime-stability
-  operations.
+  BI.ZONE Threat Intelligence publicly documented Sticky Werewolf, a
+  previously unreported cluster phishing public organizations in
+  Russia and Belarus, with espionage assessed as the aim: "Public
+  organizations in Russia and Belarus remain a popular target for
+  espionage." Activity was "traced back to April 2023 with at least
+  30 attacks to date" (October 2023). Phishing emails carried
+  IP Logger-generated links to .exe/.scr payloads masquerading as
+  Word/PDF documents that opened a decoy while installing commodity
+  Ozone RAT or Darktrack RAT obfuscated with Themida; decoys included
+  an EMERCOM of Russia emergency warning, a court claim application,
+  and, against Belarusian organizations, a legal-code-violation
+  notice. BI.ZONE names no operator, sponsor, or nation — Russia and
+  Belarus appear strictly as victims — making this a Russian vendor
+  documenting espionage against Russian and Belarusian state bodies
+  by an unidentified operator.
+outcome_summary: |
+  At least 30 attacks between April and October 2023 per BI.ZONE.
+  Compromise chain: phishing link, masqueraded executable, decoy
+  document plus the Ozone RAT loader persisted via a Startup-folder
+  .lnk under a legitimate-application name (e.g. utorrent.exe); the
+  Ozone RAT core module provides keylogging, microphone/screen/webcam
+  capture, remote command execution, HVNC covert control, reverse
+  proxy, and password extraction from web browsers and email clients
+  (Outlook, Thunderbird). IP Logger link telemetry let the operators
+  profile victims (IP, country, city, browser/OS) and triage targets,
+  "disregarding those related to, for example, sandboxes, research
+  activities, and countries outside the group's focus." No victim
+  names, data-loss volumes, or operator identity were published.
 attributions:
   - actor_id: ru/unscoped/uac-0050
     attributing_org: BI.ZONE
     attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-02-19
-    attribution_source_id: bi-zone/2024-02-19_sticky-werewolf-ukraine
-doctrine_links:
-  - doctrine_id: by/union-state-integration
-    pillar_id: by/union-state-integration/ukraine-theater-support
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Ukrainian state-institution targeting in alignment with
-      Russian theater requirements.
-    contested: false
-    analyst: claude
-  - doctrine_id: by/concept-info-security-2019
-    pillar_id: by/concept-info-security-2019/regime-stability-monitoring
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Belarusian opposition targeting fits the regime-stability
-      pillar squarely.
-    contested: false
-    analyst: claude
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-10-13
+    attribution_source_id: bi-zone/2023-10-13_sticky-werewolf-russia-belarus
+    notes: |
+      BI.ZONE attributes the campaign only to its own newly named
+      "Sticky Werewolf" cluster — no nation, service, or operator is
+      named, and the report never references CERT-UA or UAC-0050
+      (hence attribution_level activity-cluster). The actor_id here
+      follows the corpus alias table, which maps Sticky Werewolf onto
+      UAC-0050; that equation is a cross-vendor infrastructure-overlap
+      claim BI.ZONE does not make in this source, and it sits in
+      tension with directionality (CERT-UA documents UAC-0050 against
+      Ukrainian targets; BI.ZONE documents Sticky Werewolf against
+      Russian and Belarusian public organizations). Operator origin is
+      unresolved — the source notes commodity RATs serve
+      "cybercriminals and state-sponsored groups alike" and once calls
+      the operators "the criminal group".
+doctrine_links: []
 targets:
-  - target_id: orgs/ukrainian-government
+  - target_id: sectors/government
+    country: ru
     role: primary
-  - target_id: orgs/belarusian-opposition
+  - target_id: sectors/government
+    country: by
     role: primary
 sources:
-  - bi-zone/2024-02-19_sticky-werewolf-ukraine
+  - bi-zone/2023-10-13_sticky-werewolf-russia-belarus
+notes: |
+  Event id retains the legacy slug/date (2024-02/…-ukraine) from a
+  phantom citation — ids are stable forever — but the underlying
+  report is BI.ZONE's 2023-10-13 Medium primary, which contains no
+  Ukraine nexus; the formerly cited source record
+  bi-zone/2024-02-19_sticky-werewolf-ukraine is a confirmed phantom
+  (retire candidate). See qc for the full remediation trail.
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION audit, RE-SOURCE path ("badrabbit model"), plus the full
+    6-point audit against the raw source.
+    RAW EVIDENCE: bi-zone/2023-10-13_sticky-werewolf-russia-belarus — fresh live
+    snapshot bi-zone__2023-10-13_sticky-werewolf-russia-belarus.html, sha256
+    7a1bbb42…f5a3dc71, 146,449 bytes, fetched 2026-07-04 (HTTP 200 at the canonical
+    bi-zone.medium.com URL; JSON-LD datePublished 2023-10-13T07:05:19Z). The same
+    article was captured 2026-06-24 during the actor audit as
+    bi-zone__2024-02-19_sticky-werewolf-ukraine.html, sha256 de8f53e9…f0c07b30,
+    146,017 bytes — hash re-verified this audit; byte deltas are Medium dynamic
+    chrome only, article body identical.
+    STEP 0 TRIAGE: the event's sole cited source (bi-zone/2024-02-19_sticky-
+    werewolf-ukraine, "Sticky Werewolf — Tracking the Cluster Through 2023",
+    2024-02-19) is a confirmed PHANTOM — url: null (bi.zone slug 404 since
+    2026-05-28), no wayback copy, and no evidence any BI.ZONE report of that title
+    or date exists. The campaign itself is real and documented by BI.ZONE's live
+    2023-10-13 Medium primary. RE-SOURCED: created source record
+    bi-zone/2023-10-13_sticky-werewolf-russia-belarus (tier primary, snapshot +
+    sha256), re-pointed sources[] and attribution_source_id, annotated the phantom
+    record as a retire candidate (it stays cited by the actor and one doctrine —
+    out of event-audit scope).
+    [a] FACTS — the prior prose failed nearly every check against the raw. It
+    claimed spear-phishing of "Ukrainian state institutions", "Belarusian
+    opposition targets", and "Russian organizations critical of the war", tooling
+    "Remcos RAT … Rhadamanthys stealer, NetWire, and DarkCrystal RAT", and that a
+    "Belarusian-aligned framing was formalized in BI.ZONE's reporting". The raw
+    contains ZERO occurrences of Ukraine/Ukrainian, UAC-0050, CERT-UA, Remcos,
+    Rhadamanthys, NetWire, DarkCrystal, or "opposition" (keyword-verified over the
+    full HTML), and no alignment framing of any kind. All uncarried claims removed.
+    Rewritten summary/outcome_summary carry only raw-supported facts: "Public
+    organizations in Russia and Belarus remain a popular target for espionage";
+    "The group's activity can be traced back to April 2023 with at least 30
+    attacks to date"; IP Logger link generation + victim profiling (timestamp, IP,
+    country, city, browser/OS) and triage; .exe/.scr masquerading as Word/PDF;
+    decoys (EMERCOM of Russia emergency warning, court claim application,
+    Belarusian legal-code-violation notice); "installed Ozone RAT or Darktrack
+    RAT"; Themida protection; %TEMP% drop as utorrent.exe + Startup .lnk
+    persistence; Ozone core-module capabilities (keylogger, mic/screen/webcam,
+    remote commands, HVNC, artifact deletion, browser/Outlook/Thunderbird password
+    extraction, reverse proxy); IoCs 185.12.14[.]32:666, yandeksdisk[.]org,
+    diskonline[.]net.
+    [b] ATTRIBUTION — BI.ZONE attributes only to its own new cluster "Sticky
+    Werewolf"; NO nation, service, or operator is named; UAC-0050 is never
+    mentioned, so the Sticky-Werewolf=UAC-0050 equation is NOT carried by this
+    source (it is a cross-vendor alias claim recorded on the actor file). Kept
+    actor_id ru/unscoped/uac-0050 (the corpus alias home for Sticky Werewolf) but
+    downgraded auspex_assessment concur -> concur-with-caveat and documented the
+    contested equation and open operator direction in the attribution notes.
+    attributing_org_confidence high is retained for the claim BI.ZONE actually
+    makes (its own named cluster, ~30 clustered attacks, published IoCs — no
+    in-source hedging on the clustering); attribution_date corrected 2024-02-19 ->
+    2023-10-13.
+    [c] DATES — real source published_on 2023-10-13 (the phantom carried
+    2024-02-19); disclosure_date 2024-02-19 -> 2023-10-13; start_date 2023-01-01
+    -> 2023-04-01 ("traced back to April 2023"; day = month-start best estimate);
+    end_date 2024-02-01 -> null (activity ongoing "to date" at publication; no
+    bounded end stated).
+    [d] DOCTRINE_LINKS — REMOVED both strongly_inferred by/* links.
+    by/union-state-integration/ukraine-theater-support was premised on
+    Ukrainian-state targeting, which appears nowhere in the source;
+    by/concept-info-security-2019/regime-stability-monitoring was premised on
+    "Belarusian opposition" targeting — also nowhere in the source, and inverted:
+    Belarusian PUBLIC/government organizations are the victims, i.e. the
+    Belarusian state is targeted, not defended. With the operator's nation and
+    direction unresolved (source: commodity RATs serve "cybercriminals and
+    state-sponsored groups alike"), no doctrine link is defensible ->
+    doctrine_links: [] (none invented).
+    [e] ATTRIBUTION_LEVEL — set activity-cluster (previously missing): a vendor
+    cluster name with no nation attached.
+    [f] ACTOR_ID — ru/unscoped/uac-0050 resolves to atlas/actors/ru/uac-0050.yaml;
+    actor file untouched; placement/alias caveats FLAGGED to the orchestrator.
+    TARGETS — replaced orgs/ukrainian-government (uncarried; no Ukraine nexus in
+    the source) and orgs/belarusian-opposition (uncarried AND a dangling FK — no
+    such registry file exists) with sectors/government country ru and country by,
+    both primary, per "public organizations in Russia and Belarus" /
+    "government organizations". incident_type data-theft -> espionage (exfiltration
+    is not documented, only credential-theft capability; espionage is the source's
+    stated aim); intrusion retained (>=30 compromises with RAT installs);
+    initial_vector phishing confirmed; false_flag_risk none (source raises none).
+    RESIDUAL UNCERTAINTY — perpetrator identity and direction are genuinely open
+    (criminal vs state-sponsored, origin unstated; wider non-cited coverage
+    speculates pro-Ukrainian origin but this source does not say so and no such
+    claim is recorded). The event id keeps the legacy "2024-02/…-ukraine" slug
+    (ids immutable) despite the corrected 2023-10 disclosure and no-Ukraine
+    content — re-homing is Kara's call.

@@ -1,77 +1,279 @@
 id: 2024-02/isoon-leak
 name: i-Soon (Anxun) contractor document leak
-start_date: 2024-02-16  # GitHub leak surfaced
-disclosure_date: 2024-02-21  # SentinelLabs analysis
-end_date: 2024-02-21
+start_date: 2024-02-16  # "on February 16th, an account registered by that email began uploading content to GitHub"; "a data leak over the weekend of Feb 16th" (SentinelLabs)
+disclosure_date: 2024-02-16  # public from the GitHub upload itself; 2024-02-21 (pre-audit value) is the SentinelLabs ANALYSIS date, a conflation — see qc
+end_date: null  # source states uploads BEGAN Feb 16 and gives no bounded end; pre-audit 2024-02-21 was the analysis date, not an operation end
 incident_type:
-  - data-theft  # leak of contractor's own documents
-  - influence-operation  # disclosure context — anonymous leaker
-initial_vector: insider
+  - documentary  # leak OF a PRC contractor's internal documents — not an offensive PRC operation; mirrors 2016-08/shadow-brokers-leak
+  - disclosure   # all-meta by design (leaker unknown; not an attributable operation) — excluded from the eval label set
+initial_vector: unknown  # "It is not known who pilfered the information nor their motives" — pre-audit `insider` was uncarried speculation
 outcome_summary: |
-  Anonymous GitHub leak of internal documents from Anxun
-  Information Technology Co., Ltd. ("i-Soon"), a Chengdu-based
-  PRC cyber-contractor servicing MSS, MPS, and PLA tasking.
-  Approximately 500+ files comprising customer lists, marketing
-  decks, employee chats, contracts, and target lists provided
-  the first systematic open-source view into the PRC's
-  hacker-for-hire ecosystem. Documents tied i-Soon to APT41 /
-  POISON CARP operations, Hong Kong democracy-movement
-  targeting, and provincial MSS-bureau contracting.
+  An account created under an anonymously registered email address
+  (registered 15 January 2024) began uploading internal material from
+  i-Soon (Anxun; 上海安洵) to GitHub on 16 February 2024: "dozens of
+  marketing documents, images and screenshots, and thousands of WeChat
+  messages between employees and clients." SentinelLabs describes
+  i-Soon as a company that "contracts for many PRC agencies–including
+  the Ministry of Public Security, Ministry of State Security, and
+  People's Liberation Army," and the leak as "a first-of-its-kind look
+  at the internal operations of a state-affiliated hacking contractor."
+  Leaked material included victim data and targeting lists naming the
+  requesting clients and the fees earned per victim ("Collecting data
+  from Vietnam's Ministry of Economy paid out $55,000, other ministries
+  were worth less"), marketing decks citing prior counterterrorism
+  hacking (including counterterrorism centers in Pakistan and
+  Afghanistan) in a bid for work in Xinjiang, technical documentation
+  of the offensive toolkit and custom hardware snooping devices (a
+  powerbank-styled exfiltration implant), and indicators — C2
+  infrastructure, malware, victimology — that "relate to suspected
+  Chinese cyberespionage activities previously observed by the threat
+  intelligence community"; SentinelLabs named no specific group. Per
+  SentinelLabs, i-Soon "appears to be responsible for the compromise of
+  at least 14 governments, pro-democracy organizations in Hong Kong,
+  universities, and NATO." Document authenticity was "still undecided"
+  at publication, while the contents "do confirm public threat
+  intelligence." The leaker and motives are unknown; the selection
+  "seem[s] meant to embarrass the company."
 false_flag_risk: none
 summary: |
-  Doctrinally inflection-point event for AUSPEX modeling of the
-  PRC cyber-services market. i-Soon documents validated the
-  contractor-bureau model that subsequent OFAC actions
-  (Sichuan Juxinhe / Salt Typhoon, Integrity Tech / Flax
-  Typhoon, Wuhan XRZ / APT31) would prosecute through sanctions
-  in 2024-2025. Not an offensive cyber operation by the PRC —
-  this is a disclosure event, modeled here because the doctrine
-  link is to the National Intelligence Law's compelled-vendor-
-  cooperation pillar, which i-Soon documents directly evidence.
+  Anonymous GitHub leak, surfacing 16 February 2024, of internal
+  documents from the PRC cyber-contractor i-Soon (Anxun; 上海安洵) —
+  per SentinelLabs "a first-of-its-kind look at the internal operations
+  of a state-affiliated hacking contractor," showing "explicitly how
+  government targeting requirements drive a competitive marketplace of
+  independent contractor hackers-for-hire" for clients including the
+  MPS, MSS, and PLA. Not an offensive cyber operation by the PRC — a
+  documentary/disclosure event (the leaker is unknown), modeled because
+  the leaked corpus is direct documentary evidence for the
+  contractor-ecosystem model behind AUSPEX's National Intelligence Law
+  compelled-vendor-cooperation doctrine link.
 attributions:
-  - actor_id: cn/mss/apt41  # i-Soon was an APT41-adjacent contractor per docs
+  - actor_id: cn/unscoped/fishmonger
     attributing_org: SentinelLabs
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate  # hedged: "appears to be responsible…"; document authenticity "still undecided" at publication
+    attribution_level: named-actor  # the company i-Soon is named; NO PRC service is named as the operator (MPS/MSS/PLA appear only as clients)
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-02-21
     attribution_source_id: sentinellabs/2024-02-21_isoon-leak
     notes: |
-      i-Soon is the leaked entity (a contractor), not the actor
-      cluster per se. AUSPEX maps to APT41 as the closest actor
-      entity given the documented operational relationship, but
-      i-Soon also serviced MPS and PLA tasking and supported
-      multiple downstream APT clusters.
+      Subject-entity attribution (Shadow Brokers model, cf.
+      2016-08/shadow-brokers-leak): the attributed entity is the SUBJECT
+      whose documents leaked, not the leaker — SentinelLabs: "It is not
+      known who pilfered the information nor their motives."
+      SentinelLabs names the company (i-Soon / 上海安洵) and hedges its
+      operational responsibility: i-Soon "appears to be responsible for
+      the compromise of at least 14 governments, pro-democracy
+      organizations in Hong Kong, universities, and NATO." MPS, MSS and
+      PLA are named as i-Soon's CLIENT agencies, not as the operator's
+      service, so the actor remains service-unscoped. AUSPEX maps the
+      subject to cn/unscoped/fishmonger, the corpus entity for i-Soon's
+      espionage team (equivalence carried by the second cited source,
+      ESET). This source names NO threat group: leaked indicators only
+      "relate to suspected Chinese cyberespionage activities previously
+      observed" and "align with previous threat intel on several named
+      threat groups" — none named. Pre-audit actor_id cn/mss/apt41
+      removed: APT41 (and POISON CARP) appear nowhere in the cited
+      source — see qc.
+  - actor_id: cn/unscoped/fishmonger
+    attributing_org: ESET
+    attributing_org_confidence: high
+    attribution_level: named-actor  # named cluster + operating company; no PRC service named
+    auspex_assessment: concur
+    attribution_date: 2025-03-20
+    attribution_source_id: welivesecurity/2025-03_operation-fishmedley-fishmonger-i-soon-g
+    notes: |
+      Retrospective subject-equivalence attribution (attribution
+      latency): ESET, March 2025 — "we were able to independently
+      determine that FishMonger is an espionage team operated by
+      I-SOON, a Chinese contractor based in Chengdu that suffered an
+      infamous document leak in 2024." This entry dates the
+      company→cluster equivalence (FishMonger / Earth Lusca / TAG-22 /
+      Aquatic Panda / Red Dev 10), not the identity of the leaker,
+      which remains unknown.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      i-Soon's leaked contracts evidence the contractor-bureau model
-      (private companies contracted by provincial security bureaus
-      for foreign-target collection); SentinelLabs documents this but
-      does not name the 2017 National Intelligence Law or 'compelled
-      vendor cooperation', so the doctrine linkage is inferred from
-      the documented model.
-    attesting_source_id: sentinellabs/2024-02-21_isoon-leak
+      The leaked corpus is direct documentary evidence of the
+      private-vendor-serving-state-intelligence model this pillar
+      encodes: SentinelLabs describes i-Soon as a company that
+      "contracts for many PRC agencies–including the Ministry of Public
+      Security, Ministry of State Security, and People's Liberation
+      Army," shows "explicitly how government targeting requirements
+      drive a competitive marketplace of independent contractor
+      hackers-for-hire," and concludes that "third-party contractors
+      play a significant role in facilitating and executing many of
+      China's offensive operations in the cyber domain." SentinelLabs
+      names neither the 2017 National Intelligence Law nor any
+      compelled-cooperation obligation — it frames a competitive
+      commercial marketplace — so the linkage to the statute's pillar
+      is inferred, not attested.
+    attesting_source_id: sentinellabs/2024-02-21_isoon-leak  # primary SUPPORTING source (link is strongly_inferred, not attested)
     inference_basis:
       source_id: sentinellabs/2024-02-21_isoon-leak
       signals:
-        - "i-Soon leaked documents evidence Chinese private companies contracted by provincial MSS/MPS bureaus for foreign-target collection (contractor-bureau model)"
-      ruled_out: "the 2017 National Intelligence Law / compelled-vendor-cooperation by name — not named by SentinelLabs"
+        - "i-Soon 'contracts for many PRC agencies–including the Ministry of Public Security, Ministry of State Security, and People's Liberation Army'"
+        - "'government targeting requirements drive a competitive marketplace of independent contractor hackers-for-hire'"
+        - "'third-party contractors play a significant role in facilitating and executing many of China's offensive operations in the cyber domain'"
+        - "leaked targeting lists name the requesting government clients and per-victim fees ('Collecting data from Vietnam's Ministry of Economy paid out $55,000')"
+      ruled_out: "a purely private, non-state-directed hack-for-hire reading — rejected: the named clients are PRC state agencies (MPS/MSS/PLA) and SentinelLabs states that government targeting requirements drive the marketplace. (The statute itself, and any compulsion element, is NOT named by SentinelLabs — which is why the link is not attested.)"
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # DOWNGRADED from strongly_inferred 2026-07-04 — see qc
     reasoning: |
-      The contractor-bureau model documented in i-Soon files is
-      a canonical Military-Civil Fusion implementation pattern
-      applied to cyber operations.
+      A private commercial firm servicing People's Liberation Army
+      tasking alongside civilian security agencies is civil-military
+      capability fusion in substance. But the PLA appears once in the
+      source, in the client list, with no stated military-integration
+      goal, so more than one strategic reading survives — MCF fusion
+      vs. ordinary state-security outsourcing already captured by the
+      National Intelligence Law link — and the link is graded
+      plausible.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Military-Civil Fusion reading: the PLA is named among i-Soon's client agencies, placing civilian commercial hacking capability directly in military service — the wall-erasing pattern MCF encodes."
+        - "State-security outsourcing reading: the documented marketplace is driven by MPS/MSS policing-and-intelligence demand, sufficiently explained by the National Intelligence Law compelled-vendor-cooperation link without a military-fusion doctrine."
     contested: false
     analyst: claude
-targets: []  # disclosure event, no cyber victim
+targets: []  # documentary event — no cyber victim of the leak itself; i-Soon's own hacking victims belong to the operational events (e.g. 2025-03/operation-fishmedley-…)
 sources:
   - sentinellabs/2024-02-21_isoon-leak
+  - welivesecurity/2025-03_operation-fishmedley-fishmonger-i-soon-g
+notes: |
+  Editorial (AUSPEX cross-reference; NOT carried by this event's
+  sources): doctrinal inflection point for AUSPEX's modeling of the PRC
+  cyber-services market — the i-Soon corpus is the documentary anchor
+  for the contractor-ecosystem model that later US actions prosecuted:
+  the March 2025 DOJ indictment of eight i-Soon employees, two MPS
+  officers and two APT27 operators
+  (2025-03/doj-indicts-12-chinese-contract-hackers-incl-i-soon-anxun-mps-officers)
+  and the 2024–2025 OFAC designations of PRC contractor firms (Wuhan
+  XRZ / APT31; Integrity Technology Group / Flax Typhoon; Sichuan
+  Juxinhe / Salt Typhoon). Those claims ride on the sibling events'
+  sources. ESET's Operation FishMedley
+  (2025-03/operation-fishmedley-fishmonger-i-soon-global-espionage-against-govern)
+  is the operational-campaign counterpart attributed to the same
+  subject entity, cn/unscoped/fishmonger.
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs the RAW SentinelLabs article "Unmasking I-Soon | The Leak That
+    Revealed China's Cyber Operations" (Dakota Cary & Aleksandar Milenkoski,
+    2024-02-21). Raw snapshot captured live (HTTP 200):
+    sentinellabs__2024-02-21_isoon-leak.html, 324,211 bytes, sha256
+    2f9f3417…5e5d6255. Second source (subject-equivalence): ESET Operation
+    FishMedley — existing raw snapshot hash re-verified against the committed
+    content_sha256 (80fc7c14…12c4c2cf, 121,797 bytes). Phantom triage per
+    PHANTOM-REMEDIATION STEP 0: NOT a phantom — the URL resolves to the real
+    article (title, byline, dateline and full body present); normal 6-point
+    audit performed.
+    [a] FACTS — corrections: (1) "Chengdu-based" REMOVED — the source names
+    "I-Soon (上海安洵)" (= Shanghai Anxun) and asserts no city; (ESET separately
+    says "based in Chengdu" — left to that source's attribution note only).
+    (2) "Approximately 500+ files" REMOVED — press-wave figure; the source says
+    "dozens of marketing documents, images and screenshots, and thousands of
+    WeChat messages." (3) "Documents tied i-Soon to APT41 / POISON CARP
+    operations" REMOVED — the article names NO threat group: zero occurrences
+    of APT41 / POISON CARP / Jackpot Panda / Chengdu 404 / Winnti / Earth Lusca
+    anywhere in the raw HTML; it states only that leaked indicators "relate to
+    suspected Chinese cyberespionage activities previously observed by the
+    threat intelligence community" and "align with previous threat intel on
+    several named threat groups," naming none. (4) "provincial MSS-bureau
+    contracting" SOFTENED to the carried claim — "contracts for many PRC
+    agencies–including the Ministry of Public Security, Ministry of State
+    Security, and People's Liberation Army" ("provincial" appears nowhere in
+    the article). (5) Leak-contents restated verbatim-carried: targeting lists
+    + client names + per-victim fees ("Collecting data from Vietnam's Ministry
+    of Economy paid out $55,000, other ministries were worth less"); Xinjiang
+    counterterrorism marketing incl. Pakistan/Afghanistan counterterrorism
+    centers; powerbank-styled hardware exfiltration device. (6) Authenticity
+    caveat ADDED: "The authenticity of the documents is still undecided" at
+    publication, while contents "do confirm public threat intelligence."
+    (7) Hong Kong claim KEPT (carried: "pro-democracy organizations in Hong
+    Kong") and the source's hedged victimology ADDED: i-Soon "appears to be
+    responsible for the compromise of at least 14 governments, pro-democracy
+    organizations in Hong Kong, universities, and NATO." Care-item check:
+    Twitter/X-monitoring tools and per-mailbox pricing (broader press-wave
+    claims) are NOT in this article ("mailbox": 0 hits; "Twitter" only in page
+    chrome; pricing is per-victim-organization, not per-mailbox) — NOT
+    imported. (Per-inbox pricing IS carried by the sibling DOJ event's source:
+    "$10k-$75k/inbox," therecord 2025-03.)
+    [b] ATTRIBUTION — actor REPLACED cn/mss/apt41 → cn/unscoped/fishmonger.
+    The APT41 mapping was carried by NOTHING in the cited source (see [a](3));
+    the old notes' "APT41-adjacent contractor per docs" is unsupported here.
+    Model: subject-entity attribution per the 2016-08/shadow-brokers-leak
+    precedent (attribute the SUBJECT whose material leaked; the LEAKER stays
+    unattributed — "It is not known who pilfered the information nor their
+    motives"). cn/unscoped/fishmonger is the corpus's i-Soon operational
+    entity. attributing_org_confidence DOWNGRADED high → moderate (hedges:
+    "appears to be responsible…"; authenticity "still undecided").
+    auspex_assessment kept concur-with-caveat. ADDED a second dated
+    attribution (attribution latency): ESET 2025-03-20, high, concur — "we
+    were able to independently determine that FishMonger is an espionage team
+    operated by I-SOON, a Chinese contractor based in Chengdu that suffered an
+    infamous document leak in 2024"; the welivesecurity FishMedley source was
+    added to sources[] to carry the company→cluster equivalence inside this
+    event.
+    [c] DATES — source published_on 2024-02-21 ✓ (byline "February 21, 2024";
+    og modified 2024-02-22). start_date 2024-02-16 ✓ carried ("on February
+    16th, an account registered by that email began uploading content to
+    GitHub"; "a data leak over the weekend of Feb 16th"; leaker email
+    registered "10:19 pm on January 15th"). disclosure_date CORRECTED
+    2024-02-21 → 2024-02-16: the GitHub upload was itself public (a
+    Taiwan-based analyst "found the document trove on GitHub and shared their
+    findings on social media"); 02-21 was the ANALYSIS publication date — a
+    conflation. end_date CORRECTED 2024-02-21 → null (uploads "began" Feb 16;
+    the source states no bounded end). initial_vector CORRECTED insider →
+    unknown (how the documents were pilfered is explicitly unknown; `insider`
+    was uncarried speculation). incident_type CORRECTED [data-theft,
+    influence-operation] → [documentary, disclosure]: influence-operation rode
+    on leaker motive, which the source says is unknown ("seem meant to
+    embarrass the company" is its only motive-adjacent line); all-meta typing
+    mirrors shadow-brokers-leak so this non-operation stays out of the eval
+    label set.
+    [d] DOCTRINE_LINKS — link 1
+    (cn/national-intelligence-law-2017/compelled-vendor-cooperation) KEPT at
+    strongly_inferred: signals REWRITTEN to verbatim-carried quotes (the prior
+    signal claimed "provincial MSS/MPS bureaus" — not in the source);
+    ruled_out restated as a genuine rejected competitor (purely private,
+    non-state-directed hack-for-hire). NOT upgraded to attested: SentinelLabs
+    states the marketplace mechanism but frames it as COMPETITIVE commercial
+    contracting and never states a compelled-cooperation obligation or names
+    the statute — the goal the pillar encodes is not stated in substance.
+    attesting_source_id retained as the primary supporting source (schema
+    semantics for non-attested links). Link 2 (cn/mcf) DOWNGRADED
+    strongly_inferred → plausible + inference_basis.alternatives added: the
+    only military-fusion signal is the PLA appearing once in the client list;
+    two strategic readings survive (MCF fusion vs. state-security outsourcing
+    already captured by the NIL link). Consistency note: the sibling events
+    carry the same NIL/compelled-vendor-cooperation link at strongly_inferred
+    (2025-03 DOJ) and plausible (2025-03 FishMedley); this event, being the
+    documentary corpus itself, has the strongest signal set of the three.
+    [e] ATTRIBUTION_LEVEL — was missing; ADDED named-actor on both entries:
+    SentinelLabs names the company i-Soon but NO PRC service as the operator's
+    (MPS/MSS/PLA are named as CLIENTS — consistent with the actor's unscoped
+    placement); ESET names the FishMonger cluster + operating company i-Soon,
+    also without a service.
+    [f] ACTOR_ID — cn/unscoped/fishmonger resolves
+    (atlas/actors/cn/fishmonger.yaml; primary_service_id cn/unscoped exists);
+    the actor record was itself audited 2026-06-24 and already documents the
+    i-Soon equivalence and the MSS-vs-MPS caveat. No actor-file edit made.
+    Residuals: (i) Shanghai (上海安洵, SentinelLabs) vs Chengdu (ESET)
+    descriptions coexist — registered name vs office location, each kept
+    inside its own source's quote, no HQ asserted; (ii) authenticity was
+    "still undecided" as of the cited analysis — later corroboration (DOJ
+    March 2025 indictment) lives on the sibling event; (iii) editorial
+    DOJ/OFAC cross-references MOVED from summary to notes: (not carried by
+    this event's sources); (iv) unit42/2024-02-22_isoon-data-leaks exists in
+    the corpus (cited by cn/mps + cn/mss service records) and is available as
+    further corroboration if ever needed — not added, no claim here requires
+    it.

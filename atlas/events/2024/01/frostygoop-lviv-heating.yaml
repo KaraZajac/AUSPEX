@@ -1,78 +1,265 @@
 id: 2024-01/frostygoop-lviv-heating
 name: FrostyGoop Modbus ICS attack on Lvivteploenergo (Lviv heating)
-start_date: 2024-01-22
-disclosure_date: 2024-07-23  # Dragos public report
-end_date: 2024-01-24
+start_date: 2024-01-22  # "during the late evening of January 22 through January 23" (TechCrunch/BleepingComputer, quoting Dragos); network access possibly gained 2023-04-17 (BleepingComputer)
+disclosure_date: 2024-07-23  # Dragos intel brief + same-day press coverage
+end_date: 2024-01-24  # estimate: "almost 48 hours" of heat loss from late 22 Jan (Graham, via TechCrunch); "remediation ... took almost two days" (Dragos brief)
 incident_type:
   - intrusion
-  - destructive
   - disruption
-initial_vector: n-day  # exposed Mikrotik router; lateral to Modbus-speaking devices
+  - cyber-physical
+initial_vector: unknown  # "possibly gained access ... by exploiting an undetermined vulnerability in an externally facing router" (Dragos brief); TechCrunch/BleepingComputer name an internet-exposed MikroTik router, vulnerability unidentified — 0-day vs n-day undetermined
 outcome_summary: |
-  Sandworm-affiliated operators deployed FrostyGoop — the ninth
-  publicly known ICS-tailored malware — against Lvivteploenergo,
-  the municipal heating provider for Lviv, Ukraine. FrostyGoop
-  manipulates ENCO heat-controllers over Modbus TCP. Approximately
-  600 apartment buildings lost heat for ~48 hours in mid-winter.
-  Dragos disclosed and named FrostyGoop in July 2024.
+  Publicly unattributed adversaries used FrostyGoop — per Dragos the
+  ninth ICS-specific malware and the first to use Modbus TCP
+  communications to achieve an OT impact — against the municipal
+  district-heating utility in Lviv, Ukraine (named as Lvivteploenergo
+  by a Security Council of Ukraine spokesperson to TechCrunch and by
+  LB.UA-sourced reporting; the Dragos brief itself names only "a
+  municipal district energy company in Ukraine"). After downgrading
+  ENCO heat-controller firmware to a version lacking monitoring
+  capabilities (loss of view), the adversaries sent Modbus TCP
+  port-502 commands causing inaccurate measurements and system
+  malfunction: over 600 apartment buildings (>100,000 people in the
+  Sykhiv district) lost central heating for almost 48 hours in
+  sub-zero temperatures; remediation took almost two days. The
+  controllers were not destroyed. Investigation traced access
+  possibly to 17 April 2023 via an undetermined vulnerability in an
+  internet-exposed MikroTik router, then a ReGeorg-like webshell
+  (accessed predominantly via Tor), SAM-hive credential theft, and —
+  on the attack day — L2TP connections from Moscow-based IP
+  addresses across an unsegmented network. Dragos disclosed and named
+  FrostyGoop on 23 July 2024, crediting the Cyber Security Situation
+  Center of the Security Service of Ukraine (SSU).
 quantified_impact:
-  buildings_affected: 600
-  outage_hours: 48
+  buildings_affected: 600  # "over 600 apartment buildings" (Dragos brief)
+  individuals_affected: 100000  # "over 100,000 people" in Sykhiv (LB.UA, via BleepingComputer)
+  outage_hours: 48  # "almost 48 hours" (Graham, via TechCrunch); "remediation ... took almost two days" (Dragos brief)
 false_flag_risk: none
 summary: |
-  Doctrinally important as Sandworm's first publicly disclosed
-  attack on a civilian heating provider during winter — the
-  doctrine-of-resilience attack pattern made literal. FrostyGoop
-  added a new ICS-malware family to the public catalogue and
-  extended Sandworm's known OT toolkit beyond electricity into
-  district heating. Disclosure came months after the event.
+  Doctrinally important as the first publicly documented ICS-malware
+  disruption of a civilian district-heating utility in mid-winter —
+  the winter-heating-coercion pattern made literal — and as the
+  addition of a new family (the first with Modbus-TCP effects) to
+  the public ICS-malware catalogue. The operation is publicly
+  UNATTRIBUTED: Dragos explicitly declined to tie FrostyGoop to any
+  known group or government (no ties to prior activity or tooling,
+  plus a standing non-attribution policy), noting only that
+  attack-day L2TP connections came from Moscow-based IP addresses; a
+  Dragos researcher assessed the operation was "likely ... an effort
+  to undermine the morale of Ukrainians living there ... very much a
+  psychological effort ... facilitated through cyber means when
+  kinetic perhaps here wasn't the best choice." TechCrunch called it
+  the third known cyber-linked outage to hit Ukrainians. AUSPEX
+  models the actor as null (unattributed) and carries the
+  Russian-doctrine fit as inference, not attribution.
 attributions:
-  - actor_id: ru/gru/74455/sandworm
-    attributing_org: Dragos (with CERT-UA / Industrial Cyber reporting)
-    attributing_org_confidence: high
+  - actor_id: null  # no public attribution by any source; attack-day Moscow-based IPs are the only stated nexus
+    attributing_org: Dragos
+    attributing_org_confidence: low
+    attribution_level: null
     auspex_assessment: concur
     attribution_date: 2024-07-23
     attribution_source_id: dragos/2024-07_frostygoop-ukrainian-heating
+    notes: |
+      Dragos made NO attribution: the intel brief names no actor,
+      group, or state; per TechCrunch, "Despite the Russian IP
+      addresses, Dragos didn't point the finger at any known
+      particular hacking group or government as responsible for this
+      cyber-enabled outage, because the company couldn't find ties to
+      previous activities or tools, and because of the company's
+      longstanding policy on not attributing cyberattacks." The
+      brief's only nexus datum: "adversaries initiated L2TP ...
+      connections to Moscow-based IP addresses." Ukraine's Security
+      Council confirmed the attack and the LvivTeploEnergo victim to
+      TechCrunch without naming a perpetrator. CORRECTION 2026-07-04:
+      the prior record asserted ru/gru/74455/sandworm at high
+      confidence, credited to "Dragos (with CERT-UA / Industrial
+      Cyber reporting)" — no cited source names Sandworm or any
+      actor, and the Ukrainian party involved was the SSU's Cyber
+      Security Situation Center, not CERT-UA. attribution_level null
+      and confidence low reflect that the disclosing org itself
+      declined to reach even a nation-level claim.
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/grid-attack
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Civilian heating provider attack during mid-winter, designed
-      to maximize hardship; coordinated with the ongoing kinetic
-      campaign against Ukrainian energy infrastructure. Direct
-      operational expression of the energy-weaponization pattern.
-    attesting_source_id: dragos/2024-07_frostygoop-ukrainian-heating
+      Mid-winter disruption of a Ukrainian civilian district-heating
+      utility, concurrent with Russia's kinetic campaign against
+      Ukrainian energy infrastructure, is the winter-heating-coercion
+      pattern this pillar encodes. Dragos assessed the operation was
+      "likely ... an effort to undermine the morale of Ukrainians
+      living there" — "very much a psychological effort ...
+      facilitated through cyber means" — and attack-day access came
+      via L2TP connections from Moscow-based IP addresses. Held at
+      strongly_inferred rather than attested because no source
+      attributes the operation to Russia (Dragos explicitly
+      declined), so the Russian-doctrine premise is itself an
+      inference even though the coercive purpose is vendor-stated.
+    attesting_source_id: techcrunch/2024-07-23_hackers-shut-down-heating-ukrainian-city
+    inference_basis:
+      signals:
+        - "Target and season: civilian district heating cut for almost 48 hours in sub-zero cold — maximal civilian hardship, matching the pillar's winter-heating-coercion pattern (RU grid operations 2015/2016/2022 precedent)"
+        - "Attack-day L2TP connections from Moscow-based IP addresses (Dragos brief)"
+        - "Vendor-stated purpose: 'likely as an effort to undermine the morale of Ukrainians living there ... very much a psychological effort' (Graham, via TechCrunch)"
+        - "Wartime context: operation against Ukrainian civilian critical infrastructure during Russia's full-scale invasion"
+      ruled_out: "Criminal/extortive motive — no ransom demand or monetization reported; controllers were manipulated for disruption (firmware downgrade for loss of view, falsified measurements), not encrypted, ransomed, or destroyed"
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      Continuous civilian-resilience attack pattern in the Ukraine
-      theater of the Russkiy Mir doctrine.
-    attesting_source_id: dragos/2024-07_frostygoop-ukrainian-heating
+      If Russian-state directed, a civilian-resilience attack inside
+      the Ukraine theater fits the Russkiy-Mir continuous-pressure
+      pattern. Held at plausible: the operation is publicly
+      unattributed, no source states a civilizational/Russkiy-Mir
+      purpose, and a pro-Russian non-state reading — under which this
+      doctrine would not apply — survives.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Russian state operation as continuous coercive pressure in the Ukraine theater (fits the pillar)"
+        - "Pro-Russian non-state or hacktivist operation exploiting exposed OT — coercive effect without state doctrinal tasking"
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Non-contact warfare against civilian critical infrastructure
-      during active hostilities.
+      Remote cyber disruption of civilian critical infrastructure in
+      an active war zone matches the non-contact-warfare concept —
+      Dragos itself framed the operation as "facilitated through
+      cyber means when kinetic perhaps here wasn't the best choice."
+      Held at plausible (downgraded from strongly_inferred) because
+      the doctrine presumes a Russian military operator and the
+      operation is publicly unattributed.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Russian military/state operator: non-contact (cyber) means substituting for a kinetic strike against civilian infrastructure"
+        - "Non-military or non-state pro-Russian operator, outside the military-doctrine frame"
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/lvivteploenergo
+  - target_id: sectors/energy  # district heating; no finer heating/utilities sector exists. Victim org: Lvivteploenergo (no orgs/ registry record yet — see qc notes flag)
+    country: ua
     role: primary
     outcome: |
-      ENCO heat-controllers manipulated via Modbus TCP; ~600
-      apartment buildings without heat for approximately 48 hours
-      in winter.
+      ENCO heat-controllers manipulated via Modbus TCP after a
+      firmware downgrade removed monitoring (loss of view); heating
+      to over 600 apartment buildings of Lvivteploenergo's
+      district-heating service (Sykhiv district, >100,000 people)
+      lost for almost 48 hours in sub-zero temperatures. Controllers
+      not destroyed; remediation took almost two days.
 sources:
   - dragos/2024-07_frostygoop-ukrainian-heating
+  - techcrunch/2024-07-23_hackers-shut-down-heating-ukrainian-city
+  - bleepingcomputer/2024-07-23_frostygoop-malware-cut-off-heat-ukraine
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Phantom-remediation + full 6-point audit, RE-SOURCE path. The sole
+    cited source (dragos/2024-07_frostygoop-ukrainian-heating) had
+    url: null since 2026-05-28 (dead dragos.com blog slug). The
+    underlying report is real: re-pointed the record to the live
+    canonical intel-brief PDF, hub.dragos.com/hubfs/Reports/
+    Dragos-FrostyGoop-ICS-Malware-Intel-Brief-0724_.pdf — snapshot
+    sha256 fa91b1b2...dbd45e92, 1,487,419 bytes, 13 pp (PDF created
+    2024-07-23) — and added two same-day journalism records carrying
+    the specifics the PDF omits: techcrunch/2024-07-23_hackers-shut-
+    down-heating-ukrainian-city (sha256 4c4202f1...d6eaa0ca, 241,742
+    bytes) and bleepingcomputer/2024-07-23_frostygoop-malware-cut-off-
+    heat-ukraine (sha256 1145c2b2...3a535fcd, 88,506 bytes).
+    [a] FACTS — verified against raw: "the ninth industrial control
+    systems (ICS) specific malware ... first ICS-specific malware that
+    uses Modbus TCP communications to achieve an impact on OT" (brief
+    p.1); Modbus TCP port 502 read/write of holding registers; ENCO
+    controllers ("for process control in district heating, hot water,
+    and ventilation systems"); firmware downgraded to "a version that
+    lacks monitoring capabilities ... resulting in the Loss of View";
+    controllers made to "report inaccurate measurements, resulting in
+    the incorrect operation of the system and the loss of heating";
+    "over 600 apartment buildings"; "Remediation of the incident took
+    almost two days ... sub-zero temperatures"; "adversaries did not
+    attempt to destroy the controllers" — so REMOVED incident_type
+    "destructive" (nothing destroyed) and ADDED "cyber-physical".
+    Victim naming: the brief NEVER names Lviv or Lvivteploenergo
+    ("municipal district energy company in Ukraine"); Lviv +
+    LvivTeploEnergo are carried by the Security Council of Ukraine
+    statement in TechCrunch and LB.UA-sourced BleepingComputer
+    reporting — event name kept, provenance now explicit in prose.
+    Added individuals_affected: 100000 (LB.UA via BleepingComputer).
+    "Sandworm-affiliated operators", "extended Sandworm's known OT
+    toolkit", "Sandworm's first ... heating provider" — STRIPPED, no
+    source carries any Sandworm claim. initial_vector n-day →
+    unknown: the vulnerability in the internet-exposed MikroTik
+    router is "undetermined"/"unidentified" and access only
+    "possibly" gained that way.
+    [b] ATTRIBUTION — the brief attributes to NO ONE; TechCrunch
+    records Dragos explicitly declining to name "any known particular
+    hacking group or government" (no ties to prior activity/tools +
+    non-attribution policy). Moscow-based attack-day L2TP IPs are the
+    only stated nexus; BleepingComputer's "Russian-linked" lede is
+    journalistic framing. CORRECTED: ru/gru/74455/sandworm @ high /
+    concur (a fabricated over-attribution — the claimed attributing
+    org "Dragos (with CERT-UA / Industrial Cyber reporting)" also
+    misnamed the Ukrainian party: SSU CSSC, not CERT-UA) → actor_id
+    null, attributing_org Dragos, confidence low, level null,
+    auspex_assessment concur (with the non-attribution).
+    [c] DATES — start 2024-01-22 now source-carried ("late evening of
+    January 22 through January 23", TechCrunch + BleepingComputer
+    quoting Dragos; the PDF itself says only "January 2024");
+    end 2024-01-24 kept as commented estimate (late 22 Jan + "almost
+    48 hours"); disclosure 2024-07-23 = brief publication + press
+    coverage, correctly separated from the January operation. All
+    three sources' published_on = 2024-07-23, their actual same-day
+    publication dates. Initial access "possibly" 2023-04-17
+    (BleepingComputer; brief says "months earlier") noted in prose,
+    start_date deliberately remains the disruptive operation.
+    [d] DOCTRINE_LINKS — both "attested" links DOWNGRADED: no source
+    states a Russian strategic goal because no source even attributes
+    to Russia; attested would over-claim WHO-side corroboration.
+    ru/energy-weaponization/grid-attack → strongly_inferred (single
+    surviving strategic reading: winter-heating coercion to undermine
+    civilian morale — vendor-stated purpose via Graham/TechCrunch,
+    Moscow IPs, wartime pattern fit; ruled_out criminal/extortive
+    motive: no ransom/monetization). ru/russkiy-mir/ukraine-theater
+    → plausible (state vs non-state pro-Russian readings both
+    survive). ru/military-doctrine-2014/non-contact-warfare
+    strongly_inferred → plausible (presumes a Russian military
+    operator; unattributed). inference_basis added to all three;
+    attesting_source_id on the strongly_inferred link = techcrunch
+    record (primary supporting source, carries the purpose quote).
+    [e] ATTRIBUTION_LEVEL — set explicitly to null: Dragos reached no
+    level (not even nation); previously the field was absent.
+    [f] ACTOR_ID — n/a after correction (actor_id null). The former
+    referent atlas/actors/ru/sandworm.yaml resolves fine and keeps
+    other sourced events.
+    RESIDUAL UNCERTAINTIES: exact restoration time (end_date is an
+    estimate inside "almost two days"); whether initial access was
+    really the MikroTik router ("possibly"); perpetrator identity.
+    FLAGS FOR ORCHESTRATOR: (1) targets: the record pointed at
+    orgs/lvivteploenergo, which does NOT exist in atlas/targets/ —
+    dangling FK; re-pointed to sectors/energy (+ country ua) and kept
+    the org name in prose. If a registry record is wanted, create
+    orgs/lvivteploenergo (nation_state_id: ua, sector energy,
+    regional-cii) and re-point. (2) FrostyGoop=Sandworm over-
+    attribution persists in OTHER records' prose and should be
+    reviewed/softened by their owners: atlas/actors/ru/sandworm.yaml
+    (ttp_summary lists FrostyGoop in Sandworm's toolkit),
+    atlas/services/ru/gru/74455.yaml ("tooling lineage includes ...
+    FrostyGoop"), atlas/doctrines/ru/energy-weaponization.yaml
+    (cyber_relevance: "Sandworm's ... 2024 FrostyGoop Lviv heating"),
+    and atlas/events/2015/12/ukraine-power-grid-blackenergy.yaml
+    (doctrine-link reasoning implies FrostyGoop extends Sandworm's
+    pattern). (3) The Dragos record's dead blog slug had circulated
+    with a paraphrase title; title corrected to the PDF's real title
+    "Impact of FrostyGoop ICS Malware on Connected OT Systems".

@@ -1,40 +1,183 @@
 id: 2024-02/ftx-400m-sim-swap-arrests
-name: DOJ indicts SIM-swap conspiracy for $400M FTX hot-wallet drain
+name: DOJ charges SIM-swap crew for $400M FTX drain
 start_date: 2022-11-11
 disclosure_date: 2024-02-01
-end_date: 2024-02-15
+end_date: 2022-11-12
 incident_type:
   - financial-theft
+  - law-enforcement
 initial_vector: valid-creds
 outcome_summary: |
-  US DOJ unsealed indictments in the District of Columbia in
-  early February 2024 against Robert Powell, Carter Rohn, and
-  Emily Hernandez for a SIM-swap conspiracy that drained
-  approximately USD 400M from FTX cryptocurrency exchange
-  hot wallets on November 11–12 2022 — the same day FTX
-  filed for Chapter 11 bankruptcy. The defendants social-
-  engineered telephone-carrier employees to transfer FTX
-  employee phone numbers to mule-controlled SIMs and used
-  the captured SMS-based MFA codes to drain exchange
-  custodial wallets. One of the most consequential SIM-swap
-  prosecutions to date by attributed loss value.
+  An indictment unsealed in early February 2024 (first reported
+  by Ars Technica; Krebs on Security, Feb 1 2024) charged three
+  US residents over a November 2022 SIM-swap theft of more than
+  USD 400M in cryptocurrency: Robert Powell of Chicago (a.k.a.
+  "R," "R$," "ElSwapo1"), alleged ringleader of the "Powell SIM
+  Swapping Crew"; Carter Rohn of Indiana (a.k.a. "Carti,"
+  "Punslayer"), who allegedly assisted in compromising devices;
+  and Emily "Em" Hernandez of Colorado, who allegedly helped the
+  group access victim devices in SIM-swapping attacks between
+  March 2021 and April 2023. Per the indictment, the crew stole
+  the funds over several hours on November 11-12 2022 after
+  SIM-swapping an AT&T customer by impersonating them at a
+  retail store with a fake ID, enabling interception of the
+  victim's SMS messages, including one-time authentication
+  passcodes. The indictment identifies the SIM-swapped victim
+  only as "Victim 1" and the US government did not name the
+  victim organization; Krebs reported "every indication" the
+  money was stolen from FTX, which had filed for bankruptcy that
+  same day, and Elliptic corroborated that FTX wallets were
+  drained from the evening of Nov 11 into Nov 12, valuing the
+  stolen cryptoassets at USD 477M (FTX administrators reported
+  USD 413M of "unauthorized third-party transfers"; Elliptic
+  knew of no other crypto-exchange theft of that scale on that
+  date). Elliptic's October 2023 tracing found the stolen funds
+  laundered through ChipMixer and commingled with funds of
+  Russia-linked criminal groups, indicating "a broker or other
+  intermediary with a nexus in Russia."
+quantified_impact:
+  usd_stolen: 400000000  # indictment: "more than $400 million"; Elliptic valued the stolen cryptoassets at $477M; FTX administrators reported $413M in unauthorized transfers
 false_flag_risk: none
+operators_named:
+  - powell-robert  # "R" / "R$" / "ElSwapo1", alleged ringleader, Powell SIM Swapping Crew; DOJ Feb 2024
+  - rohn-carter  # "Carti" / "Punslayer"; DOJ Feb 2024
+  - hernandez-emily  # "Em"; DOJ Feb 2024
 summary: |
-  The FTX SIM-swap is the canonical case of SIM-swap
-  attribution against a corporate target rather than a
-  retail-investor victim, and the largest single-event
-  SIM-swap loss in the public record. AUSPEX classifies as
-  criminal-baseline.
+  Two-layer record: the underlying crime is the November 2022
+  SIM-swap drain of FTX on the night of its bankruptcy filing —
+  the corpus's only record of that theft — and the event is
+  anchored on the February 2024 DOJ indictment of the named
+  crew (documentary/law-enforcement layer). A SIM-swap of a
+  single AT&T customer's number cascaded into a >USD 400M
+  exchange drain; Elliptic knew of no other crypto-exchange
+  theft of that scale on that date. AUSPEX classifies as
+  criminal-baseline; no state doctrine applies, though Elliptic
+  and Unciphered assessed the post-theft laundering pointed to
+  a Russia-nexus intermediary rather than the US-based
+  SIM-swappers alone.
 attributions:
   - actor_id: null
-    attributing_org: DOJ + FBI
+    attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-02-01
     attribution_source_id: krebs/2024-02-15_400m-sim-swap-ftx
+    notes: |
+      The indictment names three individuals and a named crew
+      (the "Powell SIM Swapping Crew") - named-actor level; the
+      persons are carried in operators_named and no atlas actor
+      exists for the crew, hence actor_id null. "high" is scoped
+      to DOJ's charging of the named defendants for the theft
+      (allegations, not convictions). The government did NOT
+      name the victim organization - the indictment says only
+      "Victim 1"; the identification of the victim as FTX is
+      journalistic/blockchain-forensic inference (Krebs: "every
+      indication"; Elliptic's wallet tracing), not a DOJ claim.
+      Krebs reported FBI declined to comment.
 doctrine_links: []
 targets:
   - target_id: sectors/finance/crypto-exchange
     role: primary
 sources:
   - krebs/2024-02-15_400m-sim-swap-ftx
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against the raw of the sole cited source, Krebs on Security
+    "Arrests in $400M SIM-Swap Tied to Heist at FTX?" (snapshot
+    atlas/sources/raw/krebs__2024-02-15_400m-sim-swap-ftx.html, sha256
+    cabc3340...cc4e81fe, 53,658 bytes). Triage: NOT a phantom - the URL
+    returns the real article (title and body match the event's claims).
+
+    [a] FACTS - corrected. Carried verbatim by the raw: "Three Americans
+    were charged this week with stealing more than $400 million in a
+    November 2022 SIM-swapping attack"; Powell a.k.a. "R," "R$" and
+    "ElSwapo1," "ringleader of a SIM-swapping group called the 'Powell SIM
+    Swapping Crew'"; Rohn a.k.a. "Carti"/"Punslayer" "allegedly assisted in
+    compromising devices"; Hernandez "allegedly helped the group gain
+    access to victim devices ... between March 2021 and April 2023"; theft
+    "over several hours between November 11 and 12, 2022"; "after they
+    SIM-swapped an AT&T customer by impersonating them at a retail store
+    using a fake ID"; victim named only as "Victim 1"; "The U.S. government
+    did not name the victim organization, but there is every indication
+    that the money was stolen from ... FTX, which had just filed for
+    bankruptcy on that same day"; Elliptic: "We put the value of the
+    cryptoassets stolen at $477 million ... administrators have reported
+    overall losses due to 'unauthorized third-party transfers' of $413
+    million ... certainly over $400 million"; Elliptic Oct 2023 laundering
+    trace "points to the involvement of a broker or other intermediary with
+    a nexus in Russia." STRIPPED as not carried by the source: "in the
+    District of Columbia" (venue never stated in the article), "Chapter 11"
+    (article says only "filed for bankruptcy"), "hot-wallet" in the event
+    name (article says "FTX wallets"), "social-engineered telephone-carrier
+    employees to transfer FTX employee phone numbers to mule-controlled
+    SIMs" (raw mechanism is in-person impersonation of ONE AT&T customer
+    with a fake ID; "FTX employee" phone numbers, plural victims, and
+    "mule-controlled SIMs" are uncarried embellishments), and the
+    unqualified claim that DOJ charged a drain "from FTX ... hot wallets"
+    (the FTX identification is Krebs/Elliptic inference, now hedged), plus
+    "largest single-event SIM-swap loss in the public record" (nearest
+    carried claim is Elliptic's scale-and-date-qualified statement, now
+    quoted properly). "Conspiracy" in the old name reworded to "crew" per
+    the source's own wording. Added quantified_impact.usd_stolen 400000000
+    (indictment floor) with the 477M/413M spread in a comment, and
+    operators_named for the three defendants (corpus surname-first
+    convention, cf. mesri-behzad, urban-noah-michael).
+
+    [b] ATTRIBUTION - corrected. attributing_org was "DOJ + FBI": the FBI
+    appears in the article only as declining to comment; the charging
+    instrument is a DOJ indictment. Set attributing_org: US DOJ.
+    auspex_assessment concur retained; added a scoping note - high
+    confidence covers DOJ's charging of named defendants, NOT the
+    FTX-victim identification, which the government withheld ("Victim 1")
+    and which rests on Krebs/Elliptic inference.
+
+    [c] DATES - corrected. start_date 2022-11-11 OK (drain began evening of
+    Nov 11); end_date was 2024-02-15 (matched nothing in any source -
+    apparently copied from the source record's erroneous published_on) ->
+    2022-11-12, the theft's end per "over several hours between November 11
+    and 12, 2022". disclosure_date 2024-02-01 OK (indictment "unsealed this
+    week"; article posted Feb 1 2024; Powell detention hearing Feb 2 2024).
+    SOURCE DATE FIX: the source record's published_on was 2024-02-15 but
+    the raw page states "posted on Thursday 1st of February 2024 01:41 PM"
+    (in-body update dated Feb 3) -> corrected published_on to 2024-02-01 on
+    the source record; the id slug keeps its erroneous date (slugs are
+    stable forever), annotated there.
+
+    [d] DOCTRINE_LINKS - empty [] confirmed correct: criminal financial
+    theft with no state doctrine; nothing attested; none invented. The
+    Elliptic/Unciphered Russia-laundering-nexus observations concern a
+    post-theft laundering intermediary, not state tasking - carried as
+    context in prose, deliberately NOT as a doctrine link or ru attribution.
+
+    [e] ATTRIBUTION_LEVEL - added: named-actor. DOJ named three individuals
+    and the "Powell SIM Swapping Crew" (mirrors the null-actor + named
+    individual precedent of 2017-05/hbo-extortion-mesri).
+
+    [f] ACTOR_ID - null (unattributed to any atlas actor); no actor file to
+    resolve. Target sectors/finance/crypto-exchange resolves in
+    atlas/sectors/sectors.yaml. incident_type: added law-enforcement
+    alongside financial-theft for the two-layer structure (Nov-2022 theft +
+    Feb-2024 indictment, the event's 2024-02 anchor). initial_vector
+    valid-creds retained (SIM-swap -> intercepted SMS one-time passcodes ->
+    authenticated access; consistent with 2023-08 Kroll precedent).
+
+    DUP CHECK (tasked): no separate event models the Nov-2022 FTX drain
+    itself - corpus-wide search for FTX / $400M / SIM-swap events returns
+    only this record and 2023-08/kroll-sim-swap-crypto-bankruptcy (a
+    different incident: Kroll employee SIM-swap exposing FTX/BlockFi/
+    Genesis claimant data, which the raw here cross-references as "its own
+    breach"). No double-count; this single record intentionally carries
+    both layers.
+
+    Residual uncertainties: single-source event on a secondary
+    (journalism) source - a DOJ primary (press release/indictment PDF)
+    would be a natural second source and would carry the venue and formal
+    charges the Krebs article omits; the FTX identification remains
+    reported inference ("Victim 1" unnamed by the government); allegations
+    at charging stage, not convictions. No make/commit/git run; no actor
+    files edited.

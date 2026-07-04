@@ -1,43 +1,155 @@
 id: 2024-02/anydesk-production-intrusion
 name: AnyDesk production-systems intrusion and certificate rotation
-start_date: 2023-12-20
+start_date: 2023-12-01  # AnyDesk forensics (via SecurityWeek 2024-02-09): first breach "late December 2023" — month-granular; day not public
 disclosure_date: 2024-02-02
-end_date: 2024-02-29
+end_date: null  # no source bounds the op end; remediation (cert revocation, forced password resets) still rolling at last report (SecurityWeek 2024-02-09)
 incident_type:
   - intrusion
 initial_vector: unknown
 outcome_summary: |
-  AnyDesk Software (Stuttgart-based remote-desktop vendor,
-  ~170,000 enterprise customers) disclosed a production-systems
-  intrusion in a February 2 2024 public statement after a multi-
-  week silent remediation. The company rotated its code-signing
-  certificates, forced password resets across its user base,
-  and reported no evidence that signed binaries had been
-  tampered with. Stolen AnyDesk customer credentials subsequently
-  appeared for sale on cybercrime forums under the handle
-  "Jobaaaaa." No specific operator was publicly attributed; the
-  intrusion's tradecraft profile (code-signing certificate access,
-  multi-week dwell) is consistent with high-skill criminal
-  intrusion brokers rather than known state services.
+  AnyDesk Software (German remote-desktop vendor, ~170,000
+  customers) disclosed in a February 2 2024 public statement that
+  a security audit had found evidence of compromised production
+  systems. By the company's later account, the intrusion was
+  discovered in mid-January 2024 and a forensic investigation
+  placed the first breach in late December 2023; two relay servers
+  in Europe were among the compromised systems. Remediation with
+  CrowdStrike proceeded before public disclosure — including a
+  four-day maintenance window from January 29 during which client
+  logins were disabled — and the company revoked its
+  security-related certificates, began replacing its code-signing
+  certificate (the new certificate shipped in version 8.0.8 on
+  January 29; the prior "philandro Software GmbH" certificate was
+  slated for revocation), revoked all my.anydesk.com web-portal
+  passwords, and subsequently forced a password reset for all
+  customers. AnyDesk said the incident was not a ransomware attack
+  and involved no extortion attempt, that a code review found no
+  malicious modifications, and that it had no evidence of malicious
+  code being distributed to customers or of end-user devices being
+  affected. BleepingComputer reported, citing its own sources, that
+  source code and private code-signing keys were stolen; AnyDesk
+  did not confirm data theft. On February 3–4 2024 Resecurity
+  identified threat actors — one under the handle "Jobaaaaa" —
+  selling 18,317 AnyDesk customer-portal credentials on Exploit[.]in
+  for $15,000; Resecurity assessed those credentials were likely
+  harvested by infostealer malware on customer systems, and AnyDesk
+  said the listings were not related to the incident. No public
+  attribution was ever made.
 false_flag_risk: none
 summary: |
-  AnyDesk is one of the most-abused legitimate remote-management
-  tools in ransomware-affiliate tradecraft (cited in CISA
-  AA24-242A RansomHub, AA23-061A Royal/BlackSuit, AA24-131A
-  Black Basta advisories). The intrusion of its production
-  infrastructure raised concern about supply-chain compromise
-  scenarios but no malicious-signed-binary distribution was
-  confirmed. AUSPEX includes this event as criminal-baseline
-  because no state-nexus attribution exists and the operator
-  profile fits commodity criminal credential-broker activity.
+  AnyDesk is a widely deployed legitimate remote-access tool that
+  is also popular among threat actors, who use it for persistent
+  access to breached devices and networks, so the compromise of its
+  production infrastructure raised supply-chain-compromise concern
+  — Resecurity explicitly warned of escalation into "a more
+  devastating supply-chain attack" — but the company's code review
+  and subsequent reporting found no evidence that malicious signed
+  binaries were distributed. AUSPEX includes the event as
+  criminal-baseline: no cited source attributes the intrusion to
+  any actor, group, or state, and no state-nexus claim has been
+  made publicly.
 attributions: []
 doctrine_links: []
 targets:
   - target_id: orgs/anydesk
     role: primary
+    country: de
 sources:
   - anydesk/2024-02-02_public-statement
+  - bleepingcomputer/2024-02-02_anydesk-production-servers-breached
+  - thehackernews/2024-02-03_anydesk-hacked-password-reset
+  - resecurity/2024-02-04_anydesk-customer-credentials-dark-web
+  - securityweek/2024-02-09_anydesk-shares-more-information
 notes: |
   No attribution. Event included for completeness of the criminal-
   baseline corpus to document an intrusion of a software-supply-
   chain-adjacent target without state-nexus framing.
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: partial
+  notes: |
+    6-point audit vs raw snapshots, 2026-07-04. Source set augmented: the event
+    previously cited ONLY the AnyDesk Feb-2 statement, whose live URL has
+    link-rotted (https://anydesk.com/en/public-statement now 302-redirects to
+    trust.anydesk.com, a Vanta trust-center SPA; archive.org blocked for the audit
+    fetcher). Phantom-triage verdict: NOT a phantom — the source record already
+    carried url: null + an explanation, the statement genuinely existed, and its
+    operative text is mirrored verbatim in snapshotted coverage. Added four real,
+    snapshotted secondaries:
+    bleepingcomputer/2024-02-02_anydesk-production-servers-breached
+    (sha256 e0835b50…05e44b2a, 120,165 B);
+    thehackernews/2024-02-03_anydesk-hacked-password-reset
+    (a6850783…0f308b35, 171,921 B);
+    resecurity/2024-02-04_anydesk-customer-credentials-dark-web
+    (1c6e960f…4cac231b, 144,635 B);
+    securityweek/2024-02-09_anydesk-shares-more-information
+    (a2401648…242fa7a7, 157,441 B).
+    [a] FACTS — every kept claim is now quote-carried. Production-systems
+    compromise found via security audit (statement, mirrored by BC/THN);
+    CrowdStrike response (BC: "activated a response plan with the help of
+    cybersecurity firm CrowdStrike"); certificate revocation + code-signing
+    replacement (THN statement mirror: "We have revoked all security-related
+    certificates…" / "…revoking the previous code signing certificate…"; BC:
+    new cert in 8.0.8 released Jan 29, old 'philandro Software GmbH' cert to be
+    revoked); my.anydesk.com portal-password revocation (BC/THN) plus the later
+    forced password reset for ALL customers (SW: "AnyDesk has decided to force a
+    password reset for all customers"); four-day maintenance from Jan 29 with
+    client logins disabled, confirmed incident-related (BC); two European relay
+    servers compromised (SW); not ransomware / no extortion attempt (THN/SW);
+    code review found no malicious modifications, no malicious code distributed,
+    no end-user devices affected (SW/BC); source-code + code-signing-key theft
+    attributed to BleepingComputer's OWN reporting ("BleepingComputer has
+    learned…"), with AnyDesk not confirming data theft — phrased as
+    reported-not-confirmed; "Jobaaaaa" sale of 18,317 portal credentials for
+    $15,000 on Exploit[.]in (Resecurity) RECAST with the load-bearing caveat that
+    Resecurity assessed the credentials as likely infostealer-harvested and
+    AnyDesk said the listings were "not related to the incident" (Resecurity/SW)
+    — the old wording "stolen AnyDesk customer credentials subsequently appeared
+    for sale" implied breach-derived credentials, which no source supports;
+    ~170,000 customers (BC/THN); "German" vendor (THN). STRIPPED as uncarried:
+    "Stuttgart-based" (no cited source; the detail lives in the target registry);
+    the CISA advisory name-drops (AA24-242A / AA23-061A / AA24-131A) — replaced
+    with the BC-carried "popular among threat actors … persistent access to
+    breached devices and networks" framing; and the INVENTED closing assessment
+    "tradecraft profile … consistent with high-skill criminal intrusion brokers
+    rather than known state services" — no source profiles the operator at all.
+    [b] ATTRIBUTION — attributions: [] kept (schema-valid; 21 corpus precedents).
+    No cited source names any actor, group, or state; no attribution was ever
+    made public. Nothing invented, no state nexus added.
+    [c] DATES — start_date 2023-12-20 -> 2023-12-01 + inline comment: the sourced
+    granularity is "hackers first breached its systems in late December 2023"
+    (SW, reporting the company's forensics); the old day-precision Dec 20 was
+    carried by nothing. Month-floor + comment follows corpus precedent
+    (midnight-blizzard-microsoft-corporate encodes MSRC's "late November 2023" as
+    2023-11-01). Discovery "mid-January 2024" (SW) is carried in prose, not faked
+    into a day. disclosure_date 2024-02-02 confirmed (statement day; BC JSON-LD
+    datePublished 2024-02-02T17:16:03-05:00 covers it same-day). end_date
+    2024-02-29 -> null: carried by nothing — remediation was still rolling at
+    last report (SW Feb 9: certificates "are being revoked", reset procedure
+    "initiated"). Source published_on all verified against page metadata/bylines:
+    BC 2024-02-02, THN 2024-02-03, Resecurity 2024-02-04 ("4 Feb 2024" on page),
+    SW 2024-02-09 (JSON-LD 2024-02-09T11:17:11+00:00).
+    [d] DOCTRINE_LINKS — [] correct: unattributed criminal-baseline event, no
+    state doctrine genuinely applies, none invented.
+    [e] ATTRIBUTION_LEVEL — n/a: no attribution entries exist to carry a level.
+    [f] ACTOR_ID — n/a (no actor). Target FK orgs/anydesk resolves
+    (atlas/targets/orgs/anydesk.yaml, nation de); event target now carries
+    country: de consistently.
+    LEVEL partial (not full) solely because the load-bearing PRIMARY — the
+    AnyDesk statement itself — could not be snapshotted (link-rot + archive.org
+    blocked); its cert-revocation / password-reset / safe-to-use language is
+    corroborated verbatim through two independent snapshotted mirrors (BC, THN).
+    Every other claim is carried by directly-snapshotted sources.
+    RESIDUAL UNCERTAINTIES — the "late December 2023" breach start is the
+    company's own forensic account via SecurityWeek; no independent forensic
+    corroboration is public. BC's source-code/signing-key-theft claim is
+    single-outlet ("has learned") and remains phrased as reported-not-confirmed.
+    FLAG (target registry, NOT edited per protocol):
+    atlas/targets/orgs/anydesk.yaml summary still carries the uncaveated "stolen
+    credentials … under the seller handle 'Jobaaaaa'" framing this audit
+    corrected in the event, and has sources: [] — recommend registry fix +
+    sourcing. FLAG (source): anydesk/2024-02-02_public-statement archive_url
+    (wayback) is unverifiable from this fetcher — the T1 archive pass should
+    confirm it still resolves.

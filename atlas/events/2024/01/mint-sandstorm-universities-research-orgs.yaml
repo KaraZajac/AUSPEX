@@ -1,62 +1,105 @@
 id: 2024-01/mint-sandstorm-universities-research-orgs
 name: Mint Sandstorm (APT35) spear-phishing of universities and research orgs
-start_date: 2023-11-01
+start_date: 2023-11-01  # "Since November 2023" per MSTIC (best-estimate day-of-month)
 disclosure_date: 2024-01-17
-end_date: 2024-01-17
+end_date: null  # campaign ONGOING at disclosure ("the ongoing Mint Sandstorm campaign"); prior end_date=2024-01-17 conflated op-end with disclosure
 incident_type:
   - intrusion
+  - espionage
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Microsoft MSTIC documented a Mint Sandstorm (APT35 / Charming
-  Kitten / Phosphorus) subgroup conducting spear-phishing against
-  high-profile Middle East policy experts at universities and
-  research organizations in Belgium, France, Gaza, Israel, the
-  UK, and the US from November 2023 onward. Novel TTPs included
-  delivery of phishing lures from legitimate-but-compromised
-  email accounts (rapport-building advantage) and curl-based
-  command-and-control traffic. Persona development around
-  invitations to legitimate-seeming research and policy events
-  was the consistent initial-access pattern.
+  Operators masqueraded as high-profile individuals — including as
+  a journalist at a reputable news outlet — sending wholly benign
+  initial emails requesting the target's input on an article about
+  the Israel-Hamas war, tradecraft Microsoft assessed was likely an
+  attempt to build rapport and trust before delivering malicious
+  content. Lures came from email addresses spoofed to resemble the
+  impersonated journalist's personal account or, in a subset of
+  cases, from legitimate but compromised accounts belonging to the
+  individuals being impersonated. Targets who agreed to review the
+  "draft" were sent a link to an attacker domain
+  (cloud-document-edit[.]onrender[.]com) hosting a RAR archive that
+  decompressed to a same-name double-extension .pdf.lnk file; when
+  launched, it ran a curl command to retrieve malicious files —
+  several .vbs scripts and, in several instances, a renamed copy of
+  the legitimate NirCmd command-line tool — from attacker-controlled
+  glitch[.]me and supabase[.]co subdomains. Persistence used a
+  Persistence.vbs file adding a script (typically a.vbs) to a
+  CurrentVersion Run registry key, or scheduled tasks fetching from
+  a supabase[.]co domain; activity from targets' devices was written
+  to text files, notably documentLoger.txt. In a handful of cases
+  Microsoft observed new post-intrusion tradecraft including custom
+  backdoors: MediaPl, which masquerades as Windows Media Player and
+  uses AES-CBC-encrypted, Base64-encoded C2 communications, and
+  MischiefTut, a PowerShell backdoor with reconnaissance,
+  output-logging, and tool-download capabilities.
 false_flag_risk: none
 summary: |
-  Tempo data point for APT35 / Mint Sandstorm's persistent
-  collection against Middle-East-focused policy and academic
-  experts during the early phase of the post-October-7 Israel-
-  Hamas conflict. Operationalizes the post-Soleimani-retaliation
-  named-official-targeting pillar (extended to the broader
-  policy-expert population around the same political theater)
-  and the cyber-deniable-retaliation diaspora-targeting pillar.
+  Microsoft Threat Intelligence reported that since November 2023 a
+  technically and operationally mature subgroup of Mint Sandstorm —
+  the IRGC-tied composite cluster overlapping APT35 / Charming
+  Kitten (formerly PHOSPHORUS) — targeted high-profile individuals
+  working on Middle Eastern affairs at universities and research
+  organizations in Belgium, France, Gaza, Israel, the United
+  Kingdom, and the United States, using bespoke phishing lures
+  built around the Israel-Hamas war. Microsoft describes the
+  subgroup as specializing in gaining access to and stealing
+  sensitive information from high-value targets — journalists,
+  researchers, professors, and other individuals with insights or
+  perspective on security and policy issues of interest to Tehran —
+  and assessed it is possible the campaign was an attempt to gather
+  perspectives on events related to the war from individuals across
+  the ideological spectrum. A tempo data point for the cluster's
+  persistent collection during the early months of the Israel-Hamas
+  conflict.
 attributions:
   - actor_id: ir/irgc/apt35
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2024-01-17
     attribution_source_id: microsoft/2024-01-17_mint-sandstorm-universities
+    notes: |
+      MSTIC attributes firmly and names the sponsoring service in
+      this post: "Microsoft attributes the activity detailed in this
+      blog to a technically and operationally mature subgroup of
+      Mint Sandstorm"; "Mint Sandstorm (which overlaps with the
+      threat actor tracked by other researchers as APT35 and
+      Charming Kitten) is a composite name used to describe several
+      subgroups of activity with ties to the Islamic Revolutionary
+      Guard Corps (IRGC), an intelligence arm of Iran's military."
+      Service named (IRGC) -> named-unit, high confidence.
 doctrine_links:
-  - doctrine_id: ir/post-soleimani-retaliation
-    pillar_id: ir/post-soleimani-retaliation/named-official-targeting
+  - doctrine_id: ir/constitutional-irgc-role
+    pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting of Middle-East-policy-expert population that
-      historically overlaps with named-former-official targets;
-      the broader subgroup mission against IRGC-adversary policy
-      voices fits the named-official-targeting pillar even when
-      individual targets are not formerly senior officials.
+      An IRGC-tied Mint Sandstorm subgroup running patient,
+      resource-intensive collection against individuals whose
+      perspectives on the Israel-Hamas war and on Middle East
+      security/policy are "of interest to Tehran" is the IRGC's
+      parallel intelligence apparatus executing its constitutional
+      (Article 150) mandate — state intelligence collection serving
+      regime decision-making during the war. Held at
+      strongly_inferred, not attested, because MSTIC's
+      campaign-purpose language is hedged ("it's possible this
+      campaign is an attempt to gather perspectives on events
+      related to the war"), below the attested bar; but the
+      collection reading has no serious competitor. Linked at
+      doctrine level (pillar null): no Article-150 pillar
+      specifically encodes external policy-community collection
+      (regime-preservation encodes counter-dissident targeting,
+      which this is not).
     attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ir/cyber-deniable-retaliation
-    pillar_id: ir/cyber-deniable-retaliation/diaspora-targeting
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      APT35's persistent collection against journalists, dissidents,
-      and policy experts fits the diaspora-targeting pillar
-      doctrine.
-    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "MSTIC names the service in this post: Mint Sandstorm 'is a composite name used to describe several subgroups of activity with ties to the Islamic Revolutionary Guard Corps (IRGC), an intelligence arm of Iran's military.'"
+        - "MSTIC frames the purpose as state intelligence collection: targets 'have the potential to influence the intelligence and policy communities' and are 'attractive targets for adversaries seeking to collect intelligence for the states that sponsor their activity, such as the Islamic Republic of Iran'; 'it's possible this campaign is an attempt to gather perspectives on events related to the war from individuals across the ideological spectrum.'"
+        - "The subgroup 'specializes in gaining access to and stealing sensitive information from high-value targets' — a collection mission matching the IRGC intelligence apparatus authorized under Article 150."
+      ruled_out: "Retaliatory/coercive readings (ir/post-soleimani-retaliation named-official-targeting; ir/cyber-deniable-retaliation diaspora-targeting; ir/asymmetric-warfare coercion) — the source names no former officials, no diaspora/dissident targets, no hacktivist persona front, and no destructive or coercive element; it frames the campaign as collection. A financially-motivated reading has no support anywhere in the source."
     contested: false
     analyst: claude
 targets:
@@ -64,7 +107,137 @@ targets:
     role: primary
   - target_id: sectors/academic/research-lab
     role: primary
-  - target_id: sectors/civil-society/think-tank
-    role: primary
 sources:
   - microsoft/2024-01-17_mint-sandstorm-universities
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs the RAW MSTIC blog "New TTPs observed in Mint
+    Sandstorm campaign targeting high-profile individuals at
+    universities and research orgs" (2024-01-17). Raw snapshot
+    captured fresh (none existed): sha256 3359caab…df2a163c
+    (301,065 bytes); real article confirmed (title + full body
+    match), not a phantom. Single-source event; source is MSTIC
+    first-party original investigation (own telemetry, IOC table,
+    MediaPl SHA-256, hunting queries). Spot-check for the sibling
+    mint-sandstorm-us-cii AI-embellishment pattern: pattern
+    CONFIRMED here in one prose claim and both doctrine links.
+
+    [a] FACTS — one fabricated tradecraft claim STRIPPED:
+      • "Persona development around invitations to
+        legitimate-seeming research and policy events was the
+        consistent initial-access pattern" — NOT in source (0 hits
+        for invitation/conference/webinar/event-lure; the word
+        "event" appears only re: geopolitical events/war). The
+        REAL pattern per MSTIC: impersonation of high-profile
+        individuals incl. a journalist at a reputable news outlet;
+        benign initial emails "requesting their input on an article
+        about the Israel-Hamas war"; follow-up link to a RAR
+        archive purporting to be the draft document. Looks imported
+        from OTHER Charming Kitten reporting (fake
+        webinar/conference invites) — same embellishment family as
+        the sibling's 6 fabricated claims. Corrected in place.
+      • Rephrased "high-profile Middle East policy experts" to the
+        source's "high-profile individuals working on Middle
+        Eastern affairs" (substance same; wording now carried).
+      VERIFIED-CARRIED (verbatim in raw): "Since November 2023";
+      countries Belgium, France, Gaza, Israel, UK, US; universities
+      and research organizations; bespoke phishing lures;
+      legitimate-but-compromised accounts used to send lures;
+      rapport/trust-building intent ("likely an attempt to build
+      rapport with targets and establish a level of trust");
+      curl-based C2 retrieval ("use of the Client for URL (curl)
+      command to connect to Mint Sandstorm's command-and-control
+      (C2) server and download malicious files").
+      ADDED source-carried tradecraft the event omitted (the
+      report's headline novel TTPs): MediaPl custom backdoor
+      (masquerades as Windows Media Player; AES CBC + Base64 C2;
+      Defender name Backdoor:Win64/Eyeglass.A), MischiefTut
+      PowerShell backdoor, RAR -> .pdf.lnk double-extension -> curl
+      chain via cloud-document-edit[.]onrender[.]com with payloads
+      from glitch[.]me / supabase[.]co subdomains, renamed NirCmd,
+      Persistence.vbs / a.vbs Run-key + scheduled-task persistence,
+      documentLoger.txt activity logging. Scale words preserved
+      ("in a handful of cases", "in some cases", "several").
+      incident_type: ADDED espionage (MSTIC: "seeking to collect
+      intelligence for the states that sponsor their activity");
+      kept intrusion + data-theft (subgroup "specializes in gaining
+      access to and stealing sensitive information"; collection
+      activity + exfil-oriented tooling observed). Name's
+      "spear-phishing" kept as fair gloss: source says "bespoke"/
+      "highly bespoke phishing lures" and MSTIC's own MDTI report
+      title says "tailored phishing campaigns" (the literal word
+      "spear" does not appear; substance identical).
+    [a-targets] REMOVED sectors/civil-society/think-tank — sector
+      inflation: "think tank" appears NOWHERE in the source (0
+      hits); MSTIC names only "universities and research
+      organizations". Kept academic/university +
+      academic/research-lab (research organizations). Six victim
+      countries named; per-target country left unset since targets
+      span all six.
+    [b] ATTRIBUTION — MSTIC attributes firmly ("Microsoft
+      attributes the activity detailed in this blog to a
+      technically and operationally mature subgroup of Mint
+      Sandstorm") and states the IRGC affiliation IN THIS POST
+      ("ties to the Islamic Revolutionary Guard Corps (IRGC), an
+      intelligence arm of Iran's military") — so
+      attributing_org_confidence: high stands (unhedged
+      attribution), and the flagged question "is IRGC affiliation
+      stated?" = YES. Added attribution notes quoting the exact
+      language. auspex_assessment concur kept.
+    [c] DATES — start_date 2023-11-01 carried ("Since November
+      2023"; day-of-month is best-estimate). disclosure_date
+      2024-01-17 = blog date (visible "January 17, 2024" +
+      datePublished meta 2024-01-17T17:00:00+00:00). CORRECTED
+      end_date 2024-01-17 -> null: the source describes "the
+      ongoing Mint Sandstorm campaign" ("As of this writing…") —
+      the old value conflated op-end with disclosure; op not
+      bounded. Source published_on 2024-01-17 correct.
+    [d] DOCTRINE_LINKS — REMOVED both pre-audit links as mis-fit
+      (doctrine-shopping variant of the embellishment pattern);
+      neither survives even at plausible because the op does not
+      fit either pillar's meaning:
+      • ir/post-soleimani-retaliation/named-official-targeting:
+        pillar encodes phishing of named former Trump-administration
+        officials tied to the Soleimani strike. Source: 0 hits for
+        Soleimani/retaliation/officials; targets are Middle-East-
+        affairs researchers; purpose framed as collection, not
+        revenge. The old reasoning itself conceded targets "are not
+        formerly senior officials".
+      • ir/cyber-deniable-retaliation/diaspora-targeting: pillar
+        encodes persona-laundered harassment of Iranian diaspora
+        journalists/dissidents/activists. Source: 0 hits for
+        diaspora/dissident; impersonating a real journalist is
+        social engineering, not a hacktivist-persona front; purpose
+        is collection, not harassment.
+      ADDED one honest link: ir/constitutional-irgc-role (pillar
+      null) at strongly_inferred with inference_basis
+      (signals quoting the raw + ruled_out) — MSTIC names the
+      service and a proximate collection purpose the doctrine's
+      intelligence mandate specializes; held below attested because
+      the purpose language is hedged ("it's possible…"), mirroring
+      the sibling event's hedged-purpose precedent. attesting_
+      source_id stays null (correct for non-attested).
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-unit: MSTIC
+      names the sponsoring service (IRGC) in this post, mirroring
+      the sibling mint-sandstorm-us-cii rule ("service named ->
+      named-unit").
+    [f] ACTOR_ID — ir/irgc/apt35 resolves to
+      atlas/actors/ir/apt35.yaml (id ir/irgc/apt35); Mint Sandstorm
+      is a listed alias (Microsoft post-April-2023 taxonomy); the
+      IRGC service placement was itself verified 2026-06-24 and
+      this source independently corroborates it. No actor edit; no
+      actor flag.
+
+    Residual uncertainties: (1) start day-of-month is a
+    best-estimate for "November 2023". (2) data-theft rests on the
+    subgroup's stated specialization + observed collection tooling
+    (documentLoger.txt; MischiefTut "ostensibly" sends outputs);
+    MSTIC does not enumerate exfiltrated data. (3) TIER: source
+    tagged secondary though it is an MSTIC first-party original
+    investigation — left unchanged per audit instruction (PRESERVE
+    tier) and because the sibling audit already FLAGGED the
+    MSTIC-tier convention for corpus-wide resolution.

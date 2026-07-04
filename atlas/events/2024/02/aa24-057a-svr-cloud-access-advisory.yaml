@@ -4,60 +4,256 @@ start_date: 2024-02-26
 disclosure_date: 2024-02-26
 end_date: 2024-02-26
 incident_type:
+  - documentary
   - disclosure
   - attribution-publication
 initial_vector: unknown
 outcome_summary: |
-  NCSC-UK led a Five Eyes joint advisory (AA24-057A) cataloguing
-  observed SVR tradecraft shifts for initial access to cloud
-  tenants: password-spray, brute-force, OAuth-token abuse, dormant
-  service-account compromise, unauthorised MFA-device registration,
-  and residential-proxy infrastructure to defeat geofencing. Pulls
-  together the operational evidence from the Microsoft Midnight
-  Blizzard (Jan 2024) and HPE (Jan 2024) intrusions into a normative
-  defensive baseline for cloud-resident victims.
+  On 2024-02-26 the UK NCSC published joint advisory AA24-057A,
+  "SVR Cyber Actors Adapt Tactics for Initial Cloud Access,"
+  co-sealed by NSA, CISA, CNMF, FBI, ASD's ACSC, CCCS, and GCSB —
+  agencies of all five Five Eyes nations. It assesses APT29
+  (Midnight Blizzard / the Dukes / Cozy Bear) to be a cyber
+  espionage group "almost certainly part of the SVR" and catalogues
+  the TTPs, observed over the preceding 12 months, by which SVR
+  actors adapt as victims move to cloud infrastructure: brute
+  forcing and password spraying against service accounts (T1110);
+  takeover of dormant accounts of departed users (T1078.004),
+  including logging back into inactive accounts after an enforced
+  incident-response password reset to regain evicted access;
+  authentication with stolen system-issued access tokens, without
+  needing a password (T1528); "MFA bombing" / MFA-fatigue push spam
+  (T1621); enrollment of actor-controlled devices on cloud tenants
+  lacking device-validation rules (T1098.005); and residential
+  proxies that hide the true source of traffic from IP-based
+  network defenses (T1090.002). NCSC records SVR targeting
+  expanding beyond governmental, think tank, healthcare, and
+  energy organizations to aviation, education, law enforcement,
+  local and state councils, government financial departments, and
+  military organizations. Recommended mitigations: MFA/2SV; strong
+  unique passwords plus joiners-movers-leavers reviews disabling
+  dormant accounts; least-privilege service accounts; canary
+  service accounts; short session lifetimes; device-enrollment
+  policies; and application/host-level log detection (e.g.
+  user-agent-string changes) over IP-address indicators. The
+  advisory notes some of its TTPs (residential proxies,
+  exploitation of system accounts) are "similar to those reported
+  as recently as January 2024 by Microsoft"; it names no specific
+  victim incident.
 false_flag_risk: none
 campaign_id: apt29-midnight-blizzard
 summary: |
-  Doctrinally important as the first Five-Eyes-wide tradecraft
-  advisory framing the SVR's identity-supply-chain pattern as the
-  dominant cloud-era espionage modality. The advisory's recommended
-  controls (FIDO2, conditional access, OAuth-app monitoring,
-  privileged-identity governance) became the policy template for
-  CISA's subsequent cloud-resident hardening directives through 2024.
+  Documentary tradecraft advisory — an advisory about the SVR's
+  tradecraft evolution, not one specific intrusion. The Five Eyes'
+  consolidated statement of the SVR's cloud-era initial-access
+  repertoire: as victims modernize, the actor has "to move beyond
+  their traditional means of initial access, such as exploiting
+  software vulnerabilities in an on-premises network," and instead
+  "target the cloud services themselves," making denial of initial
+  authentication the decisive defensive layer ("Denying initial
+  access to the cloud environment can prohibit SVR from
+  successfully compromising their target"). Issued a month after
+  Microsoft's Midnight Blizzard corporate-intrusion reporting,
+  which the advisory itself cites as describing similar TTPs.
 attributions:
   - actor_id: ru/svr/apt29
-    attributing_org: NCSC-UK + CISA + NSA + FBI + Five Eyes
+    attributing_org: "NCSC-UK (lead) + NSA, CISA, CNMF, FBI, ASD's ACSC, CCCS, GCSB (Five Eyes)"
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2024-02-26
     attribution_source_id: cisa/2024-02-26_aa24-057a-svr-cloud-access
+    notes: |
+      Verbatim: "The UK National Cyber Security Centre (NCSC) and
+      international partners assess that APT29 is a cyber espionage
+      group, almost certainly part of the SVR, an element of the
+      Russian intelligence services"; NSA, CISA, CNMF, FBI, ASD's
+      ACSC, CCCS, and GCSB "agree with this attribution and the
+      details provided in this advisory." NCSC-UK lead confirmed by
+      the disclaimer (all material UK Crown Copyright; FOIA queries
+      to NCSC). "Almost certainly" = top PHIA probability band ->
+      high; named-unit because the service (SVR) is named, not
+      merely the APT29 cluster.
 doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
-    confidence: attested
-    reasoning: |
-      SVR strategic foreign-intelligence collection against
-      cloud-resident victim infrastructure — the canonical
-      information-sphere-as-domain pillar.
-    attesting_source_id: cisa/2024-02-26_aa24-057a-svr-cloud-access
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/nato-ultimatum-2021
-    pillar_id: ru/nato-ultimatum-2021/nato-degradation
-    program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Five-Eyes-wide hardening posture against SVR cloud intrusion
-      during the active phase of the invasion.
-    attesting_source_id: null
+      The advisory documents the SVR's strategic foreign-intelligence
+      collection adapting to cloud-resident victim infrastructure —
+      state espionage treating the information sphere as an operating
+      domain, the same doctrinal home the corpus assigns the SVR's
+      cloud-identity tradecraft (post-SolarWinds Sliver campaign,
+      Midnight Blizzard corporate intrusion). Strongly inferred, not
+      attested: the source states the proximate purpose (a "cyber
+      espionage group" adapting "to continue their cyber operations
+      for intelligence gain") but never the information-confrontation
+      goal-level framing the pillar itself encodes.
+    attesting_source_id: cisa/2024-02-26_aa24-057a-svr-cloud-access
+    inference_basis:
+      signals:
+        - "Advisory (verbatim): APT29 is 'a cyber espionage group, almost certainly part of the SVR'; SVR actors are adapting 'to continue their cyber operations for intelligence gain'"
+        - "Stated victim portfolio is a strategic-collection set: governmental, think tank, healthcare, and energy targets 'for intelligence gain', expanding to aviation, education, law enforcement, local and state councils, government financial departments, and military organizations"
+        - "TTP catalogue (token theft, dormant/service-account takeover, MFA bombing, device enrollment, residential proxies) is access-and-persist espionage tradecraft, not disruption or revenue generation"
+      ruled_out: "Financial/criminal or destructive motive — the advisory frames the activity strictly as espionage by Russia's foreign-intelligence service; no destructive or monetization behaviour is described"
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/ict
-    role: primary
   - target_id: sectors/government
+    role: primary
+  - target_id: sectors/government/local
+    role: primary
+  - target_id: sectors/government/defense-ministry
+    role: primary
+  - target_id: sectors/civil-society/think-tank
+    role: primary
+  - target_id: sectors/healthcare
+    role: primary
+  - target_id: sectors/energy
+    role: primary
+  - target_id: sectors/transport/aviation
+    role: primary
+  - target_id: sectors/academic
     role: primary
 sources:
   - cisa/2024-02-26_aa24-057a-svr-cloud-access
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against the primary source, the CISA-hosted joint
+    advisory AA24-057A "SVR Cyber Actors Adapt Tactics for Initial
+    Cloud Access" (url live; raw snapshot
+    cisa__2024-02-26_aa24-057a-svr-cloud-access.html, sha256
+    4611bcb8...ca88ba87, 74,392 bytes; HTML <title> "SVR Cyber
+    Actors Adapt Tactics for Initial Cloud Access | CISA"). Not a
+    phantom — the URL resolves to the real advisory. The defect
+    pattern was IMPORTED SPECIFICS from the January-2024
+    Microsoft/HPE incident reporting (the prior audit's suspicion),
+    corrected in place.
+
+    [a] FACTS — corrected. Raw keyword census: OAuth = 0, FIDO2 =
+    0, "conditional access" = 0, HPE/Hewlett = 0, geofenc- = 0,
+    Ukraine = 0, NATO = 0 (the only two byte-matches for "NATO" are
+    the substring of "Coordinator" in CISA logo alt-text). REMOVED
+    accordingly: "OAuth-token abuse" (advisory describes stolen
+    system-issued access tokens, T1528 — OAuth never appears);
+    "residential-proxy infrastructure to defeat geofencing"
+    (advisory: proxies hide the true source from defenses using
+    IP-address indicators — geofencing never appears); "pulls
+    together the operational evidence from the Microsoft Midnight
+    Blizzard (Jan 2024) and HPE (Jan 2024) intrusions" (the
+    advisory references Microsoft exactly once — some TTPs are
+    "similar to those reported as recently as January 2024 by
+    Microsoft" — and never mentions HPE); "first Five-Eyes-wide
+    tradecraft advisory" (unverifiable superlative, asserted
+    nowhere); "identity-supply-chain pattern as the dominant
+    cloud-era espionage modality" (appears nowhere); "recommended
+    controls (FIDO2, conditional access, OAuth-app monitoring,
+    privileged-identity governance) became the policy template for
+    CISA's subsequent cloud-resident hardening directives through
+    2024" (none of the four named controls appear; the forward
+    causal claim is uncited). Fixed the conflation "dormant
+    service-account compromise": the advisory treats two distinct
+    account classes — brute-forced/password-sprayed SERVICE
+    accounts (T1110) and DORMANT accounts of departed users
+    (T1078.004, incl. post-eviction regain after enforced password
+    resets). Rewrote outcome_summary/summary to the advisory's own
+    content: the six-TTP catalogue with ATT&CK ids (T1110,
+    T1078.004, T1528, T1621, T1098.005, T1090.002) observed "in
+    the last 12 months"; the sector-expansion sentence; the actual
+    mitigation list (MFA/2SV, strong unique passwords +
+    dormant-account disablement, least privilege, canary service
+    accounts, short session lifetimes, device-enrollment policies,
+    application/host-level logging over IP indicators).
+    incident_type: added documentary (an advisory about tradecraft
+    evolution, not a specific intrusion — AA22-131A convention);
+    kept disclosure + attribution-publication (unlike AA22-131A,
+    this advisory does publish a joint attribution).
+
+    [b] ATTRIBUTION — verified, tightened. Verbatim: "APT29 is a
+    cyber espionage group, almost certainly part of the SVR, an
+    element of the Russian intelligence services"; NSA, CISA, CNMF,
+    FBI, ASD's ACSC, CCCS, GCSB "agree with this attribution and
+    the details provided in this advisory." NCSC-UK lead confirmed
+    (UK Crown Copyright disclaimer; FOIA contact = NCSC).
+    attributing_org corrected "NCSC-UK + CISA + NSA + FBI + Five
+    Eyes" -> the full actual sealer list (adds CNMF, ASD's ACSC,
+    CCCS, GCSB). Confidence high kept ("almost certainly" = top
+    PHIA band); auspex_assessment concur kept; attribution_date =
+    release date 2024-02-26 kept.
+
+    [c] DATES — source published_on 2024-02-26 = the advisory's
+    "Release Date February 26, 2024" (verified in raw). Single-day
+    meta event: start/disclosure/end all 2024-02-26 kept; the TTP
+    observation window ("the last 12 months") belongs to the
+    underlying operations and stays in prose, not in event dates.
+
+    [d] DOCTRINE_LINKS — two changes. (1)
+    ru/info-security-2016/information-sphere-as-domain DOWNGRADED
+    attested -> strongly_inferred: the advisory states the
+    proximate purpose (espionage "for intelligence gain") but never
+    the pillar's goal-level framing (information confrontation /
+    info-sphere as national-security domain); per the
+    over-attestation boundary, a proximate purpose the doctrine
+    specializes = strongly_inferred. This also matches both QC'd
+    siblings (svr-cloud-identity-campaign,
+    midnight-blizzard-microsoft-corporate), which carry this exact
+    pillar at strongly_inferred. Added inference_basis
+    signals/ruled_out with verbatim quotes; attesting_source_id
+    kept as the supporting source per schema. (2)
+    ru/nato-ultimatum-2021/nato-degradation (was strongly_inferred)
+    REMOVED: NATO and Ukraine appear zero times in the advisory;
+    nothing carries the pillar's goal (fragmenting NATO consensus
+    on Ukraine via defense-industrial/logistics/political-
+    institution operations); and the link's own reasoning
+    ("Five-Eyes-wide hardening posture...") described the
+    DEFENDERS' posture, not the Russian actor's rationale — an
+    incoherent perspective for a ru doctrine on a ru actor. The
+    source-stated espionage reading (link 1) out-competes it; per
+    protocol, an invented link is removed rather than kept at a
+    lower grade (same call as the AA22-131A audit).
+
+    [e] ATTRIBUTION_LEVEL — added named-unit (was absent): the
+    advisory names both the cluster (APT29 / Midnight Blizzard /
+    the Dukes / Cozy Bear) and the SERVICE ("almost certainly part
+    of the SVR"); consistent with the QC'd
+    svr-cloud-identity-campaign convention for NCSC naming the SVR.
+
+    [f] ACTOR_ID — ru/svr/apt29 resolves
+    (atlas/actors/ru/apt29.yaml, id ru/svr/apt29,
+    primary_service_id ru/svr); the record is well-sourced and its
+    aliases cover every name the advisory uses. No actor defect.
+
+    TARGETS — corrected to the advisory's own sector list (the
+    prior audit's suspicion of HPE-bundle sector imports is
+    CONFIRMED): removed sectors/ict (not in the advisory's
+    victim-sector list — an import from the Microsoft/HPE
+    tech-sector incidents), replaced with the PREVIOUS ACTOR
+    ACTIVITY sentence's sectors — government (governmental; also
+    covers "government financial departments"),
+    civil-society/think-tank, healthcare, energy — plus the
+    expansion list: transport/aviation (aviation), academic
+    (education), government/local (local and state councils),
+    government/defense-ministry (military organizations). "Law
+    enforcement" has no sector id in the registry — folded under
+    sectors/government and flagged below. No country set (the
+    advisory scopes no victim countries). campaign_id
+    apt29-midnight-blizzard kept: editorial cluster shared with the
+    QC'd Microsoft-corporate event, grounded in the advisory's own
+    citation of Microsoft's January-2024 reporting.
+
+    RESIDUALS/FLAGS: (i) sector-registry gap — no law-enforcement
+    (or education-specific) id; law enforcement folded under
+    government, education mapped to academic. (ii) sibling event
+    svr-teamcity-cve-2023-42793 (unstamped) still carries
+    ru/info-security-2016/information-sphere-as-domain at attested
+    — the same over-attestation pattern fixed here; needs its own
+    audit. (iii) the shared source record's note glossed the
+    advisory as tradecraft "attested in the Microsoft (Jan 2024)
+    and HPE (Jan 2024) intrusions" — AUDIT line added to the source
+    record clarifying the advisory itself cites only Microsoft and
+    never names HPE.

@@ -2,48 +2,202 @@ id: 2024-01/schneider-electric-cactus
 name: Cactus ransomware against Schneider Electric Sustainability Business
 start_date: 2024-01-17
 disclosure_date: 2024-01-29
-end_date: 2024-03-31
+end_date: null
 incident_type:
   - ransomware
   - data-theft
+  - extortion
 initial_vector: unknown
-outcome_summary: |
-  Cactus ransomware group intrusion against Schneider Electric's
-  Sustainability Business division (an ESG / energy-efficiency
-  consulting and software unit isolated from the broader
-  Schneider Electric ICS portfolio). Cactus claimed exfiltration
-  of approximately 1.5TB of data including ESG advisory
-  documents, customer carbon-credit data, and internal client
-  correspondence. Schneider confirmed the incident January 29
-  2024 in a public statement, scoping the intrusion to the
-  Sustainability Business unit. No ICS / OT impact reported.
-quantified_impact:
-  data_exfiltrated_tb: 1.5
-false_flag_risk: none
 summary: |
-  Notable for victim-selection question: Cactus targeted the ESG
-  / sustainability consulting unit of an ICS-vendor parent rather
-  than the ICS portfolio itself. Brief speculation about possible
-  state-actor interest in carbon-credit / climate-finance data did
-  not develop; no state-nexus attribution emerged. The case
-  illustrates the AUSPEX baseline pattern that opportunistic
-  criminal affiliate selection produces victim sets that the
-  doctrine engine should abstain on rather than force-fit.
+  Cactus ransomware operators breached Schneider Electric's
+  Sustainability Business division — a sustainability / renewable-
+  energy and climate-regulatory consulting unit of the French
+  industrial-automation group, serving enterprise customers
+  including Clorox, DHL, Hilton, PepsiCo and Walmart — on January
+  17, 2024, stealing corporate data and disrupting the division's
+  Resource Advisor cloud platform. BleepingComputer, citing people
+  familiar with the matter, named Cactus on January 29; Schneider
+  Electric confirmed the same day that data had been accessed but
+  did not itself name the group. On February 19, 2024 Cactus
+  confirmed the intrusion by listing Schneider Electric on its
+  Tor-based leak site, claiming roughly 1.5TB of stolen data and
+  publishing a 25MB proof sample. Schneider stated the division
+  "is an autonomous entity operating its isolated network
+  infrastructure" and that no other entity in the group was
+  affected; no ICS/OT-portfolio impact was reported. No
+  state-nexus attribution emerged.
+outcome_summary: |
+  Resource Advisor and other division systems were disrupted, with
+  outages persisting at least through January 29, 2024; Schneider
+  Electric's statement said it expected access to resume within two
+  business days. The company later updated its incident
+  notification to confirm the attackers exfiltrated certain
+  Sustainability Business data and that access to impacted systems
+  had been restored (reported by SecurityWeek, 2024-02-20). Cactus
+  claimed ~1.5TB exfiltrated (attacker-claimed, uncorroborated) and
+  leaked 25MB as proof — including scans of passports and
+  non-disclosure agreement documents — threatening to publish the
+  rest unless a ransom was paid. What specific data was stolen was
+  not publicly established, and no ransom-payment outcome was
+  reported.
+quantified_impact:
+  data_exfiltrated_tb: 1.5   # Cactus leak-site claim (2024-02-19); attacker-claimed, uncorroborated
+false_flag_risk: none
 attributions:
   - actor_id: criminal/cactus
-    attributing_org: Schneider Electric + Cactus (self-claimed)
+    attributing_org: BleepingComputer (citing people familiar with the matter)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-01-29
-    attribution_source_id: kroll/2023-05-09_cactus-ransomware-self-encrypting
+    attribution_source_id: bleepingcomputer/2024-01-29_schneider-electric-cactus-ransomware
     notes: |
-      Kroll Cactus discovery report documents the ransomware
-      family; it does not name Schneider Electric specifically.
-      attribution_source_id is the nearest primary documentation of
-      Cactus activity.
+      First public naming — journalism-sourced: "suffered a Cactus
+      ransomware attack ... according to people familiar with the
+      matter." Schneider Electric's own statement confirmed the
+      intrusion and data access but never named Cactus (WithSecure
+      to SecurityWeek, 2024-01-30: "Schneider Electric is yet to
+      confirm if the Cactus ransomware brand were responsible ...
+      and they have not as yet been listed on the groups leak
+      site"). named-actor: a named criminal ransomware group; no
+      nation or unit.
+  - actor_id: criminal/cactus
+    attributing_org: Cactus (leak-site self-claim)
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2024-02-19
+    attribution_source_id: bleepingcomputer/2024-02-19_cactus-15tb-schneider-electric
+    notes: |
+      The gang confirmed the intrusion itself by listing Schneider
+      Electric on its Tor-based leak site (2024-02-19), claiming
+      ~1.5TB stolen and publishing a 25MB proof sample (passport
+      scans, NDA documents); SecurityWeek: "the suspicions have been
+      confirmed, after the gang listed the French giant on its
+      Tor-based leak website." Self-claim + proof sample + the
+      victim's own confirmation that data was exfiltrated.
 doctrine_links: []
 targets:
   - target_id: orgs/schneider-electric
     role: primary
+    country: fr
 sources:
-  - kroll/2023-05-09_cactus-ransomware-self-encrypting
+  - bleepingcomputer/2024-01-29_schneider-electric-cactus-ransomware
+  - securityweek/2024-01-30_schneider-electric-division-ransomware
+  - bleepingcomputer/2024-02-19_cactus-15tb-schneider-electric
+  - securityweek/2024-02-20_cactus-confirms-schneider-electric
+  - kroll/2023-05-09_cactus-ransomware-self-encrypting   # Cactus group-profile context only — names no victims
+notes: |
+  AUSPEX baseline case: opportunistic criminal double-extortion
+  whose victim set (the sustainability-consulting arm inside an
+  ICS-vendor parent, not the ICS portfolio) the doctrine engine
+  should abstain on rather than force-fit — doctrine_links: [] is
+  deliberate. Press coverage observed the stolen data "could
+  contain sensitive information about customers' power utilization,
+  industrial control and automation systems, and compliance with
+  environmental and energy regulations" (BleepingComputer), but no
+  espionage or state-nexus thread emerged.
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    WRONG-SOURCE remediation (phantom-remediation addendum, re-source
+    path) + full 6-point audit. Defect: every victim claim and the
+    attribution_source_id were cited to
+    kroll/2023-05-09_cactus-ransomware-self-encrypting — the May-2023
+    Cactus DISCOVERY bulletin, which names NO victims (raw re-verified
+    this audit: grep "Schneider" = 0 hits; sha256 31b196a5…e83b43a6,
+    352,077 bytes, hash unchanged from the 2026-07-02 audit). The
+    incident itself is real and well-documented — re-sourced to four
+    Jan/Feb-2024 press reports, each snapshotted + hashed:
+     - bleepingcomputer/2024-01-29_schneider-electric-cactus-ransomware
+       (38e26ec5…77c16784, 91,433 B)
+     - securityweek/2024-01-30_schneider-electric-division-ransomware
+       (984c8a47…34bd8746, 159,422 B)
+     - bleepingcomputer/2024-02-19_cactus-15tb-schneider-electric
+       (4f9b5f32…cd133248, 87,006 B)
+     - securityweek/2024-02-20_cactus-confirms-schneider-electric
+       (97824deb…eb855923, 166,393 B)
+    Kroll bulletin RETAINED in sources[] as group-profile context only
+    (family launch March 2023, self-encrypting TTP), commented as such.
+    No standalone Schneider statement URL exists — the statement was
+    issued to media and is carried verbatim in BC 2024-01-29 / SW
+    2024-01-30.
+    [a] FACTS — now all source-carried: Jan-17 attack date ("hit the
+    company's Sustainability Business division ... on January 17th" —
+    BC1; "discovered on January 17" — SW1); Resource Advisor cloud-
+    platform disruption + ongoing outages (BC1); division scope +
+    "autonomous entity operating its isolated network infrastructure" +
+    "no other entity within the Schneider Electric group has been
+    affected" (Schneider statement in BC1/SW1); data access confirmed
+    ("the on-going investigation shows that data have been accessed");
+    later victim confirmation of exfiltration + restoration ("updated
+    its incident notification ... restored access ... attackers
+    exfiltrated certain Sustainability Business data" — SW2); 1.5TB as
+    attacker CLAIM with 25MB proof sample incl. passport scans + NDAs
+    (BC2/SW2); customer names Clorox/DHL/Hilton/PepsiCo/Walmart (BC1);
+    ransom threat = double extortion (BC1/BC2/SW2). STRIPPED as
+    fabricated: the claimed exfil categories "ESG advisory documents,
+    customer carbon-credit data, and internal client correspondence" —
+    both BC articles state the opposite ("it is not known what type of
+    data was stolen" — BC1; "It is currently unknown what specific data
+    was stolen" — BC2); also stripped the old summary's "brief
+    speculation about possible state-actor interest in carbon-credit /
+    climate-finance data" — no cited source carries any such
+    speculation (replaced with BC1's actual, quoted data-sensitivity
+    observation, in notes). ADDED incident_type extortion (leak-site
+    ransom threat, source-carried). initial_vector kept unknown — no
+    source states the vector for THIS intrusion (VPN/Qlik TTPs in
+    SW1/SW2 are group-historical only).
+    [b] ATTRIBUTION — remodeled as two dated entries capturing the
+    latency ladder (schema-blessed): (1) 2024-01-29 BleepingComputer
+    journalism naming ("according to people familiar with the matter"),
+    moderate/concur — REPLACES the old single entry's false
+    attributing_org "Schneider Electric + Cactus (self-claimed)":
+    Schneider never named Cactus (WithSecure quote in SW1, verbatim in
+    the attribution note), and as of Jan 29-30 the gang had NOT yet
+    self-claimed ("the group has yet to list Schneider Electric on its
+    Tor-based leak website" — SW1); (2) 2024-02-19 Cactus leak-site
+    self-claim with proof sample, high/concur (Royal-Mail/LockBit
+    precedent: self-claim + corroborating evidence). attribution_source_id
+    re-pointed from the Kroll bulletin (which cannot attribute this
+    event) to BC1/BC2 respectively.
+    [c] DATES — start_date 2024-01-17 confirmed (attack hit / was
+    discovered Jan 17 — BC1/SW1/SW2). disclosure_date 2024-01-29
+    confirmed (Schneider statement to BleepingComputer Jan 29; SW1
+    "said on Monday" [= Jan 29], published Jan 30). end_date FIXED
+    2024-03-31 -> null: NO source carries any March end; systems were
+    restored by 2024-02-20 (SW2) but the extortion was still live then
+    (leak threat outstanding), so the operation end is unbounded in the
+    sources. Source published_on values = each page's own byline date
+    (BC 01-29 / SW 01-30 / BC 02-19 / SW 02-20), verified in the raws.
+    [d] DOCTRINE_LINKS — [] kept, correct abstention: financially
+    motivated criminal double-extortion, no state doctrine applies; no
+    source suggests strategic purpose. Editorial abstention rationale
+    moved to notes:, now quoting what BC1 actually said instead of the
+    fabricated "state-actor interest" speculation.
+    [e] ATTRIBUTION_LEVEL — ADDED (was missing): named-actor on both
+    entries — a named criminal ransomware group; no nation (criminal),
+    no unit/individuals named in any cited source.
+    [f] ACTOR_ID — criminal/cactus resolves (atlas/actors/criminal/
+    cactus.yaml); placement criminal/ (not ru/proxies/) is consistent
+    with the sources (no state-nexus attribution anywhere). FLAGS for
+    orchestrator, NOT edited per protocol: (1) actor notes claim the
+    intrusion "drew brief attention to potential ESG / carbon-credits
+    data-theft motive" — same unsourced motif stripped from this event;
+    (2) actor ttp_summary victim list (Schneider, Coop Sweden) and
+    Qlik-CVE specifics are not carried by the actor's sole cited source
+    (the Kroll bulletin) — actor record needs its own re-sourcing;
+    (3) target registry orgs/schneider-electric summary repeats
+    "claimed ~1.5TB exfiltration including ESG and carbon-credits
+    data" — the categories are uncarried (both BC articles: unknown
+    what was stolen) and its sources: [] is empty; suggest citing
+    bleepingcomputer/2024-01-29 + 2024-02-19 there and dropping the
+    category claim. quantified_impact.data_exfiltrated_tb 1.5 kept but
+    inline-commented as attacker-claimed/uncorroborated (corpus
+    convention: bare figure + hedge in prose). RESIDUAL UNCERTAINTY:
+    whether division systems were file-encrypted (vs stolen-then-
+    disrupted only) is not detailed by any source — all four call it a
+    ransomware attack; incident_type ransomware retained on that basis.

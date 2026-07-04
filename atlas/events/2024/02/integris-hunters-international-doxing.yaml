@@ -1,51 +1,208 @@
 id: 2024-02/integris-hunters-international-doxing
-name: Hunters International patient-extortion campaign against Integris Health victims
-start_date: 2023-12-24
-disclosure_date: 2024-01-04
-end_date: 2024-03-30
+name: Hunters International-linked patient-direct extortion of Integris Health patients
+start_date: 2023-11-28
+disclosure_date: 2023-12-24
+end_date: null
 incident_type:
   - data-theft
+  - extortion
   - intrusion
 initial_vector: unknown
 outcome_summary: |
-  Hunters International conducted a novel patient-direct
-  extortion campaign against approximately 2 million Oklahoma
-  Integris Health patients following a November 2023 ransomware
-  intrusion of the regional hospital network. Beginning December
-  24 2023 and continuing through early January 2024, Hunters
-  International sent direct-mail and email demands for
-  individual ransom payments (USD 50 per patient) under threat
-  of selling personal health records on its leak site. The
-  campaign was the first major US healthcare-sector deployment
-  of post-encryption patient-direct extortion as a monetization
-  channel.
+  An unauthorized party accessed the systems of Integris Health —
+  Oklahoma's largest not-for-profit health network — on November 28,
+  2023 and exfiltrated patient data; no files were encrypted and
+  services were not interrupted. Integris posted a website notice of
+  the incident on December 24, 2023, the same day patients began
+  receiving extortion emails claiming theft of the personal data of
+  "over 2 million patients". The emails contained accurate personal
+  data and linked to a Tor extortion site — listing approximately
+  4,674,000 records, not all unique and (per the threat actor) not
+  all from Integris — where individuals could pay USD 50 to have
+  their own record deleted or USD 3 to view a record, under threat
+  that the database would be sold to data brokers on January 5, 2024.
+  Integris reported the breach to HHS OCR (notification reported as
+  filed January 26, 2024; the portal entry showing 2,385,646 affected
+  patients became visible February 13, 2024); stolen data comprised
+  names with dates of birth, contact, demographic and/or Social
+  Security data, while employment, driver's-license, credential and
+  financial data were not involved. The tactic repeated the
+  patient-direct extortion used against Fred Hutchinson Cancer Center
+  patients weeks earlier. Twenty-one class actions (ten Oklahoma
+  state, eleven federal) were consolidated as Bointy et al. v.
+  Integris Health; a USD 30 million settlement fund received
+  preliminary court approval in October 2025.
 quantified_impact:
-  patients_affected: 2000000
+  patients_affected: 2385646
   per_patient_demand_usd: 50
 false_flag_risk: none
 summary: |
-  The Integris patient-direct extortion campaign is the AUSPEX
-  type-specimen for emerging post-RaaS monetization tradecraft —
-  bypassing institutional ransom decisions to extract payment
-  directly from breach victims. Notable because the Hunters
-  International cluster has Hive code lineage but operator-
-  continuity to the disrupted Hive cluster is contested and
-  the campaign tradecraft is novel rather than Hive-derived.
+  The Integris campaign is the AUSPEX type-specimen for patient-direct
+  extortion as a post-RaaS monetization channel — bypassing the
+  institution's ransom decision to extract payment from breach victims
+  individually — deployed here weeks after the same playbook was used
+  against Fred Hutchinson Cancer Center patients. No encryption was
+  involved: this was data-theft-only extortion. Attribution rests on
+  journalism rather than vendor or government forensics:
+  BleepingComputer matched the tradecraft to Hunters International's
+  Fred Hutch extortion, and the extortionists themselves told
+  DataBreaches.net "we work with them" while denying being Hunters
+  International — an affiliate-style hedge. The Hunters International
+  cluster has Hive code lineage, but operator continuity to the
+  disrupted Hive operation is contested, and the patient-extortion
+  tradecraft is novel rather than Hive-derived.
 attributions:
   - actor_id: criminal/hunters-international
-    attributing_org: Integris Health + Hunters International (self-claimed)
+    attributing_org: BleepingComputer / DataBreaches.net (journalism)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2024-01-04
-    attribution_source_id: bitdefender/2023-10-20_hunters-international-hive-overlap
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-12-26
+    attribution_source_id: bleepingcomputer/2023-12-26_integris-health-patients-extortion-emails
     notes: |
-      Bitdefender report documents Hunters International / Hive
-      code overlap; it does not name Integris specifically.
-      attribution_source_id is the nearest primary documentation of
-      Hunters International activity.
+      No vendor or government attribution exists, and Integris Health
+      never publicly named a perpetrator. BleepingComputer (2023-12-26)
+      hedged: "While it is not known who is behind the attack on
+      Integris Health, similar emails were sent to Fred Hutchinson
+      Cancer Center (Fred Hutch) patients after the Hunters
+      International ransomware gang breached the hospital" — the
+      identical USD-50 deletion scheme "making it likely that the same
+      ransomware attack is behind the attack on Integris Health".
+      DataBreaches.net (2023-12-28), in direct contact with the
+      extortionists, asked "So you are Hunters International?" and was
+      told "we work with them" — and later "I'm not hunters" — an
+      affiliate-style hedge. Retrospective trade coverage (HIPAA
+      Journal 2024 roundup) attributes the attack to Hunters
+      International flatly. Caveat on concur: the naming is journalist
+      tactic-matching plus the operator's own ambiguous affiliation
+      statement, so the hands-on-keyboard operator may be an affiliate
+      working with the Hunters International program rather than its
+      core team. attribution_level = named-actor (a specific criminal
+      group is named; no nation or unit — criminal/, no state nexus).
 doctrine_links: []
 targets:
+  - target_id: orgs/integris-health
+    country: us
+    role: primary
   - target_id: sectors/healthcare/hospital
+    country: us
     role: primary
 sources:
+  - bleepingcomputer/2023-12-26_integris-health-patients-extortion-emails
+  - bleepingcomputer/2024-02-13_integris-health-breach-2-4-million
+  - databreaches/2023-12-28_fred-hutch-integris-patient-extortion-new-normal
+  - databreaches/2024-02-16_integris-update-incident-response-criticized
+  - hipaajournal/2025-10-14_integris-30m-settlement
   - bitdefender/2023-10-20_hunters-international-hive-overlap
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    WRONG-SOURCE REMEDIATION (re-source path, badrabbit model). The event
+    rested solely on bitdefender/2023-10-20_hunters-international-hive-overlap
+    — the real Bitdefender group-discovery article ("Hive Ransomware's
+    Offspring: Hunters International Takes the Stage", 2023-11-09, sha256
+    7936583a…544b44c9, 117,809 bytes, hash re-verified on disk this audit) —
+    which NEVER mentions Integris (event's own attribution note admitted
+    this). Five real sources were created, fetched live (all HTTP 200),
+    snapshotted and hashed; the Bitdefender record is retained LAST in
+    sources[] strictly as Hunters International group-profile context (Hive
+    code lineage / contested continuity sentences in summary). Sources:
+      S1 bleepingcomputer/2023-12-26_integris-health-patients-extortion-emails
+         (Lawrence Abrams), sha256 9ca8a658…61f4752d, 89,461 bytes.
+      S2 bleepingcomputer/2024-02-13_integris-health-breach-2-4-million
+         (Bill Toulas), sha256 0f86a179…156d196f, 89,682 bytes.
+      S3 databreaches/2023-12-28_fred-hutch-integris-patient-extortion-new-normal,
+         sha256 6fbb8b6c…5e13c46b, 162,067 bytes.
+      S4 databreaches/2024-02-16_integris-update-incident-response-criticized,
+         sha256 3c9a151e…deea50a2, 162,576 bytes.
+      S5 hipaajournal/2025-10-14_integris-30m-settlement (running page,
+         dated updates back to 2023-12-27), sha256 115f3cf1…e0168958,
+         396,746 bytes.
+      S6 bitdefender/… (context only, above).
+    The Integris Health website notice itself (integrisok.com/landing/
+    cyber-event) is LINK-ROTTED — it now serves a generic hospitals page
+    (HTTP 200) and the FAQ PDF 404s; archive.org is blocked for this
+    fetcher. Not added as a source; its operative text is quoted verbatim
+    inside S1 and S5, so every notice-derived claim is carried by
+    snapshotted sources (level stays full).
+
+    [a] FACTS — corrections against the raw sources:
+      * "ransomware intrusion" / "post-encryption patient-direct extortion"
+        REMOVED — no encryption occurred: S2 "The threat actor told
+        BleepingComputer that their attack did not involve encryption and
+        they only stole the data"; S3 "The incident did not involve
+        encryption"; S5 "did not encrypt files". incident_type: dropped
+        nothing but ADDED extortion (data-theft, extortion, intrusion);
+        deliberately NOT ransomware.
+      * "first major US healthcare-sector deployment" REMOVED — contradicted
+        by S1 itself: the same USD-50 scheme was used on Fred Hutchinson
+        Cancer Center patients weeks earlier ("similar emails were sent to
+        Fred Hutchinson Cancer Center (Fred Hutch) patients…"). Reframed as
+        repetition of the Fred Hutch playbook.
+      * "approximately 2 million … patients [received] demands" CORRECTED —
+        the 2M figure is the TA's claim about stolen data ("the personal
+        data of over 2 million patients", S1), not a count of email
+        recipients; official affected count is 2,385,646 (S2 OCR portal;
+        S4 HHS notification). quantified_impact.patients_affected
+        2000000 -> 2385646.
+      * "direct-mail and email demands" CORRECTED to email only — no source
+        documents postal demands from the TA (the Jan-5 letters patients
+        received were Integris' own notifications, S4/NonDoc).
+      * USD 50 demand CARRIED (S1 "pay $50 to delete the data record or $3
+        to view it"; S5 "demanding $50 per patient to delete their stolen
+        data"); Jan-5-2024 sale deadline CARRIED (S1 verbatim extortion
+        email); Tor-site ~4,674,000 records ADDED with S4's nuance that the
+        TA said records were "not just from INTEGRIS".
+      * ADDED source-carried aftermath: 21 consolidated class actions
+        (Bointy et al.), USD 30M settlement preliminarily approved Oct 2025
+        (S5). Tech Mahindra (business-associate blame, later dismissed from
+        litigation) left OUT of the record as legal allegation, not
+        established fact; initial_vector stays unknown.
+    [b] ATTRIBUTION — attributing_org was "Integris Health + Hunters
+        International (self-claimed)": WRONG on both limbs. Integris never
+        named an actor (S1/S5 quote its notices — no perpetrator named), and
+        no clean self-claim exists: the extortionists told S3 "we work with
+        them" but "I'm not hunters". Fixed to journalism attribution
+        (BleepingComputer tactic-match "likely", 2023-12-26 + DataBreaches
+        TA contact). attribution_source_id repointed bitdefender/… -> S1.
+        attribution_date 2024-01-04 -> 2023-12-26 (first dated public
+        naming). Confidence kept moderate (hedged "likely" + affiliate
+        ambiguity). auspex_assessment concur -> concur-with-caveat, caveat
+        stated (possible affiliate rather than core group). actor_id kept
+        criminal/hunters-international — the corpus models the campaign
+        under the program the operator claims to work with; nuance recorded.
+    [c] DATES — start_date 2023-12-24 -> 2023-11-28 (op start = unauthorized
+        access date: S1 quoting Integris notice "accessed by an unauthorized
+        party on November 28, 2023"; S5 "gained access … on November 28,
+        2023"; the TA's own "11/11" claim in S3 is unconfirmed and NOT
+        used). disclosure_date 2024-01-04 -> 2023-12-24 (S5: "uploaded a
+        notice to its website on December 24, 2023"; extortion emails began
+        the same day, S1). end_date 2024-03-30 -> null — the March date was
+        carried by NO source; no bounded end is documented (S2, Feb 13: the
+        Jan-5 deadline "has long passed"). Event id retains the 2024-02/
+        month + "doxing" slug per the stable-slug rule (the Feb-2024 OCR
+        disclosure milestone matches the id month; "doxing" is a legacy
+        misnomer for patient-direct extortion). All five source
+        published_on values verified against page metadata (2023-12-26,
+        2024-02-13, 2023-12-28, 2024-02-16, 2025-10-14). S5 contains two
+        internal year typos (flagged in its record notes) — not inherited.
+    [d] DOCTRINE_LINKS — [] retained, correct: financially-motivated
+        criminal actor, no source-documented state nexus, no doctrine
+        genuinely applies; nothing invented, no attesting_source_id needed.
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor (was absent): sources name a
+        specific criminal group (Hunters International), no nation or unit.
+    [f] ACTOR_ID — criminal/hunters-international resolves to
+        atlas/actors/criminal/hunters-international.yaml; placement under
+        criminal/ (no state nexus) consistent with all sources. Targets:
+        ADDED orgs/integris-health (registry record existed but was cited by
+        zero events) alongside sectors/healthcare/hospital, both country: us
+        (was missing).
+
+    RESIDUAL UNCERTAINTIES: (1) whether the operator was Hunters
+    International core or an affiliate ("we work with them" / "I'm not
+    hunters") — recorded as the attribution caveat; (2) HHS-notification
+    date Jan 26 (S4) vs OCR-portal visibility Feb 13 (S2) — both stated;
+    (3) TA's claimed 11/11 access date unconfirmed (S3).

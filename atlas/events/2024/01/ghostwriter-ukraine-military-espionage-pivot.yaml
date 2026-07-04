@@ -1,82 +1,300 @@
 id: 2024-01/ghostwriter-ukraine-military-espionage-pivot
-name: Ghostwriter / UAC-0057 pivot to Ukrainian military espionage (PicassoLoader)
-start_date: 2023-07-01  # earliest observed in Mandiant disclosure
-disclosure_date: 2024-01-23
+name: "Ghostwriter / UAC-0057 PicassoLoader espionage campaigns against Ukrainian and Polish government and military (2022-2023)"
+start_date: 2022-04-01
+disclosure_date: 2023-06-16
 end_date: null
 incident_type:
   - intrusion
+  - espionage
   - data-theft
 initial_vector: phishing
-outcome_summary: |
-  Mandiant disclosed that Ghostwriter (UNC1151 / UAC-0057) shifted
-  through the second half of 2023 from primarily-influence
-  operations toward direct espionage against Ukrainian military
-  personnel and government employees, delivering a refreshed
-  PicassoLoader / AROEX malware family via phishing. Disclosure
-  marked the Belarus-aligned cluster's clearest documented
-  espionage-mission realignment of the invasion period.
 false_flag_risk: none
+outcome_summary: |
+  Cisco Talos (13 July 2023) consolidated several campaigns against
+  government entities, military organizations and civilian users in
+  Ukraine and Poland, active "as early as April 2022 and as recently
+  as" July 2023, judging them "very likely aimed at stealing
+  information and gaining persistent remote access." Macro-laden
+  Excel/PowerPoint lures dropped the ConfuserEx-obfuscated .NET
+  downloader CERT-UA named PicassoLoader, which retrieved payloads
+  hidden in JPEG images; final payloads included the AgentTesla RAT,
+  Cobalt Strike beacons and njRAT, which per prior CERT-UA/FortiGuard
+  analyses "were used for information theft and remote access to
+  infected systems." CERT-UA documented two 2023 waves it attributed
+  to UAC-0057 (GhostWriter): a June attack on a Ukrainian state
+  organization via a PPT lure bearing the National Defense University
+  emblem, delivering Cobalt Strike Beacon (CERT-UA#6852), and an
+  early-July XLS wave against government agencies delivering njRAT
+  (CERT-UA#6948).
 summary: |
-  Doctrinally important pivot for tracking the Belarus-aligned
-  cluster: previous Ghostwriter operations (2020-2023) were
-  primarily credential-theft-for-influence — compromise an account,
-  seed fabricated content. The 2023-2024 PicassoLoader campaign
-  is collection-for-intelligence — military personnel data,
-  troop-rotation information, government correspondence — much
-  closer in mission to GRU APT28 / Sandworm tasking than to the
-  classical Ghostwriter influence template. AUSPEX reads this as
-  Russian operational tasking flowing through the Belarusian
-  KGB executor as Russia's own GRU collection bandwidth thinned
-  against Ukrainian operational targets.
+  Sustained GhostWriter / UAC-0057 malware operations against wartime
+  Ukraine and Poland: socially engineered defense-ministry-themed and
+  fiscal-themed document lures (a soldier salary-payment form, a State
+  Treasury of Ukraine payment-instruction form, fake VAT returns)
+  delivering PicassoLoader and RAT/beacon payloads for information
+  theft and persistent remote access against Ukrainian and Polish
+  government and military organizations, with generic waves also
+  hitting civilian and business users in both countries. CERT-UA
+  attributes the activity to UAC-0057, which it equates with UNC1151 /
+  GhostWriter — the cluster Mandiant linked to the Belarusian
+  government in 2021 — noting "GhostWriter" originated as the name of
+  the group's information operation; Talos relays that attribution
+  ("allegedly linked to the Belarusian government") without an
+  independent assessment of its own. The cluster's documented
+  collection-flavored malware operations here sit alongside its older
+  credential-theft-and-influence template.
 attributions:
   - actor_id: by/unscoped/ghostwriter
-    attributing_org: Mandiant / CERT-UA
+    attributing_org: CERT-UA
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-01-23
-    attribution_source_id: mandiant/2024-01-23_ghostwriter-targets-ukraine
+    attribution_date: 2023-06-16
+    attribution_source_id: cert-ua/2023-06-16_uac-0057-picassoloader-cobalt-strike-6852
+    notes: >-
+      CERT-UA#6852 (2023-06-16) attributes in its title ("Cyber attack
+      by group UAC-0057 (GhostWriter)") and body (PicassoLoader is
+      "typically used by the UAC-0057 (GhostWriter) group");
+      CERT-UA#6948 (2023-07-07) states it flatly — "The activity is
+      carried out by the group UAC-0057" — and equates UAC-0057 with
+      UNC1151/GhostWriter per Mandiant's 2020 naming. Named-actor: the
+      advisories name the cluster only — no nation and no service (the
+      Belarus nexus is Mandiant's 2021 assessment; the RU/BY nation
+      contest is recorded on the actor record). CERT-UA#6852's note
+      that C2 servers "are located in the Russian Federation" is
+      infrastructure geography, not a nation attribution.
+  - actor_id: by/unscoped/ghostwriter
+    attributing_org: Cisco Talos
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2023-07-13
+    attribution_source_id: talos/2023-07-13_picassoloader-ukraine-poland-campaigns
+    notes: >-
+      Talos documents the campaigns but relays rather than makes the
+      attribution: "CERT-UA has attributed the July campaign to the
+      threat actor group UNC1151, as a part of the GhostWriter
+      operational activities allegedly linked to the Belarusian
+      government" — and cautions that commodity njRAT use makes "the
+      process of attribution more difficult." Moderate reflects the
+      relay and the "allegedly" hedge; Talos states no independent
+      attribution or confidence of its own.
 doctrine_links:
-  - doctrine_id: ru/russkiy-mir
-    perspective: attacker-rationale
-    pillar_id: ru/russkiy-mir/ukraine-theater
-    program_id: null
-    confidence: attested
-    reasoning: |
-      Direct intelligence collection against Ukrainian military
-      and government during active hostilities — the Ukraine-
-      theater pillar.
-    attesting_source_id: mandiant/2024-01-23_ghostwriter-targets-ukraine
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/info-security-2016
-    perspective: attacker-rationale
-    pillar_id: ru/info-security-2016/information-sphere-as-domain
+  - doctrine_id: by/union-state-integration
+    pillar_id: by/union-state-integration/ukraine-theater-support
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Ghostwriter executes Russian-strategic information-sphere
-      collection through Belarusian KGB resourcing.
+      The Belarus-linked GhostWriter/UAC-0057 cluster ran information-
+      stealing and remote-access malware campaigns against Ukrainian
+      and Polish government and military organizations continuously
+      from April 2022 — weeks after the full-scale invasion — through
+      July 2023: wartime intelligence collection against Russia's
+      adversary and its neighboring supporter, executed by the
+      Belarusian-aligned operator. That is Ukraine-theater cyber
+      support under the Union State agenda, the same pillar (at the
+      same confidence) carried by the verified sibling events
+      2022-02/ghostwriter-ukraine-targeting-invasion-eve and the
+      2024-11 PicassoLoader campaign.
     attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/military-doctrine-2014
-    perspective: attacker-rationale
-    pillar_id: ru/military-doctrine-2014/non-contact-warfare
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Ukrainian military personnel intelligence supports kinetic
-      targeting and operational planning — direct non-contact
-      warfare support.
-    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target set: Ukrainian and Polish government and military organizations — Ukraine MoD- and Poland MND-themed lures, a soldier salary-payment form, a State Treasury of Ukraine payment form (Talos raw)."
+        - "Timing: activity 'as early as April 2022,' weeks after the full-scale invasion, persisting through July 2023 (Talos raw)."
+        - "Actor-mission fit: CERT-UA equates the operator with UNC1151/GhostWriter, the cluster Mandiant assessed with high confidence as linked to the Belarusian government (actor record sources)."
+        - "Purpose stated at the proximate level: operations 'very likely aimed at stealing information and gaining persistent remote access' (Talos raw)."
+      ruled_out: >-
+        by/concept-info-security-2019 (domestic information-sphere
+        defense / regime-stability monitoring) — no domestic-opposition
+        or info-sphere-defense dimension here: the victims are foreign
+        (Ukrainian/Polish) government, military and civilian users, so
+        the theater-support reading has no serious competitor. No cited
+        source states the strategic goal, so attested is unavailable.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/ukraine-government
-    role: primary
-  - target_id: sectors/government/defense-ministry
+  - target_id: sectors/government
+    country: ua
     role: primary
   - target_id: sectors/defense
+    country: ua
+    role: primary
+  - target_id: sectors/government
+    country: pl
+    role: primary
+  - target_id: sectors/defense
+    country: pl
     role: primary
 sources:
-  - mandiant/2024-01-23_ghostwriter-targets-ukraine
+  - talos/2023-07-13_picassoloader-ukraine-poland-campaigns
+  - cert-ua/2023-07-07_uac-0057-picassoloader-njrat-6948
+  - cert-ua/2023-06-16_uac-0057-picassoloader-cobalt-strike-6852
+notes: |
+  Re-sourced 2026-07-04 (phantom remediation): the original sole
+  citation, mandiant/2024-01-23_ghostwriter-targets-ukraine, is a
+  phantom — no such Mandiant article exists (see qc). The id's 2024-01
+  prefix and the "espionage-pivot" slug are stable-slug artifacts of
+  that fabricated citation; the documented operation window is
+  April 2022 - July 2023. Slugs are never renamed per corpus policy.
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION audit — RE-SOURCE path taken (real event, phantom
+    source). Known Ghostwriter fabrication-hotspot event; extra scrutiny
+    applied per orchestrator instruction.
+
+    PHANTOM (STEP 0): sole original source
+    mandiant/2024-01-23_ghostwriter-targets-ukraine
+    (cloud.google.com/blog/topics/threat-intelligence/ghostwriter-targets-
+    ukraine) returns HTTP 200 but is Google's soft-404 shell — page title
+    "Google Cloud Blog", body "404. That's an error. The requ[ested URL was
+    not found]", zero PicassoLoader/UNC1151/UAC-0057 strings ("ghostwriter"
+    appears only as the echoed request URL in JS). No content hash recorded
+    for it per addendum. Existence independently ruled out: two web sweeps +
+    a site-scoped sweep find Mandiant's Ghostwriter corpus = 2020-07 naming
+    report, 2021-04 Ghostwriter/UNC1151 update, 2021-11 Belarus-link
+    assessment — no 2024-01 "Ghostwriter Targets Ukraine" publication
+    anywhere in the reporting record, and no Jan-2024 Mandiant Ghostwriter
+    disclosure event exists. The record's "AROEX malware family" is likewise
+    fabricated: zero occurrences in any indexed reporting (nearest string
+    match is DarkHotel's unrelated "Asruex"). Phantom source record
+    annotated as orphaned RETIRE candidate (not deleted).
+
+    RE-SOURCE (STEP 0b): underlying activity is REAL and well documented —
+    the GhostWriter/UAC-0057 PicassoLoader campaign cluster vs Ukraine and
+    Poland, Apr 2022 - Jul 2023. New sources created, snapshotted, hashed:
+    (1) talos/2023-07-13_picassoloader-ukraine-poland-campaigns —
+        sha256 93e67e40…fe881792, 90,915 bytes (real article verified:
+        byline "Vanja Svajcer, Thursday, July 13, 2023"; JSON-LD
+        datePublished 2023-07-13; dateModified 2024-12-12 is a Talos
+        platform restamp, same pattern as the apt41-taiwan precedent).
+    (2) cert-ua/2023-07-07_uac-0057-picassoloader-njrat-6948 —
+        cert.gov.ua/article/5098518; canonical page is a Vue-SPA shell
+        (2,380 bytes, no text; archive.org blocked), so raw = the OFFICIAL
+        SSSCIP CSIRT mirror csirt.csi.cip.gov.ua/en/posts/uac-0057,
+        sha256 be3828a7…18e621ff, 57,332 bytes. URL↔advisory pairing
+        independently confirmed by the Talos raw hyperlinking article id
+        5098518 as CERT-UA's attribution of the July campaign.
+        published_on 2023-07-07 per same-day SOC Prime coverage.
+    (3) cert-ua/2023-06-16_uac-0057-picassoloader-cobalt-strike-6852 —
+        cert.gov.ua/article/4905718, raw = official mirror
+        csirt.csi.cip.gov.ua/en/posts/uac-0057-ghostwriter, sha256
+        c8656716…28477544, 58,163 bytes; published_on 2023-06-16 per
+        same-day SOC Prime coverage.
+    Level kept FULL (not partial) because every load-bearing claim is
+    carried by the fully-snapshotted Talos raw AND the advisory texts are
+    captured via official same-agency government mirrors (hashed), not
+    merely third-party quotes.
+
+    [a] FACTS — original record failed: "AROEX malware family" fabricated
+    (REMOVED); "Mandiant disclosed" fabricated (REMOVED); "shifted through
+    the second half of 2023 from primarily-influence operations toward
+    direct espionage" not carried by any source and contradicted by the
+    documented Apr-2022 campaign start (REMOVED); "military personnel
+    data, troop-rotation information, government correspondence" invented
+    collection specifics (REMOVED); "clearest documented espionage-mission
+    realignment of the invasion period" editorial hyperbole (REMOVED);
+    "AUSPEX reads this as Russian operational tasking flowing through the
+    Belarusian KGB executor as Russia's own GRU collection bandwidth
+    thinned" unsourced theory naming a service (KGB) that NO source names
+    — contradicts the 2026-06-24 actor audit (REMOVED). Rebuilt summary/
+    outcome_summary carry only raw-verbatim facts: campaign window ("as
+    early as April 2022 and as recently as earlier this month", Talos);
+    victims ("government entities, military organizations and civilian
+    users in Ukraine and Poland", Talos); purpose ("very likely aimed at
+    stealing information and gaining persistent remote access", Talos);
+    tooling (PicassoLoader named by CERT-UA; ConfuserEx .NET downloader;
+    payloads AgentTesla / Cobalt Strike / njRAT; JPEG-appended encrypted
+    payloads; "were used for information theft and remote access", Talos);
+    lures (Ukraine MoD + Poland MND PPT thumbnails, soldier salary form,
+    State Treasury payment form, VAT returns — Talos; NDU-emblem PPT,
+    CERT-UA#6852); waves (June 2023 vs a Ukrainian state organization →
+    Cobalt Strike, #6852, "initiated no later than 06/09/2023"; July 2023
+    vs government agencies → njRAT, #6948, XLS lures dated 04-05/07/2023).
+    NB #6852's NDU emblem is the LURE theme — victim described only as
+    "the state organization of Ukraine"; NDU deliberately NOT claimed as
+    victim. initial_vector kept phishing (closest true vocab label:
+    socially engineered maldoc lures; Talos hedges transport as "possibly
+    sent to the targets as email attachments" — noted). incident_type
+    reset to intrusion + espionage + data-theft, each quote-carried.
+    [b] ATTRIBUTION — original entry ("Mandiant / CERT-UA", high,
+    2024-01-23, phantom source) REPLACED by two dated entries: CERT-UA
+    (high, named-actor, 2023-06-16/#6852 title + #6948 flat statement
+    "The activity is carried out by the group UAC-0057" + UNC1151/
+    GhostWriter equation) and Cisco Talos (moderate, named-actor,
+    2023-07-13 — relays CERT-UA's attribution with the "allegedly linked
+    to the Belarusian government" hedge and no independent assessment).
+    No over-attestation: neither advisory names a nation or service;
+    Belarus nexus rests on Mandiant 2021 via the actor record, where the
+    RU-vs-BY nation contest is already flagged.
+    [c] DATES — start_date 2023-07-01 -> 2022-04-01 (Talos: "as early as
+    April 2022"; the old date's "earliest observed in Mandiant disclosure"
+    comment was an artifact of the phantom). disclosure_date 2024-01-23 ->
+    2023-06-16 (earliest cited public disclosure, CERT-UA#6852; earlier
+    per-wave 2022 CERT-UA reporting exists — Talos links cert.gov.ua
+    article 861292 — but is not load-bearing here and not cited).
+    end_date null kept (Talos: activity ongoing "as recently as earlier
+    this month" at publication — unbounded). Source published_on dates
+    2023-07-13 / 2023-07-07 / 2023-06-16 verified as above (mirror
+    repost timestamps 31.07/02.08.2023 documented as repost dates, not
+    publication dates). Event id retains its 2024-01 prefix as a
+    stable-slug artifact (see notes) — slugs are never renamed.
+    [d] DOCTRINE_LINKS — original three REMOVED/REBUILT: (i) ru/russkiy-
+    mir/ukraine-theater at ATTESTED with attesting_source_id = the
+    phantom — invalid on its face (attested claim resting on a
+    nonexistent source); (ii) ru/info-security-2016 and (iii) ru/military-
+    doctrine-2014, both strongly_inferred, premised on the removed
+    unsourced "Russian tasking through the Belarusian KGB" theory, and
+    all three RU-doctrines-on-a-BY-actor (doctrine-state mismatch tagged
+    attacker-rationale — would feed wrong attacker-state derivation).
+    Replaced with the one link the evidence carries: by/union-state-
+    integration/ukraine-theater-support at strongly_inferred with full
+    inference_basis (signals + ruled_out), matching the two verified
+    sibling Ghostwriter-Ukraine events. No source states the strategic
+    goal, so no attested link — none invented.
+    [e] ATTRIBUTION_LEVEL — was missing; set named-actor on both entries
+    (a named tracked group UAC-0057=UNC1151=GhostWriter; no nation named
+    by the attributing advisories themselves, no unit named by anyone).
+    [f] ACTOR_ID — by/unscoped/ghostwriter resolves to
+    atlas/actors/by/ghostwriter.yaml (id matches; audited 2026-06-24,
+    KGB-demoted, RU/BY contest flagged). Event-actor consistency with the
+    orchestrator's brief confirmed: sources attribute to GhostWriter/
+    UNC1151 with the Belarus linkage resting on Mandiant — NOT a Russian
+    service — and the record now says exactly that.
+    TARGETS — orgs/ukraine-government (wrong grain: no specific org named
+    by sources) and sectors/government/defense-ministry (lure-theme
+    inflation: MoD/MND imagery decorates lures; ministries not documented
+    victims) REPLACED by sectors/government + sectors/defense for both ua
+    and pl per Talos's explicit victimology ("Ukrainian and Polish
+    government and military targets"); civilian/business targeting kept in
+    prose only (no clean sector id; avoids inflation).
+    DUP/CONFLATION CHECK (hotspot-specific): corpus-wide grep — only two
+    PicassoLoader events exist; this record (the "2023-07 PicassoLoader
+    corpus entry" referenced by the 2024-11 event's qc) covers the
+    Apr-2022-Jul-2023 cluster; 2024-11/ghostwriter-uac-0057-picassoloader-
+    campaign covers the Nov-2024 wave (SentinelLABS 2025-02-25) — distinct
+    lures, window, victims; 2022-02/ghostwriter-ukraine-targeting-
+    invasion-eve covers the invasion-eve credential phishing (TAG/Meta) —
+    distinct tradecraft and window. No duplicate; no wrong-bulletin
+    conflation in the rebuilt record.
+    RESIDUAL UNCERTAINTIES: (1) delivery transport hedged by Talos
+    ("possibly ... email attachments") — phishing is the closest vocab
+    label, not verbatim; (2) CERT-UA advisory publication dates rest on
+    same-day SOC Prime coverage because cert.gov.ua renders client-side
+    and archive.org is blocked — mitigated by official-mirror captures +
+    the Talos raw's independent link to #6948; (3) Apr-2022-era waves of
+    this same cluster are documented in earlier CERT-UA/Fortinet
+    reporting not cited here (Talos summarizes them) — acceptable, Talos
+    raw carries the window. FLAGS FOR ORCHESTRATOR: (1) phantom source
+    mandiant/2024-01-23_ghostwriter-targets-ukraine now orphaned +
+    annotated — RETIRE; its archive_url snapshot (2026-05-27) predates
+    this audit and almost certainly archived the 404 shell — do not treat
+    as content evidence; (2) event lives under 2024/01/ with a 2022-04
+    start_date (stable-slug policy) — worklist tooling that buckets by id
+    prefix will misfile it; (3) optional enrichment: FortiGuard's
+    2023-04 analysis (fortinet.com "ukrainian-excel-file-delivers-multi-
+    stage-cobalt-strike-loader", linked from the Talos raw) could be
+    added as a fourth source if deeper Apr-2023-wave coverage is wanted.

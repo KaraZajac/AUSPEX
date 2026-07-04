@@ -1,55 +1,180 @@
 id: 2024-01/uac-0050-remcos-mass-distribution
-name: CERT-UA documents UAC-0050 mass Remcos RAT distribution to Ukrainian state institutions
-start_date: 2023-12-20
-disclosure_date: 2024-01-15
-end_date: 2024-01-12
+name: "CERT-UA documents UAC-0050 mass RemcosRAT / QuasarRAT / Remote Utilities phishing waves (Dec 2023 - Jan 2024)"
+start_date: 2023-12-21
+disclosure_date: 2023-12-21
+end_date: 2024-01-11
 incident_type:
   - intrusion
-  - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Ukraine's CERT-UA published an advisory documenting renewed
-  UAC-0050 / Sticky Werewolf mass-phishing distribution of
-  Remcos RAT to Ukrainian state institutions over the
-  December 2023 - January 2024 window. Lures themed on
-  Ukrainian judicial documents, Defense Forces mobilization
-  communications, and tax authority correspondence. The
-  campaign was high-volume but operationally crude — a defining
-  characteristic of the cluster.
+  CERT-UA registered the waves as mass email distribution and
+  published infection-chain indicators within the same window.
+  Both advisories describe the chains conditionally (a machine
+  "може бути уражена" — may be infected — upon execution) and
+  state no victim counts, no named victims, and no
+  confirmed-compromise outcomes. Recipient categories are not
+  specified; the Ukrainian-language lures impersonate Ukrainian
+  entities (Kyivstar, the SBU, courts, M.E.Doc), placing the
+  victim pool in Ukraine.
 false_flag_risk: none
 summary: |
-  Routine but operationally important UAC-0050 tempo data point
-  in the Ukraine theater. The Remcos RAT remains the long-running
-  staple Windows implant for this cluster, with NetWire and
-  Rhadamanthys stealer rotated through as adjuncts. The mass-
-  phishing template is the cluster's signature: thousands of
-  emails, broad target lists, commodity tooling, with the
-  operational center of gravity on volume rather than precision.
+  Two CERT-UA advisories document renewed UAC-0050 mass phishing
+  in Ukraine across the December 2023 - January 2024 window,
+  delivering commodity remote-access tooling. On 2023-12-21
+  CERT-UA (advisory #8338) registered mass distribution of emails
+  themed "Заборгованість за договором Київстар" (Kyivstar contract
+  debt) and "Запит СБУ" (SBU request), both infection chains —
+  nested split RAR archives, a macro document fetching an SFX over
+  SMB, a Bitbucket-hosted payload — ending in RemcosRAT under a
+  single licence ID. On 2024-01-09 (advisories #8453/#8494)
+  request-themed waves ("Запит судових документів" — request for
+  court documents — and "Запит") delivered RemcosRAT via an AutoIt
+  script and QuasarRAT via a PowerShell download from Bitbucket;
+  on 2024-01-11 a "Запит від компанії Медок" wave (impersonating
+  the Ukrainian M.E.Doc accounting-software vendor, with archives
+  attached or linked via Bitbucket / Google Drive) installed the
+  Remote Utilities remote-access tool. All three January cases
+  shared command-and-control servers in AS215939; the December
+  RemcosRAT C2 sat with the Malaysian host Shinjiru — placement
+  CERT-UA calls typical for UAC-0050 — and in AS44477 (Stark
+  Industries Solutions). CERT-UA tracks the activity under the
+  UAC-0050 identifier and names no sponsor; neither advisory
+  specifies recipient categories or victim counts.
 attributions:
   - actor_id: ru/unscoped/uac-0050
     attributing_org: CERT-UA
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
-    attribution_date: 2024-01-15
-    attribution_source_id: cert-ua/2024-01-15_uac-0050-remcos-mass-distribution
+    attribution_date: 2023-12-21
+    attribution_source_id: cert-ua/2023-12-21_uac-0050-remcos-kyivstar-debt-sbu-request
     notes: |
-      CERT-UA designates the UAC-XXXX cluster but does not name a
-      national sponsor. The Belarus KGB linkage is the dominant
-      Western-vendor reading (Sticky Werewolf overlap) but is not
-      what CERT-UA itself attests; demoting confidence accordingly.
-doctrine_links:
-  - doctrine_id: by/union-state-integration
-    pillar_id: by/union-state-integration/ukraine-theater-support
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Mass phishing of Ukrainian state institutions is the
-      canonical Union State Ukraine-theater-support behavior.
-    contested: false
-    analyst: claude
-targets:
-  - target_id: orgs/ukrainian-state-institutions-various
-    country: ua
-    role: primary
+      CERT-UA designates the activity by cluster identifier only
+      ("Активність відстежується за ідентифікатором UAC-0050") and
+      names no sponsor, nation, or unit in either advisory — hence
+      attribution_level activity-cluster; the #8453/#8494 advisory
+      (2024-01-11) re-affirms the designation for the January
+      waves. The actor record is homed ru/unscoped/uac-0050
+      (re-homed from by/unscoped on 2026-07-02): no source ever
+      established the former Belarus placement, and CERT-UA's own
+      later characterization (quoted verbatim by BushidoToken,
+      2024-03-06; corroboration snapshot hashed in the source
+      records) links UAC-0050 to a Russian-speaking mercenary
+      organization, "The DaVinci Group", assessed to have ties to
+      Russian law enforcement. ACTOR FLAG: per the 2026-06-24
+      actor audit the eventual home may be criminal/uac-0050 or
+      ru/proxies/uac-0050; Russia-nexus with service unscoped is
+      the current canonical parking.
+doctrine_links: []
 sources:
-  - cert-ua/2024-01-15_uac-0050-remcos-mass-distribution
+  - cert-ua/2023-12-21_uac-0050-remcos-kyivstar-debt-sbu-request
+  - cert-ua/2024-01-11_uac-0050-remcos-quasar-remoteutilities
+qc:
+  verified_by: claude-fable-5
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION PATH: RE-SOURCE (badrabbit model). The sole cited source
+    (cert-ua/2024-01-15_uac-0050-remcos-mass-distribution, url cert.gov.ua/article/4490832)
+    is a CONFIRMED PHANTOM: cert.gov.ua's own JSON API — endpoint /api/articles/byId
+    discovered in the site's main-es2015.*.js bundle (prior audits saw only the empty SPA
+    shell and believed no API existed) — returns 409 "Article not found with id 4490832",
+    while serving real articles in full; CERT-UA's search API lists every UAC-0050 advisory
+    and none is dated 2024-01-15 or numbered 4490832; neither BushidoToken's nor Malpedia's
+    UAC-0050 pages cite it. The underlying EVENT is REAL: two genuine CERT-UA advisories
+    bracket the claimed window and were made the sources —
+      - cert-ua/2023-12-21_uac-0050-remcos-kyivstar-debt-sbu-request (article 6276824,
+        CERT-UA#8338, published 21.12.2023): raw API capture
+        cert-ua__2023-12-21_uac-0050-remcos-kyivstar-debt-sbu-request.json,
+        sha256 7b21584e…69be919 (7b21584e36113be74cfc29c3f26cd5843a4e1d23c8d82a2c8d8a67f7569be919),
+        3,536,457 bytes.
+      - cert-ua/2024-01-11_uac-0050-remcos-quasar-remoteutilities (article 6277063,
+        CERT-UA#8453/#8494, published 11.01.2024): raw API capture
+        cert-ua__2024-01-11_uac-0050-remcos-quasar-remoteutilities.json,
+        sha256 867c78cb…b6d3f1a3 (867c78cb5812faeaf84a6e50488a13ecf8e59e30a5314d07fce3ac10b6d3f1a3),
+        5,019,650 bytes.
+    Level full: every surviving claim is carried by these two hashed primary captures.
+
+    [a] FACTS — rewritten against the raw advisories. CARRIED: mass distribution ("зафіксовано
+    масове розповсюдження електронних листів", both advisories); Remcos RAT as the window's
+    staple (Dec: both lure chains end in RemcosRAT, licence 5639D40461DCDD07011A2B87AD3C9EDD;
+    Jan-09: RemcosRAT via AutoIt, licence 90A63732CBE64F87F97AC8716B711015); QuasarRAT
+    (Jan-09, PowerShell + Bitbucket) and Remote Utilities (Jan-11, "Запит від компанії Медок")
+    as the adjunct tooling; lure themes verbatim ("Заборгованості за договором Київстар",
+    "Запит СБУ", "Запит судових документів", "Запит", "Запит від компанії Медок"); shared
+    January C2 in AS215939; December C2 on Shinjiru ("Окрім типового для UAC-0050 розміщення
+    серверів управління RemcosRAT … Shinjiru") and AS44477 (STARK INDUSTRIES SOLUTIONS LTD).
+    REMOVED as uncarried/fabricated: "to Ukrainian state institutions" (neither advisory names
+    recipient categories — no "державних органів/установ" anywhere in either body; the old
+    name/prose/targets asserted it); "Defense Forces mobilization communications" and "tax
+    authority correspondence" lures (nowhere in either advisory; the tax theme matches CERT-UA's
+    LATER #11776 advisory of 2024-10-30, outside this event); "NetWire and Rhadamanthys stealer
+    rotated through as adjuncts" (neither appears in either advisory; NetWire's infrastructure
+    was seized in March 2023, predating the window); "Sticky Werewolf" as a CERT-UA co-name
+    (CERT-UA uses only the UAC-0050 identifier; the alias is BI.ZONE's, kept on the actor
+    record, not in this event's prose); "thousands of emails, broad target lists" (no counts
+    in the sources — "масове" carries only "mass"); "high-volume but operationally crude — a
+    defining characteristic" (editorial, uncarried). PARTIALLY RESURRECTED: the old "judicial
+    documents" lure claim IS carried for the Jan-09 wave ("Запит судових документів") and was
+    kept in precise form. TARGETS: the orgs/ukrainian-state-institutions-various entry was
+    REMOVED (recipient categories unspecified in both advisories; any sector/org claim would be
+    inflation). Directionality (victims ua) remains carried in prose: mass mailings registered
+    by Ukraine's governmental CERT, Ukrainian-language lures impersonating Ukrainian entities
+    (Kyivstar, SBU, courts, M.E.Doc). incident_type: dropped data-theft (no exfiltration or
+    compromise outcome documented; both advisories use conditional "може бути уражена" language);
+    kept intrusion for the mass RAT-delivery campaign itself (CERT-UA titles it "атака").
+
+    [b] ATTRIBUTION — CERT-UA, kept moderate (no-upgrade rule), auspex concur-with-caveat.
+    Both advisories attribute by cluster identifier only: "Активність відстежується за
+    ідентифікатором UAC-0050" — no sponsor, nation, or unit named. attribution_date corrected
+    2024-01-15 -> 2023-12-21 (date of the first in-window attribution; source re-pointed from
+    the phantom to the #8338 record). Attribution notes REWRITTEN: the old note's "Belarus KGB
+    linkage is the dominant Western-vendor reading (Sticky Werewolf overlap)" is
+    source-contradicted — per the 2026-06-24/2026-07-02 actor audits the Belarus placement was
+    never sourced (BI.ZONE/Kaspersky treat Belarus as a VICTIM), and CERT-UA's own later
+    framing (BushidoToken 2024-03-06 quoting CERT-UA; corroboration snapshots re-verified
+    2026-07-04: _corrob__bushidotoken__uac-0050-davinci.html sha256 1ec3d51e…b4fdea43, 205,761
+    bytes; _corrob__malpedia__uac-0050.html sha256 8cfac383…c70b4c6, 1,097,006 bytes) is a
+    "Russian-speaking mercenary organization" ("The DaVinci Group") with "ties to Russian law
+    enforcement". New note matches the ru/unscoped re-home and carries the standing ACTOR FLAG
+    (eventual home criminal/ vs ru/proxies/ is Kara's call).
+
+    [c] DATES — start_date 2023-12-20 -> 2023-12-21 (first wave registered "21.12.2023");
+    end_date 2024-01-12 -> 2024-01-11 (last documented wave "11.01.2024"); disclosure_date
+    2024-01-15 -> 2023-12-21 (first public advisory; no 2024-01-15 publication exists). Source
+    published_on values are the advisories' own dates (21.12.2023 / 11.01.2024) from the API
+    payloads, not campaign months. Residual: article 6277063's teaser says the January waves
+    were "10.01.2024 та 11.01.2024" while its body twice says 09.01.2024 and 11.01.2024; the
+    body's detailed narrative (09.01) is treated as authoritative and the discrepancy is noted
+    in the source record. NOTE: the id's 2024-01 month now postdates disclosure_date (2023-12);
+    ids are stable-forever per schema, so the id was not touched.
+
+    [d] DOCTRINE_LINKS — REMOVED the by/union-state-integration/ukraine-theater-support link
+    (was strongly_inferred) -> doctrine_links: []. Its reasoning ("canonical Union State
+    Ukraine-theater-support behavior") presupposed a Belarusian-aligned operator — a premise
+    the canonical actor record now explicitly refutes (BY "was never sourced"; actor re-homed
+    ru/unscoped 2026-07-02), and neither cited advisory states any strategic purpose. A Belarus
+    doctrine cannot even reach "plausible" ("the op fits the doctrine") absent any Belarus
+    nexus. No RU doctrine link was invented in its place: the actor is a mercenary crew whose
+    state-proxy relationship is unresolved (ru/UNSCOPED), and no cited source states the
+    operation's goal — doctrine_links: [] is the honest state. FLAG (see final report): sibling
+    event 2023-02/cert-ua-uac-0050-mass-phishing still carries the BY link (plausible,
+    contested — pre-re-home stamp), and the actor's default_doctrine_alignment_ids still reads
+    by/union-state-integration/ukraine-theater-support; both need the post-re-home decision.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set activity-cluster (CERT-UA's UAC-XXXX identifier;
+    the DaVinci/Russia-nexus characterization is not a nation/unit attribution in these
+    advisories).
+
+    [f] ACTOR_ID — ru/unscoped/uac-0050 resolves (atlas/actors/ru/uac-0050.yaml, id field
+    ru/unscoped/uac-0050; former ids by/kgb/uac-0050, by/unscoped/uac-0050 noted in-file for
+    provenance). Actor file NOT edited. Prose now matches the re-home (no Belarus framing
+    anywhere in the event).
+
+    RESIDUAL UNCERTAINTIES: (1) recipient categories/victimology for these waves are
+    unspecified in the primaries — the structured targets block was dropped rather than
+    guessed, so the victims-ua signal rides only in prose; (2) 09 vs 10 January teaser/body
+    discrepancy (body followed); (3) no confirmed-compromise outcome exists — incident_type
+    "intrusion" models the campaign, not verified breaches; (4) UAC-0050's state nexus remains
+    an open actor-level question (mercenary, "ties to Russian law enforcement").
