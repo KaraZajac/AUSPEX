@@ -1,54 +1,109 @@
 id: 2023-12/cisa-aa23-335a-unitronics-campaign
 name: CISA AA23-335A — IRGC-affiliated Unitronics PLC global campaign
-start_date: 2023-10-01
+start_date: 2023-10-01  # "In October 2023, CyberAv3ngers claimed credit ... for cyberattacks against Israel-based PLCs" (internet-facing Unitronics, default/no passwords); Telegram claims window Sept 13 - Oct 30, 2023; "In November 2023 ... began actively targeting and compromising" Israeli-made Unitronics PLCs; US WWS access "Beginning on Nov. 22, 2023"
 disclosure_date: 2023-12-01
-end_date: 2023-12-31
+end_date: 2024-01-31  # "Between November 2023 and January 2024 ... likely in four separate waves of cyberattacks" (Dec-18-2024 update)
 incident_type:
   - intrusion
   - disruption
-initial_vector: n-day  # exposed Unitronics PLCs; default credentials; port 20256/TCP
+initial_vector: valid-creds  # internet-exposed Unitronics Vision PLCs/HMIs on default TCP port 20256 with "default or no passwords" (T1078.001 Default Accounts, T1110 Brute Force); CVE-2023-6448 (default-password weakness, CWE-798) assigned Dec 11, 2023 — no software-vulnerability exploitation described; the widely reported "1111" string appears in neither advisory version
 outcome_summary: |
-  CISA joint advisory documented 75+ compromised Unitronics
-  Vision PLC devices globally; at least 34 US water and
-  wastewater facilities affected. Minor OT impacts at multiple
-  WWS facilities; PLC ladder logic supplanted with CyberAv3ngers
-  messaging.
+  Per the advisory as updated December 18, 2024: between November
+  2023 and January 2024, likely in four separate waves, the actors
+  compromised at least 75 Unitronics devices, at least 34 of them
+  in the US water and wastewater sector (having "accessed multiple
+  U.S.-based WWS facilities" beginning November 22, 2023).
+  Compromised devices had their ladder logic erased and supplanted
+  with the actors' own file containing "no inputs or outputs"
+  (preventing the devices from operating as intended), were
+  renamed, version-downgraded, and locked against remote
+  remediation (default port changed 20256 to 20257,
+  upload/download functions disabled), and displayed an
+  anti-Israel defacement splash page on the HMI. No physical
+  process damage is reported; the advisory warns that deeper
+  access "could render additional, more profound cyber-physical
+  effects on processes and equipment."
 quantified_impact:
-  affected_plcs: 75
-  us_wws_facilities: 34
+  compromised_devices: 75  # "The actors compromised at least 75 devices" (Nov 2023 - Jan 2024; Dec-18-2024 update)
+  us_wws_devices: 34  # "including at least 34 in the WWS Sector in the United States" — a device count, not a facilities count
 false_flag_risk: none
 campaign_id: cyberav3ngers-water-utility-wave
 summary: |
-  Multi-government joint advisory (CISA, FBI, NSA, EPA, INCD,
-  NCSC-UK, CCCS) — formal attestation of the IRGC affiliation for
-  the broader Unitronics campaign of which Aliquippa is the
-  canonical individual event. The advisory documents the
-  tradecraft: CyberAv3ngers operators identified internet-exposed
-  Unitronics Vision-series PLCs (port 20256/TCP) via Shodan-style
-  scanning, logged into the integrated HMI using default
-  credentials ("1111"), and overwrote the device ladder logic and
-  HMI splash screen with an anti-Israel banner naming Unitronics
-  as Israeli-made equipment. The operation is OT-defacement
-  rather than process manipulation — no IEC 61131 logic was
-  redirected to physical damage — but the targeted PLC pool
-  spans US water / wastewater, energy, and food-and-beverage
-  facilities and is reported across the EU and Ireland.
+  Joint advisory — originally released December 1, 2023 by FBI,
+  CISA, NSA, EPA, and Israel's INCD; the December 18, 2024 update
+  added Canada's CCCS and the UK's NCSC as co-sealers — formally
+  attesting the IRGC affiliation of the broader Unitronics
+  campaign of which Aliquippa is the canonical individual event.
+  The advisory states that in November 2023 "IRGC-affiliated cyber
+  actors using the persona 'CyberAv3ngers' began actively
+  targeting and compromising Israeli-made Unitronics Vision Series
+  programmable logic controllers (PLCs) and human machine
+  interfaces (HMIs)", calls CyberAv3ngers "an Iranian
+  IRGC-affiliated cyber persona", and records the persona's
+  October 2023 claims of attacks on Israel-based PLCs in the
+  water, energy, shipping, and distribution sectors. Tradecraft
+  per the advisory: the actors authenticated to internet-connected
+  devices with communications on default TCP port 20256 that
+  "either had a default password in place or no password",
+  supplanted the device ladder logic, and uploaded an HMI splash
+  defacement stating "You have been hacked, down with Israel.
+  Every equipment 'made in Israel' is CyberAv3ngers legal target."
+  The operation is OT defacement and device disruption rather than
+  process manipulation — the replacement ladder logic contained no
+  inputs or outputs, and no physical damage is reported. Victims
+  spanned multiple US states and foreign countries across
+  "multiple critical infrastructure industries", and the NCSC
+  observed targeting of PLC devices in the United Kingdom, "likely
+  as part of a wider cyber campaign against Israel and
+  Israeli-made technology." The affected PLC line is commonly used
+  in water/wastewater, energy, food and beverage manufacturing,
+  transportation, and healthcare.
 attributions:
   - actor_id: ir/irgc-io/cyberav3ngers
-    attributing_org: CISA + FBI + NSA + EPA + INCD + CCCS + NCSC
+    attributing_org: CISA + FBI + NSA + EPA + INCD
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2023-12-01
     attribution_source_id: cisa/2023-12-01_aa23-335a-cyberav3ngers
+    notes: |
+      The original December 1, 2023 advisory was authored by five
+      agencies (FBI, CISA, NSA, EPA, INCD — per the Dec-2023 PDF);
+      the December 18, 2024 update added CCCS and the UK NCSC,
+      making seven authoring agencies on the current version.
+      Level named-unit at the IRGC parent only: the advisory ties
+      the CyberAv3ngers persona to "the Iranian Government's
+      Islamic Revolutionary Guard Corps (IRGC)" but names no IRGC
+      sub-organization; IRGC-CEC granularity arrives with OFAC's
+      February 2, 2024 designation (companion event
+      2024-02/ofac-cyberav3ngers-irgc-io-designations). The actor
+      id's IRGC-IO placement is the atlas's structural judgment —
+      see the actor-file audit note.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Persona-to-IRGC-IO attribution attested in CISA / OFAC
-      documents; see Aliquippa event for full reasoning.
+      The advisory pierces the persona as fact — "CyberAv3ngers is
+      an Iranian IRGC-affiliated cyber persona"; "IRGC-affiliated
+      cyber actors using the persona 'CyberAv3ngers'" — a state
+      armed force conducting coercive OT attacks behind a
+      hacktivist front whose Telegram channel claims attacks
+      (several falsely). That attests the persona-laundering
+      mechanism, but the advisory states neither a deniability nor
+      a retaliation purpose in words, so the doctrine label is
+      strongly inferred rather than attested (mechanism attested,
+      goal inferred). Grading now matches the companion Aliquippa
+      and OFAC-designation events on the same pillar.
     attesting_source_id: cisa/2023-12-01_aa23-335a-cyberav3ngers
+    inference_basis:
+      source_id: cisa/2023-12-01_aa23-335a-cyberav3ngers
+      signals:
+        - "Advisory states as fact that the hacktivist persona is a state front: 'CyberAv3ngers is an Iranian IRGC-affiliated cyber persona'; 'IRGC-affiliated cyber actors using the persona CyberAv3ngers'"
+        - "Advisory documents the persona's Telegram claim channel including false claims ('several of these claimed compromises of critical infrastructure organizations in Israel are false') — claim-and-leak persona behaviour"
+        - "Coercive anti-Israel OT defacement conducted under the persona brand rather than under the IRGC's own name"
+      ruled_out: "Genuine independent hacktivism — excluded by the advisory's own IRGC-affiliation finding; a stated deniable-retaliation GOAL is not in the advisory (mechanism only), hence not attested"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -57,18 +112,162 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Anti-Israel-equipment projection across multiple states
-      hosting Unitronics PLCs — global expression of Forward
-      Defense.
+      The advisory carries the operation's strategic purpose in
+      substance: the actors' own displayed rationale — "You have
+      been hacked, down with Israel. Every equipment 'made in
+      Israel' is CyberAv3ngers legal target" (quoted unhedged in
+      both the Dec-2023 and Dec-2024 versions) — and the NCSC's
+      assessment that UK PLC targeting was "likely as part of a
+      wider cyber campaign against Israel and Israeli-made
+      technology" (hedge limited to the UK-linkage sentence).
+      Anti-Israel-equipment projection executed against
+      third-country infrastructure (US, UK, other countries) by an
+      IRGC-affiliated persona is the extraterritorial engagement
+      of an adversary the proxy-projection pillar encodes;
+      "Forward Defense" is the AUSPEX mapping of that stated goal
+      (the slug itself does not appear in the source).
     attesting_source_id: cisa/2023-12-01_aa23-335a-cyberav3ngers
+    inference_basis:
+      source_id: cisa/2023-12-01_aa23-335a-cyberav3ngers
+      source_quote: >-
+        The IRGC-affiliated cyber actors left a defacement image
+        stating, "You have been hacked, down with Israel. Every
+        equipment 'made in Israel' is CyberAv3ngers legal target."
+        [...] the NCSC observed the targeting of PLC devices,
+        including in the United Kingdom, likely as part of a wider
+        cyber campaign against Israel and Israeli-made technology.
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/ics/water
     country: us
-    role: primary
+    role: primary  # "at least 34 in the WWS Sector in the United States"; "accessed multiple U.S.-based WWS facilities"
+  - target_id: sectors/critical-infrastructure
+    country: us
+    role: primary  # the non-WWS share of the 75+ devices: "U.S.-based Unitronics PLC devices used in multiple critical infrastructure industries, including the WWS Sector"
   - target_id: sectors/ics/water
-    role: primary
+    country: il
+    role: primary  # October 2023 phase: "CyberAv3ngers targeted Israeli PLCs in the water, energy, shipping, and distribution sectors"
 sources:
   - cisa/2023-12-01_aa23-335a-cyberav3ngers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against the raw snapshotted advisory. Raw evidence: (1)
+    raw/cisa__2023-12-01_aa23-335a-cyberav3ngers.html, sha256
+    bf4b5dd8...60d11b4c, 105,312 bytes — hash re-verified this audit;
+    the live page is the Dec-18-2024 REVISION (seven authoring
+    agencies). (2) Supplementary capture of the original Dec-2023 PDF
+    linked from the same page:
+    raw/cisa__2023-12-01_aa23-335a-cyberav3ngers__original-dec2023.pdf,
+    sha256 85dd5fe1...f7aeeafb, 608,288 bytes (five authoring
+    agencies; carries the Dec-14-2023 CVE addendum).
+    [a] FACTS — corrections: (1) STRIPPED the default-credential
+    string '("1111")' — "1111" appears in NEITHER the live advisory
+    nor the original PDF (grep 0/0); carried vector language is
+    "default or no passwords" / "either had a default password in
+    place or no password" / "compromise default credentials"
+    (T1078.001, T1110). The 1111 specificity traces to the separate
+    Nov-28-2023 CISA Alert and press reporting, not cited by this
+    event — stripped rather than re-sourced. (2) STRIPPED
+    "Shodan-style scanning" (0 hits; advisory says only
+    "internet-facing" / "internet accessible" / "internet-connected").
+    (3) STRIPPED "reported across the EU and Ireland" (0 hits for
+    both); carried spread is "victims spanned multiple U.S. states
+    and foreign countries" plus NCSC-observed UK PLC targeting
+    (Dec-2024 update; the original said only "victims span multiple
+    U.S. states"). (4) STRIPPED "no IEC 61131 logic was redirected"
+    (IEC never appears); replaced with carried facts: replacement
+    ladder logic "contained no inputs or outputs", devices renamed /
+    version-downgraded / upload-download disabled / port 20256->20257,
+    splash-page defacement; advisory warns deeper access "could
+    render additional, more profound cyber-physical effects". (5)
+    FIXED devices-vs-facilities conflation: "The actors compromised
+    at least 75 devices, including at least 34 in the WWS Sector in
+    the United States" — 34 is a DEVICE count; quantified_impact
+    re-keyed affected_plcs -> compromised_devices, us_wws_facilities
+    -> us_wws_devices; the facilities-language claim retained
+    verbatim ("accessed multiple U.S.-based WWS facilities").
+    "Globally" removed from the 75-device claim (the count sits in
+    the "Threat Actor Activity Against U.S.-Based Unitronics
+    Devices" update section). (6) Defacement banner corrected to
+    verbatim: "You have been hacked, down with Israel. Every
+    equipment 'made in Israel' is CyberAv3ngers legal target." — the
+    banner itself does not name Unitronics; the advisory (not the
+    banner) identifies the devices as Israeli-made. (7) Sector
+    claims separated: exposure pool = PLCs "commonly used in" WWS +
+    energy, food and beverage manufacturing, transportation systems,
+    healthcare; actual US victim spread = "multiple critical
+    infrastructure industries"; Israel October phase = "water,
+    energy, shipping, and distribution sectors".
+    [b] ATTRIBUTION — the advisory names the actor flatly:
+    "CyberAv3ngers is an Iranian IRGC-affiliated cyber persona";
+    actors "affiliated with the Iranian Government's Islamic
+    Revolutionary Guard Corps (IRGC)" — attributing_org_confidence
+    high upheld, auspex concur upheld. attributing_org CORRECTED for
+    the 2023-12-01 attribution date: the original PDF names FIVE
+    authoring agencies (FBI, CISA, NSA, EPA, INCD); CCCS + UK NCSC
+    appear only in the Dec-18-2024 revision (0 hits in the Dec-2023
+    PDF) — the previous seven-agency list at the 2023-12-01 date was
+    a version conflation; update roster documented in notes.
+    [c] DATES — source published_on 2023-12-01 correct ("Dec. 1,
+    2023: Initial version"). start_date 2023-10-01 KEPT: "In October
+    2023, CyberAv3ngers claimed credit ... for cyberattacks against
+    Israel-based PLCs" (internet-facing, "used Unitronics' default
+    passwords or no password"); Telegram claims window "Between
+    Sept. 13, 2023, and Oct. 30, 2023"; active compromise of
+    Israeli-made Unitronics PLCs "In November 2023"; US WWS access
+    "Beginning on Nov. 22, 2023". disclosure_date 2023-12-01 = the
+    advisory's initial release. end_date CORRECTED 2023-12-31 ->
+    2024-01-31: "Between November 2023 and January 2024 ... likely
+    in four separate waves" (Dec-2024 update). initial_vector
+    CORRECTED n-day -> valid-creds: default/no passwords =
+    T1078.001 Valid Accounts: Default Accounts (+T1110); no
+    software-vulnerability exploitation is described (CVE-2023-6448,
+    assigned Dec 11, 2023 per the PDF, is the default-password
+    weakness CWE-798, not an exploited n-day).
+    [d] DOCTRINE_LINKS — link 1
+    (ir/cyber-deniable-retaliation/persona-laundering) DOWNGRADED
+    attested -> strongly_inferred: the advisory attests the
+    persona-laundering MECHANISM (persona pierced to the IRGC) but
+    states neither a deniability nor a retaliation purpose in words
+    — mechanism-not-goal per the 2026-06-19 calibration; grading now
+    consistent with the companion Aliquippa and OFAC-designation
+    events (both strongly_inferred on this pillar). The old
+    reasoning also mis-stated "Persona-to-IRGC-IO attribution
+    attested in CISA / OFAC documents": THIS advisory names only the
+    IRGC parent, and OFAC is not cited by this event — fixed;
+    inference_basis (signals + ruled_out) added. Link 2
+    (ir/forward-defense/proxy-projection) KEPT attested as
+    label-vs-goal (calibration mode 2b — keep + add quote): the
+    advisory carries the strategic purpose in substance — the
+    unhedged defacement rationale "Every equipment 'made in Israel'
+    is CyberAv3ngers legal target" (both versions) and NCSC's
+    "likely as part of a wider cyber campaign against Israel and
+    Israeli-made technology" — goal-level anti-Israel-equipment
+    projection executed extraterritorially (US, UK, foreign
+    countries); the Forward-Defense slug is the AUSPEX mapping of
+    that stated goal; inference_basis.source_quote added; the
+    "likely" hedge (NCSC UK-linkage sentence only) is disclosed in
+    the reasoning.
+    [e] ATTRIBUTION_LEVEL — set named-unit (was missing): persona
+    (CyberAv3ngers) + nation (Iran) + named state armed force (IRGC
+    — the schema's own named-unit example); granularity caveat (IRGC
+    parent only, no sub-org) recorded in the attribution note.
+    [f] ACTOR_ID — ir/irgc-io/cyberav3ngers resolves
+    (atlas/actors/ir/cyberav3ngers.yaml); actor already
+    service-audited 2026-06-24 with the documented IRGC-CEC-vs-
+    IRGC-IO granularity caveat (IO placement = atlas structural
+    judgment, CEC = source-exact sub-org). No actor edit made.
+    TARGETS — countryless water entry pinned to il (Israel October
+    phase names water explicitly) and sectors/critical-infrastructure
+    country us added ("multiple critical infrastructure industries");
+    UK targeting kept in prose only (targeting observed, sector
+    unspecified, compromise not stated). RESIDUAL UNCERTAINTY: none
+    load-bearing — every remaining claim traces to the snapshotted
+    raw; the five-vs-seven-agency version history is documented in
+    the source record.

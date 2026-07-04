@@ -1,50 +1,203 @@
 id: 2023-12/court-services-victoria-qilin
 name: Qilin ransomware against Court Services Victoria (Australia)
 start_date: 2023-12-08
-disclosure_date: 2023-12-23
-end_date: 2024-02-29
+disclosure_date: 2024-01-02
+end_date: 2023-12-21
 incident_type:
   - ransomware
   - data-theft
+  - extortion
 initial_vector: unknown
 outcome_summary: |
-  Qilin ransomware intrusion of Court Services Victoria's IT
-  environment. Operators exfiltrated audio and video recordings
-  of court hearings dating November 1-21 2023, including
-  witness testimony from sensitive criminal and family-law
-  proceedings. Victorian Attorney-General Jaclyn Symes confirmed
-  the incident December 23 2023. The Victorian Government
-  commissioned an independent review by Rufus Black AO; no
-  ransom was paid and no leak-site posting of the audio
-  recordings has been confirmed.
+  Ransomware intrusion of Court Services Victoria's audio-visual
+  in-court technology network — a single courts-wide system managing
+  only hearing recordings. The breach occurred on 8 December 2023
+  (CSV FAQ: "While we became aware on 21 December, the incident
+  occurred on 8 December") and was discovered on 21 December 2023
+  when staff were locked out of computers displaying "YOU HAVE BEEN
+  PWND"; a text file threatened publication of stolen files and gave
+  a dark-web address for recovery instructions (double extortion).
+  CSV isolated and disabled the network the same day. CSV's 2 January
+  2024 statement (CEO Louise Anderson) said recordings of some
+  hearings between 1 November and 21 December 2023 may have been
+  accessed — Supreme Court, all County Court criminal and civil
+  hearings recorded on the network, some Magistrates' Court
+  committals, all Coroners Court hearings, one October Children's
+  Court hearing; VCAT none — including, per ABC, witness testimony
+  from highly sensitive cases and at least two County Court cases
+  involving historical and child sexual abuse. CSV's 18 January 2024
+  update, based on forensic analysis available from 5 January,
+  expanded the exposure: most County Court recordings from 1 January
+  2023 and some back to 28 May 2019 and 4-6 April 2016, Coroners
+  Court hearings back to 5 August 2019, and some regional Supreme
+  Court hearings as far back as April 2016. No other court systems or
+  records (including employee and financial data) were accessed.
+  Victoria Police's cybercrime squad investigated alongside Victorian
+  Department of Government Services cyber experts; Acting Premier Ben
+  Carroll said the attack had "essentially been confined". CSV
+  declined to name the actor or comment on ransom demands; no ransom
+  payment was ever confirmed or denied. Video conferencing was
+  re-established in most courts on 16 January 2024 (hybrid hearings
+  from 22 January), with in-court recording restored progressively
+  through late February-April 2024. BleepingComputer found no CSV
+  entry on Qilin's leak site and could not independently confirm
+  Qilin's responsibility.
 quantified_impact:
-  weeks_of_recordings_compromised: 3
+  weeks_of_recordings_compromised: 7
 false_flag_risk: none
 summary: |
-  Notable for sensitivity of exfiltrated data (court recordings
-  with witness-protection implications) and for being the first
-  major Qilin attack against an Australian state-government
-  judicial body. AUSPEX includes in criminal-baseline because
-  Qilin tradecraft is standard RaaS without state-nexus
-  attribution.
+  Notable for the sensitivity of the exposed material — audio-visual
+  recordings of court hearings including witness testimony from
+  highly sensitive criminal matters (at least two County Court cases
+  involving historical and child sexual abuse, per ABC), with some
+  recordings involving identities protected by court orders or
+  legislation — in a double-extortion ransomware intrusion against
+  the statutory agency administering Victoria's courts and tribunals.
+  AUSPEX includes in criminal-baseline because Qilin tradecraft is
+  standard RaaS without state-nexus attribution.
 attributions:
   - actor_id: criminal/qilin
-    attributing_org: Victorian Government + Qilin (self-claimed)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-01-09
-    attribution_source_id: ncsc-uk/2024-06-04_synnovis-qilin-statement
+    attributing_org: Robert Potter (independent cyber-security expert, via ABC News)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-01-02
+    attribution_source_id: abc/2024-01-02_victoria-court-system-cyber-attack
     notes: |
-      Victorian Government statement attributed the cluster as
-      consistent with Qilin tradecraft; Qilin self-claimed via its
-      leak site January 2024. attribution_source_id placeholder
-      points at the nearest contemporaneous primary documentation
-      of Qilin activity (NHS Synnovis statement) — no specific
-      Court Services Victoria primary source is currently
-      available via verified URL.
+      The only public attribution voice is an independent expert
+      relayed by ABC News: Robert Potter, "who has seen evidence of
+      the attack, said the court system had almost certainly been hit
+      by a Russian phishing attack, using commercial ransomware known
+      as Qilin". CSV itself refused to name any actor ("We don't
+      provide information or details on cyber threat actors" — CSV
+      FAQ), and no Australian government body publicly named Qilin.
+      A prior version of this record claimed "Qilin (self-claimed)";
+      that is REFUTED: BleepingComputer (2024-01-02) reported "there
+      is no mention of CSV on their data leak site" and that it "has
+      not been able to independently confirm if Qilin is behind the
+      attack"; The Register likewise noted "Qilin is yet to claim the
+      attack on its leak site". Confidence graded moderate: a single
+      independent expert (with claimed evidence access, "almost
+      certainly") relayed by ABC as "sources", hedged by The Register
+      to "likely", never claimed by the operators, and never
+      confirmed by CSV or an investigating agency. Potter's phishing
+      characterization is likewise single-voiced, so initial_vector
+      stays unknown.
 doctrine_links: []
 targets:
   - target_id: orgs/court-services-victoria
     role: primary
+    country: au
 sources:
-  - ncsc-uk/2024-06-04_synnovis-qilin-statement
+  - courts-vic/2024-01-02_csv-cyber-incident-statement
+  - courts-vic/2024-01-02_csv-cybersecurity-incident-faqs
+  - courts-vic/2024-01-18_csv-cyber-incident-update
+  - abc/2024-01-02_victoria-court-system-cyber-attack
+  - bleepingcomputer/2024-01-02_victoria-court-recordings-qilin
+  - theregister/2024-01-02_victoria-court-system-breach
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    WRONG-SOURCE REMEDIATION (re-source path). The event's sole
+    citation was ncsc-uk/2024-06-04_synnovis-qilin-statement — the
+    NHS England statement on the JUNE 2024 LONDON Synnovis attack, a
+    real source about a DIFFERENT event, unusable for this Dec-2023
+    Australian incident (its own record even flags url: null). It was
+    removed and the event re-sourced to six real, snapshot-hashed
+    sources: three CSV govt-primaries + ABC + BleepingComputer + The
+    Register (all published 2024-01-02 except the 18 Jan update). The
+    Synnovis record itself remains validly cited by the Synnovis
+    event and others, so no orphan annotation was made.
+    [a] FACTS — every retained claim is now source-carried.
+    Raw evidence: courts-vic statement PDF sha256 52069612…bb3dee3a
+    (140,149 bytes; live URL re-curled during audit — byte-identical,
+    proving URL-snapshot pairing): alerted 21 Dec 2023; AV in-court
+    technology network disrupted; recordings 1 Nov-21 Dec 2023 may
+    have been accessed (+possibly pre-Nov); per-court table; "No
+    other court systems or records, including employee or financial
+    data, were accessed". courts-vic FAQs sha256 9da9d584…c1d2e293
+    (39,922 bytes): "the incident occurred on 8 December"; CSV
+    refuses actor naming and ransom comment; Victoria Police
+    cybercrime squad + Vic DGS; restoration timeline (VC 16 Jan,
+    hybrid 22 Jan, recordings late Feb-Apr). Update page sha256
+    4384add7…39fc3188 (33,137 bytes): expanded ranges (County 4-6 Apr
+    2016 + 28 May 2019-21 Dec 2023; Coroners 5 Aug 2019-; Supreme
+    regional to Apr 2016), found from 5 Jan forensics. ABC sha256
+    49268937…564a6fd4 (347,513 bytes): "YOU HAVE BEEN PWND" lockout,
+    dark-web ransom note, witness testimony from highly sensitive
+    cases, two child-sexual-abuse County cases, Acting Premier
+    Carroll containment quote. BleepingComputer sha256
+    abd6f9ce…8ff1312b (87,990 bytes): breach began 8 Dec; NO CSV
+    entry on Qilin leak site. Register sha256 a0a46a05…17aec9a4
+    (163,121 bytes): began 8 Dec; "Qilin is yet to claim the attack
+    on its leak site". FABRICATIONS REMOVED: (1)
+    "Victorian Attorney-General Jaclyn Symes confirmed the incident
+    December 23 2023" — no source; disclosure was CSV CEO Louise
+    Anderson's 2 Jan 2024 statement; the government voice in sources
+    is Acting Premier Ben Carroll (containment, no actor). (2) "The
+    Victorian Government commissioned an independent review by Rufus
+    Black AO" — no source anywhere (also present in the target
+    registry file; flagged below). (3) "no ransom was paid" — CSV
+    explicitly declined to comment on demands; softened to "never
+    confirmed or denied". (4) "recordings dating November 1-21 2023"
+    — garbled; real primary window 1 Nov-21 Dec 2023, later expanded
+    to 2016/2019 for some courts. (5) "witness testimony from
+    sensitive criminal and family-law proceedings" — no family-law in
+    any source (Victorian courts don't hear federal family matters);
+    replaced with the source-carried description. quantified_impact
+    weeks_of_recordings_compromised corrected 3 -> 7 (1 Nov-21 Dec
+    primary window; prose carries the 2016/2019 expansions).
+    incident_type: added extortion (publication threat + dark-web
+    payment note = double extortion per ABC/Potter and
+    BleepingComputer). initial_vector kept unknown (Potter's "Russian
+    phishing attack" is a single expert voice; CSV stated no vector).
+    [b] ATTRIBUTION — REFUTED the prior "Victorian Government + Qilin
+    (self-claimed), high": no self-claim ever existed
+    (BleepingComputer: "there is no mention of CSV on their data leak
+    site"; Register concurs) and no Victorian government body named
+    Qilin (CSV FAQ: "We don't provide information or details on cyber
+    threat actors"). Re-modeled to the real attribution: independent
+    expert Robert Potter via ABC News ("almost certainly ...
+    commercial ransomware known as Qilin"), moderate org-confidence
+    (single expert, "likely" per Register's rendering, unconfirmed by
+    BleepingComputer), auspex concur-with-caveat, attribution_date
+    2024-01-02 (was 2024-01-09, which matched no source),
+    attribution_source_id -> abc/2024-01-02_victoria-court-system-
+    cyber-attack (was the Synnovis statement).
+    [c] DATES — start_date 2023-12-08 confirmed (CSV FAQ verbatim;
+    BleepingComputer; Register). end_date corrected 2024-02-29 (no
+    source; apparently conflated with the late-Feb recording-system
+    restoration) -> 2023-12-21, when CSV "identified the problem and
+    isolated and disabled the affected network". disclosure_date
+    corrected 2023-12-23 (no source) -> 2024-01-02 (CSV statement;
+    ABC published 06:59 AEDT that day). Each source record's
+    published_on = its actual publication date (2024-01-02 x5;
+    2024-01-18 update; FAQ page first published 2024-01-02, snapshot
+    reflects updates through 2024-02-20, noted in its record).
+    [d] DOCTRINE_LINKS — [] is correct: financially motivated
+    criminal RaaS with no state-nexus attribution; no doctrine
+    genuinely applies; nothing invented.
+    [e] ATTRIBUTION_LEVEL — set named-actor (previously missing):
+    Potter names the specific group (Qilin), not merely a nation;
+    no unit exists for a criminal RaaS.
+    [f] ACTOR_ID — criminal/qilin resolves
+    (atlas/actors/criminal/qilin.yaml); placement under criminal/
+    (not ru/proxies/) is consistent with sources here: "Russia-based"
+    /"Russian hackers" describes the crew's milieu, and the actor
+    record correctly notes no published state-nexus attribution.
+    RESIDUAL UNCERTAINTIES: attribution rests on one expert with
+    claimed evidence access, relayed by ABC and echoed (hedged) by
+    trade press — Qilin's responsibility was never operator-claimed
+    or officially confirmed; whether a ransom was demanded/paid is
+    unknown by design (CSV refusal); the pre-Nov-2023 exposure tail
+    (2016/2019 recordings) is "some hearings", not quantified.
+    Per-source sha256 (first8…last8 / bytes): courts-vic statement
+    PDF 52069612…bb3dee3a / 140,149; courts-vic FAQs
+    9da9d584…c1d2e293 / 39,922; courts-vic 18-Jan update
+    4384add7…39fc3188 / 33,137; abc 49268937…564a6fd4 / 347,513;
+    bleepingcomputer abd6f9ce…8ff1312b / 87,990; theregister
+    a0a46a05…17aec9a4 / 163,121. Full hashes are recorded in each
+    source record's content_sha256.

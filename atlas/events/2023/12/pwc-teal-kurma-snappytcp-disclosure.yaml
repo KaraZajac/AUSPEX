@@ -1,56 +1,229 @@
 id: 2023-12/pwc-teal-kurma-snappytcp-disclosure
 name: PwC discloses Sea Turtle SnappyTCP Linux/Unix implant — bridging the post-2019 quiet window
 start_date: 2021-01-01
-disclosure_date: 2023-12-01
-end_date: 2023-11-30
+disclosure_date: 2023-12-05
+end_date: null
 incident_type:
   - intrusion
+  - espionage
   - data-theft
-initial_vector: valid-creds
+initial_vector: n-day
 outcome_summary: |
-  PwC Threat Intelligence's December 2023 "The Tortoise and The
-  Malwahare" report disclosed the previously-undocumented
-  SnappyTCP implant — a Linux/Unix reverse-TCP-shell with basic
-  C2 and persistence capabilities — used by Sea Turtle / Teal
-  Kurma between 2021 and 2023. The report documented one 2023
-  intrusion using a compromised legitimate cPanel account as
-  initial access to drop SnappyTCP on the victim, marking a
-  significant departure from the cluster's pre-2019 DNS-hijacking
-  tradecraft toward host-implant operations. The disclosure
-  closed the post-2019 / pre-Hunt-&-Hackett-2024 gap in public
-  reporting and confirmed continuity of Turkish state cyber
-  tasking through the quiet window.
+  PwC Threat Intelligence's 5 December 2023 report "The Tortoise
+  and The Malwahare" disclosed SnappyTCP — Linux/Unix malware
+  "previously not discussed publicly": "a simple reverse TCP
+  shell for Linux/Unix that has basic C2 capabilities and is
+  also used for establishing persistence on a system" — used by
+  Teal Kurma / Sea Turtle between 2021 and 2023, in at least two
+  variants (cleartext HTTP and OpenSSL/TLS). SnappyTCP's code is
+  practically identical to a publicly accessible GitHub
+  repository that PwC assesses with "realistic probability" is
+  currently controlled by the actor. C2 infrastructure (e.g.
+  lo0[.]systemctl[.]network, hosting sy.php as early as July
+  2021) overlaps indicators in a May 2022 Greek national CERT
+  alert, and infrastructure pivots surfaced domains resolving
+  throughout 2023 that spoof a US-government-owned
+  Arabic-language TV channel, a Golan Heights human-rights NGO,
+  and a Kurdish news agency. The disclosure closed the
+   2020-2023 gap in public Sea Turtle reporting, documenting a
+  tactical shift from the cluster's earlier large-scale
+  DNS-hijacking toward host-level implant operations.
 false_flag_risk: none
 summary: |
-  Operationally meaningful disclosure that closed the 2020–2023
-  Sea Turtle reporting gap and demonstrated tradecraft evolution
-  rather than cluster dormancy. SnappyTCP is a deliberately
-  minimal implant — its simplicity is the operational design,
-  consistent with Sea Turtle's preference for blending into
-  hosting-provider noise. Together with the January 2024 Hunt &
-  Hackett Dutch-ISP disclosure and the March 2024 Microsoft
-  MARBLED DUST telecom disclosure, this report anchored the
-  three-pillar 2024 Sea Turtle resurgence picture.
+  Operationally meaningful disclosure that closed the 2020-2023
+  Sea Turtle public-reporting gap and demonstrated tradecraft
+  evolution rather than dormancy: the Türkiye-nexus cluster PwC
+  tracks as Teal Kurma "altered its tactics" from the
+  large-scale DNS hijacking of its 2018-2020 heyday to a simple
+  Linux/Unix reverse-shell implant, while continuing to target
+  "throughout Europe and the Middle East" — a sector focus on
+  "governments, telecommunication, and IT service providers"
+  plus the NGO and media sectors. PwC assesses initial access
+  has likely continued via exploitation of major CVEs with
+  publicly available proof-of-concept code (CVE-2021-44228,
+  CVE-2021-21974, CVE-2022-0847), and that the motivation is
+  "almost certainly" information collection focused on
+  espionage, with collected data exploitable "for surveillance
+  purposes, or to gather traditional intelligence about the
+  activities of specific targets".
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: PwC Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-12-01
+    attribution_date: 2023-12-05
     attribution_source_id: pwc/2023-12_tortoise-and-malwahare-teal-kurma
+    notes: "PwC names the cluster and its nation nexus without hedge — 'a highly capable Türkiye-nexus threat actor, known as Teal Kurma (a.k.a. Sea Turtle, Marbled Dust, Cosmic Wolf)' — grounded in its own prior reporting ('CTO-SIB-20200323-01-A — Furthering Turkish state interests through cyber operations') and a footnoted Reuters 2020 piece. Named-actor (named group + nation nexus), NOT named-unit — no Turkish service (MIT or other) is named anywhere in the report, hence the actor stays nation-scoped at tr/unscoped."
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      PwC's victim characterization preserves the Sea Turtle
-      Middle East / Europe / NGO / IT / telecommunications
-      pattern, sustaining the counter-Kurdish doctrinal fit.
+      PwC states the purpose at the proximate level — motivation
+      "almost certainly to collect information that can further
+      some type of economic or political interest, but the focus
+      is on conducting espionage", with the take "exploited for
+      surveillance purposes, or to gather traditional
+      intelligence about the activities of specific targets" —
+      i.e. the espionage-for-surveillance purpose this pillar
+      specializes. Victim selection carries the Kurdish signal:
+      2023 actor infrastructure spoofs "a Kurdish news agency"
+      (anfturkce[.]news), and the stated sector focus —
+      governments, telecommunications (holding customer
+      "metadata around connections to websites, or call logs")
+      and IT service providers across Europe and the Middle East
+      — is the same surveillance-enabling collection pattern the
+      pillar's canonical Sea Turtle exemplars encode.
+    attesting_source_id: pwc/2023-12_tortoise-and-malwahare-teal-kurma
+    inference_basis:
+      signals:
+        - PwC's motive statement — "almost certainly to collect
+          information", espionage-focused, exploitable "for
+          surveillance purposes, or to gather traditional
+          intelligence about the activities of specific targets".
+        - Spoofed-infrastructure victimology includes a Kurdish
+          news agency (anfturkce[.]news — ANF, the PKK-aligned
+          Firat News Agency), the precise diaspora media
+          ecosystem the pillar encodes.
+        - Sector focus on telecoms (customer connection metadata
+          and call logs), governments and IT service providers —
+          surveillance-enabling collection consistent with the
+          pillar's KRG/telecom exemplars from the 2017-2019
+          DNS-hijacking era.
+        - PwC's own strategic framing of the cluster in its prior
+          intelligence brief "Furthering Turkish state interests
+          through cyber operations" (CTO-SIB-20200323-01-A,
+          footnote 8).
+      ruled_out: |
+        tr/mavi-vatan (Eastern-Mediterranean energy/maritime
+        interests) — SnappyTCP activity "highly likely focused on
+        European countries, particularly those located in the
+        Mediterranean" could gesture at Mavi Vatan, but the
+        report names no energy or maritime victims and centers
+        NGO/media/ethnic-audience surveillance collection. The
+        gulen-diaspora sibling pillar was also considered; the
+        one ethnic-audience spoof the report names is Kurdish
+        (ANF), not Gülenist. Not "attested" because PwC names
+        espionage/surveillance as the purpose but never states
+        the counter-Kurdish-diaspora goal itself — that last step
+        is AUSPEX's inference from victim selection.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/sea-turtle-snappytcp-various
+  - target_id: sectors/government
+    role: primary
+  - target_id: sectors/ict/telecom
+    role: primary
+  - target_id: sectors/ict/managed-services
+    role: primary
+  - target_id: sectors/media
+    role: primary
+  - target_id: sectors/civil-society/ngo
     role: primary
 sources:
   - pwc/2023-12_tortoise-and-malwahare-teal-kurma
+notes: |
+  Canonical Teal Kurma / SnappyTCP event. A fabricated July-2023
+  "Teal Kurma overview" sibling event resting on a phantom
+  source (PwC's generic CTI landing page) was deleted 2026-07-03
+  and merged here; the tr/unscoped/sea-turtle actor record now
+  cites this event's source. The spoofed organizations surfaced
+  by the same infrastructure (Alhurra, Al-Marsad, ANF) are
+  modeled as named-org targets in
+  2023-12/strikeready-sea-turtle-kurdish-news-spoofing; this
+  event carries the SnappyTCP campaign's sector-level
+  victimology per PwC. The January-2024 Hunt & Hackett Dutch-ISP
+  campaign (compromised-cPanel initial access) is a separate
+  disclosure — that detail was removed from this record in the
+  2026-07-04 audit because the PwC report does not carry it.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited 2026-07-04 against the RAW PwC report "The Tortoise and The
+    Malwahare" (pwc/2023-12_tortoise-and-malwahare-teal-kurma; live URL fetched
+    clean, HTTP 200, no redirect; snapshot 261,262 bytes; sha256
+    cb7dbe5d…0c696640, full hash in the source record). Canonical-event
+    context: the fabricated July-2023 "overview" sibling (phantom source = PwC
+    CTI landing page) was deleted 2026-07-03 and merged here; this audit makes
+    the survivor solid. Snapshot verified as the REAL article (byline
+    "December 05, 2023"; 16x SnappyTCP, 10x Teal Kurma, full IOC appendix).
+    [a] FACTS — verbatim-supported: SnappyTCP "previously not discussed
+    publicly"; "a simple reverse TCP shell for Linux/Unix that has basic C2
+    capabilities and is also used for establishing persistence on a system";
+    use window "Between 2021 and 2023"; "at least two main variants" (cleartext
+    vs OpenSSL/TLS); GitHub repo code "practically identical" with "realistic
+    probability" the account is actor-controlled; lo0[.]systemctl[.]network
+    /sy.php observed "as early as July 2021"; indicator overlap with the May
+    2022 Greek national CERT alert ("kyvernoasfaleia-IOCs-11052022"); domains
+    "resolving throughout 2023" spoofing Alhurra ("A US government-owned
+    Arabic-language TV channel"), Al-Marsad ("A NGO in the Golan Heights that
+    is focused on Arab human rights") and anfturkce[.]news ("A Kurdish news
+    agency"); tactic shift from "large scale and prolonged" DNS hijacking
+    ("Teal Kurma has altered its tactics to include additional tools").
+    REMOVED as unsupported: (1) "one 2023 intrusion using a compromised
+    legitimate cPanel account as initial access" — ZERO occurrences of cPanel
+    in the report; that detail is Hunt & Hackett's January-2024 Dutch-campaign
+    finding, a separate event (conflation inherited from the deleted sibling);
+    (2) "deliberately minimal implant … simplicity is the operational design …
+    blending into hosting-provider noise" — fabricated tradecraft embellishment
+    (the report says only "simple reverse TCP shell"; its self-containment
+    observation is about statically-linked GLIBC, nothing about hosting-provider
+    noise); (3) "confirmed continuity of Turkish state cyber tasking" —
+    over-claim (report says "Türkiye-nexus"; no state-tasking statement);
+    (4) the "March 2024 Microsoft MARBLED DUST telecom disclosure … three-pillar
+    2024 resurgence" cross-reference — not carried by this source, and the
+    msft/2024-03-05 source is unfetchable per the 2026-06-25 actor audit.
+    initial_vector valid-creds -> n-day: the report's only initial-access
+    statement is vulnerability exploitation "since at least 2017" and "likely
+    continued leveraging major CVEs … particularly ones with publicly available
+    proof-of-concept code such as CVE-2021-44228, CVE-2021-21974, and
+    CVE-2022-0847" (an assessed, "likely"-hedged vector — noted). incident_type
+    +espionage ("the focus is on conducting espionage"); data-theft kept per
+    "overall actions on objectives of collecting and exfiltrating sensitive
+    data".
+    [b] ATTRIBUTION — "PwC has continued to track a highly capable
+    Türkiye-nexus threat actor, known as Teal Kurma (a.k.a. Sea Turtle, Marbled
+    Dust, Cosmic Wolf)" — asserted without hedge as PwC's established tracking,
+    footnoted to Reuters (2020-01-27) and PwC's own CTO-SIB-20200323-01-A
+    ("Furthering Turkish state interests through cyber operations").
+    attributing_org_confidence high kept; auspex_assessment concur kept (nexus
+    independently corroborated per the actor record — Talos 2019
+    "state-sponsored", Hunt & Hackett 2024 "Turkey based", MISP-galaxy country
+    TR). attribution_date 2023-12-01 -> 2023-12-05.
+    [c] DATES — source published_on corrected 2023-12-01 -> 2023-12-05 (page
+    byline "December 05, 2023"); disclosure_date likewise. start_date
+    2021-01-01 kept as the year-floor of "Between 2021 and 2023" (infra live
+    "as early as July 2021"). end_date 2023-11-30 -> null: the operation is
+    NOT bounded — the report states linked infrastructure is "still active at
+    the time of writing"; the old value implied a bounded end no source
+    carries.
+    [d] DOCTRINE_LINKS — the kurdish-diaspora link kept at strongly_inferred
+    (NOT attested — correctly so: PwC names the proximate purpose, espionage
+    "exploited for surveillance purposes", plus a Kurdish-news-agency spoof,
+    but never states the counter-Kurdish-diaspora goal itself). Rewrote the
+    thin one-sentence reasoning; added inference_basis (4 signals + ruled_out
+    covering tr/mavi-vatan and the gulen-diaspora sibling pillar);
+    attesting_source_id set as the supporting source per schema semantics for
+    strongly_inferred links. perspective default (attacker-rationale) correct.
+    [e] ATTRIBUTION_LEVEL — added named-actor (named group + nation nexus, no
+    service/unit named), mirroring the Agrius/Tortoiseshell convention.
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves
+    (atlas/actors/tr/sea-turtle.yaml, itself audited 2026-06-25); this source
+    REINFORCES the unscoped placement (Türkiye-nexus only, no MIT/service
+    named). TARGETS: dangling FK orgs/sea-turtle-snappytcp-various (no registry
+    file; referenced only by this event) repointed to five source-carried
+    sector targets — "focuses on targeting governments, telecommunication, and
+    IT service providers" (sectors/government, sectors/ict/telecom,
+    sectors/ict/managed-services) and "the NGO and Media & Entertainment
+    sector" (sectors/civil-society/ngo, sectors/media), all role primary;
+    country left null because the report gives regions only (Europe / Middle
+    East / MENA / "European countries, particularly those located in the
+    Mediterranean"), no ISO-codeable victim country. Residual uncertainties:
+    initial access for the SnappyTCP intrusions is PwC-assessed ("likely"), not
+    forensically documented per victim; no victim organization is named
+    (sector/region level only); the 2021 start month is a floor estimate.
