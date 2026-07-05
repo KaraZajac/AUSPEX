@@ -5,46 +5,198 @@ disclosure_date: 2024-10-15
 end_date: 2024-09-30
 incident_type:
   - intrusion
+  - espionage
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky's Securelist team published a new long-form analysis
-  of SideWinder activity in 2024, documenting the StealerBot
-  modular post-exploitation framework and expanded targeting
-  beyond the canonical Pakistan-China set into the Middle East
-  (Saudi Arabia, UAE) and Africa. The reported expansion is
-  consistent with Indian interests in Indo-Pacific / Gulf
-  diplomatic and energy collection.
+  Kaspersky's Securelist team (Giampaolo Dedola, Vasily Berdnikov)
+  published a long-form analysis of new SideWinder attack waves,
+  dissecting the previously-undocumented "StealerBot" — a modular
+  .NET post-exploitation implant loaded only in memory (an
+  Orchestrator plus keylogger, screenshot grabber, file stealer,
+  credential stealer, credential phisher, token grabber, RDP and
+  live-console modules) — and a significant geographic expansion.
+  Kaspersky lists victims in Bangladesh, Djibouti, Jordan, Malaysia,
+  the Maldives, Myanmar, Nepal, Pakistan, Saudi Arabia, Sri Lanka,
+  Turkey and the United Arab Emirates, plus diplomatic-entity
+  targeting of Afghanistan, France, China, India, Indonesia and
+  Morocco; targeted sectors include government and military,
+  logistics, infrastructure, telecommunications, finance,
+  universities and oil-trading. Kaspersky attributes the activity to
+  "the SideWinder APT group with medium/high confidence" and names no
+  state operator (India appears in the report only as a victim of
+  diplomatic-entity targeting).
 false_flag_risk: none
 summary: |
-  The most recent significant SideWinder tradecraft disclosure
-  as of 2026. StealerBot is the headline new tooling — a
-  modular framework for credential, document, and email theft.
-  The Middle East and Africa targeting widens the operational
-  footprint relative to Group-IB's 2022 picture.
+  Kaspersky's October 2024 StealerBot report. The headline is
+  "StealerBot" — a modular .NET espionage implant that Kaspersky says
+  is the group's main post-exploitation tool, providing credential
+  theft, file/document theft, keylogging, screen capture, RDP and an
+  interactive live console (no email-theft module is described) — and
+  a marked geographic broadening: alongside SideWinder's canonical
+  Pakistan / Sri Lanka / China / Nepal target set, Kaspersky now
+  documents Middle East (Saudi Arabia, UAE, Jordan, Turkey) and
+  Africa (Djibouti; Morocco via diplomatic targeting) victims. That
+  widens the operational footprint relative to Group-IB's 2022
+  picture. Delivery remains spear-phishing with remote-template-
+  injection RTF exploiting CVE-2017-11882 and LNK / mshta chains.
 attributions:
   - actor_id: in/unscoped/sidewinder
     attributing_org: Kaspersky (Securelist)
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-10-15
     attribution_source_id: kaspersky/2024-10-15_sidewinder-stealerbot
+    notes: |
+      Verbatim: "We attribute these activities to the SideWinder APT
+      group with medium/high confidence." Kaspersky names the established
+      named group (SideWinder / T-APT-04 / RattleSnake) but no state
+      operator or unit — India appears only as a victim country of
+      diplomatic-entity targeting, hence actor is in/unscoped/sidewinder
+      and attribution_level is named-actor (group named, nation/unit not).
+      attributing_org_confidence set moderate (not high) to honestly
+      represent the source's hedged "medium/high" (never-upgrade).
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/diplomatic-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Gulf / Africa expansion fits the diplomatic-collection
-      pillar more comfortably than the Pakistan-military pillar;
-      Indian Indo-Pacific posture and energy interests align
-      with the new victim set.
+      SideWinder is the India-nexus espionage actor from which AUSPEX
+      reconstructed this regional-collection posture, and Kaspersky's
+      Oct-2024 victim list still contains the pillar's exact South Asian
+      government / diplomatic set — Afghanistan (diplomatic entities),
+      Sri Lanka, Nepal, Bangladesh, the Maldives and Pakistan — delivered
+      via country-specific government / diplomatic lures (a Nepal Oil
+      Corporation document; Hajj and spoofed Saudi Ministry-of-Foreign-
+      Affairs consulate themes). That continued targeting of regional
+      government and diplomatic bodies is what the diplomatic-collection
+      pillar encodes. The label is strongly_inferred, not attested,
+      because Kaspersky states no strategic purpose and does not even
+      name a state operator (it attributes only to "the SideWinder APT
+      group"). It is not downgraded to plausible because the in-region
+      South Asian core is unambiguous; note, however, that the report's
+      headline expansion into the Gulf (Saudi Arabia, UAE, Jordan,
+      Turkey) and Africa (Djibouti, Morocco) sits beyond this regional
+      doctrine's stated Pakistan / Afghanistan / China / Sri Lanka scope
+      and is not the basis for the link.
+    attesting_source_id: kaspersky/2024-10-15_sidewinder-stealerbot
+    inference_basis:
+      signals:
+        - "Continued targeting of the pillar's South Asian set: Kaspersky's Oct-2024 victim list includes Afghanistan (diplomatic entities), Sri Lanka, Nepal, Bangladesh, the Maldives and Pakistan."
+        - "Actor-mission fit: SideWinder is the India-nexus espionage group from which this regional-collection posture was reconstructed; its regional government / military / diplomatic collection mission is unchanged."
+        - "Tradecraft fit: country-specific government / diplomatic lures (a Nepal Oil Corporation document; Hajj and spoofed Saudi-MOFA consulate themes) indicate diplomatic-collection tasking rather than opportunistic crime."
+      ruled_out: "pakistan-military pillar — the Oct-2024 wave's documented victims skew to civilian government and diplomatic entities across the region (and to new Gulf / Africa / Turkey / Europe states) rather than specifically Pakistani military targets, so the diplomatic-collection pillar fits better."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/gulf-states-various
+  - target_id: sectors/government
+    country: null
     role: primary
-  - target_id: orgs/african-states-various
+  - target_id: sectors/defense
+    country: null
+    role: primary
+  - target_id: sectors/transport/logistics
+    country: null
+    role: primary
+  - target_id: sectors/ict/telecom
+    country: null
+    role: primary
+  - target_id: sectors/finance
+    country: null
+    role: primary
+  - target_id: sectors/academic
+    country: null
+    role: primary
+  - target_id: sectors/energy/oil-gas
+    country: null
     role: primary
 sources:
   - kaspersky/2024-10-15_sidewinder-stealerbot
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited against the RAW Kaspersky Securelist report "SideWinder APT's
+    post-exploitation framework analysis" (authors Dedola & Berdnikov),
+    raw_snapshot kaspersky__2024-10-15_sidewinder-stealerbot.html,
+    sha256 2c3a6883…f7af4537, 373,244 bytes — hash RE-VERIFIED, matches
+    the source record's content_sha256. Real article confirmed (not a
+    phantom): <title> "SideWinder APT's post-exploitation framework
+    analysis | Securelist"; meta description "new targets in the Middle
+    East and Africa, post-exploitation tools and techniques".
+    [a] FACTS — StealerBot: verbatim "StealerBot is a name assigned by
+    the attacker to a modular implant developed with .NET to perform
+    espionage activities"; modules enumerated in the report = Orchestrator,
+    Keylogger, Screenshot Grabber, File Stealer, Live Console, RDP,
+    Credential Stealer, Token Grabber, Credential Phisher, UACBypass,
+    Downloader, Installers. CORRECTION: summary previously claimed a
+    framework "for credential, document, and EMAIL theft" — email theft is
+    UNSUPPORTED (the only 'email'/'e-mail' strings in the raw are the
+    spear-phishing DELIVERY vector, a C2 domain 'mofa[.]email', and
+    Kaspersky newsletter boilerplate; there is no email-stealer module).
+    Stripped "email"; rewrote capabilities to the source-carried set
+    (credential/file-document theft, keylog, screen capture, RDP, live
+    console). CORRECTION: summary claimed "most recent significant
+    SideWinder disclosure as of 2026" — FALSE; the raw's own recirculation
+    carries later reports ("SideWinder targets the maritime and nuclear
+    sectors…" and "SideWinder Beyond the Surface"), and sibling events
+    2024-07 and 2025-04 post-date this. Stripped that claim. Infection
+    vector verbatim "spear-phishing email with an attachment", RTF via
+    remote template injection "forged to exploit CVE-2017-11882", LNK →
+    mshta chains — all source-carried (initial_vector: phishing ✓). Added
+    incident_type espionage (report frames StealerBot as espionage).
+    [b] ATTRIBUTION — verbatim "We attribute these activities to the
+    SideWinder APT group with medium/high confidence." CORRECTION:
+    attributing_org_confidence high → MODERATE (source hedges "medium/high";
+    never-upgrade). Added attribution_level: named-actor (established named
+    group named; no nation/unit — India appears ONLY as a victim country:
+    "diplomatic entities in … Afghanistan, France, China, India, Indonesia
+    and Morocco"). auspex_assessment concur retained. Added attribution
+    notes with the verbatim quote.
+    [c] DATES — source datePublished "2024-10-15T10:00:54+00:00" (+ byline
+    "15 Oct 2024") ⇒ disclosure_date 2024-10-15 ✓ and source published_on
+    ✓. start_date 2024-01-01 / end_date 2024-09-30 are best-estimates for
+    the 2024 wave: the report states NO precise operation start/end; nearest
+    anchor is a Hajj-2024 (June 2024) lure and this being a 2024 follow-on
+    to the July-2024 report. Kept as estimates (schema allows), not tightened
+    to avoid inventing a specific unsourced date.
+    [d] DOCTRINE — link kept strongly_inferred (NOT attested: Kaspersky
+    states no purpose and names no state operator). Rewrote reasoning to
+    rest on the in-pillar South Asian government/diplomatic targeting the
+    report actually documents (Afghanistan/Sri Lanka/Nepal/Bangladesh/
+    Maldives/Pakistan) rather than the previous Gulf/Africa "energy
+    collection" framing, which over-reached beyond the regional doctrine's
+    scope and imputed a motive the source does not state. Added
+    inference_basis {signals[], ruled_out} and attesting_source_id (as the
+    supporting source; permitted on strongly_inferred). Actor-state (in) =
+    doctrine-state (in): attacker-rationale, no perspective tag, no
+    doctrine-state-mismatch.
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+    [f] ACTOR_ID — in/unscoped/sidewinder resolves (atlas/actors/in/
+    sidewinder.yaml) and placement is CORRECT: no cited source (incl. this
+    one) names the NTRO/an Indian service; India-nexus is well-supported at
+    named-actor level only. No actor edit needed.
+    TARGETS — CORRECTION (fabrication-class defect): the two prior targets
+    orgs/gulf-states-various and orgs/african-states-various are DANGLING FKs
+    (no registry file defines either; referenced by no other record) and are
+    unsupported "various"-org placeholders — the report names NO victim
+    organizations, only countries and sectors. Replaced with the sectors the
+    report explicitly enumerates ("government and military entities,
+    logistics, infrastructure and telecommunications companies, financial
+    institutions, universities and oil trading companies"): sectors/government,
+    sectors/defense, sectors/transport/logistics, sectors/ict/telecom,
+    sectors/finance, sectors/academic, sectors/energy/oil-gas — role primary,
+    country null (multi-country spread; the 12 victim + 6 diplomatic countries
+    are carried in the prose). This matches the 2024-07 SideWinder sibling's
+    sector-target modeling. Victim geography moved into outcome_summary
+    verbatim from the report's Victims section.
+    RESIDUAL / FLAGS: (1) source record's own notes assert this event
+    absorbed a deleted "2024-01/sidewinder-bhutan-bangladesh-continuation"
+    fragment on 2026-07-04 — this event's git history (2 commits, none dated
+    2026-07-04) and content show no such merge; the Bhutan/Bangladesh
+    material is not present here. Flagged for orchestrator. (2) start/end
+    dates are estimates, not source-stated.

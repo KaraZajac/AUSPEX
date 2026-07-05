@@ -2,49 +2,180 @@ id: 2024-06/synnovis-qilin-london-nhs
 name: Qilin ransomware against Synnovis (London NHS pathology)
 start_date: 2024-06-03
 disclosure_date: 2024-06-04
-end_date: 2024-09-30
+end_date: 2024-12-31
 incident_type:
   - ransomware
-  - disruption
+  - extortion
   - data-theft
+  - disruption
 initial_vector: unknown
 outcome_summary: |
   Qilin ransomware intrusion against Synnovis, the pathology-
-  services joint venture supplying Guy's and St Thomas' NHS
-  Foundation Trust, King's College Hospital NHS Foundation Trust,
-  and primary care across south-east London. Blood transfusion,
-  microbiology, and pathology services were suspended across
-  multiple London hospitals for over a week, forcing a critical-
-  incident declaration. NHS England subsequently confirmed
-  approximately 1,700 elective procedures and 10,000 outpatient
-  appointments were cancelled. Patient blood-test data
-  (~400GB) was published on Qilin's leak site after Synnovis
-  refused payment.
+  services joint venture supplying Guy's and St Thomas' and King's
+  College Hospital NHS Foundation Trusts and primary care across
+  south-east London. Pathology services — blood transfusion in
+  particular — were suspended across the affected hospitals,
+  forcing a critical-incident declaration; blood testing in the
+  capital fell to around 10% of normal levels and the NHS launched
+  a nationwide appeal for O-type blood donors. In the first 13
+  days the two worst-hit trusts cancelled 1,134 planned operations
+  and 2,194 outpatient appointments, and NHS England ultimately
+  confirmed delays to over 11,000 outpatient and elective-procedure
+  appointments. After Synnovis did not pay a US$50 million ransom,
+  Qilin published roughly 400 GB of stolen data on 20 June 2024;
+  the breach was later found to affect more than 900,000 people.
+  In June 2025 King's College Hospital NHS Foundation Trust
+  confirmed the attack contributed to a patient's death. NHS
+  England reported services were fully restored by December 2024.
 quantified_impact:
-  procedures_cancelled: 1700
-  appointments_cancelled: 10000
+  appointments_procedures_delayed: 11000
+  operations_cancelled_first_13_days: 1134
+  outpatient_appointments_cancelled_first_13_days: 2194
   data_exfiltrated_gb: 400
+  ransom_demand_usd: 50000000
+  individuals_affected: 900000
+  patient_deaths_contributed: 1
 false_flag_risk: none
 summary: |
-  The Synnovis incident is the most clinically disruptive single
-  ransomware event in UK NHS history. Qilin's affiliate base
-  operates a Rust-language encryptor (originally Go, ported in
-  early 2023) on an 80/20 affiliate-favorable economic model.
-  No public state-nexus attribution exists for Qilin; the
-  operator's victim selection in 2024-25 includes targets that
-  Russian-state-tolerated RaaS programs typically avoid (Russian-
-  language media via Lee Enterprises Eastern Europe subsidiaries),
-  weakening any FSB-tolerance hypothesis.
+  On 3 June 2024 the Qilin ransomware operation encrypted systems
+  at Synnovis — the NHS pathology-services joint venture serving
+  Guy's and St Thomas' and King's College Hospital NHS Foundation
+  Trusts and primary care across south-east London. Pathology
+  services, and blood transfusion in particular, were suspended
+  across the affected hospitals, forcing critical-incident
+  declarations. Former NCSC chief executive Ciaran Martin publicly
+  attributed the attack to Qilin — "a Russian group of cyber
+  criminals who call themselves Qilin" — and the gang self-claimed
+  by publishing stolen data on its dark-web leak site. Qilin
+  demanded a US$50 million ransom (per its own statement to
+  Bloomberg); when Synnovis did not pay, on 20 June 2024 the gang
+  published roughly 400 GB of stolen pathology data, later found
+  to affect more than 900,000 people. NHS England confirmed the
+  incident delayed over 11,000 outpatient and elective-procedure
+  appointments, and in June 2025 King's College Hospital NHS
+  Foundation Trust confirmed the attack contributed to a patient's
+  death (a long wait for a blood-test result being a contributing
+  factor). No state-nexus attribution has been published for Qilin
+  — a financially-motivated ransomware-as-a-service operation — so
+  AUSPEX places it under criminal/ rather than ru/proxies/.
 attributions:
   - actor_id: criminal/qilin
-    attributing_org: NHS England + journalism consensus
+    attributing_org: Qilin (leak-site self-claim) + UK NCSC (Ciaran Martin) and journalism consensus
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-06-04
-    attribution_source_id: ncsc-uk/2024-06-04_synnovis-qilin-statement
+    attribution_date: 2024-06-05
+    attribution_source_id: bleepingcomputer/2024-06-05_qilin-london-hospitals
+    notes: |
+      Former NCSC CEO Ciaran Martin, 2024-06-05: "We believe it is a Russian
+      group of cyber criminals who call themselves Qilin" (BBC Radio 4, via
+      BleepingComputer). Qilin self-claimed by publishing ~400 GB of Synnovis
+      data on its leak site on 20 June 2024 after a US$50M ransom went unpaid.
+      named-actor: a criminal group is named, but no state service or nexus is
+      published — so the actor is placed criminal/qilin, not ru/proxies.
 doctrine_links: []
 targets:
   - target_id: orgs/synnovis
     role: primary
+    country: uk
+    outcome: |
+      Multi-week suspension of pathology / blood-transfusion services across
+      south-east London NHS trusts; >11,000 appointments delayed; ~400 GB
+      leaked affecting >900,000 people; attack contributed to one patient death.
 sources:
   - ncsc-uk/2024-06-04_synnovis-qilin-statement
+  - bleepingcomputer/2024-06-05_qilin-london-hospitals
+  - therecord/2025-06-25_ransomware-contributed-patient-death
+  - scworld/2024-06-19_synnovis-50m-ransom
+  - hipaajournal/2025-11-12_synnovis-care-disrupted
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Full 6-point audit vs RAW snapshots of five sources (the legacy single
+    NHS England citation had url:null and did not itself name the actor; the
+    event was re-sourced — "badrabbit model" — against reachable primaries).
+    Snapshots (sha first8…last8 / bytes):
+      - ncsc-uk/2024-06-04_synnovis-qilin-statement (NHS England, PRIMARY)
+        fa511db5…9b79f57a / 35,726
+      - bleepingcomputer/2024-06-05_qilin-london-hospitals  d2fef310…6a5698cc / 89,416
+      - therecord/2025-06-25_ransomware-contributed-patient-death  63eac40b…d8f859fa / 85,659
+      - scworld/2024-06-19_synnovis-50m-ransom  961c94ab…1196c4cc / 98,584
+      - hipaajournal/2025-11-12_synnovis-care-disrupted  fd0a9d19…88bd3061 / 454,691
+
+    [a] FACTS — corrected & now source-carried:
+     • Attack date 3 Jun 2024 ✓ NHS England: "On 3 June 2024, Synnovis was the
+       victim of a ransomware cyber-attack".
+     • end_date 2024-09-30 → 2024-12-31. NHS England: "services were fully
+       restored by December 2024" (month-precision; set to end of Dec).
+     • Scale re-anchored. DROPPED the un-snapshotted "~1,700 elective / ~10,000
+       outpatient" split. Now: NHS England "delays to over 11,000 outpatient and
+       elective procedure appointments" (floor 11,000) + first-13-days 1,134
+       operations + 2,194 outpatient (HIPAA/BleepingComputer). Blood testing "at
+       around 10% of normal levels"; "nationwide appeal … for O blood-type
+       donors" / "shortage of O-negative blood" (HIPAA). "critical incident …
+       declared" (BleepingComputer, HIPAA).
+     • ADDED, each carried: US$50M demand (SC Media: "demanded by the Qilin
+       ransomware gang to provide $50 million in ransom"; HIPAA: "$50 million …
+       within 120 hours", from Qilin→Bloomberg). Leak 20 Jun 2024 of ~400 GB
+       (NHS England leak date; HIPAA "Qilin uploaded 400 GB … to its dark web
+       data leak site"). >900,000 people affected (The Record). Patient death
+       (The Record / King's College Hospital: "a number of contributing factors
+       that led to the patient's death … a long wait for a blood test result
+       due to the cyber-attack").
+     • STRIPPED unsupported/embellished claims from the old summary: (1) the
+       "80/20 affiliate-favorable economic model"; (2) actor tradecraft "Rust
+       encryptor (originally Go, ported early 2023)" — neither is carried by any
+       event source (they live in the actor record); (3) the "Russian-language
+       media via Lee Enterprises Eastern Europe subsidiaries, weakening any
+       FSB-tolerance hypothesis" clause — Lee Enterprises is a US local-newspaper
+       publisher; the "Eastern Europe subsidiaries / Russian-language media"
+       description is unsupported and appears fabricated. (4) "the most
+       clinically disruptive single ransomware event in UK NHS history" — no
+       snapshot carries a "first"/"most" claim, so the superlative was removed;
+       the death + scale carry severity without it.
+     • initial_vector kept "unknown". Qilin claimed to Bloomberg it used a
+       zero-day but "did not state what vulnerability" and no vendor confirmed —
+       an unverified attacker self-claim, so 0-day is NOT asserted.
+     • incident_type: added "extortion" (US$50M demand + double-extortion leak);
+       ransomware/data-theft/disruption retained.
+
+    [b] ATTRIBUTION — corrected. The old attribution_source_id was the NHS
+    England statement, which NEVER names Qilin (grep of the snapshot finds no
+    "Qilin"). Re-pointed to bleepingcomputer/2024-06-05_qilin-london-hospitals,
+    which carries the actual naming — NCSC's Ciaran Martin: "We believe it is a
+    Russian group of cyber criminals who call themselves Qilin" — plus the
+    gang's leak-site self-claim (publishing the data). Rewrote attributing_org
+    to "Qilin (leak-site self-claim) + UK NCSC (Ciaran Martin) and journalism
+    consensus"; attribution_date 2024-06-04 → 2024-06-05. Confidence HIGH and
+    auspex_assessment concur RETAINED (authoritative govt naming + gang
+    self-claim = high; not over-attested).
+
+    [c] DATES — start 2024-06-03 ✓, disclosure 2024-06-04 ✓ (kept), end
+    corrected to 2024-12-31 (above). Each source's published_on set to its true
+    date: BleepingComputer datePublished 2024-06-05; The Record 2025-06-25; SC
+    Media 2024-06-19; HIPAA datePublished 2025-11-12 (a running write-up — NOT a
+    June-2024 piece; the initial draft slug was corrected before writing).
+
+    [d] DOCTRINE_LINKS — [] retained and correct. Qilin is apolitical,
+    financially-motivated crime; no doctrine genuinely applies and no source
+    states a strategic purpose, so no link is invented (no attested claim).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (a named criminal group; no state
+    service/unit named — consistent with criminal/ placement).
+
+    [f] ACTOR_ID — criminal/qilin resolves to atlas/actors/criminal/qilin.yaml
+    ✓. Placement under criminal/ (not ru/proxies/) is consistent with the
+    evidence: Ciaran Martin calls Qilin "a Russian group of cyber criminals"
+    (geography, not tasking) and no FSB-tolerance attribution is published.
+    Directionality verified: perpetrator criminal/qilin (no state) → victim
+    orgs/synnovis (nation_state_id uk); added country: uk to the target.
+
+    Residual uncertainties: (i) end_date is month-precise only ("by December
+    2024"); (ii) the $50M and zero-day details originate from Qilin's own
+    statement to Bloomberg — $50M is corroborated (SC Media/HIPAA), the zero-day
+    is not (→ initial_vector unknown); (iii) "over 11,000" is a floor — the
+    circulated granular split (~1,710 elective / 10,152 outpatient) was in no
+    captured snapshot and was deliberately not asserted.

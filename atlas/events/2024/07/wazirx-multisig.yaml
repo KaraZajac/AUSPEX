@@ -1,5 +1,5 @@
 id: 2024-07/wazirx-multisig
-name: WazirX multisig wallet drain (Liminal compromise)
+name: WazirX multisig wallet drain (Gnosis Safe signing-interface manipulation)
 start_date: 2024-07-18
 disclosure_date: 2024-07-18
 end_date: 2024-07-18
@@ -8,63 +8,207 @@ incident_type:
   - supply-chain
 initial_vector: supply-chain
 outcome_summary: |
-  Approximately USD 235M drained from a WazirX
-  Liminal-managed multisig wallet via compromise of the
-  custody-vendor's signing workflow. Vector: attacker
-  obtained sufficient multisig signatures to authorize
-  fraudulent withdrawals, attributed to private-key
-  exfiltration upstream of WazirX itself. Elliptic and TRM
-  Labs published on-chain attribution to Lazarus within
-  days.
+  Approximately USD 235M drained from a WazirX-controlled
+  Gnosis Safe multisig wallet (4-of-6; five keys held by
+  WazirX, one by custody vendor Liminal). Vector: eight days
+  before the drain the attacker deployed a malicious smart
+  contract, then exploited a discrepancy between the
+  transaction shown in the Liminal signing interface and the
+  actual transaction payload, causing the co-signers to
+  approve a benign-looking transaction that in fact replaced
+  the Safe with the attacker's contract — signing-interface /
+  blind-signing manipulation, not private-key theft. Elliptic
+  assessed on-chain that the hack was "perpetrated by hackers
+  affiliated with North Korea"; the United States and Republic
+  of Korea later attributed the $235M theft to the DPRK in a
+  14 January 2025 trilateral joint statement (issued with
+  Japan). WazirX and Liminal publicly blamed each other for
+  the compromise.
 quantified_impact:
   usd_stolen: 235000000
   asset_classes:
-    - ETH
-    - USDT
     - SHIB
+    - ETH
     - MATIC
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Defining 2024 Lazarus operation against the South Asian
-  exchange perimeter. Vendor-attributed (Elliptic, TRM)
-  rather than US-government-attested, but the
-  Liminal-side supply-chain compromise pattern matches
-  the same DMM-via-Ginco tradecraft attested by FBI / NPA
-  in December 2024 — both 2024 operations leveraged a
-  custodial wallet vendor as the upstream pivot rather
-  than targeting the exchange directly. WazirX subsequently
-  paused withdrawals and entered a multi-month
-  restructuring; user fund recovery is partial.
+  One of the defining 2024 DPRK-attributed crypto-exchange
+  thefts. ~$235M (more than 200 different assets — Elliptic
+  itemizes ~$96.7M Shiba Inu, ~$52.6M Ether, ~$11M Matic) was
+  drained from a WazirX Gnosis Safe multisig by manipulating
+  the signing workflow: a payload/interface-display
+  discrepancy caused the legitimate co-signers to approve a
+  malicious contract-upgrade transaction, with the attacker's
+  contract staged eight days in advance. Attribution developed
+  with latency: on-chain analytics firm Elliptic assessed the
+  hack as North Korea-affiliated within a day (moderate;
+  on-chain heuristics; it did NOT name Lazarus), and the US
+  and ROK governments formally attributed the $235M theft to
+  the DPRK in the 14 Jan 2025 trilateral joint statement,
+  which also states the DPRK's crypto-theft proceeds fund its
+  "unlawful weapons of mass destruction and ballistic missile
+  programs" and names the Lazarus Group as a designated DPRK
+  threat group. Whether the compromise sat on Liminal's
+  custody infrastructure or WazirX's own signing environment
+  is disputed — the two publicly blamed each other — so the
+  "upstream custody-vendor supply-chain pivot" reading
+  (cf. DMM/Ginco) is one interpretation, not an established
+  fact. WazirX paused withdrawals and entered a
+  Singapore-supervised restructuring; user recovery remains
+  ongoing.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: Elliptic
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-07-19
     attribution_source_id: elliptic/2024-07-19_wazirx-lazarus
     notes: |
-      Elliptic clustering attribution by wallet-flow
-      overlap with prior DPRK-attributed laundering
-      addresses. No US-government PSA published for
-      WazirX specifically.
+      On-chain attribution only. Elliptic (verbatim): "On-chain
+      analysis and other information reviewed by Elliptic
+      indicates that this hack was perpetrated by hackers
+      affiliated with North Korea" — nation-level ("North
+      Korea"), NOT a named group: the blog does not mention
+      "Lazarus" anywhere. Confidence moderate ("indicates" +
+      on-chain heuristics). Prior AUSPEX text claiming an
+      "Elliptic clustering attribution to Lazarus" at high
+      confidence overstated the source; corrected 2026-07-05.
+  - actor_id: kp/rgb/lazarus
+    attributing_org: US Department of State + Republic of Korea (trilateral joint statement with Japan)
+    attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur
+    attribution_date: 2025-01-14
+    attribution_source_id: state/2025-01-14_dprk-crypto-theft-joint-statement
+    notes: |
+      Two-government formal attribution (verbatim): "The United
+      States and Republic of Korea additionally attribute to the
+      DPRK, based on detailed industry analysis, thefts last
+      year against WazirX for $235 million." Attribution is to
+      "the DPRK" (nation) for WazirX specifically; the same
+      statement names "the Lazarus Group" as a designated DPRK
+      threat group generally, but does not tie a named group to
+      WazirX in the WazirX sentence — hence attribution_level
+      nation. AUSPEX buckets DPRK financial-cyber under the
+      kp/rgb/lazarus umbrella, which the statement names as the
+      responsible DPRK crypto-theft group.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Tradecraft (custody-vendor supply-chain pivot,
-      multi-sig key exfiltration) and proceeds-laundering
-      cluster overlap with attested 2024 DPRK operations
-      (DMM Bitcoin). No standalone WMD-financing
-      attestation specific to WazirX, but the doctrinal
-      pattern is identical.
+      The 14 Jan 2025 US-ROK-Japan joint statement both (a)
+      attributes the $235M WazirX theft to the DPRK and (b)
+      states, in the same document, the terminal goal the
+      proceeds serve — "denying the DPRK illicit revenue for its
+      unlawful weapons of mass destruction and ballistic missile
+      programs" — the WMD / ballistic-missile-financing end that
+      the 8th-Congress defense plan encodes. This is the
+      standardized government WMD-financing language the doctrine
+      file names as the attested bar (the Treasury/OFAC pattern),
+      stated in the event's own cited source for this named
+      theft. attested, not merely strongly_inferred — the
+      contrast is the DMM-Bitcoin and Bybit FBI PSAs, which
+      stated only the proximate "generate revenue for the regime"
+      and were held at strongly_inferred.
     contested: false
     analyst: claude
+    attesting_source_id: state/2025-01-14_dprk-crypto-theft-joint-statement
+    inference_basis:
+      source_id: state/2025-01-14_dprk-crypto-theft-joint-statement
+      source_quote: "Our three governments strive together to prevent thefts, including from private industry, by the DPRK and to recover stolen funds with the ultimate goal of denying the DPRK illicit revenue for its unlawful weapons of mass destruction and ballistic missile programs."
 targets:
   - target_id: orgs/wazirx
     role: primary
-    outcome: ~$235M drained from Liminal-managed multisig wallet.
+    country: in
+    outcome: ~$235M drained from a WazirX Gnosis Safe multisig (4-of-6) via signing-interface payload manipulation.
 sources:
   - elliptic/2024-07-19_wazirx-lazarus
+  - state/2025-01-14_dprk-crypto-theft-joint-statement
+  - halborn/2024-07-23_explained-wazirx-hack-july-2024
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION -> RE-SOURCE (+ attribution recalibration + doctrine upgrade). The
+    sole prior citation (elliptic/2024-07-19_wazirx-lazarus) was url:null and unverifiable
+    (phantom-class); the incident is real and well-documented, so re-sourced to three
+    reachable, hashed primaries: Elliptic "$235 million lost by WazirX in North Korea-linked
+    breach" (url filled; snapshot c55c6dc9..dbe2079b, 322,862 bytes, pub 2024-07-19);
+    US-ROK-Japan State Dept "Joint Statement on Cryptocurrency Thefts by the DPRK..." (NEW
+    govt-primary; 57d11694..d74ebdca, 147,040 bytes, pub 2025-01-14); Halborn "Explained: The
+    WazirX Hack (July 2024)" (NEW vendor-research; 06350e5c..a7f6e2039, 233,118 bytes, pub
+    2024-07-23).
+
+    [a] FACTS. Amount $235M CONFIRMED (Elliptic "$235 million"; State Dept "WazirX for $235
+    million"; Halborn "nearly $235 million"; Wikipedia $234.9M). VECTOR CORRECTED — the prior
+    outcome_summary claimed "private-key exfiltration upstream of WazirX itself," which is
+    WRONG. Halborn: 4-of-6 Gnosis Safe, "Five keys held by WazirX; one key controlled by
+    Liminal"; attacker exploited "discrepancies between how a transaction appeared in the
+    Liminal interface and the actual transaction data," submitting "a transaction that
+    appeared benign - causing the four parties to sign it - while including the malicious
+    payload"; malicious contract "deployed by the attacker eight days earlier." So the
+    mechanism is signing-interface/blind-signing manipulation (co-signers signed with their
+    real keys) — NOT key theft. asset_classes [ETH,USDT,SHIB,MATIC] -> [SHIB,ETH,MATIC]:
+    Elliptic itemizes "more than 200 different assets, including around $96.7m of Shiba Inu,
+    $52.6m of Ether, $11 million of Matic"; USDT is carried by no hashed source (count 0 in
+    the Elliptic snapshot) -> dropped. Added the WazirX<->Liminal blame dispute (Halborn does
+    not assign compromise to either party). Removed the unsupported "TRM Labs published
+    on-chain attribution to Lazarus" (no TRM source snapshotted; and see [b]).
+
+    [b] ATTRIBUTION — load-bearing recalibration (task: attribution care). Prior: single
+    Elliptic entry, kp/rgb/lazarus at HIGH, "Elliptic clustering attribution ... to Lazarus."
+    OVERSTATED: the Elliptic snapshot says (verbatim) "On-chain analysis and other information
+    reviewed by Elliptic indicates that this hack was perpetrated by hackers affiliated with
+    North Korea" and does NOT mention "Lazarus" anywhere (term count 0). Elliptic reached
+    NATION-level ("North Korea"), MODERATE confidence ("indicates" + on-chain heuristics) —
+    downgraded high->moderate, attribution_level nation, assessment concur->concur-with-caveat.
+    BUT firm DPRK attribution IS supported (not "only Elliptic"): added a second dated entry
+    for the 14 Jan 2025 US-ROK-Japan joint statement (verbatim) "The United States and
+    Republic of Korea additionally attribute to the DPRK, based on detailed industry analysis,
+    thefts last year against WazirX for $235 million" — govt, HIGH, attribution_level nation
+    (WazirX attributed to "the DPRK"; the statement names "the Lazarus Group" only generally,
+    not in the WazirX sentence). actor kp/rgb/lazarus KEPT (corpus DPRK-financial umbrella,
+    which the statement names as the responsible DPRK crypto group); incident-specific
+    granularity is nation on both entries. The two entries capture the attribution latency
+    (on-chain vendor Jul-2024 -> two-government Jan-2025).
+
+    [c] DATES. start/disclosure/end 2024-07-18 CONFIRMED (breach 18 Jul 2024). Source
+    published_on set to actual pub dates: Elliptic 2024-07-19 (slug retained; blog dates the
+    breach 18 Jul), State Dept 2025-01-14 (datePublished 2025-01-14T13:36:32+00:00), Halborn
+    2024-07-23 (earliest page ISO timestamp 2024-07-23T08:20:09). No date-sanity issues.
+
+    [d] DOCTRINE_LINKS — UPGRADED strongly_inferred -> attested. The event's own cited govt
+    source states the terminal goal in substance (verbatim): "...to recover stolen funds with
+    the ultimate goal of denying the DPRK illicit revenue for its unlawful weapons of mass
+    destruction and ballistic missile programs," AND names WazirX among the thefts attributed
+    to the DPRK. This is the standardized-WMD-language attested bar the doctrine file spells
+    out (Treasury/OFAC pattern) — distinct from DMM/Bybit (held strongly_inferred) whose FBI
+    PSAs stated only proximate "generate revenue for the regime." Set attesting_source_id +
+    inference_basis {source_quote, source_id} to the joint statement. All three FKs
+    (doctrine/pillar/program) resolve; contested false; perspective attacker-rationale (default).
+
+    [e] ATTRIBUTION_LEVEL — set nation on both entries (sources reach "North Korea"/"the DPRK"
+    for this specific theft; no source names a group for the WazirX incident itself).
+
+    [f] ACTOR_ID — kp/rgb/lazarus RESOLVES (atlas/actors/kp/lazarus.yaml declares id
+    kp/rgb/lazarus; file path is flatter than the id, as with siblings). Actor record carries
+    a 2026-06-25 audit confirming the RGB service placement for the Lazarus umbrella. No actor
+    edit.
+
+    FLAGS: (1) targets/orgs/wazirx.yaml has sources: [] and a summary asserting "multiple
+    Elliptic / TRM blockchain attributions to the DPRK Lazarus Group" — same Lazarus/TRM
+    overstatement + unsourced; recommend aligning it to nation-level DPRK and adding the
+    joint-statement source (target-registry files out of scope for this audit). (2) The prior
+    elliptic source title referenced a "laundering" follow-up post; url filled to the live
+    "North Korea-linked breach" attribution post actually snapshotted, title corrected to
+    match. RESIDUALS: the ~$7.6M 4th asset in Elliptic's list is not fully legible in the
+    snapshot, so asset_classes lists only the three assets Elliptic names with dollar values;
+    whether Liminal's or WazirX's environment was breached is genuinely disputed and left
+    unresolved in prose; initial_vector kept supply-chain (subverted third-party signing
+    workflow + pre-staged contract) with the dispute flagged.

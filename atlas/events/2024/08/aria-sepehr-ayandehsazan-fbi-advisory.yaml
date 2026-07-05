@@ -1,87 +1,341 @@
 id: 2024-08/aria-sepehr-ayandehsazan-fbi-advisory
-name: FBI / CISA advisory on Aria Sepehr Ayandehsazan (Emennet Pasargad re-brand)
-start_date: 2024-01-01
-disclosure_date: 2024-08-14
-end_date: 2024-11-30
+name: FBI / Treasury / INCD advisory on Aria Sepehr Ayandehsazan (Emennet Pasargad re-brand)
+start_date: 2023-10-07  # advisory anchors the documented IO wave to "following the October 7, 2023 HAMAS attack"; infra (Server-Speed) documented from ~April/mid-2023
+disclosure_date: 2024-10-30  # Version History "October 30, 2024: Initial version"; Product ID JCSA-20241030-001 / AA24-233A
+end_date: 2024-10-30  # advisory evidence horizon (all IOCs <= Oct 2024); op assessed ongoing (advisory warns of future ops)
 incident_type:
   - influence-operation
   - intrusion
-initial_vector: phishing
+initial_vector: n-day  # SQLMap / SQL-injection of public-facing apps + CVE-2023-38831 weaponization (advisory Tables 2-3); advisory documents NO phishing
 outcome_summary: |
-  FBI / CISA joint advisory named Aria Sepehr Ayandehsazan as
-  the IRGC contractor operating influence and intrusion
-  campaigns against the 2024 US election and Israeli
-  organizations. Spoofed personas, hack-and-leak, mass-email
-  coercion — the Emennet Pasargad operational playbook
-  rebranded.
-false_flag_risk: suspected  # persona spoofing of US groups
+  Joint FBI / U.S. Treasury / Israel National Cyber Directorate
+  advisory (AA24-233A, 30 Oct 2024) warning of new tradecraft by
+  the Iranian cyber group Emennet Pasargad, operating under the
+  cover company Aria Sepehr Ayandehsazan (ASA) and tracked by the
+  private sector as Cotton Sandstorm / Marnanbridge / Haywire
+  Kitten. It documents cyber-enabled information operations run
+  through a myriad of cover personas — concentrated on the
+  Israel-Hamas conflict after 7 Oct 2023 (threat-SMS to hostage
+  families as "Contact-HSTG"; "Cyber Flood"; "Cyber Court"
+  hacktivist fronts), a July 2024 compromise of a French dynamic-
+  display provider to denounce Israeli Olympic athletes under a
+  spoofed "Regiment GUD" persona, and a Dec 2023 hijack of a US
+  IPTV service ("For-Humanity") using an AI-generated news anchor.
+  Microsoft reporting cited in the advisory notes ASA scouting US
+  election-related websites and media, suggesting preparation for
+  future influence operations.
+false_flag_risk: suspected  # cover personas + impersonation of the real French far-right group GUD ("Regiment GUD") and ASA-run hacktivist fronts (advisory); attribution to ASA itself is firm
 summary: |
-  Companion event to the IRGC trio Trump-campaign hack-and-leak
-  — the FBI advisory establishes that the broader 2024-election
-  influence ecosystem ran through the rebranded contractor. The
-  advisory documents Aria Sepehr Ayandehsazan / Emennet Pasargad
-  / Mint Sandstorm tradecraft: spear-phishing with credential-
-  harvesting links, targeted social-engineering against political-
-  campaign and Israeli-civil-society staff (LinkedIn / WhatsApp
-  pretexting), abuse of cloud-mail providers for mass-email
-  coercion campaigns, hack-and-leak via spoofed US grassroots
-  personas (e.g., "Enemies of the People", "Hometown Hero"), and
-  follow-on PowerShell-based implants in the broader Mint
-  Sandstorm / CharmPower / POWERSTAR toolset. Operators staged
-  exfiltrated data through hosting infrastructure designed to
-  give the persona a "civic" appearance while laundering IRGC
-  direction.
+  Joint FBI / U.S. Treasury / Israel INCD Cybersecurity Advisory
+  (Product ID JCSA-20241030-001 / AA24-233A, 30 October 2024)
+  documenting new tradecraft of the Iranian cyber group Emennet
+  Pasargad, which the FBI states has since mid-2024 operated under
+  the cover company Aria Sepehr Ayandehsazan (ASA, Iranian
+  Registration No. 504415) and is tracked by vendors as Cotton
+  Sandstorm / Marnanbridge / Haywire Kitten (formerly Eleyanet
+  Gostar). The advisory catalogs cyber-enabled information
+  operations run through cover personas, concentrated on the
+  Israel-Hamas conflict following 7 October 2023: "Contact-HSTG"
+  threat-SMS to families of Israeli hostages; "Cyber Flood"; a
+  "Cyber Court" persona promoting purported hacktivist groups
+  (Makhlab al-Nasr, NET Hunter, Emirate Students Movement, Zeus is
+  Talking) actually run by ASA; a "Sample" campaign to
+  crowdsource-identify Israeli individuals including law
+  enforcement; and OSINT doxxing of Israeli fighter pilots and UAV
+  operators via Pastebin, LinkedIn, Instagram and OpenStreetMap.
+  In July 2024 the actors compromised a French commercial dynamic-
+  display provider to push montages denouncing Israeli
+  participation in the 2024 Olympic and Paralympic Games, paired
+  with a fake French-media news article and threat messages under a
+  spoofed "Regiment GUD" persona impersonating the real French
+  far-right group GUD. A December 2023 operation ("For-Humanity")
+  hijacked a US-based IPTV streaming service to broadcast Israel-
+  Hamas-conflict messaging using a generative-AI news anchor. ASA
+  also harvested content from internet-exposed IP cameras (RTSP,
+  TCP 554) in Israel, Gaza and Iran, and used fictitious cover
+  hosting resellers ("Server-Speed", "VPS-Agent") to provision
+  operational infrastructure — including for a Lebanon-based actor
+  hosting Hamas-themed sites — to provide plausible deniability.
+  For initial access ASA relies on public-facing-application
+  exploitation (SQLMap / SQL injection, Acunetix, Burp Suite,
+  Masscan), weaponization of CVE-2023-38831, automated password-
+  guessing and hash-cracking, and a malicious "Google Chrome
+  Installer.msi" that drops a heavily obfuscated RAT ("bd.exe").
+  The FBI assesses the group's recent campaigns mix genuine
+  computer-intrusion activity with exaggerated or fictitious claims
+  of access to amplify psychological effect. Microsoft reporting
+  cited by the advisory adds that ASA has been scouting US
+  election-related websites and media, suggesting preparation for
+  more direct influence operations. NOTE: this advisory does not
+  name the IRGC anywhere in its 16 pages; the ir/irgc placement
+  rests on the actor's separate Treasury 2021-11-18 (jy0494)
+  designation. Editorial cross-reference only: the September 2024
+  DOJ indictment of three IRGC cyber actors for the Trump-campaign
+  hack-and-leak (doj/2024-09-27) is a distinct operation and is not
+  a source for this advisory.
 attributions:
   - actor_id: ir/irgc/emennet-pasargad
-    attributing_org: US FBI / CISA
+    attributing_org: US FBI / US Treasury / Israel INCD
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-08-14
+    attribution_date: 2024-10-30
     attribution_source_id: fbi/2024-08_aria-sepehr-ayandehsazan
+    notes: |
+      The 30 Oct 2024 joint advisory names the actor only as "the
+      Iranian cyber group Emennet Pasargad" operating as ASA (aka
+      Cotton Sandstorm / Marnanbridge / Haywire Kitten) — a named
+      group + nation, but NO service/unit: the advisory never says
+      "IRGC" in its 16 pages. Hence attribution_level = named-actor
+      (not named-unit). The ir/irgc service placement is carried by
+      the actor's separate Treasury 2021-11-18 (jy0494) source, not
+      by this advisory. CISA is NOT an authoring agency (cited only
+      for its CPGs / Iran Cyber Threat page); the authors are FBI +
+      US Treasury + Israel INCD.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      FBI/CISA advisory attests the IRGC-contractor / persona-laundering
-      mechanism under the Aria Sepehr Ayandehsazan rebrand; it does not
-      name a 'deniable-retaliation' strategic goal, so the doctrine
-      label is inferred from the mechanism.
+      The advisory extensively documents the persona-laundering
+      mechanism as fact — "a myriad of cover personas," ASA-run
+      hacktivist fronts under "Cyber Court" (Makhlab al-Nasr, NET
+      Hunter, etc.), impersonation of the real French far-right
+      group GUD ("Regiment GUD"), and fictitious cover hosting
+      resellers ("Server-Speed"/"VPS-Agent") that FBI assesses were
+      set up to provide "plausible deniability." It does not name a
+      'deniable-retaliation' strategic goal (nor the IRGC), so the
+      doctrine label is inferred from the mechanism, not attested.
     attesting_source_id: fbi/2024-08_aria-sepehr-ayandehsazan
     inference_basis:
       source_id: fbi/2024-08_aria-sepehr-ayandehsazan
       signals:
-        - "FBI/CISA advisory attests the IRGC-contractor operation of spoofed personas (persona-laundering mechanism) under the rebrand"
-      ruled_out: "a 'cyber-deniable-retaliation' strategic goal — not named in the advisory"
+        - "Advisory documents ASA operating a myriad of cover personas and ASA-run hacktivist fronts (Cyber Court) plus impersonation of the real French group GUD — the persona-laundering mechanism"
+        - "FBI assesses the fictitious cover hosting resellers Server-Speed/VPS-Agent were set up to provide plausible deniability that malicious infrastructure was assigned by a legitimate provider"
+      ruled_out: "a 'cyber-deniable-retaliation' strategic goal — not named in the advisory (which also never names the IRGC)"
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ir/resistance-axis
+    pillar_id: ir/resistance-axis/information-warfare
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      The advisory's dominant documented activity is multilingual
+      anti-Israel information warfare tied to the Israel-Hamas
+      conflict after 7 October 2023: Hebrew threat-SMS to hostage
+      families (Contact-HSTG), threat messaging to Israeli Olympic
+      athletes, doxxing of Israeli fighter pilots / UAV operators,
+      IP-camera harvesting in Israel, and "Cyber Court" Telegram
+      fronts — matching the Resistance-Axis multilingual-
+      information-warfare pillar. The advisory states proximate
+      purposes (to "cause additional psychological effects and
+      inflict further trauma," to "intimidate Israelis," to protest
+      the Israel-Hamas conflict) rather than the strategic
+      resistance-axis goal, so the label is strongly_inferred, not
+      attested.
+    attesting_source_id: fbi/2024-08_aria-sepehr-ayandehsazan
+    inference_basis:
+      source_id: fbi/2024-08_aria-sepehr-ayandehsazan
+      signals:
+        - "Advisory documents extensive multilingual anti-Israel IO after 7 Oct 2023 (Contact-HSTG hostage-family SMS, athlete threats, pilot/UAV doxxing, IP-camera harvesting, Cyber Court Telegram fronts)"
+        - "Advisory states proximate intent to cause psychological effect / trauma and to intimidate Israelis, consistent with anti-adversary information warfare"
+      ruled_out: "a purely US-electoral or financially-motivated reading — the documented operations overwhelmingly target Israel and the Israel-Hamas conflict"
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/post-soleimani-retaliation
     pillar_id: ir/post-soleimani-retaliation/electoral-discord
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Same operational ecosystem as the DOJ-indicted IRGC trio
-      Trump-campaign operation; the Soleimani-revenge motive is in
-      that companion indictment (doj/2024-09-27), which is not among
-      this event's fetched sources and which this advisory does not
-      state, so the linkage is inferred — re-verify against the indictment.
-    attesting_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+      This advisory documents only that ASA has been SCOUTING US
+      election-related websites and media (per the Microsoft
+      reporting it cites), "suggesting preparations for" future
+      influence operations — not an executed 2024 electoral-discord
+      operation. Combined with the same actor's executed 2020
+      "Proud Boys" electoral-interference op, an electoral-discord
+      reading is plausible, but this advisory neither states an
+      electoral goal nor mentions Soleimani, and more than one
+      strategic reading survives. The Soleimani-revenge motive lives
+      in the separate September 2024 DOJ indictment of three IRGC
+      actors for the Trump-campaign hack-and-leak (doj/2024-09-27) —
+      a distinct operation, not a source for this advisory — so it
+      cannot be imported here.
+    attesting_source_id: fbi/2024-08_aria-sepehr-ayandehsazan
     inference_basis:
-      source_id: doj/2024-09-27_irgc-trio-trump-campaign
-      signals:
-        - "The companion DOJ indictment attributes a Soleimani-revenge motive to the IRGC-trio Trump-campaign operation (same ecosystem); not in this event's fetched sources"
-      ruled_out: "the post-Soleimani-retaliation goal stated in this advisory — pending re-verification of the companion indictment"
+      alternatives:
+        - "Electoral discord: Microsoft reporting (cited by the advisory) has ASA scouting US election-related websites/media, and the same actor ran the 2020 Proud Boys electoral-interference op — but this advisory documents preparation/interest, not an executed electoral operation"
+        - "Anti-Israel information warfare: the advisory's executed operations overwhelmingly target Israel and the Israel-Hamas conflict, captured by the resistance-axis/information-warfare link above"
+        - "Generalized deniable regime IO: cover-persona operations across France, Sweden and a US IPTV service point to broad influence / psychological effect rather than a specifically electoral goal"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/government/election-systems
-    country: us
-    role: primary
   - target_id: sectors/civil-society
     country: il
     role: primary
+  - target_id: sectors/defense
+    country: il
+    role: primary
+  - target_id: sectors/media
+    country: fr
+    role: primary
+  - target_id: sectors/media
+    country: us
+    role: primary
 sources:
   - fbi/2024-08_aria-sepehr-ayandehsazan
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited against the RAW cited artifact — the FBI/Treasury/INCD Joint
+    Cybersecurity Advisory "New Tradecraft of Iranian Cyber Group Aria Sepehr
+    Ayandehsazan aka Emennet Pasargad" (Product ID JCSA-20241030-001 / AA24-233A,
+    30 Oct 2024), read directly from the on-disk snapshot
+    fbi__2024-08_aria-sepehr-ayandehsazan.pdf. sha256 RE-VERIFIED (matches source
+    record) 63c82855…364b844c, 1,153,344 bytes, 16 pages, PDF 1.7. This is the
+    GENUINE advisory (not a phantom / not a wrong-source) — normal 6-point audit;
+    heavy de-fabrication required.
+
+    [a] FACTS — the prior summary carried multiple UNSUPPORTED / cross-actor
+    claims, all stripped:
+      • "Mint Sandstorm / CharmPower / POWERSTAR toolset" + "follow-on
+        PowerShell-based implants" — FABRICATED cross-actor conflation. Mint
+        Sandstorm / CharmPower / POWERSTAR are Charming Kitten / APT35 artifacts,
+        a DIFFERENT Iranian actor. The advisory's private-sector names for THIS
+        group are "Cotton Sandstorm, Marnanbridge, and Haywire Kitten" (p1); its
+        only named malware is 'bd.exe' RAT delivered via a malicious 'Google
+        Chrome Installer.msi', plus First.exe (pp9-10,13). No PowerShell implant.
+        Removed entirely.
+      • "spear-phishing with credential-harvesting links" + initial_vector:
+        phishing — UNSUPPORTED. Advisory initial access = SQLMap/SQL injection
+        (T1190, p11), Masscan/Acunetix/Burp (p9), CVE-2023-38831 weaponization
+        (Table 2, p11), automated password-guessing (T1110.001) and hash-cracking
+        (T1110.002). No phishing anywhere. Fixed initial_vector phishing→n-day.
+      • "abuse of cloud-mail providers for mass-email coercion campaigns" —
+        UNSUPPORTED here; a carry-over from the group's 2020 "Proud Boys" op. This
+        advisory documents SMS/messaging coercion (Contact-HSTG to hostage
+        families, p5) and IPTV hijack, not mass-email. Removed.
+      • Personas "Enemies of the People" / "Hometown Hero" — NOT in this advisory
+        ("Enemies of the People" is the 2020-op persona; "Hometown Hero" appears
+        nowhere). Replaced with the advisory's REAL personas: Contact-HSTG, Cyber
+        Flood, Cyber Court (+ ASA-run fronts Makhlab al-Nasr / NET Hunter /
+        Emirate Students Movement / Zeus is Talking), For-Humanity, Regiment GUD,
+        Sample (pp5-6).
+      • "LinkedIn / WhatsApp pretexting" against campaign staff — WhatsApp is
+        FABRICATED (absent from advisory); LinkedIn appears only as OSINT/recon to
+        identify Israeli pilots (p8, Table 1 T1589.003), not social-engineering of
+        campaign staff. Recast as OSINT doxxing.
+      • "IRGC direction" / "civic appearance" laundering embellishments — advisory
+        says the cover resellers provide "plausible deniability that malicious
+        infrastructure was being assigned by a legitimate hosting provider" (p3);
+        it never says IRGC. Recast to advisory wording.
+      Rewrote summary + outcome_summary to advisory-carried facts only (ASA=Emennet
+      cover, Reg No 504415; post-Oct-7 anti-Israel IO; July-2024 French Olympics
+      op / Regiment GUD; Dec-2023 US IPTV For-Humanity w/ AI anchor; IP-camera
+      harvesting RTSP/554 IL/Gaza/Iran; Server-Speed/VPS-Agent cover resellers +
+      Lebanon/Hamas hosting; SQLi/CVE-2023-38831/password-guessing + Chrome-MSI
+      RAT; Microsoft-reported US-election scouting; "mix of computer intrusion
+      activity and exaggerated or fictitious claims of access" p2). Fixed name
+      ("FBI / CISA"→"FBI / Treasury / INCD"). Kept incident_type intrusion — the
+      advisory documents genuine computer-intrusion (French-provider compromise,
+      IPTV unauthorized access, IP-camera access, RAT, SQLi), so influence-
+      operation + intrusion are both source-carried.
+
+    [b] ATTRIBUTION — advisory names "the Iranian cyber group Emennet Pasargad …
+    operating under the company name Aria Sepehr Ayandehsazan (ASA) … known by the
+    private sector terms Cotton Sandstorm, Marnanbridge, and Haywire Kitten" (p1),
+    and "FBI obtained reliable information in mid-2024 indicating Emennet Pasargad
+    has more recently been using the Iranian company name Aria Sepehr Ayandehsazan
+    (ASA, Iranian Registration Number 504415) as a nominal cover" (p2). NO
+    service/unit named — advisory never says "IRGC." Corrections: attributing_org
+    "US FBI / CISA"→"US FBI / US Treasury / Israel INCD" (CISA is NOT an author);
+    added attribution_level: named-actor (group+nation, not named-unit);
+    attribution_date 2024-08-14→2024-10-30; kept high/concur; added notes. ir/irgc
+    placement is carried by the actor's Treasury-2021 source, not this advisory.
+
+    [c] DATES — the artifact's Version History reads "October 30, 2024: Initial
+    version" (p16); Product ID JCSA-20241030-001 / AA24-233A; URL
+    ic3.gov/CSA/2024/241030.pdf. The prior published_on / disclosure_date /
+    attribution_date of 2024-08-14 were WRONG for this artifact — corrected all to
+    2024-10-30 (and the source record's published_on, below). start_date
+    2024-01-01→2023-10-07: the advisory repeatedly anchors the documented IO wave
+    to "following the October 7, 2023 HAMAS attack" and documents Oct-Dec 2023
+    activity (IP cameras Oct 2023; For-Humanity Dec 2023) that the old
+    2024-01-01 start excluded. (Judgment call: infrastructure is documented from
+    ~April/mid-2023 — Server-Speed "from approximately April 2023," p3; IOCs from
+    May 2023, p12 — so 2023-04 is also defensible; I chose the operational IO
+    anchor the advisory foregrounds.) end_date 2024-11-30→2024-10-30: all IOC
+    "End of Actor Association" dates are ≤ October 2024 (pp12-13) and the version
+    is 30 Oct 2024; the op is assessed ONGOING (advisory warns of "future ASA
+    cyber operations"), so this is an evidence horizon, not a confirmed op-end. The
+    prior 2024-11-30 (bracketing the 5 Nov election) post-dated ALL advisory
+    evidence and was not source-carried. Source id-slug "fbi/2024-08_…" kept
+    (frozen per convention) despite the corrected date.
+
+    [d] DOCTRINE_LINKS — three links, recalibrated honestly:
+      • ir/cyber-deniable-retaliation/persona-laundering — KEPT strongly_inferred.
+        Mechanism heavily documented (myriad cover personas; Cyber Court ASA-run
+        hacktivist fronts; Regiment-GUD impersonation of the real GUD; cover
+        hosting resellers for "plausible deniability"; and the referenced 20 Oct
+        2022 FBI PIN is titled "…Using False-Flag Personas"). Goal / IRGC not
+        named → not attested. Fixed reasoning + signals (removed the false
+        "IRGC-contractor" and "FBI/CISA" wording).
+      • ir/resistance-axis/information-warfare — ADDED (strongly_inferred). The
+        advisory's DOMINANT documented activity — multilingual anti-Israel IO tied
+        to the Israel-Hamas conflict — was previously UNREPRESENTED. Advisory
+        states proximate intent ("cause additional psychological effects and
+        inflict further trauma," "intimidate Israelis") → strongly_inferred, not
+        attested. attacker-rationale (Iran doctrine on Iranian actor; no
+        state-mismatch).
+      • ir/post-soleimani-retaliation/electoral-discord — DOWNGRADED
+        strongly_inferred→plausible. Advisory documents only Microsoft-reported
+        election-website SCOUTING (prep), not an executed electoral op, and never
+        mentions Soleimani; multiple readings survive. Switched attesting_source_id
+        from doj/2024-09-27_irgc-trio-trump-campaign (a DIFFERENT operation/actor-
+        subset, and not in this event's sources[]) to the fbi advisory (which
+        carries the scouting signal); converted inference_basis to alternatives[].
+      No attested links (none warranted — no goal-level strategic purpose stated).
+      All three attesting_source_ids now resolve and are within sources[].
+
+    [e] ATTRIBUTION_LEVEL — added (was missing): named-actor. The advisory names a
+    specific Iranian group (Emennet Pasargad / ASA) but no service/unit → not
+    named-unit; more specific than nation → not nation.
+
+    [f] ACTOR_ID — ir/irgc/emennet-pasargad RESOLVES (atlas/actors/ir/emennet-
+    pasargad.yaml); ASA is already an equivalent alias of Emennet Pasargad, and
+    Cotton Sandstorm is the record's MISP-galaxy name. The ir/irgc placement is
+    sound (source-backed by Treasury 2021, verified in the actor file). No actor
+    edits made; no actor FLAG needed. (On THIS advisory alone the actor would sit
+    at ir/ named-actor; the IRGC service attribution comes from Treasury.)
+
+    TARGETS — restructured to match the advisory. REMOVED sectors/government/
+    election-systems (us, primary): the advisory shows only scouting/interest in
+    US election-related sites (Microsoft), NOT an executed election-systems
+    intrusion — keeping it as a primary victim over-claimed. New set, all source-
+    carried: sectors/civil-society il (hostage families, athletes, Israeli public);
+    sectors/defense il (fighter pilots / UAV operators / IAF flight academy,
+    pp7-8); sectors/media fr (French dynamic-display provider + French media site,
+    July-2024 Olympics op, p6); sectors/media us (Dec-2023 IPTV company +
+    election-media scouting, pp5-6). Sweden ("Anzu Team," p2) is documented but
+    given only a summary mention, not a target entry (brief in-source coverage).
+
+    SNAPSHOT — reused the existing raw PDF; sha256 re-verified (see above). No new
+    fetch needed (justice.gov/ic3 bypass unnecessary — the ic3.gov PDF was already
+    captured and integral).
+
+    RESIDUAL / FLAGS: (1) start_date is a judgment call (Oct-7 operational anchor
+    vs ~April/mid-2023 infra). (2) France op modeled as sectors/media though the
+    display provider is commercial. (3) The event's original US-election-centric
+    framing (name, election-systems target, electoral-discord strongly_inferred,
+    "companion to the trio") over-weighted an angle the advisory supports only as
+    Microsoft-reported scouting; rebalanced toward the advisory's dominant
+    anti-Israel IO — orchestrator should confirm the rebalance is acceptable.
+    (4) doj/2024-09-27_irgc-trio-trump-campaign is a DISTINCT op (indicted trio
+    Jalili/Aghamiri/Balaghi), not ASA/Emennet — ensure no other event conflates
+    them. (5) Source record published_on corrected 2024-08-14→2024-10-30 (below).

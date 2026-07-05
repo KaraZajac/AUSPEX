@@ -6,42 +6,62 @@ end_date: 2024-07-31
 incident_type:
   - intrusion
   - data-theft
-  - influence-operation
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Google Threat Analysis Group (TAG) published an APT42 (IRGC)
-  campaign telemetry summary covering February through late July
-  2024. APT42 phishing campaigns against Israeli users surged
-  sharply during the period — peaking at approximately 45
-  distinct phishing campaigns per day against Israeli targets in
-  April 2024 — with social-engineering personas masquerading as
-  journalists, conference organizers, and (after the April 2024
-  Israeli strikes on Iran) as the Washington Institute for Near
-  East Policy. Targets included Israeli diplomats, military
-  officials, an aerospace executive, NGOs, and academics, plus
-  US political-campaign-adjacent staff in both parties.
+  Google Threat Analysis Group (TAG) published a summary of
+  APT42 credential-phishing activity between February and late
+  July 2024 (Google describes APT42 as an Iranian
+  government-backed actor "associated with" the IRGC). Over the
+  prior six months, the U.S. and Israel together accounted for
+  roughly 60% of APT42's known geographic targeting. Targeting of
+  Israeli users intensified in April 2024 against people
+  connected to the Israeli military and defense sector, diplomats,
+  academics, and NGOs; social-engineering personas included a
+  journalist requesting comment on recent air strikes (used
+  against former senior Israeli military officials and an
+  aerospace executive) and — in multiple campaigns since April
+  2024 — an impersonation of the Washington Institute for Near
+  East Policy. In May–June 2024 APT42 also targeted the personal
+  email accounts of roughly a dozen individuals affiliated with
+  both the Biden and Trump presidential campaigns, including
+  current and former U.S. government officials, and successfully
+  accessed the Gmail account of a high-profile political
+  consultant.
 quantified_impact:
-  peak_phishing_campaigns_per_day_il: 45
+  us_election_affiliated_individuals_targeted: 12  # "roughly a dozen" Biden- and Trump-affiliated personal accounts (Google TAG)
+  accounts_successfully_compromised: 1  # personal Gmail of "a high-profile political consultant" (Google TAG)
 false_flag_risk: none
 summary: |
-  Quantified tempo data for the period that runs into the IRGC
-  trio Trump-campaign hack-and-leak operation (separately
-  attested). Google TAG's telemetry is one of the few vendor
-  publications that releases numerical phishing-campaign tempo
-  for an Iranian APT cluster, making it a load-bearing data
-  point for evaluating doctrine-pillar activation tempo. The
-  Resistance-Axis anti-Israel-coercion pillar lights up via
-  Israeli-target volume; the post-Soleimani-retaliation
-  electoral-discord pillar lights up via campaign-adjacent
-  targeting (separately attested in the September 2024 DOJ
+  Vendor telemetry on APT42 (IRGC-associated) credential-phishing
+  for the period that runs into the IRGC trio Trump-campaign
+  hack-and-leak operation (separately attested). Google TAG
+  characterizes the activity as a spike in Israeli targeting and a
+  ~60% U.S.+Israel share of APT42's known targeting over the prior
+  six months (it does not publish a numeric per-day campaign
+  tempo). The Resistance-Axis anti-Israel-coercion pillar is
+  evidenced by the Israeli-target concentration during the
+  Israel-Iran / Israel-Hezbollah escalation; the
+  post-Soleimani-retaliation electoral-discord pillar is evidenced
+  by the bipartisan U.S. campaign-adjacent targeting (the parallel
+  hack-and-leak is separately attested in the September 2024 DOJ
   indictment).
 attributions:
   - actor_id: ir/irgc-io/apt42
     attributing_org: Google Threat Analysis Group
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2024-08-14
     attribution_source_id: google-tag/2024-08-14_apt42-israel-us-phishing
+    notes: |
+      Google TAG states APT42 is "an Iranian government-backed
+      threat actor" and "Associated with Iran's Islamic
+      Revolutionary Guard Corps (IRGC)" — naming the IRGC at the
+      parent-service level (named-unit); it does not resolve
+      IRGC-IO vs IRGC. The IRGC-IO sub-unit placement is
+      corpus-adopted from Mandiant's tasking split (APT42 =
+      IRGC-IO, APT35 = IRGC).
 doctrine_links:
   - doctrine_id: ir/resistance-axis
     pillar_id: ir/resistance-axis/anti-israel-coercion
@@ -53,6 +73,12 @@ doctrine_links:
       Israel-Hezbollah / Israel-Iran kinetic exchange period
       fits the anti-Israel-coercion pillar.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victim concentration: Israeli military/defense, diplomats, academics and NGOs targeted heavily Feb-Jul 2024, intensifying in April 2024 (Google TAG)."
+        - "Timing: the surge coincides with the April 2024 direct Israel-Iran exchange and the Israel-Hezbollah escalation."
+        - "Actor mission: Google TAG frames the activity as APT42 altering focus 'in support of Iran's political and military priorities' — an IRGC collection actor tasked to the regional confrontation."
+      ruled_out: "Undirected/global espionage — ruled out by the ~60% U.S.+Israel targeting share and the crisis-timed Israeli spike, which read as anti-Israel coercion rather than routine collection."
     contested: false
     analyst: claude
   - doctrine_id: ir/post-soleimani-retaliation
@@ -64,6 +90,11 @@ doctrine_links:
       overlaps the IRGC trio operation (separately DOJ-attested
       as Soleimani-revenge motivated).
     attesting_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+    inference_basis:
+      signals:
+        - "Google TAG: APT42 targeted personal accounts of ~a dozen individuals affiliated with both the Biden and Trump 2024 campaigns, incl. current/former US officials, and breached a high-profile political consultant's Gmail."
+        - "The Sept 2024 DOJ indictment (doj/2024-09-27_irgc-trio-trump-campaign) attributes the parallel IRGC hack-and-leak to avenging Qasem Soleimani, evidencing electoral-discord intent in this exact window."
+      ruled_out: "Ordinary foreign-policy espionage with no electoral aim — weakened by the bipartisan campaign-account targeting in an election year alongside the DOJ-stated Soleimani-revenge motive of the parallel hack-and-leak."
     contested: false
     analyst: claude
 targets:
@@ -76,8 +107,115 @@ targets:
   - target_id: sectors/civil-society/ngo
     country: il
     role: primary
-  - target_id: sectors/government/election-systems
+  - target_id: sectors/government/civilian
     country: us
     role: primary
 sources:
   - google-tag/2024-08-14_apt42-israel-us-phishing
+  - doj/2024-09-27_irgc-trio-trump-campaign
+notes: |
+  Cross-link (do NOT merge): near-overlapping sibling event
+  2024-10/microsoft-apt42-israeli-targeting covers the same actor
+  (APT42 / Mint Sandstorm, ir/irgc-io/apt42) against Israeli
+  targets in the adjacent Jul–Sep 2024 window, disclosed by
+  Microsoft MSTIC (2024-10-08). Distinct vendor, period, and
+  disclosure — kept as separate telemetry points, not merged.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    Audited vs the RAW Google TAG post "Iranian backed group steps up phishing
+    campaigns against Israel, U.S." (2024-08-14). Snapshot captured:
+    google-tag__2024-08-14_apt42-israel-us-phishing.html — sha256
+    ed18dcfe…8c44d44f (396,988 bytes). Second cited source
+    doj/2024-09-27_irgc-trio-trump-campaign is UN-SNAPSHOTTABLE here (justice.gov
+    Akamai-403s scripted fetches on live + /archives/ URLs; web.archive.org
+    blocked) — already audited 2026-06-24 with its Soleimani-revenge quote
+    preserved in that record's notes; mirror-corroborated only. Hence level:
+    partial (a load-bearing supporting source could not be re-snapshotted here),
+    though the Google TAG primary carries 100% of the event's factual spine.
+
+    [a] FACTS — MAJOR CORRECTION. STRIPPED the fabricated quantification
+    "peaking at approximately 45 distinct phishing campaigns per day against
+    Israeli targets in April 2024" and the field
+    quantified_impact.peak_phishing_campaigns_per_day_il: 45. The raw carries NO
+    such figure: "per day" = 0 prose hits, "spike" = 0 prose hits; every literal
+    "45" in the file is CSS (rotate(-45deg), margins, 45px), a SHA256 IOC
+    fragment, or a URL (onedrive-qrty45.html) — none is a campaign-tempo value.
+    The article's only stated quantities are: "roughly 60% of APT42's known
+    geographic targeting" was U.S.+Israel over the prior six months (corroborated
+    by chart alt-text "over 60% of users targeted by APT42 are in the US and
+    Israel"); "roughly a dozen" Biden/Trump-affiliated individuals targeted in
+    May–June; "more than 50" Google Sites-abuse campaigns disrupted over six
+    months; one confirmed compromise (personal Gmail of "a high-profile political
+    consultant"). Replaced quantified_impact with the two defensible impact
+    figures (~12 targeted, 1 compromised) and moved the 60% share into prose.
+    Also STRIPPED persona "conference organizers" ("conference" = 0 hits in the
+    raw — imported from the actor ttp_summary, not carried by this source).
+    VERIFIED verbatim: "an Iranian government-backed threat actor"; "APT42
+    heavily targeted users in Israel and the U.S." "Between February and late
+    July 2024"; April 2024 intensification against "the Israeli military and
+    defense sector, as well as diplomats, academics, and NGOs"; journalist
+    persona "requesting comment on the recent air strikes" against "former senior
+    Israeli military officials and an aerospace executive"; "masqueraded as the
+    legitimate Washington Institute for Near East Policy in multiple campaigns
+    since April 2024"; "roughly a dozen individuals affiliated with President
+    Biden and with former President Trump, including current and former officials
+    in the U.S. government"; "successfully gained access to the personal Gmail
+    account of a high-profile political consultant". Rewrote outcome_summary +
+    summary to match (removed the "releases numerical phishing-campaign tempo"
+    overstatement — no numeric tempo is published, only a spike chart + the 60%
+    share). incident_type: changed influence-operation -> espionage — this source
+    documents credential-phishing COLLECTION against officials/military/campaigns,
+    not a completed influence op; the hack-and-leak/dissemination is the separate
+    DOJ-attested trio event (FLAG: editorial, revert if the election-targeting
+    angle is preferred as influence-operation).
+
+    [b] ATTRIBUTION — Google TAG: "an Iranian government-backed threat actor" +
+    "Associated with Iran's Islamic Revolutionary Guard Corps (IRGC)". Kept
+    attributing_org_confidence: high (flat "government-backed"), auspex_assessment:
+    concur. IRGC appears exactly once; "Intelligence Organization"/"IRGC-IO" = 0 —
+    the source names the IRGC parent, not the IRGC-IO sub-unit.
+
+    [c] DATES — published_on 2024-08-14 = the post's own date (verified in
+    snapshot). start_date 2024-02-01 / end_date 2024-07-31 match "Between February
+    and late July 2024". disclosure_date 2024-08-14 = publication. All correct, no
+    change.
+
+    [d] DOCTRINE_LINKS — both kept strongly_inferred (honest). Link 1
+    (resistance-axis/anti-israel-coercion): source states purpose only generically
+    ("in support of Iran's political and military priorities"), NOT the anti-Israel
+    goal, so NOT attested; added inference_basis {signals[], ruled_out}.
+    attesting_source_id stays null. Link 2 (post-soleimani-retaliation/
+    electoral-discord): kept strongly_inferred with attesting_source_id
+    doj/2024-09-27 as the primary SUPPORTING source (schema-valid on
+    strongly_inferred); the DOJ indictment names the Soleimani-revenge purpose of
+    the parallel hack-and-leak, but that is a distinct operation, so this
+    phishing-tempo event triangulates rather than being attested; added
+    inference_basis. Added the DOJ source to sources[] (it is genuinely cited via
+    the link).
+
+    [e] ATTRIBUTION_LEVEL — set named-unit (was absent): Google TAG names the IRGC
+    (a service/unit). Noted that it names IRGC at the parent level ("Associated
+    with…"), and the IRGC-IO precision is corpus-adopted from Mandiant, not this
+    source.
+
+    [f] ACTOR_ID — ir/irgc-io/apt42 resolves (file atlas/actors/ir/apt42.yaml, id
+    ir/irgc-io/apt42, primary_service_id ir/irgc-io). No actor edits.
+
+    TARGETS — CORRECTED us target sectors/government/election-systems ("Election
+    infrastructure & registration") -> sectors/government/civilian. No election
+    infrastructure was touched; the source names "current and former officials in
+    the U.S. government" + campaign-affiliated individuals + a political consultant
+    (personal email accounts). government/civilian is the closest supported sector
+    (FLAG: no dedicated presidential-campaign/political-personnel sector exists;
+    the campaign angle is carried by the electoral-discord doctrine link + prose).
+    IL targets (government, defense, civil-society/ngo) all source-verified;
+    unchanged.
+
+    SOURCE-TIER — google-tag/2024-08-14 kept tier: secondary per orchestrator's
+    explicit PRESERVE-tier instruction; flagged that first-party Google TAG
+    original telemetry arguably merits primary, but corpus vendor-research tiering
+    is split (google-tag 3 primary / 3 secondary) so not "clearly" miscategorized.

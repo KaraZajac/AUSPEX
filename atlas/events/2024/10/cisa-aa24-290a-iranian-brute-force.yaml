@@ -1,63 +1,90 @@
 id: 2024-10/cisa-aa24-290a-iranian-brute-force
 name: CISA AA24-290A — Iranian brute-force / credential-access against US CII
-start_date: 2024-01-01
+start_date: 2023-10-01
 disclosure_date: 2024-10-16
-end_date: 2024-10-15
+end_date: null  # advisory declares no campaign end; last network IOC 2024-02-15
 incident_type:
   - intrusion
   - data-theft
 initial_vector: valid-creds
 outcome_summary: |
-  Five-Eyes joint advisory (CISA / FBI / NSA / CSE / AFP / ASD
-  ACSC) documenting Iranian-affiliated cyber-actor brute-force
-  and password-spraying operations against US critical-
-  infrastructure organizations across healthcare, government,
-  IT, engineering, and energy sectors. Operators modified MFA
-  registrations to establish persistent access. The operations
-  are distinct from but adjacent to the CyberAv3ngers Unitronics
-  campaign and overlap operationally with the Pioneer Kitten /
-  Fox Kitten initial-access-broker ecosystem.
+  AA24-290A documents Iranian brute-force / password-spray and MFA
+  'push bombing' (MFA fatigue) intrusions into US critical-
+  infrastructure organizations — healthcare and public health,
+  government, information technology, engineering, and energy —
+  since October 2023. The actors abused valid accounts (reached via
+  password spraying and the open-source DomainPasswordSpray.ps1
+  tool, plus Microsoft 365 / Azure / Okta / Citrix / ADFS exposure),
+  registered their own devices for MFA and modified MFA registrations
+  for persistent access, moved laterally over RDP, and exfiltrated
+  credential and network-inventory data. The authoring agencies
+  assess the actors sell this access and information on cybercriminal
+  forums to third parties who may conduct follow-on activity; the
+  advisory cautions that some TTPs/IOCs may belong to those buyers
+  rather than to the Iranian actors.
 false_flag_risk: none
 summary: |
-  Five-Eyes attestation of the broader Iranian-affiliated initial-
-  access ecosystem operating against US CII during the 2024
-  election window. Doctrinally fits the asymmetric-warfare
-  civilian-CII-coercion pillar and supports the sanctions-evasion
-  ransomware-revenue pillar where the same access is monetized
-  through follow-on affiliate work (Pioneer Kitten). The
-  advisory's October 2024 timing also overlaps the FBI / CISA
-  Aria Sepehr Ayandehsazan advisory and the broader election-
-  cycle tempo elevation.
+  Joint Five-Eyes advisory (FBI, CISA, NSA, CSE Canada, AFP, and
+  ASD's ACSC) warning that, since October 2023, Iranian cyber actors
+  have used brute force — chiefly password spraying — and MFA 'push
+  bombing' / MFA fatigue to compromise accounts at US critical-
+  infrastructure organizations across the healthcare and public-
+  health, government, information-technology, engineering, and energy
+  sectors. After gaining access the actors frequently registered
+  their own devices for MFA and modified MFA registrations to
+  establish persistent access, then performed discovery to harvest
+  further credentials and network information. The authoring agencies
+  assess the actors aim to obtain credentials and network-mapping
+  data to sell on cybercriminal forums, enabling follow-on access by
+  other actors — i.e. Iranian initial-access-broker activity, not a
+  coercive or destructive CII operation. AUSPEX situates the campaign
+  within the broader IRGC-aligned Iranian access/monetization
+  ecosystem, but the advisory itself names neither the IRGC nor any
+  specific group and attributes the activity to Iran at the nation
+  level.
 attributions:
   - service_id: ir/irgc
     actor_id: null
     attributing_org: CISA + FBI + NSA + CSE + AFP + ASD ACSC
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-10-16
     attribution_source_id: cisa/2024-10-16_aa24-290a-irgc-brute-force
     notes: |
-      Service-level attribution to Iranian state-affiliated cyber
-      actors without specific cluster attribution; multiple
-      clusters in the IRGC ecosystem are consistent with the
-      tradecraft pattern.
+      AA24-290A attributes the activity to "Iranian cyber actors"
+      and tags the record "Nation-State Actor: Iran"; it names no
+      service, unit, or group — the strings "IRGC" / "Revolutionary
+      Guard" appear nowhere in the advisory. attribution_level is
+      therefore nation, at high confidence (an unhedged Five-Eyes
+      attribution). The ir/irgc service_id is an AUSPEX assessment
+      placing the activity in the IRGC-aligned initial-access-broker
+      ecosystem (Pioneer Kitten / Fox Kitten lineage); it is NOT
+      stated by this advisory, hence auspex_assessment is
+      concur-with-caveat. REVIEW: keep ir/irgc as an ecosystem
+      overlay, or drop to pure nation-level (actor_id + service_id
+      both null)?
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Five-Eyes advisory documents Iranian-affiliated brute-force/
-      credential-access against US CII; it frames the motive as
-      credential/access harvesting (for resale), not civilian-CII
-      coercion, and does not name asymmetric warfare — so the
-      doctrine linkage is inferred from the CII target set.
-    attesting_source_id: cisa/2024-10-16_aa24-290a-irgc-brute-force
+      An Iranian (IRGC-ecosystem) actor brute-forcing US critical-
+      infrastructure organizations fits the asymmetric-warfare
+      civilian-CII-coercion pillar's target set. But AA24-290A states
+      the actors' aim is to harvest and sell credentials / network
+      data on cybercriminal forums (initial-access brokering) — a
+      revenue / access-resale purpose, not CII coercion — and it
+      documents no CII disruption or harm. With the source naming a
+      resale purpose, more than one strategic reading survives
+      (asymmetric CII-coercion vs. sanctions-evasion revenue), so the
+      link is plausible, not strongly_inferred.
+    attesting_source_id: null
     inference_basis:
-      source_id: cisa/2024-10-16_aa24-290a-irgc-brute-force
-      signals:
-        - "AA24-290A documents Iranian-affiliated brute-force/password-spray + MFA-registration abuse against US CII (credential-access behaviour + target set)"
-      ruled_out: "an 'asymmetric warfare' / civilian-CII-coercion intent — the advisory frames access-harvesting, not coercion"
+      alternatives:
+        - "Asymmetric-warfare civilian-CII-coercion: the exclusively US-CII target set (healthcare, government, energy) matches the pillar and the actor population is assessed IRGC-aligned; but the advisory documents stealthy access-harvesting, not CII disruption or coercion."
+        - "Sanctions-evasion / access-resale revenue: the advisory's stated aim — selling harvested credentials and access on cybercriminal forums — reads as revenue-generating initial-access brokering, which competes with (and arguably dominates) the coercion reading."
     contested: false
     analyst: claude
   - doctrine_id: ir/sanctions-evasion
@@ -65,16 +92,26 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      The Pioneer Kitten / Fox Kitten ecosystem monetizes the
-      same kind of access through ransomware-affiliate work
-      (separately attested in the August 2024 CISA AA24-241A
-      advisory). Same access pattern, dual purpose.
+      The same Iranian initial-access-broker ecosystem (Pioneer
+      Kitten / Fox Kitten) is separately documented monetizing this
+      kind of access through ransomware-affiliate work (CISA
+      AA24-241A, Aug 2024). If the access AA24-290A describes feeds
+      that pipeline, it serves the sanctions-evasion ransomware-
+      revenue pillar. The link is plausible, not higher, because
+      AA24-290A itself never mentions ransomware, Pioneer Kitten, or
+      sanctions evasion — it says only that the actors sell access to
+      unspecified cybercriminals.
     counter_explanation: |
-      AA24-290A itself does not document ransomware monetization
-      of the access in scope; the plausible-confidence link
-      reflects the broader ecosystem pattern rather than the
-      specific events the advisory documents.
+      AA24-290A does not document ransomware monetization, name
+      Pioneer Kitten / Fox Kitten, or tie the resale proceeds to
+      Iran's sanctions-evasion economy; the plausible link reflects
+      the broader ecosystem pattern, not the specific activity this
+      advisory documents.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Sanctions-evasion ransomware-revenue: harvested access sold on for ransomware-affiliate monetization within the IRGC-linked Pioneer Kitten / Fox Kitten model."
+        - "Generic criminal access-resale with no state nexus: the advisory frames buyers as ordinary cybercriminals, so the resale need not serve Iran's sanctions-evasion economy at all."
     contested: false
     analyst: claude
 targets:
@@ -87,8 +124,87 @@ targets:
   - target_id: sectors/energy
     country: us
     role: primary
+  - target_id: sectors/ict
+    country: us
+    role: primary
   - target_id: sectors/critical-infrastructure
     country: us
     role: primary
 sources:
   - cisa/2024-10-16_aa24-290a-irgc-brute-force
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited against the primary source — CISA/FBI/NSA/CSE/AFP/ASD-ACSC joint advisory
+    AA24-290A "Iranian Cyber Actors' Brute Force and Credential Access Activity Compromises
+    Critical Infrastructure Organizations" (16 Oct 2024). RAW snapshot captured:
+    cisa__2024-10-16_aa24-290a-irgc-brute-force.html, sha256 97598a76…54bcb448, 108,304 bytes.
+    Real first-party govt article (title + body match), NOT a phantom; tier primary confirmed.
+    All 6 points completed -> level full.
+
+    [a] FACTS — corrected. Verbatim: "warn network defenders of Iranian cyber actors' use of
+    brute force and other techniques to compromise organizations across multiple critical
+    infrastructure sectors, including the healthcare and public health (HPH), government,
+    information technology, engineering, and energy sectors. The actors likely aim to obtain
+    credentials and information describing the victim's network that can then be sold to enable
+    access to cybercriminals." And: "Since October 2023, Iranian actors have used brute force,
+    such as password spraying, and multifactor authentication (MFA) 'push bombing' ... The actors
+    frequently modified MFA registrations, enabling persistent access ... The authoring agencies
+    assess the Iranian actors sell this information on cybercriminal forums." STRIPPED as
+    unsupported by the advisory: (1) the "2024 election window" / "election-cycle tempo elevation"
+    framing — "election" occurs on the page ONLY in CISA's site-nav topic "Election Security",
+    never in the advisory body; AA24-290A is a credential-harvesting / initial-access advisory
+    with NO election nexus. (2) "distinct from ... the CyberAv3ngers Unitronics campaign",
+    "overlap ... with the Pioneer Kitten / Fox Kitten initial-access-broker ecosystem", and
+    "overlaps the FBI / CISA Aria Sepehr Ayandehsazan advisory" — none of CyberAv3ngers /
+    Unitronics / Pioneer Kitten / Fox Kitten / Aria Sepehr / ransomware appears anywhere in
+    AA24-290A (grep = 0 hits); these were AUSPEX ecosystem cross-links stated as source fact.
+    ADDED (prominent in the advisory but previously missing): MFA 'push bombing' / MFA fatigue
+    [T1621]; and the actors' stated end — selling harvested credentials/network data on
+    cybercriminal forums (initial-access brokering). summary + outcome_summary rewritten to what
+    the advisory carries, with the IRGC-ecosystem reading explicitly labelled AUSPEX inference.
+
+    [b] ATTRIBUTION — corrected. The advisory attributes ONLY to "Iranian cyber actors" /
+    "Iranian actors" / "Iranian group" and tags "Nation-State Actor: Iran". "IRGC" /
+    "Revolutionary Guard" / "Guard Corps" appear NOWHERE (grep = 0). Set attribution_level: nation
+    (was absent). Kept attributing_org_confidence: high (unhedged Five-Eyes attribution).
+    Downgraded auspex_assessment concur -> concur-with-caveat and rewrote the attribution notes:
+    ir/irgc service_id is an AUSPEX ecosystem overlay, NOT a service attribution made by this
+    advisory (the prior notes claimed "Service-level attribution", which over-stated the source).
+
+    [c] DATES — corrected. start_date 2024-01-01 -> 2023-10-01 ("Since October 2023"; earliest
+    network IOC in Table 14 = 10/06/2023). end_date 2024-10-15 -> null: prior value was a
+    fabricated disclosure-minus-one; the advisory declares no campaign end, is written in the
+    present tense, and its IOC date-ranges are explicitly "the timeframe the actors likely used
+    the IPs" (IP-usage windows; last = 02/15/2024), not a campaign boundary. disclosure_date
+    2024-10-16 confirmed (Release Date "October 16, 2024", Alert Code AA24-290A). Source
+    published_on 2024-10-16 confirmed.
+
+    [d] DOCTRINE_LINKS — recalibrated. ir/asymmetric-warfare/civilian-cii-coercion DOWNGRADED
+    strongly_inferred -> plausible: the advisory states a resale / initial-access-broker purpose
+    ("credentials and information ... sold to enable access to cybercriminals"), a serious
+    competitor to the coercion reading, and documents no CII disruption/harm — so "one strategic
+    reading with no serious competitor" fails; inference_basis converted signals/ruled_out ->
+    alternatives[]; attesting_source_id set null. ir/sanctions-evasion/ransomware-revenue kept
+    plausible (advisory names neither ransomware nor sanctions evasion nor Pioneer Kitten; honest
+    counter_explanation retained; alternatives[] added). Neither link is attested, so no
+    attesting_source_id gate obligation.
+
+    [e] ATTRIBUTION_LEVEL — set to nation (see [b]).
+
+    [f] ACTOR_ID — actor_id null is correct (advisory names no group). service_id ir/irgc resolves
+    to atlas/services/ir/irgc.yaml (Islamic Revolutionary Guard Corps, nation ir) but is NOT
+    supported by this advisory; FLAGGED for orchestrator/Kara (keep as AUSPEX ecosystem overlay
+    vs. drop to pure nation-level). No actor/service files edited.
+
+    TARGETS — added sectors/ict (advisory explicitly names "information technology"); kept
+    healthcare / government / energy / critical-infrastructure (source-named or CII umbrella).
+    "engineering" is named by the advisory but has NO sector slug in atlas/sectors/sectors.yaml —
+    recorded here, not added (would dangle the FK).
+
+    RESIDUAL UNCERTAINTY: (1) the ir/irgc overlay (see [f]); (2) end_date left null rather than a
+    hard 2024-02-15 (last IOC) — chosen null because the advisory does not bound the campaign;
+    (3) sectors/ict added while "engineering" could not be (no slug).

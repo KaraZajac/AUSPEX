@@ -1,12 +1,13 @@
 id: 2024-10/earth-simnavaz-apt34-uae-gulf
 name: Earth Simnavaz (APT34 / OilRig) STEALHOOK campaign against UAE and Gulf government targets
-start_date: 2024-07-01
+start_date: 2024-07-01  # best estimate: no source states the intrusion date; bounded below by CVE-2024-30088's June-2024 patch and above by the 2024-10-11 disclosure
 disclosure_date: 2024-10-11
-end_date: 2024-10-11
+end_date: null  # AUDIT 2026-07-05: was 2024-10-11 (conflated with the disclosure date); no source states an op end
 incident_type:
   - intrusion
+  - espionage
   - data-theft
-initial_vector: n-day  # CVE-2024-30088 Windows Kernel EoP
+initial_vector: n-day  # web shell on a vulnerable public-facing web server (specific initial-access CVE unstated). CVE-2024-30088 (Windows Kernel EoP) was used LATER for SYSTEM privilege escalation, not initial access
 outcome_summary: |
   Trend Micro documented Earth Simnavaz (APT34 / OilRig)
   exploiting CVE-2024-30088, a Windows Kernel elevation-of-
@@ -20,45 +21,57 @@ outcome_summary: |
   toolkit.
 false_flag_risk: none
 summary: |
-  Continuation of the long-running APT34 collection campaign
-  against Gulf-state government and energy sectors. Doctrinally
-  fits the Forward Defense / proxy-projection pillar (UAE is a
-  Resistance-Axis adversary host state) and the constitutional
-  IRGC counter-foreign-threat tasking when applied to the MOIS-
-  attributed APT34 cluster. The STEALHOOK toolset and CVE-2024-
-  30088 exploitation are notable as APT34's first publicly
-  documented use of a recent Windows Kernel zero-day-aged n-day,
-  showing operational tempo investment against high-value Gulf
-  targets.
+  Continuation of the long-running APT34 / OilRig cyber-espionage
+  campaign against Gulf-state targets, documented by Trend Micro
+  (which tracks the group as "Earth Simnavaz") against the United
+  Arab Emirates and the broader Gulf region. Initial access was
+  via a web shell dropped on a vulnerable public-facing web
+  server; the actor then used the ngrok RMM tool for persistence
+  and lateral movement toward the domain controller and exploited
+  CVE-2024-30088 — a Windows Kernel elevation-of-privilege flaw
+  Microsoft patched in June 2024 — for SYSTEM-level privilege
+  escalation. A dropped password-filter DLL (psgfilter.dll)
+  harvested clear-text domain credentials, and the STEALHOOK
+  backdoor exfiltrated stolen data through the victim's on-premises
+  Microsoft Exchange servers as outbound email attachments to
+  attacker-controlled addresses; the toolkit combined customized
+  .NET tools, PowerShell scripts, and IIS-based malware. Trend
+  Micro frames the actor as a state-sponsored espionage group;
+  APT34 / OilRig is widely attributed to Iran in the broader
+  reporting (The Hacker News, SOC Prime), though Trend Micro's own
+  report names neither Iran nor a specific service.
 attributions:
   - actor_id: ir/mois/apt34
     attributing_org: Trend Micro Research
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-10-11
     attribution_source_id: trend-micro/2024-10-11_earth-simnavaz-uae-gulf
+    notes: "Trend Micro identifies the group with high confidence as Earth Simnavaz = APT34 = OilRig (a specific named threat cluster) and calls it 'state-sponsored', but its report names neither Iran nor the MOIS — hence attribution_level named-actor, not nation/named-unit. The Iran linkage comes from APT34/OilRig's established identity (corroborated here by The Hacker News 'Iranian threat actor' and SOC Prime 'Iranian nation-backed'); the corpus actor's ir/mois service placement rests on its own cited sources (Lab Dookhtegan 2019), not on this Trend Micro report. AUSPEX concurs the activity is APT34."
 doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: ir/forward-defense/proxy-projection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Persistent collection against UAE and Gulf-state governments
-      — Resistance-Axis adversary host states — fits the forward-
-      defense / proxy-projection pillar.
+      Persistent APT34 / OilRig cyber-espionage collection against
+      the UAE and other Gulf-state governments — US-aligned regional
+      adversaries of Iran — is the cyber expression of forward
+      defense: projecting Iranian intelligence collection into
+      adversary networks at near-zero physical risk, the activity
+      the proxy-projection pillar ("cyber tasking against Israeli and
+      US allies in the region") encodes. strongly_inferred rather
+      than attested because no cited source states Iran's strategic
+      purpose — Trend Micro documents only tradecraft and
+      victimology.
     attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ir/constitutional-irgc-role
-    pillar_id: ir/constitutional-irgc-role/regime-preservation
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      MOIS-attributed APT34 collection against IRGC-adversary
-      governments aligns with the IRGC counter-foreign-threat
-      mandate even when the operating service is MOIS rather
-      than IRGC proper.
-    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology: UAE + broader-Gulf government / critical infrastructure — US-aligned regional adversaries of Iran (Trend Micro; The Hacker News; SOC Prime)."
+        - "Actor mission: APT34 / OilRig is a long-running state-sponsored espionage cluster whose own default doctrine alignment is forward-defense / proxy-projection."
+        - "Operation profile: persistent credential theft and Exchange-based exfiltration (collection), not destructive disruption — consistent with intelligence projection into adversary networks rather than coercion."
+      ruled_out: "Resistance-Axis anti-Israel coercion — the named victims here are Gulf governments (UAE), not Israel, and the operation is espionage collection rather than destructive coercion, so that pillar is the weaker fit."
     contested: false
     analyst: claude
 targets:
@@ -69,3 +82,65 @@ targets:
     role: primary
 sources:
   - trend-micro/2024-10-11_earth-simnavaz-uae-gulf
+  - thehackernews/2024-10-13_oilrig-windows-kernel-uae-gulf
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    Audited vs Trend Micro "Earth Simnavaz (aka APT34) Levies Advanced Cyberattacks" (raw snapshot
+    cea2992e…b7740d1f, 105100 bytes) + corroborating The Hacker News 2024-10-13 (raw 78969f5a…e3b2077c,
+    170310 bytes). Level=partial: the load-bearing UAE + government specifics are only mirror-corroborated
+    because Trend Micro EDITED the live page (see below); everything else is carried by the captured primary.
+    [a] FACTS — all tradecraft verbatim in the Trend Micro raw: STEALHOOK ("identified by Trend Micro as
+    STEALHOOK", the exfiltration backdoor); CVE-2024-30088 ("the Windows Kernel Elevation of Privilege
+    vulnerability … as a means of privilege escalation", patched June 2024); ngrok ("remote monitoring and
+    management (RMM) tool … download the ngrok remote management tool, facilitating lateral movement … reach
+    the Domain Controller"); password-filter DLL ("abusing the dropped password filter policy … extract
+    clean-text credentials … exfiltrated via email"; THN names it psgfilter.dll); on-prem Exchange exfil
+    ("exploits on-premises Exchange servers to exfiltrate credentials to email accounts under their control");
+    ".NET tools, PowerShell scripts, and IIS-based malware"; web-shell initial access ("infiltrating a
+    vulnerable web server to drop a web shell" — THN). CORRECTIONS: (1) removed the embellishment "APT34's
+    first publicly documented use of a recent Windows Kernel zero-day-aged n-day" — NO source carries a
+    "first"/"novel" claim; Trend Micro only says the group "recently added CVE-2024-30088 to their toolset"
+    / "continuous adaptation by exploiting newer vulnerabilities". (2) initial_vector comment fixed:
+    CVE-2024-30088 is post-access PRIVILEGE ESCALATION, not initial access; initial access was a web shell on
+    a vulnerable public-facing web server (specific CVE unstated). (3) summary rewritten to strip embedded
+    doctrine editorializing and be source-grounded. (4) added incident_type: espionage (Trend Micro: "a cyber
+    espionage group / cyber espionage campaign").
+    CONTENT-DRIFT (why partial): the Trend Micro page re-fetched 2026-07-05 has been retitled "…Against Middle
+    East" and its body genericized — "UAE" (0), "government" as victim (0), and "Iran/Iranian" (0) no longer
+    appear in the captured raw (the lone "iran" is inside an outbound hyperlink to a DarkReading Fox-Kitten
+    piece). The ORIGINAL Oct-2024 report named UAE + government, preserved in the source-record title, the
+    original URL slug (…-uae-gulf-regions.html, now 301-redirecting), Trend Micro's own syndicated PR
+    ("…Against UAE and Gulf Regions", publicnow.com), and secondary reporting. Added The Hacker News as a
+    corroborating cited source: "The Iranian threat actor known as OilRig … a cyber espionage campaign
+    targeting the U.A.E. and the broader Gulf region" (quoting TM researchers Fahmy/Yamany/Kamal/Dai); SOC
+    Prime: "government sectors … critical infrastructure organizations in the UAE", "Iranian nation-backed".
+    Kept targets sectors/government (ae) + sectors/government (Gulf) — corroborated; did not inflate to energy
+    (TM frames energy/oil-gas as the group's GENERAL focus, not this incident's confirmed victim).
+    [b] ATTRIBUTION — added attribution_level: named-actor. Trend Micro names the cluster (Earth Simnavaz =
+    APT34 = OilRig) with high confidence but NEITHER Iran NOR the MOIS; kept confidence high (un-hedged group
+    ID) and auspex_assessment concur (AUSPEX concurs it is APT34). Added a note recording that this report
+    reaches only named-actor and that the ir/mois placement rests on the actor's OTHER sources, not this one.
+    [c] DATES — published_on 2024-10-11 correct (TM pub date). end_date corrected 2024-10-11 → null (was
+    conflated with disclosure; no op-end stated). start_date 2024-07-01 flagged as a best estimate (no source
+    dates the intrusion; bounded by the June-2024 CVE patch and the Oct-11 disclosure). disclosure_date
+    2024-10-11 correct. THN published_on 2024-10-13 (per its datePublished meta).
+    [d] DOCTRINE — kept forward-defense/proxy-projection at strongly_inferred (honest: no source states Iran's
+    purpose, so not attested; attesting_source_id null), revised the reasoning to the now-corroborated
+    UAE/Gulf victimology and added inference_basis.signals + ruled_out. REMOVED the second link
+    (ir/constitutional-irgc-role/regime-preservation): AI-over-tag — that pillar encodes counter-DISSIDENT /
+    diaspora / journalist ops (civil-society sectors), NOT foreign-government espionage; it is IRGC-specific
+    while the actor is MOIS (its own reasoning hedged "even when the operating service is MOIS rather than
+    IRGC proper"); and the actor's own default_doctrine_alignment_ids are forward-defense + resistance-axis,
+    NOT constitutional-irgc-role. Result: one honest strongly_inferred doctrine link.
+    [e] ATTRIBUTION_LEVEL — set named-actor (see [b]).
+    [f] ACTOR_ID — ir/mois/apt34 resolves (file atlas/actors/ir/apt34.yaml carries id ir/mois/apt34; the loader
+    keys on id, not path); ir/mois service exists; placement was itself audited/VERIFIED 2026-06-24. No actor
+    edit. NOTE for orchestrator: the ir/mois placement rests on a TERTIARY source (Lab Dookhtegan 2019) per the
+    actor record's own caveat — this event's attributing source (Trend Micro) does not corroborate MOIS.
+    FLAGS: (1) SOURCE content-drift on trend-micro/2024-10-11_earth-simnavaz-uae-gulf — live page edited to
+    genericize victimology; source record annotated + re-tiered secondary→primary (first-party original vendor
+    investigation). (2) New source added: thehackernews/2024-10-13_oilrig-windows-kernel-uae-gulf (snapshotted).

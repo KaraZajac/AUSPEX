@@ -1,52 +1,102 @@
 id: 2024-08/ta453-blacksmith-anvilecho-religious-figure
 name: TA453 / Charming Kitten delivers BlackSmith / AnvilEcho via fake-podcast lure
 start_date: 2024-07-22
-disclosure_date: 2024-08-13
-end_date: 2024-08-13
+disclosure_date: 2024-08-20  # AUDIT: was 2024-08-13; real byline/JSON-LD = 2024-08-20
+end_date: null  # AUDIT: was 2024-08-13 (= disclosure, a conflation); source does not bound the op's end
 incident_type:
   - intrusion
-  - data-theft
+  - espionage  # AUDIT: was data-theft; Proofpoint frames as intelligence collection, delivery only "attempted", no confirmed exfiltration
 initial_vector: phishing
 outcome_summary: |
-  Proofpoint disclosed a TA453 (APT35 / Charming Kitten) spear-
-  phishing operation from late July 2024 targeting a prominent
-  Jewish religious figure with a fake podcast-invitation lure.
-  The attack chain delivered the BlackSmith toolkit, which
-  installs the AnvilEcho PowerShell trojan — a monolithic
-  consolidation of TA453's previous modular implants
-  (CharmPower, GorjolEcho, POWERSTAR, PowerLess) into a single
-  script. Initial vector: Google-Drive-hosted ZIP containing a
-  Windows shortcut (LNK) file. Capabilities include
-  reconnaissance, screenshots, file download/upload via FTP and
-  Dropbox.
+  Proofpoint disclosed (2024-08-20) a TA453 spear-phishing
+  operation that began 22 July 2024 targeting a prominent Jewish
+  religious figure. TA453 impersonated the Research Director of
+  the Institute for the Study of War (ISW), invited the target
+  onto a fake ISW podcast, and — after a benign trust-building
+  exchange and a password-protected DocSend note linking the real
+  ISW podcast — sent a Google-Drive ZIP ("Podcast Plan-2024.zip")
+  containing a Windows shortcut (LNK). The chain attempted to
+  deliver the C++ BlackSmith toolset, which loads the AnvilEcho
+  PowerShell trojan (~2,200 lines, v3.2.3) — a single-script
+  consolidation of TA453's previously modular backdoors
+  (GorjolEcho/PowerStar, TAMECURL, MischiefTut, CharmPower).
+  AnvilEcho performs WMI system reconnaissance, screenshots, audio
+  capture, browser-info and keystroke collection, and file
+  up/download, with AMSI/ETW and SSL-validation bypasses; its code
+  indicates prior use of FTP and Dropbox for exfiltration.
+  Proofpoint frames the toolkit as focused on intelligence
+  collection and exfiltration.
 false_flag_risk: none
 summary: |
-  Doctrinally important: targeting a prominent Jewish religious
-  figure fits both the Resistance-Axis anti-Israel-coercion
-  pillar (broadly defined to include diaspora civil-society
-  leaders) and the cyber-deniable-retaliation diaspora-targeting
-  pillar. Tradecraft-side, AnvilEcho's monolithic consolidation
-  of multiple prior toolsets is the most significant TA453
-  implant evolution in several years; Proofpoint's framing
-  suggests this becomes the cluster's default backdoor going
-  forward.
+  Proofpoint attributes this campaign to TA453 operating "in
+  support of the IRGC, specifically the IRGC Intelligence
+  Organization (IRGC-IO)," and assesses TA453 "roughly equivalent
+  to Mandiant's APT42 ... all of which can generally be considered
+  Charming Kitten." Proofpoint states the effort "likely support[s]
+  intelligence collection in support of Iranian government
+  interests" — i.e. the source frames it as espionage, not an
+  overt coercive or destructive operation. AUSPEX reads the
+  persona-driven collection against a prominent Jewish religious/
+  civil-society figure as fitting the cyber-deniable-retaliation
+  diaspora/civil-society-targeting pillar (which explicitly brackets
+  "APT35 / APT42 / APT39 operations"), with weaker, contested
+  Resistance-Axis anti-Israel-coercion value during the Israel-Hamas
+  conflict; both are AUSPEX inferences the source does not state.
+  Tradecraft-side, AnvilEcho consolidates TA453's previously modular
+  PowerShell scripts into a single ~2,200-line full-service trojan
+  (v3.2.3); Proofpoint's stated significance is the streamlining,
+  not a claim that it becomes the cluster's default backdoor.
 attributions:
-  - actor_id: ir/irgc/apt35
+  - actor_id: ir/irgc-io/apt42
     attributing_org: Proofpoint Threat Insight
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
-    attribution_date: 2024-08-13
+    attribution_date: 2024-08-20
     attribution_source_id: proofpoint/2024-08_ta453-blacksmith-anvilecho
+    notes: |
+      AUDIT 2026-07-05 (claude-opus-4.8/max): re-pointed actor_id
+      ir/irgc/apt35 -> ir/irgc-io/apt42. This report's Attribution
+      section states TA453 "operates in support of the IRGC,
+      specifically the IRGC Intelligence Organization (IRGC-IO)" and
+      that it is "roughly equivalent to Mandiant's APT42 ... all of
+      which can generally be considered Charming Kitten." The corpus
+      models the cluster split as APT42 = IRGC-IO, APT35 = IRGC; the
+      named unit here (IRGC-IO) and the explicit APT42 equivalence
+      select ir/irgc-io/apt42. TA453 is an "overlapping" alias on
+      both actors, so the FK resolves either way; the source's own
+      words choose APT42/IRGC-IO. attribution_level=named-unit
+      (IRGC-IO named), confidence high (firm standing Proofpoint
+      assessment, caveated only that individual IRGC members cannot
+      be named).
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/diaspora-targeting
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      APT35's persistent collection against diaspora-adjacent
-      civil-society and religious leaders fits the diaspora-
-      targeting pillar.
+      Proofpoint attributes the campaign to TA453/IRGC-IO and states
+      it "likely support[s] intelligence collection in support of
+      Iranian government interests" — persona-driven, deniable
+      collection against a civil-society/religious figure, executed
+      behind an impersonated ISW podcast host. That is the tradecraft
+      the cyber-deniable-retaliation pillar encodes, and the
+      diaspora/civil-society-targeting pillar explicitly brackets
+      "APT35 / APT42 / APT39 operations." The source names the
+      intelligence-collection purpose (not a coercive, destructive,
+      or influence goal), which triangulates to persona-laundered
+      IRGC-IO collection as the dominant reading. Caveat: the target
+      is a prominent Jewish religious figure, not an Iranian diaspora
+      dissident, so the fit is via the pillar's persona-based
+      civil-society-collection scope rather than its diaspora-
+      dissident core.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Proofpoint attribution: TA453 operates in support of the IRGC Intelligence Organization (IRGC-IO), a persona-driven collection actor."
+        - "Tradecraft: impersonation of ISW's Research Director plus a fake-podcast lure = anonymous-persona access where overt state attribution would be politically costly, the pillar's defining pattern."
+        - "Stated purpose: Proofpoint frames AnvilEcho as focused on intelligence collection and exfiltration, not disruption or leak-and-claim."
+      ruled_out: "Resistance-Axis anti-Israel-coercion as the PRIMARY reading — the source never mentions Israel, coercion, or a destructive effect and frames the op as espionage; also ruled out opportunistic reconnaissance — the bespoke ISW persona and full AnvilEcho toolset indicate a tasked collection priority."
     contested: false
     analyst: claude
   - doctrine_id: ir/resistance-axis
@@ -54,17 +104,26 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Targeting prominent Jewish religious figures during the
-      Israel-Hamas conflict has Resistance-Axis information-
-      warfare value; counter-explanation is that the target may
-      have been selected for traditional intelligence value
-      independent of the conflict cycle.
+      Targeting a prominent Jewish religious figure during the
+      Israel-Hamas conflict could carry Resistance-Axis value, but
+      Proofpoint does not mention Israel, the conflict, coercion, or
+      any destructive/leak effect — it frames the op purely as
+      intelligence collection. More than one strategic reading
+      survives (standing IRGC-IO collection vs. conflict-tempo
+      anti-Israel targeting), so this stays plausible.
     counter_explanation: |
-      APT35's long history of targeting Jewish religious and
-      community figures predates the Israel-Hamas conflict and
-      may reflect a standing collection requirement rather than
-      a Resistance-Axis-driven tempo elevation.
+      TA453/Charming-Kitten's long history of collecting against
+      Jewish and Israel-policy-adjacent figures predates the
+      Israel-Hamas conflict and may reflect a standing IRGC-IO
+      collection requirement rather than a Resistance-Axis-driven
+      tempo elevation; the anti-israel-coercion pillar otherwise
+      encodes destructive/coercive ops (Moses Staff, Black Shadow,
+      CyberAv3ngers), which this espionage op is not.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Standing IRGC-IO intelligence collection: Proofpoint states the op supports intelligence collection for Iranian government interests and does not tie it to the Israel-Hamas conflict."
+        - "Resistance-Axis anti-Israel coercion: a prominent Jewish religious figure targeted during the conflict has anti-Israel information value, but the pillar centers on destructive/coercive ops against Israeli targets, which this collection op is not."
     contested: false
     analyst: claude
 targets:
@@ -72,3 +131,123 @@ targets:
     role: primary
 sources:
   - proofpoint/2024-08_ta453-blacksmith-anvilecho
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the RAW Proofpoint "Best Laid Plans: TA453 Targets
+    Religious Figure with Fake Podcast Invite Delivering New
+    BlackSmith Malware Toolset" (raw snapshot captured + hashed:
+    proofpoint__2024-08_ta453-blacksmith-anvilecho.html, sha256
+    7e516f4f…bb0809b, 140,439 bytes). Single-source event; source is
+    reachable and is the real article (not a phantom).
+
+    [a] FACTS — corrected to match the RAW. Op began "Starting 22
+    July 2024" (start_date ✓). Lure = TA453 impersonating "the
+    Research Director for the Institute for the Study of War (ISW)"
+    with a fake ISW-podcast invite; trust-built via a benign email
+    then a password-protected DocSend note linking the REAL ISW
+    podcast; malware staged via a Google Drive ZIP "Podcast
+    Plan-2024.zip" containing "Podcast Plan 2024.lnk" — ADDED the ISW
+    impersonation + multi-stage flow (were absent). Chain "attempted
+    to deliver" BlackSmith (C++ toolset; PDB E:\FinalStealer\
+    blacksmith\) → AnvilEcho PowerShell trojan (~2200 lines, v3.2.3)
+    — softened "delivered" → "attempted to deliver" (Proofpoint's
+    own hedge; target's replies were "outside of Proofpoint
+    visibility"). CORRECTED the predecessor list: RAW says AnvilEcho
+    is "the successor of GorjolEcho/PowerStar, TAMECURL, MischiefTut,
+    and CharmPower" — event had "(CharmPower, GorjolEcho, POWERSTAR,
+    PowerLess)", i.e. it dropped TAMECURL+MischiefTut and mis-added
+    PowerLess (RAW ties the *name* "BlackSmith" and a browser-stealer
+    to the older POWERLESS module per Volexity, NOT the AnvilEcho
+    lineage). Capabilities all source-carried (WMI recon, screenshot,
+    Get-Sound audio, Get-WebInfo browser, klg, file up/download,
+    AMSI+ETW bypass, TrustAllCerts SSL bypass; "Possible support for
+    FTP and Dropbox" + "code suggesting … FTP and Dropbox … in the
+    past" → softened to "code indicates prior use"). No fabricated
+    capabilities found; the malware section is if anything richer
+    than the event claimed. STRIPPED two AI-embellishments from the
+    summary: "most significant TA453 implant evolution in several
+    years" and "Proofpoint's framing suggests this becomes the
+    cluster's default backdoor going forward" — the RAW makes neither
+    claim (it says only that TA453 "streamlined its malware functions
+    … into a full-service PowerShell trojan").
+
+    [b] ATTRIBUTION — KEY CORRECTION. RAW Attribution section:
+    "Proofpoint does continue to assess that TA453 operates in
+    support of the IRGC, specifically the IRGC Intelligence
+    Organization (IRGC-IO)" and "Proofpoint currently views TA453 as
+    overlapping with Microsoft's Mint Sandstorm … and roughly
+    equivalent to Mandiant's APT42 and PWC's Yellow Garuda, all of
+    which can generally be considered Charming Kitten." The event had
+    actor_id ir/irgc/apt35 (APT35 = IRGC). The corpus models the
+    split as APT42 = IRGC-IO / APT35 = IRGC (see apt42.yaml alias
+    note), and TA453 is an "overlapping" alias on BOTH actors — so
+    the source's OWN words (IRGC-IO + "roughly equivalent to …
+    APT42") select ir/irgc-io/apt42. RE-POINTED actor_id
+    ir/irgc/apt35 → ir/irgc-io/apt42 (FK verified: ir/apt42.yaml id
+    ir/irgc-io/apt42, service ir/irgc-io exists). Set
+    attribution_level=named-unit (IRGC-IO named); kept
+    attributing_org_confidence high (firm standing assessment) and
+    auspex_assessment concur. Fixed attribution_date 2024-08-13 →
+    2024-08-20.
+
+    [c] DATES — the event/source were pinned to a WRONG 2024-08-13.
+    RAW byline "August 20, 2024" and JSON-LD "datePublished":
+    "2024-08-20T12:00:25Z". Fixed source published_on and event
+    disclosure_date + attribution_date 08-13 → 08-20. end_date was
+    08-13 (= disclosure, a conflation) → null (source gives no
+    operation end). start_date 2024-07-22 confirmed by RAW.
+
+    [d] DOCTRINE_LINKS — neither link is attested (correct): the RAW
+    states an INTELLIGENCE-COLLECTION purpose, not the specific
+    anti-Israel-coercion or diaspora-retaliation goal, so both stay
+    below attested with attesting_source_id null. Kept link-1
+    (cyber-deniable-retaliation/diaspora-targeting) strongly_inferred
+    per task guidance and grounded it on the source-stated IRGC-IO
+    collection purpose + persona tradecraft; ADDED inference_basis
+    {signals[], ruled_out}. Rewrote link-2 (resistance-axis/
+    anti-israel-coercion) reasoning (the RAW never mentions Israel/
+    conflict/coercion) and kept it plausible with a counter_
+    explanation + ADDED inference_basis {alternatives[]}. Both are
+    attacker-rationale (default) — perspective correct. FLAG: the
+    diaspora-targeting pillar is an imperfect fit — its summary is
+    specifically about *Iranian diaspora* dissidents/journalists/
+    activists, whereas this target is a Jewish religious figure lured
+    via a US think-tank (ISW) persona; the op reads as think-tank/
+    policy-community intelligence collection. Proofpoint explicitly
+    describes IRGC-IO's standing intelligence mandate ("collects
+    intelligence … in support of a variety of assigned
+    responsibilities"), so ir/constitutional-irgc-role may be a
+    cleaner PRIMARY doctrine — left for orchestrator/Kara (did not
+    invent/swap doctrines in-audit).
+
+    [e] ATTRIBUTION_LEVEL — was missing; set named-unit (IRGC-IO is a
+    named unit within the IRGC that Proofpoint names as sponsor).
+
+    [f] ACTOR_ID — now ir/irgc-io/apt42 (resolves: atlas/actors/ir/
+    apt42.yaml). apt42's default_doctrine_alignment_ids already
+    include ir/cyber-deniable-retaliation, so the re-point makes
+    link-1 consistent with the actor default. Actor files NOT edited.
+
+    Source-record fixes (same source): title corrected to the real
+    "…Delivering New BlackSmith Malware Toolset"; tier secondary →
+    primary (first-party vendor original research); added raw_snapshot
+    + content_sha256; notes reconciled (had "APT35/Charming Kitten";
+    RAW says IRGC-IO/APT42) + AUDIT line.
+
+    FLAGS for orchestrator:
+    (1) RE-ATTRIBUTION ir/irgc/apt35 → ir/irgc-io/apt42 on this event
+        — source-faithful, but TA453 is deliberately overlap-modeled
+        across both actors; if the corpus convention prefers mapping
+        Proofpoint-TA453 to APT35 for continuity, revert. Other
+        TA453/Charming-Kitten events (e.g. 2023-04 mint-sandstorm-
+        us-cii) map to apt35, so this event is now the lone
+        TA453→apt42 mapping — worth a consistency pass.
+    (2) DOCTRINE: consider ir/constitutional-irgc-role (IRGC-IO
+        intelligence mandate, source-described) as primary; the
+        diaspora-targeting pillar target-profile is a stretch.
+    Residual uncertainty: target's nationality unstated by source
+    (target_id sectors/civil-society/religious kept; country unset).

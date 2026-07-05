@@ -2,47 +2,149 @@ id: 2024-01/hunt-hackett-sea-turtle-resurgence
 name: Hunt & Hackett documents Sea Turtle resurgence against Dutch ISPs serving Kurdish diaspora
 start_date: 2023-01-01
 disclosure_date: 2024-01-04
-end_date: 2023-11-30
+end_date: null   # AUDIT 2026-07-05: was 2023-11-30 (invented precision); H&H gives no op end date — "between 2021 and 2023", "initiated early 2023", C&C live "at the time of writing".
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: valid-creds
 outcome_summary: |
   Dutch firm Hunt & Hackett published a detailed analysis of
-  Sea Turtle / MARBLED DUST activity through 2023, documenting
-  targeting of telecommunications and ICT service providers in
-  the Netherlands serving Kurdish-diaspora and Turkish-opposition
-  customers. Targets included three ISPs, an IT services company,
-  and a media outlet. Tradecraft was consistent with the pre-2019
-  Sea Turtle pattern but oriented to diaspora-internet-
-  infrastructure rather than government-of-Cyprus-style targets.
+  Sea Turtle / Marbled Dust activity, documenting campaigns in
+  the Netherlands focused on telecommunications, media, ISPs and
+  IT-service providers — more specifically Kurdish (PKK-affiliated)
+  websites and organisations holding data on minority groups and
+  political dissidents. Hunt & Hackett observed multiple victim
+  organisations and at least two compromised cPanel accounts, and
+  confirmed the copying and likely exfiltration of at least one
+  e-mail archive. Tradecraft (compromised cPanel/SSH access, the
+  SnappyTCP reverse shell, VPN-fronted logons and anti-forensics)
+  reflected altered capabilities versus the DNS-hijacking for
+  which Sea Turtle was known in 2017–2019, while targeting
+  similar sectors.
 false_flag_risk: none
 summary: |
-  The most operationally significant Sea Turtle resurgence
-  disclosure. Hunt & Hackett's report quieted speculation that
-  the cluster had been disbanded after the 2019 Talos attribution
-  and demonstrated continuity of Turkish state cyber tasking
-  against Kurdish diaspora through different infrastructure
-  targets.
+  Hunt & Hackett documented a Sea Turtle resurgence after a
+  period in which public reporting on the cluster had remained
+  limited following the 2019 Talos attribution, and assessed the
+  activity as a state-supported cyber-espionage group operating
+  in alignment with Turkish interests. The campaigns collected
+  politically motivated information — personal data on minority
+  groups and political dissidents, and access to Kurdish (PKK-
+  affiliated) websites — for surveillance and intelligence
+  gathering, demonstrating continuity of Turkish-aligned espionage
+  against Kurdish-diaspora targets through different infrastructure.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Hunt & Hackett
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-01-04
     attribution_source_id: hunt-hackett/2024-01-04_sea-turtle-resurgence
+    notes: "Hunt & Hackett tracks the named cluster Sea Turtle (aliases Teal Kurma, Marbled Dust, SILICON, Cosmic Wolf) and attributes it at the NATION level — 'Hunt & Hackett believes that Sea Turtle is a Turkey based Advanced Persistent Threat (APT) actor', 'operating in alignment with Turkish interests', a 'state-supported cyber espionage group' with 'the aim of advancing Turkey's interests'. No Turkish intelligence service (MIT) or unit is named — hence attribution_level named-actor (named group + nation), not named-unit, and actor tr/unscoped/sea-turtle."
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Dutch ISPs serving Kurdish-diaspora customers is a precise
-      doctrinal target match.
+      Hunt & Hackett documents Sea Turtle campaigns in the
+      Netherlands that specifically target Kurdish (PKK-affiliated)
+      websites and organisations holding data on minority groups
+      and political dissidents, and states the stolen information
+      is "likely to be exploited for surveillance or intelligence
+      gathering on specific groups and or individuals" advancing
+      "Turkey's interests" — precisely the Kurdish-diaspora
+      surveillance the pillar encodes. The label is
+      strongly_inferred rather than attested because the doctrine
+      is an inferred posture with no governing Turkish text (its
+      own cyber_relevance directs links here to strongly_inferred)
+      and H&H frames the activity as espionage "in alignment with
+      Turkish interests" rather than a directed counter-Kurdish
+      state mandate; victim selection is nonetheless unambiguous
+      and admits no serious competing strategic reading.
+    attesting_source_id: hunt-hackett/2024-01-04_sea-turtle-resurgence
+    inference_basis:
+      signals:
+        - "Victimology: campaigns target Kurdish (PKK-affiliated) websites plus telecom/ISP/IT-service providers serving Kurdish-diaspora and political-dissident customers in the Netherlands."
+        - "Stated purpose: H&H says the collected 'politically motivated information such as personal information on minority groups and potential political dissents' is 'likely to be exploited for surveillance or intelligence gathering on specific groups and or individuals'."
+        - "Actor-mission fit: Sea Turtle is a Turkey-based, state-supported espionage cluster whose known target set includes Kurdish/PKK groups; the campaign is assessed as advancing Turkey's interests."
+        - "Corroboration: H&H ties the pattern to 2020 US-official reporting of hackers acting in Turkey's interest, focusing on the identities and locations of victims geopolitically significant to Turkey."
+      ruled_out: "tr/mavi-vatan (Eastern-Mediterranean maritime/energy geopolitics), the actor's other default doctrine — ruled out because the victims are Kurdish-diaspora internet infrastructure and PKK-affiliated websites, not maritime, hydrocarbon or Eastern-Med energy targets."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/dutch-isps-kurdish-diaspora
     role: primary
+    country: nl
 sources:
   - hunt-hackett/2024-01-04_sea-turtle-resurgence
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs Hunt & Hackett "Turkish espionage campaigns in the Netherlands" — the SOLE
+    cited source (raw snapshot hunt-hackett__2024-01-04_sea-turtle-resurgence.html, sha256
+    62126e31…3a01641c, 126551 bytes; hash RE-VERIFIED against on-disk snapshot, matches the
+    source record). A phantom msft/2024-03-05 source was removed from this event on
+    2026-07-05; H&H is now the only source and carries every retained claim.
+    [a] FACTS — CORRECTED. Removed the fabricated victim breakdown "three ISPs, an IT
+    services company, and a media outlet": the report NEVER enumerates victims — only
+    "multiple campaigns", "multiple victim organizations", "multiple organizations", and a
+    "second cPanel account", across sectors "telecommunication, media, ISPs and IT-service
+    providers and more specifically Kurdish websites (among others PKK affiliated)". Rewrote
+    outcome_summary to source-carried facts: ≥2 compromised cPanel accounts; SnappyTCP
+    reverse shell (C&C forward.boord[.]info:443); VPN-fronted logons (M247, Arelion);
+    anti-forensics (unset Bash/MySQL history, overwrote Linux logs); copy + likely-exfil of
+    ≥1 e-mail archive ("created a copy of the e-mail archive … highly likely that Sea Turtle
+    exfiltrated the e-mail archive"). Fixed the tradecraft framing: report says the actor
+    "has since continued to target similar sectors but has altered its capabilities" — i.e.
+    technique shifted from the 2017–2019 DNS-hijacking hallmark to cPanel/reverse-shell,
+    sectors similar; the old prose ("consistent with the pre-2019 pattern … rather than
+    government-of-Cyprus-style targets") conflated technique with target and over-claimed.
+    Dropped the unverifiable superlative "most operationally significant … disclosure" and
+    the "quieted speculation that the cluster had been disbanded" embellishment — report
+    says only that public info "remained limited" / actor was "operating primarily under the
+    radar" (no disbandment claim). initial_vector valid-creds CONFIRMED: "a legitimate
+    cPanel account, compromised by the attacker … unclear how they obtained access to the
+    cPanel credentials" + MITRE T1078.004 Valid Accounts. incident_type: added espionage
+    ("state-supported cyber espionage group", "motivated by espionage") alongside retained
+    intrusion + data-theft.
+    [b] ATTRIBUTION — H&H names the cluster Sea Turtle and attributes at NATION level:
+    "Hunt & Hackett believes that Sea Turtle is a Turkey based Advanced Persistent Threat
+    (APT) actor that is motivated by espionage"; campaigns "believed to have been
+    orchestrated by a cyber threat actor operating in alignment with Turkish interests";
+    "characteristics of a state-supported cyber espionage group … with the aim of advancing
+    Turkey's interests". NO MIT / Turkish service named. Kept attributing_org_confidence
+    high (H&H asserts the Sea-Turtle=this-activity link and the Turkey nexus without
+    hedging) and auspex_assessment concur.
+    [c] DATES — disclosure_date 2024-01-04 kept (matches source record published_on, slug,
+    archive_url, and external citations) BUT the captured page byline reads "Jan 5, 2024
+    10:02:02 AM" — a 1-day discrepancy (likely a HubSpot display/timezone artifact);
+    FLAGGED, not silently changed. start_date 2023-01-01 = report's "initiated early 2023"
+    (best estimate). end_date CORRECTED 2023-11-30 → null: report gives NO op end date —
+    "between 2021 and 2023", "initiated early 2023", C&C infra live "at the time of writing";
+    the Nov-30 end was unsupported invented precision.
+    [d] DOCTRINE — kept strongly_inferred (NOT upgraded to attested; corpus rule =
+    confidence-never-upgraded, and doctrine tr/counter-gulen-kurdish-surveillance is an
+    inferred posture whose own cyber_relevance directs links here to strongly_inferred).
+    Expanded the one-line reasoning and added inference_basis (signals[] + ruled_out). The
+    source DOES state the surveillance purpose (targets "Kurdish websites (among others PKK
+    affiliated)"; collects "personal information on minority groups and potential political
+    dissents" "likely to be exploited for surveillance or intelligence gathering"), so set
+    attesting_source_id to the H&H source as the primary SUPPORTING source. ruled_out =
+    tr/mavi-vatan (actor's other default doctrine): victims are Kurdish-diaspora internet
+    infrastructure, not Eastern-Med maritime/energy. perspective attacker-rationale
+    (default); doctrine-state tr = actor-state tr, no mismatch.
+    [e] ATTRIBUTION_LEVEL — added named-actor (named cluster Sea Turtle + nation Turkey; no
+    unit/MIT named → not named-unit).
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves to atlas/actors/tr/sea-turtle.yaml (id
+    tr/unscoped/sea-turtle; demoted from tr/mit 2026-06-25, phantom Microsoft source removed
+    2026-07-05). No actor-file change needed.
+    Added targets[].country: nl (victims in the Netherlands). NOTE: target
+    orgs/dutch-isps-kurdish-diaspora has no registry file (dangling orgs/ FK) —
+    informational-only per validate.ts (targets/ normalization deferred corpus-wide);
+    flagged, not created (out of scope).

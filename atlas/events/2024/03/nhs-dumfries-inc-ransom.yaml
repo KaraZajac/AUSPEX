@@ -1,45 +1,162 @@
 id: 2024-03/nhs-dumfries-inc-ransom
 name: INC Ransom data extortion of NHS Dumfries and Galloway
-start_date: 2024-03-15
-disclosure_date: 2024-03-27
-end_date: 2024-05-30
+start_date: 2024-02-29
+disclosure_date: 2024-03-15
+end_date: 2024-05-06
 incident_type:
-  - data-theft
   - intrusion
+  - data-theft
+  - extortion
+  - leak
 initial_vector: unknown
 outcome_summary: |
-  INC Ransom group exfiltrated approximately 3TB of clinical and
-  administrative records from NHS Dumfries and Galloway, a
-  regional Scottish health board serving ~150,000 patients. After
-  the board declined to pay, INC Ransom progressively published
-  patient files on its leak site over March-May 2024 including
-  named clinical records, mental-health correspondence, and child-
-  safeguarding documentation. The Scottish Information
-  Commissioner opened a statutory investigation. No clinical
-  disruption was reported; the incident was data-theft extortion
-  rather than encryption-based.
+  NHS Dumfries and Galloway confirmed that, during an intrusion
+  that began at the end of February 2024, the attackers had access
+  to "a large volume of patient and staff-identifiable data" —
+  "millions of very small, separate pieces of data" such as
+  consultant-to-patient letters, letters between consultants, test
+  results and x-rays. INC Ransom posted a "proof pack" of genuine
+  stolen records on its dark-web extortion site (publicly disclosed
+  26 March 2024; the board confirmed publication on 27 March); the
+  proof pack related to six individual patients, who were each
+  contacted. The board entered no interaction with the attackers,
+  and on 6 May 2024 INC Ransom carried out its threat, publishing
+  over 3 terabytes of data. No patient appointments or operations
+  were cancelled and services ran as normal; the board worked with
+  the Information Commissioner's Office (ICO) and Central Legal
+  Office. The incident was data-theft extortion rather than
+  encryption-driven disruption.
 quantified_impact:
-  data_exfiltrated_tb: 3
-  patients_affected: 150000
+  data_exfiltrated_tb: 3  # INC Ransom's claim; NHS D&G confirmed the criminals published "over 3 terabytes" on 6 May 2024
 false_flag_risk: none
 summary: |
-  Type-specimen INC Ransom data-extortion case against UK NHS.
-  INC Ransom emerged July 2023 with a Citrix NetScaler (CVE-
-  2023-3519) and valid-credentials initial-access profile and
-  has continued through 2025-26 despite its source-code reportedly
-  being sold on Russian-language forums in May 2024 (with the
-  Lynx ransomware cluster emerging from the sale). No public
-  state-nexus attribution exists.
+  Type-specimen INC Ransom data-extortion case against the UK NHS.
+  INC Ransom is a financially-motivated ransomware / data-extortion
+  group first detected in July 2023 that gains initial access via
+  Citrix NetScaler (CVE-2023-3519) exploitation and purchased valid
+  account credentials; its source code was reportedly offered for
+  sale in 2024, after which the Lynx ransomware cluster emerged with
+  substantial code overlap. NHS Dumfries and Galloway is a regional
+  Scottish health board serving south-west Scotland (population just
+  under 150,000). No public state-nexus attribution exists; AUSPEX
+  files INC Ransom under criminal/. The specific initial-access
+  vector for this incident was not publicly disclosed.
 attributions:
   - actor_id: criminal/inc-ransom
-    attributing_org: NHS Dumfries and Galloway + journalism consensus
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org: INC Ransom leak-site self-claim + journalism consensus (The Record, Computer Weekly)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-03-27
-    attribution_source_id: ncsc-uk/2024-03-27_nhs-dumfries-galloway-statement
+    attribution_source_id: computerweekly/2024-03-27_nhs-scotland-inc-ransom-leak
+    notes: |
+      Attribution rests on INC Ransom's own leak-site self-claim
+      (the group posted a "proof pack" and claimed three terabytes;
+      publicly disclosed 26 March 2024) plus journalism consensus
+      naming the group. NHS Dumfries and Galloway's own statement
+      confirms the leaked proof-pack data is genuine but names only
+      "a recognised ransomware group", not INC Ransom, and no
+      independent forensic or government attribution of INC Ransom
+      to this incident exists. Named-actor (a named criminal group;
+      no nation-state or service). Hence moderate / concur-with-
+      caveat — downgraded 2026-07-05 from the prior high / concur,
+      which over-stated a leak-site self-claim.
 doctrine_links: []
 targets:
   - target_id: orgs/nhs-dumfries-galloway
     role: primary
 sources:
   - ncsc-uk/2024-03-27_nhs-dumfries-galloway-statement
+  - computerweekly/2024-03-27_nhs-scotland-inc-ransom-leak
+  - therecord/2024-03-29_nhs-scotland-inc-ransom-data-breach
+  - trend-micro/2024-10-29_ransomware-spotlight-inc
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs four raw snapshots (all sha256-verified). PHANTOM-adjacent
+    remediation: the sole prior source (ncsc-uk/2024-03-27_nhs-dumfries-
+    galloway-statement) had url:null; RE-SOURCED by populating its real URL
+    (https://www.nhsdg.co.uk/cyberattack/, the health board's own living
+    statement page) + snapshot, and ADDING three real sources (Computer
+    Weekly, The Record, Trend Micro).
+
+    Snapshots (raw in atlas/sources/raw/, gitignored):
+     - ncsc-uk__2024-03-27_nhs-dumfries-galloway-statement.html
+       sha256 4e26870d…79a00dc46 (228,353 bytes) — NHS D&G statement page.
+     - computerweekly__2024-03-27_nhs-scotland-inc-ransom-leak.html
+       sha256 2879ee50…06ff594d (382,328 bytes) — Alex Scroxton, 2024-03-27.
+     - therecord__2024-03-29_nhs-scotland-inc-ransom-data-breach.html
+       sha256 219b1c7d…62c8b048 (84,409 bytes) — Alexander Martin, 2024-03-29.
+     - trend-micro__2024-10-29_ransomware-spotlight-inc.html
+       sha256 7d51e8de…d743575b0 (499,395 bytes) — actor-general profile.
+
+    [a] FACTS — corrected against RAW:
+     * VOLUME: the task's "~3GB proof + ~150GB full" is NOT supported by any
+       source. NHS D&G's page: "On Monday 6 May 2024, they carried out that
+       threat – publishing over 3 terabytes of data." Computer Weekly: "Inc
+       Ransom claimed to be in possession of three terabytes of data." So
+       the figure is 3 TERABYTES (kept data_exfiltrated_tb: 3), not 3GB. The
+       proof pack itself is described only as "a small number of patients" /
+       "six individual patients" — no GB figure. No source gives 150GB.
+     * REMOVED quantified_impact.patients_affected: 150000 — fabrication
+       conflating the population SERVED with patients affected. The proof
+       pack "related to six individual patients"; the full-leak affected
+       count was never quantified. Population "just under 150,000" (The
+       Record) is the region served, now stated as such in the summary.
+     * "Scottish Information Commissioner opened a statutory investigation"
+       was WRONG on two counts and removed: the correct body is the UK
+       Information Commissioner's Office (ICO) — NHS D&G page: "The
+       Information Commissioner's Office (ICO) and Central Legal Office (CLO)
+       supported the incident process" / "We continue to work closely with
+       the Information Commissioner's Office on this matter" — and no source
+       says a "statutory investigation" was "opened".
+     * Data types trimmed to snapshot-carried: "individual letters from
+       consultants to patients, letters between consultants, test results,
+       x-rays" (NHS D&G page). Prior "mental-health correspondence / child-
+       safeguarding documentation" was NOT in any snapshotted source, so
+       dropped (broader reporting — ITPro, DigitalHealth, ITV — additionally
+       described children's mental-health and cancer records spanning
+       2015-2024, but those outlets were not snapshotted; not asserted here).
+     * No clinical disruption — verbatim: "No patient appointments or
+       operations have had to be cancelled or rescheduled" / "services have
+       continued to run as normal". "No interaction has been entered into
+       with those responsible" (so reframed the prior "declined to pay").
+     * Actor-general summary claims carried by Trend Micro "Ransomware
+       Spotlight: INC": "first detected in July 2023"; "exploit CVE-2023-3519"
+       via "Netscaler ADC (Citrix ADC) and Netscaler Gateway"; "uses
+       purchased valid account credentials"; "the Lynx ransomware group …
+       allegedly bought source code from the gang behind the INC ransomware,
+       but these claims have yet to be proven". Dropped the unsourced
+       "continued through 2025-26", the specific "$300K / Russian-language
+       forums / May 2024" (not in the cited source; lives in the actor
+       record), and an unverifiable "largest Scottish NHS exfiltration"
+       superlative.
+    [b] ATTRIBUTION — downgraded high/concur → moderate/concur-with-caveat.
+       The victim board names only "a recognised ransomware group"; the INC
+       Ransom identity is the group's own leak-site self-claim + journalism
+       consensus, with no independent forensic/government attribution. Re-
+       pointed attribution_source_id from the health-board statement (which
+       does not name the actor) to Computer Weekly (which does).
+    [c] DATES — start_date 2024-03-15 → 2024-02-29 (op "began at the end of
+       February"; 15 March was the first public ALERT, now disclosure_date).
+       end_date 2024-05-30 (unsourced) → 2024-05-06 (the full ~3TB
+       publication, the culminating act). attribution_date 2024-03-27 kept
+       (leak-site disclosure 26 Mar / board confirmation 27 Mar). Each
+       source's published_on set to its real byline date.
+    [d] DOCTRINE_LINKS — [] correct and retained. INC Ransom is criminal/,
+       financially motivated, no state nexus (actor default_doctrine_
+       alignment_ids: []); no doctrine genuinely applies. None invented.
+    [e] ATTRIBUTION_LEVEL — set named-actor (a named criminal group; no
+       nation-state or unit named).
+    [f] ACTOR_ID — criminal/inc-ransom resolves to atlas/actors/criminal/
+       inc-ransom.yaml. See FLAGS.
+
+    Residual uncertainty: the widely-reported "children's mental-health /
+    cancer records / 2015-2024 range" is credible but not in a snapshotted
+    source, so it was excluded rather than asserted. BBC (task-named) is
+    bot-walled for the fetcher and was not added; the snapshotted tier-1
+    trio (health-board page + Computer Weekly + The Record) carry every
+    incident claim, so level: full stands.

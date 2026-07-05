@@ -9,29 +9,50 @@ initial_vector: 0-day
 outcome_summary: |
   Microsoft MSTIC disclosed Citrine Sleet exploitation of
   CVE-2024-7971, a V8 type-confusion zero-day in
-  Chromium-based browsers, against cryptocurrency-sector
-  employees. Exploit-chain: voyagorclub[.]space drive-by →
-  V8 type-confusion RCE → Windows sandbox escape via
+  Chromium-based browsers, against the cryptocurrency sector
+  for financial gain. Exploit chain: voyagorclub[.]space
+  browser-exploit domain → V8 type-confusion RCE in the
+  sandboxed renderer → Windows kernel sandbox escape via
   CVE-2024-38106 → FudModule rootkit (admin-to-kernel,
-  previously documented on Diamond Sleet, evidencing
-  tooling-sharing across DPRK clusters). Pre-positioning
-  for follow-on crypto theft.
+  data-only/DKOM; also attributed to Diamond Sleet,
+  evidencing shared FudModule tooling between the two DPRK
+  actors). MSTIC observed no additional malware on target
+  devices; AUSPEX reads the RCE-plus-rootkit as
+  pre-positioning for follow-on cryptocurrency theft.
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Notable for the FudModule rootkit's cross-cluster reuse
-  (Citrine Sleet + Diamond Sleet), suggesting either shared
-  parent tooling within RGB or personnel migration. The
-  Chromium-zero-day-plus-Windows-sandbox-escape chain is
-  among the highest-tradecraft DPRK operations publicly
-  documented to date.
+  Microsoft MSTIC attributed exploitation of the Chromium V8
+  type-confusion zero-day CVE-2024-7971 to a North Korean
+  threat actor with high confidence, and to Citrine Sleet
+  specifically with medium confidence. Notable for the
+  FudModule rootkit's cross-actor reuse: the rootkit was also
+  attributed to Diamond Sleet, and Microsoft — having
+  previously identified shared infrastructure and tools
+  between the two DPRK actors — assesses this as likely shared
+  use of the FudModule malware between them. CVE-2024-7971 was
+  the third V8 type-confusion vulnerability exploited and
+  patched in 2024 (after CVE-2024-4947 and CVE-2024-5274).
 attributions:
   - actor_id: kp/rgb/citrine-sleet
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: named-unit
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-08-30
     attribution_source_id: msft/2024-08-30_citrine-sleet-chrome-zero-day
+    notes: |
+      MSTIC splits its confidence: "high confidence that the
+      observed exploitation of CVE-2024-7971 can be attributed to
+      a North Korean threat actor" (nation), but attributes the
+      activity "with medium confidence to Citrine Sleet" (the
+      named actor). Because this row names the specific actor
+      (kp/rgb/citrine-sleet), attributing_org_confidence tracks
+      the medium/moderate Citrine-Sleet assessment, not the high
+      nation-level one. attribution_level is named-unit: MSTIC
+      names the unit — "Citrine Sleet ... has been attributed to
+      Bureau 121 of North Korea's Reconnaissance General Bureau"
+      (specificity is orthogonal to confidence per SCHEMA).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
@@ -56,3 +77,17 @@ targets:
     outcome: Cryptocurrency-sector employees RCE-compromised; pre-positioning for theft.
 sources:
   - msft/2024-08-30_citrine-sleet-chrome-zero-day
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs Microsoft MSTIC "North Korean Threat Actor Citrine Sleet Exploiting Chromium Zero-Day" (2024-08-30). Raw snapshot atlas/sources/raw/msft__2024-08-30_citrine-sleet-chrome-zero-day.html, sha256 4fb25730…5592722a, 316,263 bytes — hash re-verified against the value already on the source record (added 2026-06-24); matches exactly, reused.
+    [a] FACTS — core claims all source-carried (RAW quotes): CVE-2024-7971 = "a type confusion vulnerability in the V8 JavaScript and WebAssembly engine, impacting versions of Chromium prior to 128.0.6613.84" ✓; crypto-sector targeting "for financial gain" ✓; chain voyagorclub[.]space → CVE-2024-7971 RCE "in the sandboxed Chromium renderer process" → shellcode with "a Windows sandbox escape exploit and the FudModule rootkit" → escape "exploited CVE-2024-38106, a vulnerability in the Windows kernel" ✓; FudModule "admin-to-kernel", data-only, "direct kernel object manipulation (DKOM)" ✓; FudModule "also been attributed to Diamond Sleet" + "shared use of the FudModule malware between these threat actors" ✓; "the third exploited V8 type confusion vulnerability … patched in V8 this year, after CVE-2024-4947 and CVE-2024-5274" ✓. STRIPPED two embellishments MSTIC does NOT carry: (1) summary's "suggesting either shared parent tooling within RGB or personnel migration" — MSTIC states only "shared infrastructure and tools" / "shared use of the FudModule malware"; rewrote to MSTIC wording; (2) summary's "among the highest-tradecraft DPRK operations publicly documented to date" — unsourced superlative; removed. QUALIFIED the "pre-positioning for follow-on crypto theft" line: MSTIC states "We did not observe any additional malware activity on the target devices" — kept the pre-positioning reading but marked it explicitly as AUSPEX inference and added the no-additional-malware fact. Delivery term "drive-by" → "browser-exploit domain" (MSTIC: "we cannot confirm at this time how the targets were directed").
+    [b] ATTRIBUTION — corrected over-attestation. RAW verbatim: "We assess with high confidence that the observed exploitation of CVE-2024-7971 can be attributed to a North Korean threat actor … Our ongoing analysis and observed infrastructure lead us to attribute this activity with medium confidence to Citrine Sleet." The attribution row names the specific actor (kp/rgb/citrine-sleet), so attributing_org_confidence high→moderate (high was the nation-level claim; the Citrine-Sleet-specific claim is medium). auspex_assessment concur→concur-with-caveat (mirrors the Agrius exemplar precedent: source medium-confidence on the specific cluster). ADDED attribution_level: named-unit — MSTIC names the unit verbatim: "Citrine Sleet … has been attributed to Bureau 121 of North Korea's Reconnaissance General Bureau" (level is orthogonal to confidence per SCHEMA). Added an attribution notes: block recording the high(nation)/medium(actor) split.
+    [c] DATES — source published_on 2024-08-30 ✓ (blog date). start_date 2024-08-19 ✓ ("On August 19, 2024, Microsoft identified a North Korean threat actor exploiting a zero-day"). disclosure_date 2024-08-30 ✓. end_date 2024-08-30 = disclosure-date proxy (MSTIC states no campaign end; Google patched CVE-2024-7971 on Aug 21, MSFT patched CVE-2024-38106 on Aug 13, so the live window effectively closed pre-disclosure) — left as a bounded proxy, flagged.
+    [d] DOCTRINE_LINKS — confidence strongly_inferred is CORRECT and unchanged. MSTIC names only the PROXIMATE goal (crypto-sector targeting "for financial gain"; the US-govt line — actors "will likely continue targeting … cryptocurrency technology firms … to generate and launder funds to support the North Korean regime" — is regime-funding, still proximate) and never states the terminal WMD / ballistic-missile-financing goal, so the 8th-Congress link cannot be attested per the doctrine's own per-event attestation rule (corrected 2026-07-02) and the SCHEMA attestation boundary. ruled_out ("8th-Congress defense plan / WMD-financing — not named by MSTIC") accurate. attesting_source_id present as the primary SUPPORTING source (allowed on strongly_inferred). perspective default attacker-rationale correct. signals[] colon-space item is quoted (YAML-safe).
+    [e] ATTRIBUTION_LEVEL — was missing; set named-unit (see [b]).
+    [f] ACTOR_ID — kp/rgb/citrine-sleet resolves to atlas/actors/kp/citrine-sleet.yaml (id kp/rgb/citrine-sleet, primary_service_id kp/rgb/bureau-121). Placement is anchored by THIS very MSTIC post (names the RGB + Bureau 121) and was actor-audited 2026-06-24. The task-note suggestion of kp/unscoped/citrine-sleet is SUPERSEDED by the raw source, which names the unit — no actor change, no flag.
+    RESIDUAL / FLAGS: (i) source tier: secondary — first-party MSTIC original research reads as primary, but corpus vendor-research tiering is genuinely split (199 primary / 170 secondary) and an existing 2026-07-02 audit note on a sibling MSTIC source already ruled this "not clearly miscategorized — left as-is, flagged"; followed that precedent (unchanged, flagged). (ii) campaign_id apt38-crypto-pivot is an editorial cluster string; MSTIC does not name APT38 (Citrine Sleet = AppleJeus / Bureau-121 cluster) — left as editorial, out of 6-point scope. (iii) doctrine program crypto-bridge-theft is the closest-fit revenue-aggregation program for crypto-sector theft-prep; kept.

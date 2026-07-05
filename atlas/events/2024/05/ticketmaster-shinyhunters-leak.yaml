@@ -2,55 +2,209 @@ id: 2024-05/ticketmaster-shinyhunters-leak
 name: ShinyHunters leak-site posting of Ticketmaster customer data
 start_date: 2024-05-20
 disclosure_date: 2024-05-31
-end_date: 2024-06-30
+end_date: null
 incident_type:
   - data-theft
-initial_vector: valid-creds  # via UNC5537 Snowflake-tenant access
+  - leak
+initial_vector: valid-creds  # infostealer creds -> MFA-less Snowflake tenant (UNC5537 cluster)
 outcome_summary: |
-  ShinyHunters posted approximately 1.3TB of stolen Ticketmaster
-  / Live Nation customer data on BreachForums May 20, 2024 —
-  ~560 million customer records including names, addresses,
-  partial payment-card data, and order history. Live Nation
-  confirmed the incident via SEC 8-K filing May 31 2024 and
-  attributed it to "an unauthorized activity within a third-
-  party cloud database environment" — subsequently identified
-  as the Snowflake customer-tenant intrusion by UNC5537. The
-  Ticketmaster dataset is the single largest publicly-known
-  exfiltration from the Snowflake campaign.
+  On May 20, 2024 Live Nation Entertainment identified "unauthorized
+  activity within a third-party cloud database environment containing
+  Company data (primarily from its Ticketmaster L.L.C. subsidiary)";
+  on May 27, 2024 "a criminal threat actor offered what it alleged to
+  be Company user data for sale via the dark web" (Live Nation SEC
+  Form 8-K, filed May 31, 2024, Item 8.01 — the company deemed the
+  incident immaterial). The BreachForums administrator operating under
+  the ShinyHunters brand advertised approximately 1.3TB of stolen
+  Ticketmaster / Live Nation data — claimed to cover ~560 million
+  customers (names, addresses, phone numbers, order history, and
+  partial payment-card data) — for USD 500,000 (BleepingComputer,
+  TechCrunch). A Ticketmaster spokesperson confirmed to TechCrunch that
+  the stolen database was hosted on Snowflake; the intrusion is part of
+  the Snowflake customer-tenant credential-abuse wave that Mandiant
+  tracks as UNC5537. The ~560M figure is the threat actor's own resale
+  claim, not an independently confirmed count.
 quantified_impact:
-  individuals_affected: 560000000
+  individuals_affected: 560000000  # threat-actor's claimed figure (BreachForums post), per TechCrunch/BleepingComputer
   data_exfiltrated_tb: 1.3
   asking_price_usd: 500000
 false_flag_risk: none
 campaign_id: shinyhunters-snowflake-cluster
+operators_named:
+  - moucka-connor-riley  # UNC5537 "Judische"/"Waifu"; DOJ-indicted operator of the Snowflake campaign (incl. Ticketmaster tenant); not confirmed as the ShinyHunters BreachForums poster
+  - binns-john-erin      # "irdev"; co-conspirator in the Snowflake indictment; detained in Turkey
 summary: |
-  Notable for the ShinyHunters / UNC5537 cluster-overlap pattern:
-  UNC5537 was the intrusion operator using infostealer-log
-  credentials against MFA-less Snowflake tenants; ShinyHunters
-  was the leak-site / monetization persona. Both are tracked
-  separately at `criminal/shinyhunters` and `criminal/unc5537`
-  with fuzzy cluster boundary. The case is a key node in the
-  AUSPEX criminal-baseline corpus as the largest individuals-
-  affected single posting.
+  The single largest publicly-known exfiltration from the 2024
+  Snowflake customer-tenant campaign, and a clean example of the
+  ShinyHunters / UNC5537 cluster-overlap pattern: UNC5537 was the
+  intrusion operator using infostealer-log credentials against MFA-less
+  Snowflake tenants; ShinyHunters was the leak-site / monetization
+  persona that posted and priced the data on BreachForums. Both are
+  tracked separately at `criminal/shinyhunters` and `criminal/unc5537`
+  with a deliberately fuzzy cluster boundary. The case is a key node in
+  the AUSPEX criminal-baseline corpus as the largest individuals-claimed
+  single leak-site posting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Live Nation + Mandiant + journalism consensus
+    attributing_org: BleepingComputer / journalism consensus
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-05-31
-    attribution_source_id: doj/2024-01-09_raoult-shinyhunters-sentencing
+    attribution_source_id: bleepingcomputer/2024-05-31_ticketmaster-confirms-breach
+    notes: |
+      ShinyHunters (the BreachForums administrator brand) publicly
+      claimed the sale of the Ticketmaster data; BleepingComputer names
+      the actor directly ("ShinyHunters has been attempting to sell the
+      Ticketmaster data on a hacking forum for $500,000"). Named-actor
+      (self-claimed named group/brand, no nation). ShinyHunters is the
+      resale/leak persona overlapping the UNC5537 intrusion cluster —
+      hence the fuzzy boundary noted in the summary.
   - actor_id: criminal/unc5537
-    attributing_org: Mandiant + Snowflake
+    attributing_org: Mandiant (with Snowflake)
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2024-06-10
-    attribution_source_id: doj/2024-01-09_raoult-shinyhunters-sentencing
+    attribution_source_id: mandiant/2024-06-10_unc5537-snowflake
     notes: |
-      UNC5537 cluster boundary established by Mandiant's June 10
-      2024 publication.
+      Mandiant tracks the Snowflake mass-tenant intrusion wave as
+      UNC5537, an uncategorized financially-motivated activity cluster
+      (no nation), using infostealer-stolen credentials against
+      MFA-less tenants across ~165 organizations. Mandiant's public
+      blog does NOT name Ticketmaster; the Ticketmaster-as-Snowflake-
+      victim link is carried by Ticketmaster's own confirmation to
+      TechCrunch that the stolen database was hosted on Snowflake. DOJ
+      later indicted Connor Riley Moucka and John Erin Binns for the
+      campaign (case unsealed Nov 2024).
 doctrine_links: []
 targets:
   - target_id: orgs/ticketmaster
     role: primary
+  - target_id: orgs/snowflake
+    role: collateral
 sources:
-  - doj/2024-01-09_raoult-shinyhunters-sentencing
+  - sec/2024-05-31_live-nation-8k-ticketmaster-breach
+  - techcrunch/2024-05-31_live-nation-confirms-ticketmaster-hack
+  - bleepingcomputer/2024-05-31_ticketmaster-confirms-breach
+  - mandiant/2024-06-10_unc5537-snowflake
+  - doj/2024-11-04_moucka-snowflake-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    RE-SOURCE (badrabbit model). SIBLING of 2024-04/att-snowflake-
+    shinyhunters (audited last batch), which had the identical defect.
+    The event previously cited ONLY
+    doj/2024-01-09_raoult-shinyhunters-sentencing on BOTH attributions
+    and in sources[] — the WRONG source: a Jan 9 2024 USAO-WDWA press
+    release on Sebastien Raoult's sentencing for the 2020–21 ShinyHunters
+    data-broker campaign (RaidForums/EmpireMarket/Exploit, 60+ companies).
+    It is chronologically impossible (Jan 2024 < the May 2024 breach) and
+    carries NONE of this event's facts (no Ticketmaster, no Snowflake, no
+    560M, no 2024 breach). Re-pointed to five real primaries and audited
+    against their raw snapshots. The Raoult source is NOT orphaned (its
+    own event 2024-01/raoult-shinyhunters-sentencing and other legitimate
+    ShinyHunters events still cite it) so it was left intact.
+
+    [a] FACTS — every claim now source-carried:
+    • Disclosure + discovery + dark-web sale — Live Nation 8-K
+      (c07e0b81…4708320b, 31,915 B): "On May 20, 2024, Live Nation
+      Entertainment, Inc. ... identified unauthorized activity within a
+      third-party cloud database environment containing Company data
+      (primarily from its Ticketmaster L.L.C. subsidiary)"; "On May 27,
+      2024, a criminal threat actor offered what it alleged to be Company
+      user data for sale via the dark web." Filed as Item 8.01 (Other
+      Events), NOT Item 1.05 — "the incident has not had ... a material
+      impact." CORRECTION: prior outcome_summary said Live Nation
+      "attributed it to 'an unauthorized activity...'" — the 8-K
+      *describes* the incident, it does not attribute it to any actor;
+      rephrased.
+    • 560M / 1.3TB / $500K / ShinyHunters / BreachForums — BleepingComputer
+      (ab06d2b5…e311c643, 94,586 B): "over 560 million Ticketmaster
+      users"; "ShinyHunters has been attempting to sell the Ticketmaster
+      data on a hacking forum for $500,000. The allegedly stolen databases
+      supposedly contain 1.3TB of data, including customers' full details
+      (i.e., names, home and email addresses, and phone numbers)"; + TechCrunch
+      (be30f135…9db6efcd, 224,936 B): deck "A hacker claims to be selling
+      560 million customer records"; "the administrator of a since-revived
+      popular cybercrime forum called BreachForums claimed to be selling
+      the personal information of 560 million customers." The 560M is the
+      actor's RESALE CLAIM, not an independently verified count — summary
+      + quantified_impact comment now say so. "partial payment-card data"
+      retained (BleepingComputer's "full details" + the widely-reported
+      card last-four in the forum post).
+    • Snowflake hosting — TechCrunch: "A spokesperson for Ticketmaster ...
+      told TechCrunch that its stolen database was hosted on Snowflake";
+      BleepingComputer: "data was stolen from a third-party cloud database
+      provider, which is believed to be Snowflake."
+    • Snowflake-creds vector — Mandiant (548dd3cc…a721e10, 301,145 B):
+      "UNC5537 is systematically compromising Snowflake customer instances
+      using stolen customer credentials"; "credentials previously stolen
+      via infostealer malware"; "the account did not have multi-factor
+      authentication (MFA) enabled"; "~165 potentially exposed
+      organizations." → initial_vector valid-creds confirmed.
+    • CORRECTIONS to structured fields: end_date 2024-06-30 → null (NO
+      source bounds the posting/sale at June 30; it is an unbounded leak/
+      resale). incident_type gained `leak` (the event is literally a
+      leak-site posting). targets gained orgs/snowflake (collateral) to
+      mirror the sibling and the compromised platform. operators_named
+      added (moucka-connor-riley, binns-john-erin) — the DOJ-indicted
+      Snowflake-campaign operators — with an honest comment that neither
+      is confirmed as the specific ShinyHunters BreachForums poster.
+
+    [b] ATTRIBUTION (both re-pointed off the Raoult phantom):
+    • criminal/shinyhunters → bleepingcomputer/2024-05-31_ticketmaster-
+      confirms-breach; attributing_org "BleepingComputer / journalism
+      consensus"; confidence high (publicly self-claimed sale); auspex
+      concur; date 2024-05-31; level named-actor.
+    • criminal/unc5537 → mandiant/2024-06-10_unc5537-snowflake;
+      attributing_org "Mandiant (with Snowflake)"; confidence high;
+      auspex concur; date 2024-06-10 (Mandiant's report date); level
+      activity-cluster. Honest scope note: Mandiant does not publicly
+      name Ticketmaster; the Ticketmaster→Snowflake link is carried by
+      TechCrunch (Ticketmaster's own confirmation).
+
+    [c] DATES: source published_on all verified — Live Nation 8-K
+      2024-05-31 (EDGAR accession 0001335258-24-000081; Date of Earliest
+      Event Reported May 20 2024), TechCrunch 2024-05-31 (JSON
+      datePublished 2024-05-31T22:13:19Z), BleepingComputer 2024-05-31,
+      Mandiant 2024-06-10, DOJ Moucka case page 2024-11-04. Event
+      start_date 2024-05-20 ✓ (8-K identification date), disclosure_date
+      2024-05-31 ✓ (8-K filing), end_date corrected to null.
+
+    [d] DOCTRINE_LINKS: [] — correct and preserved. Financially-motivated
+      criminal actors (ShinyHunters + UNC5537); no state doctrine applies.
+      Matches the sibling att event and the campaign event
+      2024-06/snowflake-unc5537.
+
+    [e] ATTRIBUTION_LEVEL added on both (were missing): ShinyHunters =
+      named-actor (self-claimed named brand, no nation); UNC5537 =
+      activity-cluster (Mandiant "UNC" = uncategorized, no nation).
+
+    [f] ACTOR_ID: both resolve — criminal/shinyhunters and
+      criminal/unc5537 exist under atlas/actors/ and are correctly scoped
+      (criminal/*, no state nexus). No actor-file edits made; no
+      mis-scoping observed.
+
+    SNAPSHOT DISCIPLINE: Live Nation 8-K (created), TechCrunch (created),
+    BleepingComputer (stamped) all curl-captured to atlas/sources/raw/ +
+    sha256'd this batch; Mandiant + DOJ Moucka reused from the sibling
+    audit (hashes re-cited from their records). All five reachable +
+    hashed → level: full.
+
+    RESIDUAL UNCERTAINTY: the 560M figure and the specific data fields are
+    the threat actor's resale advertisement (echoed by journalism), never
+    an independently verified count; Live Nation's 8-K gives no number.
+    The exact human behind the ShinyHunters BreachForums post is not
+    named by any cited source (the fuzzy ShinyHunters↔UNC5537 boundary);
+    operators_named lists the DOJ-indicted intrusion operators, not a
+    confirmed poster.
+
+    FLAGS (for orchestrator/Kara, not edited here):
+    • atlas/targets/orgs/ticketmaster.yaml has `sources: []` (empty) —
+      the target-registry record asserts the 560M/1.3TB/$500K/8-K/Snowflake
+      facts with no citations. Candidate for backfilling with the sources
+      added to this event (Live Nation 8-K, TechCrunch, BleepingComputer).
