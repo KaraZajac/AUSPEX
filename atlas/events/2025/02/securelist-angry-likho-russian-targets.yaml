@@ -1,6 +1,6 @@
 id: 2025-02/securelist-angry-likho-russian-targets
-name: Kaspersky documents Angry Likho (UAC-0050) wave against Russian organizations with Lumma Stealer
-start_date: 2025-01-01
+name: Kaspersky documents Angry Likho (Sticky Werewolf) APT targeting Russian and Belarusian government organizations with Lumma Stealer
+start_date: 2024-06-01
 disclosure_date: 2025-02-21
 end_date: 2025-02-21
 incident_type:
@@ -8,60 +8,130 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Kaspersky's Securelist published a follow-on to its January
-  2025 Angry Likho overview, documenting a fresh wave of
-  operations attributed to the Angry Likho cluster (overlapping
-  with CERT-UA's UAC-0050 / BI.ZONE's Sticky Werewolf) against
-  Russian-language corporate targets. The wave shifted payload
-  to Lumma Stealer delivered via DLL-side-loading and obfuscated
-  Python loader chains; tasking, lures, and infrastructure
-  patterns remained consistent with prior UAC-0050 tradecraft.
+  Kaspersky's Securelist ("Angry Likho: Old beasts in a new
+  forest") documented the Angry Likho APT -- referred to as Sticky
+  Werewolf by some vendors and tracked by Kaspersky within its
+  "Likho" activity cluster since 2023. Standardized spear-phishing
+  emails delivered a Nullsoft NSIS self-extracting archive (SFX)
+  that ran an obfuscated AutoIt loader -- a legitimate AutoIt
+  interpreter (Child.pif) executing a compiled AU3 script (i.a3x)
+  -- to install the Lumma stealer; the group's FrameworkSurvivor.exe
+  implant was first seen in June 2024 and a fresh surge followed in
+  January 2025 (flagged from F6 / F.A.C.C.T. indicators). Kaspersky
+  identified hundreds of victims in Russia and several in Belarus,
+  with fluent-Russian bait documents thematically tied to Russian
+  government institutions and their contractors.
 false_flag_risk: none
 summary: |
-  Notable for the Russian-target reach of a cluster otherwise
-  framed as Belarusian-aligned and Ukraine-targeting. Kaspersky's
-  documentation supports the AUSPEX position that the Angry Likho
-  label overlaps but does not perfectly equal UAC-0050: the
-  cluster's operational scope appears broader than CERT-UA's
-  Ukrainian-state-institution framing, including commodity-RAT
-  delivery to Russian-language corporate targets that fits less
-  neatly within the Belarusian KGB / Union State framing.
-  Recorded here for cluster-tracking continuity; the
-  Belarusian-only attribution is softer than for the pure
-  Ukrainian-target operations.
+  Kaspersky assesses Angry Likho as a targeted APT whose victims
+  are "primarily ... organizations in Russia and Belarus," and
+  infers the operators are "likely native Russian speakers" from
+  the fluent-Russian lures; it names no state sponsor or
+  intelligence service, and Belarus appears as a TARGET, not a
+  sponsor. Directionality: this operation is directed AGAINST
+  Russian and Belarusian government organizations. AUSPEX files
+  Angry Likho within its unified UAC-0050 / Sticky Werewolf cluster
+  on cross-vendor infrastructure overlap only (the aliases are
+  "overlapping", not equivalent) -- Kaspersky itself does not
+  mention UAC-0050, Ukraine, or Remcos in this report, and its
+  Russia/Belarus victimology runs opposite to CERT-UA's
+  Ukrainian-victim UAC-0050 framing.
 attributions:
   - actor_id: ru/unscoped/uac-0050
-    attributing_org: Kaspersky Securelist
-    attributing_org_confidence: moderate
+    attributing_org: Kaspersky (Securelist)
+    attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-02-21
     attribution_source_id: kaspersky/2025-02-21_angry-likho-lumma-russian-orgs
     notes: |
-      Kaspersky framing is "Angry Likho." The Russian-target
-      component complicates the Belarusian-aligned framing —
-      AUSPEX records the attribution but flags the operational
-      ambiguity in the dossier-level notes.
-doctrine_links:
-  - doctrine_id: by/union-state-integration
-    pillar_id: by/union-state-integration/ukraine-theater-support
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Russian-target operations sit awkwardly inside a
-      Belarusian-Russian Union State framing oriented toward
-      Ukrainian-theater support. Confidence reduced to
-      `plausible` to reflect that the doctrine-fit is weaker
-      than for the Ukrainian-target operations the cluster is
-      better known for.
-    contested: true
-    analyst: claude
+      Kaspersky "attribute[s] this campaign to the APT group Angry
+      Likho with a high degree of confidence" -- an ACTIVITY-CLUSTER
+      attribution (Angry Likho = Sticky Werewolf per some vendors),
+      noting similarities with BI.ZONE and F6 findings; it infers
+      native-Russian-speaking operators from the fluent-Russian lures
+      and names NO nation-state or intelligence service. The
+      ru/unscoped/uac-0050 mapping is AUSPEX's unified cluster
+      (UAC-0050 / Sticky Werewolf / Angry Likho aliased as
+      "overlapping" on infrastructure overlap only); Kaspersky does
+      not mention UAC-0050 here, and its Russia/Belarus victimology is
+      the OPPOSITE of CERT-UA's Ukrainian-victim UAC-0050 profile.
+doctrine_links: []
 targets:
-  - target_id: sectors/finance
+  - target_id: sectors/government
     country: ru
     role: primary
-  - target_id: sectors/manufacturing
-    country: ru
+  - target_id: sectors/government
+    country: by
     role: collateral
 sources:
   - kaspersky/2025-02-21_angry-likho-lumma-russian-orgs
-  - kaspersky/2025-01_angry-likho-overview
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    CANONICAL SURVIVOR of the merge of the duplicate/inverted event
+    2025-01/kaspersky-angry-likho-uac-0050 INTO this record (Kara-approved
+    2026-07-05). Both events rested on the single real Securelist article 115663,
+    "Angry Likho: Old beasts in a new forest" (datePublished 2025-02-21,
+    dateModified 2025-05-13). Full 6-point audit against the raw snapshot
+    kaspersky__2025-02-21_angry-likho-lumma-russian-orgs.html (sha256
+    64de4d17...65c3ca05, 226956 B). Raw hit-counts: Ukraine 0, Ukrainian 0,
+    Remcos 0, UAC-0050 0, "DLL side"/sideload 0, Python 0 -- vs AutoIt 8, NSIS 3,
+    FrameworkSurvivor 2, Lumma 23, Belarus 5.
+    [a] FACTS -- CORRECTED. The pre-audit outcome_summary/summary carried three
+      fabrications absent from the article: (1) delivery "via DLL-side-loading and
+      obfuscated Python loader chains" -> ZERO hits for either; the real chain is
+      spear-phishing -> Nullsoft NSIS self-extracting archive (SFX) -> obfuscated
+      AutoIt (legit interpreter Child.pif running compiled AU3 script i.a3x) ->
+      Lumma stealer, with the FrameworkSurvivor.exe implant first seen June 2024.
+      (2) cluster "framed as ... Ukraine-targeting" / a "Ukrainian-target baseline"
+      -> ZERO "Ukraine" hits. (3) targets "Russian-language corporate targets" ->
+      the article's targets are "government institutions in Russia ... [and] their
+      contractors are the primary targets." Rewrote both prose fields to the quoted
+      victimology and delivery chain.
+    [b] ATTRIBUTION -- Kaspersky "attribute[s] this campaign to the APT group Angry
+      Likho with a high degree of confidence" (noting BI.ZONE / F6 overlaps) =
+      activity-cluster, HIGH confidence; NO nation/service named. Set
+      attributing_org_confidence high (was moderate); added attribution_level
+      activity-cluster (was absent); rewrote notes off the inverted "Belarusian-
+      aligned framing" language to record the UAC-0050 equation as AUSPEX's
+      overlapping-cluster call (not Kaspersky's) and the Russia/Belarus victimology
+      as OPPOSITE the CERT-UA Ukrainian-victim UAC-0050 profile. attributing_org
+      normalized "Kaspersky Securelist" -> "Kaspersky (Securelist)".
+    [c] DATES -- disclosure_date 2025-02-21 kept (real datePublished). start_date
+      2025-01-01 -> 2024-06-01 (article: "tracking the attacks of this campaign
+      since June 2024"; June-2024 FrameworkSurvivor implant), folding the corrected
+      Jan twin's source-carried start. end_date 2025-02-21 kept (report-publication
+      close; activity ongoing "at the moment of our research," the Jan-2025 surge
+      the latest concrete wave).
+    [d] DOCTRINE_LINKS -- REMOVED the sole link by/union-state-integration/
+      ukraine-theater-support (was confidence plausible, contested). INVERTED +
+      unsupported: that pillar encodes Belarus supporting Russia's war ON Ukraine,
+      but this operation attacks Russian/Belarusian government orgs and no source
+      states any strategic purpose. Set to [] (matches the actor's emptied
+      default_doctrine_alignment_ids, 2026-07-04, and the corrected Jan twin).
+    [e] TARGETS -- replaced sectors/finance ru (primary) + sectors/manufacturing ru
+      (collateral) [both fabricated; the finance/manufacturing/corporate strings in
+      the raw are site-nav/footer boilerplate + an unrelated ToddyCat sidebar item,
+      NOT Angry Likho victimology] with sectors/government ru (primary) +
+      sectors/government by (collateral), per the quoted victimology.
+    [f] ACTOR_ID -- ru/unscoped/uac-0050 RESOLVES (atlas/actors/ru/uac-0050.yaml,
+      id ru/unscoped/uac-0050). Kept unchanged: the corpus deliberately unifies
+      Angry Likho into this cluster (Kara-approved 2026-07-04, alias "overlapping").
+      No actor-file edit made.
+    SOURCES -- dropped the phantom kaspersky/2025-01_angry-likho-overview (url null;
+      no distinct Jan-2025 overview exists; its snapshot is THIS same 115663 page).
+      This record now rests solely on the real kaspersky/2025-02-21_angry-likho-
+      lumma-russian-orgs. FOLD: no source-carried detail unique to the Jan twin
+      remained (both cited the same article); folded only the corrected start_date
+      (June 2024) and delivery/victimology specifics into the prose.
+    MERGE + PHANTOM -- this record now stands complete on its own; the Jan duplicate
+      2025-01/kaspersky-angry-likho-uac-0050 is SAFE TO DELETE. After this
+      de-citation plus the Jan delete, the phantom source kaspersky/2025-01_angry-
+      likho-overview is cited in sources[] ONLY by actor ru/unscoped/uac-0050 ->
+      RETIRE recommended (repoint that actor citation to the real 115663 source,
+      then delete the phantom); annotated on the source record, FK propagation left
+      to the orchestrator (not deleted here).
