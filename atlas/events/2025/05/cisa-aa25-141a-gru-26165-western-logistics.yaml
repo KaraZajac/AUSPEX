@@ -1,16 +1,19 @@
 id: 2025-05/cisa-aa25-141a-gru-26165-western-logistics
 name: CISA AA25-141A — GRU Unit 26165 targets Western logistics and tech firms supporting Ukraine
-start_date: 2022-02-24  # CISA-stated onset coinciding with invasion
+start_date: 2022-02-24  # advisory: "Since 2022" / unit-26165 op uptick "In late February 2022"; anchored to the 2022-02-24 invasion
 disclosure_date: 2025-05-21
 end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  CISA + NSA + FBI + Five Eyes + EU partner joint advisory
-  AA25-141A documented a sustained GRU Unit 26165 (APT28 /
-  Forest Blizzard) campaign — running since 2022 — against
+  A joint advisory (AA25-141A) by CISA, NSA, FBI and 18 partner
+  agencies across 11 NATO/allied states (US, UK, DE, CZ, PL, AU,
+  CA, DK, EE, FR, NL) documented a sustained GRU Unit 26165
+  (APT28 / Forest Blizzard) campaign — running since 2022 —
+  against
   Western logistics entities and technology companies involved
   in coordination, transport, and delivery of foreign assistance
   to Ukraine. Tradecraft includes spearphishing, credential
@@ -31,11 +34,20 @@ summary: |
   collateral.
 attributions:
   - actor_id: ru/gru/26165/apt28
-    attributing_org: CISA + NSA + FBI + Five Eyes + EU partners
+    attributing_org: CISA, NSA, FBI + 18 partner agencies (11 nations)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2025-05-21
     attribution_source_id: cisa/2025-05-21_aa25-141a-gru-26165
+    notes: |
+      Joint CSA AA25-141A explicitly names the operator as the "Russian
+      General Staff Main Intelligence Directorate (GRU) 85th Main Special
+      Service Center (85th GTsSS), military unit 26165" (APT28 / Fancy Bear /
+      Forest Blizzard / BlueDelta) — named-unit specificity, high confidence.
+      21 authoring/co-sealing agencies across 11 countries (US, UK, DE, CZ,
+      PL, AU, CA, DK, EE, FR, NL); NOT "Five Eyes" — New Zealand's GCSB is
+      not a co-sealer.
 doctrine_links:
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
@@ -86,3 +98,106 @@ targets:
     role: primary
 sources:
   - cisa/2025-05-21_aa25-141a-gru-26165
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the joint CSA "Russian GRU Targeting Western Logistics
+    Entities and Technology Companies" (AA25-141A). Raw snapshot captured
+    (cisa__2025-05-21_aa25-141a-gru-26165.html, sha256 52920a80…62e89edc,
+    201,126 bytes) — live, genuine article (title + "26165" ×23 +
+    "AA25-141A" ×34 + every claimed TTP present); NOT a phantom. Single
+    tier-1 govt-primary source carries every retained claim -> level=full.
+
+    [a] FACTS — all source-carried; two corrections. Verbatim core:
+    "targeting Western logistics entities and technology companies. This
+    includes those involved in the coordination, transport, and delivery
+    of foreign assistance to Ukraine." "Since 2022, Western logistics
+    entities and IT companies have faced an elevated risk of targeting by
+    the Russian … GRU … 85th … (85th GTsSS), military unit 26165." TTPs
+    verified: spearphishing (×18, fake login pages + HEADLACE/MASEPIE
+    delivery); credential harvesting / "reconstituted password spraying"
+    + LDAP brute-force spray; n-day CVEs — CVE-2023-23397 (Outlook NTLM),
+    CVE-2020-12641 / CVE-2020-35730 / CVE-2021-44026 (Roundcube),
+    CVE-2023-38831 (WinRAR); "dynamic link library (DLL) search order
+    hijacking [T1574.001]"; IP-camera recon — ">10,000 cameras", Table 1
+    Ukraine 81.0% / Romania 9.9% / Poland 4.0% / Hungary 2.8% / Slovakia
+    1.7%, "to track the movement of materials into Ukraine". Ongoing/
+    elevated-risk: "authoring agencies expect similar targeting and TTP
+    use to continue." Data-theft carried: exfil of shipment manifests
+    (sender/recipient/train-plane-ship numbers/route/cargo), EWS+IMAP
+    email collection, NTDS.dit dumping. CORRECTION 1: "Five Eyes" struck
+    from outcome_summary + attributing_org — New Zealand (GCSB) is NOT a
+    co-sealer; the CSA has 21 authoring/co-sealing agencies across 11
+    countries (US, UK, DE, CZ, PL, AU, CA, DK, EE, FR, NL), only 4 of 5
+    eyes signing. CORRECTION 2: ADDED incident_type "espionage" — the
+    advisory's own central framing ("cyber espionage-oriented campaign",
+    ×3); matches sibling 2024-05/apt28-spd. initial_vector phishing ✓
+    (spearphishing primary among several IA vectors). start_date comment
+    refined: advisory says "Since 2022" / uptick "In late February 2022"
+    — 2022-02-24 kept as the invasion anchor, not a CISA-stated exact day.
+
+    [b] ATTRIBUTION — direct govt attribution, high confidence, concur;
+    kept. attributing_org corrected per [a]; operator named at named-unit
+    specificity (see [e]).
+
+    [c] DATES — published_on 2025-05-21 ✓ ("May 2025: Initial
+    publication"; AA25-141A = 141st day of 2025 = 21 May). Page also shows
+    "Last Revised April 17, 2026 / April 2026: Correction on two domains"
+    (minor later revision) — initial published_on is correct; retrieved_on
+    2026-05-26 PRESERVED. disclosure 2025-05-21 ✓; end_date null (ongoing).
+
+    [d] DOCTRINE_LINKS. Link 1 ru/nato-ultimatum-2021/
+    ukraine-support-interdiction = ATTESTED — VERIFIED HONEST, kept. The
+    pillar encodes "Cyber operations against the logistics, communications,
+    and industrial base sustaining Western aid to Ukraine." The advisory
+    states the goal in substance: "As Russian military forces failed to
+    meet their military objectives and Western countries provided aid to
+    support Ukraine's territorial defense, unit 26165 expanded its
+    targeting of logistics entities and technology companies involved in
+    the delivery of aid" + "to track the movement of materials into
+    Ukraine" + "These accounts contained information on aid shipments to
+    Ukraine." Firms targeted *because* they deliver aid = a clean
+    goal-level attestation; attesting_source_id present. (Contrast sibling
+    2024-02/moobot-apt28, which correctly DOWNGRADED this same pillar to
+    plausible because DOJ there stated only generic "intelligence interest
+    to the Russian government"; here the aid-logistics purpose is
+    explicit.) Link 2 ru/russkiy-mir/ukraine-theater = strongly_inferred —
+    kept, honest (attesting_source_id null, correct). Link 3
+    ru/fpc-2023/anti-anglo-saxon = strongly_inferred + counter_explanation
+    — kept, honest (the counter_explanation already concedes
+    ukraine-support-interdiction is operationally closer/better-supported).
+    All three attacker-rationale (RU doctrine on RU actor) — no perspective
+    tag, no state-mismatch. All doctrine/pillar FKs resolve.
+
+    [e] ATTRIBUTION_LEVEL = named-unit ADDED (was MISSING — the sole
+    schema defect). Advisory names the specific unit: "GRU 85th … (85th
+    GTsSS), military unit 26165." Matches sibling 2024-02/moobot-apt28
+    (named-unit, same unit named by DOJ); more specific than
+    2024-05/apt28-spd (named-actor — German govt named only APT28 + GRU
+    service, not the unit).
+
+    [f] ACTOR_ID ru/gru/26165/apt28 resolves (atlas/actors/ru/apt28.yaml,
+    internal id matches; primary_service_id ru/gru/26165 = "GRU Unit 26165
+    — 85th Main Special Service Center (GTsSS)"; status sanctioned). This
+    very advisory is primary evidence FOR that placement — well-formed, no
+    flag. Directionality correct: APT28 = perpetrator (actor_id set),
+    Western logistics/ict/aerospace-defense = victims (targets[]) — an
+    operation, NOT a counter-action.
+
+    TARGETS ✓ no inflation, all resolve + source-carried:
+    sectors/transport/logistics ("Western logistics entities"; air/sea/
+    rail), sectors/ict ("technology companies"/"IT Services"),
+    sectors/aerospace/defense ("Defense Industry" vertical + airports/air-
+    traffic-management).
+
+    RESIDUAL (editorial): summary cross-refs ("July 2025 NCSC Authentic
+    Antics attribution", "UK FCDO sanctions on three GRU units", "2018 WADA
+    / 2016 DNC") are corpus cross-references NOT carried by this advisory.
+    Verified accurate out-of-band (NCSC, July 2025: UK sanctioned 3 GRU
+    units — 26165, 29155, 74455 — + 18 officers alongside the Authentic
+    Antics attribution; DNC-2016 + WADA-2018 are established in-corpus
+    APT28 ops) — kept as accurate editorial context per the moobot-sibling
+    cross-reference convention.

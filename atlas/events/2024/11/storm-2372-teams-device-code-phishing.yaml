@@ -6,79 +6,134 @@ end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Microsoft disclosed an ongoing Russian-aligned device-code phishing
-  campaign by the actor it tracks as Storm-2372, active since at
-  least August 2024 against government, NGO, IT-services, defense,
-  telecoms, healthcare, higher-education, and energy organisations
-  across Europe, North America, Africa, and the Middle East.
-  Operators used Microsoft Teams "chat" lures impersonating
-  prominent individuals to socially engineer victims into
-  authorising attacker-controlled OAuth device-code flows, granting
-  persistent token-based access without harvesting passwords.
+  Microsoft (MSTIC) disclosed an ongoing device-code phishing
+  campaign by an emerging cluster it tracks as Storm-2372, assessed
+  with moderate confidence to align with Russian interests,
+  victimology, and tradecraft. Active since at least August 2024, it
+  targeted government, NGO, IT-services/technology, defense,
+  telecommunications, health, higher-education, and energy/oil-and-gas
+  organisations across Europe, North America, Africa, and the Middle
+  East. Operators built rapport by impersonating prominent
+  individuals over third-party messaging services (WhatsApp, Signal,
+  Microsoft Teams), then delivered Microsoft Teams meeting-invitation
+  lures that tricked victims into entering an attacker-generated
+  device code in the legitimate Microsoft sign-in flow — yielding
+  access and refresh tokens for persistent, password-less access to
+  mailboxes and cloud resources.
 false_flag_risk: none
-campaign_id: apt29-midnight-blizzard
 summary: |
-  Doctrinally novel as the first widely disclosed Russia-aligned
-  campaign built around OAuth device-code social engineering at
-  scale. The tradecraft bypasses password-based MFA entirely:
-  the victim provides the attacker-controlled code in an
-  authorised legitimate Microsoft flow, generating refresh tokens
-  the attacker can use for sustained access. Pairs with the
-  February 2024 Five Eyes SVR cloud-access advisory (AA24-057A)
-  as the operational evolution: SVR moved from password-spray /
-  service-account compromise toward consent-phishing and OAuth
-  trust abuse.
+  Microsoft Threat Intelligence documented Storm-2372's abuse of the
+  device code authentication flow (the OAuth 2.0 device-authorization
+  grant) for social-engineering-driven account takeover. The victim
+  is induced to enter an attacker-generated device code into a
+  genuine Microsoft sign-in page; the actor captures the resulting
+  access and refresh tokens and uses them for sustained, password-
+  less access, evading password-based MFA because the sign-in itself
+  is legitimate. Post-compromise, the actor moved laterally by
+  sending device-code links from the victim's own account and used
+  Microsoft Graph keyword search (for terms such as username,
+  password, admin, teamviewer, anydesk, credentials, secret,
+  ministry, and gov) to locate and exfiltrate email. A 14 Feb 2025
+  update reported a shift to the Microsoft Authentication Broker
+  client ID to register an actor-controlled device in Entra ID and
+  obtain a Primary Refresh Token, using regionally-appropriate
+  proxies to blend sign-in activity. Microsoft did not attribute
+  Storm-2372 to a named Russian service — "Storm" is its temporary
+  designation for an emerging cluster — and notes other actors (e.g.
+  activity documented by Volexity) use the same device-code
+  technique.
 attributions:
   - actor_id: ru/svr/apt29
     attributing_org: Microsoft MSTIC
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-02-13
     attribution_source_id: microsoft/2025-02-13_storm-2372-device-code-phishing
     notes: |
-      Microsoft attributes to "Russian-aligned" Storm-2372 without
-      a confirmed SVR linkage in the public report; AUSPEX uses
-      ru/svr/apt29 as the closest cluster on tradecraft and
-      victimology grounds, with concur-with-caveat to flag the
-      uncertain attribution.
+      Nation-level attribution only. Microsoft assesses "with
+      moderate confidence that Storm-2372 aligns with Russian
+      interests, victimology, and tradecraft" and calls it "a
+      suspected nation-state actor working toward Russian state
+      interests"; "Storm" is Microsoft's temporary designation for
+      an unknown / emerging cluster, held "until we reach high
+      confidence about the origin or identity of the threat actor."
+      The report never names APT29 / Midnight Blizzard / Cozy Bear,
+      the SVR, or any Russian service (0 mentions). AUSPEX therefore
+      records attribution_level: nation, moderate confidence,
+      concur-with-caveat. actor_id ru/svr/apt29 is retained ONLY as a
+      nearest-existing-cluster placeholder to keep the FK valid — it
+      OVER-SCOPES the source. Correct fix (flagged for orchestrator):
+      create a nation-level ru/unscoped/storm-2372 actor and re-point
+      actor_id + attribution_source_id to it.
 doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Espionage-mission targeting of NATO/Ukraine-aiding government,
-      defense, telecoms, and energy orgs; the Microsoft blog does
-      not name the 2016 Information Security Doctrine, so the
-      doctrine frame is inferred from the collection target set.
+      A Russia-aligned actor (Microsoft moderate confidence)
+      conducting broad, multi-region espionage collection —
+      device-code token theft feeding Microsoft Graph email
+      harvesting and keyword search across government, defense,
+      telecoms, energy and other sectors — serves the
+      intelligence-collection posture the 2016 Information Security
+      Doctrine encodes (the information sphere as a national-security
+      domain). Microsoft names no doctrine or strategic goal, so the
+      frame is inferred from the collection mission and target
+      breadth; a purely criminal motive is the competitor considered
+      and rejected on the Russia-alignment assessment and the
+      government / ministry-focused Graph targeting.
     attesting_source_id: microsoft/2025-02-13_storm-2372-device-code-phishing
     inference_basis:
       source_id: microsoft/2025-02-13_storm-2372-device-code-phishing
       signals:
-        - "Microsoft documents Storm-2372 espionage targeting of NATO/Ukraine-aiding govt/defense/telecom/energy orgs (collection target set)"
-      ruled_out: "the 2016 Information Security Doctrine / strategic goal — not named in the blog"
+        - "Microsoft assessment: Storm-2372 aligns with Russian interests, victimology, and tradecraft (moderate confidence); a suspected nation-state actor working toward Russian state interests"
+        - "Mission is intelligence collection: device-code token theft then Microsoft Graph email harvesting and keyword search for terms including 'ministry', 'gov', 'credentials', 'secret'"
+      ruled_out: "criminal / financially-motivated device-code phishing (no state doctrine) — rejected on Microsoft's Russia-alignment assessment and the government / ministry-focused collection"
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      European / North American / Middle Eastern government and
-      defense targeting during the active phase of the invasion.
+      The target set includes European and North American government
+      and defense organisations during the active phase of Russia's
+      war on Ukraine, which could serve NATO cohesion / aid-pipeline
+      degradation. Labelled plausible rather than higher because
+      Microsoft frames the activity as broad espionage collection
+      (not disruption of NATO), the attribution is only nation-level
+      "Russia-aligned" (moderate confidence, no named actor or unit),
+      and the victimology also spans Africa, the Middle East and
+      non-defense sectors — so more than one strategic reading
+      survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "NATO-degradation intent: collection on NATO government and defense targets to erode alliance cohesion and aid to Ukraine."
+        - "Undifferentiated Russian intelligence collection: the same targets and email harvesting fit a broad espionage posture, and the Africa / Middle-East and health / education / energy targets sit outside a NATO-degradation frame."
     contested: false
     analyst: claude
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/aid-state-targeting
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Concentration on European NATO states supporting Ukraine
-      fits the aid-state-targeting pillar.
+      Some of the European targets are Ukraine-aiding states, which
+      fits the aid-state-targeting pillar. Labelled plausible because
+      Microsoft states no such purpose, the attribution is
+      nation-level only, and the broad multi-region victimology
+      (including Africa and the Middle East) and non-aid sectors mean
+      the aid-state reading is one of several that survive.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Ukraine-aid-state targeting: collection against European states supplying aid to Ukraine."
+        - "Undifferentiated Russian espionage: the global, multi-sector target set (Europe, North America, Africa, Middle East) is broader than an aid-state focus."
     contested: false
     analyst: claude
 targets:
@@ -92,3 +147,67 @@ targets:
     role: primary
 sources:
   - microsoft/2025-02-13_storm-2372-device-code-phishing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs Microsoft Threat Intelligence "Storm-2372 conducts
+    device code phishing campaign" (13 Feb 2025). Raw snapshot
+    microsoft__2025-02-13_storm-2372-device-code-phishing.html,
+    sha256 b036fae0…86804f90, 306476 bytes.
+    [a] FACTS ✓ after correction. Source-carried: device-code (OAuth
+    device-authorization) flow abuse; active since ≥Aug 2024;
+    victimology government / NGO / IT / defense / telecom / health /
+    higher-ed / energy across Europe, North America, Africa, Middle
+    East; rapport via WhatsApp / Signal / Teams impersonation of
+    prominent individuals; Teams meeting-invite device-code lures;
+    access + refresh tokens → persistent password-less access; Graph
+    email harvesting + keyword search (username / password / admin /
+    teamviewer / anydesk / credentials / secret / ministry / gov);
+    lateral movement via intra-org phishing; 14 Feb 2025 update
+    (Authentication Broker client ID → Entra device registration →
+    PRT; regionally-appropriate proxies). REMOVED two unsupported
+    claims: (1) "first widely disclosed / doctrinally novel ... at
+    scale" superlative — the same source says other actors exploit
+    device-code phishing and points to Volexity's parallel reporting;
+    (2) the "pairs with AA24-057A ... SVR moved from password-spray
+    toward OAuth abuse" framing — AA24-057A is uncited and
+    presupposes a Storm-2372 = SVR identity the source explicitly
+    does not assert. Added incident_type espionage (email harvesting /
+    Graph collection). Removed campaign_id apt29-midnight-blizzard
+    (embedded the same unsupported APT29 identity).
+    [b] ATTRIBUTION: verbatim source is "we assess with moderate
+    confidence [that Storm-2372] aligns with Russia's interests and
+    tradecraft" / "aligns with Russian interests, victimology, and
+    tradecraft" / "a suspected nation-state actor working toward
+    Russian state interests." attributing_org_confidence: moderate is
+    exactly source-supported (report says "moderate", not the "medium
+    confidence" in the tasking note). Report NEVER names APT29 /
+    Midnight Blizzard / Cozy Bear / SVR / any service (0 grep hits).
+    [c] DATES: source published_on 2025-02-13 ✓ (byline "February 13,
+    2025"); start_date 2024-08-01 ✓ ("active since at least August
+    2024"); disclosure_date 2025-02-13 ✓; end_date null ✓ ("ongoing").
+    [d] DOCTRINE: none attested (source names no doctrine or goal) —
+    correct. Kept ru/info-security-2016/information-sphere-as-domain
+    at strongly_inferred (broad Russia-aligned intelligence-collection
+    frame; fixed its signal, which had asserted a "NATO/Ukraine-aiding"
+    target set the source does not state). DOWNGRADED
+    ru/nato-ultimatum-2021/nato-degradation and
+    ru/sanctions-response-2022/aid-state-targeting strongly_inferred →
+    plausible: with only nation-level "Russia-aligned" attribution and
+    a broad multi-region collection target set (incl. Africa / Middle
+    East and non-defense sectors), the specifically anti-NATO / anti-
+    aid readings are among several that survive; added
+    inference_basis.alternatives to each.
+    [e] attribution_level: nation set (was missing).
+    [f] ACTOR: ru/svr/apt29 resolves (atlas/actors/ru/apt29.yaml) but
+    OVER-SCOPES this nation-only source. FLAG for orchestrator: create
+    nation-level ru/unscoped/storm-2372 (Russia-aligned, Microsoft
+    "Storm" emerging cluster, moderate confidence, mission espionage)
+    and re-point actor_id + attribution_source_id; apt29 kept only to
+    preserve FK validity (cannot create actor files per protocol).
+    FLAG (id/path): event id 2024-11 matches neither the operation
+    start (2024-08) nor disclosure (2025-02) — likely a mislabel;
+    slug-stability is Kara's call, so not moved here.

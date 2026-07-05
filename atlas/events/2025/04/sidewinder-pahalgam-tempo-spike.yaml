@@ -1,54 +1,161 @@
 id: 2025-04/sidewinder-pahalgam-tempo-spike
-name: SideWinder operational tempo spike against Pakistani military during Pahalgam / Operation Sindoor cycle
+name: SideWinder StealerBot spear-phishing campaign against Pakistani defense and government targets during the 2025 India-Pakistan crisis window
 start_date: 2025-04-22
-disclosure_date: 2025-05-07
+disclosure_date: 2025-05-20
 end_date: null
 incident_type:
+  - espionage
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Following the April 22 2025 Pahalgam attack and India's
-  subsequent "Operation Sindoor" strikes against Pakistan, vendor
-  reporting (Sekoia, Kaspersky, and Indian commercial threat-
-  intelligence outlets) documented a sharp uptick in SideWinder
-  operational tempo against Pakistani military and Karachi-area
-  defense-research targets. Phishing lures were themed on
-  Pakistani military communiqués and post-Sindoor diplomatic
-  cables; tradecraft included StealerBot variants and continued
-  exploitation of weaponized RTF documents.
+  Acronis Threat Research Unit disclosed (reported by The Hacker
+  News, 2025-05-20) a 2025 SideWinder spear-phishing campaign
+  against high-level South Asian government institutions,
+  including Pakistan. The Pakistan-specific named victim was
+  Pakistan's Directorate of Indigenous Technical Development (a
+  defense technical-development body); the campaign also hit
+  government institutions in Sri Lanka and Bangladesh. Infection
+  used geofenced spear-phishing to deliver an RTF weaponizing
+  CVE-2017-11882 (Office Equation Editor) — with CVE-2017-0199 also
+  reported — launching a shellcode loader that runs the StealerBot
+  post-exploitation toolkit; the modus operandi was noted as
+  consistent with SideWinder activity Kaspersky documented in
+  March 2025. Trellix subsequently (reported 2025-10-28)
+  documented multi-wave 2025 SideWinder phishing against Pakistani
+  and other South Asian diplomats using ModuleInstaller and
+  StealerBot.
 false_flag_risk: none
 summary: |
-  Significant data point for the AUSPEX pattern of Indian-aligned
-  cluster tempo elevations during India-Pakistan crisis cycles
-  (Pulwama / Balakot 2019, Article 370 2019, Pahalgam / Sindoor
-  2025). The Pahalgam cycle was the most acute India-Pakistan
-  military escalation since Balakot and SideWinder's response
-  tempo elevation is the cyber dimension of that crisis.
+  A 2025 operation by SideWinder (India-nexus APT, active since
+  2012) whose activity window overlaps the acute April-May 2025
+  India-Pakistan crisis cycle (the 22 April 2025 Pahalgam attack
+  and India's subsequent Operation Sindoor strikes — the most
+  acute India-Pakistan military escalation since Balakot 2019).
+  AUSPEX tracks a hypothesis that Indian- and Pakistani-aligned
+  cluster activity tracks bilateral crisis cycles (companion
+  events: 2025-04/sidecopy-pre-pahalgam-tempo,
+  2025-05/apt36-pahalgam-operation-sindoor-tempo on the
+  Pakistani side). NOTE: no cited source frames this SideWinder
+  campaign as a crisis-driven "tempo spike" against Pakistan — the
+  disclosed campaign (Acronis/Trellix) is an ongoing multi-country
+  espionage operation whose window happens to include the crisis;
+  the crisis-cycle linkage is an AUSPEX inference, not a source
+  claim. The defensible, source-carried core is SideWinder's
+  documented April-May 2025 targeting of a Pakistani defense body
+  and South Asian government institutions with StealerBot.
 attributions:
   - actor_id: in/unscoped/sidewinder
-    attributing_org: Sekoia / vendor-consensus
+    attributing_org: Acronis
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-05-07
-    attribution_source_id: sekoia/2025-05-07_sidewinder-pahalgam-tempo
+    attribution_date: 2025-05-20
+    attribution_source_id: thehackernews/2025-05-20_sidewinder-south-asian-ministries
+    notes: "Acronis attributed the campaign to SideWinder (reported by The Hacker News). SideWinder is a named cluster of Indian origin (Kaspersky, MITRE G0121 'suspected Indian threat actor group'); no specific Indian service is named, hence actor is in/unscoped/sidewinder and attribution_level is named-actor (group + nation, NOT named-unit). Corroborated by Trellix (thehackernews/2025-10-28_sidewinder-clickonce-diplomats)."
 doctrine_links:
   - doctrine_id: in/regional-collection-pakistan-china
     pillar_id: in/regional-collection-pakistan-china/pakistan-military
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Tempo elevation against Pakistani military targets during
-      an acute India-Pakistan crisis cycle is canonical
-      Pakistan-military collection pillar behavior.
+      An India-nexus named actor (SideWinder) targeting a Pakistani
+      defense technical-development directorate and Pakistani
+      government institutions with StealerBot espionage tooling is
+      canonical Pakistan-military/defense collection-pillar
+      behavior for this cluster. Confidence is strongly_inferred,
+      not attested: SideWinder's multi-year Pakistani-defense target
+      set triangulates to this pillar with no serious competitor,
+      but no Indian government statement claims the tasking and no
+      source states the strategic purpose.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "India-nexus SideWinder (named-actor, Indian origin per Kaspersky and MITRE G0121) hit Pakistan's Directorate of Indigenous Technical Development, a defense technical-development body (Acronis, May 2025)."
+        - "Campaign window includes the 22 April 2025 Pahalgam attack and Operation Sindoor — the most acute India-Pakistan military crisis since Balakot 2019."
+        - "Canonical multi-year SideWinder target set is Pakistani military and government (Kaspersky 2018, Group-IB 2022, Arctic Wolf 2023); this 2025 campaign continues that pattern with StealerBot."
+      ruled_out: "The regional diplomatic-collection pillar also fits SideWinder's broader 2025 diplomat-targeting activity, but the Pakistan-specific named victim here is a defense technical-development directorate, placing the primary reading on the Pakistan-military collection pillar rather than general diplomatic collection."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/pakistan-military-various
+  - target_id: sectors/defense
     country: pk
     role: primary
-  - target_id: orgs/pakistan-defense-research
+  - target_id: sectors/government
     country: pk
-    role: primary
+    role: collateral
 sources:
-  - sekoia/2025-05-07_sidewinder-pahalgam-tempo
+  - thehackernews/2025-05-20_sidewinder-south-asian-ministries
+  - thehackernews/2025-10-28_sidewinder-clickonce-diplomats
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    PHANTOM-REMEDIATION → RE-SOURCE (badrabbit model). The sole cited source was a phantom:
+    sekoia/2025-05-07_sidewinder-pahalgam-tempo (url:null; its own notes admit "no specific
+    Sekoia.io blog permalink covering SideWinder tempo during the Pahalgam / Operation Sindoor
+    cycle was recovered"). No Sekoia "tempo-spike" report exists. Web verification confirms the
+    UNDERLYING incident is real: SideWinder ran 2025 spear-phishing against Pakistani/South Asian
+    government targets — so the event was re-sourced to real reporting rather than retired.
+    Level=partial: the vendor primaries (Acronis "From banks to battalions…"; Trellix "SideWinder's
+    Shifting Sands: Click Once for Espionage") are bot-walled to my fetcher (Acronis 403; Trellix
+    curl HTTP 000 / WebFetch 403), so claims are carried by snapshotted The Hacker News mirrors.
+
+    [a] FACTS — corrected to what the snapshotted sources carry; fabrications stripped.
+    THN 2025-05-20 (Acronis, sha256 ecef0b01…fa027948, 170,631 B): "High-level government
+    institutions in Sri Lanka, Bangladesh, and Pakistan have emerged as the target of a new
+    campaign orchestrated by a threat actor known as SideWinder"; "Pakistan's Directorate of
+    Indigenous Technical Development" is the Pakistan-specific named victim; "The malicious payload
+    is an RTF file that weaponizes CVE-2017-11882, a memory corruption vulnerability in the Equation
+    Editor, to launch a shellcode-based loader that runs the StealerBot malware"; "consistent with
+    recent SideWinder attacks documented by Kaspersky in March 2025." THN 2025-10-28 (Trellix,
+    sha256 b8c9fbfc…92dc049a, 171,938 B) corroborates 2025 SideWinder targeting of Pakistani + South
+    Asian diplomats with "ModuleInstaller and StealerBot." STRIPPED as unsupportable: (1) the
+    "sharp uptick in SideWinder operational tempo" / crisis-driven "tempo spike" causal framing —
+    no source states it; (2) "Karachi-area defense-research targets" — fabricated geography (the real
+    defense target is the Directorate of Indigenous Technical Development, no city named; zero
+    "Karachi" hits in either snapshot); (3) "post-Sindoor diplomatic cables" lure theme — fabricated
+    (real lures are Pakistani military-welfare/government documents per Trellix, e.g. CSD/JCO items);
+    (4) "Sekoia, Kaspersky, and Indian commercial threat-intelligence outlets" multi-vendor-consensus
+    claim — Sekoia citation is phantom; the actual reporters are Acronis (May 2025) and Trellix
+    (Oct 2025). CVEs verified real and source-carried (CVE-2017-11882 named verbatim; CVE-2017-0199
+    also named); StealerBot + weaponized-RTF tradecraft verified.
+
+    [b] ATTRIBUTION — Acronis attributes the campaign to SideWinder (via THN). SideWinder = named
+    cluster of Indian origin (MITRE G0121 "suspected Indian threat actor group"; Kaspersky). Set
+    attributing_org=Acronis (was "Sekoia / vendor-consensus"), attribution_source_id re-pointed off
+    the phantom to thehackernews/2025-05-20_…, attribution_date 2025-05-07→2025-05-20. Kept
+    confidence=high (the SideWinder identification is firm/vendor-consensus) and assessment=concur.
+
+    [c] DATES — disclosure_date 2025-05-07 (the phantom/Op-Sindoor strike date) → 2025-05-20 (the
+    real Acronis/THN disclosure). start_date kept at 2025-04-22 as a best-estimate crisis-window
+    anchor: the campaign is documented active across April–May 2025 (Acronis May; "consistent with
+    Kaspersky March 2025"), but NO snapshotted source pins SideWinder's op-start to that exact date —
+    it is the crisis anchor, flagged here. end_date null (ongoing).
+
+    [d] DOCTRINE_LINKS — link kept strongly_inferred (NOT attested; attesting_source_id null),
+    reasoning rewritten off the (unsourced) "tempo elevation" onto the documented Pakistani-defense
+    targeting; added inference_basis{signals[], ruled_out} (ruled out the diplomatic-collection pillar
+    since the Pakistan-specific victim is a defense R&D directorate). Honest: no source states purpose,
+    no Indian govt claims tasking; doctrine is an inferred posture.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was absent): SideWinder group + Indian nation-of-origin,
+    no service named (consistent with the actor's in/unscoped placement).
+
+    [f] ACTOR_ID — in/unscoped/sidewinder resolves to atlas/actors/in/sidewinder.yaml (id
+    in/unscoped/sidewinder). Correct India-nexus placement; no actor-file edit.
+
+    TARGETS — both original targets were DANGLING FKs (orgs/pakistan-military-various,
+    orgs/pakistan-defense-research — neither exists in atlas/targets/). Replaced with FK-valid,
+    source-carried sector targets: sectors/defense pk (primary) = Pakistan's Directorate of
+    Indigenous Technical Development (explicitly named); sectors/government pk (collateral) =
+    "high-level government institutions in … Pakistan." incident_type gained "espionage" (THN:
+    "Cyber Espionage").
+
+    FLAGS for orchestrator: (1) phantom sekoia/2025-05-07_sidewinder-pahalgam-tempo is now ORPHANED
+    (annotated in its own record) — retire candidate. (2) Vendor primaries (Acronis, Trellix) are
+    bot-walled — level kept partial; upgrade to full if the originals are later snapshotted.
+    (3) target orgs/pakistani-military.yaml exists with sources:[] (pre-existing registry gap; not
+    referenced by this event after the fix, not edited here).

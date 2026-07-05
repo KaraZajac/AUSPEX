@@ -1,11 +1,11 @@
 id: 2024-12/cyberav3ngers-iocontrol-disclosure
 name: Claroty Team82 discloses CyberAv3ngers IOCONTROL custom OT/IoT malware
-start_date: 2024-06-01
+start_date: 2023-10-15  # AUDIT 2026-07-05: was 2024-06-01 (unsupported); Claroty dates the Orpak/Gasboy attack reports "mid-October 2023 to late January 2024"
 disclosure_date: 2024-12-13
-end_date: 2024-12-13
+end_date: 2024-01-31  # AUDIT 2026-07-05: was 2024-12-13 (conflated w/ disclosure); source-bounded reported-wave end "late January 2024" (VirusTotal sample surfaced Sept 2024)
 incident_type:
   - intrusion
-  - destructive
+  - cyber-physical  # AUDIT 2026-07-05: was "destructive" — source shows no wiping/destruction (0 hits destroy/wipe/sabotage); IOCONTROL is an OT/IoT device-manipulation cyberweapon (fuel pumps, PLCs, HMIs)
 initial_vector: n-day  # default / weak credentials on internet-exposed devices
 outcome_summary: |
   Claroty Team82 disclosed analysis of a custom Linux-based
@@ -23,33 +23,69 @@ false_flag_risk: none
 campaign_id: cyberav3ngers-water-utility-wave
 summary: |
   Major escalation point in the CyberAv3ngers operational
-  arc: from exploiting default credentials on Unitronics PLCs
-  (Aliquippa, 2023) to operating a bespoke, modular, cross-
-  device OT/IoT malware platform with formal C2 infrastructure.
-  Doctrinally still operating inside the persona-laundering /
-  asymmetric-civilian-CII-coercion pattern attested for the
-  cluster by Treasury OFAC's February 2024 designations, but
-  the tooling sophistication closes the gap between IRGC-IO
-  cluster capability and the kind of bespoke ICS malware
-  historically seen only from Sandworm / Industroyer.
+  arc: from exploiting default / weak credentials on internet-
+  exposed Unitronics PLCs (Aliquippa, 2023) to operating a
+  bespoke, modular, cross-device OT/IoT malware platform
+  (IOCONTROL) with dedicated MQTT command-and-control. Claroty
+  assesses IOCONTROL as "a cyberweapon used by a nation-state to
+  attack civilian critical infrastructure." Doctrinally
+  continuous with the persona-laundering / civilian-CII-coercion
+  pattern behind the cluster's earlier Unitronics operations,
+  whose IRGC operators — the IRGC Cyber-Electronic Command
+  (IRGC-CEC) — the US Treasury designated in February 2024; the
+  custom cross-vendor tooling marks a substantial capability step
+  up from the 2023 default-credential operations.
 attributions:
   - actor_id: ir/irgc-io/cyberav3ngers
     attributing_org: Claroty Team82
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate  # AUDIT 2026-07-05: was high — Claroty hedges ("allegedly"/"believed to be")
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-12-13
     attribution_source_id: claroty/2024-12-13_iocontrol-iran-ot
+    notes: |
+      Claroty attributes IOCONTROL to "a threat actor group linked to
+      Iran known as the CyberAv3ngers" and assesses the platform "a
+      cyberweapon used by a nation-state to attack civilian critical
+      infrastructure." Confidence set moderate (not high): Claroty's own
+      wording is hedged ("allegedly", "believed to be responsible").
+      AUSPEX still concurs because the CyberAv3ngers persona publicly
+      claimed the Orpak fuel-system attacks on its own Telegram channel
+      (documented by Claroty) and OFAC (Feb 2024) sanctioned the IRGC
+      officials behind the persona. attribution_level = named-actor:
+      Claroty names the CyberAv3ngers group + Iran; the IRGC sub-org is
+      relayed from Treasury, not original to Claroty. NB DISCREPANCY:
+      every govt source and Claroty name the IRGC Cyber-Electronic
+      Command (IRGC-CEC), NOT the IRGC-IO (Intelligence Organization)
+      that the actor id ir/irgc-io/cyberav3ngers encodes — flagged for
+      actor review, not re-homed here.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # AUDIT 2026-07-05: DOWNGRADED from attested
     reasoning: |
-      OFAC February 2024 attests the CyberAv3ngers → IRGC-IO
-      persona-laundering linkage; Claroty's IOCONTROL disclosure
-      extends the cluster's tooling sophistication under the
-      already-attested doctrine link.
-    attesting_source_id: treasury/2024-02-02_cyberav3ngers-irgc-io
+      CyberAv3ngers operates as a named hacktivist persona (Telegram / X
+      claim-and-leak) whose operators the US government has pierced to
+      the IRGC — OFAC's February 2024 designation names six IRGC
+      Cyber-Electronic Command (IRGC-CEC) officials behind the persona's
+      Unitronics operations. Claroty documents the same persona claiming
+      the Orpak/Gasboy fuel-system compromises on Telegram while
+      assessing IOCONTROL a nation-state cyberweapon: the persona-
+      laundering pattern. Downgraded from attested because no cited
+      source states the persona-laundering GOAL (plausible deniability)
+      in substance — the Treasury release neither names "CyberAv3ngers"
+      nor uses any persona / hacktivist / deniability language and
+      addresses the Unitronics ops, not IOCONTROL; Claroty states no
+      deniability purpose. The pattern is triangulated, not source-
+      attested.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "CyberAv3ngers is a named hacktivist persona that publicly claimed the Orpak fuel-system attacks on its own Telegram channel (Claroty documents the Telegram posts / screenshots)."
+        - "OFAC (Feb 2024) pierced the persona, sanctioning six IRGC Cyber-Electronic Command officials as responsible for the cluster's critical-infrastructure operations — state operators behind a hacktivist front."
+        - "Claroty assesses IOCONTROL a cyberweapon used by a nation-state, yet the operations are publicly owned only by the CyberAv3ngers persona — laundering state action through a persona."
+      ruled_out: "Overt / acknowledged state operation with no deniability layer — ruled out because the ops are claimed solely by the CyberAv3ngers hacktivist persona while government attribution (OFAC / CISA) places the operators inside the IRGC."
     contested: false
     analyst: claude
   - doctrine_id: ir/asymmetric-warfare
@@ -57,11 +93,24 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cross-vendor OT/IoT tooling enabling coercion against fuel,
-      water, and broader civilian CII operationalizes the
-      asymmetric-warfare pillar at a substantially higher
-      capability tier than 2023 default-credential operations.
+      Claroty assesses IOCONTROL "a cyberweapon used by a nation-state
+      to attack civilian critical infrastructure" and frames the fuel-
+      system attacks as "another extension of the geopolitical conflict
+      between Israel and Iran" — coercion of adversary civilian CII
+      (fuel, and the cluster's prior water targeting), the core of the
+      asymmetric-warfare civilian-CII-coercion pillar, now at a higher
+      capability tier than the 2023 default-credential operations. Not
+      raised to attested: Claroty states civilian-CII targeting and an
+      intimidation effect ("projections of power … hoping to instill
+      fear") but does not crisply state coercion as the operation's
+      end-goal.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Claroty: IOCONTROL is 'a cyberweapon used by a nation-state to attack civilian critical infrastructure' — fuel-management systems (Orpak / Gasboy) serving civilian retail fuel."
+        - "Claroty frames the campaign as 'another extension of the geopolitical conflict between Israel and Iran' and the attacks as 'projections of power … hoping to instill fear' — coercion / intimidation of adversary civilians."
+        - "Cross-vendor OT/IoT reach (IP cameras, routers, PLCs, HMIs, firewalls, fuel pumps) scales the civilian-CII target surface well beyond the 2023 Unitronics default-credential operations."
+      ruled_out: "Espionage / intelligence collection — ruled out because IOCONTROL is an OT control / attack implant (device manipulation, defacement, demonstrated access), not a data-exfiltration tool, and the disclosed effect is coercive OT disruption of civilian fuel infrastructure."
     contested: false
     analyst: claude
 targets:
@@ -75,3 +124,76 @@ targets:
     role: primary
 sources:
   - claroty/2024-12-13_iocontrol-iran-ot
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited against the two cited sources, both snapshotted + hashed.
+    Claroty (Team82) "Inside a New OT/IoT Cyberweapon: IOCONTROL"
+    847f0554…d5df5e7e (148,882 bytes) — freshly captured, REAL article
+    (not a phantom). Treasury OFAC jy2072 (attesting source of the ex-
+    attested link) 579b0021…7b167554 (119,852 bytes) — hash re-verified.
+
+    [a] FACTS — all event claims source-carried by Claroty (verbatim):
+    "custom-built" "modular" "Linux-based" platform ("IOCONTROL malware is
+    based on a generic OT/IoT malware framework for embedded Linux-based
+    devices"); sample "extracted from a Gasboy fuel control system which
+    has close ties with Orpak Systems"; device types "IP cameras, routers,
+    PLCs, HMIs, firewalls, and … fuel pumps"; vendors "Baicells, D-Link,
+    Hikvision, Red Lion, Orpak, Phoenix Contact, Teltonika, Unitronics"
+    (event lists a subset — no fabrication); "IOCONTROL leverages the MQTT
+    protocol … disguise traffic over MQTT to and from the attackers'
+    command-and-control" (port 8883); scope "several hundred Israel-made
+    Orpak Systems and U.S.-made Gasboy fuel management systems in Israel
+    and the United States." CORRECTION: struck the summary clause "closes
+    the gap … bespoke ICS malware historically seen only from Sandworm /
+    Industroyer" — AI-embellishment; Claroty says NOTHING of Sandworm or
+    Industroyer (0 hits each; also 0 for destroy/wipe/sabotage/escalation).
+    incident_type "destructive" → "cyber-physical" (no destruction shown;
+    OT/IoT device-manipulation weapon; siblings use disruption — Kara may
+    normalize).
+
+    [b] ATTRIBUTION — Claroty attributes to "a threat actor group linked
+    to Iran known as the CyberAv3ngers" and assesses IOCONTROL "a cyber-
+    weapon used by a nation-state to attack civilian critical infra-
+    structure." Confidence high → MODERATE: Claroty's wording is hedged
+    ("allegedly compromised", "believed to be responsible"). auspex_
+    assessment kept concur (persona self-claimed the Orpak attacks on
+    Telegram per Claroty; OFAC sanctioned the IRGC operators). Added
+    attribution_level: named-actor (CyberAv3ngers group + Iran named;
+    IRGC sub-org only relayed from Treasury).
+
+    [c] DATES — Claroty published_on 2024-12-13 confirmed (= disclosure_
+    date, kept). start_date 2024-06-01 → 2023-10-15 (unsupported; source:
+    "reports about these attacks by CyberAv3ngers against Orpak devices
+    span from mid-October 2023 to late January 2024"). end_date 2024-12-13
+    → 2024-01-31 (was conflated with the disclosure date; source-bounded
+    reported-wave end "late January 2024"; the VirusTotal sample surfaced
+    Sept 2024, C2 domain registered Nov 23 2023).
+
+    [d] DOCTRINE_LINKS — persona-laundering DOWNGRADED attested →
+    strongly_inferred: the attesting source (OFAC jy2072) contains ZERO
+    occurrences of "CyberAv3ngers", "persona", "hacktivist", or "deniab*",
+    and concerns the Unitronics ops, not IOCONTROL — it does not state the
+    persona-laundering GOAL in substance, so cannot attest it. attesting_
+    source_id treasury → null; inference_basis (signals + ruled_out) added.
+    civilian-CII-coercion kept strongly_inferred (NOT upgraded per the no-
+    upgrade rule, though Claroty's "nation-state … attack civilian critical
+    infrastructure" is strong support); inference_basis added.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was absent).
+
+    [f] ACTOR_ID — ir/irgc-io/cyberav3ngers RESOLVES (file
+    atlas/actors/ir/cyberav3ngers.yaml, id field). FLAG (not re-homed per
+    instruction): the id encodes IRGC-IO (Intelligence Organization) but
+    OFAC/CISA/Claroty every source names the IRGC Cyber-Electronic Command
+    (IRGC-CEC). The actor file already carries this KEEP-with-caveat note;
+    orchestrator/Kara to resolve the IO↔CEC mapping if an ir/irgc-cec
+    service is stood up.
+
+    Residual: Gasboy-compromise date not precisely fixed by the source
+    (sample from VirusTotal); end_date reflects the documented Orpak wave.
+    Claroty tier kept secondary (corpus convention: vendor-research below
+    govt-primary).

@@ -1,90 +1,236 @@
 id: 2024-12/treasury-beyondtrust-silk-typhoon
 name: US Treasury BeyondTrust compromise (Silk Typhoon / APT27 cluster)
-start_date: 2024-12-08  # estimated initial access via BeyondTrust
-disclosure_date: 2024-12-30  # Treasury statement
+start_date: 2024-12-08  # Treasury notified by BeyondTrust; actual initial access earlier (BeyondTrust root-caused the API-key compromise on Dec 5 2024)
+disclosure_date: 2024-12-30  # Treasury letter to Congress
 end_date: 2024-12-30
 incident_type:
   - intrusion
   - data-theft
-initial_vector: n-day  # CVE-2024-12356 / CVE-2024-12686 BeyondTrust Remote Support
+  - espionage
+initial_vector: valid-creds  # stolen BeyondTrust Remote Support SaaS API key; underlying flaws CVE-2024-12356 / CVE-2024-12686 were zero-days when exploited (third-party SaaS/supply-chain compromise)
 outcome_summary: |
-  Exploitation of BeyondTrust Remote Support (CVE-2024-12356 /
-  CVE-2024-12686) gave PRC-attributed actors access to a
-  cryptographic key used to secure a Treasury cloud-based
-  service, then to ~3,000 unclassified files across ~100
-  Treasury workstations, including OFAC and the Office of the
-  Secretary. Microsoft attributed to "Silk Typhoon" (formerly
-  Hafnium); OFAC subsequently sanctioned Yin Kecheng (Jan 17
-  2025) as a Shanghai-based MSS-linked perpetrator.
+  A China state-sponsored actor abused a stolen BeyondTrust Remote
+  Support SaaS API key (BeyondTrust root-caused the key compromise
+  on Dec 5 2024; the underlying flaws CVE-2024-12356 /
+  CVE-2024-12686 were zero-days when exploited) to override the
+  service's security, remotely access Treasury Departmental Offices
+  workstations, and take unclassified documents. Bloomberg reported
+  the actor broke into no less than 400 Treasury workstations and
+  stole over 3,000 files (policy/travel documents, org charts,
+  sanctions and foreign-investment material, "Law Enforcement
+  Sensitive" data), including at OFAC and the Office of the Treasury
+  Secretary. Treasury's Dec 30 2024 letter attributed the intrusion
+  to an unnamed China state-sponsored APT; Bloomberg/Microsoft
+  subsequently identified "Silk Typhoon" (= Hafnium), and OFAC
+  sanctioned Shanghai-based MSS-affiliated Yin Kecheng (Jan 17 2025)
+  as a perpetrator.
 quantified_impact:
-  files_accessed: 3000
-  workstations_accessed: 100
+  files_accessed: 3000        # Bloomberg: "over 3,000 files"
+  workstations_accessed: 400  # Bloomberg: "no less than 400 computers" (corrects earlier ~100)
 false_flag_risk: none
 summary: |
-  Targeting OFAC reads as counterintelligence on pending PRC
-  sanctions — specifically the Salt Typhoon (Sichuan Juxinhe)
-  and Flax Typhoon (Integrity Tech) designations Treasury
-  announced just weeks later in January 2025. The Silk Typhoon
+  Espionage-only targeting of OFAC (which administers US sanctions)
+  and the Office of the Treasury Secretary reads as counterintelligence
+  on US sanctions decision-making — reporting states the hackers were
+  "likely aiming to collect intelligence on what Chinese individuals
+  and organizations the U.S. might consider sanctioning," weeks before
+  Treasury's own Flax Typhoon (Integrity Tech, Jan 3 2025) and Salt
+  Typhoon (Sichuan Juxinhe, Jan 17 2025) designations. The Silk Typhoon
   vs Hafnium vs APT27 cluster question is contested: Microsoft
-  consolidated as "Silk Typhoon"; vendor consensus via the Yin
-  Kecheng OFAC designation places the actor in the APT27
-  cluster ecosystem; AUSPEX flags the attribution accordingly.
+  consolidated the actor as "Silk Typhoon (HAFNIUM)"; Mandiant said its
+  UNC5221 cluster "likely overlaps with APT27 and Silk Typhoon" while
+  cautioning it lacked independent evidence. AUSPEX records the
+  attributions with their differing confidence and flags the cluster
+  reconciliation as unresolved.
 attributions:
-  - actor_id: cn/mss/hafnium  # = Silk Typhoon in current Microsoft taxonomy
-    attributing_org: US Treasury
+  - actor_id: cn/mss/hafnium  # AUSPEX resolution of "China state-sponsored APT"; = Silk Typhoon / Hafnium
+    attributing_org: US Treasury (2024-12-30 letter to Congress)
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2024-12-30
-    attribution_source_id: null
+    attribution_source_id: thehackernews/2024-12-31_chinese-apt-beyondtrust-api-treasury
+    notes: |
+      Treasury's Dec 30 2024 letter attributed the intrusion at the
+      NATION level only: "an unnamed state-sponsored Advanced Persistent
+      Threat (APT) actor from China." The named-actor identity (Silk
+      Typhoon) came later (Bloomberg, Jan 9 2025). actor_id is AUSPEX's
+      resolution of that China-APT attribution to the later-named cluster.
   - actor_id: cn/mss/hafnium
-    attributing_org: US Treasury OFAC (Jan 2025 Yin Kecheng designation)
+    attributing_org: Bloomberg (via BleepingComputer)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-01-17
-    attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
-  - actor_id: cn/unscoped/apt27
-    attributing_org: open-source consensus (post-Yin Kecheng)
-    attributing_org_confidence: moderate
-    auspex_assessment: contested
+    attribution_date: 2025-01-09
+    attribution_source_id: bleepingcomputer/2025-01-09_treasury-hack-silk-typhoon
+    notes: |
+      "a Bloomberg report ... attributed the attack to the Silk Typhoon
+      hacking group"; "Silk Typhoon (also known as Hafnium)." Microsoft
+      (microsoft/2025-03-05) independently confirms the Silk Typhoon =
+      HAFNIUM identity and the stolen-API-key / PAM tradecraft.
+  - actor_id: cn/mss/hafnium
+    attributing_org: US Treasury OFAC (2025-01-17 Yin Kecheng designation)
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
     attribution_date: 2025-01-17
     attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
     notes: |
-      Silk Typhoon / Hafnium / APT27 cluster reconciliation is
-      contested. Microsoft consolidated under "Silk Typhoon";
-      other vendors map the Yin Kecheng-associated tradecraft
-      to the APT27 cluster. AUSPEX records both attributions
-      pending vendor consensus.
+      OFAC designated Yin Kecheng — "affiliated with the People's Republic
+      of China Ministry of State Security (MSS)" — as a perpetrator of the
+      BeyondTrust / Treasury compromise (associated with Silk Typhoon).
+      This is the MSS nexus for the individual; the release's own text
+      names neither "APT27" nor "Silk Typhoon" (see the cn/mss/hafnium and
+      cn/unscoped/apt27 actor-file audits).
+  - actor_id: cn/unscoped/apt27
+    attributing_org: Mandiant (via The Hacker News)
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: contested
+    attribution_date: 2025-01-18
+    attribution_source_id: thehackernews/2025-01-18_us-sanctions-sichuan-juxinhe-silk-typhoon
+    notes: |
+      CONTESTED cluster-overlap only: "Mandiant told The Hacker News that
+      the cluster it tracks as UNC5221 likely overlaps with APT27 and Silk
+      Typhoon, although it ... doesn't have 'independent evidence' on its
+      own to confirm these connections." Whether Silk Typhoon = Hafnium =
+      the APT27 cluster, or distinct MSS-ecosystem teams, is unresolved.
+      Confidence low + contested to reflect Mandiant's explicit hedge. (The
+      prior version cited the Jan-2025 OFAC release for this APT27 mapping,
+      but that release contains zero occurrences of "APT27" — corrected.)
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
+    confidence: strongly_inferred  # 'attested' requires attesting_source_id + a source stating the goal; sources name only the proximate (sanctions-intel) purpose
     reasoning: |
-      Targeting OFAC and Office of the Secretary is decision-
-      maker political-intelligence collection on US sanctions
-      policy — directly invoking the Intelligence Law's
-      political-intelligence mandate.
+      Espionage-only targeting of OFAC (which administers US sanctions)
+      and the Office of the Treasury Secretary is political/policy-
+      intelligence collection on US sanctions decision-making — the
+      collection-for-the-state mandate the 2017 National Intelligence Law
+      codifies. No cited source names that statute, but reporting states
+      the proximate purpose (sanctions-policy intelligence) and Microsoft
+      frames Silk Typhoon collection as targeting US government policy.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "OFAC + Office of the Treasury Secretary targeted; espionage-only (no ransomware, no theft-for-profit)."
+        - "BleepingComputer: the hackers were 'likely aiming to collect intelligence on what Chinese individuals and organizations the U.S. might consider sanctioning.'"
+        - "Microsoft (2025-03-05): Silk Typhoon 'Data of interest overlaps with China-based interests, US government policy and administration.'"
+      ruled_out: "Financially-motivated crime: no encryption, extortion, or monetization; access was used to exfiltrate policy / sanctions documents."
     contested: false
     analyst: claude
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/decision-maker-sigint
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # downgraded 2026-07-05 from strongly_inferred: sources frame this as sanctions counterintelligence; nothing ties the op to Taiwan; >1 reading survives
     reasoning: |
-      OFAC and Treasury Secretary office are decision-maker
-      targets on China-policy, which subsumes Taiwan-policy
-      and PRC-sanctions decision-making.
+      OFAC and the Treasury Secretary's office are US decision-maker
+      targets on China policy, which the decision-maker-SIGINT pillar
+      encodes. The link is only plausible: every cited source frames the
+      operation as sanctions / economic-policy counterintelligence, none
+      ties it to Taiwan-contingency preparation, so more than one strategic
+      reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Sanctions / economic-policy counterintelligence: the reading the sources support, encoded by cn/national-intelligence-law-2017."
+        - "Taiwan-contingency decision-maker SIGINT: knowing the US sanctions / coercion playbook aids Taiwan-scenario planning, but no cited source states this."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/us-treasury-ofac
-    role: primary
-    outcome: |
-      ~3,000 unclassified files across ~100 workstations
-      accessed; Treasury authentication keys compromised.
   - target_id: orgs/us-treasury
     role: primary
+    country: us
+    outcome: |
+      Actor overrode the Remote Support service's security and remotely
+      accessed Treasury Departmental Offices workstations, taking
+      unclassified documents — reportedly 3,000+ files across no less than
+      400 workstations (Bloomberg), including at OFAC (sanctions
+      administration) and the Office of the Treasury Secretary. The
+      compromised key was BeyondTrust's Remote Support SaaS API key, not
+      Treasury's own credentials.
 sources:
+  - beyondtrust/2024-12-08_remote-support-saas-security-investigation
+  - thehackernews/2024-12-31_chinese-apt-beyondtrust-api-treasury
+  - bleepingcomputer/2025-01-09_treasury-hack-silk-typhoon
   - treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
+  - thehackernews/2025-01-18_us-sanctions-sichuan-juxinhe-silk-typhoon
+  - microsoft/2025-03-05_silk-typhoon-it-supply-chain
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    RE-SOURCE audit (phantom-remediation path). The event previously cited ONE source
+    (treasury/2025-01-17 OFAC release), which carries NONE of the load-bearing facts
+    (BeyondTrust API-key vector, the two CVEs, the Treasury victimology, the file/computer
+    counts, or the "Silk Typhoon" name — that release's own text has zero occurrences of
+    "Silk Typhoon"/"APT27"/"BeyondTrust"). A prior interrupted agent had curled five real
+    articles into atlas/sources/raw/ but created no source records; this audit verified each
+    is the genuine, correct-event article, created the five source records, re-pointed the
+    event, and did the full 6-point audit. All snapshots re-hashed 2026-07-05.
+
+    SOURCES (sha256 first8..last8 / bytes):
+      beyondtrust/2024-12-08_remote-support-saas-security-investigation  f9c93c5e..416806c / 380,351 (primary, vendor-of-origin)
+      thehackernews/2024-12-31_chinese-apt-beyondtrust-api-treasury      75a87afa..250046  / 170,996 (carries Treasury 12-30 letter)
+      bleepingcomputer/2025-01-09_treasury-hack-silk-typhoon             58411899..99b2def / 88,531  (Silk Typhoon attribution)
+      treasury/2025-01-17_salt-typhoon-sichuan-juxinhe                   7c2cfe78..3652451 / 124,947 (OFAC Yin Kecheng; hash re-verified, unchanged)
+      thehackernews/2025-01-18_us-sanctions-sichuan-juxinhe-silk-typhoon b5e799ed..3f8b90e0 / 173,857 (400/3000 counts + Mandiant APT27 overlap)
+      microsoft/2025-03-05_silk-typhoon-it-supply-chain                  6f4cc4a2..fcf60   / 316,562 (Silk Typhoon=HAFNIUM + tradecraft + intent)
+
+    [a] FACTS — all now source-carried; two errors corrected:
+      * VECTOR: stolen BeyondTrust "infrastructure API key for Remote Support SaaS ... compromised
+        and used to enable access ... by resetting local application passwords" (BeyondTrust);
+        "The attackers used a stolen Remote Support SaaS API key" (BleepingComputer). CVE-2024-12356
+        / CVE-2024-12686 were "zero-day vulnerabilities discovered" Dec 13 2024 (BeyondTrust) — so
+        initial_vector CHANGED n-day -> valid-creds (stolen API key; the CVEs were 0-days, not
+        n-days; third-party SaaS/supply-chain compromise noted in the field comment).
+      * "cryptographic key" -> "a key" (embellishment removed): the Treasury letter says "a key used
+        by the vendor to secure a cloud-based service"; BeyondTrust says "API key." "cryptographic key"
+        appears in no source.
+      * WORKSTATIONS 100 -> 400 (factual correction): Bloomberg via THN: "broken into no less than 400
+        computers belonging to the Treasury and stole over 3,000 files." The prior "~100" was
+        unsupported by any source. files_accessed 3,000 confirmed ("over 3,000 files").
+      * Victims OFAC + Office of the Treasury Secretary — carried by THN 2024-12-31 (anon US officials).
+        (CFIUS appears in the orgs/us-treasury registry summary but in none of THIS event's cited
+        sources, so it is not asserted here.)
+    [b] ATTRIBUTION — rebuilt from 3 partly-unsourced entries (entry 1 had attribution_source_id: null;
+        the APT27 entry cited the OFAC release, which never says "APT27") to 4 fully source-carried,
+        dated entries capturing attribution latency: Treasury nation-level "unnamed state-sponsored APT
+        actor from China" (2024-12-30) -> Bloomberg "Silk Typhoon (also known as Hafnium)" named-actor
+        (2025-01-09) -> OFAC Yin Kecheng MSS-affiliated individual (2025-01-17) -> Mandiant UNC5221
+        "likely overlaps with APT27 and Silk Typhoon ... doesn't have independent evidence" (2025-01-18,
+        low+contested). No over-attestation remains.
+    [c] DATES — published_on set to each article's true pub date (BeyondTrust 2024-12-08 living advisory;
+        THN 2024-12-31 datePublished 2024-12-31T11:12; BleepingComputer 2025-01-09; THN sanctions
+        2025-01-18T11:36; Microsoft 2025-03-05). Event start_date comment corrected: 2024-12-08 is the
+        Treasury-NOTIFICATION date (BeyondTrust root-caused the API-key compromise Dec 5); disclosure
+        2024-12-30 = the letter to Congress.
+    [d] DOCTRINE_LINKS — neither is 'attested' (no source states the goal; attesting_source_id null on
+        both, correct). cn/national-intelligence-law-2017 KEPT strongly_inferred (sources name the
+        proximate sanctions-intel purpose + Microsoft "US government policy and administration"); added
+        inference_basis.signals + ruled_out. cn/taiwan-reunification/decision-maker-sigint DOWNGRADED
+        strongly_inferred -> plausible (over-attestation fix): sources frame the op as sanctions
+        counterintelligence, nothing ties it to Taiwan, >1 reading survives; added
+        inference_basis.alternatives.
+    [e] ATTRIBUTION_LEVEL — added to all four: nation / named-actor / named-actor / activity-cluster.
+    [f] ACTOR_ID — cn/mss/hafnium (file atlas/actors/cn/hafnium.yaml, id cn/mss/hafnium) and
+        cn/unscoped/apt27 both resolve. No actor edits. The APT27=unscoped and Hafnium=MSS placements
+        are consistent with the 2026-06-24 actor audits (MSS attested for Hafnium via the 2021 White
+        House statement; APT27 kept cn/unscoped as no source names its service).
+
+    FLAGS for orchestrator:
+      * DANGLING FK FIXED: the event referenced target_id orgs/us-treasury-ofac, which does NOT exist
+        in the target registry (only this event referenced it). Collapsed to the existing orgs/us-treasury
+        target (whose own summary already covers OFAC); OFAC + Office of the Secretary carried in the
+        target outcome + summary prose. If a distinct OFAC org target is desired, Kara/orchestrator can
+        create atlas/targets/orgs/us-treasury-ofac.yaml (out of scope for this event-only audit).
+      * DIRECTIONALITY OK: this event is the OPERATION (attacker cn/mss/hafnium -> victim orgs/us-treasury,
+        us). The Jan-2025 OFAC sanction is the concurrent US COUNTER-action and is already modeled
+        separately as policy-action us/2025-01-17_salt-typhoon-sichuan-juxinhe-sanctions AND event
+        2025-01/treasury-salt-typhoon-sanctions — no directionality inversion here.
+      * initial_vector judgment call: valid-creds chosen (stolen API key is the operative Treasury-access
+        mechanism, most directly source-supported); supply-chain / 0-day are defensible alternates given
+        the third-party-SaaS provenance and the zero-day CVEs.

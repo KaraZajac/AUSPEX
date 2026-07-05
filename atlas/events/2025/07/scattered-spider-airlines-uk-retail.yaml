@@ -1,49 +1,182 @@
 id: 2025-07/scattered-spider-airlines-uk-retail
 name: Scattered Spider Q2 2025 wave — UK retail and aviation
 start_date: 2025-04-22
-disclosure_date: 2025-05-12
+disclosure_date: 2025-05-02
 end_date: 2025-07-15
 incident_type:
   - ransomware
   - data-theft
+  - extortion
   - disruption
 initial_vector: phishing
 outcome_summary: |
   Q2 2025 Scattered Spider activity cluster hitting UK retail
-  (Marks & Spencer Apr 22 — major multi-week e-commerce outage
-  estimated GBP 300M impact; Co-op Apr 30; Harrods May 1) and
-  pivoting to aviation (Hawaiian Airlines Jun 23, WestJet
-  earlier in June, Qantas Jul 3). Tradecraft consistent with
-  prior campaigns: IT help-desk social engineering, MFA-reset
-  abuse, vSphere encryption. Ransom brand association: DragonForce
-  (UK retail wave) and Qilin (aviation wave).
+  (Marks & Spencer 22 Apr — multi-week e-commerce outage plus
+  customer-data theft; Co-op 30 Apr; Harrods 1 May; combined
+  estimated impact ~GBP 440M per UK reporting) and, in June, activity
+  in the aviation sector (WestJet mid-June internal-systems
+  disruption; Hawaiian Airlines disclosed a security incident to the
+  SEC in late June). Tradecraft consistent with prior campaigns: IT
+  help-desk social engineering to reset passwords / MFA tokens, plus —
+  in the retail wave — DragonForce ransomware encrypting VMware ESXi
+  servers alongside data theft for extortion. The aviation-sector
+  attributions are explicitly hedged (Mandiant: incidents "resemble
+  the operations of UNC3944 or Scattered Spider … still working on
+  attribution"; WestJet "likely" the group; Hawaiian "unclear whether
+  Scattered Spider is behind"). Qantas (disclosed 2 Jul), linked to
+  Scattered Spider in early reporting, is tracked separately in AUSPEX
+  as a ShinyHunters / UNC6040 Salesforce-vishing breach
+  (2025-07/qantas-shinyhunters-salesforce), not folded in here.
+quantified_impact:
+  combined_impact_estimate_gbp: 440000000  # M&S/Co-op/Harrods combined estimate; UK reporting (thehackernews 2025-07-10; CMC "single combined cyber event")
 false_flag_risk: none
 campaign_id: scattered-spider-cluster
 summary: |
   Demonstrates Scattered Spider's continued operational viability
-  despite the November 2024 five-member indictment — the cluster
-  recruited replacement operators from the same Telegram subculture
-  and remained Western-jurisdictional. UK NCSC issued a joint
-  advisory with FBI / Australian Signals Directorate Aug 2025
-  re-emphasizing the help-desk-attack vector. AUSPEX records
-  this cluster as the 2025 mid-arc continuation event for
+  despite the November 2024 five-member US indictment — the cluster
+  recruited replacement operators from the same Anglophone Telegram /
+  "The Com" subculture and remained Western-jurisdictional. On
+  29 July 2025 the FBI and CISA released an updated joint Cybersecurity
+  Advisory (AA23-320A, co-sealed with NCSC-UK, ASD/ACSC, RCMP, CCCS,
+  AFP) attributing recent commercial-facilities-sector activity — TTPs
+  obtained through FBI investigations as recently as June 2025, with
+  most-recent deployment of DragonForce ransomware — to Scattered
+  Spider, and re-emphasizing the IT-help-desk social-engineering
+  vector. That advisory is TTP-/sector-level and does NOT name the
+  individual M&S / Co-op / Harrods / airline victims; the named-victim
+  set recorded here is corroborated by contemporaneous UK incident
+  reporting and the July 2025 UK National Crime Agency arrests. AUSPEX
+  records this cluster as the 2025 mid-arc continuation event for
   Scattered Spider.
 attributions:
   - actor_id: criminal/scattered-spider
-    attributing_org: UK NCSC + FBI + Microsoft
+    attributing_org: FBI + CISA + NCSC-UK + ASD/ACSC (joint CSA AA23-320A, 29 Jul 2025)
     attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-05-20
-    attribution_source_id: ncsc-uk/2025-05-20_scattered-spider-uk-retail
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-07-29
+    attribution_source_id: cisa/2025-07-29_aa23-320a-scattered-spider-update
+    notes: |
+      The 29 Jul 2025 joint advisory (AA23-320A update) attributes the
+      recent commercial-facilities-sector activity and DragonForce
+      ransomware deployment to Scattered Spider at TTP/sector level; it
+      does NOT name M&S / Co-op / Harrods or the airlines individually.
+      The named-victim triad + DragonForce framing is corroborated by
+      the NCA arrests reporting (thehackernews 2025-07-10). Caveat
+      because the authoritative attribution is sector-level, not
+      per-victim. NB: the May 2025 UK NCSC involvement was
+      incident-response support to the affected retailers
+      (computerweekly / theregister 2025-05-02), NOT a formal
+      attribution — SS was only speculatively named at that stage.
+  - actor_id: criminal/scattered-spider
+    attributing_org: Mandiant / Google TIG (reported via SecurityWeek / Axios)
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-06-30
+    attribution_source_id: securityweek/2025-06-30_hawaiian-airlines-scattered-spider
+    notes: |
+      Aviation-wave attributions are explicitly hedged: Mandiant said
+      the airline/transport incidents "resemble the operations of
+      UNC3944 or Scattered Spider. We are still working on attribution";
+      WestJet is "likely the work of the cybercrime group"; and "it's
+      unclear whether Scattered Spider is behind the Hawaiian Airlines
+      hack." Recorded as activity-cluster / low to preserve that hedge.
 doctrine_links: []
 targets:
   - target_id: orgs/marks-and-spencer
     role: primary
   - target_id: orgs/co-op
     role: primary
-  - target_id: orgs/qantas
+  - target_id: orgs/harrods
+    role: primary
+  - target_id: orgs/westjet
     role: primary
   - target_id: orgs/hawaiian-airlines
     role: primary
 sources:
-  - ncsc-uk/2025-05-20_scattered-spider-uk-retail
+  - cisa/2025-07-29_aa23-320a-scattered-spider-update
+  - securityweek/2025-06-30_hawaiian-airlines-scattered-spider
+  - thehackernews/2025-07-10_four-arrested-ms-coop-harrods
+  - computerweekly/2025-05-02_ncsc-retail-wake-up-call
+  - theregister/2025-05-02_ncsc-harrods-retail
+  - doj/2024-11-20_scattered-spider-five-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    RE-SOURCED off a phantom (badrabbit model), then full 6-point audit.
+    The event previously rested on a single source — ncsc-uk/2025-05-20_
+    scattered-spider-uk-retail — whose url is null (NCSC slug 404'd) and
+    whose record mischaracterizes a May-2025 NCSC retail news item as a
+    "joint advisory with FBI and ASD" (that conflates it with the 29 Jul
+    2025 AA23-320A update). Re-pointed the event onto 5 reachable,
+    snapshotted primaries + the DOJ indictment source. All raw snapshots
+    re-hashed this session (sha first8…last8 / bytes):
+      cisa/2025-07-29_aa23-320a-scattered-spider-update  a253f799…c0bb8d05 / 687957 B (PDF)
+      securityweek/2025-06-30_hawaiian-airlines-scattered 14ab99fa…d8a713b5 / 161727 B
+      thehackernews/2025-07-10_four-arrested-ms-coop-harr c098dbdc…08f751b3 / 175179 B
+      computerweekly/2025-05-02_ncsc-retail-wake-up-call  f6fefeb1…11032426 / 384849 B
+      theregister/2025-05-02_ncsc-harrods-retail          dbff3d2e…c64f5828 / 166243 B
+    [a] FACTS — retail dates confirmed (computerweekly): "22 April 2025:
+    A cyber attack at M&S…" / Co-op "30 April" / Harrods "1 May". Combined
+    impact: THN title "£440M Cyber Attack on Marks & Spencer, Co-op, and
+    Harrods" (set quantified_impact.combined_impact_estimate_gbp=440M).
+    DragonForce + TTPs from CISA verbatim: "most recently deploying
+    DragonForce ransomware", "convince IT help desk personnel to reset
+    passwords and/or MFA tokens", "encrypting VMware Elastic Sky X
+    integrated (ESXi) servers [T1486]", "data theft for extortion",
+    "TTPs obtained through FBI investigations as recently as June 2025".
+    THN confirms M&S "carried out by the DragonForce ransomware group".
+    Aviation (securityweek): WestJet "reported earlier in June that a
+    cyberattack had disrupted certain internal systems"; Hawaiian "told
+    the SEC late last week that it had identified a cybersecurity
+    incident". CORRECTIONS: (1) STRIPPED unsourced "GBP 300M" M&S-specific
+    figure → replaced with the sourced ~GBP 440M combined estimate.
+    (2) STRIPPED "Qilin (aviation wave)" ransom-brand claim — no cited
+    source supports Qilin for this wave; CISA supports only DragonForce.
+    (3) "vSphere encryption" → "VMware ESXi" (CISA's exact term).
+    (4) Hawaiian "Jun 23" → "late June (SEC 8-K)" (source says "late last
+    week" of a 30 Jun article). (5) Summary "Aug 2025" joint advisory →
+    "29 July 2025" AA23-320A, with correct co-sealers.
+    [b] ATTRIBUTION — was single entry, high-conf, dated 2025-05-20 on the
+    phantom. Rebuilt into two dated entries capturing attribution latency:
+    (i) FBI+CISA+NCSC-UK+ASD joint CSA (29 Jul), high / named-actor /
+    concur-with-caveat — authoritative but sector-level, not per-victim;
+    (ii) Mandiant/Google TIG (30 Jun), low / activity-cluster /
+    concur-with-caveat — carries the explicit "resemble … still working
+    on attribution" / "likely" / "unclear whether" airline hedges the
+    task flagged. Downgraded from the over-stated high/attested single
+    stamp.
+    [c] DATES — disclosure_date 2025-05-12 (unanchored) → 2025-05-02
+    (NCSC public "wake-up call" + Harrods confirmation, both cited).
+    start 2025-04-22 (M&S) and end 2025-07-15 (aviation-wave tail;
+    editorial estimate, within the documented window) retained. Each
+    source's published_on matches its record.
+    [d] DOCTRINE_LINKS — [] is correct: criminal/financial cluster, no
+    state nexus, actor default_doctrine_alignment_ids=[]. None invented.
+    [e] ATTRIBUTION_LEVEL — set named-actor (CISA names "Scattered
+    Spider") and activity-cluster (Mandiant sees resemblance, attribution
+    unresolved).
+    [f] ACTOR_ID — criminal/scattered-spider resolves to
+    atlas/actors/criminal/scattered-spider.yaml; clean, well-sourced,
+    status: indicted. No actor edits.
+    TARGETS — REMOVED orgs/qantas (conflation: Qantas Jul-2025 is
+    canonically the ShinyHunters/UNC6040 Salesforce breach in event
+    2025-07/qantas-shinyhunters-salesforce; leaving it here double-counted
+    it as a confirmed SS victim). ADDED orgs/harrods (in summary, cited)
+    and orgs/westjet ("likely" SS, cited). Kept M&S / Co-op / Hawaiian.
+    FLAGS for orchestrator: (1) org target registry entries
+    orgs/marks-and-spencer, orgs/co-op, orgs/harrods, orgs/westjet,
+    orgs/hawaiian-airlines do NOT exist under atlas/targets/orgs/ (only
+    orgs/qantas does) — these are soft-dangling (validate.ts counts, does
+    not error); create registry files if named-victim linkage is wanted.
+    (2) Source ncsc-uk/2025-05-20_scattered-spider-uk-retail is
+    mischaracterized (url null; labelled a joint FBI/ASD advisory but is
+    a May NCSC retail news item conflated with the 29 Jul AA23-320A). Not
+    orphaned — still cited by 2025-07/qantas-shinyhunters-salesforce and
+    policy-action multilateral/2025-05-20_uk-scattered-spider-retail (whose
+    2025-05-20 date should also be reviewed vs the 10 Jul NCA arrests) —
+    so left in place for orchestrator to correct/retire corpus-wide.

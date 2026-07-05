@@ -4,42 +4,107 @@ start_date: 2025-03-12
 disclosure_date: 2025-03-12
 end_date: 2025-03-12
 incident_type:
-  - intrusion
+  - ransomware
+  - documentary
 initial_vector: phishing
 outcome_summary: |
   Joint advisory by CISA, FBI, and MS-ISAC characterizing Medusa
-  ransomware as having affected 300+ critical-infrastructure
-  organizations across the US since 2021. Identifies medical,
+  ransomware as having affected over 300 victims across
+  critical-infrastructure sectors since 2021 (as of February
+  2025; Medusa first identified June 2021). Identifies medical,
   education, legal, insurance, technology, and manufacturing
   sector targeting. Initial-access tradecraft via phishing and
   exploitation of ScreenConnect (CVE-2024-1709) and Fortinet
   EMS SQL injection (CVE-2023-48788).
 false_flag_risk: none
 summary: |
-  Medusa is the dominant ransomware brand of 2024–25 following
-  the post-ALPHV / post-LockBit reshuffle and the April 2025
-  disappearance of RansomHub. AUSPEX records this advisory as
-  the canonical 2025-era US-government documentation of the
-  Russian-tolerated ransomware ecosystem's continued operation
-  despite the 2023–24 disruption arc.
+  Joint CISA / FBI / MS-ISAC #StopRansomware advisory (AA25-071A,
+  released 12 March 2025) characterizing the Medusa
+  ransomware-as-a-service (RaaS) operation, first identified in
+  June 2021. Per the advisory, Medusa originally operated as a
+  closed variant (all development and operations controlled by a
+  single group of threat actors) and later moved to an affiliate
+  model with ransom negotiation still centrally controlled by the
+  "Medusa actors"; it uses double-extortion via a data-leak site.
+  The advisory explicitly states this Medusa ransomware variant is
+  unrelated to the MedusaLocker variant and to the Medusa
+  mobile-malware variant (per the FBI). AUSPEX records this as the
+  canonical 2025-era US-government documentation of the Medusa RaaS
+  operation. The advisory assigns Medusa no operator nation or
+  state nexus — it is characterized purely as a
+  financially-motivated cybercriminal RaaS of unstated origin.
 attributions:
   - actor_id: criminal/medusa  # was ru/proxies/medusa; demoted 2026-06-24 (AA25-071A documents no Russia/state nexus — see actor notes)
     attributing_org: CISA + FBI + MS-ISAC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-03-12
     attribution_source_id: cisa/2025-03-12_aa25-071a-medusa-advisory
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Continued Russian-territorial tolerance of ransomware
-      operations against US CII three years after the criminal-
-      proxy mobilization pattern was codified.
-    contested: false
-    analyst: claude
+# doctrine_links REMOVED 2026-07-05 (claude-opus-4.8/max audit): was ru/sanctions-response-2022/criminal-proxy-mobilization @ plausible.
+# The sole source (AA25-071A) documents ZERO Russia/state nexus (full-text scan: no Russia/FSB/GRU/SVR/state-sponsored/safe-harbor/tolerated
+# tokens except an unrelated "Pro-Russia Hacktivists" sidebar link). The "Russian-territorial tolerance" reasoning was unsourced and assumed
+# its own conclusion (circularity). Actor is now stateless criminal/medusa, whose own default_doctrine_alignment_ids already dropped this
+# exact doctrine for the same reason. No doctrine genuinely applies -> []. See qc.notes.
+doctrine_links: []
 targets: []
 sources:
   - cisa/2025-03-12_aa25-071a-medusa-advisory
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs CISA/FBI/MS-ISAC #StopRansomware: Medusa Ransomware (AA25-071A), the sole cited source.
+    Raw snapshot PRESERVED and hash RE-VERIFIED on disk: cisa__2025-03-12_aa25-071a-medusa-advisory.html,
+    sha256 1424af90…a5d88a8b (113,892 bytes) — matches the committed content_sha256 exactly. STEP-0 phantom
+    triage: live URL re-curled HTTP 200, title "#StopRansomware: Medusa Ransomware | CISA" — the REAL advisory,
+    NOT a phantom/homepage (fresh-curl hash differs only by CISA's per-request dynamic tokens; on-disk snapshot
+    is authoritative). tier=primary correct (US govt joint advisory). No re-source needed.
+    DISAMBIGUATION (task-critical) ✓: the advisory itself settles it — "The Medusa ransomware variant is
+    unrelated to the MedusaLocker variant and the Medusa mobile malware variant per the FBI's…" and "Medusa is a
+    ransomware-as-a-service (RaaS) variant first identified in June 2021." Full-text scan: ZERO botnet/Mirai/
+    Android tokens. This event is unambiguously the Medusa RaaS, not MedusaLocker and not the Medusa Android
+    botnet.
+    [a] FACTS — all outcome_summary claims verbatim-carried: "As of February 2025, Medusa developers and
+    affiliates have impacted over 300 victims from a variety of critical infrastructure sectors with affected
+    industries including medical, education, legal, insurance, technology, and manufacturing" (300+ victim count
+    ✓, exact six-sector list ✓); "Phishing campaigns as a primary method for stealing victim credentials [T1566]"
+    (phishing ✓); "the ScreenConnect vulnerability CVE-2024-1709" ✓; "Fortinet EMS SQL injection vulnerability
+    CVE-2023-48788" ✓. RaaS/closed-then-affiliate model ✓ ("Medusa originally operated as a closed ransomware
+    variant, meaning all development and associated operations were controlled by the same group of cyber threat
+    actors"); double-extortion / data-leak site / .onion corroborated; operators named only "Medusa actors" (47×).
+    CORRECTION — summary REWRITTEN: stripped two unsupported claims. (1) "dominant ransomware brand of 2024–25
+    following the post-ALPHV / post-LockBit reshuffle and the April 2025 disappearance of RansomHub" — an
+    ANACHRONISM (a 12-Mar-2025 advisory cannot reference an April-2025 event) and wholly absent from the source
+    (no ALPHV/LockBit/RansomHub tokens). (2) "Russian-tolerated ransomware ecosystem" — DIRECTLY contradicts the
+    actor's own no-Russia-nexus demotion; full-text scan found zero Russia/FSB/GRU/SVR/state-sponsored/safe-harbor/
+    tolerated tokens (lone "Russia" = unrelated "Pro-Russia Hacktivists" sidebar link). Replaced with
+    source-grounded prose (RaaS since June 2021, closed→affiliate model, double-extortion, explicit MedusaLocker/
+    mobile-malware disambiguation, no operator nation/state nexus). outcome_summary tightened: "300+ critical-
+    infrastructure organizations across the US since 2021" → "over 300 victims across critical-infrastructure
+    sectors since 2021 (as of February 2025; first identified June 2021)" — dropped the geo-scope "across the US"
+    (not in the count sentence) and matched the source noun "victims".
+    [b] ATTRIBUTION — attributing_org "CISA + FBI + MS-ISAC" at high confidence ✓ (definitive US govt joint
+    advisory characterizing Medusa's TTPs). auspex_assessment concur ✓. Attribution is of the criminal brand
+    only — the advisory names NO nation/state, consistent with actor_id criminal/medusa (stateless).
+    [c] DATES — source published_on 2025-03-12 = advisory "Release Date March 12, 2025" ✓; Alert Code AA25-071A
+    ✓. Event start=disclosure=end=2025-03-12 all = the advisory publication date — correct for a documentary/
+    advisory (point-in-time) event.
+    [d] DOCTRINE_LINKS — REMOVED the lone link (ru/sanctions-response-2022/criminal-proxy-mobilization @ plausible)
+    → doctrine_links: []. Grounds: the sole source documents no Russia/state nexus at all (see [a]); the reasoning
+    "Continued Russian-territorial tolerance" was unsourced and assumed its own conclusion; the actor is now
+    stateless criminal/medusa and its own default_doctrine_alignment_ids already dropped this identical doctrine
+    ("its criminal-proxy roster never named Medusa, and the cited source documents no Russia nexus"). Keeping a
+    Russian STATE doctrine on a stateless criminal actor with zero documented nexus is a doctrine-state-mismatch;
+    per SCHEMA, [] is correct when no doctrine genuinely applies — none was invented to replace it.
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor: the advisory names a specific coherent criminal group ("Medusa
+    developers", "Medusa affiliates", "Medusa actors", "Medusa Blog" leak site) but no sub-unit/service (not
+    named-unit) and no nation (not nation) — a named actor, not a bare activity-cluster.
+    [f] ACTOR_ID — criminal/medusa resolves to atlas/actors/criminal/medusa.yaml (present, thoroughly audited,
+    correctly stateless). Task allowed criminal/medusa OR null; kept criminal/medusa because the advisory's subject
+    IS a concrete resolvable named actor, which is more informative than a null-actor counter-action. NO actor flag.
+    Also corrected incident_type intrusion → [ransomware, documentary]: the event models a ransomware advisory
+    (documentary meta-type), not an intrusion; "ransomware" (core) keeps it eval-eligible. RESIDUAL: none material;
+    targets left [] (advisory names sectors, not specific victim orgs — no inflation).

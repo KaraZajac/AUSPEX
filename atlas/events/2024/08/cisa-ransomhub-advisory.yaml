@@ -4,28 +4,43 @@ start_date: 2024-08-29
 disclosure_date: 2024-08-29
 end_date: 2024-08-29
 incident_type:
-  - intrusion
+  - documentary
 initial_vector: phishing
 outcome_summary: |
-  CISA / FBI / MS-ISAC / HHS joint advisory characterizing
-  RansomHub ransomware-as-a-service activity since February
-  2024. Documents ~210 victims across 18 critical-infrastructure
-  sectors. Identifies absorption of ALPHV affiliates including
-  Scattered Spider. Initial-access tradecraft via phishing,
-  password-spray, and exploitation of Citrix NetScaler ADC
-  (CVE-2023-3519), Fortinet FortiOS (CVE-2023-27997), Apache
-  ActiveMQ (CVE-2023-46604), Atlassian Confluence (CVE-2023-22515),
-  ConnectWise ScreenConnect (CVE-2024-1709).
+  CISA / FBI / MS-ISAC / HHS joint advisory (AA24-242A,
+  #StopRansomware) characterizing RansomHub ransomware-as-a-service
+  activity. RansomHub — described by the advisory as formerly known as
+  Cyclops and Knight — has, since its inception in February 2024,
+  "encrypted and exfiltrated data from at least 210 victims"
+  representing 11 critical-infrastructure sectors (water and
+  wastewater; information technology; government services and
+  facilities; healthcare and public health; emergency services; food
+  and agriculture; financial services; commercial facilities; critical
+  manufacturing; transportation; communications). The advisory states
+  the model has recently attracted high-profile affiliates from other
+  prominent variants "such as LockBit and ALPHV." Affiliates gain
+  initial access via phishing, password spraying, and exploitation of
+  known vulnerabilities — CVE-2023-3519 (Citrix ADC/NetScaler),
+  CVE-2023-27997 (Fortinet FortiOS), CVE-2023-46604 (Apache ActiveMQ),
+  CVE-2023-22515 (Atlassian Confluence), CVE-2023-46747 (F5 BIG-IP),
+  and CVE-2023-48788 (Fortinet FortiClientEMS).
 false_flag_risk: none
 summary: |
-  AUSPEX records this as the canonical US-government documentation
-  of the post-ALPHV ransomware-ecosystem reshuffle. RansomHub
-  subsequently disappeared abruptly in April 2025; affiliates
-  migrated to DragonForce, Akira, Qilin.
+  AUSPEX records this as the canonical US-government documentation of
+  the post-ALPHV ransomware-ecosystem reshuffle: a joint
+  #StopRansomware advisory profiling RansomHub, the RaaS (which the
+  advisory describes as formerly Cyclops/Knight) that emerged in
+  February 2024 and attracted affiliates displaced from ALPHV and
+  LockBit. It names no specific victim — it is the general RansomHub
+  TTP/IOC profile — and is cited elsewhere in the corpus (change-
+  healthcare, frontier, christies, halliburton) only as background for
+  that "ALPHV-successor RaaS" framing, never as an incident/attribution
+  source for a named victim.
 attributions:
   - actor_id: criminal/ransomhub
     attributing_org: CISA + FBI + MS-ISAC + HHS
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-08-29
     attribution_source_id: cisa/2024-08-29_aa24-242a-ransomhub-advisory
@@ -33,3 +48,113 @@ doctrine_links: []
 targets: []
 sources:
   - cisa/2024-08-29_aa24-242a-ransomhub-advisory
+notes: |
+  Post-advisory context (NOT carried by AA24-242A, which is dated
+  2024-08-29 and cannot speak to it): RansomHub's leak infrastructure
+  went dark abruptly around April 2025, with affiliates reported
+  migrating to DragonForce, Qilin, and Akira. Held here as editorial
+  context only — it would need its own 2025 source before it could
+  re-enter the summary. Removed from the summary during the 2026-07-05
+  audit because the sole cited source (Aug-2024) does not support it.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the CISA/FBI/MS-ISAC/HHS joint advisory AA24-242A
+    "#StopRansomware: RansomHub Ransomware" (cisa.gov/.../aa24-242a).
+    Raw snapshot already on disk from the 2026-07-04 pass; sha256
+    RE-VERIFIED this pass: cde72d5a…c9099fb7 (full
+    cde72d5a224a614d442ae239ad3dd799589ec5eca9c5b367e8dbd6bdc9099fb7),
+    124,716 bytes. NOT a phantom — URL is the real advisory page and
+    its body carries the claims below. Text extracted to plain (42,342
+    chars) for verification.
+
+    [a] FACTS — corrected three fabrications + one wrong count:
+    • Publisher/authors ✓ verbatim: "The Federal Bureau of
+      Investigation (FBI), the Cybersecurity and Infrastructure
+      Security Agency (CISA), the Multi-State Information Sharing and
+      Analysis Center (MS-ISAC), and the Department of Health and Human
+      Services (HHS)".
+    • Inception Feb 2024 ✓ and victim count ✓ verbatim: "Since its
+      inception in February 2024, RansomHub has encrypted and
+      exfiltrated data from at least 210 victims".
+    • SECTOR COUNT CORRECTED 18 → 11. The string "18" appears NOWHERE
+      in the advisory; the source enumerates exactly 11 sectors ("the
+      water and wastewater, information technology, government services
+      and facilities, healthcare and public health, emergency services,
+      food and agriculture, financial services, commercial facilities,
+      critical manufacturing, transportation, and communications
+      critical infrastructure sectors"). Replaced "18" with the
+      enumerated 11.
+    • AFFILIATE ABSORPTION CORRECTED. Event said "absorption of ALPHV
+      affiliates including Scattered Spider." "Scattered Spider" count
+      = 0 in the advisory — FABRICATION, removed. The advisory's actual
+      words: "recently attracting high-profile affiliates from other
+      prominent variants such as LockBit and ALPHV" — so LockBit
+      (which the event OMITTED) is added, ALPHV kept. Also added the
+      advisory's lineage claim ("formerly known as Cyclops and Knight").
+    • CVE LIST CORRECTED. Event listed 5 CVEs; the advisory's
+      "Exploits based on the following CVEs have been observed" block
+      names 6: CVE-2023-3519 (Citrix ADC/NetScaler), CVE-2023-27997
+      (FortiOS), CVE-2023-46604 (Apache ActiveMQ OpenWire), CVE-2023-
+      22515 (Atlassian Confluence Data Center/Server), CVE-2023-46747
+      (F5 BIG-IP), CVE-2023-48788 (Fortinet FortiClientEMS) — all six
+      verified verbatim. The event's 5th CVE, "ConnectWise
+      ScreenConnect (CVE-2024-1709)", is FABRICATED: "CVE-2024-1709",
+      "1709", and "ScreenConnect" all count = 0 in the advisory. The
+      lone "Connectwise" token is a remote-access/RMM tool cited for
+      lateral movement ("…PsExec, Anydesk, Connectwise, N-Able, Cobalt
+      Strike…"), NOT an exploited initial-access CVE — a clear
+      conflation with the unrelated ScreenConnect CVE. Removed 1709;
+      added the two real CVEs (46747, 48788) the event had dropped.
+    • Initial-access methods ✓ verbatim: "compromise internet facing
+      systems and user endpoints by using methods such as phishing
+      emails [T1566], exploitation of known vulnerabilities [T1190],
+      and password spraying [T1110.003]." initial_vector: phishing
+      kept (phishing is named first; matches documentary-advisory
+      convention, e.g. aa20-099a).
+    • SUMMARY forward-claim STRIPPED. Original summary asserted
+      "RansomHub subsequently disappeared abruptly in April 2025;
+      affiliates migrated to DragonForce, Akira, Qilin." The only cited
+      source is dated 2024-08-29 and cannot carry a 2025 fact:
+      "DragonForce", "Akira", "Qilin", "April 2025" all count = 0.
+      Removed from summary; relocated to a clearly-labelled editorial
+      notes: block flagged "NOT carried by AA24-242A" (candidate for a
+      2025 re-source — see FLAG).
+
+    [b] ATTRIBUTION — unchanged, correct. A govt-primary four-agency
+    joint advisory names RansomHub definitively; attributing_org
+    "CISA + FBI + MS-ISAC + HHS", confidence high, auspex_assessment
+    concur all hold. attribution_source_id resolves.
+
+    [c] DATES — correct. AA24-242A = the 242nd day of 2024 = 2024-08-29;
+    source published_on 2024-08-29; advisory says info current "as
+    recently as August 2024". For a single-day documentary event,
+    start_date = disclosure_date = end_date = 2024-08-29 is right.
+
+    [d] DOCTRINE_LINKS: [] — correct and preserved. RansomHub is
+    criminal/financial (criminal/ransomhub, no state nexus, empty
+    default_doctrine_alignment_ids); no state doctrine applies and no
+    source states a strategic purpose. Not inventing one.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; ADDED named-actor. The
+    advisory names RansomHub as a defined RaaS variant/group with IOCs
+    and TTPs but no nation/unit (criminal), so named-actor is the
+    correct specificity.
+
+    [f] ACTOR_ID — criminal/ransomhub resolves to
+    atlas/actors/criminal/ransomhub.yaml; criminal placement is
+    justified (mixed affiliate nationality, no public state nexus). See
+    FLAG: the actor record's ttp_summary repeats "Absorbed displaced
+    ALPHV affiliates including Scattered Spider" citing only this same
+    advisory, which does not name Scattered Spider — orchestrator/Kara
+    to reconcile (I did not edit the actor file).
+
+    OTHER: incident_type CORRECTED intrusion → documentary. This is a
+    documentary/advisory meta-event, not an intrusion; the fix makes it
+    correctly all-meta (excluded from the eval label set, kept in
+    training) and matches sibling CISA-advisory events (aa20-099a,
+    bianlian-pivot). targets: [] preserved (general profile, no named
+    victim org).

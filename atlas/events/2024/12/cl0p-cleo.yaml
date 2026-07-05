@@ -1,37 +1,170 @@
 id: 2024-12/cl0p-cleo
 name: Cl0p Cleo Harmony / VLTrader / LexiCom zero-day mass exploitation
 start_date: 2024-10-01
-disclosure_date: 2024-12-13
+disclosure_date: 2024-12-09
 end_date: 2025-01-31
 incident_type:
   - data-theft
+  - extortion
   - supply-chain
 initial_vector: 0-day
 outcome_summary: |
-  Cl0p exploited two zero-days (CVE-2024-50623 unrestricted-file-
-  upload bug, then bypass CVE-2024-55956) in Cleo Harmony,
-  VLTrader, and LexiCom managed-file-transfer products. Mass-
-  exploitation through Q4 2024 affected at least 66 organizations
-  per Cl0p's leak-site postings. Notable victims: Hertz, Western
-  Alliance Bank, Blue Yonder (supply-chain software whose own
-  separate ransomware incident Nov 2024 hit Starbucks).
+  Cl0p exploited two zero-days in Cleo's Harmony, VLTrader, and LexiCom
+  managed-file-transfer products: CVE-2024-50623 (an unrestricted
+  file-upload/download flaw enabling unauthenticated RCE, disclosed by
+  Cleo in October 2024; the 5.8.0.21 patch proved bypassable) and
+  CVE-2024-55956 (assigned 13 December 2024, patched in 5.8.0.24; abused
+  the Autorun directory to run commands). Post-exploitation used the
+  "Malichus" Java backdoor. Huntress publicly disclosed active
+  mass-exploitation on 9 December 2024 (evidence of exploitation from at
+  least 3 December), though the CVE-2024-50623 exploitation window ran
+  earlier — Western Alliance Bank's data was exfiltrated 12–24 October
+  2024. On 24 December 2024 Cl0p's leak site gave 66 companies a 48-hour
+  ultimatum; by mid-January 2025 it had named ~59 organizations. Notable
+  named organizations: Hertz, Western Alliance Bank, and Blue Yonder.
+  Several initially disputed Cl0p's claims (Hertz, Western Alliance Bank,
+  and Arrow Electronics reported "no evidence" in January 2025), but
+  Western Alliance Bank later confirmed ~21,899 people's data stolen via
+  the Cleo flaw and Hertz confirmed a Cleo-linked breach; Blue Yonder,
+  which Cl0p also listed, had separately confirmed a November 2024
+  ransomware attack.
 false_flag_risk: none
 summary: |
-  Third in Cl0p's MFT-zero-day mass-exploitation arc (GoAnywhere
-  Q1 2023, MOVEit Q2 2023, Cleo Q4 2024). The pattern is the
-  defining tradecraft signature of Cl0p / TA505 / FIN11 since
-  2021 and persisted through OFAC sanctions / TOCRP rewards
-  through the 2024 cycle.
+  Third in Cl0p's managed-file-transfer zero-day mass-exploitation arc
+  (GoAnywhere Q1 2023 -> MOVEit Q2 2023 -> Cleo Q4 2024), the defining
+  tradecraft of the Cl0p / TA505 / FIN11 cluster. Huntress identified the
+  Cleo intruders as "the same group behind the MOVEit mass exploitation
+  campaign in 2023, which hit hundreds of organizations globally," and
+  Cl0p confirmed to BleepingComputer that it was responsible for
+  exploiting CVE-2024-50623. Directionality is global — hundreds of
+  organizations named on Cl0p's leak site, disproportionately North
+  American. Cl0p is a Russian-speaking profit-criminal extortion crew
+  (TechCrunch calls it "Russia-linked"), but AUSPEX keeps it in the
+  stateless criminal/ namespace: no cited source documents a
+  Russian-state nexus for the crew or this campaign (see criminal/clop).
 attributions:
   - actor_id: criminal/clop
-    attributing_org: Huntress + CrowdStrike + Cl0p (self-claimed)
+    attributing_org: "Cl0p (self-claim); Huntress / BleepingComputer"
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-12-15
+    attribution_date: 2024-12-16
     attribution_source_id: huntress/2024-12-09_cleo-cl0p-attribution
-doctrine_links: []  # removed defunct ru/sanctions-response-2022/criminal-proxy-mobilization 2026-07-02 (propagated from cl0p-goanywhere audit): stateless criminal/clop, no sourced state nexus; full audit pending in census
+    notes: "Cl0p self-claimed on its leak site (confirmed to BleepingComputer that it was 'responsible for exploiting CVE-2024-50623'); Huntress affirmed the intruders are 'the same group behind the MOVEit mass exploitation campaign in 2023.' Level named-actor (a criminal cluster; no nation-state unit). CORRECTION: attributing_org 'Huntress + CrowdStrike + Cl0p (self-claimed)' -> 'Cl0p (self-claim); Huntress / BleepingComputer' — CrowdStrike was NOT among the sources and is dropped; BleepingComputer (cited) corroborates the self-claim. attribution_date 2024-12-15 -> 2024-12-16 (Cl0p's public mid-December claim; the 9 Dec Huntress advisory predates the claim and was updated to carry it). high/concur retained: the ACTOR attribution (Cl0p ran the Cleo campaign) is not contested — only specific victim listings were disputed."
+doctrine_links: []  # criminal/clop is a stateless profit-criminal extortion crew; no cited source documents a state nexus and no strategic state doctrine applies. Full census audit completed 2026-07-05 (claude-opus-4.8/max) — [] confirmed correct (matches the goanywhere/moveit/oracle-EBS siblings), not a placeholder.
 targets:
   - target_id: orgs/cleo-software
     role: primary
 sources:
   - huntress/2024-12-09_cleo-cl0p-attribution
+  - rapid7/2024-12-10_widespread-exploitation-cleo-cve-2024-50623
+  - bleepingcomputer/2024-12-24_clop-extorting-66-cleo-victims
+  - techcrunch/2025-01-16_clop-names-cleo-victims-disputes
+  - therecord/2025-03-18_western-alliance-bank-cleo-breach
+  - cybersecuritydive/2025-04-15_hertz-data-breach-cleo
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Phantom-triage + RE-SOURCE (badrabbit model) + full 6-point audit.
+    The event cited only ONE source (Huntress). Huntress is REAL (not a
+    phantom): curl HTTP 200, title "Cleo Software Actively Being Exploited
+    in the Wild," snapshot sha 38b5f8a5…773a0e42 (396,334 B). But Huntress
+    alone did NOT carry the "66 organizations" figure, the named victims,
+    or the October-2024 start — so the event was re-sourced with five
+    reachable primaries/secondaries (all snapshotted + hashed). No
+    load-bearing source is un-snapshottable -> level FULL.
+
+    [a] FACTS — all now source-carried. CVEs: CVE-2024-50623 (unrestricted
+    file upload -> unauth RCE, Cleo advisory Oct 2024, 5.8.0.21 patch
+    bypassable) + CVE-2024-55956 (assigned 13 Dec 2024, fix 5.8.0.24,
+    Autorun-directory abuse) — Huntress (38b5f8a5…773a0e42; "Although Cleo
+    published an update and advisory for CVE-2024-50623 —which allows
+    unauthenticated remote code execution—Huntress security researchers
+    have recreated the proof of concept and learned the patch does not
+    mitigate the software flaw") + Rapid7 (93729071…1efb6ec0, 335,811 B;
+    "CVE-2024-50623, a vulnerability disclosed in Cleo VLTrader, Cleo
+    Harmony, and Cleo LexiCom in October 2024 … fixed in version 5.8.0.21 …
+    but according to Huntress, 5.8.0.21 remained vulnerable" and "As of
+    December 13, CVE-2024-55956 has been assigned to this issue"). Products
+    Harmony/VLTrader/LexiCom ✓ (Huntress spells it "VLTransfer" once — the
+    product is VLTrader). "Malichus" Java implant ✓ Huntress. The "66
+    companies / 48 hours" leak-site extortion ✓ BleepingComputer
+    (310ca670…924599b1, 88,550 B; "announced on its dark web portal that 66
+    companies have 48 hours to respond to the demands"). ~59 named +
+    disputes ✓ TechCrunch (ca7956f7…ba178e44, 239,890 B; "the Russia-linked
+    Clop gang listed 59 organizations …," Hertz/Western Alliance/Arrow
+    "found no evidence," "Clop also listed … Blue Yonder … which confirmed
+    a November ransomware attack"). Named-victim CONFIRMATIONS added
+    because TechCrunch shows Hertz + Western Alliance DISPUTING in Jan 2025:
+    Western Alliance ✓ The Record (edd9b04f…e09fb5ddc, 83,738 B; "21,899
+    people were impacted," exfil "October 12, 2024, to October 24, 2024");
+    Hertz ✓ Cybersecurity Dive (630465f0…843401e1, 304,602 B; "Hertz Corp.
+    confirmed a threat actor gained access to sensitive personal data in a
+    breach linked to vulnerabilities in Cleo file-transfer software … took
+    place between October and December 2024"). CORRECTIONS: reframed
+    "at least 66 organizations per Cl0p's leak-site postings" as Cl0p's OWN
+    leak-site extortion figure with the dispute->confirmation arc; DROPPED
+    the uncited "hit Starbucks" detail on Blue Yonder (kept the sourced
+    "separate Nov 2024 ransomware attack" per TechCrunch); added
+    incident_type 'extortion' (66-victim/48h leak-site model).
+
+    [b] ATTRIBUTION — Huntress states plainly "CL0P ransomware group
+    claimed responsibility for CVE-2024-55956 activity. This is the same
+    group behind the MOVEit mass exploitation campaign in 2023," and Cl0p
+    confirmed responsibility to BleepingComputer. Removed CrowdStrike from
+    attributing_org (never a cited source); set attributing_org to
+    "Cl0p (self-claim); Huntress / BleepingComputer." Added
+    attribution_level: named-actor. attribution_date 2024-12-15 ->
+    2024-12-16 (Cl0p's public claim post-dates the 9 Dec Huntress advisory).
+    attributing_org_confidence high / concur retained — the actor
+    attribution is uncontested (only victim listings were disputed).
+
+    [c] DATES — start_date 2024-10-01 CONFIRMED as an October-2024
+    exploitation-window start (Rapid7/TechCrunch "disclosed … in October
+    2024"; Western Alliance exfil 12–24 Oct 2024). disclosure_date
+    2024-12-13 -> 2024-12-09 (Huntress's public advisory = first public
+    disclosure of active exploitation and the cited source's own date;
+    CVE-2024-55956 was formally assigned 13 Dec). end_date 2025-01-31 kept
+    as an editorial extortion-window bound (the 66-victim countdown ran
+    into mid/late Jan 2025; NOT a discretely-sourced hard stop — Cl0p kept
+    adding Cleo listings for months). Source published_on dates set from
+    each page's metadata: Huntress 2024-12-09, Rapid7 2024-12-10 (visible
+    <time> + URL; ignored the 2025-06 CMS JSON-LD artifact), BleepingComputer
+    2024-12-24, TechCrunch 2025-01-16, The Record 2025-03-18, Cybersecurity
+    Dive 2025-04-15.
+
+    [d] DOCTRINE_LINKS — [] confirmed CORRECT (was already [] with a
+    "pending" note; audit now complete). criminal/clop is a stateless
+    profit-criminal extortion crew; no cited source documents a Russia/state
+    nexus for the Cleo campaign, and financial motivation alone is not a
+    doctrine. Matches the goanywhere/moveit/oracle-EBS siblings (all []).
+    No attesting_source_id needed. Did NOT invent a doctrine.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (Cl0p/TA505/FIN11 criminal
+    cluster; no state unit), consistent with the goanywhere sibling.
+
+    [f] ACTOR_ID — criminal/clop resolves to
+    atlas/actors/criminal/clop.yaml (well-formed; moved ru/unscoped ->
+    criminal/ on 2026-06-25, de-provisionalized). Task note "some corpus
+    clop events may be ru/proxies" checked: NOT stale here — already
+    criminal/clop. No actor-file edit. NB the actor's misp_galaxy id is
+    TA505 and MISP tags country: RU as origin, not sponsorship; TechCrunch's
+    "Russia-linked" is a journalistic origin descriptor, not a state-nexus
+    finding — placement unchanged.
+
+    FLAGS: (1) orgs/cleo-software is a DANGLING target FK (no registry file
+    at atlas/targets/orgs/cleo-software.yaml) — identical to the tolerated
+    sibling dangling FKs orgs/progress-moveit (moveit) and
+    orgs/fortra-goanywhere (goanywhere), i.e. the exploited-MFT-vendor as
+    primary target. KEPT for parity (I may not create target files); the
+    real downstream victims (Hertz, Western Alliance Bank, Blue Yonder, +
+    ~59–66 leak-site listings) are global, mostly North American, and are
+    NOT in the target registry. Kara may wish to create orgs/cleo-software
+    and/or add confirmed victim orgs. (2) No govt-primary source anchors the
+    CVEs (Cleo's first-party advisory page exposes no publication date, so
+    it was not added to avoid a fabricated date; CISA KEV / NVD could be
+    added as primaries if desired) — the technical facts are multiply
+    corroborated across Huntress + Rapid7, so level FULL stands.

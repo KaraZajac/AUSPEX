@@ -5,62 +5,153 @@ disclosure_date: 2025-09-25
 end_date: null
 incident_type:
   - intrusion
-  - pre-positioning
+  - espionage  # ArcaneDoor-connected cluster; Talos frames ArcaneDoor as espionage-focused ("government networks globally"). Dropped pre-positioning: it rested on the (removed) China / Volt-Typhoon inference, and CISA frames the tradecraft as persistence for continued access, not pre-positioning for disruption.
 initial_vector: 0-day
 outcome_summary: |
-  CISA Emergency Directive 25-03 ordered Federal Civilian
-  Executive Branch agencies to take immediate forensic and
-  patching action on Cisco ASA / Firepower devices following
-  observed state-sponsored zero-day exploitation of
-  CVE-2025-20333 (RCE) and CVE-2025-20362 (privilege escalation),
-  plus medium-severity CVE-2025-20363. Agencies were required
-  to perform core-dump collection and submit through CISA's
-  Malware Next Gen portal by 11:59 PM EDT 26 September 2025.
-  End-of-support ASA hardware (with an EOL date of 31 August
-  2026) was ordered disconnected by the same deadline.
-  The campaign was assessed by CISA to be the same UAT4356 /
-  ArcaneDoor PRC-attributed cluster previously documented by
-  Cisco Talos in April 2024.
+  CISA Emergency Directive 25-03 (25 September 2025) ordered
+  Federal Civilian Executive Branch agencies to take immediate
+  forensic and patching action on Cisco ASA / Firepower devices
+  following an ongoing zero-day exploitation campaign by "an
+  advanced threat actor" chaining CVE-2025-20333 (unauthenticated
+  remote code execution) and CVE-2025-20362 (privilege escalation),
+  and manipulating read-only memory (ROM) to persist through reboot
+  and system upgrade. Agencies were required to perform core-dump
+  collection and submit through CISA's Malware Next Gen portal by
+  11:59 PM EDT 26 September 2025. ASA hardware reaching end-of-support
+  on or before 30 September 2025 was ordered permanently disconnected
+  by that date; hardware with an August 2026 end-of-support date was
+  ordered patched by the 26 September deadline. Per the directive,
+  "Cisco assesses that this campaign is connected to the ArcaneDoor
+  activity identified in early 2024" — the UAT4356 / STORM-1849
+  cluster Cisco Talos disclosed that April and assessed, with high
+  confidence, to be a state-sponsored actor of no attributed nation.
 false_flag_risk: none
 summary: |
-  ED 25-03 is the second of three F5-class emergency directives
-  issued in autumn 2025 (preceding ED 26-01 on F5 by 20 days)
-  and continues the pattern of state-aligned actors burning
-  zero-days against enterprise edge appliances as a route into
-  federal and CII networks. The ArcaneDoor cluster connection
-  ties the campaign back into the broader PRC edge-appliance
-  exploitation ecosystem alongside UNC5221 / BRICKSTORM.
+  ED 25-03 is one of the autumn-2025 wave of CISA emergency
+  directives against actively-exploited enterprise edge appliances
+  (followed twenty days later by ED 26-01 on the F5 BIG-IP breach),
+  fitting the broader pattern of a capable, likely state-sponsored
+  actor burning zero-days against perimeter network devices as a
+  route into government networks. The directive's own text ties the
+  campaign to the 2024 ArcaneDoor cluster (Cisco Talos: UAT4356 /
+  STORM-1849), which Talos assessed with high confidence to be
+  state-sponsored but attributed to no nation. AUSPEX therefore
+  models the operator as an unattributed state-sponsored activity
+  cluster (actor_id null), NOT a China / PRC-nexus actor: neither
+  CISA, Cisco, nor Talos names a state, and MISP-galaxy records
+  country None for both ArcaneDoor and STORM-1849.
 attributions:
   - actor_id: null
-    attributing_org: CISA (state-sponsored — cluster not named publicly)
+    attributing_org: CISA (advanced threat actor) / Cisco (ArcaneDoor cluster)
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-09-25
     attribution_source_id: cisa/2025-09-25_ed-25-03-cisco-asa
     notes: |
-      CISA characterised the activity as state-sponsored
-      without naming the actor; vendor reporting (Cisco Talos,
-      Mandiant) ties the operator to the UAT4356 / ArcaneDoor
-      cluster previously attributed in 2024 disclosures to a
-      PRC-nexus actor.
-doctrine_links:
-  - doctrine_id: cn/intelligentized-warfare
-    pillar_id: cn/intelligentized-warfare/pre-positioning
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Edge-appliance zero-day burn against federal networks
-      with persistent-access objectives fits the
-      pre-positioning pillar; consistent with the Volt / Salt
-      Typhoon operational pattern.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
+      ED 25-03 characterises the operator only as "an advanced threat
+      actor" — the string "state-sponsored" does NOT appear anywhere in
+      the directive — and states verbatim: "Cisco assesses that this
+      campaign is connected to the ArcaneDoor activity identified in early
+      2024." The ArcaneDoor cluster (UAT4356 / STORM-1849) was established
+      by Cisco Talos in April 2024, which assessed "with high confidence
+      that these actions were performed by a state-sponsored actor" but
+      named NO nation. No cited source — CISA, Cisco, or Talos — attributes
+      the cluster to the PRC / China or any state, and MISP-galaxy records
+      country None for both ArcaneDoor and STORM-1849. Hence actor_id null +
+      attribution_level activity-cluster, NOT a cn/ placement. The prior
+      record's "PRC-attributed" / "PRC-nexus" claim, and its framing that
+      CISA named UAT4356 or called the activity "state-sponsored", were
+      unsourced over-attribution and have been removed — the same
+      correction the census applied to the 2024 ArcaneDoor event.
+doctrine_links: []  # Unattributed state-sponsored cluster — no nation is attested by any cited source (CISA: "advanced threat actor"; Talos: "state-sponsored", NO nation; MISP country None), so no state doctrine has a predicate. Removed the prior cn/intelligentized-warfare/pre-positioning link: it presupposed a China attribution no source makes, and its Volt/Salt-Typhoon "pre-positioning" reading is contradicted by the espionage (data-exfiltration) character of the ArcaneDoor cluster. Mirrors the 2024 ArcaneDoor event (also doctrine_links: []).
 targets:
+  # ED 25-03 protects US FCEB agencies; the connected ArcaneDoor cluster
+  # (Talos) targeted "government networks globally". Removed sectors/ict/
+  # networking (role primary): the Cisco ASA/Firepower appliance class is the
+  # attack surface/vector, not a victim sector — sector inflation, per the
+  # 2024 ArcaneDoor precedent (which likewise kept only sectors/government).
   - target_id: sectors/government/civilian
     country: us
     role: primary
-  - target_id: sectors/ict/networking
-    role: primary
 sources:
   - cisa/2025-09-25_ed-25-03-cisco-asa
+  - blogtalosintelligence/2024-04_cisco-talos-discloses-arcanedoor-uat4356  # ArcaneDoor cluster primary (UAT4356 / STORM-1849, "state-sponsored", NO nation) — carries the cluster identity CISA connects the 2025 campaign to
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    De-over-attribution audit vs RAW sources. This event had inherited a China / PRC
+    attribution that NO cited source supports — the same defect the census already
+    corrected on the sibling 2024 ArcaneDoor event (2024-04/cisco-talos-discloses-
+    arcanedoor-uat4356, de-attributed to actor_id null). Corrected in place; added the
+    Cisco Talos ArcaneDoor primary so the cluster framing is now source-carried rather
+    than resting on the CISA directive's single quote.
+    SOURCES (both snapshotted + hash-verified):
+      (1) cisa/2025-09-25_ed-25-03-cisco-asa — RAW cisa__2025-09-25_ed-25-03-cisco-asa.html,
+          sha256 8902dcb2…f86ade11, 80,695 B (captured + hashed 2026-07-05, HTTP 200). The
+          live page is the V1 revision "Updated April 23, 2026"; the ORIGINAL 2025-09-25 ED
+          25-03 text is preserved lower in the same page (facts below quoted from it).
+      (2) blogtalosintelligence/2024-04_cisco-talos-discloses-arcanedoor-uat4356 — RAW
+          blogtalosintelligence__2024-04_cisco-talos-discloses-arcanedoor-uat4356.html,
+          sha256 870063af…aa029d11, 99,148 B — hash RE-VERIFIED against the committed value
+          (unchanged since the 2024 audit). ADDED to this event's sources[] this audit.
+    [a] FACTS — CVEs verified verbatim in the CISA raw: "CVE-2025-20333 – allows for remote
+    code execution" (8 hits) and "CVE-2025-20362 – allows for privilege escalation" (8 hits);
+    tradecraft verbatim: "exploiting zero-day vulnerabilities to gain unauthenticated remote
+    code execution on ASAs, as well as manipulating read-only memory (ROM) to persist through
+    reboot and system upgrade"; core-dump mandate: "submit core dump(s) via the Malware Next
+    Gen portal by 11:59PM EDT on September 26, 2025". STRIPPED "plus medium-severity
+    CVE-2025-20363": 0 hits in the CISA directive (it names ONLY 20333 + 20362 as the
+    "unacceptable risk" CVEs); the label was also wrong — 20363 is a critical unauthenticated
+    RCE, and 20362 (CVSS 6.5) is the medium one. CORRECTED the EOL-disconnect claim: the raw
+    orders ASA hardware with EOL "on or before September 30, 2025" to be "permanently
+    disconnect[ed] … on or before September 30, 2025", while hardware with the "August 31, 2026"
+    EOL is ordered PATCHED by 26 Sep — the prior text wrongly said the Aug-2026 devices were
+    "ordered disconnected." Added the ROM-persistence detail (verbatim-supported).
+    [b] ATTRIBUTION — the core correction. CISA raw: "CISA is aware of an ongoing exploitation
+    campaign by an advanced threat actor targeting Cisco Adaptive Security Appliances (ASA)"
+    and "Cisco assesses that this campaign is connected to the ArcaneDoor activity identified
+    in early 2024." The strings "state-sponsored", "UAT4356", "China", "PRC" = 0 hits EACH in
+    the directive; "ArcaneDoor" = 3 hits (all crediting Cisco, none naming a nation). Talos raw
+    (source 2): "we assess with high confidence that these actions were performed by a
+    state-sponsored actor" — NO nation — and coins "UAT4356 … STORM-1849". So: kept actor_id
+    null; set attribution_level activity-cluster (added; was missing); kept confidence high
+    (Talos's stated confidence on state-sponsorship) + auspex_assessment concur-with-caveat.
+    REMOVED as unsourced over-attribution: "PRC-attributed"/"PRC-nexus" cluster, the claim
+    that CISA called it "state-sponsored" or named UAT4356, and the "broader PRC edge-appliance
+    exploitation ecosystem alongside UNC5221 / BRICKSTORM" framing (UNC5221/BRICKSTORM is a
+    distinct China-attributed cluster, not carried by either source). MISP-galaxy records
+    country None for both ArcaneDoor and STORM-1849 (per the 2024 census cross-check).
+    [c] DATES — disclosure_date 2025-09-25 ✓ (ED 25-03 "Original Issuance Date: September 25,
+    2025"). start_date 2025-09-01 kept as the flagged-approximate 2025 exploitation-observation
+    window (Cisco/CISA disclosed 2025-09-25; ROM-modification capability noted "at least as
+    early as 2024" but that predates this campaign's observed window). end_date null ✓ (ongoing).
+    Source published_on dates ✓ (CISA 2025-09-25 original issuance; Talos 2024-04-24).
+    [d] DOCTRINE_LINKS — emptied to []. The prior cn/intelligentized-warfare/pre-positioning
+    (strongly_inferred) presupposed a China attribution no cited source makes; an unattributed
+    cluster has no state whose doctrine can be assigned. Its Volt/Salt-Typhoon "pre-positioning"
+    reading is also contradicted by the espionage / data-exfiltration character of ArcaneDoor.
+    Same disposition as the 2024 ArcaneDoor event. No attesting source existed to downgrade from.
+    [e] ATTRIBUTION_LEVEL — set activity-cluster (Talos/Cisco reached "a state-sponsored
+    cluster / ArcaneDoor", not a nation).
+    [f] ACTOR_ID — null (unattributed), correct. FLAG (no actor edit made): the only ArcaneDoor
+    actor file, atlas/actors/cn/arcanedoor.yaml (id cn/unscoped/arcanedoor), remains ORPHANED
+    (0 events reference it — this event kept actor_id null) and asserts an UNSOURCED cn/ (China)
+    nexus; it already carries a 2026-06-25 delete/re-home recommendation. This audit does NOT
+    reference it and re-confirms that disposition.
+    INCIDENT_TYPE / DIRECTIONALITY — retyped [intrusion, pre-positioning] → [intrusion,
+    espionage]: operation-types are convention for a directive documenting an active campaign
+    (cf. cisa-aa24-241a-pioneer-kitten, 2024 ArcaneDoor); espionage is carried by the Talos
+    ArcaneDoor framing CISA connects to. Direction: unattributed (unknown-state) cluster → US
+    government (sectors/government/civilian, us). Not a counter-action — it documents an intrusion,
+    it is not the US acting against a named actor. TARGETS — removed sectors/ict/networking
+    (appliance class = vector, not victim sector; inflation).
+    LEVEL full — both load-bearing sources snapshotted + hash-verified and every retained claim
+    is source-carried. RESIDUAL: the genuine Cisco 2025 primary advisory ("Continued Attacks
+    Against Cisco Firewalls", sec.cloudapps.cisco.com/…/asa_ftd_continued_attacks) is JS/Cloudflare
+    bot-walled (44 KB shell, 0 content markers) and could NOT be snapshotted — but no retained
+    claim depends on it (the ArcaneDoor connection is carried by CISA's own text; the cluster
+    identity + state-sponsored + no-nation by Talos), so the level is unaffected.

@@ -1,45 +1,78 @@
 id: 2025-09/mustang-panda-eu-nato
-name: Mustang Panda renewed EU / NATO diplomatic campaign
+name: Mustang Panda (TA416) renewed EU / NATO diplomatic espionage campaign
 start_date: 2025-06-01
-disclosure_date: 2025-09-15
+disclosure_date: 2026-04-01
 end_date: null
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Proofpoint-disclosed Mustang Panda / TA416 spear-phishing
-  campaign against EU institutions, NATO member-state
-  diplomatic missions, and Mongolian / Russian-policy-relevant
-  geographies. Continuity of the 2022 EU campaign with
-  expanded tooling (TONESHELL evolution; SnakeDisk USB worm).
+  Proofpoint-disclosed (1 April 2026) TA416 / Mustang Panda
+  campaign that, from mid-2025, resumed targeting of diplomatic
+  missions and delegations to the EU and NATO across a range of
+  European countries — chiefly ministries of foreign affairs and
+  ministries of defense, focused on individuals assigned to NATO
+  missions and delegations. Web-bug reconnaissance and malware-
+  delivery waves (a distinct wave in late September 2025)
+  delivered the group's customized PlugX backdoor via DLL-
+  sideloading triads. Continuity of the 2022 European campaign
+  after ~two years (mid-2023 to mid-2025) of focus on Southeast
+  Asia, Taiwan, and Mongolia.
 false_flag_risk: none
 summary: |
-  Marks renewed Mustang Panda activity against NATO-aligned
-  diplomatic targets at a time of intensifying US-EU-China
-  competition, including over PRC support to Russia in
-  Ukraine. Doctrine framing: BRI political-intelligence plus
-  Russia-policy collection — Beijing wanting line-of-sight
-  on EU/NATO deliberations about secondary-sanctions exposure
-  for PRC firms supporting Moscow.
+  Marks renewed TA416 (Mustang Panda) targeting of EU- and NATO-
+  aligned diplomatic entities. Proofpoint observed multiple waves
+  of web-bug profiling and PlugX malware-delivery campaigns using
+  freemail lures, fake Cloudflare Turnstile challenge pages, and
+  abuse of Microsoft Entra ID (OAuth) third-party app redirects;
+  some phishing was sent from a likely-compromised European armed-
+  forces account and a compromised Southeast Asian diplomatic
+  mailbox. The renewed targeting commenced one day after the 25th
+  EU-China summit and coincided with heightened EU-China tensions
+  over trade, the Russia-Ukraine war, and rare-earths exports.
+  Attribution: Proofpoint attributes the activity to "the China-
+  aligned threat actor TA416" (nation-level; no specific Chinese
+  service named). Proofpoint explicitly tracks TA416 as distinct
+  from a second, overlapping "Mustang Panda" cluster it designates
+  UNK_SteadySplit (the user of the TONESHELL / PUBLOAD families).
 attributions:
   - actor_id: cn/unscoped/mustang-panda
     attributing_org: Proofpoint
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-09-15
+    attribution_date: 2026-04-01
     attribution_source_id: proofpoint/2025-09_mustang-panda-eu-nato
+    notes: |
+      Proofpoint attributes the campaign to "the China-aligned threat actor TA416"
+      (its own tracked cluster) — nation-level China nexus, named-actor cluster, NO
+      Chinese service (MSS) named, consistent with actor cn/unscoped/mustang-panda.
+      Proofpoint's "Attribution — what even is Mustang Panda anyway?" section cautions
+      the "Mustang Panda" umbrella is opaque and that it tracks TA416 as distinct from
+      the overlapping UNK_SteadySplit cluster (the TONESHELL/PUBLOAD user).
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      EU / NATO diplomatic mission targeting in
-      Russia-policy-relevant geographies (Mongolia, Eastern
-      Europe) maps to BRI political-intelligence collection
-      plus China-Russia-axis policy collection.
+      Systematic collection against EU/NATO diplomatic missions, ministries of foreign
+      affairs and ministries of defense is foreign political-intelligence collection.
+      Proofpoint's own conclusion frames the renewed campaign as "a renewed
+      intelligence-collection focus against EU and NATO-affiliated diplomacy entities,"
+      commencing one day after the 25th EU-China summit amid EU-China tensions over
+      trade, the Russia-Ukraine war, and rare-earths exports. AUSPEX maps that proximate
+      collection purpose to the BRI political-intelligence-collection pillar (the actor's
+      default alignment). Not attested: Proofpoint names the collection focus but not a
+      BRI / Beijing strategic goal.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology: diplomatic missions and delegations to the EU and NATO (MFAs, ministries of defense) across many European countries."
+        - "Timing: commenced one day after the 25th EU-China summit, during EU-China tensions over trade, the Russia-Ukraine war, and rare-earths exports."
+        - "Proofpoint conclusion: 'a renewed intelligence-collection focus against EU and NATO-affiliated diplomacy entities'."
+      ruled_out: "Taiwan-island collection (the actor's other default alignment): although Proofpoint notes some targeting of missions to Taiwan, this campaign's core victimology is EU/NATO diplomacy in Europe, not cross-strait targets."
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
@@ -47,15 +80,107 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Diplomatic-target collection at scale is canonical
-      Intelligence Law tasking.
+      TA416 is a China-aligned state espionage actor; sustained collection against
+      foreign (EU/NATO) diplomatic entities is the canonical activity the 2017 National
+      Intelligence Law obliges Chinese intelligence organs and cooperating parties to
+      perform. Strongly_inferred rather than attested: the legal-tasking basis is a
+      structural inference — Proofpoint documents the collection but names no statute.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "China-aligned actor (Proofpoint: 'the China-aligned threat actor TA416') conducting foreign-government intelligence collection."
+        - "Persistent, scaled collection against EU/NATO diplomatic missions from mid-2025 into early 2026."
+      ruled_out: "Financially-motivated / non-state explanation: ruled out — espionage-only tooling (PlugX) and exclusively diplomatic victimology, with no monetization."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government/foreign-ministry
     role: primary
+  - target_id: sectors/government/defense-ministry
+    role: primary
   - target_id: sectors/government
     role: primary
 sources:
   - proofpoint/2025-09_mustang-panda-eu-nato
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION → RE-SOURCED (badrabbit model), then full 6-point audit.
+    The sole cited source proofpoint/2025-09_mustang-panda-eu-nato had url: null (an
+    invented slug flagged by the 2026-05-26 sweep; a 2026-06-24 audit marked it
+    UNFETCHABLE and skipped it). The underlying EVENT is REAL and well-documented:
+    re-pointed the source to the genuine primary — Proofpoint, "I'd come running back
+    to EU again: TA416 resumes European government espionage campaigns" (Mark Kelly /
+    Georgi Mladenov, published 1 April 2026),
+    https://www.proofpoint.com/us/blog/threat-insight/id-come-running-back-eu-again-ta416-resumes-european-government-espionage
+    Raw snapshot captured: proofpoint__2025-09_mustang-panda-eu-nato.html,
+    sha256 05783766…08db8cdd (057837660d380fcddb084578ef74d87d97de5c38a50fee67d651011c08db8cdd),
+    305,359 bytes. All facts below are quoted from that snapshot.
+
+    [a] FACTS — corrected substantial AI-embellishment / campaign conflation:
+      • Victimology VERIFIED: "In late September 2025, Proofpoint observed TA416 conduct
+        multiple malware delivery campaigns targeting European ministries of defense and
+        ministries of foreign affairs. This targeting predominantly focused on individuals
+        assigned to NATO missions and delegations." Also "multiple waves of web bug and
+        malware delivery campaigns against diplomatic missions to the European Union and
+        NATO across a range of European countries." Added sectors/government/defense-ministry.
+      • TOOLING CORRECTED: the old outcome_summary claimed "TONESHELL evolution; SnakeDisk
+        USB worm." FALSE for this campaign. The real payload: "maintaining a consistent
+        goal of loading the group's customized PlugX backdoor via DLL sideloading triads"
+        (PlugX = 28 hits). "SnakeDisk" = 0 hits in the source (it belongs to the separate
+        IBM X-Force / Hive0154 Thailand air-gap campaign, mid-2025 — a DIFFERENT operation).
+        TONESHELL (3 hits) / PUBLOAD (2 hits) appear ONLY as the tooling of UNK_SteadySplit —
+        "Proofpoint tracks what is commonly referred to as Mustang Panda under two primary
+        clusters: TA416 (covered within this report) and a second group tracked under the
+        temporary designator UNK_SteadySplit… UNK_SteadySplit is a user of the custom
+        TONESHELL and PUBLOAD malware families" — NOT the TA416 activity this event models.
+        Stripped TONESHELL/SnakeDisk; set PlugX/DLL-sideloading.
+      • MONGOLIA CORRECTED: old prose listed "Mongolian … geographies" as targets. The
+        source places Mongolia in the PRIOR period, not this campaign: "From mid-2023 until
+        mid-2025, Proofpoint observed minimal TA416 targeting within Europe, with the group
+        mostly active across Southeast Asia, Taiwan, and Mongolia." Removed Mongolia from
+        the victimology (kept only as the prior-focus context).
+      • MOTIVE CORRECTED: old summary asserted "secondary-sanctions exposure for PRC firms
+        supporting Moscow" — NOT in the source. Source: return "occurred during heightened
+        EU-China tensions over trade, the Russia-Ukraine war, and rare earths exports, and
+        commenced immediately following the 25th EU-China summit." Rewrote to the source's
+        framing. Initial access VERIFIED: fake Cloudflare Turnstile pages → Microsoft Entra
+        ID (OAuth) third-party app redirect abuse; some mail from a compromised European
+        armed-forces account + a compromised SE-Asian diplomatic mailbox.
+      • incident_type: dropped data-theft (exfiltration not confirmed — these are delivery/
+        web-bug campaigns) and added espionage; kept intrusion.
+
+    [b] ATTRIBUTION — "the China-aligned threat actor TA416." Nation-level China nexus,
+      named-actor cluster, NO service: grep "ministry of state security" = 0. Confirms and
+      strengthens actor placement cn/unscoped/mustang-panda (not cn/mss). Set attributing_org
+      high (Proofpoint definitively names its own tracked cluster), attribution_level
+      named-actor, auspex_assessment concur; added a note capturing Proofpoint's own umbrella-
+      opacity caveat and TA416≠UNK_SteadySplit distinction.
+
+    [c] DATES — source published_on FIXED 2025-09-15 → 2026-04-01 (byline "April 01, 2026").
+      Event disclosure_date FIXED 2025-09-15 → 2026-04-01; attribution_date likewise. The
+      2025-09-15 disclosure was fabricated to match the invented slug — nothing was disclosed
+      that day. start_date kept 2025-06-01: defensible (earliest C&C-domain first-sightings
+      "Jun-25" in the IOC table; "mid-2025 onwards"); the first observed operational wave was
+      the late-July 2025 web-bug run "one day after the 25th EU-China summit," and the anchor
+      malware wave was "late September 2025" (matching the 2025-09 event slug). end_date null:
+      campaign continued into early 2026 (ongoing).
+
+    [d] DOCTRINE_LINKS — both strongly_inferred (per directive), neither attested, both
+      attesting_source_id null (correct; no attested → no gate obligation). Improved reasoning
+      and added inference_basis (signals[] + ruled_out) to both; colon-space list items quoted.
+      cn/bri/political-intelligence-collection carried by Proofpoint's explicit conclusion
+      ("a renewed intelligence-collection focus against EU and NATO-affiliated diplomacy
+      entities"); cn/national-intelligence-law-2017 (pillar null) is the structural legal-
+      tasking basis. Both are the actor's default alignments. FKs verified to resolve.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing): Proofpoint names a specific tracked
+      actor (TA416) at nation level; not named-unit (no MSS/unit).
+
+    [f] ACTOR_ID — cn/unscoped/mustang-panda resolves to atlas/actors/cn/mustang-panda.yaml
+      (internal id matches). Placement CORROBORATED by the new real source (China-aligned, no
+      service). Directionality correct: China/TA416 = attacker; EU/NATO diplomatic entities =
+      victims. No actor edit made (per protocol). FLAGS in final report.

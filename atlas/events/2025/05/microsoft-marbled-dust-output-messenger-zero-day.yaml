@@ -6,53 +6,97 @@ end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: 0-day
 outcome_summary: |
   Microsoft Threat Intelligence disclosed that Marbled Dust
-  (Sea Turtle / Teal Kurma / Cosmic Wolf / UNC1326) has been
-  exploiting CVE-2025-27920, a directory-traversal zero-day in
-  the Srimax Output Messenger LAN messaging product, since
-  April 2024. Microsoft assesses with high confidence that the
-  targeted accounts are associated with the Kurdish military
-  operating in Iraq. The cluster used the vulnerability to
-  drop Golang backdoors on compromised Output Messenger servers
-  and harvest user data from the messaging product, marking the
-  first publicly documented Marbled Dust use of a zero-day —
-  a meaningful tradecraft escalation from the cluster's prior
-  n-day-and-DNS-hijacking pattern.
+  (which Microsoft says overlaps with the clusters other vendors
+  track as Sea Turtle and UNC1326) has, since April 2024, been
+  exploiting CVE-2025-27920 — a directory-traversal zero-day in
+  the Srimax Output Messenger messaging product — against user
+  accounts that had not applied the fix. Microsoft assesses with
+  high confidence that the targeted accounts are associated with
+  the Kurdish military operating in Iraq, and states the
+  exploitation "resulted in collection of related user data from
+  targets in Iraq." The cluster dropped GoLang backdoors
+  (OMServerService.exe / OMClientService.exe, C2
+  api.wordinfos[.]com) onto compromised Output Messenger servers
+  and exfiltrated user data. Microsoft frames the zero-day use as
+  a notable shift in Marbled Dust's capability and an increase in
+  technical sophistication over the cluster's prior pattern of
+  exploiting known (n-day) vulnerabilities in internet-facing
+  appliances and using DNS hijacking. Microsoft also identified a
+  second Output Messenger vulnerability (CVE-2025-27921) but did
+  not observe it being exploited.
 false_flag_risk: none
 summary: |
-  Operationally significant Marbled Dust escalation. The Output
-  Messenger zero-day puts the cluster in the same
-  zero-day-capable tier as the more frequently noted Iranian
-  and Chinese state-aligned actors and confirms continued
-  operational tasking against Iraqi-Kurdish military targets.
-  The April-2024 exploitation start substantially predates the
-  May-2025 public disclosure, consistent with state-protected
-  zero-day operational lifecycle. Microsoft attributes with
-  high confidence and explicitly names Türkiye as the affiliated
-  nation-state — unusual precision for a Microsoft attribution
-  and consistent with the well-developed victim-set evidence.
+  Operationally significant Marbled Dust escalation. In
+  Microsoft's own framing the zero-day use is a notable shift in
+  the cluster's capability and a rise in technical sophistication,
+  and it confirms continued operational tasking against
+  Kurdish-military targets in Iraq. The April-2024 exploitation
+  start substantially predates the May-2025 public disclosure — a
+  roughly 13-month window of undisclosed exploitation before
+  Microsoft notified Srimax and the patch issued. On attribution,
+  Microsoft assesses that Marbled Dust operates as a
+  Türkiye-affiliated espionage actor (a nation-level affiliation;
+  no specific Turkish service is named — hence the actor is carried
+  as tr/unscoped/sea-turtle) and separately assesses with high
+  confidence that the compromised accounts belong to the Kurdish
+  military operating in Iraq. The explicit "high confidence"
+  qualifier in the source attaches to that Kurdish-military target
+  association, not to the nation-level Türkiye affiliation, which
+  Microsoft states as an established assessment.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-05-12
     attribution_source_id: msft/2025-05-12_marbled-dust-output-messenger-zero-day
+    notes: |
+      Microsoft: "Marbled Dust operates as a Türkiye-affiliated
+      espionage threat actor" and "Marbled Dust overlaps with
+      activity tracked by other security vendors as Sea Turtle and
+      UNC1326." Nation named (Türkiye); no Turkish service named —
+      hence named-actor (not named-unit) and actor tr/unscoped. The
+      source's explicit "high confidence" attaches to the target
+      association ("the targets of the attack are associated with
+      the Kurdish military operating in Iraq"); the Türkiye
+      affiliation is stated as an established assessment without an
+      explicit confidence adverb. The only "moderate confidence"
+      hedge in the report concerns recon / vector-selection
+      methodology, not the attribution.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Microsoft's high-confidence assessment that targets are
-      associated with the Kurdish military in Iraq is a precise
-      Kurdish-region collection match. The PKK / Iraqi-Kurdish
-      military equity intersection is the strongest
-      counter-Kurdish doctrinal fit available.
+      Microsoft's high-confidence assessment that the targets are
+      associated with the Kurdish military operating in Iraq is a
+      precise match to the doctrine's Kurdish-diaspora / KRG
+      collection pillar, and Microsoft frames Marbled Dust as
+      targeting organizations that "likely represent counter
+      interests to the Turkish government." A Türkiye-affiliated
+      espionage actor collecting on the Kurdish military in Iraq is
+      the defining victim class of the counter-Kurdish pillar. It is
+      strongly_inferred rather than attested because no authoritative
+      source states the counter-Kurdish-surveillance goal as such
+      (Microsoft names the victim and a generic "counter interests"
+      framing, not the strategic end) — the calibration the
+      doctrine's own cyber_relevance sets for these links.
     contested: false
     analyst: claude
+    attesting_source_id: msft/2025-05-12_marbled-dust-output-messenger-zero-day
+    inference_basis:
+      signals:
+        - "Microsoft assesses with high confidence that the targets are associated with the Kurdish military operating in Iraq."
+        - "Microsoft frames Marbled Dust as targeting organizations that likely represent counter interests to the Turkish government."
+        - "A Türkiye-affiliated espionage actor collecting on the Kurdish military in Iraq is the victim class the counter-Gülen / counter-Kurdish diaspora-surveillance pillar encodes (Kurdish opposition, the KRG in Iraq, PYD-aligned orgs)."
+        - "Target and TTP continuity with the earlier Sea Turtle / Marbled Dust targeting of Kurdish-region infrastructure that the doctrine cites as its canonical cyber exemplar."
+      ruled_out: "Generic or opportunistic espionage with no specifically counter-Kurdish character, rejected because the victim set is specifically the Kurdish military in Iraq (the pillar's defining victim class) rather than a broad or unrelated set, and Microsoft ties the targeting to counter-interests of the Turkish government."
 targets:
   - target_id: orgs/iraqi-kurdish-military
     country: iq
@@ -61,3 +105,79 @@ targets:
     role: staging
 sources:
   - msft/2025-05-12_marbled-dust-output-messenger-zero-day
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the RAW Microsoft Threat Intelligence blog "Marbled Dust leverages zero-day in
+    Output Messenger for regional espionage" (2025-05-12), snapshot captured LIVE from
+    microsoft.com (archive.org blocked for the fetcher):
+    sha256 ad3c0555…d1f07b41 (full ad3c0555fab223c3f6a1c3f950eeb5661522cdef33998d7694311331d1f07b41),
+    306,379 bytes, saved atlas/sources/raw/msft__2025-05-12_marbled-dust-output-messenger-zero-day.html.
+    This is the GENUINE, canonical Marbled Dust event — NOT a phantom: article title, CVE-2025-27920
+    (6 hits), Output Messenger (35), Marbled Dust (46), Kurdish military, Iraq, Türkiye, directory
+    traversal, April 2024, GoLang all present in the RAW. (The fabricated 2024-03/
+    microsoft-marbled-dust-iraqi-telecom sibling — built on a 404 phantom Microsoft "March 2024"
+    post — was already DELETED; the actor record and the 2018 Sea-Turtle-Kurdistan event both name
+    this May-2025 disclosure as the real Microsoft Marbled Dust reporting. No re-source needed here.)
+    [a] FACTS ✓ (all now source-carried): "Since April 2024, the threat actor that Microsoft Threat
+    Intelligence tracks as Marbled Dust has been observed exploiting user accounts that have not
+    applied fixes to a zero-day vulnerability (CVE-2025-27920) in the messaging app Output Messenger"
+    → start_date 2024-04-01, initial_vector 0-day. "These exploits have resulted in collection of
+    related user data from targets in Iraq" → data-theft. CVE-2025-27920 = "directory traversal
+    vulnerability in the Output Messenger Server Manager application" dropping OMServerService.vbs to
+    the startup dir; GoLang backdoors OMServerService.exe + OMClientService.exe; C2 api.wordinfos[.]com
+    — all verbatim. Srimax = "the developer of the messaging app," "issued a software update." Second
+    vuln CVE-2025-27921 "identified … has not observed exploitation" — ADDED to outcome_summary (was
+    omitted). Title/body call it "regional espionage" / "espionage threat actor" → ADDED incident_type
+    espionage. CORRECTIONS: (1) stripped the alias parenthetical "Teal Kurma / Cosmic Wolf" from
+    outcome_summary — THIS source names only the Sea Turtle + UNC1326 overlaps ("Marbled Dust overlaps
+    with activity tracked by other security vendors as Sea Turtle and UNC1326"); Teal Kurma (PwC) /
+    COSMIC WOLF (CrowdStrike) are real actor-record aliases but are NOT carried by the cited source.
+    (2) dropped "LAN messaging product" → "messaging product" (source says "multiplatform chat
+    software," not LAN). (3) replaced the unsupported absolute "first publicly documented Marbled Dust
+    use of a zero-day" with the source's actual framing ("notable shift in … capability," "increase in
+    technical sophistication," prior pattern = known/n-day vulns + DNS hijacking — all verbatim). (4)
+    summary: removed the unsupported editorial "same zero-day-capable tier as Iranian and Chinese
+    state-aligned actors" and the "state-protected zero-day operational lifecycle" gloss; kept the
+    factual ~13-month exploitation-to-disclosure gap.
+    [b] ATTRIBUTION: source = "Microsoft Threat Intelligence assesses that Marbled Dust operates as a
+    Türkiye-affiliated espionage threat actor." Nation named (Türkiye), NO Turkish service named →
+    attribution_level set to named-actor; actor tr/unscoped/sea-turtle is correct. KEY NUANCE FIXED:
+    the event previously said Microsoft "attributes with high confidence and explicitly names Türkiye"
+    — but the source's ONLY explicit "high confidence" is on the target association ("assesses with
+    high confidence that the targets of the attack are associated with the Kurdish military operating
+    in Iraq"); the Türkiye affiliation is stated flatly, without a confidence adverb; and the report's
+    lone "moderate confidence" hedge is about recon/vector-selection, not attribution. Kept
+    attributing_org_confidence: high (the actor attribution is detailed + unhedged — malware, C2, TTP
+    continuity) but added an attribution notes field spelling out exactly what the "high confidence"
+    covers. auspex_assessment concur retained (AUSPEX concurs at the nation level).
+    [c] DATES ✓: source published_on 2025-05-12 = real blog date = disclosure_date; start_date
+    2024-04-01 = "Since April 2024"; end_date null (unbounded/ongoing). No conflation.
+    [d] DOCTRINE_LINK: tr/counter-gulen-kurdish-surveillance / kurdish-diaspora, confidence
+    strongly_inferred — HELD (calibration-consistent: the doctrine's own cyber_relevance says links
+    here are "generally strongly_inferred … but not attested (no Turkish government text describes a
+    directed cyber-surveillance mandate)"; kind: posture, issued_on null). NOT attested — Microsoft
+    names the victim + a generic "counter interests to the Turkish government" framing, not the
+    counter-Kurdish-surveillance strategic goal. Added the missing inference_basis (signals[] +
+    ruled_out) the strongly_inferred rung requires, and set attesting_source_id to the msft source as
+    the primary supporting source (schema: on strongly_inferred it denotes the supporting source).
+    [e] ATTRIBUTION_LEVEL: added named-actor (was absent).
+    [f] ACTOR_ID: tr/unscoped/sea-turtle resolves to atlas/actors/tr/sea-turtle.yaml (id
+    tr/unscoped/sea-turtle) — well-developed, already documents the demotion-to-unscoped and the
+    fabricated-sibling deletion; MARBLED DUST carried as an equivalent alias. No actor edit. NO FLAG.
+    FLAGS (for orchestrator): (1) DUPLICATE SOURCE / publisher-dir split — a second source record
+    atlas/sources/microsoft/2025-05-12_marbled-dust-output-messenger.yaml (id
+    microsoft/2025-05-12_marbled-dust-output-messenger, tier: secondary) points at the SAME Microsoft
+    URL as the cited msft/ record (tier: primary) and is ORPHANED (cited by nothing). Not merged per
+    instruction. RETIRE/MERGE candidate: the cited primary msft/ record is canonical; the orphaned
+    microsoft/ twin carries a useful AUSPEX attribution-dispute note (Stealth-Falcon/UAE-vs-Türkiye
+    conflation) that also already lives in the Stealth Falcon actor entry — port if desired, then
+    retire the orphan (Kara's call; not touched here). (2) TARGET FK GAPS (informational, non-gating —
+    validate.ts buckets orgs/ + infra/ as "targets/ normalization deferred," JSON-schema types
+    target_id as a bare string): orgs/iraqi-kurdish-military and infra/srimax-output-messenger have no
+    registry files under atlas/targets/ (no atlas/targets/infra/ dir exists; infra/srimax-output-messenger
+    is the corpus's only infra/ reference). Left as-is per the deferred-normalization convention; not
+    converted to sectors and no registry files created (outside single-event remit).

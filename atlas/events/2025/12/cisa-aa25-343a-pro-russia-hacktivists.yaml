@@ -1,62 +1,90 @@
 id: 2025-12/cisa-aa25-343a-pro-russia-hacktivists
 name: CISA AA25-343A — pro-Russia hacktivists opportunistic VNC-based attacks on OT in US and global CII
-start_date: 2024-01-01  # CISA-stated campaign onset
-disclosure_date: 2025-12-09
-end_date: null
+start_date: 2023-10-01  # first OT/ICS intrusion documented in AA25-343A (CARR - European wastewater treatment facility, Oct 2023); ecosystem itself dates to the 2022 Russia-Ukraine escalation (CARR/NoName formed Feb-Mar 2022, both DDoS-first)
+disclosure_date: 2025-12-09  # AA25-343A "Initial version" (Version History); last revised 2025-12-18
+end_date: null  # ongoing pattern (advisory documents TTPs "as recently as April 2025")
 incident_type:
-  - intrusion
-  - disruption
-initial_vector: valid-creds
+  - documentary  # Dec-2025 joint advisory codifying + attributing a 2022-2025 pro-Russia hacktivist pattern (also an attribution-publication: GRU unit 74455 -> CARR, CISM -> NoName)
+  - intrusion    # documents real OT/SCADA/HMI intrusions (CARR Oct/Nov 2023; Z-Pentest OT ops; Sector16 energy)
+  - disruption   # HMI manipulation (setpoint/parameter changes, alarm suppression, loss of view, device shutdown) + DDoS
+initial_vector: valid-creds  # VNC to HMI via default/weak/no passwords + brute-force (advisory maps Valid Accounts T0859, Default Credentials T0812)
 outcome_summary: |
-  CISA, FBI, NSA, and Five Eyes / EU partner agencies issued
-  joint advisory AA25-343A documenting pro-Russia hacktivist
-  groups (CARR / KillNet / NoName057(16) and successors)
-  conducting opportunistic, lower-sophistication attacks against
-  US and global critical infrastructure via internet-facing
-  Virtual Network Computing (VNC) endpoints with minimal or
-  default credentials. Targets included water, wastewater,
-  energy, and small municipal-utility OT devices. The advisory
-  is published as an addendum to the May 2025 OT primary-
-  mitigations joint fact sheet.
+  FBI, CISA, NSA and ~20 international partner agencies (DOE, EPA,
+  DC3, Europol EC3, Eurojust, and Five-Eyes + EU national cyber /
+  police bodies) issued joint advisory AA25-343A documenting
+  pro-Russia hacktivist groups - Cyber Army of Russia Reborn
+  (CARR), Z-Pentest, NoName057(16), Sector16, and affiliated
+  groups - conducting opportunistic, lower-sophistication attacks
+  against US and global critical infrastructure via minimally
+  secured, internet-facing Virtual Network Computing (VNC)
+  connections to OT/HMI devices with default, weak, or no
+  credentials. Named target sectors: Water and Wastewater Systems,
+  Food and Agriculture, and Energy; impacts range from temporary
+  loss of view to physical damage, though no injuries to date. The
+  advisory is published as an addition to CISA's May 6, 2025 OT
+  primary-mitigations joint fact sheet and Europol's Operation
+  Eastwood.
 false_flag_risk: none
 summary: |
-  Codifies the operational pattern that CARR / Cyber Army of
-  Russia Reborn (already AUSPEX-modeled) and the post-disruption
-  NoName057(16) reconstitution have used since 2024: opportunistic
-  exploitation of weakly secured VNC, low-impact disruption,
-  high media amplification. Doctrinally maps to the criminal-
-  proxy-mobilization and performative-disruption pillars of the
-  2022 sanctions-response doctrine.
+  Joint advisory codifying the opportunistic VNC-to-OT intrusion
+  pattern used by a cluster of pro-Russia hacktivist groups since
+  ~late 2023: scanning for internet-exposed VNC (port 5900 / 5901-
+  5910), brute-forcing default/weak/no passwords to reach HMI and
+  SCADA devices, then manipulating setpoints, suppressing alarms,
+  and forcing loss of view - high media amplification, low-to-real
+  impact (incl. physical damage). The advisory also carries fresh
+  state attribution: it assesses GRU Main Center for Special
+  Technologies unit 74455 (GTsST) as likely having supported the
+  creation of CARR and funded its DDoS tooling through ~Sept 2024,
+  and the Kremlin-established Center for the Study and Network
+  Monitoring of the Youth Environment (CISM) as having created
+  NoName057(16) as a covert project (building its DDoSia tool,
+  paying its infrastructure, and selecting targets). Z-Pentest
+  (formed Sept 2024 by CARR + NoName admins) is the OT-intrusion
+  specialist; Sector16 (Jan 2025) is a novice offshoot claiming US
+  energy-infrastructure compromises. Doctrinally maps to the
+  criminal-proxy-mobilization and performative-disruption pillars
+  of the 2022 sanctions-response doctrine.
 attributions:
   - actor_id: ru/gru/carr
-    attributing_org: CISA + FBI + NSA + Five Eyes / EU partners
-    attributing_org_confidence: moderate
+    attributing_org: FBI + CISA + NSA + international partners (Five Eyes + EU/Europol)
+    attributing_org_confidence: moderate  # source hedges: GRU unit 74455 "likely responsible for supporting the creation of CARR"; actors "suspected to be from GRU unit 74455 likely funded" its tools
+    attribution_level: named-actor  # advisory names the group CARR as the actor; it additionally names the GRU unit 74455 (GTsST) sponsor at named-unit level (see QC flag)
     auspex_assessment: concur
     attribution_date: 2025-12-09
     attribution_source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
+    notes: "AA25-343A: GRU General Staff Main Intelligence Directorate Main Center for Special Technologies (GTsST) military unit 74455 (= Sandworm/APT44/Seashell Blizzard per Appendix B) 'is likely responsible for supporting the creation of CARR ... in late February or early March of 2022'; actors 'suspected to be from GRU unit 74455 likely funded the tools CARR ... used to conduct ... (DDoS) attacks through at least September 2024.' Independent second-source corroboration of the CARR->GRU nexus, now at UNIT level (74455)."
   - actor_id: ru/proxies/noname05716
-    attributing_org: CISA + FBI + NSA + Five Eyes / EU partners
-    attributing_org_confidence: moderate
+    attributing_org: FBI + CISA + NSA + international partners (Five Eyes + EU/Europol)
+    attributing_org_confidence: moderate  # "assess that" CISM created NoName as a covert project (direct assessment; kept moderate for cluster consistency)
+    attribution_level: named-actor  # advisory names the NoName057(16) group; the CISM creator is a state org (not a mil/intel unit)
     auspex_assessment: concur
     attribution_date: 2025-12-09
     attribution_source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
+    notes: "AA25-343A: the Center for the Study and Network Monitoring of the Youth Environment (CISM), 'established on behalf of the Kremlin, created NoName057(16) as a covert project'; CISM staff 'developed and customized the ... DDoS tool DDoSia, paid for the group's network infrastructure, served as administrators ... and selected DDoS targets.' Independent second-source (beyond DOJ Dec-2025) for the CISM->NoName state nexus."
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/performative-disruption
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Low-impact, high-visibility VNC opportunism against Western
-      municipal CII fits the performative-disruption pattern; the
-      CISA advisory documents the TTPs and target set but does not
-      name a 2022 sanctions-response doctrine, so the label is
-      inferred.
+      Low-impact, high-visibility VNC/OT opportunism against Western
+      CII fits the performative-disruption pattern. AA25-343A states
+      these groups are "primarily seeking notoriety," "regularly make
+      false or exaggerated claims about their attacks ... to garner
+      more attention," and portray "minor incursions as significant
+      breaches" - performative signaling over strategic effect - with
+      the CARR platform "aimed at deterring anti-Russia rhetoric." The
+      advisory does not name a 2022 sanctions-response doctrine, so the
+      strategic-doctrine label is inferred, not attested.
     attesting_source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
     inference_basis:
       source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
       signals:
-        - "CISA AA25-343A documents pro-Russia hacktivist VNC opportunism against Western OT/CII (TTPs + target set)"
-      ruled_out: "a codified '2022 sanctions-response' doctrine / performative-disruption strategic goal — not named by CISA"
+        - "AA25-343A: groups are 'primarily seeking notoriety' and 'make false or exaggerated claims about their attacks on critical infrastructure to garner more attention' (high-visibility, low-effect performative behaviour)"
+        - "AA25-343A: CARR recruited actors to an 'unattributable platform ... aimed at deterring anti-Russia rhetoric' (signaling function)"
+        - "AA25-343A: opportunistic targeting on 'superficial criteria, such as victim availability and existing vulnerabilities, rather than ... strategically significant entities'"
+      ruled_out: "a codified '2022 sanctions-response' / performative-disruption strategic goal stated at goal level - not named by CISA (behaviour + notoriety motive only)"
     contested: false
     analyst: claude
   - doctrine_id: ru/sanctions-response-2022
@@ -64,17 +92,152 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Hacktivist groupings of this size and tempo operate with
-      tolerated-by-state status — the mobilization pillar.
-    attesting_source_id: null
+      AA25-343A documents the criminal-proxy-mobilization mechanism in
+      substance: GRU unit 74455 "supporting the creation of CARR" and
+      funding its tooling; CISM (established on behalf of the Kremlin)
+      creating NoName057(16) "as a covert project," building its DDoSia
+      tool, paying its infrastructure, and selecting its targets; and
+      Sector16 possibly receiving "indirect support from the Russian
+      government in exchange for conducting specific cyber operations
+      that further Russian strategic goals" - which the advisory ties
+      to "broader Russian cyber strategies that involve leveraging
+      non-state threat actors for certain cyber activities, adding a
+      layer of deniability." Kept strongly_inferred (not attested) only
+      because the advisory does not name the codified 2022 sanctions-
+      response doctrine; the proxy-mobilization mechanism itself is
+      stated outright. ATTESTED-UPGRADE CANDIDATE for Kara (same posture
+      as operation-eastwood-noname).
+    attesting_source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
+    inference_basis:
+      source_id: cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
+      signals:
+        - "AA25-343A: GRU unit 74455 (GTsST) 'is likely responsible for supporting the creation of CARR' and 'likely funded the tools CARR ... used to conduct ... DDoS attacks through at least September 2024'"
+        - "AA25-343A: CISM, 'established on behalf of the Kremlin, created NoName057(16) as a covert project'; CISM staff built DDoSia, 'paid for the group's network infrastructure ... and selected DDoS targets'"
+        - "AA25-343A: Sector16 'may have received indirect support from the Russian government ... that further Russian strategic goals'; Russia 'leveraging non-state threat actors ... adding a layer of deniability'"
+      ruled_out: "the codified 'sanctions-response-2022' doctrine construct - not named by CISA; the deniable-state-proxy mechanism IS stated, so this is an attested-upgrade candidate flagged for Kara"
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/ics/water
-    role: primary
+    role: primary  # AA25-343A: "Water and Wastewater Systems"
+  - target_id: sectors/agriculture
+    role: primary  # AA25-343A: "Food and Agriculture" (e.g. CARR Nov-2023 US dairy-farm HMI intrusions)
   - target_id: sectors/energy
-    role: primary
+    role: primary  # AA25-343A: "Energy" (Sector16 claims US energy-infra compromises; "oil well systems")
   - target_id: sectors/critical-infrastructure
     role: primary
 sources:
   - cisa/2025-12-09_aa25-343a-pro-russia-hacktivists
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the RAW CISA joint advisory AA25-343A "Pro-Russia
+    Hacktivists Conduct Opportunistic Attacks Against US and Global
+    Critical Infrastructure" (raw_snapshot
+    cisa__2025-12-09_aa25-343a-pro-russia-hacktivists.html, sha256
+    22c0b8ee...9683f51d, 120060 B). NOT A PHANTOM: url resolves to the
+    real advisory (HTTP 200; <title> matches; Alert Code AA25-343A;
+    Version History "December 09, 2025: Initial version," last revised
+    2025-12-18). Cross-links kept DISTINCT (not merged):
+    doj-carr-noname-disruption (2025-12) and operation-eastwood-noname
+    (2025-07) are separate actions/documents.
+
+    [a] FACTS - corrected. RAW names FOUR pro-Russia hacktivist groups
+    "Cyber Army of Russia Reborn (CARR), Z-Pentest, NoName057(16),
+    Sector16, and affiliated groups" as VNC opportunists against OT.
+    FABRICATION REMOVED: outcome_summary named "KillNet" - KillNet
+    appears 0x in the advisory (grep-confirmed); replaced with the
+    advisory's actual group set. Added Z-Pentest (15 mentions - the
+    OT-intrusion specialist) and Sector16 (8), both previously absent
+    though central. "Five Eyes / EU partner agencies" softened
+    ("Five Eyes" appears 0x; advisory lists FBI/CISA/NSA + ~20 named
+    US/FVEY/EU/Europol bodies - kept as an accurate grouping, not a
+    source phrase). "small municipal-utility OT devices" softened to
+    the advisory's named sectors. TTPs VERIFIED verbatim: VNC on port
+    5900 / 5901-5910; Nmap/OPENVAS scanning; brute-force / default /
+    weak / no passwords; SCADA intrusions (sometimes with simultaneous
+    DDoS to facilitate); HMI setpoint/parameter changes, alarm
+    suppression, loss of view, device restart/shutdown; physical damage
+    possible, "Attacks have not yet caused injury."
+
+    [b]/[e] ATTRIBUTION - kept BOTH named attributions (ru/gru/carr,
+    ru/proxies/noname05716); did NOT null / nation-level them (a floated
+    option) because THIS source is explicitly and richly attributive -
+    nulling would be under-attestation. Added attribution_level:
+    named-actor to both (was missing) + notes with exact source
+    language. KEY SECOND-SOURCE FINDING: AA25-343A names, in its own
+    words, GRU Main Center for Special Technologies (GTsST) military
+    unit 74455 (= Sandworm/APT44/Seashell Blizzard per Appendix B) as
+    "likely responsible for supporting the creation of CARR ... in late
+    February or early March of 2022" and funding its DDoS tools
+    "through at least September 2024"; and CISM ("established on behalf
+    of the Kremlin") as having "created NoName057(16) as a covert
+    project," built DDoSia, paid its infrastructure, and "selected DDoS
+    targets." attributing_org_confidence kept moderate (advisory hedges
+    "likely"/"suspected" on CARR; "assess that" on NoName).
+    auspex_assessment concur kept. attributing_org refined to
+    "FBI + CISA + NSA + international partners (Five Eyes + EU/Europol)."
+
+    [c] DATES - corrected. start_date 2024-01-01 (comment falsely
+    claimed "CISA-stated campaign onset") -> 2023-10-01: the advisory
+    dates the first OT/ICS intrusion to CARR's Oct-2023 European
+    wastewater-facility claim (group formation Feb-Mar 2022; broader
+    escalation with the 2022 Russia-Ukraine war). No 2024 onset is
+    stated by the source. disclosure_date 2025-12-09 CONFIRMED (Version
+    History "Initial version"); noted last-revised 2025-12-18. end_date
+    null kept (ongoing; TTPs "as recently as April 2025"). Source
+    published_on 2025-12-09 correct.
+
+    [d] DOCTRINE_LINKS - both kept strongly_inferred; documentation
+    strengthened. Link1 (performative-disruption): reasoning + signals
+    re-grounded in the advisory's notoriety / exaggerated-claims /
+    "deterring anti-Russia rhetoric" / opportunistic-not-strategic
+    language. Link2 (criminal-proxy-mobilization): was thin ("size and
+    tempo ... tolerated-by-state," attesting_source_id null, no
+    inference_basis) - REBUILT with attesting_source_id + structured
+    inference_basis quoting the advisory's explicit proxy-mobilization
+    mechanism (GRU-74455 created/funded CARR; CISM created/funded/tasked
+    NoName; Sector16 "indirect support from the Russian government ...
+    leveraging non-state threat actors ... adding a layer of
+    deniability ... that further Russian strategic goals"). FLAG: this
+    arguably clears the ATTESTED bar for criminal-proxy-mobilization
+    (mechanism stated in substance) - left strongly_inferred + flagged
+    for Kara, mirroring operation-eastwood-noname. Neither link names
+    the codified 2022 sanctions-response doctrine, so both stay
+    inferred, not attested. perspective default (attacker-rationale)
+    correct (real actors; feeds who x why).
+
+    [f] ACTOR_ID - ru/gru/carr resolves (atlas/actors/ru/carr.yaml,
+    id ru/gru/carr) and ru/proxies/noname05716 resolves
+    (atlas/actors/ru/noname05716.yaml, id ru/proxies/noname05716).
+    incident_type: added "documentary" (Dec-2025 advisory codifying +
+    attributing a 2022-25 pattern; also an attribution-publication),
+    kept intrusion + disruption (real characterized activity). targets:
+    added sectors/agriculture (advisory's "Food and Agriculture"; CARR
+    dairy-farm HMI intrusions) alongside ics/water, energy,
+    critical-infrastructure.
+
+    FLAGS for orchestrator/Kara:
+    (1) ACTOR-FILE (not edited): AA25-343A names GRU unit 74455 (GTsST)
+    as creating/funding CARR - a UNIT-level second source the CARR
+    actor file's 2026-06-24 note lacked (it had only DOJ parent-"GRU").
+    Consider adding this advisory to ru/carr.yaml sources and
+    revisiting the ru/gru vs ru/gru/74455 service placement.
+    (2) ACTOR-FILE (not edited): AA25-343A independently corroborates
+    the CISM->NoName state nexus (second source beyond DOJ Dec-2025);
+    consider adding to ru/noname05716.yaml sources.
+    (3) UN-MODELED ACTORS: Z-Pentest (OT-intrusion specialist, formed
+    Sept 2024 by CARR+NoName admins) and Sector16 (Jan 2025) are named
+    + attributed by the advisory but have no atlas actor records; the
+    event can only attribute the two modeled groups. New-actor
+    candidates for Kara.
+    (4) MODELING: typed [documentary, intrusion, disruption] to honor
+    both the advisory's documentary nature and its real characterized
+    activity; if Kara prefers pure-documentary (excluded from eval, to
+    avoid double-counting operation-eastwood / doj-carr-noname
+    activity), drop the non-meta types.
+    (5) attested-upgrade candidate on criminal-proxy-mobilization (see
+    [d]).

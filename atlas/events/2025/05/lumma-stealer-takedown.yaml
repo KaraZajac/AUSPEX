@@ -4,26 +4,44 @@ start_date: 2025-05-13
 disclosure_date: 2025-05-21
 end_date: 2025-05-21
 incident_type:
+  - law-enforcement
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  Coordinated takedown of Lumma Stealer (LummaC2)
-  infrastructure. Microsoft Digital Crimes Unit obtained
-  court order in the Eastern District of New York for
-  seizure of approximately 2,300 Lumma-associated domains;
-  DOJ seized five core command-and-control domains and the
-  marketplace login panels. Lumma had emerged as the leading
-  post-RedLine infostealer through 2024 with ~400K
-  infections in the 60 days preceding the action per
-  Microsoft telemetry. Europol, Japan JC3, and CISA
-  contributed. Russian-based developer ("Shamel") publicly
-  reported as not detained.
+  Coordinated international takedown of the Lumma Stealer
+  (LummaC2) infostealer malware-as-a-service. Microsoft's
+  Digital Crimes Unit, via a court order granted in the U.S.
+  District Court for the Northern District of Georgia (civil
+  action filed 13 May 2025), seized, suspended, or blocked
+  approximately 2,300 malicious domains that formed the
+  backbone of Lumma's infrastructure; more than 1,300 of
+  those were seized by or transferred to Microsoft (including
+  300 domains actioned by law enforcement with Europol's
+  support) and redirected to Microsoft sinkholes.
+  Simultaneously the U.S. Department of Justice — the case
+  investigated by the FBI's Dallas Field Office — unsealed
+  two warrants authorizing seizure of five internet domains
+  that hosted the LummaC2 user/admin login panels (the
+  marketplace's central command structure): two seized 19 May
+  and the operators' three replacement panel domains seized
+  21 May. Europol's European Cybercrime Centre (EC3) and
+  Japan's Cybercrime Control Center (JC3) suspended locally
+  based Lumma infrastructure. Microsoft telemetry identified
+  over 394,000 Windows computers infected worldwide between
+  16 March and 16 May 2025. Lumma's primary developer is
+  based in Russia and uses the alias "Shamel"; the action was
+  an infrastructure disruption and neither the DOJ nor
+  Microsoft announced an arrest of the developer.
 false_flag_risk: none
 summary: |
-  The Lumma takedown is the third major infostealer-platform
-  enforcement action of 2024–2025 after Operation Magnus
-  (RedLine / META, Oct 2024) and the November 2024
-  Snowflake-related indictments. AUSPEX classifies as
+  The Lumma disruption is the major infostealer-platform
+  enforcement action of the 2024–2025 wave, following
+  Operation Magnus (RedLine / META, Oct 2024) and extending
+  the court-ordered domain-seizure template refined since the
+  2022 Raccoon Stealer takedown. A public-private
+  counter-action — Microsoft DCU civil litigation plus a DOJ
+  criminal seizure — against a criminal MaaS with no
+  documented state nexus. AUSPEX classifies as
   criminal-baseline.
 attributions:
   - actor_id: null
@@ -31,8 +49,95 @@ attributions:
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2025-05-21
-    attribution_source_id: doj/2025-05-21_lumma-ndtx-takedown
+    attribution_source_id: doj/2025-05-21_lumma-opa-seizes-domains
+    notes: "Counter-action (actor_id null): a two-track disruption of the Lumma MaaS — Microsoft DCU civil seizure (N.D. Ga.) of ~2,300 domains + DOJ criminal seizure (FBI Dallas Field Office) of the five LummaC2 panel domains, with Europol EC3 and Japan JC3. The operator ('Shamel', Russia) is the subject, not an AUSPEX-modeled attacker here."
 doctrine_links: []
 targets: []
 sources:
-  - doj/2025-05-21_lumma-ndtx-takedown
+  - doj/2025-05-21_lumma-opa-seizes-domains
+  - microsoft/2025-05-21_lumma-global-action
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Phantom-remediation audit (RE-SOURCE path). The event is real and
+    heavily documented; its sole prior source was a phantom DOJ URL. Re-sourced
+    to two verified, snapshotted primaries and corrected in place.
+
+    PHANTOM/WRONG-SOURCE: prior sole source doj/2025-05-21_lumma-ndtx-takedown
+    (url .../usao-ndtx/pr/lumma-stealer-disrupted) curls (same UA) to an empty
+    JS shell — HTTP 200 but only 2,316 bytes, blank <title>, zero article body —
+    while the genuine DOJ OPA release on the SAME host curls to a full 94,643-byte
+    page. The ndtx slug is a soft-404 / guessed URL; no content hash recorded.
+    Removed from sources[] and from attribution_source_id; its record annotated
+    as an orphaned RETIRE candidate for Kara.
+
+    RE-SOURCED to:
+    - doj/2025-05-21_lumma-opa-seizes-domains (govt-primary, tier primary;
+      sha256 37440be1…3425a566, 94,643 bytes). Real body verified: "The Justice
+      Department announced today the unsealing of two warrants authorizing the
+      seizure of five internet domains used by malicious cyber actors to operate
+      the LummaC2 information-stealing malware service." On-page headline names
+      "Court-Authorized Domain Seizures"; text names Northern District of Texas +
+      Dallas (FBI field office). Seizure timeline May 19 / 20 / 21 present.
+    - microsoft/2025-05-21_lumma-global-action (vendor-research, tier primary;
+      sha256 fa994517…12e557f4f, 171,098 bytes). First-party DCU account.
+
+    [a] FACTS — every claim now source-carried:
+      · "approximately 2,300 malicious domains" + "the United States District
+        Court of the Northern District of Georgia" — MS blog, verbatim.
+        CORRECTION: prior outcome_summary AND the phantom source's notes said the
+        Microsoft order was in the "Eastern District of New York" — FABRICATED.
+        The order was N.D. Ga. Fixed. (The NDTX/FBI-Dallas nexus is the DOJ
+        CRIMINAL five-domain seizure, a separate track — now stated correctly.)
+      · "over 394,000 Windows computers globally infected … Between March 16,
+        2025, and May 16, 2025" — MS blog, verbatim. CORRECTION: prior text said
+        "~400K infections in the 60 days preceding the action"; tightened to the
+        exact figure + exact window (mid-Mar–mid-May 2025 ≈ 60 days ✓).
+      · "five internet domains" / "two warrants" / user-panel login pages, seized
+        19 May (2) + 21 May (3) — DOJ OPA, verbatim. Prior text called these
+        "five core command-and-control domains"; re-described as the LummaC2
+        user/admin login panels (the marketplace's "central command structure",
+        MS blog's phrase) to match both sources.
+      · ">1,300 domains … including 300 domains actioned by law enforcement with
+        the support of Europol … redirected to Microsoft sinkholes" — MS blog,
+        verbatim; added (was absent).
+      · "Europol's European Cybercrime Center (EC3) and Japan's Cybercrime
+        Control Center (JC3) facilitated the suspension of locally based Lumma
+        infrastructure" — MS blog, verbatim.
+      · developer "based in Russia … alias 'Shamel'" — MS blog, verbatim.
+        Kept "not detained" only as the accurate observation that neither release
+        announced an arrest (removed the un-sourced "publicly reported as not
+        detained" phrasing).
+      · REMOVED "CISA" from the contributor list — neither snapshotted primary
+        names CISA (a separate CISA/FBI advisory exists but is not cited here).
+      · SUMMARY framing trimmed: dropped the "November 2024 Snowflake-related
+        indictments" anchor (Snowflake was an infostealer-ENABLED extortion
+        prosecution, not an infostealer-PLATFORM takedown — mischaracterized);
+        kept Operation Magnus (RedLine/META, Oct 2024) + Raccoon-2022 lineage,
+        both real and in-corpus editorial context.
+    [b] ATTRIBUTION — actor_id null is correct (counter-action; the takedown is
+        not an AUSPEX-modeled operation). attributing_org "DOJ + Microsoft DCU +
+        Europol + Japan JC3" all carried; confidence high, concur retained;
+        attribution_source_id repointed phantom → OPA. No over-attestation.
+    [c] DATES — start_date 2025-05-13 = MS civil filing date (op commencement) ✓;
+        disclosure/end 2025-05-21 = joint announcement day (both releases dated
+        21 May 2025) ✓. New source records published_on 2025-05-21, retrieved
+        2026-07-05.
+    [d] DOCTRINE_LINKS — [] correct; a criminal-MaaS law-enforcement takedown
+        carries no genuine doctrine link (criminal-baseline). None invented.
+    [e] ATTRIBUTION_LEVEL — omitted (null-actor counter-action; nothing is being
+        attributed to a named actor), consistent with the raccoon-stealer-takedown
+        convention.
+    [f] ACTOR_ID — null (correct). FLAG: there is NO criminal/lumma actor file in
+        the corpus (only criminal/unc5537 mentions Lumma as a stealer it used). If
+        Kara wants the Lumma operator (Shamel / Microsoft's "Storm-2477") as a
+        first-class criminal actor, it must be created separately — NOT required
+        for this counter-action event.
+
+    RESIDUAL: "Storm-2477" (Microsoft's tracking name for the operator) appears in
+    Microsoft's ecosystem (MSTIC activity-group data) but NOT in either cited
+    release, so it is not asserted in the event. Justice.gov is bot-walled to the
+    fetcher, but the OPA release curled to full content — level: full.
