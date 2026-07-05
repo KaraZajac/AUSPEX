@@ -1,52 +1,189 @@
 id: 2024-05/christies-ransomhub
 name: RansomHub data extortion of Christie's auction house
 start_date: 2024-05-09
-disclosure_date: 2024-05-30
-end_date: 2024-06-30
+disclosure_date: 2024-05-27
+end_date: null
 incident_type:
   - intrusion
   - data-theft
+  - extortion
 initial_vector: unknown
 outcome_summary: |
-  RansomHub-claimed intrusion of Christie's IT environment days
-  before its May spring auction season (combined USD 840M asset
-  catalog including Andy Warhol and Vincent van Gogh works).
-  Christie's website went offline for several days; bidding was
-  forced to phone and in-person channels. RansomHub claimed
-  exfiltration of approximately 500,000 client KYC and identity
-  records covering high-net-worth art buyers. Christie's
-  acknowledged the incident May 30, 2024 but declined to pay
-  ransom; sample data was subsequently published on the
-  RansomHub leak site.
+  RansomHub-claimed intrusion of Christie's systems on 8-9 May 2024,
+  days before the auction house's ~USD 840M spring sales (headlined by
+  a $35M Vincent van Gogh). Christie's took its website offline on 9 May
+  citing a "technology security incident," knocking out online viewing
+  and bidding; the marquee auctions proceeded via phone and in-person
+  bidding, and a rare-watches sale (incl. Michael Schumacher's) was
+  delayed. On 27 May RansomHub listed Christie's on its darknet extortion
+  site with sample data, claiming ~2GB covering "at least 500,000"
+  private clients worldwide. Christie's CEO Guillaume Cerutti confirmed
+  unauthorized third-party access and theft of some client identity data
+  but said there was "no evidence of any financial or transactional data"
+  taken; Christie's refused to negotiate — RansomHub said the house
+  "ceased communication midway through" — and did not pay within the
+  seven-day deadline. Christie's notified privacy regulators and affected
+  clients. Breach-notification reporting later put the confirmed total at
+  45,798 individuals — far below RansomHub's 500,000 claim.
 quantified_impact:
-  individuals_affected: 500000
+  individuals_affected: 45798
+  individuals_claimed_by_actor: 500000
 false_flag_risk: none
 summary: |
-  High-profile RansomHub case against a global art-market
-  institution. Notable for the wealth-sensitivity of the
-  exfiltrated dataset (KYC / source-of-funds records covering
-  ultra-high-net-worth individuals across multiple jurisdictions).
-  RansomHub's mid-2024 victim distribution spans healthcare,
-  energy services, and luxury / hospitality with no discernible
-  doctrinal targeting pattern, consistent with affiliate-driven
-  opportunistic selection.
+  High-profile RansomHub data-extortion case against a global art-market
+  institution, timed to Christie's May spring auction season. The
+  exfiltrated dataset was client identity PII — full names, addresses,
+  and the machine-readable zones of government identity documents
+  (passports) that Christie's collects for anti-money-laundering
+  compliance — covering private art buyers across many jurisdictions.
+  It was NOT financial or transactional data: Christie's CEO stated
+  there was "no evidence of any financial or transactional data … taken
+  or copied." RansomHub's 2024 victim set spans healthcare, telecom,
+  energy services and the luxury / art market with no discernible
+  doctrinal targeting pattern — consistent with affiliate-driven,
+  opportunistic ransomware-as-a-service selection rather than any
+  strategic direction.
 attributions:
   - actor_id: criminal/ransomhub
-    attributing_org: Christie's + RansomHub (self-claimed)
+    attributing_org: RansomHub (leak-site self-claim); Christie's confirmed the breach
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-05-30
-    attribution_source_id: ncsc-uk/2024-06-04_synnovis-qilin-statement
+    attribution_date: 2024-05-27
+    attribution_source_id: bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach
     notes: |
-      Christie's confirmed the incident in press statements May 30
-      2024; RansomHub self-claimed via its leak site. No primary
-      CISA / NCSC advisory specific to the Christie's case;
-      attribution_source_id is a placeholder pointing at the
-      nearest contemporaneous primary source documenting RansomHub
-      activity.
+      RansomHub self-claimed by listing Christie's on its darknet extortion
+      site on 27 May 2024 (Monday) with sample data; Christie's CEO Guillaume
+      Cerutti and a company spokesperson confirmed unauthorized third-party
+      access and theft of some client identity data (BleepingComputer / The
+      Register / The Record, 28 May 2024). named-actor: a named criminal RaaS
+      operation, self-claimed with sample data and a victim-confirmed breach,
+      no competing claimant — hence high confidence; no state service or nexus
+      is alleged, so the actor is criminal/ransomhub, not a state proxy.
 doctrine_links: []
 targets:
   - target_id: orgs/christies
     role: primary
+    country: uk
 sources:
+  - therecord/2024-05-28_christies-cyberattack-ransomhub
+  - bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach
+  - theregister/2024-05-28_christies-confirms-clients-data-stolen
+  - scworld/2024-05-28_christies-ransomhub-threat
+  - scworld/2024-06-11_over-45k-impacted-christies-ransomhub
+  - infosecurity/2024-05-15_cyber-attack-disrupts-christies-840m-auctions
   - cisa/2024-08-29_aa24-242a-ransomhub-advisory
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    PHANTOM/WRONG-SOURCE remediation + full 6-point census audit. PATH: RE-SOURCE
+    (badrabbit model). The event previously carried attribution_source_id =
+    ncsc-uk/2024-06-04_synnovis-qilin-statement — an NHS England statement about
+    the Qilin attack on Synnovis (a DIFFERENT victim), used here as a
+    fallback-donor placeholder. REMOVED (not retired: that record is owned by
+    2024-06/synnovis-qilin-london-nhs and still cited by 3 other Qilin events, so
+    it is not orphaned). Re-sourced to six real Christie's reports, each curl'd →
+    snapshot → sha256 (all HTTP 200, 2026-07-05):
+      - therecord/2024-05-28_christies-cyberattack-ransomhub   8e78355a…e07a99dc / 83,916
+      - bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach  625e2bba…1aa3e6d5 / 88,086
+      - theregister/2024-05-28_christies-confirms-clients-data-stolen    de40e8ef…89ccce54 / 164,705
+      - scworld/2024-05-28_christies-ransomhub-threat          2453dd83…c4acb465 / 119,298
+      - scworld/2024-06-11_over-45k-impacted-christies-ransomhub  56692644…1e8dcc36 / 97,046
+      - infosecurity/2024-05-15_cyber-attack-disrupts-christies-840m-auctions  d89156fc…0a4392e6 / 103,530
+      - cisa/2024-08-29_aa24-242a-ransomhub-advisory  cde72d5a…c9099fb7 / 124,716 (pre-existing;
+        hash re-verified) — RETAINED as RaaS-actor BACKGROUND only (it never names
+        Christie's), not as the incident/attribution source.
+
+    [a] FACTS — now source-carried; corrections:
+     • Intrusion 8-9 May 2024. SC Media (45K): "Infiltration of Christie's systems
+       between May 8 and May 9 enabled the exfiltration of some stored data". start_date
+       kept 2024-05-09 (day systems were affected + website taken offline).
+     • Auction context ADDED + sourced. Infosecurity: auctions worth an "estimated
+       $840m … a Vincent van Gogh painting valued at $35m"; "The cyber-attack has
+       taken Christie's website offline"; "bids can still be placed through phone and
+       in-person channels"; the "rare watches, including those owned by … Michael
+       Schumacher, has been delayed." CORRECTED the old "combined USD 840M asset
+       catalog including Andy Warhol and Vincent van Gogh works" → DROPPED "Andy
+       Warhol" (not in any snapshot; only the van Gogh is carried).
+     • Leak-site listing 27 May with SAMPLES. The Record: "A listing on RansomHub's
+       darknet extortion site includes what the criminals say are samples of data
+       stolen from Christie's". SC Media: "2GB of data of 'at least 500,000'
+       Christie's clients from around the world".
+     • BIG CORRECTION — victim count. Old record stated 500,000 as fact
+       (quantified_impact.individuals_affected: 500000; "RansomHub claimed exfiltration
+       of approximately 500,000 client KYC and identity records"). 500,000 is
+       RansomHub's UNVERIFIED CLAIM. SC Media (11 Jun 2024): "Christie's had
+       information from 45,798 individuals stolen … significantly lower than the more
+       than 500,000 claimed by the ransomware gang." → set individuals_affected: 45798
+       (confirmed notification total) and individuals_claimed_by_actor: 500000
+       (actor's claim, kept transparently).
+     • BIG CORRECTION — data nature. Old "KYC / source-of-funds records" and "client
+       KYC and identity records" OVER-STATE and contradict the source. Christie's CEO
+       (via The Record / SC Media / BleepingComputer / The Register): "no evidence of
+       any financial or transactional data … taken or copied" / "no evidence that any
+       financial or transactional records were compromised." STRIPPED "source-of-funds";
+       reframed to identity PII — "full names, addresses, the machine-readable zones of
+       identity documents [passports]" (The Register), collected for AML compliance
+       (SC Media: government-issued photo ID "to comply with anti-money laundering and
+       sanction laws").
+     • Refusal to pay + mechanics. The Register: "Christie's has seemingly refused to
+       pay"; "seven-day deadline for the victim to pay". SC Media / The Record:
+       Christie's "ceased communication midway through" negotiations; "refusing to
+       negotiate an extortion payment". outcome_summary's "declined to pay ransom" ✓.
+     • incident_type: ADDED "extortion" (leak-site listing + ransom demand +
+       threat-to-leak = data-extortion). Did NOT add "ransomware": no source confirms
+       encryption/encryptor deployment at Christie's — this reads as data-theft +
+       extortion (the website was taken offline defensively). intrusion + data-theft
+       retained. name "data extortion of Christie's" is accurate.
+
+    [b] ATTRIBUTION — attribution_source_id re-pointed from the phantom Synnovis/Qilin
+    statement → bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach (carries
+    both RansomHub's self-claim and Christie's confirmation). actor_id criminal/ransomhub
+    was ALREADY correct (NOT Qilin) — only the citation was wrong. attribution_date
+    2024-05-30 → 2024-05-27 (the Monday RansomHub publicly claimed it; Christie's
+    confirmed 27-28 May). Confidence HIGH / concur RETAINED: self-claim posted WITH
+    sample data + victim-confirmed breach + no competing claimant. Rewrote attributing_org
+    and notes to reflect real sourcing (removed "placeholder pointing at nearest
+    contemporaneous primary source" language).
+
+    [c] DATES — start 2024-05-09 ✓ (8-9 May infiltration). disclosure 2024-05-30 →
+    2024-05-27: the data-breach entered the public record via RansomHub's 27 May listing,
+    and Christie's confirmed to press 27-28 May (the old May-30 date was Christie's client
+    e-mail milestone, a secondary date not carried by the snapshotted set). end_date
+    2024-06-30 → null: no source bounds an operation end; the extortion/leak episode had
+    no clean close. Each source's published_on set to its true article date
+    (datePublished-verified): The Record 2024-05-28, BleepingComputer 2024-05-28, The
+    Register 2024-05-28, SC Media (threat) 2024-05-28, SC Media (45K) 2024-06-11,
+    Infosecurity 2024-05-15.
+
+    [d] DOCTRINE_LINKS — [] retained and correct (criminal-baseline). RansomHub is an
+    apolitical, financially-motivated RaaS; no source states a strategic purpose and no
+    doctrine genuinely applies, so no link is invented and there is no attested claim.
+    The CISA AA24-242A advisory (affiliate-driven RaaS, ALPHV-successor) supports the
+    "opportunistic, no doctrinal pattern" reading.
+
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor (was missing): a named criminal group is
+    identified; no state service/unit is named — consistent with criminal/ placement.
+
+    [f] ACTOR_ID — criminal/ransomhub resolves to atlas/actors/criminal/ransomhub.yaml ✓
+    (its ttp_summary already lists "Christie's auction house (May 2024)"). Placement under
+    criminal/ (not a proxy) is consistent — no state nexus alleged. Directionality:
+    perpetrator criminal/ransomhub (no state) → victim orgs/christies.
+
+    Residual uncertainties + FLAGS:
+     (i) VICTIM COUNTRY — set target country: uk. The orchestrator's task note said
+        "Christie's is US-HQ'd," but EVERY snapshotted source calls it British / UK-based /
+        London ("the British auction house Christie's" — The Record, SC Media; "UK-based
+        auction house Christie's" — SC Media; "Christie's London location" — The Record),
+        matching the immutable registry orgs/christies (nation_state_id: uk). Christie's
+        does operate in 46 countries incl. major New York salerooms and is French-owned
+        (Groupe Artémis), but the sources uniformly designate it UK. FLAG: the "US-HQ'd"
+        premise is not supported by the reporting.
+     (ii) orgs/christies.yaml has sources: [] — could be backfilled from the six new
+        Christie's source records (orchestrator/Kara; not edited here per protocol).
+     (iii) 45,798 is the breach-notification total per SC Media citing The Register;
+        500,000 remains RansomHub's own (self-serving, unverified) claim.
+     (iv) initial_vector kept unknown — no source states the initial-access method.

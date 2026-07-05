@@ -1,45 +1,217 @@
 id: 2025-02/lee-enterprises-qilin
 name: Qilin ransomware against Lee Enterprises (US newspaper publisher)
 start_date: 2025-02-03
-disclosure_date: 2025-02-07
-end_date: 2025-04-30
+disclosure_date: 2025-02-12
+end_date: 2025-03-06
 incident_type:
   - ransomware
+  - extortion
   - disruption
   - data-theft
 initial_vector: unknown
 outcome_summary: |
-  Lee Enterprises (US local-newspaper publisher operating 77 daily
-  and 350 weekly publications across 25 states) disclosed via
-  SEC 8-K filing February 7, 2025 a cybersecurity incident that
-  disrupted print and digital publishing across multiple titles
-  for over a week. Qilin ransomware subsequently claimed
-  responsibility February 24 2025 and posted approximately
-  120GB of exfiltrated data including subscriber and employee
-  records, internal financial documents, and editorial
-  workflow materials.
+  On 3 February 2025 Lee Enterprises — a US local-newspaper publisher
+  operating daily and weekly titles across 72 markets in 25 states
+  (about 350 weekly and specialty publications) — suffered a systems
+  outage caused by a ransomware attack. Per its SEC Form 8-K (Item
+  1.05 Material Cybersecurity Incident, report date 12 February 2025),
+  threat actors "unlawfully accessed the Company's network, encrypted
+  critical applications, and exfiltrated certain files." The attack
+  disrupted print distribution, billing, collections and vendor
+  payments; at least 79 Lee newspapers reported disruptions to their
+  online or print publications, many publishing delayed or smaller
+  editions and some unable to publish at all. As of 12 February core
+  products were being distributed normally while weekly and ancillary
+  products (about five percent of operating revenue) remained
+  unrestored; a 6 March 8-K/A reported the threat contained and all
+  products producing again with residual limitations. Qilin claimed
+  responsibility on 27-28 February 2025, listing Lee on its dark-web
+  leak site, claiming theft of roughly 350 GB (about 120,000
+  documents) and threatening to publish everything on 5 March;
+  reporting indicates Lee did not pay. A later forensic investigation
+  (concluded around 28 May 2025) determined the breach exposed the
+  personal information — including Social Security numbers — of 39,779
+  individuals.
 quantified_impact:
-  publications_affected: 77
-  data_exfiltrated_gb: 120
+  publications_disrupted: 79
+  individuals_affected: 39779
+  data_claimed_gb: 350
+  documents_claimed: 120000
 false_flag_risk: none
 summary: |
-  US-newspaper-publisher targeting is unusual in the Qilin
-  victim run but consistent with the cluster's broad mid-market
-  affiliate selection. Notable for press-freedom-adjacent impact
-  (multiple titles missed print editions for the first time in
-  some cases in decades) and for cross-jurisdictional victim mix
-  (Lee subsidiaries publish English-language and Eastern-European
-  outlets, weakening any Russian-state-tolerance hypothesis).
+  A large US daily-newspaper chain is an atypical entry in the Qilin
+  victim run (mostly healthcare, manufacturing and public-sector,
+  though the gang had previously hit media with The Big Issue), yet
+  consistent with the ransomware-as-a-service cluster's broad,
+  affiliate-driven, opportunistic victim selection. The incident is
+  notable for its press-freedom-adjacent impact: a single ransomware
+  intrusion halted page-building and print/e-edition publishing across
+  dozens of US local newspapers (the St. Louis Post-Dispatch, Arizona
+  Daily Star, Buffalo News, Sioux City Journal and others), which the
+  U.S. Press Freedom Tracker logged as affecting "more than 75" / "at
+  least 79" titles. Qilin is a financially-motivated, Russia-based
+  ransomware-as-a-service operation with no published state-nexus
+  attribution, so AUSPEX places it under criminal/ rather than
+  ru/proxies/; nothing in the reporting ties this victim selection to
+  any state interest.
 attributions:
   - actor_id: criminal/qilin
-    attributing_org: Lee Enterprises + Qilin (self-claimed)
+    attributing_org: Qilin (leak-site self-claim) + security-industry & journalism consensus (BleepingComputer, The Record, SentinelOne, Darktrace)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-02-24
-    attribution_source_id: ncsc-uk/2024-06-04_synnovis-qilin-statement
+    attribution_date: 2025-02-27
+    attribution_source_id: bleepingcomputer/2025-06-04_lee-enterprises-data-breach-39000
+    notes: |
+      Lee Enterprises itself did NOT attribute the attack ("the company has
+      yet to attribute the attack to a specific operation" — BleepingComputer).
+      Attribution rests on Qilin's own leak-site self-claim (took credit
+      27 Feb 2025; listed Lee on its dark-web site 28 Feb, posted data samples,
+      claimed ~350 GB / ~120,000 documents, threatened a 5 March release)
+      corroborated by security-industry analysis (SentinelOne, Darktrace) and
+      journalism consensus. named-actor: a named criminal group, but no state
+      service or nexus is published — hence criminal/qilin, not ru/proxies.
 doctrine_links: []
 targets:
   - target_id: orgs/lee-enterprises
     role: primary
+    country: us
+    outcome: |
+      Multi-week disruption to print distribution and online publishing across
+      at least 79 US local newspapers; data breach exposing Social Security
+      numbers + other PII of 39,779 individuals; Qilin leak-site extortion
+      (claimed ~350 GB, threatened 5 March release; Lee reportedly did not pay).
 sources:
-  - ncsc-uk/2024-06-04_synnovis-qilin-statement
+  - sec/2025-02-18_lee-enterprises-8k-cyber-incident
+  - sec/2025-03-06_lee-enterprises-8ka-cyber-update
+  - therecord/2025-02-10_lee-enterprises-cyberattack-printing
+  - therecord/2025-06-04_lee-enterprises-cyberattack-ssn
+  - bleepingcomputer/2025-06-04_lee-enterprises-data-breach-39000
+  - cybersecuritydive/2025-03-03_lee-enterprises-ransomware-data-leak
+  - pressfreedomtracker/2025-02-27_lee-enterprises-newspapers-cyberattack
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    PHANTOM/WRONG-SOURCE RE-SOURCE ("badrabbit model") + full 6-point census
+    audit. The event previously cited ncsc-uk/2024-06-04_synnovis-qilin-statement
+    TWICE (attribution_source_id + sources[]) — an NHS England statement about a
+    DIFFERENT Qilin victim (Synnovis, London NHS), mis-attached by a fallback
+    donor. BOTH citations REMOVED (the source is retained, owned by
+    2024-06/synnovis-qilin-london-nhs — not retired). The Lee Enterprises / Qilin
+    incident is real and well-documented; re-sourced against 7 real primaries,
+    all curl-snapshotted (sha first8…last8 / bytes):
+      - sec/2025-02-18_lee-enterprises-8k-cyber-incident (Item 1.05, PRIMARY)
+        b15431f0…d8888b60 / 27,329
+      - sec/2025-03-06_lee-enterprises-8ka-cyber-update (8-K/A, PRIMARY)
+        59a63ad4…c46fbff2 / 29,929
+      - therecord/2025-02-10_lee-enterprises-cyberattack-printing  fe48a4f1…83e7b345 / 86,367
+      - therecord/2025-06-04_lee-enterprises-cyberattack-ssn  0318a6ea…30a5a19d / 82,742
+      - bleepingcomputer/2025-06-04_lee-enterprises-data-breach-39000  49c8c4f0…b403e953 / 89,097
+      - cybersecuritydive/2025-03-03_lee-enterprises-ransomware-data-leak  f4f5b2c8…3da14f35 / 303,204
+      - pressfreedomtracker/2025-02-27_lee-enterprises-newspapers-cyberattack  a1b170db…0920e550 / 48,700
+
+    [a] FACTS — every claim now source-carried; corrections made:
+     • Attack date 3 Feb 2025 ✓ (SEC 8-K: "On February 3, 2025, Lee Enterprises,
+       Inc. ... experienced a systems outage caused by a cybersecurity attack";
+       BleepingComputer: access "on February 3, 2025").
+     • Mechanism ✓ (SEC 8-K: threat actors "unlawfully accessed the Company's
+       network, encrypted critical applications, and exfiltrated certain files").
+     • DATA SIZE CORRECTED: old "approximately 120GB" was WRONG — a conflation of
+       the document COUNT. Qilin claimed "120,000 documents totaling 350 GB"
+       (BleepingComputer) / "350 GB of data ... according to SentinelOne"
+       (Cybersecurity Dive) / "theft of 350 GB" (The Record, Press Freedom
+       Tracker). quantified_impact now data_claimed_gb: 350, documents_claimed:
+       120000. Old event also overstated: it said Qilin "posted approximately
+       120GB" — sources show Qilin CLAIMED ~350 GB, posted SAMPLES on 28 Feb and
+       THREATENED a full 5 March release (not a confirmed full dump); prose fixed
+       to "claimed/threatened," not "posted."
+     • SSN / DATA BREACH ADDED (was entirely missing): forensic investigation
+       determined PII of 39,779 individuals exposed, "name with a combination of
+       ... Social Security Number, Driver's License, Financial Account Number,
+       Medical Information, or Health Insurance Policy Number" (BleepingComputer;
+       The Record: "39,779 people"). Discovered 28 May 2025, disclosed to Maine
+       AG early June. Old "subscriber and employee records / editorial workflow
+       materials" replaced with the sourced data types (govt ID scans, financial
+       spreadsheets, contracts, NDAs — Qilin samples; SSN+PII — confirmed breach).
+     • DISRUPTION SCOPE: publications count corrected 77 → 79 ("At least 79 Lee
+       newspapers experienced disruptions" — Press Freedom Tracker; SEC 8-K:
+       distribution of print publications "experienced delays," online "partially
+       limited"; named titles St. Louis Post-Dispatch/Arizona Daily Star/Buffalo
+       News/Sioux City Journal). The old "77" doubled as the disruption count AND
+       a business-size figure — de-conflated. Business size stated as "72 markets
+       in 25 states, ~350 weekly and specialty publications" (The Record ×2,
+       Cybersecurity Dive). NOTE source conflict: BleepingComputer says "77 daily
+       newspapers and 350 weekly ... across 26 states"; used the multiply-sourced
+       "72 markets / 25 states" framing and flagged the variance.
+     • Five-percent-of-operating-revenue (weekly/ancillary) ✓ (SEC 8-K).
+     • "did not pay" — reporting "suggests that Lee refused to pay the ransom or
+       that negotiations have stalled" (Press Freedom Tracker/SecurityWeek);
+       phrased as "reporting indicates Lee did not pay." (The separate $9.5M is a
+       class-action data-breach SETTLEMENT, not a ransom — deliberately excluded.)
+     • FABRICATION REMOVED: the old summary's "Lee subsidiaries publish
+       English-language and Eastern-European outlets, weakening any Russian-state-
+       tolerance hypothesis" is FALSE (Lee is a plain US local-newspaper chain,
+       no Eastern-European subsidiaries) — the same fabrication was just stripped
+       from actor criminal/qilin; NOT reintroduced. Also dropped the unsourced
+       "first time in some cases in decades" superlative (no snapshot carries it).
+
+    [b] ATTRIBUTION — corrected. Old attribution_source_id was the wrong-source
+    Synnovis NHS statement; re-pointed to bleepingcomputer/2025-06-04 (names the
+    Qilin claim + leak-site listing + "the company has yet to attribute the attack
+    to a specific operation"). attributing_org rewritten from "Lee Enterprises +
+    Qilin (self-claimed)" — Lee did NOT attribute — to "Qilin (leak-site
+    self-claim) + security-industry & journalism consensus." attribution_date
+    2025-02-24 → 2025-02-27 (Qilin "took credit on Feb. 27"; leak-site listing
+    28 Feb). Confidence high RETAINED (concrete leak-site self-claim with posted
+    samples + SentinelOne/Darktrace analysis + journalism consensus);
+    auspex_assessment concur RETAINED.
+
+    [c] DATES — start 2025-02-03 ✓ kept. disclosure_date 2025-02-07 → 2025-02-12:
+    the prior "disclosed via SEC 8-K February 7" was WRONG — the only 8-K filed
+    2025-02-07 (accession 004403) is Lee's Q1 earnings (Item 2.02) with NO
+    incident disclosure (verified: 0 hits for cyber/outage/incident in the cover
+    doc AND both exhibits, only generic risk-factor boilerplate). The formal Item
+    1.05 disclosure is report-date Feb 12 / filed Feb 18 (Press Freedom Tracker:
+    "the SEC filing — dated Feb. 12"). Incident was already public earlier via
+    Lee's own newspapers (~3-4 Feb) and press (The Record, 10 Feb). end_date
+    2025-04-30 (unsourced precision) → 2025-03-06, the sourced milestone where the
+    6 March 8-K/A states "the threat has been contained" and "all products are
+    being produced and distributed" (residual back-office delays remained; full
+    restoration "in the coming weeks" — no precise date published; PII
+    determination concluded ~28 May). Each source's published_on set to its true
+    date.
+
+    [d] DOCTRINE_LINKS — [] retained and correct (criminal-baseline). Qilin is
+    apolitical financially-motivated crime; no doctrine genuinely applies and no
+    source states any strategic purpose, so none is invented (no attested claim).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (a named criminal group; no state
+    service/unit named — consistent with criminal/ placement).
+
+    [f] ACTOR_ID — criminal/qilin resolves to atlas/actors/criminal/qilin.yaml ✓.
+    Placement under criminal/ (not ru/proxies/) is consistent: sources call Qilin
+    a "Russia-based cybercriminal operation" (geography, not tasking) and no
+    state-nexus attribution is published. Directionality verified: perpetrator
+    criminal/qilin (no state) → victim orgs/lee-enterprises (nation_state_id us);
+    added country: us + outcome to the target.
+
+    FLAGS for orchestrator:
+     • TARGET REGISTRY orgs/lee-enterprises.yaml has sources: [] and repeats the
+       unsourced "77 daily and 350 weekly ... across 25 US states" business
+       description; not edited (out of audit scope). Suggest sourcing it to
+       sec/2025-02-18 + therecord/2025-06-04 and reconciling the 72-markets/25-
+       states vs 77-daily/26-states variance.
+     • Two SEC filings were captured but NOT cited (correctly): the 2025-02-07
+       Q1-earnings 8-K (no incident content) and the 2025-02-27 8-K (Item 5.07
+       annual-meeting votes, unrelated). Their raws were not retained.
+
+    Residual uncertainties: (i) full-restoration date is undated ("in the coming
+    weeks" from 6 March); end_date anchored to the "contained/producing" milestone.
+    (ii) 350 GB / 120,000 documents is Qilin's own leak-site CLAIM (SentinelOne-
+    relayed), not independently confirmed; exfiltration itself IS confirmed (SEC
+    8-K) but not the volume. (iii) Qilin claim date is 27-28 Feb (credited 27th,
+    leak-site listing 28th). (iv) business-size figures vary by source (72 markets/
+    25 states vs 77 daily/26 states).
