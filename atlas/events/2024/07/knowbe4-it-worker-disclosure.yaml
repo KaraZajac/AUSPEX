@@ -1,66 +1,191 @@
 id: 2024-07/knowbe4-it-worker-disclosure
 name: KnowBe4 DPRK IT-worker infiltration self-disclosure
-start_date: 2024-07-15  # company-issued Mac first-boot detection
-disclosure_date: 2024-07-23
-end_date: 2024-07-23
+start_date: 2024-07-15  # 2024-07-15 21:55 EST — malware-load / suspicious activity detected on the company-issued Mac (KnowBe4 SOC timeline)
+disclosure_date: 2024-07-23  # blog published_on; HTML datePublished = 2024-07-23T14:14:55Z
+end_date: 2024-07-15  # SOC contained the device ~22:20 EST the same day; the worker then went unresponsive
 incident_type:
-  - intrusion
-  - documentary
+  - insider
+  - disclosure
 initial_vector: insider
 outcome_summary: |
   KnowBe4 publicly disclosed having unknowingly hired a
-  DPRK IT worker for a US-based principal software engineer
-  role. Identity verification was passed via stolen
-  US-citizen identity, stock-photo headshot enhanced with
-  AI, and four rounds of video-call interviews. The hire
-  was detected when the company-issued Mac began loading
-  malware on first boot from the laptop-farm hosting
-  address; the hire was terminated and never had any
-  access to KnowBe4 customer systems or data. Canonical
-  public case study of the IT-worker-fraud detection
-  lifecycle from the victim organization's perspective.
+  DPRK fake IT worker into a US-based Principal Software
+  Engineer role on its internal IT AI team. Pre-hire
+  identity verification passed via a valid but stolen
+  US-citizen identity, an AI-enhanced stock-photo headshot,
+  and four video-conference interviews that confirmed the
+  applicant matched the photo. The company-issued Mac began
+  loading malware the moment it was received at the
+  "IT mule laptop farm" address; EDR flagged the activity
+  on 2024-07-15 (21:55 EST) and the SOC contained the
+  device ~25 minutes later. KnowBe4 states no illegal
+  access was gained and no data was lost, compromised, or
+  exfiltrated — the new hire had no access to production
+  systems. Findings were corroborated with Mandiant and the
+  FBI. Canonical first-party case study of the
+  IT-worker-fraud detection lifecycle from the victim's
+  perspective.
 false_flag_risk: none
 campaign_id: dprk-it-worker-enforcement-arc
 summary: |
-  Reference case for the IT-worker fraud program's modern
-  identity-validation defeats and the detection signature
-  on the malware-loading side. Published two months after
-  Treasury sb0416 designations and the Chapman superseding
-  indictment, KnowBe4's disclosure documents that the
-  scheme defeats AI-augmented identity verification (deepfake
-  video interviews) and that the post-hire malware-load
-  pattern (laptop-farm address, first-boot beaconing) is
-  the most reliable detection signature.
+  First-party reference case for the DPRK IT-worker fraud
+  scheme, disclosed by the victim organization. KnowBe4's
+  account documents the scheme's identity-validation
+  defeats — a valid but stolen US-citizen identity, an
+  AI-enhanced stock-photo headshot, and a real applicant
+  who passed four video-conference interviews — and the
+  post-hire detection signature: the company-issued Mac
+  began loading malware the moment it reached the
+  laptop-farm address (the worker used a Raspberry Pi to
+  download malware and manipulated session-history files),
+  which EDR flagged and the SOC contained the same day.
+  KnowBe4 attributes the ring to North Korea (a
+  "well-organized, state-sponsored, large criminal ring")
+  whose workers "give a large amount to North Korea to fund
+  their illegal programs," and corroborated its findings
+  with Mandiant and the FBI.
 attributions:
   - actor_id: kp/it-worker-fraud
     attributing_org: KnowBe4
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2024-07-23
     attribution_source_id: knowbe4/2024-07-23_north-korean-fake-it-worker
     notes: |
-      KnowBe4 attribution by tradecraft consistency with
-      the Treasury sb0416 / Chapman / 14-national
-      indictment pattern: stolen US-citizen identity,
-      laptop-farm hosting address, first-boot malware
-      beaconing.
+      KnowBe4 attributes the incident to North Korea — "it
+      turns out this was a fake IT worker from North Korea",
+      a "well-organized, state-sponsored, large criminal
+      ring" — and corroborated its findings with Mandiant and
+      the FBI (an active FBI investigation at time of
+      writing). Nation-level attribution plus the canonical
+      IT-worker-fraud modus (stolen US-citizen identity,
+      AI-enhanced headshot, IT-mule laptop-farm hosting
+      address, VPN from NK/China, night-shift cover, malware
+      loaded on the company Mac). The blog names no specific
+      vendor-tracked cluster; kp/it-worker-fraud is AUSPEX's
+      modeling of the DPRK IT-worker scheme.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/it-worker-fraud
     confidence: strongly_inferred
     reasoning: |
-      KnowBe4 case matches the canonical IT-worker fraud
-      tradecraft attested by Treasury sb0416 and the
-      14-national DOJ indictment. Doctrinally part of the
-      same revenue-aggregation pillar; KnowBe4 itself
-      did not invoke the WMD-financing language so this
-      is strongly-inferred rather than attested.
+      KnowBe4's disclosure documents the canonical DPRK
+      IT-worker fraud tradecraft and states the workers "give
+      a large amount to North Korea to fund their illegal
+      programs" — a proximate regime-funding purpose, NOT the
+      terminal WMD / ballistic-missile-financing goal in
+      substance. Doctrinally this is the revenue-aggregation
+      pillar's IT-worker-fraud program. Labeled
+      strongly_inferred, not attested: per the per-event
+      8th-congress rule a vendor blog naming only the
+      proximate ("illegal programs") goal does not clear the
+      attestation bar, which requires the source itself to
+      state the WMD / ballistic-missile end (as Treasury/OFAC
+      designations do).
+    attesting_source_id: knowbe4/2024-07-23_north-korean-fake-it-worker
+    inference_basis:
+      signals:
+        - "KnowBe4 attributes the scheme to North Korea and states its workers 'give a large amount to North Korea to fund their illegal programs' — an explicit state-revenue purpose."
+        - "Tradecraft matches the state-directed DPRK IT-worker fraud cluster (kp/it-worker-fraud): stolen US identity, AI-enhanced headshot, IT-mule laptop farm, VPN from NK/China, night-shift cover."
+        - "The actor is modeled as a hard-currency revenue channel for the 8th-Congress 13-system defense plan; the revenue-aggregation pillar encodes exactly this state-revenue generation."
+      ruled_out: "Generic financially-motivated fraud with no state-strategic purpose — ruled out because KnowBe4 itself frames the ring as 'state-sponsored' and as funding North Korea's programs. The only surviving question is proximate-revenue vs. terminal-WMD framing, which is precisely why the link is strongly_inferred rather than attested."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/knowbe4
     role: primary
-    outcome: Hire terminated before access provisioning; no customer impact.
+    outcome: SOC contained the device ~25 min after malware-load detection; the new hire had no access to production systems; no data lost, compromised, or exfiltrated.
 sources:
   - knowbe4/2024-07-23_north-korean-fake-it-worker
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs the FIRST-PARTY KnowBe4 blog "How a North Korean Fake IT Worker Tried to
+    Infiltrate Us" (blog.knowbe4.com). Raw snapshot captured:
+    knowbe4__2024-07-23_north-korean-fake-it-worker.html, sha256 a5f8e7d2…7caa147b,
+    207726 bytes. STEP-0 triage: HTML <title> + article body match the event → NOT a
+    phantom; the source is the authoritative first-party account → normal 6-point audit.
+
+    [a] FACTS — over-claims stripped/corrected against the raw:
+      • "deepfake video interviews" REMOVED (fabrication). Narrative: HR "conducted four
+        video conference based interviews … confirming the individual matched the photo,"
+        the still headshot being AI-"enhanced" stock photography; NO deepfake-video claim.
+        All 3 "deepfake" hits in the file are the blog's topic-tag sidebar ("Deepfake (55)"
+        category count), not incident text.
+      • "first-boot beaconing" REMOVED. Raw: "the moment it was received, it immediately
+        started to load malware"; "He used a raspberry pi to download the malware";
+        "manipulate session history files … execute unauthorized software." 0 hits for
+        "beacon" / "first boot"; reworded to source-accurate malware-load/download.
+      • "the most reliable detection signature" (AUSPEX generalization) softened — raw says
+        only "The EDR software detected it and alerted our InfoSec Security Operations Center."
+      • "Published two months after Treasury sb0416 designations and the Chapman superseding
+        indictment" REMOVED from summary — not source-carried: 0 hits for sb0416 / Chapman /
+        WMD / ballistic / 800M / Office 39; "Treasury"/"OFAC" appear only in link/meta chrome,
+        not the prose. (The WMD-financing linkage is retained where it belongs — as an explicit
+        AUSPEX inference in the doctrine_link.)
+      • "terminated" REMOVED (outcome_summary + target.outcome). 0 hits for terminat/fired/
+        dismiss; raw says the SOC "contained XXXX's device" and the worker "became
+        unresponsive." Reworded to containment.
+      KEPT (verbatim-carried): Principal Software Engineer; "valid but stolen US-based
+      identity" + AI-"enhanced" stock photo; four video-conference interviews; company Mac
+      loaded malware on receipt; EDR→SOC detection; "IT mule laptop farm" + VPN from "North
+      Korea or over the border in China" + night-shift cover; Raspberry Pi malware download;
+      corroboration with Mandiant (4 hits) + FBI (2 hits); "No illegal access was gained, and
+      no data was lost, compromised, or exfiltrated" + "not a data breach"; "no access to
+      production systems"; workers "give a large amount to North Korea to fund their illegal
+      programs."
+
+    [b] ATTRIBUTION — actor kp/it-worker-fraud (resolves ✓). KnowBe4 states unequivocally
+    "this was a fake IT worker from North Korea," a "state-sponsored, large criminal ring"
+    (North Korea = 20 hits), corroborated with Mandiant + FBI → attributing_org_confidence
+    high SUPPORTED; auspex_assessment concur KEPT. REWROTE the notes: the prior notes claimed
+    KnowBe4 attributed "by tradecraft consistency with the Treasury sb0416 / Chapman /
+    14-national indictment pattern" — that is (i) not KnowBe4's stated basis (Mandiant+FBI
+    corroboration is) and (ii) anachronistic (the 14-national DOJ indictment is 2024-12-12,
+    five months AFTER this 2024-07-23 blog). Also removed the "first-boot malware beaconing"
+    phrase.
+
+    [c] DATES — start_date 2024-07-15 KEPT ("On July 15, 2024, a series of suspicious
+    activities were detected … beginning at 9:55pm EST"); comment corrected from "first-boot
+    detection." disclosure_date 2024-07-23 CONFIRMED vs HTML datePublished 2024-07-23T14:14:55Z.
+    end_date CORRECTED 2024-07-23 → 2024-07-15 (was conflated with disclosure_date; device
+    contained ~10:20pm EST the same day). Source published_on 2024-07-23 confirmed on the
+    source record.
+
+    [d] DOCTRINE_LINKS — kp/8th-congress-defense-plan / revenue-aggregation / it-worker-fraud
+    KEPT at strongly_inferred (correct: source names only the proximate "illegal programs"
+    goal, not the terminal WMD/ballistic-missile end — per the doctrine file's per-event
+    attestation rule and the vendor-blog→strongly_inferred steer). Refined reasoning; ADDED
+    inference_basis {signals[], ruled_out} (was missing) and attesting_source_id = the knowbe4
+    source (schema: on strongly_inferred, denotes the primary supporting source). perspective
+    left default (attacker-rationale — DPRK doctrine on a DPRK op). Correctly NOT attested.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; SET to nation. KnowBe4 named the country (North
+    Korea) + the IT-worker-fraud modus and corroborated with Mandiant/FBI, but named no
+    specific vendor-tracked group/unit → nation (not named-actor).
+
+    [f] ACTOR_ID — kp/it-worker-fraud resolves to atlas/actors/kp/it-worker-fraud.yaml
+    (well-developed; status: sanctioned). NB two-segment id (no service segment) — unusual
+    but functional (primary_service_id kp/office-39 → state kp; the cluster is deliberately
+    cross-service). Not a defect.
+
+    incident_type CORRECTED [intrusion, documentary] → [insider, disclosure]: KnowBe4
+    explicitly states "No illegal access was gained … This is not a data breach," so
+    "intrusion" (successful) over-states — the malware-load was an attempted insider compromise
+    contained in ~25 min; the report is titled "Incident Report Summary: Insider Threat" and is
+    a first-party self-disclosure → insider (operational) + disclosure (meta). data-theft
+    correctly absent (none occurred).
+
+    SOURCE re-tier: knowbe4/2024-07-23 secondary → primary (first-party disclosure of KnowBe4's
+    own incident) + raw_snapshot/content_sha256 added. FLAG: source kind:journalism is arguably
+    miscategorized (first-party vendor incident report, not third-party journalism) — preserved
+    per protocol, flagged for orchestrator.
+
+    Residual uncertainty: none load-bearing. "AI-enhanced" describes the still headshot
+    (explicit in-source); the live video calls were passed by a real person using the stolen
+    identity — no deepfake-video claim exists in the source.

@@ -1,14 +1,14 @@
 id: 2024-05/dmm-bitcoin
 name: DMM Bitcoin theft via Ginco supply-chain compromise
-start_date: 2024-03-15  # initial Ginco employee compromise per FBI/NPA timeline
-disclosure_date: 2024-05-31  # DMM Bitcoin public disclosure
-end_date: 2024-05-31
+start_date: 2024-03-25  # "late March 2024": LinkedIn fake-recruiter contacts + compromises a Ginco employee (FBI/NPA timeline)
+disclosure_date: 2024-12-23  # public disclosure = the FBI/DC3/NPA attribution PSA (the only cited source). The theft was contemporaneously public via DMM in late May 2024, but no cited in-event source carries that specific date.
+end_date: 2024-05-31  # "late-May 2024": legitimate DMM transaction manipulated, 4,502.9 BTC (~$308M) lost (FBI/NPA timeline)
 incident_type:
   - financial-theft
   - supply-chain
 initial_vector: phishing
 outcome_summary: |
-  Largest crypto hack of 2024. Approximately $308M
+  Approximately $308M
   (4,502.9 BTC) stolen from DMM Bitcoin, a Japan-based
   cryptocurrency exchange, via supply-chain compromise of
   Ginco — a Japan-based enterprise wallet-software vendor.
@@ -38,6 +38,7 @@ attributions:
   - actor_id: kp/rgb/tradertraitor
     attributing_org: US FBI + DC3 + Japan NPA
     attributing_org_confidence: high
+    attribution_level: named-actor  # source names DPRK (nation) + TraderTraitor (named activity); NO service/unit named (no RGB) — hence named-actor, not named-unit
     auspex_assessment: concur
     attribution_date: 2024-12-23
     attribution_source_id: fbi/2024-12-23_dmm-bitcoin-attribution
@@ -50,10 +51,14 @@ doctrine_links:
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
     confidence: strongly_inferred
     reasoning: |
-      FBI/DC3/NPA joint attribution names DPRK revenue generation
-      but not the WMD goal or the defense plan; the financing
-      linkage is inferred. Largest single-event DPRK theft of 2024
-      by USD value.
+      FBI/DC3/NPA joint attribution states only the proximate
+      revenue goal — the proceeds fund North Korea's "use of
+      illicit activities … to generate revenue for the regime" —
+      and names neither the WMD/ballistic-missile financing end nor
+      the 8th-Congress defense plan; the link to the defense plan
+      is AUSPEX's inference. strongly_inferred, not attested: the
+      revenue behaviour is source-stated, the defense-plan goal is
+      not (the per-event 8th-Congress attested bar is unmet).
     attesting_source_id: fbi/2024-12-23_dmm-bitcoin-attribution
     inference_basis:
       source_id: fbi/2024-12-23_dmm-bitcoin-attribution
@@ -65,9 +70,87 @@ doctrine_links:
 targets:
   - target_id: orgs/dmm-bitcoin
     role: primary
+    country: jp
     outcome: ~$308M (4,502.9 BTC) drained.
   - target_id: orgs/ginco
     role: staging
-    outcome: Wallet-software vendor compromise via LinkedIn fake-recruiter Trojan.
+    country: jp
+    outcome: Wallet-management-software vendor compromised via a LinkedIn fake-recruiter malicious Python "pre-employment test"; session-cookie theft enabled impersonation and access to Ginco's unencrypted communications system.
 sources:
   - fbi/2024-12-23_dmm-bitcoin-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs the FBI/DC3/NPA joint PSA "FBI, DC3, and NPA Identification of North Korean
+    Cyber Actors, Tracked as TraderTraitor, Responsible for Theft of $308 Million USD from
+    Bitcoin.DMM.com" (2024-12-23). Raw snapshot RE-VERIFIED on disk:
+    fbi__2024-12-23_dmm-bitcoin-attribution.html, sha256 5786f10d…59a4c049, 75108 bytes (hash
+    matches the source record; not re-fetched). REAL article (title + body carry the claims) —
+    NOT a phantom; normal 6-point audit.
+
+    [a] FACTS — core claims verbatim-carried. Money: "the theft of cryptocurrency worth $308
+    million U.S. dollars" + "the loss of 4,502.9 BTC, worth $308 million at the time of the
+    attack" — $308M + 4,502.9 BTC CONFIRMED. Ginco vector (verbatim): "In late March 2024, a
+    North Korean cyber actor, masquerading as a recruiter on LinkedIn, contacted an employee at
+    Ginco, a Japan-based enterprise cryptocurrency wallet software company … a URL linked to a
+    malicious Python script under the guise of a pre-employment test located on a GitHub page …
+    After mid-May 2024, TraderTraitor actors exploited session cookie information to impersonate
+    the compromised employee and successfully gained access to Ginco's unencrypted
+    communications system. In late-May 2024, the actors likely used this access to manipulate a
+    legitimate transaction request by a DMM employee, resulting in the loss of 4,502.9 BTC …
+    The stolen funds ultimately moved to TraderTraitor-controlled wallets." → Ginco =
+    Japan-based enterprise wallet-software vendor CONFIRMED; supply-chain pivot (Ginco→DMM)
+    CONFIRMED; session-cookie hijack CONFIRMED. CORRECTIONS: removed the unsourced superlatives
+    "Largest crypto hack of 2024" (outcome_summary) and "Largest single-event DPRK theft of
+    2024 by USD value" (doctrine reasoning) — true externally but NOT carried by the cited
+    source (single-source event; the FBI PSA does not rank the theft). Added country: jp to both
+    targets ("Japan-based" for both DMM and Ginco, verbatim).
+
+    [b] ATTRIBUTION — source names the actor: "North Korean Cyber Actors, Tracked as
+    TraderTraitor" / "by North Korean cyber actors in May 2024. The theft is affiliated with
+    TraderTraitor threat activity, which is also tracked as Jade Sleet, UNC4899, and Slow
+    Pisces." Confidence high ✓ (direct govt identification). attributing_org "US FBI + DC3 +
+    Japan NPA" = "The Federal Bureau of Investigation, Department of Defense Cyber Crime Center,
+    and National Police Agency of Japan" ✓. attribution_date 2024-12-23 = published_on ✓.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; ADDED named-actor. Source names the NATION (North
+    Korea) + the NAMED ACTIVITY (TraderTraitor/Jade Sleet/UNC4899/Slow Pisces) but NO
+    service/unit — raw term-scan: "Reconnaissance"=0, "RGB"=0, the only "Bureau" is "Federal
+    Bureau of Investigation." → named-actor, not named-unit.
+
+    [c] DATES — published_on 2024-12-23 ✓. CORRECTIONS: (1) start_date 2024-03-15 → 2024-03-25:
+    source says "In late March 2024" for the LinkedIn/Ginco initial access — 03-15 is mid-March
+    (conflation fixed). (2) disclosure_date 2024-05-31 → 2024-12-23: the prior date (DMM's own
+    disclosure) is carried by NO cited in-event source; the only cited source is the Dec-23 PSA,
+    which is the sourced public disclosure/attribution. (3) end_date kept 2024-05-31 =
+    "late-May 2024" theft ✓. Net: op window late-Mar→late-May 2024, disclosure/attribution
+    Dec-2024 — the attribution latency, now all source-carried. No date-sanity warnings
+    (disclosure 12-23 > start; end 05-31 > start). NB event id/path stay 2024-05 (immutable;
+    headline theft month) though start_date is March.
+
+    [d] DOCTRINE_LINKS — kp/8th-congress-defense-plan / revenue-aggregation / crypto-bridge-theft;
+    all three FKs resolve (pillar + program confirmed in the doctrine file). confidence KEPT
+    strongly_inferred — CORRECT per the per-event 8th-Congress rule: the PSA states only the
+    proximate revenue goal (verbatim closing: "…combat North Korea's use of illicit
+    activities—including cybercrime and cryptocurrency theft—to generate revenue for the
+    regime") and NEVER names WMD / nuclear / ballistic-missile financing or the defense plan
+    (raw scan: no substantive WMD/ballistic/nuclear string). So NOT attested. inference_basis
+    signal quote "generate revenue for the regime" is verbatim-exact; ruled_out correct.
+    attesting_source_id on a strongly_inferred link = primary supporting source (schema-OK).
+    Reasoning rewritten to state the revenue-vs-WMD boundary explicitly.
+
+    [f] ACTOR_ID — kp/rgb/tradertraitor RESOLVES (file atlas/actors/kp/tradertraitor.yaml, id
+    kp/rgb/tradertraitor). FLAGGED to orchestrator: the actor file is INTERNALLY STALE — its
+    header/id/primary_service_id were re-homed kp/unscoped→kp/rgb (2026-07-02, Mandiant
+    JumpCloud RGB-naming basis) but ttp_summary + the long notes block still assert "none names
+    the RGB … no service is asserted … Keep kp/unscoped." Not editable here (actor files out of
+    scope).
+
+    RESIDUALS/FLAGS: (1) targets orgs/dmm-bitcoin + orgs/ginco are NOT in the target registry
+    (siblings orgs/bybit, orgs/safe-wallet, orgs/harmony-horizon-bridge DO exist) — kept the
+    orgs/ ids (cohort convention; dangling-org targets are non-fatal in validate.ts) → create
+    the two registry files. (2) Single-source event (only the FBI PSA) — every retained claim is
+    carried by that primary govt source; unsourced superlatives dropped rather than kept.

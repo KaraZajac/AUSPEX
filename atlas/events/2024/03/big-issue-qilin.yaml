@@ -1,42 +1,55 @@
 id: 2024-03/big-issue-qilin
 name: Qilin ransomware against The Big Issue Group
-start_date: 2024-03-27
-disclosure_date: 2024-04-04
-end_date: 2024-05-15
+start_date: 2024-03-20
+disclosure_date: 2024-03-26
+end_date: null
 incident_type:
   - ransomware
   - data-theft
-  - disruption
+  - extortion
 initial_vector: unknown
 outcome_summary: |
   Qilin ransomware intrusion of The Big Issue Group, a UK
-  social-enterprise magazine publisher supporting people
-  experiencing homelessness. The intrusion forced suspension
-  of vendor-facing IT systems for several weeks, disrupting
-  the magazine's vendor-payment processing and supply
-  logistics for approximately 1,000 active street vendors.
-  Qilin claimed responsibility April 4, 2024 and posted
-  approximately 550GB of exfiltrated data on its leak site
-  including financial records and vendor PII.
+  street-newspaper and social-enterprise publisher supporting
+  people experiencing homelessness. The group detected the
+  incident in the week before 26 March 2024, restricted access
+  to its systems and engaged external IT-security experts; it
+  stated that publication and distribution of the magazine were
+  not impacted and that it was operating with limited disruption.
+  On 24 March 2024 Qilin posted The Big Issue to its darknet
+  leak site, claiming to have stolen approximately 550GB of data
+  — staff and executive PII (including passport scans, payroll
+  records, and CEO Paul Cheal's driving licence and salary
+  details), contracts, partner data, and financial/investment
+  information. The 550GB figure is Qilin's own leak-site claim
+  and was not independently verified.
 quantified_impact:
-  data_exfiltrated_gb: 550
-  vendors_affected: 1000
+  data_exfiltrated_gb: 550   # Qilin leak-site CLAIM, not independently verified
 false_flag_risk: none
 summary: |
-  Illustrative criminal-baseline case: a Russian-language-
-  operated RaaS cluster (no state nexus) targets a UK social
-  enterprise with no plausible doctrinal interest. The
-  victim selection is opportunistic-affiliate, the impact
-  falls on vulnerable street vendors, and no state-aligned
-  reading produces a coherent targeting story — exactly the
-  signal AUSPEX wants the doctrine engine to abstain on.
+  Illustrative criminal-baseline case: a RaaS cluster whose
+  payload is written by Russian-speaking operators (no
+  documented state nexus) hits a UK social enterprise with no
+  plausible doctrinal interest. Victim selection is
+  opportunistic-affiliate and no state-aligned reading produces
+  a coherent targeting story — exactly the signal AUSPEX wants
+  the doctrine engine to abstain on.
 attributions:
   - actor_id: criminal/qilin
-    attributing_org: The Big Issue + Qilin (self-claimed)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-04-04
-    attribution_source_id: ncsc-uk/2024-06-04_synnovis-qilin-statement
+    attributing_org: Qilin (leak-site self-claim); incident confirmed by The Big Issue Group
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-03-26
+    attribution_source_id: theregister/2024-03-27_big-issue-qilin-cyberattack
+    notes: |
+      Attribution rests on Qilin's own leak-site claim (Qilin named itself;
+      posted ~24 Mar 2024) plus posted proof-of-theft (staff/executive PII),
+      reported by The Register, The Record and Computer Weekly. The Big Issue
+      Group publicly confirmed a cyber incident but did not independently name
+      Qilin. Hence moderate confidence / concur-with-caveat: a corroborated
+      criminal self-claim, not an independent IR/vendor attribution.
+      named-actor (group named; no unit).
 doctrine_links: []
 targets:
   - target_id: sectors/media/journalism
@@ -44,4 +57,68 @@ targets:
   - target_id: sectors/civil-society/ngo
     role: collateral
 sources:
-  - ncsc-uk/2024-06-04_synnovis-qilin-statement
+  - theregister/2024-03-27_big-issue-qilin-cyberattack
+  - therecord/2024-03-26_big-issue-qilin
+  - computerweekly/2024-03-26_qilin-big-issue-claim
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    WRONG-SOURCE REMEDIATION (re-source path, "badrabbit model"). The event's
+    sole citation + attribution_source_id was ncsc-uk/2024-06-04_synnovis-qilin-
+    statement — an NHS England statement about the DIFFERENT June-2024 London
+    Synnovis Qilin victim (a shared "fallback donor" mis-cited by several
+    events). Removed here; it stays legitimately cited by the real event
+    2024-06/synnovis-qilin-london-nhs. Re-sourced to three real, snapshot-hashed
+    journalism primaries on the March-2024 Big Issue leak-site claim:
+      - theregister/2024-03-27_big-issue-qilin-cyberattack  sha 828f9076..cc9e479d8 (164,227 B)
+      - therecord/2024-03-26_big-issue-qilin                sha 35b1b1e2..4b86d2fce (85,650 B)
+      - computerweekly/2024-03-26_qilin-big-issue-claim     sha 6b14a915..3eda5f557 (381,435 B)
+
+    [a] FACTS — corrected against the three RAW sources:
+      - 550GB kept but re-scoped as Qilin's LEAK-SITE CLAIM, not independently
+        verified (The Record: "darknet extortion site alongside the claim the
+        gang stole 550 gigabytes of confidential data"; CW: "550GB").
+      - STRIPPED fabricated impact "forced suspension of vendor-facing IT
+        systems for several weeks ... vendor-payment processing ... ~1,000
+        active street vendors." DIRECTLY CONTRADICTED: all three sources carry
+        the victim statement "The publication and distribution of the Big Issue
+        magazine is not impacted by this incident" and "operating with limited
+        disruption." No source gives any vendor-affected count (Register cites a
+        2022 figure of "3,637 vendors" as historical scale, NOT incident
+        impact). Removed quantified_impact.vendors_affected: 1000.
+      - "vendor PII" corrected to staff/executive PII — leaked data is
+        personnel/passport/payroll + CEO Paul Cheal driving licence & salary +
+        Big Issue Invest CEO passport/bank (Register), contracts/partner data +
+        financial/investment info (CW). Not street-vendor PII.
+      - incident_type disruption -> extortion (double-extortion leak-site;
+        "disruption" overstated given "not impacted").
+    [c] DATES — corrected conflation with the Synnovis timeline:
+      - disclosure_date 2024-04-04 -> 2024-03-26 (first reporting: The Record +
+        Computer Weekly both 26 Mar; Qilin posted the leak Sunday 24 Mar).
+        "Qilin claimed responsibility April 4, 2024" was FALSE — the claim was
+        public by 26/27 Mar.
+      - end_date 2024-05-15 -> null (UNSUPPORTED; no source gives a resolution
+        date — late-March reporting only says systems being restored).
+      - start_date 2024-03-27 -> 2024-03-20 (best estimate: Beaumont said the
+        org had been dealing with it "for about a week" as of ~26/27 Mar;
+        Register "last week"). True intrusion/dwell date is unpublished.
+      - Source published_on set to each article's JSON-LD datePublished
+        (Register 2024-03-27, Record 2024-03-26, CW 2024-03-26).
+    [b]/[e] ATTRIBUTION — set to leak-site self-claim: attributing_org_confidence
+      high -> moderate, auspex_assessment concur -> concur-with-caveat, added
+      attribution_level: named-actor, attribution_date 2024-04-04 -> 2024-03-26,
+      attribution_source_id re-pointed to The Register. Qilin named ITSELF on
+      its leak site (+ posted proof-of-theft); Big Issue confirmed an incident
+      but did not independently attribute. Moderate / concur-with-caveat honest.
+    [d] DOCTRINE — doctrine_links: [] correct and kept (criminal RaaS, no state
+      nexus, no doctrine). Payload "written in Russian" / operators "thought to
+      be Russian" (Register) supports the criminal-baseline abstain framing.
+    [f] ACTOR — actor_id criminal/qilin resolves (atlas/actors/criminal/qilin.yaml).
+      Placement under criminal/ (not ru/proxies/) is source-consistent: no
+      published state-nexus attribution.
+    Targets sectors/media/journalism (primary) + sectors/civil-society/ngo
+    (collateral) both resolve and fit a UK street-newspaper social enterprise;
+    kept. false_flag_risk none kept.

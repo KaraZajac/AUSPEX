@@ -1,57 +1,97 @@
 id: 2024-07/apt41-dust-global-campaign
 name: APT41 "DUST" global campaign (Mandiant / Google TAG)
-start_date: 2023-01-01
-disclosure_date: 2024-07-18  # Mandiant report
-end_date: 2024-07-18
+start_date: 2023-01-01  # Mandiant: access maintained "since 2023" (no month given)
+disclosure_date: 2024-07-18  # Mandiant / Google TAG report
+end_date: null  # report describes prolonged/ongoing access ("over an extended period"); declares no op end — do NOT conflate with disclosure
 incident_type:
   - intrusion
   - data-theft
-initial_vector: phishing
-outcome_summary: |
-  APT41 multi-year intrusion campaign against shipping and
-  logistics, technology, automotive, media, and government in
-  UK, Italy, Spain, Turkey, Taiwan, Thailand, and Singapore.
-  Tradecraft: ANTSWORD and BLUEBEAM web shells → DUSTPAN
-  in-memory dropper → BEACON; DUSTTRAP for follow-on
-  collection. Mandiant assessed long-dwell strategic-collection
-  posture across the target set, with a particular focus on
-  shipping / logistics aligned to BRI-relevant logistics
-  intelligence.
+  - espionage
+initial_vector: unknown  # report states no initial-access vector; web shells were only the earliest observed stage
 false_flag_risk: none
+outcome_summary: |
+  Mandiant, with Google's Threat Analysis Group (TAG), disclosed a
+  sustained APT41 campaign that compromised organizations in the
+  global shipping and logistics, media and entertainment,
+  technology, and automotive sectors. Most victims operated in
+  Italy, Spain, Taiwan, Thailand, Turkey, and the United Kingdom;
+  shipping/logistics victims were concentrated in Europe and the
+  Middle East, while media and entertainment victims were in Asia.
+  APT41 infiltrated and maintained prolonged, unauthorized access
+  since 2023, extracting sensitive data over an extended period.
+  Tradecraft: ANTSWORD and BLUEBEAM web shells executed DUSTPAN
+  (an in-memory dropper) to load the BEACON backdoor for C2; later
+  in the intrusions APT41 deployed DUSTTRAP, a multi-stage plugin
+  framework, leading to hands-on-keyboard activity. Data was
+  collected with SQLULDR2 (dumping Oracle databases) and
+  exfiltrated to Microsoft OneDrive via PINEGROVE. Mandiant also
+  detected reconnaissance toward similar organizations in
+  Singapore, with no confirmed compromise there.
 summary: |
-  Reaffirms APT41's continued state-tasked operations after
-  the 2020 DOJ indictment of five named cluster members. The
-  geographic target spread (UK + EU + Mediterranean + Taiwan +
-  ASEAN) tracks Belt and Road logistics corridors plus
-  Taiwan-island and EU industrial-system collection.
+  A China-nexus APT41 espionage campaign against strategic-collection
+  targets — shipping and logistics, technology, automotive, and media
+  and entertainment — spanning the UK, EU, Mediterranean, Taiwan, and
+  ASEAN, disclosed years after the 2020 DOJ indictment of five named
+  cluster members yet showing APT41's continued activity. Mandiant
+  tracks APT41 as conducting Chinese state-sponsored espionage
+  alongside financially motivated activity that "may be outside of
+  state control"; the report states no strategic motive for this
+  campaign, so the doctrine links below are AUSPEX intent-inferences,
+  not Mandiant assessments.
 attributions:
   - actor_id: cn/mss/apt41
     attributing_org: Mandiant + Google TAG
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-07-18
     attribution_source_id: mandiant/2024-07-18_apt41-dust
+    notes: |
+      The report attributes the campaign to APT41 (named actor) and
+      characterizes it as "Chinese state-sponsored espionage activity"
+      (nation level); it does NOT name the Ministry of State Security or
+      any Chinese service — hence attribution_level named-actor, not
+      named-unit. The actor's cn/mss placement rests on the DOJ's
+      September 2020 indictment (a defendant "Allegedly Boasted of
+      Connections to the Chinese Ministry of State Security"), a boast
+      framing, not on this report.
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/maritime-and-port
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Shipping and logistics targeting across BRI-corridor
-      geographies (Mediterranean, ASEAN, Turkey) is the
-      operational signature of BRI maritime-and-port
-      intelligence collection.
+      Shipping and logistics is the campaign's standout sector, with
+      victims concentrated in Europe and the Middle East — a target set
+      consistent with BRI maritime-and-port logistics-intelligence
+      collection. Plausible, not higher: the report states no strategic
+      purpose and never mentions the Belt and Road Initiative or
+      maritime/port intelligence, and the same targeting reads equally
+      as broad commercial espionage against multinational logistics
+      firms.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "BRI maritime-and-port intelligence: shipping/logistics is the campaign's dominant, Europe/Middle-East-concentrated sector, matching PRC interest in global port and logistics-corridor intelligence."
+        - "General commercial/economic espionage: APT41 is a dual-mission contractor, so targeting multinational shipping/logistics firms for competitive intelligence is an equally strong reading absent any stated motive."
     contested: false
     analyst: claude
   - doctrine_id: cn/mic2025
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Technology and automotive sector targeting in EU and UK
-      maps to multiple MIC2025 pillars (next-gen IT, NEV).
+      Technology and automotive targeting in the EU and UK maps to Made
+      in China 2025 priority sectors (next-generation IT, new-energy
+      vehicles). Plausible rather than higher because the source states
+      no purpose, never names MIC2025 or any industrial-policy goal, and
+      the same targeting is explicable as generic IP / commercial
+      espionage.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "MIC2025 industrial-policy collection: technology + automotive victims align with MIC2025 priority sectors (next-gen IT, NEV)."
+        - "Generic IP/commercial espionage: technology and automotive IP theft is a routine espionage objective that needs no MIC2025-specific reading."
     contested: false
     analyst: claude
   - doctrine_id: cn/15th-fyp
@@ -59,20 +99,35 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Industrial-system collection abroad is the natural
-      precondition for the 15th FYP modernized-industrial-system
-      pillar; the 2024 timing falls within the 14th-to-15th FYP
-      transition window.
+      Foreign industrial and technology collection is a precondition for
+      the 15th FYP modernized-industrial-system pillar, and the 2023-24
+      activity falls in the 14th-to-15th FYP transition window. Plausible
+      only: the 15th FYP was not yet published during the operations, the
+      source states no purpose, and this reading substantially overlaps
+      the MIC2025 industrial-policy reading above.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "15th FYP modernized-industrial-system precondition: industrial/technology collection abroad feeds the industrial-base modernization the pillar encodes."
+        - "MIC2025 / general industrial espionage: the same tech/automotive collection is already covered by the MIC2025 reading, with no distinct 15th-FYP purpose evidenced."
     contested: false
     analyst: claude
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/taiwan-island-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Taiwan victim presence in the campaign envelope.
+      Taiwan is one of the six victim geographies. Plausible only: the
+      report does not identify the sector or intelligence value of the
+      Taiwan victim(s) (its Asia-based victims were in media and
+      entertainment), states no cross-strait purpose, and Taiwan's
+      presence as one of several commercial-sector victim countries does
+      not by itself indicate island-collection tasking.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Taiwan-island collection: Taiwan is a named victim country and a standing PRC intelligence priority."
+        - "Incidental commercial targeting: the Taiwan victim(s) may be media/entertainment or technology firms hit within the broader commercial campaign, with no cross-strait political/military intelligence value established."
     contested: false
     analyst: claude
 targets:
@@ -82,9 +137,94 @@ targets:
     role: primary
   - target_id: sectors/ict
     role: primary
-  - target_id: sectors/transport/road
+  - target_id: sectors/manufacturing/automotive
     role: primary
-  - target_id: sectors/media
+  - target_id: sectors/media/entertainment
     role: primary
 sources:
   - mandiant/2024-07-18_apt41-dust
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs Mandiant / Google-TAG "APT41 Has Arisen From the DUST" (2024-07-18).
+    Raw snapshot mandiant__2024-07-18_apt41-dust.html reused from the 2026-06-24
+    audit; sha256 RE-VERIFIED 011424d4...6dd725f0 (full
+    011424d433c4eac3f6cc94305e55768df98a510b317a4eb826a2da306dd725f0), 391507 bytes.
+
+    [a] FACTS corrected to the report. Verbatim: "Mandiant has observed a sustained
+    campaign by the advanced persistent threat group APT41 targeting and
+    successfully compromising multiple organizations operating within the global
+    shipping and logistics, media and entertainment, technology, and automotive
+    sectors. The majority of organizations were operating in Italy, Spain, Taiwan,
+    Thailand, Turkey, and the United Kingdom. APT41 successfully infiltrated and
+    maintained prolonged, unauthorized access to numerous victims' networks since
+    2023." Tradecraft verbatim: "APT41 used a combination of ANTSWORD and BLUEBEAM
+    web shells for the execution of DUSTPAN to execute BEACON backdoor ... Later in
+    the intrusion, APT41 leveraged DUSTTRAP, which would lead to hands-on keyboard
+    activity. APT41 used publicly available tools SQLULDR2 for copying data from
+    databases and PINEGROVE to exfiltrate data to Microsoft OneDrive." DUSTPAN = "an
+    in-memory dropper written in C/C++"; DUSTTRAP = "a multi-stage plugin framework".
+    CORRECTIONS: (1) removed "government" from victim sectors — the string
+    "government" appears ONLY in a reference-link title ("...APT41 Targeting U.S.
+    State Governments", the 2022 USAHerds report), never as a DUST victim sector.
+    (2) Singapore DEMOTED from victim country to reconnaissance-only: "Mandiant has
+    detected reconnaissance activity directed towards similar organizations ... such
+    as Singapore. At the time of the publication, neither Mandiant nor Google TAG
+    have any indicators of these organizations being compromised." Six confirmed
+    victim countries: IT, ES, TW, TH, TR, UK. (3) removed the fabricated Mandiant
+    framing "assessed long-dwell strategic-collection posture ... aligned to
+    BRI-relevant logistics intelligence" — the strings "strategic", "Belt and Road",
+    "BRI", and "maritime" do NOT appear in the report (grep count 0 each); Mandiant
+    assesses no motive. (4) added SQLULDR2 / PINEGROVE->OneDrive exfil and the
+    DUSTTRAP "multi-stage plugin framework" description. Did NOT re-introduce
+    CCleaner (that compromise is APT17 per the actor file).
+
+    [b] ATTRIBUTION — "In collaboration with Google's Threat Analysis Group (TAG),
+    Mandiant has observed..." supports attributing_org "Mandiant + Google TAG";
+    Mandiant asserts the APT41 attribution without hedging (high). MSS caveat kept:
+    the report says only "Chinese state-sponsored espionage activity" / "China-based
+    actors" — no "Ministry of State Security" / "MSS" string (grep 0). Added
+    attribution notes that the cn/mss placement rests on the DOJ Sept-2020 "boast"
+    framing, not this report.
+
+    [c] DATES — published_on / disclosure 2024-07-18 correct. start_date 2023-01-01
+    is the best-estimate encoding of "since 2023" (no month given). end_date CHANGED
+    2024-07-18 -> null: the prior value duplicated the disclosure date; the report
+    describes prolonged/ongoing access ("over an extended period"; DUSTTRAP campaigns
+    "in 2024") and declares no operational end — reusing the disclosure date was a
+    conflation. initial_vector CHANGED phishing -> unknown: "phishing" does not
+    appear in the report (grep 0) and no initial-access vector is stated.
+
+    [d] DOCTRINE — the report states NO strategic purpose (no goal language; no
+    BRI / MIC2025 / 15th-FYP / Taiwan-reunification framing), so no link can be
+    attested; all four attesting_source_id remain null. Mandiant's own dual-mission
+    caveat ("Chinese state-sponsored espionage ... in addition to financially
+    motivated activity that may be outside of state control") means a commercial /
+    general-espionage reading competes with every state-doctrine reading. DOWNGRADED
+    cn/bri, cn/mic2025, and cn/taiwan-reunification from strongly_inferred ->
+    plausible (more than one strategic reading survives; the four-doctrine spread is
+    itself evidence no single reading dominates); cn/15th-fyp kept plausible. Added
+    inference_basis.alternatives to all four.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing): the source names the group
+    "APT41" + "Chinese state-sponsored", no service/unit.
+
+    [f] ACTOR_ID — cn/mss/apt41 resolves to atlas/actors/cn/apt41.yaml (id
+    cn/mss/apt41); no change.
+
+    TARGETS — replaced sectors/transport/road (road transport / connected-vehicle)
+    with sectors/manufacturing/automotive (OEM/parts) — the report's "automotive" =
+    manufacturers; and sectors/media -> sectors/media/entertainment to match "media
+    and entertainment". Kept transport/maritime (shipping), transport/logistics, ict
+    (technology).
+
+    RESIDUAL UNCERTAINTIES / FLAGS: exact start month within 2023 not given; the
+    report gives sector->region bands (shipping/logistics = Europe+ME;
+    media/entertainment = Asia) but no clean sector x country matrix, so no per-target
+    country codes assigned; the Taiwan victim's sector is unstated, weakening the
+    Taiwan-reunification link (kept plausible). FLAG for Kara: cn/15th-fyp/
+    modernized-industrial-system largely duplicates the cn/mic2025 industrial-policy
+    reading and the 15th FYP postdates the ops — a candidate for removal.

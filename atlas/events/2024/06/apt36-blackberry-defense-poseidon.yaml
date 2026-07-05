@@ -1,53 +1,180 @@
 id: 2024-06/apt36-blackberry-defense-poseidon
-name: BlackBerry documents Transparent Tribe Poseidon and ElizaRAT campaigns against Indian defense
-start_date: 2024-02-01
-disclosure_date: 2024-06-18
-end_date: 2024-06-18
+name: BlackBerry documents Transparent Tribe cross-platform (GLOBSHELL/PYSHELLFOX) espionage against Indian government, defense, and aerospace
+start_date: 2023-11-01
+disclosure_date: 2024-05-22
+end_date: 2024-04-30
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  BlackBerry's threat-research team published an analysis of
-  Transparent Tribe operations in 2024 documenting the Poseidon
-  loader and the newer ElizaRAT Windows implant family, deployed
-  alongside the continuing Crimson RAT staple. Targets included
-  Indian Ministry of Defence personnel and defense-research
-  organizations. ElizaRAT's emergence was a notable tradecraft
-  development: the cluster has historically reused Crimson RAT
-  rather than developing new core implants.
+  BlackBerry Threat Research published an analysis of Transparent
+  Tribe / APT36 activity spanning late 2023 to April 2024 targeting
+  the Indian government, defense (defense forces and defense
+  contractors), and aerospace sectors — including unnamed Bangalore
+  firms in aerospace, missile development, and earth-moving equipment
+  supply. The cluster leaned on cross-platform programming languages
+  (Python, Golang, Rust) and abused legitimate web services (Telegram,
+  Discord, Slack, Google Drive) for command-and-control and
+  exfiltration. The documented payloads were GLOBSHELL — a Python/ELF
+  file-exfiltration utility (variants bashd/basho/bashu plus Windows
+  win_service.exe / win_hta.exe) that harvests documents from the
+  /media directory — and PYSHELLFOX (implemented as bashm), which
+  exfiltrates the victim's Firefox browser session. BlackBerry notes
+  that Poseidon (a Golang agent compiling to Linux and macOS ELF
+  binaries, delivered via desktop-entry files) remains part of the
+  group's toolkit, though it did not confirm the attack vector in this
+  cluster. The focus on ELF binaries reflects the Indian government's
+  reliance on Linux systems.
 false_flag_risk: none
 summary: |
-  Notable for the introduction of ElizaRAT into Transparent Tribe's
-  tooling repertoire — the most significant tradecraft refresh
-  for the cluster in years. Continued targeting of Indian MoD
-  and defense-research equities maintains the canonical
-  Pakistani-asymmetric military-collection pattern. The Crimson
-  RAT remains the historical signature but the modernized chain
-  is operationally meaningful.
+  A tradecraft-modernization data point for the Pakistani-aligned
+  Transparent Tribe cluster: a pivot to cross-platform languages
+  (Python/Golang/Rust) and web-service-hosted C2 (Telegram, Discord,
+  Slack, Google Drive), with an emphasis on ELF/Linux payloads suited
+  to Indian government systems. The newly documented tooling —
+  GLOBSHELL (document exfiltration) and PYSHELLFOX (Firefox-session
+  theft) — extends the canonical APT36 arsenal rather than replacing
+  it. Continued targeting of Indian government, defense, and aerospace
+  equities (including missile-development suppliers) maintains the
+  cluster's Pakistani-asymmetric military-collection pattern.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: BlackBerry Threat Research
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-06-18
+    attribution_date: 2024-05-22
     attribution_source_id: blackberry/2024-06-18_transparent-tribe-elizarat
+    notes: |
+      BlackBerry: attributed to "Pakistani-based advanced persistent
+      threat group Transparent Tribe (APT36)"; "we assess with moderate
+      to high confidence [the campaigns] were indeed conducted by
+      Transparent Tribe" and "uncovered multiple artifacts that
+      substantiate our attribution". Named-actor level (group + nation
+      Pakistan; no ISI/service unit named — the actor is pk/unscoped).
+      attributing_org_confidence recorded as moderate (the floor of the
+      source's stated "moderate to high" range) to avoid over-attestation.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Indian MoD and defense-research targeting; canonical
-      pattern for the cluster.
+      Sustained collection against Indian government, defense forces,
+      defense contractors, and aerospace/missile-development targets by
+      the canonical Pakistani-aligned cluster fits the asymmetric-posture
+      military-collection pillar; BlackBerry frames the intent as
+      monitoring India's defense/aerospace modernization.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "BlackBerry: 'we surmise that Transparent Tribe has been carefully monitoring the efforts of the Indian defense forces as they strive to bolster and upgrade the country's aerospace defense capabilities'."
+        - "Victim set is Indian government, defense (forces + contractors), and aerospace, incl. Bangalore missile-development and aerospace firms — a military-collection target profile."
+        - "Transparent Tribe / APT36 is a long-running Pakistani-aligned espionage cluster whose documented mission is intelligence collection against Indian government and military equities."
+      ruled_out: "pk/asymmetric-posture-india/kashmir-political — the targeting is defense/aerospace technical-intelligence collection, not Kashmir political influence or messaging; no Kashmir-political nexus appears in the report."
+    counter_explanation: null
 targets:
-  - target_id: orgs/indian-mod
+  - target_id: sectors/government
     country: in
     role: primary
-  - target_id: orgs/indian-defense-research-various
+  - target_id: sectors/defense
+    country: in
+    role: primary
+  - target_id: sectors/aerospace/defense
     country: in
     role: primary
 sources:
   - blackberry/2024-06-18_transparent-tribe-elizarat
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION -> RE-SOURCE (badrabbit model). The event is REAL
+    but its cited source URL was a phantom and its headline malware were
+    misattributed. Audited against BlackBerry Threat Research "Transparent
+    Tribe Targets Indian Government, Defense, and Aerospace Sectors
+    Leveraging Cross-Platform Programming Languages" (publ. 2024-05-22).
+    Raw snapshot captured from the live Arctic Wolf mirror (Arctic Wolf
+    acquired BlackBerry's Cylance unit and hosts the identical report;
+    blogs.blackberry.com now redirects to its blog homepage and
+    archive.org is fetch-blocked). A curl of the recorded url is
+    byte-identical to the snapshot: sha256 12b84de2...778f70db, 394,365 B.
+
+    PHANTOM: prior source url was .../en/2024/06/transparent-tribe-targets-
+    indian-government-defense-and-aerospace (no "-sectors") — it 200s but
+    redirects to the BlackBerry blog HOMEPAGE ("Secure Communications
+    Blog"), carrying none of the article body (grep for poseidon/elizarat/
+    crimson/aerospace on the homepage = 0). Real article is the
+    .../2024/05/...-aerospace-sectors post (matches the existing archive_url).
+
+    [a] FACTS -- REWRITTEN. STRIPPED as uncarried: "ElizaRAT" (0 occurrences
+    in the source; ElizaRAT is a Check Point Oct/Nov-2024 discovery -- see
+    event 2024-11/checkpoint-elizarat-evolution-apt36) and the "Crimson RAT
+    staple" (<=1 incidental token; WebFetch of the article confirms Crimson
+    RAT "not mentioned" as a payload). The prior event's thesis ("introduction
+    of ElizaRAT ... most significant tradecraft refresh") was fabricated/
+    misattributed. ADDED the actual documented payloads GLOBSHELL (Python/ELF
+    file-exfil; variants bashd/basho/bashu + Windows win_service.exe/
+    win_hta.exe; harvests /media documents) and PYSHELLFOX (Firefox-session
+    exfil, as bashm), plus the cross-platform-language (Python/Golang/Rust)
+    and web-service abuse (Telegram/Discord/Slack/Google Drive) framing --
+    all verbatim in the source. POSEIDON corrected, NOT stripped: source says
+    "Transparent Tribe has employed desktop entry files to deliver Poseidon
+    payloads in ELF format. Poseidon is a Golang agent that compiles into
+    Linux and macOS x64 executables" and it "currently remains part of the
+    group's toolkit; however, we haven't confirmed the specific attack vector"
+    -- a real toolkit mention (Golang ELF Linux/macOS agent, vector
+    unconfirmed), NOT the "Poseidon loader" headline the event implied.
+    initial_vector phishing CONFIRMED ("spear-phishing emails" delivering
+    "malicious ZIP archives or links"; also ISO images / WinRAR).
+
+    [b] ATTRIBUTION -- source: "Pakistani-based advanced persistent threat
+    group Transparent Tribe (APT36)"; "we assess with moderate to high
+    confidence ... conducted by Transparent Tribe"; "multiple artifacts that
+    substantiate our attribution". DOWNGRADED attributing_org_confidence
+    high -> moderate (floor of the stated "moderate to high" range;
+    over-attestation guard). auspex_assessment concur retained.
+
+    [c] DATES -- FIXED. attribution_date/disclosure_date 2024-06-18 ->
+    2024-05-22 (JSON-LD datePublished 2024-05-22T19:11:03Z). Campaign window
+    per source "late 2023 to April 2024": start_date 2024-02-01 -> 2023-11-01
+    (best-estimate "late 2023"); added end_date 2024-04-30. NB the immutable
+    event id/path (2024-06) predates the true 2024-05-22 disclosure by a
+    month -- slug left unchanged per the stable-slug rule (cosmetic only).
+
+    [d] DOCTRINE -- pk/asymmetric-posture-india/military-collection kept at
+    strongly_inferred (NOT upgraded to attested: the source states the purpose
+    only as a hedged "surmise"). Added inference_basis.signals (incl. the
+    verbatim "surmise ... monitoring the efforts of the Indian defense forces
+    ... aerospace defense capabilities" quote) + ruled_out (kashmir-political
+    pillar). attesting_source_id null (correct for strongly_inferred).
+    perspective attacker-rationale (default; PK doctrine on a PK-attributed op
+    vs IN targets -- no cross-state mismatch).
+
+    [e] ATTRIBUTION_LEVEL -- set named-actor (was absent). Group + nation
+    Pakistan; no service unit named.
+
+    [f] ACTOR_ID -- pk/unscoped/transparent-tribe RESOLVES to
+    atlas/actors/pk/transparent-tribe.yaml (id: pk/unscoped/transparent-tribe;
+    the file path omits the "unscoped" segment but the id itself is correct --
+    demoted to unscoped 2026-06-24). No actor-file edit made.
+
+    TARGETS -- REMOVED orgs/indian-defense-research-various (DANGLING FK: no
+    such target file) and orgs/indian-mod (the source names no specific MoD
+    org -- only the government/defense/aerospace SECTORS + unnamed Bangalore
+    aerospace/missile firms). Set sector targets sectors/government,
+    sectors/defense, sectors/aerospace/defense (all country in). Added
+    incident_type espionage (document + browser-session exfil).
+
+    RESIDUALS / FLAGS: (1) source id + raw-snapshot filename retain the
+    misleading "2024-06-18...elizarat" slug (immutable -- not renamed). (2)
+    The co-citing event 2024-11/checkpoint-elizarat-evolution-apt36 asserts in
+    its summary that this report is the "BlackBerry June 2024 ElizaRAT
+    emergence finding" -- FALSE (this report is May 2024 and never mentions
+    ElizaRAT); flagged for the orchestrator to correct that event.

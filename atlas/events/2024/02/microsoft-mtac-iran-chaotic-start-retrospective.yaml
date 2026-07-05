@@ -7,14 +7,14 @@ incident_type:
   - influence-operation
   - intrusion
   - data-theft
-initial_vector: phishing
+initial_vector: unknown  # AUDIT 2026-07-04: was 'phishing' (unsupported) — MTAC retrospective names no phishing vector; multi-op report emphasising pre-existing access / opportunistic ops
 outcome_summary: |
   Microsoft Threat Analysis Center (MTAC) published a
   retrospective summarising Iranian-aligned cyber-and-influence
   operations in the first ~3 months of the Israel-Hamas war. The
   report tracks the increase from 9 active Iranian threat groups
-  targeting Israel during the first week of the war to 14 within
-  three weeks, and a 42% increase in inbound web traffic to
+  targeting Israel during the first week of the war to 14 by day
+  15 (two weeks in), and a 42% increase in inbound web traffic to
   Iranian state-affiliated news sites in week one (still 28%
   elevated three weeks in). The report's load-bearing operational
   attribution names the Shahid Kaveh Group (Storm-0784) as the
@@ -41,14 +41,20 @@ attributions:
     actor_id: null
     attributing_org: Microsoft Threat Analysis Center
     attributing_org_confidence: high
+    attribution_level: named-unit  # AUDIT 2026-07-04: MTAC names the IRGC (state unit) as operator — "the IRGC's Shahid Kaveh Group"; the group itself is a named-actor sub-cluster under that unit
     auspex_assessment: concur
     attribution_date: 2024-02-06
     attribution_source_id: microsoft/2024-02-06_iran-chaotic-start
     notes: |
-      Microsoft documents 14 Iran-aligned threat groups active
-      against Israel during the report window; this attribution
-      row reflects the IRGC service-level umbrella for the
-      Shahid Kaveh Group / Storm-0784 named in the report.
+      Microsoft tracks 9 Iranian groups active against Israel in
+      week one, rising to 14 by day 15; this attribution row
+      reflects the IRGC service-level umbrella for the Shahid
+      Kaveh Group named as the Nevatim-hoax operator. The blog
+      names "the IRGC's Shahid Kaveh Group"; the group's Microsoft
+      designator Storm-0784 is carried by the companion MTAC
+      report (microsoft/2024-02-06_iran-surges-cei-hamas). MTAC
+      also names MOIS as running other personas (Malek Team,
+      Homeland Justice) — not captured as a separate row here.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
@@ -59,6 +65,9 @@ doctrine_links:
       Solomon persona laundering. False Nevatim claim is the
       canonical operational example of the pillar.
     attesting_source_id: microsoft/2024-02-06_iran-chaotic-start
+    inference_basis:
+      source_id: microsoft/2024-02-06_iran-chaotic-start
+      source_quote: "the IRGC's Shahid Kaveh Group used customized ransomware to conduct cyberattacks against security cameras in Israel. It then used one of its cyber personas, 'Soldiers of Solomon,' to falsely claim it had ransomed security cameras and data at Nevatim Air Force Base"
     contested: false
     analyst: claude
   - doctrine_id: ir/resistance-axis
@@ -66,11 +75,17 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      MTAC documents a coordinated multi-group multi-language
-      information-warfare push aligned with the Hamas operational
-      narrative; matches the Resistance-Axis information-warfare
-      pillar definition.
+      MTAC documents a coordinated multi-group cyber-enabled
+      information-warfare surge (sockpuppet networks, an AI-
+      generated news anchor, amplification via Iranian state
+      media) explicitly framed as intended to help Hamas and
+      weaken Israel — matching the Resistance-Axis information-
+      warfare pillar. (Source does not itself call the operations
+      multilingual; that descriptor is dropped as unsupported.)
     attesting_source_id: microsoft/2024-02-06_iran-chaotic-start
+    inference_basis:
+      source_id: microsoft/2024-02-06_iran-chaotic-start
+      source_quote: "Iranian government-aligned actors have launched a series of cyberattacks and influence operations (IO) intended to help the Hamas cause and weaken Israel and its political allies and business partners"
     contested: false
     analyst: claude
   - doctrine_id: ir/asymmetric-warfare
@@ -82,6 +97,12 @@ doctrine_links:
       directed at Israeli civilian targets fits the asymmetric-
       warfare civilian-CII-coercion pillar pattern.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target: Israeli civilian critical infrastructure — IRGC-linked Cyber Avengers' claim against an Israeli electric company, ransomware against Israeli security cameras, and (expanded scope) Israeli-made PLCs including a Pennsylvania water authority."
+        - "Timing: onset of the Israel-Hamas war, Microsoft-tracked group count surging 9 to 14 by day 15."
+        - "Actor-mission: IRGC/MOIS-run coercive and destructive cyber personas, consistent with civilian-CII coercion rather than quiet collection."
+      ruled_out: "Pure espionage / intelligence collection — rejected because the documented operations were destructive and coercive (customized ransomware, public false claims, PLC disruption), not covert access for exfiltration."
     contested: false
     analyst: claude
 targets:
@@ -96,3 +117,82 @@ targets:
     role: primary
 sources:
   - microsoft/2024-02-06_iran-chaotic-start
+  - microsoft/2024-02-06_iran-surges-cei-hamas
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against the cited MTAC reporting; both sources snapshotted. NOT a
+    phantom — the cited "On the Issues" post is the real article ("Iran
+    accelerates cyber ops against Israel from chaotic start", Clint Watts /
+    GM MTAC, Feb 6 2024) and carries the load-bearing claims.
+    RAW EVIDENCE:
+      - microsoft/2024-02-06_iran-chaotic-start (blog, tier secondary,
+        PRESERVED) sha256 a2555b86…156c532e, 181353 bytes.
+      - microsoft/2024-02-06_iran-surges-cei-hamas (companion MTAC report,
+        tier primary, ADDED this audit) sha256 69e2a044…f0bbd66b, 246883 bytes.
+
+    [a] FACTS — all now source-carried. Blog verbatim: "Iran's activity
+    quickly grew from nine Microsoft-tracked groups active in Israel during
+    the first week of the war to 14, two weeks into the war" / "rise from
+    nine in the first days to 14 by day 15"; report: "…nine Iranian groups
+    active in targeting Israel; that number grew to 14 groups by day 15."
+    CORRECTION: outcome_summary said the surge to 14 was "within three weeks"
+    → fixed to "by day 15 (two weeks in)" — the "three weeks" was a conflation
+    with the traffic stat. Traffic verbatim: "A 42% increase in traffic, in
+    the first week of the war… Even three weeks later, this traffic was still
+    28% above pre-war levels" (outcome_summary's "28% … three weeks in"
+    matches the blog's own bullet; note the blog body elsewhere says "one
+    month into the war remained 28%" — internal source inconsistency, event
+    follows the bullet). Nevatim hoax verbatim: "the IRGC's Shahid Kaveh Group
+    used customized ransomware …security cameras in Israel. It then used one
+    of its cyber personas, 'Soldiers of Solomon,' to falsely claim it had
+    ransomed …Nevatim Air Force Base. Examination of the security footage
+    …reveals it was from a town north of Tel Aviv with a Nevatim street, not
+    the airbase" ✓. CORRECTION: initial_vector 'phishing' → 'unknown' (grep
+    'phish' = 0 in raw; multi-op retrospective emphasising pre-existing
+    access). "Storm-0784": NOT in the cited blog (grep = 0) but VERIFIED real,
+    not an AI hallucination — the companion MTAC report states "the IRGC's
+    Shahid Kaveh Group, which Microsoft tracks as Storm-0784…"; rather than
+    strip a true fact I ADDED that report as a primary source and kept the
+    designator (CISA AA26-097A, 2026, independently lists Storm-0784 as a
+    Shahid Kaveh alias). TARGETS (il, all primary) kept: government (Nevatim
+    AFB / anti-Israel-state ops), critical-infrastructure (Cyber Avengers'
+    Israeli electric-company claim, security cameras, Israeli-made PLCs),
+    media (the IO/information environment — report is IO-centric); media is
+    the softest but defensible for an influence-operation event.
+
+    [b] ATTRIBUTION — service_id ir/irgc, actor_id null. Blog names the actor
+    at unit level ("the IRGC's Shahid Kaveh Group"); attributing_org_confidence
+    high is honest (stated as fact, not hedged). auspex_assessment concur kept.
+
+    [c] DATES — both sources published_on 2024-02-06 = actual pub date (byline
+    "Feb 6, 2024") ✓; start_date 2023-10-07 (war onset) ✓; disclosure_date
+    2024-02-06 ✓; end_date 2024-01-31 is a report-window estimate (latest
+    dated op cited is late-Dec Albania / Nov 25 PA water authority; report
+    frames "Three months on") — kept, flagged as estimate.
+
+    [d] DOCTRINE_LINKS — persona-laundering (attested, upheld): source shows a
+    state organ operating a deniable hacktivist persona that makes a false
+    strategic-target claim; added inference_basis.source_quote. resistance-axis/
+    information-warfare (attested, upheld): source explicitly states the goal —
+    "intended to help the Hamas cause and weaken Israel" — source_quote added;
+    CORRECTION: reasoning dropped "multi-language" (grep language/Arabic/Hebrew
+    = 0; descriptor echoed the pillar name, not the source). asymmetric-warfare/
+    civilian-cii-coercion (strongly_inferred, honest): source shows Israeli-CII
+    targeting but states no coercion purpose; added inference_basis signals[] +
+    ruled_out (espionage). All three pillar FKs resolve.
+
+    [e] ATTRIBUTION_LEVEL — was missing; set named-unit (MTAC names the IRGC
+    state unit as operator; Shahid Kaveh Group is a named-actor cluster beneath
+    it).
+
+    [f] ACTOR_ID — actor_id null (allowed); service_id ir/irgc resolves.
+    FLAGS: (1) no actor file exists for the Shahid Kaveh Group / Storm-0784
+    (candidate id ir/irgc/shahid-kaveh) — orchestrator may wish to create one.
+    (2) MTAC also attributes personas to MOIS (Malek Team, Homeland Justice);
+    only the IRGC umbrella row is modelled — a MOIS row could be added.
+    RESIDUAL: end_date is a window estimate; source has an internal 28% "three
+    weeks" vs "one month" inconsistency (event follows the bullet).

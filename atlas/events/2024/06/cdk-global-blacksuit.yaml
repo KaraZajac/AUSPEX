@@ -10,51 +10,171 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   CDK Global (US auto-dealer management SaaS, ~15,000 dealership
-  customers) suffered a BlackSuit / Royal ransomware intrusion
-  forcing a multi-week outage of dealership operations across
-  North America. CDK reportedly paid ~USD 25M in Bitcoin ransom.
-  Affected dealerships reverted to paper records; estimated
-  industry-wide impact ~USD 1B (Anderson Economic Group
-  estimate). Q2 2024 US auto sales sharply impacted.
+  customers across North America) suffered a BlackSuit / Royal
+  ransomware intrusion in mid-June 2024 that forced a multi-week
+  outage of dealership operations; affected dealerships reverted to
+  pen-and-paper records. CDK reportedly paid ~USD 25M in Bitcoin
+  (387 BTC traced to a BlackSuit-controlled wallet on 2024-06-21;
+  CDK did not confirm payment). Anderson Economic Group estimated
+  ~USD 1.02B in direct dealer losses and ~56,200 lost new-vehicle
+  sales over the June 19 – July 5 disruption window; CDK restored
+  substantially all dealers by ~2024-07-04.
 quantified_impact:
   dealerships_affected: 15000
   reported_ransom_paid_usd: 25000000
   downtime_weeks: 2
-  industry_impact_usd: 1000000000
+  industry_impact_usd: 1020000000
 false_flag_risk: none
 summary: |
-  Most economically consequential single SaaS-supply-chain
-  ransomware on US public record after Change Healthcare. Royal /
-  BlackSuit is a direct Conti splinter that re-uses Conti-era
-  tradecraft per the CISA AA23-061A Royal advisory: phishing
-  with weaponized PDF / callback-themed lures, Cobalt Strike
-  beacons, the Qakbot / IcedID / Truebot loader ecosystem,
-  credential dumping with Mimikatz, lateral movement on valid
-  credentials, PsExec and RDP, abuse of legitimate remote-
-  management tools (AnyDesk, ConnectWise ScreenConnect), data
-  exfiltration with rclone to MEGA, and a partial-encryption
-  ChaCha20-based encryptor with .royal and .blacksuit extensions.
-  The CDK intrusion forced a multi-week outage of dealership
-  operations across North America and reinforced the AUSPEX
-  criminal-state-symbiosis pattern at scale.
+  With an estimated ~USD 1.02B in industry-wide dealer losses
+  (Anderson Economic Group), the CDK Global outage was among the
+  most economically consequential single SaaS / supply-chain
+  ransomware incidents on US public record (comparable in scale to
+  the 2024 Change Healthcare attack). Royal / BlackSuit is a
+  post-Conti splinter whose general tradecraft the CISA
+  #StopRansomware Royal / BlackSuit advisory (AA23-061A) documents:
+  phishing for initial access, Cobalt Strike, credential dumping
+  with Mimikatz, lateral movement via PsExec and RDP, abuse of
+  legitimate remote-management tools (AnyDesk, ScreenConnect), data
+  exfiltration with rclone, and a partial-encryption encryptor
+  appending .royal and .blacksuit extensions. CDK never disclosed
+  the specific initial-access vector used against it
+  (initial_vector: unknown); the BlackSuit attribution rests on
+  crypto-tracing of the ~USD 25M ransom (TRM Labs, reported by CNN /
+  CyberScoop), not a self-claim or a government / vendor named-actor
+  attribution.
 attributions:
   - actor_id: criminal/royal
-    attributing_org: Mandiant + AdvIntel + journalism consensus
+    attributing_org: TRM Labs (crypto-tracing) via CNN / CyberScoop journalism
     attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2024-06-25
-    attribution_source_id: bloomberg/2024-06-21_cdk-blacksuit-attribution
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Russian-tolerated post-Conti splinter; opportunistic target.
-    contested: false
-    analyst: claude
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-07-11
+    attribution_source_id: cnn/2024-07-11_cdk-blacksuit-25m-ransom
+    notes: |
+      Press / crypto-tracing-level attribution, not a self-claim or a
+      govt / vendor named-actor call. TRM Labs traced ~387 BTC (~USD 25M)
+      sent 2024-06-21 to a wallet "controlled by hackers affiliated with
+      ... BlackSuit" (CNN 2024-07-11), corroborated independently by
+      CyberScoop 2024-07-12 ("wallet likely controlled by BlackSuit"). The
+      receiving address shared history with "known BlackSuit and Wizard
+      Spider victim payments" (Wizard Spider = Conti parent crew). BlackSuit
+      named as the group (named-actor); no specific unit / operator. Moderate
+      confidence, concur-with-caveat — TRM's "findings do not conclusively
+      prove that the payment came from CDK," and CDK never confirmed a payment.
+doctrine_links: []
 targets:
   - target_id: orgs/cdk-global
+    country: us
     role: primary
 sources:
-  - bloomberg/2024-06-21_cdk-blacksuit-attribution
+  - cnn/2024-07-11_cdk-blacksuit-25m-ransom
+  - cyberscoop/2024-07-12_cdk-blacksuit-25-million
+  - andersoneconomicgroup/2024-07-15_cdk-dealer-losses-1-02b
+  - cnn/2024-06-30_cdk-outage-car-dealers
+  - cisa/2023-03-02_aa23-061a-royal-advisory
+notes: |
+  Doctrine link intentionally EMPTY (doctrine_links: []). The prior
+  ru/sanctions-response-2022 / criminal-proxy-mobilization link (plausible)
+  was REMOVED on audit: the actor criminal/royal is a stateless profit-
+  criminal crew with NO documented Russian-state nexus — its own
+  2026-06-24/25 audit demoted it out of the RU bucket to criminal/ and
+  dropped exactly this doctrine alignment as unsourced (the pillar roster
+  never names Royal / BlackSuit; the CISA advisories document no state
+  nexus). No cited source states any state-strategic purpose for the CDK
+  op; every source frames it as opportunistic financial extortion. Editorial
+  context only (not a doctrine claim): Royal / BlackSuit is a post-Conti
+  splinter and fits AUSPEX's criminal-lineage theme, but the CDK hit is an
+  opportunistic profit target, not a source-supported instrument of Russian
+  sanctions-response doctrine. FLAG for Kara: if editorial policy wants
+  post-Conti crews tagged to the RU criminal-proxy pillar, restore as a
+  plausible link with honest lineage-based inference_basis.alternatives —
+  do not re-add it as attested.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION -> RE-SOURCED (badrabbit model). The sole prior
+    citation, bloomberg/2024-06-21_cdk-blacksuit-attribution, has url: null
+    (a 2026-05-28 audit found the Bloomberg slug 404s, no wayback) — an
+    unsnapshottable/unverifiable source, and its framing overstated what
+    Bloomberg actually published. CDK Global June-2024 is a real, heavily
+    documented incident, so it was re-sourced to verifiable reporting and the
+    dead Bloomberg record removed from sources[]/attribution_source_id and
+    annotated as a RETIRE candidate (STEP 0c). All raws captured live
+    (curl HTTP 200) and hashed; sha256 first8...last8 + bytes below.
+
+    [a] FACTS — all now source-carried:
+      * ~15,000 dealerships across North America: CNN 2024-06-30 "software to
+        nearly 15,000 car dealerships across North America, according to CDK";
+        CyberScoop "roughly 15,000 car dealerships in the U.S."
+      * ~USD 25M / 387 BTC ransom on 2024-06-21 (reportedly CDK): CNN
+        2024-07-11 "about 387 bitcoin — then the equivalent of roughly $25
+        million — was sent to a cryptocurrency account controlled by hackers
+        affiliated with ... BlackSuit"; headline "CDK almost certainly paid a
+        $25 million ransom". Kept the honest "reportedly"/"did not confirm"
+        hedge (TRM "findings do not conclusively prove that the payment came
+        from CDK").
+      * multi-week outage + reversion to paper + restored ~2024-07-04: CNN
+        2024-06-30 (outage began "last Wednesday"=Jun 19, "return to pen and
+        paper records"); CNN 2024-07-11 "'substantially all' of the nearly
+        15,000 ... dealerships ... were back online" (a week before Jul-11).
+      * ~USD 1.02B industry impact + ~56,200 lost sales: Anderson Economic
+        Group 2024-07-15 "total direct losses to franchised auto dealers in
+        the three calendar weeks that included June 19 and ran through July 5
+        reached $1,020 million ... approximately 56,200 new unit sales ...
+        lost". CORRECTED industry_impact_usd 1,000,000,000 -> 1,020,000,000 to
+        match the AEG primary figure; reworked outcome_summary/quantified to it.
+      * TRADECRAFT: verified the summary's TTP list against the AA23-061A raw
+        (hash re-verified vs source record, reuse). STRIPPED items NOT carried
+        by AA23-061A: "weaponized PDF / callback-themed lures", "Qakbot /
+        IcedID / Truebot loader ecosystem", "rclone to MEGA" (kept rclone),
+        "ChaCha20-based" encryptor, and "ConnectWise" (kept ScreenConnect).
+        KEPT (all grep-confirmed in the advisory): phishing, Cobalt Strike,
+        Mimikatz, PsExec, RDP, AnyDesk, ScreenConnect, rclone, partial
+        encryption, .royal + .blacksuit extensions, Conti lineage. Added
+        cisa/2023-03-02_aa23-061a-royal-advisory to sources[] so the retained
+        tradecraft is carried. Softened the "MOST economically consequential
+        ... after Change Healthcare" superlative to a hedged editorial
+        comparator anchored to the sourced $1.02B.
+    [b] ATTRIBUTION — attributing_org "Mandiant + AdvIntel + journalism
+        consensus" was UNSUPPORTED (neither Mandiant nor AdvIntel names the CDK
+        attribution in any reachable source) -> corrected to "TRM Labs (crypto-
+        tracing) via CNN / CyberScoop journalism", the actual attributors.
+        auspex_assessment concur -> concur-with-caveat (press/crypto-tracing
+        level, hedged; CDK unconfirmed). attributing_org_confidence kept
+        moderate. attribution_source_id repointed bloomberg(dead) -> CNN
+        2024-07-11.
+    [c] DATES — start/disclosure 2024-06-19, end 2024-07-04 all corroborated
+        (CNN outage-began-Jun-19; substantially-all-restored ~Jul-4). Source
+        published_on set to actual pub dates (CNN 2024-07-11, CyberScoop
+        2024-07-12, AEG 2024-07-15, CNN 2024-06-30), not the campaign month.
+        attribution_date 2024-06-25 -> 2024-07-11 to match the verifiable
+        crypto-tracing attribution (the earlier date rode on the dead Bloomberg).
+    [d] DOCTRINE_LINKS — REMOVED the ru/sanctions-response-2022 /
+        criminal-proxy-mobilization plausible link -> doctrine_links: []. No
+        source states a Russian-state purpose; actor is stateless criminal/
+        with the same alignment explicitly dropped at actor level as unsourced;
+        the malformed link also lacked the required inference_basis.alternatives.
+        Rationale + restore-path moved to event notes and FLAGGED for Kara.
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (sources name the
+        group "BlackSuit"; no unit/individual named).
+    [f] ACTOR_ID — criminal/royal RESOLVES (canonical "Royal / BlackSuit";
+        BlackSuit is an equivalent-confidence rebrand alias). Confirmed there
+        is correctly NO separate criminal/blacksuit file. Actor record is
+        well-audited (2026-06-24/25); no actor edit made.
+
+    SOURCE SNAPSHOTS (sha256 first8...last8 | bytes):
+      cnn/2024-07-11_cdk-blacksuit-25m-ransom  8bde38c4...8b19307d | 5,136,871
+      cyberscoop/2024-07-12_cdk-blacksuit-25-million 48d36c12...a4ad251f | 106,952
+      andersoneconomicgroup/2024-07-15_cdk-dealer-losses-1-02b d70f4a48...5b868a0c | 101,080
+      cnn/2024-06-30_cdk-outage-car-dealers  e5a59520...0f94e54d | 5,645,268
+      cisa/2023-03-02_aa23-061a-royal-advisory 79e6d151...112f91bd | 169,157 (hash re-verified, reuse)
+
+    RESIDUALS: (1) target orgs/cdk-global.yaml has sources: [] — flagged to
+    orchestrator (target-registry edits out of this audit's scope). (2)
+    downtime_weeks kept at 2 (widely reported ~two-week core outage); AEG's
+    loss window is the fuller 3 calendar weeks (Jun 19 – Jul 5). (3) Bloomberg
+    record left on disk, annotated as RETIRE candidate (deletion is Kara's).

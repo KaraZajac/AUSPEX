@@ -8,17 +8,21 @@ incident_type:
   - insider
 initial_vector: insider
 outcome_summary: |
-  Approximately USD 62M (17,400 ETH) drained from the
+  Approximately USD 62.5M (17,413 ETH) drained from the
   Munchables game-finance protocol on Blast L2 by an insider
-  developer with privileged contract-deployment access.
-  ZachXBT on-chain investigation within hours identified the
-  attacker as a DPRK-origin IT worker who had been hired
-  into the Munchables team under a Western pseudonym; the
-  attacker subsequently returned the funds voluntarily after
-  on-chain identification and public attribution.
+  developer whose smart contracts granted them discretionary
+  power to move funds; the attacker manipulated the contract
+  and transferred stored user funds before upgrading the
+  platform's smart contracts. ZachXBT's contemporaneous
+  on-chain investigation attributed the drain to a hired North
+  Korean developer (GitHub "Werewolves0493") — the canonical
+  DPRK IT-worker insider pattern. After public attribution the
+  developer unconditionally relinquished the private keys and
+  the funds were recovered in full (Munchables: "all user
+  funds are safe").
 quantified_impact:
-  usd_stolen: 62000000
-  usd_recovered: 62000000
+  usd_stolen: 62500000
+  usd_recovered: 62500000
   asset_classes:
     - ETH
 false_flag_risk: none
@@ -29,7 +33,7 @@ summary: |
   compromise victims externally via social engineering,
   the IT-worker fraud cluster compromises them internally
   via hired-developer placements. The Munchables case is
-  the highest-dollar publicly-confirmed instance of the
+  among the highest-dollar publicly-reported instances of the
   internal-pivot variant in 2024 and illustrates the
   doctrinal link between the IT-worker revenue stream
   (wage fraud) and direct asset theft from the same victim
@@ -39,17 +43,26 @@ summary: |
 attributions:
   - actor_id: kp/it-worker-fraud
     attributing_org: ZachXBT (independent OSINT)
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur
-    attribution_date: 2024-03-27
+    attribution_date: 2024-03-26
     attribution_source_id: zachxbt/2024-03-27_munchables-dprk-developer
     notes: |
-      ZachXBT on-chain identification of the attacker
-      address as a DPRK-origin IT-worker developer hired
-      under a Western pseudonym. Pattern subsequently
-      attested by Treasury sb0416 (May 2024) and the
-      14-national DOJ indictment (December 2024) for the
-      broader DPRK IT-worker ecosystem.
+      ZachXBT's on-chain identification of the attacker as a
+      hired North Korean developer (GitHub "Werewolves0493"),
+      corroborated by CoinDesk and The Block. Confidence set to
+      moderate (was high): the snapshotted contemporaneous
+      reporting hedges ZachXBT's March attribution — "likely
+      North Korean, based on their GitHub commit activity"
+      (CoinDesk) / "might be linked to North Korean hackers, but
+      this remains unclear" (The Block). ZachXBT firmed it in a
+      2024-07 follow-up naming "four other DPRK IT workers who
+      were on the Munchables [team]". attribution_level=nation:
+      ZachXBT named the DPRK IT-worker scheme, not a specific
+      service/APT. The broader IT-worker pattern is separately
+      attested by Treasury sb0416 (May 2024) and the 14-national
+      DOJ indictment (Dec 2024), neither of which names Munchables.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
@@ -64,11 +77,102 @@ doctrine_links:
       siphoning) is operationally distinct but doctrinally
       identical — both are revenue streams from the same
       placement cluster.
+    inference_basis:
+      signals:
+        - "ZachXBT attributes the Munchables drain to a North Korean developer hired into the team under a Western-style GitHub persona — the insider-placement variant of the DPRK IT-worker fraud cluster (kp/it-worker-fraud)."
+        - "The cluster's proceeds are documented by Treasury sb0416 (May 2024) and the DOJ 14-national indictment (Dec 2024); OFAC standardized language ties DPRK revenue-generation to the WMD and ballistic-missile programs that the 8th-Congress revenue-aggregation pillar encodes."
+        - "Actor bureaucratic ownership (Office 39 / Munitions Industry Department per OFAC) routes such proceeds to weapons procurement — the terminal goal of this doctrine."
+      ruled_out: "Ordinary non-state criminal insider theft — ruled out by ZachXBT's DPRK-IT-worker attribution and the actor's source-documented state ownership; no serious competing strategic reading survives. Not attested: no Munchables-specific source states the WMD-financing purpose (ZachXBT names only the actor)."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/munchables
     role: primary
-    outcome: ~$62M drained; voluntarily returned ~24 hours later.
+    outcome: ~$62.5M (17,413 ETH) drained; voluntarily returned in full within ~24 hours.
 sources:
   - zachxbt/2024-03-27_munchables-dprk-developer
+  - coindesk/2024-03-27_munchables-north-korea-linked-exploiter
+  - theblock/2024-03-27_munchables-recovers-62m
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: partial
+  notes: |
+    Phantom re-source (badrabbit model). The event's sole source
+    was zachxbt/2024-03-27_munchables-dprk-developer with url:null —
+    nothing to snapshot. The incident is real and well documented,
+    so it was RE-SOURCED: ZachXBT's actual 2024-03-26 X post is now
+    the attribution url (x.com bot-walls the fetcher → JS shell
+    only, NO content hash), and two contemporaneous secondary
+    reports were created + snapshotted to carry every claim:
+      - CoinDesk 2024-03-27 "Munchables Exploited for $62M, North
+        Korea-Linked Exploiter Returns Private Keys" — sha256
+        8fc7e660…a782b6db, 494,165 bytes.
+      - The Block 2024-03-27 "Munchables recovers $62 million taken
+        in security breach" — sha256 7796b893…43909c69, 397,089 bytes.
+
+    [a] FACTS — corrected + all now source-carried. Amount tightened
+    62M→62.5M (17,400→17,413 ETH): CoinDesk "a loss of $62.5 million
+    worth of ether (ETH)"; The Block/BlockSec "A total of 17,412.6
+    ETH, worth about $62.8 million, was redirected to a 2/3 multisig
+    wallet" (usd_stolen/recovered set 62.5M; $62.5–62.8M spread is
+    ETH-price timing, full recovery). Insider vector: The Block "The
+    project's smart contracts had granted the developer in question
+    the power to transfer funds at their discretion"; CoinDesk "The
+    attacker manipulated a contract and transferred stored user funds
+    before upgrading the platform's smart contracts". Return: The
+    Block "the developer had agreed to unconditionally relinquish the
+    private keys … 'All user funds are safe,' Munchables stated";
+    CoinDesk "the developer had shared all private keys to recover
+    the funds". REMOVED the storage-slot / self-assign-1M-ETH
+    mechanism from prose — it appears only in un-snapshotted
+    Cointelegraph/0xQuit reporting, not in either cited source.
+    Softened unsourced superlative "highest-dollar publicly-confirmed"
+    → "among the highest-dollar publicly-reported".
+
+    [b] ATTRIBUTION — DOWNGRADED high→moderate. Snapshotted sources
+    hedge: CoinDesk "ZachXBT said the attacker was likely North
+    Korean, based on their GitHub commit activity … listed on GitHub
+    as 'Werewolves0493' and allegedly worked for the Munchables
+    team"; The Block "ZachXBT suggested the involved individual might
+    be linked to North Korean hackers, but this remains unclear".
+    ZachXBT's own posts are more assertive ("North Korean dev";
+    2024-07 "four other DPRK IT workers who were on the Munchables")
+    but are on bot-walled X. attribution_source_id kept on the
+    ZachXBT record (he is the attributor); actor kp/it-worker-fraud
+    unchanged and well-matched (ZachXBT's "DPRK IT Worker" framing +
+    the hired-insider vector).
+
+    [c] DATES — attribution_date 2024-03-27→2024-03-26 (ZachXBT's
+    embedded attribution tweet is dated "March 26, 2024" per
+    CoinDesk). start/disclosure 2024-03-26, end 2024-03-27 (return)
+    consistent with CoinDesk pub Mar 27 03:25, updated 18:50. New
+    source published_on: both 2024-03-27; ZachXBT record repaired to
+    2024-03-26 + retrieved_on 2026-07-04.
+
+    [d] DOCTRINE_LINKS — confidence strongly_inferred is correct and
+    kept: no Munchables-specific source states the WMD/ballistic-
+    missile-financing goal (ZachXBT names only the actor), so NOT
+    attested; no attesting_source_id (correct). Added inference_basis
+    {signals[], ruled_out} triangulating the WMD-revenue reading and
+    ruling out non-state criminal theft.
+
+    [e] ATTRIBUTION_LEVEL — was missing; set to `nation` (ZachXBT
+    named DPRK / the IT-worker scheme, not a specific service or APT
+    codename).
+
+    [f] ACTOR_ID — kp/it-worker-fraud resolves (atlas/actors/kp/
+    it-worker-fraud.yaml); doctrine + pillar + program + target FKs
+    all resolve. No actor-file edits.
+
+    Residual uncertainty: the DPRK attribution originates with ZachXBT
+    (on-chain OSINT), whose primary post is un-snapshottable (X
+    bot-wall / deleted Telegram); it is corroborated only as reported
+    by the two snapshotted secondaries, which hedge it. No govt/tier-1
+    source names Munchables specifically. Level=partial (not full):
+    the factual claims (amount/vector/return/dates) are fully carried
+    by the two hash-verified snapshots, but the load-bearing DPRK
+    attribution's origin source (ZachXBT's X post / deleted Telegram)
+    is bot-walled/un-snapshottable and is only mirror-corroborated —
+    hedged — in the snapshotted secondaries.

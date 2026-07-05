@@ -1,66 +1,221 @@
 id: 2024-04/apt29-diplomatic-phishing-europe
-name: APT29 sustained diplomatic phishing of European foreign ministries (WINELOADER)
-start_date: 2023-01-01  # earliest observed in disclosure
-disclosure_date: 2024-04-24
+name: "APT29 (SVR) WINELOADER spearphishing — German political parties and European diplomatic entities"
+start_date: 2024-01-01  # month anchor: WINELOADER "first observed in operational use in late January 2024" (Mandiant); the CDU-themed German political-party campaign ran late February 2024
+disclosure_date: 2024-03-22  # Mandiant WINELOADER / German-political-parties report. The event id's legacy "2024-04" prefix derives from a since-corrected 2024-04-24 date and is retained per the stable-id rule.
 end_date: null
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Mandiant disclosed an ongoing APT29 / SVR phishing campaign
-  targeting diplomatic and government entities across NATO Europe,
-  particularly ministries of foreign affairs and embassies, using
-  lure documents themed around inter-state diplomatic
-  correspondence. Tradecraft evolved from earlier ROOTSAW staging
-  toward WINELOADER and successor loaders that abuse legitimate
-  binaries via DLL search-order hijacking. Sustained collection
-  continued through the active invasion phase.
+  In late February 2024 Mandiant identified APT29 (SVR) running a
+  spearphishing campaign against German political parties, using emails
+  posing as an invite to a 01 March dinner reception bearing the logo of
+  the Christian Democratic Union (CDU). The German-language lure linked to
+  a malicious ZIP holding a ROOTSAW (EnvyScout) dropper that delivered a
+  second-stage CDU-themed decoy and the WINELOADER backdoor, invoked by
+  DLL side-loading into a legitimate Microsoft binary (sqldumper.exe).
+  WINELOADER had first been seen in operational use in late January 2024
+  against likely diplomatic entities in Czechia, Germany, India, Italy,
+  Latvia, and Peru. Mandiant called the political-party targeting a
+  departure from — and the first observed instance beyond — this cluster's
+  usual remit of governments, foreign embassies, and diplomatic missions,
+  judging it a broad threat to European and other Western political
+  parties given Moscow's interest in changing Western political dynamics
+  related to Ukraine.
 false_flag_risk: none
 summary: |
-  Continues the SVR's canonical European foreign-ministry mission
-  through the post-invasion period, but with material tradecraft
-  evolution: APT29 moved from lure-and-document staging toward
-  legitimate-binary abuse, ZIP-shipped payloads, and rapid
-  domain-rotation infrastructure to reduce signature exposure as
-  Western telemetry on prior tooling matured. Pairs with the
-  parallel APT29 Microsoft Midnight Blizzard intrusion (Jan 2024
-  disclosure) and the January 2024 NCSC + Five Eyes SVR cloud-
-  access advisory.
+  APT29's diplomatic-themed spearphishing kept evolving through the
+  post-invasion period. Mandiant's September-2023 "Backchannel Diplomacy"
+  reporting shows the cluster prioritising European Ministries of Foreign
+  Affairs, embassies, and NATO/EU-associated diplomatic entities,
+  delivering its mainstay ROOTSAW first stage from actor-controlled and
+  compromised websites with follow-on ZIP payloads. By early 2024 the same
+  ROOTSAW delivery chain was carrying a new backdoor, WINELOADER, and the
+  actor extended its collection from diplomatic missions to political
+  parties (the CDU-themed German campaign of late February 2024). Sits, as
+  corpus context, alongside the January-2024 APT29 Microsoft "Midnight
+  Blizzard" corporate intrusion and the February-2024 Five Eyes SVR
+  cloud-access advisory (AA24-057A).
 attributions:
   - actor_id: ru/svr/apt29
-    attributing_org: Mandiant
+    attributing_org: Mandiant (Google Cloud)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
-    attribution_date: 2024-04-24
-    attribution_source_id: mandiant/2024-04-24_apt29-evolving-diplomatic-phishing
+    attribution_date: 2024-03-22
+    attribution_source_id: mandiant/2024-03-22_apt29-wineloader-german-political-parties
+    notes: |
+      Mandiant (2024-03-22), verbatim: "In late February 2024, Mandiant
+      identified APT29 — a Russian Federation backed threat group linked by
+      multiple governments to Russia's Foreign Intelligence Service (SVR) —
+      conducting a phishing campaign targeting German political parties."
+      named-unit: the service (SVR) is named, not merely the APT29 cluster;
+      high confidence (Mandiant "identified"). Corroborated by Mandiant
+      "Backchannel Diplomacy" (2023-09-21), which ties the earlier
+      diplomatic phishing "to the SVR's central role in collecting
+      intelligence concerning the current pivotal phase of the war."
 doctrine_links:
-  - doctrine_id: ru/fpc-2023
-    pillar_id: ru/fpc-2023/anti-anglo-saxon
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      European-NATO foreign-ministry targeting in support of
-      Russian strategic decision-making during the invasion fits
-      the FPC-2023 anti-Anglo-Saxon collection priority.
-    attesting_source_id: mandiant/2024-04-24_apt29-evolving-diplomatic-phishing
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/nato-ultimatum-2021
-    pillar_id: ru/nato-ultimatum-2021/nato-degradation
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Sustained targeting of NATO-member foreign ministries during
-      active hostilities aligns with the NATO-degradation pillar
-      of the 2021 ultimatum posture.
-    attesting_source_id: null
+      APT29/SVR spearphishing of German political parties and European
+      foreign ministries is strategic foreign-political-intelligence
+      collection — the SVR treating the information sphere as an operating
+      domain, the same doctrinal home the corpus assigns the SVR's other
+      strategic-collection campaigns (SolarWinds, TeamCity, cloud-identity,
+      the Midnight Blizzard corporate intrusion, the AA24-057A cloud-access
+      advisory). Strongly inferred, not attested: Mandiant states the
+      proximate purpose — the "SVR's responsibility to collect political
+      intelligence" and Moscow's interest in "changing Western political
+      dynamics related to Ukraine" — but never the information-confrontation
+      / info-sphere-as-national-security-domain goal the pillar itself
+      encodes. Matches the same-pillar strongly_inferred calibration on the
+      SVR-advisory siblings (aa24-057a, svr-teamcity, svr-cloud-identity,
+      midnight-blizzard-microsoft-corporate).
+    attesting_source_id: mandiant/2024-03-22_apt29-wineloader-german-political-parties
+    inference_basis:
+      signals:
+        - "Mandiant WINELOADER report (verbatim): APT29 is 'a Russian Federation backed threat group linked by multiple governments to Russia's Foreign Intelligence Service (SVR)'; 'Based on the SVR's responsibility to collect political intelligence ... we judge this activity to present a broad threat to European and other Western political parties'"
+        - "Stated collection motive (verbatim): 'Moscow's vital interest in understanding changing Western political dynamics related to Ukraine and other flashpoint foreign policy issues'"
+        - "Backchannel Diplomacy (verbatim): APT29 'continues to prioritise European Ministries of Foreign Affairs and embassies' and diplomatic entities 'associated with' NATO/EU member states, 'pointing to the SVR's central role in collecting intelligence concerning the current pivotal phase of the war'"
+      ruled_out: "Destructive, disruptive, financial, or overt influence-operation motive — both reports frame the activity strictly as espionage/intelligence collection by Russia's foreign-intelligence service (backdoor delivery for follow-on collection); no wiper, leak, monetization, or public influence component is described. The stated-collection reading also out-competes an info-psychological/election-interference reading (info-security-2016/info-psychological-defense), which Mandiant does not support — it frames the party targeting as intelligence collection, not active measures."
     contested: false
     analyst: claude
 targets:
+  - target_id: sectors/civil-society
+    country: de
+    role: primary  # German political parties (CDU-themed campaign) — nearest registry fit; NO political-party sector (nor an orgs/cdu registry entry) exists — FLAGGED in qc
   - target_id: sectors/government/foreign-ministry
-    role: primary
+    role: primary  # European Ministries of Foreign Affairs (Backchannel Diplomacy) + the late-Jan-2024 diplomatic-entity wave
   - target_id: sectors/government
-    role: primary
+    role: primary  # embassies / diplomatic missions / NATO-EU-associated diplomatic entities
 sources:
+  - mandiant/2024-03-22_apt29-wineloader-german-political-parties
   - mandiant/2024-04-24_apt29-evolving-diplomatic-phishing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM-REMEDIATION path = RE-SOURCE (wrong/incomplete source). The
+    sole cited source was mandiant/2024-04-24_apt29-evolving-diplomatic-
+    phishing ("Backchannel Diplomacy", raw
+    mandiant__2024-04-24_apt29-evolving-diplomatic-phishing.html, sha256
+    38026252...d2e6cc99, 385,353 bytes, HTML <title> "Backchannel
+    Diplomacy: APT29's Rapidly Evolving Diplomatic Phishing Operations").
+    That article is REAL but is Mandiant's SEPTEMBER-2023 ROOTSAW-era
+    report — raw keyword census: WINELOADER = 0, CDU = 0, "political
+    parties" = 0 (ROOTSAW = 94). It does not carry this event's headline
+    WINELOADER / CDU-lure / German-political-party claims. Web-searched and
+    identified the genuine primary report — Mandiant "APT29 Uses WINELOADER
+    to Target German Political Parties" (2024-03-22, Luke Jenkins & Dan
+    Black) — created its source record
+    (mandiant/2024-03-22_apt29-wineloader-german-political-parties), curled
+    + snapshotted it (raw
+    mandiant__2024-03-22_apt29-wineloader-german-political-parties.html,
+    sha256 e55b770a...882ab9f0, 293,646 bytes, HTML <title> "APT29 Uses
+    WINELOADER to Target German Political Parties | Google Cloud Blog",
+    WINELOADER = 124, CDU = 10), re-pointed the event's primary source +
+    attribution to it, and KEPT Backchannel Diplomacy as a genuine
+    corroborating source for the 2023 European-MFA / ROOTSAW context (its
+    published_on fixed 2024-04-24 -> 2023-09-21, snapshot hash added).
+
+    [a] FACTS — rewritten strictly to the two raws. VERIFIED verbatim in
+    the WINELOADER raw: invite "to a dinner reception on 01 March bearing a
+    logo from the Christian Democratic Union (CDU), a major political party
+    in Germany"; "German-language lure document contains a phishing link
+    directing victims to a malicious ZIP file containing a ROOTSAW
+    dropper"; "ROOTSAW delivered a second-stage CDU-themed lure document
+    and a next stage WINELOADER payload"; "WINELOADER is invoked via a DLL
+    side loading technique into a legitimate Windows executable"
+    (sqldumper.exe); "WINELOADER was first observed in operational use in
+    late January 2024 ... targeting likely diplomatic entities in Czechia,
+    Germany, India, Italy, Latvia, and Peru"; "departure from this APT29
+    initial access cluster's typical remit of targeting governments,
+    foreign embassies, and other diplomatic missions ... first time
+    Mandiant has seen an operational interest in political parties."
+    VERIFIED in the Backchannel raw: APT29 "continues to prioritise
+    European Ministries of Foreign Affairs and embassies"; targeting
+    "diplomatic entities associated with" NATO/EU member states; ROOTSAW +
+    follow-on ZIP to actor-controlled/compromised sites. STRUCK unsourced
+    embellishments from the prior prose: "successor loaders" (only
+    WINELOADER is named), "rapid domain-rotation infrastructure to reduce
+    signature exposure as Western telemetry ... matured" (not carried),
+    "DLL search-order hijacking" (raw term is DLL SIDE-LOADING). incident_type
+    corrected [intrusion, data-theft] -> [intrusion, espionage]: no
+    confirmed bulk exfiltration is documented — the reports document
+    spearphishing -> backdoor delivery for foreign-intelligence collection.
+    initial_vector phishing kept (spearphishing lures). Fixed the summary's
+    "January 2024 NCSC ... cloud-access advisory" -> February-2024 AA24-057A
+    (its real release date).
+
+    [b] ATTRIBUTION — named-unit / high / concur, source = the WINELOADER
+    report (verbatim quote in attribution notes). SVR is explicitly named
+    ("linked by multiple governments to Russia's Foreign Intelligence
+    Service (SVR)"), so named-unit (not merely the APT29 cluster). Backchannel
+    independently corroborates the SVR link. attribution_date moved
+    2024-04-24 -> 2024-03-22 (the WINELOADER report's date).
+
+    [c] DATES — source published_on values fixed to the articles' own
+    JSON-LD datePublished: WINELOADER = 2024-03-22, Backchannel = 2023-09-21
+    (was 2024-04-24 — a fabricated/erroneous date carried into both the
+    source record AND the event's disclosure_date). Event disclosure_date
+    2024-04-24 -> 2024-03-22; start_date 2023-01-01 -> 2024-01-01 (month
+    anchor for WINELOADER's "late January 2024" first operational use; the
+    German campaign ran late February 2024); end_date null (ongoing threat
+    per Mandiant). NOTE/FLAG: no Mandiant APT29 report exists for
+    2024-04-24; the event id prefix "2024-04" is a legacy of that wrong
+    date and is retained (stable-id rule) though the true disclosure is
+    2024-03.
+
+    [d] DOCTRINE_LINKS — the two prior links (ru/fpc-2023/anti-anglo-saxon
+    at strongly_inferred with an over-reaching attesting_source_id, and
+    ru/nato-ultimatum-2021/nato-degradation at strongly_inferred with
+    attesting_source_id: null) REPLACED with a single
+    ru/info-security-2016/information-sphere-as-domain link at
+    strongly_inferred, per the batch-32 SVR-advisory calibration (the
+    aa24-057a and svr-teamcity audits removed exactly those two links in
+    favour of this pillar). Mandiant states the proximate SVR
+    political-intelligence-collection purpose but not the pillar's
+    information-confrontation goal, so strongly_inferred (not attested);
+    attesting_source_id set to the WINELOADER report as the primary
+    supporting source; inference_basis signals[] + ruled_out added with
+    verbatim quotes; ruled_out also rejects the info-psychological /
+    election-interference reading (Mandiant frames the party targeting as
+    collection, not active measures). perspective = default
+    attacker-rationale (ru doctrine on ru actor). No attested link remains,
+    so no attesting-source gate exposure.
+
+    [e] ATTRIBUTION_LEVEL — set named-unit (was ABSENT on the sole
+    attribution): both raws name the SVR service, per the orchestrator
+    steer and the aa24-057a/svr-teamcity sibling convention.
+
+    [f] ACTOR_ID — ru/svr/apt29 resolves to atlas/actors/ru/apt29.yaml
+    (id ru/svr/apt29, primary_service_id ru/svr; SVR placement verified
+    2026-06-25 per the actor record). Aliases cover Cozy Bear / Midnight
+    Blizzard / the Dukes / Nobelium. No actor defect.
+
+    TARGETS — rebuilt: sectors/government/foreign-ministry + sectors/government
+    (European MFAs, embassies, diplomatic missions — both raws) and
+    sectors/civil-society (country de) for the German political parties.
+    FLAG: the sector registry has NO political-party (nor a government/
+    political-party or civil-society/political-party) id, and there is no
+    orgs/cdu registry entry, so the CDU / German-party victim is mapped to
+    the nearest available bucket (sectors/civil-society) — recommend the
+    orchestrator add a political-party sector or an orgs/cdu target and
+    re-point. Country codes: de on the party target; the diplomatic targets
+    span >1 country (Czechia/Germany/India/Italy/Latvia/Peru + European MFAs
+    broadly) so left unset.
+
+    RESIDUALS: (i) political-party sector-registry gap (above). (ii) Legacy
+    source id mandiant/2024-04-24_...-evolving-diplomatic-phishing embeds a
+    wrong date but is immutable per the stable-id rule; its published_on and
+    notes are corrected. (iii) Zscaler ThreatLabz (Feb 2024,
+    SPIKEDWINE/wine-tasting-lure European-diplomat WINELOADER report) was
+    reviewed as additional corroboration but not added — the two Mandiant
+    reports already carry every event claim. Both cited raws fetched cleanly
+    (curl exit 0, full article bodies) -> level: full.

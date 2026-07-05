@@ -2,7 +2,7 @@ id: 2024-03/hoya-hunters-international
 name: Hunters International ransomware against Hoya Corporation
 start_date: 2024-03-30
 disclosure_date: 2024-04-04
-end_date: 2024-05-15
+end_date: null
 incident_type:
   - ransomware
   - disruption
@@ -10,42 +10,146 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Hunters International ransomware intrusion against Hoya
-  Corporation (Tokyo-headquartered optical-products and medical-
-  device manufacturer; world's largest producer of EUV
-  photomask blanks for semiconductor lithography and a major
-  ophthalmic-lens supplier). Hoya disclosed via Japanese-language
-  press release April 4, 2024 that production at multiple plants
-  had been suspended following a ransomware intrusion. Hunters
-  International claimed responsibility April 9 and demanded
-  USD 10M ransom for the approximately 1.7 million stolen
-  files (~2TB). Hoya restored most production by mid-May.
+  Corporation (Tokyo-headquartered maker of optical instruments,
+  medical equipment and electronic components — a leading producer
+  of semiconductor mask blanks and photomasks and of products for
+  EUV lithography, and a major ophthalmic-lens supplier). On
+  2024-03-30 Hoya discovered an "IT system incident" at an overseas
+  office, later assessed by external forensic investigators as most
+  likely unauthorized access to its servers by a third party; the
+  company disclosed on 2024-04-04 that some production plants and
+  the ordering system for several products had been affected. Hoya
+  characterized it only as an "IT system incident" and did not
+  itself confirm ransomware. Days later, French outlet LeMagIT
+  reported — from screenshots of Hunters International's victim-
+  negotiation panel, independently confirmed by BleepingComputer —
+  a USD 10M ransom demand for a decryptor and to withhold the
+  ~1.7 million files (~2 TB) allegedly stolen, under a "No
+  Negotiation / No Discount Policy." As of mid-April 2024 the
+  actors had not posted Hoya to their public leak site and had not
+  publicly admitted responsibility.
 quantified_impact:
   data_exfiltrated_tb: 2
   files_stolen: 1700000
   ransom_demanded_usd: 10000000
 false_flag_risk: none
 summary: |
-  Hoya's EUV-photomask-blank position makes it a node of
-  significant interest to PRC semiconductor-acquisition tasking
-  (sectors/ict/semiconductors/equipment) — but Hunters
-  International's tradecraft profile is standard Rust-encryptor
-  RaaS with no espionage indicators and a clear leak-site
-  monetization pattern. The case is included in the AUSPEX
-  criminal-baseline corpus as an example where target sensitivity
-  to state strategic interests does not imply doctrinal targeting
-  when the operator profile is purely financial.
+  Hoya's semiconductor position — a leading maker of mask blanks /
+  photomasks and a leader in products for EUV lithography, whose
+  "trade secrets could be particularly valuable to rivals or
+  sanctioned nations" (Tom's Hardware) — makes it a node whose
+  sensitivity to state semiconductor-acquisition interest is real
+  (sectors/ict/semiconductors/equipment). But Hunters
+  International's profile is standard Rust-encryptor RaaS with Hive
+  code lineage, no espionage indicators, and a financial ransom-
+  and-extortion monetization pattern. The case is included in the
+  AUSPEX criminal-baseline corpus as an example where target
+  sensitivity to state strategic interests does not imply doctrinal
+  targeting when the operator profile is purely financial.
 attributions:
   - actor_id: criminal/hunters-international
-    attributing_org: Hoya Corporation + Hunters International (self-claimed)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-04-09
-    attribution_source_id: bitdefender/2023-10-20_hunters-international-hive-overlap
+    attributing_org: LeMagIT / BleepingComputer (Hunters International ransom-negotiation panel)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-04-11
+    attribution_source_id: bleepingcomputer/2024-04-11_optics-giant-hoya-hit-with-10-million-ransomware-demand
+    notes: "Attribution to Hunters International rests on the group's own victim-negotiation panel (screenshots first published by France's LeMagIT), independently confirmed by BleepingComputer — NOT a public leak-site self-claim: as of the April 2024 reporting the group had not posted Hoya publicly or admitted responsibility, and Hoya itself called it only an 'IT system incident' without confirming ransomware. Named-actor (a specific criminal group; no state / unit named). Confidence moderate — BleepingComputer independently confirmed the demand, but both it and Tom's Hardware hedge (the latter: the claim 'needs a pinch of salt')."
 doctrine_links: []
 targets:
   - target_id: sectors/ict/semiconductors/equipment
     role: primary
-  - target_id: sectors/healthcare/biotech
+  - target_id: sectors/healthcare
     role: collateral
 sources:
+  - bleepingcomputer/2024-04-11_optics-giant-hoya-hit-with-10-million-ransomware-demand
+  - therecord/2024-04-04_hoya-japan-cyberattack-affects-production
+  - tomshardware/2024-04-12_hoya-euv-chipmaking-supplier-ransomware
   - bitdefender/2023-10-20_hunters-international-hive-overlap
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    WRONG-SOURCE remediation + full 6-point audit. The event previously cited
+    ONLY bitdefender/2023-10-20_hunters-international-hive-overlap ("Hive
+    Ransomware's Offspring: Hunters International Takes the Stage") as BOTH its
+    sole source AND attribution_source_id — that is the group-DISCOVERY article;
+    it never mentions Hoya and carries none of the Hoya facts. RE-SOURCED
+    (badrabbit model) to genuine Apr-2024 Hoya coverage; Bitdefender retained
+    only as group-profile context (Hive lineage / RaaS). Three real sources
+    snapshotted + hashed:
+    - bleepingcomputer/2024-04-11_optics-giant-hoya-hit-with-10-million-ransomware-demand
+      (Bill Toulas, 2024-04-11) sha256 f0a7a0f8…8eba6abe, 89,555 bytes — ATTRIBUTION + ransom.
+    - therecord/2024-04-04_hoya-japan-cyberattack-affects-production
+      (Joe Warminsky, 2024-04-04) sha256 8d7b4a18…87c74c22, 83,959 bytes — DISCLOSURE facts/dates.
+    - tomshardware/2024-04-12_hoya-euv-chipmaking-supplier-ransomware
+      (Mark Tyson, 2024-04-12) sha256 94d0e632…d03bad9e, 1,831,730 bytes — semiconductor/EUV context + corroboration.
+    Bitdefender snapshot bitdefender__2023-10-20_hunters-international-hive-overlap.html
+    re-hashed 7936583a…544b44c9 (117,809 bytes) — matches its record (hash re-verified).
+
+    [a] FACTS — $10M / 1.7M files / 2TB all source-carried: BC "demanded a $10
+    million ransom for a file decryptor and not to release files stolen"; "an
+    alleged 1.7 million stolen files, amounting to 2 TB of data. This ransom
+    demand was also confirmed independently by BleepingComputer"; Tom's Hardware
+    "a pledge by the ransomware group not to release any of the 1.7 million files
+    (2TB of data)". (NB: the tasking figure "1.1M-doc" is NOT what any source
+    says — every source, and the Hunters International panel screenshot reported
+    by Hackmanac as 1,771,224 files, gives ~1.7M; kept 1700000.) CORRECTIONS:
+    (1) removed unsourced "Hoya restored most production by mid-May" and set
+    end_date null — no cited April-2024 source establishes a restoration/bounded
+    end. (2) Reframed the disclosure: Hoya "did not itself confirm ransomware"
+    (The Record: "Recorded Future News has asked Hoya whether ransomware was the
+    cause. The company did not immediately respond."); it was disclosed as an
+    "IT system incident" / "unauthorized access to our servers by a third party"
+    affecting "some production plants and the ordering system for several
+    products" (softened from "production at multiple plants had been suspended").
+    (3) Moderated the "world's largest producer of EUV photomask blanks"
+    superlative — Tom's Hardware supports only "essential player" / "a leader in
+    the development of products for EUV lithography" + key products "Mask blanks
+    and photomasks for semiconductor manufacturing"; superlative dropped.
+
+    [b] ATTRIBUTION — corrected. Old block said attributing_org "Hoya
+    Corporation + Hunters International (self-claimed)" with high confidence and
+    attribution_date 2024-04-09 — all three wrong: Hoya never named the actor;
+    the group did NOT publicly self-claim (BC: "no files have been released on
+    the Hunters International site and the threat actors haven't publicly claimed
+    responsibility for the attack on Hoya"); the demand surfaced via the group's
+    negotiation panel (LeMagIT screenshots) + BC's independent confirmation. Set
+    attributing_org "LeMagIT / BleepingComputer (Hunters International ransom-
+    negotiation panel)"; confidence high→moderate; auspex_assessment
+    concur→concur-with-caveat; attribution_date 2024-04-09→2024-04-11 (BC pub
+    date, the snapshotted confirming source); attribution_source_id repointed
+    bitdefender→bleepingcomputer.
+
+    [c] DATES — start_date 2024-03-30 ✓ (The Record: "on March 30 it discovered
+    an 'IT system incident'"); disclosure_date 2024-04-04 ✓ (The Record pub date
+    / Hoya statement; BC: "no updates on the business status since April 4,
+    2024"); end_date 2024-05-15→null (unsourced). Each new source's published_on
+    = its actual pub date (2024-04-11 / 2024-04-04 / 2024-04-12), verified from
+    datePublished in the snapshots.
+
+    [d] DOCTRINE_LINKS — [] retained and correct. The event's whole purpose is a
+    criminal-baseline negative example (financial operator, no doctrinal
+    targeting despite a strategically sensitive victim); no doctrine applies; no
+    attesting source needed.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (a specific named criminal group,
+    "Hunters International"; no nation/service/unit named — correct, it is a
+    criminal/ actor).
+
+    [f] ACTOR_ID — criminal/hunters-international resolves to
+    atlas/actors/criminal/hunters-international.yaml (RaaS, Hive code lineage,
+    financial mission; lists Hoya Mar-2024 among victims). No actor defect. NB
+    for orchestrator: the actor file also still cites the Bitdefender group-
+    discovery source (legitimate group-profile citation) — unaffected.
+
+    Residual uncertainties: (i) LeMagIT is the ultimate origin of the ransom
+    figures but is French-language and was not snapshotted; BC's explicit
+    independent confirmation carries the claim, so no LeMagIT record was created.
+    (ii) The affected facilities were an unspecified "overseas office" (The
+    Record) — target country deliberately left unset. (iii) Later reporting
+    (Hackmanac, Jul-2024; actor file) indicates Hoya was eventually listed on the
+    leak site, but the April-2024 cited sources predate any public listing, so
+    the attribution is framed to what those sources support.

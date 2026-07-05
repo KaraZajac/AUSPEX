@@ -1,68 +1,113 @@
 id: 2024-02/moobot-apt28-botnet-disruption
 name: DOJ disruption of GRU 26165 Moobot Ubiquiti router botnet (APT28)
-start_date: 2024-01-01  # operation period
-disclosure_date: 2024-02-15
-end_date: 2024-02-15
+start_date: 2024-01-01  # DOJ: "a January 2024 court-authorized operation" (op window, est.)
+disclosure_date: 2024-02-15  # DOJ press release
+end_date: 2024-02-15  # bounded at disclosure (point-in-time Jan-2024 disruption; cf. 2024-01/kv-botnet)
 incident_type:
   - disruption
   - law-enforcement
-initial_vector: unknown
+initial_vector: valid-creds  # routers first compromised via publicly-known default admin passwords (DOJ)
 outcome_summary: |
-  DOJ and FBI conducted a court-authorised disruption of a Moobot
-  botnet of compromised Ubiquiti EdgeRouters operated by GRU Unit
-  26165 (APT28 / FANCYBEAR). The botnet relayed APT28 reconnaissance
-  and credential-harvest traffic against US government, military,
-  and CI organisations and against NATO / EU partners supporting
-  Ukraine. The operation deleted GRU-installed malware and
-  configuration from the compromised routers and prevented
-  reinfection; FBI issued companion technical guidance on Ubiquiti
-  factory-reset and firmware-update procedures.
+  FBI/DOJ conducted a court-authorised disruption ("Operation Dying
+  Ember", led by FBI Boston) of a botnet of compromised Ubiquiti
+  EdgeOS routers that GRU Military Unit 26165 (APT28) had repurposed
+  as, in DOJ's words, a "global cyber espionage platform." Per DOJ the
+  GRU did NOT build the botnet: non-GRU cybercriminals had first
+  installed the criminal "Moobot" malware on routers still using
+  publicly-known default administrator passwords, after which GRU
+  hackers used Moobot to deploy their own bespoke scripts and files.
+  The botnet carried APT28 spearphishing and credential-harvesting
+  against "targets of intelligence interest to the Russian government"
+  — U.S. and foreign government, military, security, and corporate
+  organisations. The operation leveraged Moobot itself to copy and
+  delete the GRU's stolen data and malicious files, and reversibly
+  modified the routers' firewall rules to block GRU remote-management
+  access — a temporary measure users can roll back by factory-resetting
+  their routers. More than a thousand routers were remediated. FBI
+  issued companion guidance to factory-reset, update firmware, and
+  change default passwords; DOJ cautioned that a reset WITHOUT a
+  password change leaves a router open to reinfection.
 false_flag_risk: none
 campaign_id: gru-26165-western-logistics
 summary: |
-  Doctrinally important as the second US "victim-network-touched"
-  cyber-disruption against a Russian state-controlled botnet (the
-  first being the May 2018 Cyclops Blink / VPNFilter operation,
-  also against Sandworm). The Moobot disruption applies the
-  template developed against the PRC Volt Typhoon / KV-botnet (Jan
-  2024 — also FBI court-authorised botnet deletion) to GRU
-  operations within four weeks. The cadence shows the FBI's
-  willingness to use disruptive cyber-action against multiple
-  peer-state operators in rapid sequence.
+  DOJ's own framing situates the operation in a rapid cadence of
+  court-authorised botnet disruptions. DAG Lisa Monaco: "for the
+  second time in two months, we've disrupted state-sponsored hackers
+  from launching cyber-attacks behind the cover of compromised U.S.
+  routers" (the prior router-botnet takedown being the late-January
+  2024 Volt Typhoon / KV-botnet disruption — see
+  2024-01/kv-botnet-volt-typhoon-disruption). AAG Matthew Olsen called
+  it "the third time since Russia's unjustified invasion of Ukraine
+  that the Department has stripped the Russian intelligence services of
+  a key tool," and "a unique, two-for-one operation... a botnet used by
+  both criminal and state-sponsored actors" — reflecting the Moobot
+  infrastructure's criminal origin and GRU repurposing. Shadowserver
+  Foundation and Microsoft Threat Intelligence assisted; DOJ noted a
+  companion FBI-led multinational advisory on Russian actors' use of
+  compromised routers followed the release.
 attributions:
-  - actor_id: ru/gru/26165/apt28
+  - actor_id: null  # was ru/gru/26165/apt28 — counter-action (US state action AGAINST the actor); actor nulled per directionality convention, AUDIT-2026-07-04
     attributing_org: US Department of Justice / FBI
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ names the operator as "GRU Military Unit 26165" (APT28)
     auspex_assessment: concur
     attribution_date: 2024-02-15
     attribution_source_id: doj/2024-02-15_moobot-apt28-botnet-disruption
+    notes: |
+      Counter-action: FBI/DOJ court-authorised disruption ("Operation
+      Dying Ember"). The disrupted actor — GRU Military Unit 26165 /
+      APT28, the SUBJECT — is described in the summary/outcome; no
+      AUSPEX-tracked actor perpetrated this US law-enforcement action,
+      so actor_id is null (was ru/gru/26165/apt28, which resolves to
+      atlas/actors/ru/apt28.yaml). attributing_org records the
+      executing/announcing body; DOJ identified the operator at high
+      confidence, named-unit specificity.
 doctrine_links:
   - doctrine_id: ru/nato-ultimatum-2021
-    pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
+    pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      DOJ framing names the Moobot botnet as supporting APT28
-      operations against US/NATO/EU members assisting Ukraine (the
-      support-interdiction behaviour); DOJ does not name the 2021
-      NATO-ultimatum posture, so the doctrine linkage is inferred.
-    attesting_source_id: doj/2024-02-15_moobot-apt28-botnet-disruption
+      GRU Unit 26165 / APT28 repurposed the botnet as a "global cyber
+      espionage platform" for spearphishing and credential-harvesting
+      against U.S. and foreign government, military, security, and
+      corporate organisations "of intelligence interest to the Russian
+      government" (DOJ). Broad GRU strategic collection against
+      NATO/Western government and defence targets during the war fits
+      the NATO-cohesion-degradation reading of the 2021 ultimatum
+      posture, but DOJ states only a generic intelligence-collection
+      purpose — it names no NATO-degradation or Ukraine-aid goal — so
+      more than one strategic reading survives. (Pillar corrected from
+      ukraine-support-interdiction, which the source does not support:
+      it describes broad govt/military espionage, not aid-logistics
+      interdiction.)
+    attesting_source_id: null
     inference_basis:
-      source_id: doj/2024-02-15_moobot-apt28-botnet-disruption
-      signals:
-        - "DOJ: the botnet supported APT28 ops against US/NATO/EU members assisting Ukraine (support-interdiction behaviour)"
-      ruled_out: "the 2021 NATO-ultimatum posture / its strategic goal — not named by DOJ"
+      alternatives:
+        - "NATO-degradation espionage: APT28 (whose default alignment already includes ru/nato-ultimatum-2021/nato-degradation) running strategic collection against Western govt/military/defence targets, consistent with degrading NATO cohesion on Ukraine."
+        - "Undifferentiated GRU strategic intelligence collection: DOJ frames the purpose only as 'intelligence interest to the Russian government' — generic foreign-intelligence collection not tied to any single doctrine (cf. ru/fpc-2023/anti-anglo-saxon, ru/military-doctrine-2014)."
     contested: false
     analyst: claude
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/aid-state-targeting
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Ubiquiti router botnet supporting credential-harvest against
-      US government / military targets during the active phase of
-      the invasion.
+      The disruption fell in the active phase of the Ukraine war and
+      the botnet-enabled collection swept U.S. and allied government /
+      military targets — consistent with the sanctions-response
+      posture's prioritisation of Ukraine-aiding states. But DOJ frames
+      the botnet as generic strategic espionage, not sanctions-
+      retaliatory or aid-state-specific targeting, and the
+      aid-state-targeting pillar is otherwise built on proxy /
+      performative operations (CARR, NoName) unlike this classic GRU
+      collection platform — so this is only a plausible timing-and-
+      target overlay.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Sanctions-response aid-state targeting: 2024 wartime GRU collection against U.S./allied govt and military reads as pressure on Ukraine-aiding states."
+        - "Non-sanctions-response strategic espionage: APT28 credential-harvesting collection is long-running GRU tradecraft predating the 2022 posture; DOJ names only 'intelligence interest to the Russian government'."
     contested: false
     analyst: claude
 targets:
@@ -72,3 +117,104 @@ targets:
     role: primary
 sources:
   - doj/2024-02-15_moobot-apt28-botnet-disruption
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs the DOJ press release "Justice Department Conducts
+    Court-Authorized Disruption of Botnet Controlled by the Russian
+    Federation's GRU" (2024-02-15). Raw snapshot captured via the
+    Akamai bm-verify cookie-jar bypass (justice.gov is Bot-Manager-
+    walled): doj__2024-02-15_moobot-apt28-botnet-disruption.html,
+    sha256 10be7e58…dc97002e, 87838 bytes. Single tier-1 govt-primary
+    source; it carries every retained claim verbatim -> level=full.
+
+    [a] FACTS — corrected. Router-cleanup MECHANISM re-grounded to DOJ:
+    the op "leveraged the Moobot malware to copy and delete stolen and
+    malicious data and files" and "reversibly modified the routers'
+    firewall rules to block remote management access" (temporary, user-
+    reversible). Struck the prior "prevented reinfection" claim as an
+    overstatement — DOJ warns "a factory reset that is not also
+    accompanied by a change of the default administrator password will
+    return the router to its default administrator credentials, leaving
+    the router open to reinfection." Added DOJ's operation name
+    "Operation Dying Ember" (FBI Boston-led; "over a thousand
+    compromised routers"). Removed unsupported target embellishments
+    ("CI organisations", "NATO/EU partners supporting Ukraine"): DOJ
+    scopes victims as "U.S. and foreign governments and military,
+    security, and corporate organizations" of "intelligence interest to
+    the Russian government." Rewrote summary: struck the "second victim-
+    network-touched... first being the May 2018 Cyclops Blink/VPNFilter"
+    claim — not carried by this source AND factually muddled (May 2018 =
+    VPNFilter; Cyclops Blink was 2022) — replaced with DOJ's own cadence
+    quotes (Monaco "second time in two months... compromised U.S.
+    routers"; Olsen "third time since Russia's unjustified invasion...
+    stripped the Russian intelligence services of a key tool" /
+    "unique, two-for-one operation... both criminal and state-sponsored
+    actors"). initial_vector unknown->valid-creds: routers "still used
+    publicly known default administrator passwords."
+
+    MOOBOT(criminal)-vs-APT28(repurposer) distinction VERIFIED (now in
+    summary/outcome), DOJ verbatim: "the GRU did not create it from
+    scratch. Instead, the GRU relied on the 'Moobot' malware, which is
+    associated with a known criminal group. Non-GRU cybercriminals
+    installed the Moobot malware on Ubiquiti Edge OS routers that still
+    used publicly known default administrator passwords. GRU hackers
+    then used the Moobot malware to install their own bespoke scripts
+    and files that repurposed the botnet, turning it into a global
+    cyber espionage platform."
+
+    [b] ATTRIBUTION — DOJ names "GRU Military Unit 26165, also known as
+    APT 28, Sofacy Group, Forest Blizzard, Pawn Storm, Fancy Bear, and
+    Sednit" at high confidence. Set attribution_level=named-unit (a
+    specific GRU unit named). auspex_assessment concur retained.
+
+    [c] DATES — source published_on 2024-02-15 correct. Op is "a
+    January 2024 court-authorized operation" (start_date 2024-01-01 est.
+    window); disclosure 2024-02-15; end_date bounded at disclosure per
+    the disruption-counter-action convention (cf. 2024-01/kv-botnet).
+
+    DIRECTIONALITY (biggest correction) — modelled as a COUNTER-ACTION:
+    actor_id ru/gru/26165/apt28 -> null. This event documents a U.S.
+    law-enforcement action AGAINST the actor (FBI/DOJ court-authorised
+    disruption), not an APT28 operation. Per the SCHEMA directionality
+    rule and the sibling counter-actions (2024-01/kv-botnet-volt-typhoon
+    -disruption, 2023-05/operation-medusa-snake-disruption) the
+    perpetrator slot is null, the acting body (US DOJ/FBI) is
+    attributing_org, incident_type stays meta [disruption,
+    law-enforcement], and the disrupted actor (GRU 26165 / APT28) is the
+    SUBJECT in prose. Not a dangling-FK fix — the old actor_id resolved
+    (atlas/actors/ru/apt28.yaml, id ru/gru/26165/apt28).
+
+    [d]/[e] DOCTRINE — both links were over-graded strongly_inferred on
+    a signal the source does NOT carry ("DOJ names the botnet as
+    supporting ops against US/NATO/EU members assisting Ukraine"). DOJ
+    states only a generic purpose ("intelligence interest to the Russian
+    government"), never a Ukraine-aid or NATO-degradation GOAL — so both
+    downgraded to plausible with honest inference_basis.alternatives.
+    Link 1 pillar switched ukraine-support-interdiction ->
+    nato-degradation: the source's broad govt/military/security/
+    corporate espionage fits nato-degradation (govt+defence target set;
+    APT28's own default alignment) far better than the aid-logistics
+    ukraine-support-interdiction pillar. Link 2 (sanctions-response/
+    aid-state-targeting) kept but plausible with the caveat that a
+    classic GRU collection platform is a weak fit for a pillar otherwise
+    built on proxy/performative ops. Both are Russian attacker-rationale
+    doctrines on a null-actor counter-action (perspective absent =
+    attacker-rationale, matching the MEDUSA sibling); eventStateId falls
+    back to ru. verify_atlas doctrine-state-mismatch will surface this
+    as an expected review item, not an error.
+
+    [f] ACTOR — ru/gru/26165/apt28 resolves (atlas/actors/ru/apt28.yaml,
+    id ru/gru/26165/apt28); no actor-file edit needed; now nulled
+    in-event per directionality.
+
+    RESIDUAL — DOJ's "second time in two months" is not tied by name to
+    Volt Typhoon in THIS source; the KV-botnet/Volt Typhoon
+    identification in the summary is a corpus cross-reference
+    (2024-01/kv-botnet-volt-typhoon-disruption), editorial not
+    source-stated. A companion FBI-led multinational router advisory is
+    referenced by DOJ as issued after the release; not added — DOJ alone
+    carries every retained claim.

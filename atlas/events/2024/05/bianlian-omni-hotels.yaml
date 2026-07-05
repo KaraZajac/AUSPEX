@@ -1,48 +1,156 @@
 id: 2024-05/bianlian-omni-hotels
-name: BianLian data extortion of Omni Hotels and Resorts
+name: Daixin Team ransomware and data extortion of Omni Hotels and Resorts
 start_date: 2024-03-29
-disclosure_date: 2024-04-04
-end_date: 2024-06-15
+disclosure_date: 2024-04-03
+end_date: null
 incident_type:
   - intrusion
+  - ransomware
   - data-theft
+  - extortion
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  Omni Hotels and Resorts (US hospitality chain operating 50
-  hotels and resorts across North America) disclosed April 4
-  2024 a cyber incident that forced shutdown of phone, Wi-Fi,
-  point-of-sale, and reservation systems for several days
-  across the company's properties. BianLian claimed
-  responsibility April 30 2024 and began posting exfiltrated
-  data on its leak site including approximately three years
-  of guest data — confirming the data-extortion-only operating
-  model the cluster adopted in January 2023.
+  Multi-day nationwide outage of Omni Hotels & Resorts'
+  reservation, hotel room door-lock, point-of-sale, phone and
+  Wi-Fi systems after the company shut its systems down Friday
+  March 29 2024 to contain the intrusion. Omni publicly
+  confirmed the cyberattack April 3 2024 and restored most
+  systems from backups over the following days; BleepingComputer's
+  sources described a ransomware attack with encrypted servers
+  being rebuilt from backup. On April 15 2024 the Daixin Team
+  ransomware / data-extortion group claimed responsibility on its
+  data-leak site, threatening to publish 3,539,089 guest records
+  spanning 2017 to the present unless a ransom was paid. The
+  records Daixin listed comprised guest contact data (names,
+  email addresses, and mailing addresses), not payment-card data.
 false_flag_risk: none
 summary: |
-  Notable BianLian US-hospitality victim demonstrating the
-  cluster's continued mid-market post-encrypt-pivot
-  operations. Multi-day operational disruption (phones, PoS,
-  reservations) even without ransomware encryption — the
-  intrusion alone forced operational shutdown to contain
-  lateral movement. Criminal-baseline classification holds
-  per CISA AA23-136A characterization of BianLian as a
-  financially-motivated cluster with no state nexus.
+  Data-extortion and operational-disruption incident against a
+  US mid-market hospitality chain (Omni Hotels & Resorts — 50
+  hotels and resorts across the United States, Canada, and
+  Mexico), claimed by the Daixin Team ransomware group. A
+  cyberattack beginning Friday March 29 2024 forced Omni to shut
+  down core systems (reservations, room-key/door locks,
+  point-of-sale, phones, Wi-Fi) for several days; sources
+  characterised it as a ransomware attack, with encrypted
+  servers restored from backups. On April 15 2024 Daixin Team
+  claimed the breach on its leak site, asserting theft of
+  3,539,089 guest contact records (names, emails, mailing
+  addresses) dating to 2017 and threatening publication absent
+  payment. Financially-motivated criminal activity with no
+  documented state nexus; no doctrine link applies.
 attributions:
-  - actor_id: criminal/bianlian
-    attributing_org: Omni Hotels + BianLian (self-claimed)
+  - actor_id: null
+    attributing_org: Daixin Team (self-claimed, data-leak site) — reported by BleepingComputer
     attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2024-04-30
-    attribution_source_id: cisa/2023-05-16_aa23-136a-bianlian-advisory
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-04-15
+    attribution_source_id: bleepingcomputer/2024-04-15_daixin-ransomware-gang-claims-attack-on-omni-hotels
     notes: |
-      CISA AA23-136A is the joint BianLian advisory; it does not
-      name Omni Hotels specifically. No primary government advisory
-      specific to this case; attribution_source_id is the nearest
-      contemporaneous primary documentation of BianLian activity.
+      Leak-site SELF-CLAIM: the Daixin Team ransomware / data-extortion
+      group claimed the Omni Hotels attack on its data-leak site (reported
+      by BleepingComputer 2024-04-15), posting a 3,539,089-record guest
+      database as proof of access. No government or vendor forensic
+      attribution has been published; confidence is moderate on the basis
+      of a self-claim corroborated by the posted stolen-data sample and
+      contemporaneous reporting. attribution_level named-actor (a specific
+      criminal group is named; no state or service).
+      actor_id is null ONLY because AUSPEX has no `criminal/daixin` actor
+      record yet — this is NOT a counter-action and NOT a genuine
+      non-attribution. See qc FLAG: create `criminal/daixin` and re-point
+      actor_id here. The event was previously (incorrectly) attributed to
+      `criminal/bianlian`; NO source links BianLian to Omni Hotels.
 doctrine_links: []
 targets:
   - target_id: sectors/hospitality
+    country: us
     role: primary
 sources:
-  - cisa/2023-05-16_aa23-136a-bianlian-advisory
+  - bleepingcomputer/2024-04-02_omni-hotels-experiencing-nationwide-it-outage-since-friday
+  - bleepingcomputer/2024-04-03_omni-hotels-confirms-cyberattack-behind-ongoing-it-outage
+  - bleepingcomputer/2024-04-15_daixin-ransomware-gang-claims-attack-on-omni-hotels
+  - therecord/2024-04-04_omni-hotels-cyberattack-disruptions-customers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: partial
+  notes: |
+    RE-SOURCE + WRONG-ACTOR correction (phantom-remediation path = RE-SOURCE, not
+    retire — the incident is real and well-documented). Level PARTIAL: every factual
+    claim is now source-carried and every source is snapshotted, but the correct actor
+    (Daixin Team) has NO actor record in the corpus, so actor_id is parked at null
+    pending orchestrator/Kara creation of `criminal/daixin` — a load-bearing unresolved
+    element that bars a `full` stamp.
+
+    WRONG-SOURCE proof [c/pre]: the only prior citation was
+    cisa/2023-05-16_aa23-136a-bianlian-advisory (the general #StopRansomware BianLian
+    advisory). Re-verified its on-disk snapshot (137,973 B, sha256 1b937b45…2945f594):
+    grep "omni" = 0 hits. It never names Omni Hotels and is about the WRONG GROUP — it
+    is not even Daixin group-profile context, so it was REMOVED from sources[] entirely
+    (it remains cited by 2023-01/bianlian-pivot-data-extortion and 2023-05/cisa-bianlian-
+    advisory, so it is NOT orphaned; its source record was left untouched).
+
+    [a] FACTS — rewrote summary/outcome to the RAW coverage. Source-carried:
+    - Outage began Fri 2024-03-29; Omni shut systems to contain; multi-day nationwide
+      outage of reservation / hotel-room door-lock / PoS / phone / Wi-Fi systems.
+      [BleepingComputer 04-02, 649266a5…5619b919, 89,885 B: "nationwide IT outage since
+      Friday … reservation, hotel room door lock, and point-of-sale (POS) systems"] +
+      [The Record 04-04, 4fbdb401…788c65fa, 83,267 B: began "March 29 and forced its IT
+      team to shut down affected systems 'to protect and contain its data'"].
+    - Omni CONFIRMED the cyberattack 2024-04-03; ransomware character + restoring
+      encrypted servers from backups. [BleepingComputer 04-03, 01e11f08…7a48fb22,
+      88,353 B: "Since Friday, March 29, Omni Hotels & Resorts has been responding to a
+      cyberattack on its systems"; "the hotel chain was the victim of a ransomware
+      attack and is currently in the process of restoring encrypted servers from backups"].
+    - Company scale "50 hotels and resorts across the United States, Canada, and Mexico"
+      is now source-carried [04-03 + 04-15 both: "Omni Hotels owns/operates 50 hotels and
+      resorts across the United States, Canada, and Mexico, with … 23,550 rooms and 28
+      golf courses"] — replaces the unsourced "North America" phrasing.
+    - Daixin claim 2024-04-15; 3,539,089 records; names/emails/mailing addresses; from
+      2017 to present. [BleepingComputer 04-15, b4b5b0c3…991b7d22e, 88,083 B: "The Daixin
+      Team ransomware gang claimed a recent cyberattack on Omni Hotels & Resorts …";
+      "3,539,089 records of Omni Hotels visitors with sensitive information, including
+      names, email addresses, and mailing addresses"; "from 2017 to the present"].
+    STRIPPED as unsupported/fabricated: (i) end_date 2024-06-15 → null (NO source; the
+    disruptive phase resolved in early April with restoration in progress and no precise
+    all-clear carried, and the extortion leak-threat is open-ended); (ii) the "confirming
+    the data-extortion-only operating model the cluster adopted in January 2023" and the
+    "criminal-baseline per CISA AA23-136A characterization of BianLian" lines — both are
+    BianLian-profile claims irrelevant to Daixin; (iii) the "~three years of guest data"
+    figure → corrected to "2017 to present" per the RAW. Did NOT assert the "no SSN /
+    financial info" exclusion (carried by TechCrunch/SecurityWeek, not by my 4 snapshots);
+    limited the exclusion to "not payment-card data," which the 04-15 enumeration supports
+    (its payment-card sentence describes Omni's SEPARATE 2016 PoS-malware breach, not 2024).
+    No specific ransom amount stated (the "$2M/$3.5M" figures are from non-snapshotted
+    outlets; the "2 million" strings in the BleepingComputer snapshots are sidebar noise).
+
+    [b] ATTRIBUTION — actor corrected BianLian → Daixin Team. attributing_org, level
+    (named-actor), confidence (moderate), auspex_assessment (concur-with-caveat, honest
+    for a leak-site self-claim with no govt/vendor forensic attribution), and
+    attribution_date (2024-04-30 → 2024-04-15, the actual claim/report date) all fixed;
+    attribution_source_id re-pointed to the BleepingComputer 04-15 Daixin article.
+
+    [c] DATES — start_date 2024-03-29 retained (Fri outage start, source-carried).
+    disclosure_date 2024-04-04 → 2024-04-03 (Omni's own confirmation date per
+    BleepingComputer 04-03). end_date → null (see [a]). Each new source's published_on =
+    its JSON-LD datePublished (04-02, 04-03, 04-15, 04-04 respectively) — verified.
+
+    [d] DOCTRINE_LINKS — [] retained and correct: Daixin Team is a financially-motivated
+    criminal group; no doctrine applies. No attesting source needed.
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (a specific criminal group named; no
+    nation/service). Was absent before.
+
+    [f] ACTOR_ID — **FLAG (loud): the correct actor `criminal/daixin` does NOT exist in
+    atlas/actors/.** Per protocol I do not create/edit actor files, so actor_id is null
+    pending its creation + re-point. incident_type includes non-meta types with a null
+    actor, so verify_atlas.py will surface this as a review item — that is the intended
+    signal. When creating the actor: CISA/FBI/HHS advisory AA22-294A ("#StopRansomware:
+    Daixin Team", 2022-10-21) is a good govt group-profile primary; misp-galaxy carries a
+    "Daixin Team" cluster. Also FLAG (cosmetic): the id/slug `2024-05/bianlian-omni-hotels`
+    and filename are now a MISNOMER (Daixin, not BianLian) — retained because slugs are
+    stable-forever per SCHEMA.md; an alias/rename is Kara's call. (The id month "05" vs the
+    March/April op is a pre-existing quirk, left as-is.)

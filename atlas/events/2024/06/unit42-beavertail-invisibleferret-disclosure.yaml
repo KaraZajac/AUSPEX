@@ -1,86 +1,218 @@
 id: 2024-06/unit42-beavertail-invisibleferret-disclosure
 name: Unit 42 disclosure of BeaverTail + InvisibleFerret Contagious Interview campaign
-start_date: 2023-11-01  # Unit 42 dates campaign onset to late 2023
-disclosure_date: 2024-06-13
-end_date: 2024-06-13
+start_date: 2022-12-01  # AUDIT 2026-07-04: Unit 42 — Contagious Interview infra "established as early as December 2022" (first CI malware samples Mar 2023; Wagemole file trove timestamped from Aug 2022). Prior 2023-11-01 ("onset late 2023") was unsupported.
+disclosure_date: 2023-11-21  # AUDIT 2026-07-04: article datePublished 2023-11-21 (JSON-LD + meta article:published_time + byline "Published: November 21, 2023"; first update Dec 1 2023). Prior 2024-06-13 was wrong.
+end_date: 2023-11-21  # disclosure-event date = publication date
 incident_type:
   - intrusion
   - financial-theft
+  - espionage  # Wagemole "potential for both financial gain and espionage"; InvisibleFerret keylogging + data exfiltration
 initial_vector: phishing
 outcome_summary: |
-  Palo Alto Unit 42 disclosed two parallel DPRK job-themed
-  campaigns. Contagious Interview: BeaverTail JavaScript
-  downloader and InvisibleFerret Python backdoor delivered
-  via fake job-interview Trojan targeting cryptocurrency
-  and Web3 developers — TraderTraitor cluster. Wagemole:
-  the IT-worker fraud counterpart, fake resumes / GitHub
-  profiles to obtain remote employment for revenue. Both
-  campaigns identified across hundreds of victims, multiple
-  cryptocurrency-related repositories, and active npm-package
-  trojanization activity.
+  Palo Alto Unit 42 (21 Nov 2023) disclosed two parallel
+  job-themed campaigns it assessed as North Korea (DPRK)
+  state-sponsored. Contagious Interview (tracked CL-STA-0240):
+  threat actors pose as employers to lure software developers
+  into installing malware during a fake job interview —
+  BeaverTail, a JavaScript information-stealer/loader hidden
+  inside NPM packages (hosted on / injected into GitHub
+  projects), which retrieves InvisibleFerret, a cross-platform
+  Python backdoor (fingerprinting, keylogging, browser
+  credential + crypto-wallet theft, AnyDesk deployment). Unit 42
+  assessed the campaign objective as "likely cryptocurrency
+  theft" plus staging for follow-on attacks. Wagemole (tracked
+  CL-STA-0241): the IT-worker fraud counterpart — fake resumes,
+  stolen US identities and GitHub personas used to obtain remote
+  employment at US and global companies, which DOJ/FBI reporting
+  ties to funneling wages to DPRK weapons programs. Attribution
+  confidence differs: Contagious Interview MODERATE, Wagemole
+  HIGH. The source gives NO victim count and does NOT name
+  TraderTraitor / Lazarus / APT38 for either cluster.
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Canonical TraderTraitor tradecraft documentation for the
-  2024 cycle. The BeaverTail (JS first stage) +
-  InvisibleFerret (Python second stage) combination
-  documented here is the same chain subsequently observed
-  in the 2024-2025 npm supply-chain operations and in the
-  multiple individual crypto-developer thefts of the
-  period. Operation dates back to late 2023 per Unit 42
-  reconstruction; concurrent with the Stake.com / CoinEx
-  exchange-side operations of September 2023 and the DMM
-  Bitcoin supply-chain operation of early 2024.
+  Unit 42's November 2023 disclosure introducing the BeaverTail
+  (JavaScript first-stage stealer/loader inside NPM packages) +
+  InvisibleFerret (Python second-stage backdoor) chain and the
+  Contagious Interview (CL-STA-0240) developer-targeting
+  tradecraft. Per Unit 42 the Contagious Interview infrastructure
+  was established as early as December 2022 (first malware samples
+  March 2023); the Wagemole (CL-STA-0241) file trove is timestamped
+  from August 2022. AUSPEX associates the BeaverTail/InvisibleFerret
+  developer-compromise chain with the DPRK crypto-theft umbrella
+  (kp/rgb/tradertraitor) that monetises via the crypto-exchange and
+  supply-chain thefts recorded elsewhere in the atlas (Atomic Wallet
+  Jun 2023, Stake.com / CoinEx Sept 2023, DMM Bitcoin May 2024), and
+  the same chain was later observed in the 2024-2025 npm supply-chain
+  operations. NOTE this Nov-2023 source itself names only CL-STA-0240
+  + DPRK (moderate confidence), not TraderTraitor — the TraderTraitor
+  identity is an AUSPEX cross-cluster association, not source-stated.
 attributions:
   - actor_id: kp/rgb/tradertraitor
     attributing_org: Palo Alto Networks Unit 42
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-06-13
+    attributing_org_confidence: moderate  # AUDIT 2026-07-04: source says "moderate confidence" for Contagious Interview (was high)
+    attribution_level: nation  # DPRK reached at moderate confidence; NO named group named for CL-STA-0240
+    auspex_assessment: concur-with-caveat  # the TraderTraitor actor mapping is AUSPEX's addition, not source-stated
+    attribution_date: 2023-11-21
     attribution_source_id: unit42/2024-06-13_north-korea-job-campaigns
     notes: |
-      Unit 42 attribution by tradecraft (LinkedIn / Telegram
-      fake-recruiter pretext), infrastructure overlap, and
-      malware-family lineage to known TraderTraitor /
-      Lazarus operations.
+      Unit 42 (21 Nov 2023): "We attribute with moderate
+      confidence that Contagious Interview is run by a North
+      Korea state-sponsored threat actor"; tracked as
+      CL-STA-0240. The source names NO specific group for this
+      cluster — Lazarus appears only as an Operation Dream Job
+      comparison, and TraderTraitor / APT38 / BlueNoroff do NOT
+      appear anywhere in the article. Hence attribution_level =
+      nation (DPRK at moderate confidence; not named-actor).
+      AUSPEX maps CL-STA-0240 to kp/rgb/tradertraitor as a
+      cross-cluster association — the BeaverTail/InvisibleFerret
+      fake-interview developer-lure tradecraft was later folded
+      into the TraderTraitor / Slow-Pisces umbrella by subsequent
+      reporting — an AUSPEX analytical identity, NOT stated by
+      this source; therefore concur-with-caveat.
   - actor_id: kp/it-worker-fraud
     attributing_org: Palo Alto Networks Unit 42
-    attributing_org_confidence: high
+    attributing_org_confidence: high  # source: "high confidence that Wagemole can be attributed to a North Korea-sponsored APT"
+    attribution_level: nation  # DPRK reached at high confidence; tracked as CL-STA-0241, no named group
     auspex_assessment: concur
-    attribution_date: 2024-06-13
+    attribution_date: 2023-11-21
     attribution_source_id: unit42/2024-06-13_north-korea-job-campaigns
     notes: |
-      Wagemole side of the disclosure: parallel
-      fake-resume / fake-GitHub fraud-employment campaign
-      run by DPRK IT-worker cluster.
+      Unit 42 (21 Nov 2023): "we assess with high confidence
+      that Wagemole can be attributed to a North Korea-sponsored
+      APT, which we track as CL-STA-0241" — basis: passwords
+      created in Korean typed on a US keyboard including words
+      used only in North Korea, and Korean keyboard settings on
+      actor-controlled machines. Wagemole is the parallel
+      fake-resume / stolen-identity / GitHub-persona
+      remote-employment fraud; Unit 42 notes DOJ/FBI reporting
+      that DPRK "uses remote workers to funnel wages to its
+      weapons programs." attribution_level = nation (no specific
+      named group asserted by the source).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
-    confidence: strongly_inferred
+    confidence: strongly_inferred  # vendor report naming only the proximate crypto-theft goal → strongly_inferred, not attested (per-event 8th-congress rule)
     reasoning: |
-      BeaverTail / InvisibleFerret are the tradecraft chain
-      delivering the Web3 developer-machine compromises
-      that subsequently enable crypto-exchange and
-      supply-chain thefts attested elsewhere in the atlas
-      (DMM Bitcoin, Atomic Wallet, Stake.com).
+      BeaverTail / InvisibleFerret are the developer-machine
+      compromise chain whose stated objective (Unit 42: "likely
+      cryptocurrency theft ... and using compromised targets as a
+      staging environment for additional attacks") feeds the DPRK
+      hard-currency revenue aggregation the 8th-Congress plan
+      encodes — the same monetisation channel expressed in the
+      crypto-exchange / supply-chain thefts recorded elsewhere in
+      the atlas (Atomic Wallet, Stake.com, DMM Bitcoin).
+    inference_basis:
+      signals:
+        - "Unit 42 states the objective is 'likely cryptocurrency theft'; BeaverTail enumerates browser crypto-wallet extensions (MetaMask, Binance, Coinbase, Phantom, Ronin, TRON) and Solana keys, and InvisibleFerret exfiltrates cryptocurrency-specific file paths."
+        - "DPRK crypto-theft revenue is repeatedly attributed by Treasury/FBI to WMD / ballistic-missile financing (the revenue-aggregation pillar); developer-machine compromise is the access chain feeding that monetisation."
+      ruled_out: |
+        Pure espionage / IP collection — ruled out because the
+        documented tooling and Unit 42's stated objective are
+        financial (crypto-wallet and credit-card theft), not
+        classified-data collection.
     contested: false
     analyst: claude
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/it-worker-fraud
-    confidence: strongly_inferred
+    confidence: strongly_inferred  # source references the wages→weapons purpose via DOJ/FBI, not its own primary attestation → strongly_inferred
     reasoning: |
-      Wagemole side of the disclosure is the same
-      IT-worker fraud program attested in Treasury sb0416
-      (May 2024) and the 14-national DOJ indictment
-      (December 2024).
+      Wagemole (CL-STA-0241) is the DPRK IT-worker fraud program:
+      fake resumes and stolen identities used to win remote
+      employment, which Unit 42 links to DOJ/FBI reporting that
+      North Korea "uses remote workers to funnel wages to its
+      weapons programs" — the same program independently attested
+      in Treasury sb0416 (May 2024) and the 14-national DOJ
+      indictment (December 2024).
+    inference_basis:
+      signals:
+        - "Unit 42 explicitly ties Wagemole to the DOJ/FBI finding that North Korea 'uses remote workers to funnel wages to its weapons programs' — the proximate revenue purpose the revenue-aggregation/it-worker-fraud program encodes."
+        - "The DPRK IT-worker fraud program is independently attested as WMD-financing revenue in Treasury sb0416 (May 2024) and the 14-national DOJ indictment (Dec 2024)."
+      ruled_out: |
+        Ordinary financially-motivated identity fraud with no state
+        nexus — ruled out by Unit 42's high-confidence DPRK
+        attribution (Korean-language artefacts) and the
+        state-revenue-for-weapons framing.
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/finance/crypto-exchange
-    role: primary
   - target_id: sectors/ict/software
-    role: primary
+    role: primary  # the directly-compromised victims: software developers lured via fake job interviews (source: "software developers" ×9)
+  - target_id: sectors/finance/crypto-exchange
+    role: primary  # crypto-theft objective + impersonated-company theme ("AI, cryptocurrency and NFT-related companies"); not a directly-breached exchange
 sources:
   - unit42/2024-06-13_north-korea-job-campaigns
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against the RAW Unit 42 article "Hacking Employers and Seeking Employment: Two
+    Job-Related Campaigns Bear Hallmarks of North Korean Threat Actors"
+    (raw_snapshot unit42__2024-06-13_north-korea-job-campaigns.html,
+    sha256 0ec26b0d…62d20826, 288,914 bytes). NOT a phantom — the cited URL returns the real
+    article; title + body carry BeaverTail (41), InvisibleFerret (37), Contagious Interview (35),
+    Wagemole (26), NPM (50). This is the RIGHT source with a WRONG recorded date; audited + corrected
+    in place (no re-source needed).
+
+    [c] DATES — MAJOR CORRECTION. The article's actual publication date is 2023-11-21, not
+    2024-06-13. Ironclad: JSON-LD "datePublished":"2023-11-21T00:00:00+00:00"; meta
+    article:published_time content="2023-11-21T14:00:48+00:00"; byline "Published: November 21,
+    2023"; first update log entry "Updated Dec. 1, 2023" (an article updated Dec-2023 cannot post
+    Jun-2024). Fixed disclosure_date + end_date 2024-06-13 → 2023-11-21 and both attribution_date
+    → 2023-11-21. start_date 2023-11-01 ("onset late 2023") was unsupported → 2022-12-01: Unit 42
+    says Contagious Interview infra "established as early as December 2022" (first CI malware
+    samples "as early as March 2023"; Wagemole file trove timestamped "as early as August 2022").
+    NB the event id (2024-06/…) and source id (unit42/2024-06-13_…) and file paths still embed the
+    wrong date — slugs are stable-forever so left in place; FLAGGED for orchestrator re-slug/move.
+
+    [a] FACTS — stripped fabrications. (1) "hundreds of victims" — the source gives NO victim count
+    (grep "hundreds" = 0); removed. (2) "targeting cryptocurrency and Web3 developers" — source says
+    "software developers" (×9); "Web3" = 0 occurrences; reworded to software developers with the
+    crypto-theft objective noted. (3) "Canonical TraderTraitor tradecraft ... for the 2024 cycle" —
+    wrong actor label + wrong year; reframed. VERIFIED-TRUE + retained: BeaverTail = JavaScript
+    stealer/loader hidden inside NPM packages hosted on/injected into GitHub ("BeaverTail is
+    JavaScript-based malware hidden inside Node Package Manager (NPM) packages"); InvisibleFerret =
+    cross-platform Python backdoor (fingerprinting, keylogging, browser credential + crypto-wallet
+    theft, AnyDesk); chain = BeaverTail first stage → retrieves InvisibleFerret second stage;
+    delivery = fake job interview, actor poses as employer, victim installs malicious NPM package;
+    objective "likely cryptocurrency theft ... staging environment for additional attacks". npm
+    vector VERIFIED. developer-targeting VERIFIED. Directionality: global software-developer victims
+    (US + worldwide), Wagemole targets US companies + freelance marketplaces incl. Africa — matches.
+
+    [b]/[e] ATTRIBUTION — corrected over-attestation. Contagious Interview: source = "We attribute
+    with moderate confidence that Contagious Interview is run by a North Korea state-sponsored threat
+    actor" → downgraded attributing_org_confidence high → moderate; set attribution_level = nation;
+    auspex_assessment concur → concur-with-caveat. CRITICAL: the source names NO specific group for
+    CL-STA-0240 — TraderTraitor/APT38/BlueNoroff = 0 occurrences; Lazarus (3) appears only as an
+    Operation Dream Job comparison. The event's kp/rgb/tradertraitor mapping is an AUSPEX
+    cross-cluster identity (BeaverTail/InvisibleFerret later folded into the TraderTraitor/Slow-Pisces
+    umbrella), NOT source-stated — documented in notes + FLAGGED. Wagemole: source = "we assess with
+    high confidence that Wagemole can be attributed to a North Korea-sponsored APT, which we track as
+    CL-STA-0241" (basis: Korean-language passwords on US keyboards, words used only in North Korea,
+    Korean keyboard settings) → attributing_org_confidence high retained (correct); added
+    attribution_level = nation; attribution_date fixed. Both clusters reach NATION (DPRK), not
+    named-actor, in this source.
+
+    [d] DOCTRINE_LINKS — both kept strongly_inferred (per-event 8th-Congress rule: a vendor report
+    naming only the proximate crypto-theft/regime-revenue goal is strongly_inferred, NOT attested —
+    and the doctrine record's own 2026-07-02 note confirms this). Neither carries an attesting_source_id
+    (correct for strongly_inferred). Added inference_basis (signals + ruled_out) to both. crypto-bridge-theft
+    link: source states objective = "likely cryptocurrency theft"; BeaverTail enumerates crypto-wallet
+    extensions; strongly_inferred holds. it-worker-fraud link: source itself ties Wagemole to DOJ/FBI
+    "funnel wages to its weapons programs" (weapons programs ×2) — proximate revenue purpose;
+    strongly_inferred holds. Removed "Web3" from reasoning. All doctrine/pillar/program FKs resolve.
+
+    [f] ACTOR_ID — both resolve: kp/rgb/tradertraitor (file atlas/actors/kp/tradertraitor.yaml, id
+    kp/rgb/tradertraitor, re-homed kp/unscoped→kp/rgb 2026-07-02) and kp/it-worker-fraud. FLAG: this
+    source does not support the CL-STA-0240 → TraderTraitor identity (AUSPEX-analytical only) — a
+    dedicated kp CL-STA-0240 / Contagious-Interview cluster actor does NOT exist; orchestrator/Kara
+    to decide whether to create one or retain the TraderTraitor mapping. Did NOT edit actor files.
+
+    TARGETS [pt.4] — ict/software = the directly-compromised victims (software developers);
+    finance/crypto-exchange retained as the crypto-theft objective + impersonation theme (added
+    clarifying comments), not a directly-breached exchange. incident_type: added espionage (Wagemole
+    "potential for both financial gain and espionage"; InvisibleFerret keylogging/exfiltration).

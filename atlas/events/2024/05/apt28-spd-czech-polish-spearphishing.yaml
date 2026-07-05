@@ -1,83 +1,251 @@
 id: 2024-05/apt28-spd-czech-polish-spearphishing
-name: APT28 spearphishing of German SPD and Czech/Polish entities (CVE-2023-23397)
-start_date: 2022-03-01  # Bundesregierung statement: campaign began March 2022
+name: APT28 spearphishing of the German SPD and Czech institutions (CVE-2023-23397)
+start_date: 2022-03-01  # German statement: campaign began at least as early as March 2022
 disclosure_date: 2024-05-03
-end_date: 2023-12-01  # approx. campaign duration per German MFA
+end_date: null  # no source states an operation end; SPD email access observed from Dec 2022, campaign undated at 2024-05 disclosure
 incident_type:
   - intrusion
   - data-theft
-initial_vector: 0-day  # CVE-2023-23397 Outlook NTLM relay was 0-day at time of exploitation
+  - espionage
+initial_vector: 0-day  # CVE-2023-23397 Outlook NTLM relay was a 0-day when operationalized from March 2022 (Microsoft patched it March 2023)
 outcome_summary: |
-  German federal government publicly attributed a sustained APT28
-  campaign exploiting CVE-2023-23397 (Outlook NTLM relay) against
-  the German SPD (Chancellor Scholz's party), Czech state and
-  military entities, Polish government targets, and additional
-  defense, aerospace, and logistics organizations. Germany summoned
-  the Russian charge d'affaires and characterized the campaign as
-  an "intolerable" cyberattack; EU and NATO issued solidarity
-  statements. Czech MFA published parallel attribution.
+  On 2024-05-03 the German Federal Government (Foreign Minister Baerbock /
+  Interior Minister Faeser, following a formal attribution procedure led by the
+  Auswaertiges Amt) publicly attributed to APT28 — "steered by the military
+  intelligence service of Russia" (GRU) — a sustained campaign that exploited the
+  Microsoft Outlook vulnerability CVE-2023-23397 (NTLM relay). Named German
+  victims: the SPD Executive Committee (Chancellor Scholz's party), whose email
+  accounts were accessed from December 2022, plus German companies in the
+  armament, aerospace/space, logistics and IT-service sectors and various
+  foundations and associations. Germany summoned the acting Russian charge
+  d'affaires and called the attack "intolerable." The same day, Czechia's MFA
+  announced in parallel that Czech institutions had also been targeted by APT28
+  via the Outlook flaw (without detailing the targets), and the EU High
+  Representative and NATO issued solidarity statements condemning the campaign
+  against Germany and Czechia.
 false_flag_risk: none
 summary: |
-  Doctrinally significant as a member-state public attribution of
-  GRU targeting of a governing-party political infrastructure
-  during an EU-election year. Pairs with subsequent NATO and EU
-  statements. The exploited vulnerability (CVE-2023-23397) is the
-  Outlook elevation-of-privilege bug that Microsoft patched in
-  March 2023 — APT28 had operationalized it from at least March
-  2022 per the German Federal Office statement.
+  Doctrinally significant as a coordinated member-state public attribution of GRU
+  targeting of a governing party's political infrastructure and of
+  defence-industrial targets. The exploited vulnerability, CVE-2023-23397, is the
+  Outlook elevation-of-privilege / NTLM-relay bug Microsoft patched in March 2023;
+  APT28 had operationalized it as a 0-day from at least March 2022 — the month
+  after Russia's full-scale invasion of Ukraine — per the German statement. This
+  event models the German (SPD + German industry) and the parallel Czech
+  (unspecified institutions) attributions announced on 2024-05-03; Poland,
+  Lithuania, Slovakia and Sweden were named by NATO the same day as OTHER/prior
+  alliance targets of the same actor, NOT as victims of this specific attribution
+  (see notes).
 attributions:
   - actor_id: ru/gru/26165/apt28
-    attributing_org: German Federal Government (Auswärtiges Amt)
+    attributing_org: German Federal Government (Auswaertiges Amt / BMI)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-05-03
     attribution_source_id: bundesregierung/2024-05-03_apt28-spd-attribution
+    notes: |
+      Baerbock (2024-05-03): "we can attribute this cyberattack to a group called
+      APT28, which is steered by the military intelligence service of Russia";
+      Interior Minister Faeser named the GRU. Level set to named-actor: the German
+      government named the group (APT28) and its parent service (the GRU), but its
+      reachable wording does not name the specific GRU unit 26165 / 85th GTsSS —
+      that identity is an assessed identification (carried here by the two
+      secondaries) and is established by prior sources already in the actor record
+      (2018 DOJ indictments; 2020 UK/EU Bundestag-hack sanctions). Confidence high
+      ("unambiguously").
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/aid-state-targeting
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Targeting the governing party of the German Chancellor — the
-      single largest European supplier of Ukraine military aid at
-      the time — squarely fits the aid-state-targeting pillar of
-      the post-2022 posture. The German Federal Government's
-      attribution statement framed the campaign in those terms.
-    attesting_source_id: bundesregierung/2024-05-03_apt28-spd-attribution
+      A GRU campaign that compromised the governing party of Germany — the largest
+      European supplier of military aid to Ukraine at the time — together with
+      German armament, aerospace and logistics firms, beginning in March 2022 (the
+      month after the full-scale invasion), fits the post-2022 sanctions-response
+      posture's aid-state-targeting pillar. No cited source states that strategic
+      goal in so many words, so the label is strongly_inferred rather than
+      attested; the German Interior Ministry (per Al Jazeera) did describe the
+      victims as including "targets related to Russia's war in Ukraine."
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target set: the governing party of Germany (largest EU supplier of Ukraine military aid) plus German armament/aerospace/logistics/IT firms — war-materiel-relevant."
+        - "Timing: campaign began at least as early as March 2022, the month after Russia's full-scale invasion."
+        - "BMI framing (per Al Jazeera): victims included 'targets related to Russia's war in Ukraine.'"
+        - "Actor: GRU unit 26165 (APT28), a strategic military-intelligence collection arm."
+      ruled_out: "Routine pre-war political espionage — the post-invasion onset and the war-materiel industrial target set fit the sanctions-response/aid-targeting posture more specifically than undifferentiated collection."
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      Coordinated targeting of three NATO members' government and
-      defense entities; NATO and EU solidarity statements explicitly
-      framed the campaign as a NATO-degradation operation.
-    attesting_source_id: bundesregierung/2024-05-03_apt28-spd-attribution
+      The victims (German and Czech government/party/defence entities) are NATO
+      members and NATO condemned the campaign as "a threat to Allied security," but
+      no cited source frames the operation as a NATO-degradation effort, and the
+      same target set reads at least as well as aid-state coercion or routine
+      strategic collection — so more than one strategic reading survives. (Corrects
+      a prior over-attestation: the earlier reasoning claimed the NATO/EU statements
+      "explicitly framed the campaign as a NATO-degradation operation"; they did
+      not.)
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "NATO-degradation: DE/CZ government, party and defence targets are NATO-member entities and NATO called the activity 'a threat to Allied security.'"
+        - "Sanctions-response / aid-state coercion: the same target set reads more directly as pressure on Ukraine-aid suppliers (see the aid-state-targeting link)."
+        - "Routine foreign-intelligence collection: the documented effect is email-account compromise (collection), the core mission of GRU 26165, with no alliance-degradation effect shown."
+    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/destabilization-via-info
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Political-leadership and party-infrastructure targeting
-      consistent with the 2014 Military Doctrine framing of
-      destabilization-by-information-means against adversary
-      societies.
+      Compromise of a governing party's executive committee is consistent with the
+      2014 Military Doctrine's information-confrontation framing, and the Czech MFA
+      and EU described the campaign as targeting "democratic processes /
+      institutions." But the documented activity is email-account collection with
+      no leak or information effect tied to it, so a routine-espionage reading
+      competes with the destabilization reading — hence plausible rather than
+      strongly_inferred.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Destabilization via information means: targeting a governing party's executive fits information-confrontation against an adversary's political leadership; the Czech MFA/EU framed it as targeting democratic processes."
+        - "Foreign-intelligence collection: the observed effect is email-account compromise (espionage), with no leak or influence operation tied to this campaign."
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/spd-germany
     role: primary
-  - target_id: sectors/government/foreign-ministry
-    role: primary
-  - target_id: sectors/government/defense-ministry
-    role: primary
+    country: de
+    outcome: "Executive Committee email accounts compromised (accessed from Dec 2022)"
   - target_id: sectors/defense
-    role: collateral
+    role: primary
+    country: de
+  - target_id: sectors/aerospace
+    role: primary
+    country: de
+  - target_id: sectors/government
+    role: primary
+    country: cz
 sources:
   - bundesregierung/2024-05-03_apt28-spd-attribution
+  - aljazeera/2024-05-03_germany-russia-intolerable-cyberattack
+  - thehackernews/2024-05-04_apt28-outlook-czech-german-attribution
+notes: |
+  Multi-victim event modelling the German (SPD Executive Committee + German
+  defence/aerospace/logistics/IT industry, country de) and the parallel Czech
+  (unspecified institutions, country cz) attributions of 2024-05-03. Poland,
+  Lithuania, Slovakia and Sweden were named by NATO the same day as OTHER/prior
+  targets of APT28, NOT as victims of this attribution — the earlier de/cz/pl
+  framing conflated the separately-reported Dec-2023 Polish-CERT CVE-2023-23397
+  targeting; a distinct event should carry the Polish campaign if desired.
+  attribution_level is named-actor (group + GRU service; the specific unit 26165
+  is not in the reachable German wording).
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: partial
+  notes: |
+    Phantom-remediation audit. The cited govt primary
+    (bundesregierung/2024-05-03_apt28-spd-attribution ->
+    auswaertiges-amt.de/en/newsroom/news/-/2660484) has LINK-ROTTED: the live URL
+    returns HTTP 400/404 and the recorded wayback archive_url is on archive.org
+    (blocked for this fetcher), so it could not be snapshotted. The BMI press
+    release and the EU Council (consilium) page were also un-capturable (servlet
+    400 / Cloudflare 403). The incident is real and well-documented, so per the
+    re-source protocol two reachable secondaries were CREATED, snapshotted and
+    hashed, and every claim is now carried by them:
+      - aljazeera/2024-05-03_germany-russia-intolerable-cyberattack
+        sha256 bfe732e8…b2e0703c (202,485 bytes)
+      - thehackernews/2024-05-04_apt28-outlook-czech-german-attribution
+        sha256 690b3c3f…c1e633c4 (179,963 bytes)
+    Level = partial because the load-bearing govt primary is un-snapshottable and
+    claims rest on mirror corroboration.
+
+    [a] FACTS. Verified & kept: CVE-2023-23397 Outlook NTLM/Net-NTLMv2 relay
+    (THN); 0-day operationalized from at least March 2022 (Al Jazeera "began at
+    least as early as March 2022"); SPD Executive Committee email accounts
+    "accessed from December that year" [2022] (Al Jazeera); German armament /
+    aerospace-space / logistics / IT-service companies + foundations/associations
+    (THN "logistics, armaments, the air and space industry, IT services,
+    foundations, and associations located in Germany"); charge d'affaires summoned
+    + "intolerable" (Al Jazeera). CORRECTED: (1) "Czech state and military
+    entities" -> "Czech institutions (unspecified)" — Czech MFA "the country's
+    institutions had also been targeted … It didn't provide details about the
+    targets" (Al Jazeera); no source says Czech *military*. (2) "Polish government
+    targets" REMOVED from the German-attribution framing — NATO named "Lithuania,
+    Poland, Slovakia and Sweden" as OTHER alliance targets of APT28, not victims of
+    this German/Czech attribution (conflation with the Dec-2023 Polish-CERT
+    CVE-2023-23397 event); recorded in event notes. (3) end_date 2023-12-01 ("per
+    German MFA") -> null: unsupported; Dec-2022 is when SPD access *began*, not an
+    op end. (4) "subsequent NATO and EU statements" -> same-day (2024-05-03). (5)
+    Added incident_type espionage (email-account collection).
+
+    [b] ATTRIBUTION. German Federal Government, high confidence, concur — kept.
+    attribution_level ADDED = named-actor. Evidence: Baerbock "a group called
+    APT28, which is steered by the military intelligence service of Russia"; Faeser
+    named the GRU. The govt named the group + parent SERVICE (GRU), not the
+    specific unit; THN states "APT28, assessed to be linked to Military Unit 26165
+    … GRU" as an assessment, not the govt's wording. FLAG: orchestrator brief said
+    "named-unit (GRU 26165 named)"; I could not verify unit-26165 in any reachable
+    German-government text (primary un-capturable), so I set the conservative,
+    definition-faithful named-actor. If Kara retrieves the German primary and it
+    names "Einheit 26165 / 85. Hauptzentrum," upgrade to named-unit is warranted;
+    the unit identity is otherwise established by the actor record's 2018 DOJ +
+    2020 UK/EU sanctions sources.
+
+    [c] DATES. source published_on 2024-05-03 = Al Jazeera "Published On 3 May
+    2024" ✓. start_date 2022-03-01 ✓; disclosure 2024-05-03 ✓; end_date -> null
+    (above). New secondaries dated 2024-05-03 (Al Jazeera) and 2024-05-04 (THN
+    byline "May 04, 2024").
+
+    [d] DOCTRINE_LINKS — two over-attestations corrected. (1)
+    sanctions-response-2022/aid-state-targeting attested -> strongly_inferred: the
+    prior reasoning claimed the govt "framed the campaign in those terms"; the
+    reachable govt wording states no such goal (closest is BMI's "targets related
+    to Russia's war in Ukraine"). Added inference_basis.signals + ruled_out;
+    attesting_source_id -> null. (2) nato-ultimatum-2021/nato-degradation attested
+    -> plausible: the prior reasoning claimed NATO/EU "explicitly framed the
+    campaign as a NATO-degradation operation" — FALSE; NATO said "a threat to
+    Allied security" and the EU said "irresponsible behaviour," neither a
+    degradation-goal statement, and the attesting_source_id (bundesregierung)
+    carried no such claim. Added alternatives; attesting_source_id -> null. (3)
+    military-doctrine-2014/destabilization-via-info strongly_inferred -> plausible:
+    op is email collection (no leak/influence effect), so routine-espionage
+    competes; added alternatives. Event now carries zero attested links (correct —
+    a condemnation/attribution statement does not state strategic purpose at goal
+    level). All links attacker-rationale (RU doctrine on RU actor); no perspective
+    tag / state-mismatch.
+
+    [e] ATTRIBUTION_LEVEL set (was missing) = named-actor — see [b].
+
+    [f] ACTOR_ID ru/gru/26165/apt28 resolves (atlas/actors/ru/apt28.yaml, internal
+    id matches; primary_service_id ru/gru/26165). Actor well-formed, sanctioned, no
+    flag.
+
+    TARGETS restructured to match sources (no inflation): resolved the DANGLING FK
+    orgs/spd-germany by CREATING atlas/targets/orgs/spd-germany.yaml (mirrors the
+    orgs/dnc governing-party precedent; sector government, country de). REMOVED
+    sectors/government/foreign-ministry and sectors/government/defense-ministry
+    (unsupported — no foreign/defence *ministry* was a named victim; the Auswaertiges
+    Amt is the discloser and the German defence victims are *companies*). Set
+    sectors/defense (de) + sectors/aerospace (de) primary for the armament +
+    air/space companies, and sectors/government (cz) for the Czech institutions.
+    Added country codes for de/cz directionality. (logistics/IT companies noted in
+    prose — no logistics/it sector ids exist; not invented.)
+
+    FLAGS for orchestrator/Kara: (i) named-actor vs the briefed named-unit — see
+    [b]. (ii) Poland is NOT modelled as a victim here; consider a separate event
+    for the Dec-2023 Polish-CERT CVE-2023-23397 campaign. (iii) NEW FILE created
+    outside the strict one-event scope: atlas/targets/orgs/spd-germany.yaml (needed
+    to clear the dangling FK) — please review. (iv) govt primary un-snapshottable
+    (link-rot + archive.org block); wayback archive_url on record.

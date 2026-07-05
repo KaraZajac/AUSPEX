@@ -1,6 +1,6 @@
 id: 2024-03/acidpour-sandworm-ukraine-isp-wiper
-name: AcidPour wiper deployment against Ukrainian ISP / telecom infrastructure (Sandworm)
-start_date: 2024-03-01  # approximate; SentinelLabs disclosure window
+name: AcidPour wiper appears in Ukraine amid Sandworm-linked ISP/telecom disruption
+start_date: 2024-03-13  # telecom networks reportedly offline since 2024-03-13 (SolntsepekZ claim); AcidPour sample first submitted from Ukraine 2024-03-16; SentinelLabs disclosure 2024-03-21
 disclosure_date: 2024-03-21
 end_date: null
 incident_type:
@@ -9,33 +9,64 @@ incident_type:
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  SentinelLabs disclosed AcidPour — an evolved x86-Linux embedded
-  wiper variant of the February 2022 AcidRain (Viasat KA-SAT)
-  family — appearing in Ukraine. AcidPour targets storage paths
-  (/dev/dm-, /dev/loop, RAID arrays, NAS, embedded appliances)
-  rather than satellite-modem flash. CERT-UA parallel disclosure
-  attributed the activity to Sandworm (UAC-0165). Victimology
-  suggested ISP / telecommunications-operator targeting, consistent
-  with the late-2023 / early-2024 wave of Ukrainian telecom
-  disruption.
+  On 16 March 2024 SentinelLabs identified a novel x86-Linux wiper it
+  named AcidPour, uploaded from Ukraine, and confirmed it as a variant
+  of AcidRain — the wiper that rendered Eutelsat KA-SAT (Surfbeam2)
+  modems inoperable in Ukraine at the onset of the February 2022
+  Russian invasion (commonly, though per SentinelLabs a misnomer, the
+  "Viasat hack"). AcidPour reuses AcidRain's reboot, recursive-wipe and
+  IOCTL-based wiping logic and expands it with Unsorted Block Image
+  (UBI, /dev/ubi*) and Device Mapper (/dev/dm-*) handling, extending
+  its reach beyond flash to RAID arrays, SANs, NAS and other
+  large-storage / embedded Linux (x86) devices. SentinelLabs confirmed
+  the AcidRain->AcidPour link, connecting AcidPour to clusters
+  previously attributed to Russian military intelligence; CERT-UA and
+  Ukraine's SSSCIP publicly attributed the activity to UAC-0165, a
+  subgroup of Sandworm. Specific AcidPour targets were not conclusively
+  verified, but the discovery coincided with an enduring disruption of
+  multiple Ukrainian telecom networks (offline since 13 March 2024)
+  publicly claimed by the GRU-linked SolntsepekZ persona; SentinelLabs
+  stated it could not confirm AcidPour was used against those ISPs.
 false_flag_risk: none
 summary: |
-  Doctrinally significant as the family evolution of AcidRain into
-  a more general Linux-storage wiper. The AcidRain family was the
-  signature destructive payload of the Viasat KA-SAT invasion-day
-  operation; AcidPour's appearance against Ukrainian ISP / telecom
-  infrastructure two years later marks Sandworm's continued
-  development of destructive tooling for embedded / Linux-edge
-  victim environments — the natural follow-on tool for operations
-  against Ukrainian telecom operators (Kyivstar disruption Dec 2023
-  established this victimology).
+  Doctrinally significant as the family evolution of AcidRain into a
+  more general x86-Linux storage / embedded wiper. AcidRain was the
+  signature destructive payload of the invasion-day (24 Feb 2022)
+  Eutelsat KA-SAT / Surfbeam2 modem-wiping operation aimed at disabling
+  Ukrainian military communications; AcidPour's appearance in Ukraine
+  two years later, amid disruption of Ukrainian telecom operators,
+  marks continued Sandworm / GRU development of destructive tooling for
+  embedded / Linux-edge victim environments. SentinelLabs notes the
+  attributed subcluster UAC-0165's targets "are commonly observed in
+  Ukrainian critical infrastructure, including telecommunications,
+  energy, and government services" — the telecom victimology this tool
+  fits — while cautioning that AcidPour's use against the March 2024
+  ISP outages was not confirmed at disclosure.
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: SentinelLabs / CERT-UA
+    attributing_org: SentinelLabs / CERT-UA / Ukraine SSSCIP
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-03-21
     attribution_source_id: sentinelone/2024-03-21_acidpour-acidrain-ukraine
+    notes: |
+      SentinelLabs "confirms the connection between AcidRain and
+      AcidPour, effectively connecting it to threat clusters previously
+      publicly attributed to Russian military intelligence." CERT-UA
+      "confirmed our findings and publicly attributed the activity to
+      UAC-0165, considered a subgroup of the outdated Sandworm APT";
+      Ukraine's SSSCIP (reported via CyberScoop) likewise designated
+      UAC-0165. attribution_level=named-actor: the source names Sandworm
+      (named actor), UAC-0165 (Ukrainian activity-cluster) and "Russian
+      military intelligence" (GRU service) but does NOT state the
+      numbered unit — Sandworm = GRU Unit 74455 rests on prior public
+      attributions (2020 US DoJ indictment), not this report. The one
+      "medium-confidence" qualifier in the article is the HISTORICAL
+      AcidRain<->VPNFilter 'dstr' developmental similarity, not the
+      AcidRain<->AcidPour link (SentinelLabs calls it "confirmed") nor
+      the actor attribution (government CERT + SSSCIP explicit) — so high
+      is not overstated.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
@@ -50,8 +81,9 @@ doctrine_links:
     inference_basis:
       source_id: sentinelone/2024-03-21_acidpour-acidrain-ukraine
       signals:
-        - "SentinelLabs/CERT-UA document the AcidPour wiper against Ukrainian ISP/telecom (Ukraine-theater behaviour)"
-      ruled_out: "the Russkiy Mir doctrine / strategic goal — not named in the source"
+        - "SentinelLabs confirm AcidPour (an AcidRain / GRU-lineage wiper) appeared in Ukraine amid the March 2024 disruption of multiple Ukrainian telecom networks (Ukraine-theater destructive behaviour)"
+        - "SentinelLabs frame it as 'cyber support for this hot conflict' with 'strategic intent to inflict significant operational impact ... disrupting critical infrastructure and communications'"
+      ruled_out: "the Russkiy Mir doctrine / strategic goal itself is not named in the source; the Ukraine-war-theater reading is inferred from actor + target + the source's war-support framing"
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
@@ -59,10 +91,20 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Telecom infrastructure destructive operations during active
-      hostilities — non-contact-warfare against critical
-      communications infrastructure.
-    attesting_source_id: null
+      Destructive cyber against critical communications infrastructure
+      during active hostilities — degrading an adversary's functioning
+      by non-kinetic means, the effect the non-contact-warfare pillar
+      encodes. SentinelLabs describe the AcidRain->AcidPour transition
+      as underscoring "the strategic intent to inflict significant
+      operational impact ... disrupting critical infrastructure and
+      communications."
+    attesting_source_id: sentinelone/2024-03-21_acidpour-acidrain-ukraine
+    inference_basis:
+      source_id: sentinelone/2024-03-21_acidpour-acidrain-ukraine
+      signals:
+        - "GRU / Sandworm destructive wiper (AcidPour) tooling aimed at Ukrainian telecom / large-storage embedded devices during the Russia-Ukraine war"
+        - "SentinelLabs frame the transition AcidRain->AcidPour as underscoring 'the strategic intent to inflict significant operational impact ... disrupting critical infrastructure and communications'"
+      ruled_out: "the 2014 Military Doctrine text is not named by the source; the non-contact-warfare reading is inferred from destructive-cyber-as-warfighting-method against wartime communications infrastructure"
     contested: false
     analyst: claude
 targets:
@@ -72,3 +114,80 @@ targets:
     role: primary
 sources:
   - sentinelone/2024-03-21_acidpour-acidrain-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited against SentinelLabs "AcidPour | New Embedded Wiper Variant
+    of AcidRain Appears in Ukraine" (Guerrero-Saade & Hegel, 2024-03-21),
+    raw snapshot sha256 7206f8ce…bbb215c4 (345,571 bytes). NOT a phantom
+    — URL live, title/body match the citation.
+    [a] FACTS: AcidPour = confirmed x86-Linux variant of AcidRain, first
+    seen (uploaded from Ukraine) 2024-03-16 — source-carried ("we
+    identified a suspicious Linux binary uploaded from Ukraine"; "a
+    confirmed variant we refer to as 'AcidPour'"). AcidRain lineage:
+    rendered Eutelsat KA-SAT / Surfbeam2 modems inoperable at the onset
+    of the Feb 2022 invasion (source explicitly calls "Viasat hack" a
+    MISNOMER — corrected the event's "Viasat KA-SAT" to "Eutelsat KA-SAT
+    / Surfbeam2" + kept the common name in a parenthetical). Net-new
+    capability = UBI (/dev/ubi*) + Device Mapper (/dev/dm-*) logic
+    putting RAID / SAN / NAS + large-storage / embedded Linux in scope.
+    CORRECTED outcome_summary's "targets storage paths (/dev/dm-,
+    /dev/loop … ) rather than satellite-modem flash": /dev/loop* is an
+    INHERITED AcidRain path (not a distinctive AcidPour addition), and
+    AcidPour EXPANDS beyond flash (retains /dev/mtd*, adds /dev/ubi*
+    flash-abstraction) rather than replacing it — reworded to "expands …
+    extending its reach beyond flash to RAID arrays, SANs, NAS". Removed
+    the UNSOURCED "Kyivstar disruption Dec 2023" claim (absent from this
+    single source) and the "late-2023 / early-2024 wave" framing;
+    re-grounded telecom victimology in the source's own "UAC-0165 targets
+    are commonly observed in Ukrainian critical infrastructure, including
+    telecommunications, energy, and government services". Softened event
+    name + summary "deployment against ISPs" -> "appears amid disruption":
+    source is explicit "Specific targets of AcidPour have yet to be
+    conclusively verified" and "we cannot confirm that AcidPour was used
+    to disrupt these ISPs".
+    [b] ATTRIBUTION: kept high / concur, added attribution_level + notes.
+    Source: SentinelLabs "confirms the connection between AcidRain and
+    AcidPour, effectively connecting it to threat clusters previously
+    publicly attributed to Russian military intelligence"; CERT-UA
+    "publicly attributed the activity to UAC-0165, considered a subgroup
+    of the outdated Sandworm APT"; Ukraine SSSCIP likewise (via
+    CyberScoop). high is NOT overstated — government CERT + SSSCIP name
+    the actor explicitly and SentinelLabs calls the malware link
+    "confirmed"; the SOLE "medium-confidence" qualifier in the article is
+    the HISTORICAL AcidRain<->VPNFilter 'dstr' developmental tie, not the
+    AcidPour attribution. Added "Ukraine SSSCIP" to attributing_org.
+    [c] DATES: source published_on 2024-03-21 ✓ (byline "March 21,
+    2024"); disclosure_date 2024-03-21 ✓. FIXED start_date 2024-03-01
+    ("approximate; SentinelLabs disclosure window" — wrong, disclosure
+    was the 21st) -> 2024-03-13, the source-anchored operation start
+    ("multiple Ukrainian telecommunication networks, reportedly offline
+    since March 13th"); comment records AcidPour sample 2024-03-16 +
+    disclosure 2024-03-21. end_date null ✓ ("impact is still ongoing").
+    [d] DOCTRINE_LINKS: both strongly_inferred (neither attested -> no
+    attested-gate). ru/russkiy-mir/ukraine-theater: kept
+    strongly_inferred, tightened signals (removed "against ISP/telecom"
+    overclaim -> "appeared … amid the March 2024 disruption"; added the
+    source's "cyber support for this hot conflict" / "strategic intent to
+    inflict significant operational impact … disrupting critical
+    infrastructure and communications" war-support framing); ruled_out =
+    Russkiy Mir goal not named. ru/military-doctrine-2014/
+    non-contact-warfare: kept strongly_inferred, added attesting_source_id
+    (primary supporting source) + inference_basis (signals + ruled_out)
+    it previously lacked. Neither source names a doctrine slug — honest.
+    [e] ATTRIBUTION_LEVEL: was MISSING -> set named-actor. Source names
+    Sandworm (named actor), UAC-0165 (activity-cluster) and "Russian
+    military intelligence" (GRU service) but NOT the numbered unit;
+    Sandworm = GRU Unit 74455 rests on prior public attributions (2020 US
+    DoJ indictment), so not named-unit from THIS source.
+    [f] ACTOR_ID: ru/gru/74455/sandworm resolves
+    (atlas/actors/ru/sandworm.yaml — canonical Sandworm / GRU 74455 /
+    APT44); solid, not provisional, no flag.
+    RESIDUAL UNCERTAINTY: the AcidPour->ISP-outage causal link is
+    unconfirmed by the source (stated explicitly); the event now hedges
+    this throughout. Telecom targets kept role=primary as the observed
+    victim sector of the documented March 2024 disruption (Triacom /
+    Misto TV), with the tool-attribution caveat carried in the prose.

@@ -1,38 +1,64 @@
 id: 2024-06/anssi-nobelium-france-attribution
 name: ANSSI / CERT-FR publishes Nobelium / APT29 intrusion-set report (diplomatic targeting)
-start_date: 2020-01-01
+start_date: 2020-10-01  # ANSSI: Nobelium "active since at least October 2020"; French strand from Feb 2021
 disclosure_date: 2024-06-19
-end_date: 2024-06-19
+end_date: 2024-06-19  # publication/disclosure act; underlying Nobelium activity ongoing per the report
 incident_type:
   - espionage
   - documentary
 initial_vector: phishing
 outcome_summary: |
   ANSSI / CERT-FR publication CERTFR-2024-CTI-006 (19 June 2024,
-  English-language) consolidating ANSSI's view of Nobelium /
-  APT29 / Midnight Blizzard intrusion-set activity affecting
-  French diplomatic entities (Ministry of Foreign Affairs,
-  embassies, diplomatic communications infrastructure). Report
-  covers the Diplomatic Orbiter campaign and overlapping APT29
-  subclusters.
+  English-language, TLP:CLEAR, 3 pp) consolidating ANSSI's view of
+  the Nobelium / Midnight Blizzard intrusion set, which ANSSI dates
+  to at least October 2020 and treats as one of three distinct
+  SVR-related intrusion sets (alongside APT29 / The Dukes and Dark
+  Halo). The report documents Nobelium activity against French
+  diplomatic and government entities: the Ministry for Europe and
+  Foreign Affairs (an unsuccessful Cobalt Strike attempt plus
+  Apr–May 2022 phishing against dozens of MFA email addresses), the
+  Ministry of Culture and the National Agency for Territorial
+  Cohesion (ANCT) (compromised via a "Strategic Review" lure,
+  Feb–May 2021, no lateral movement), and the French embassies in
+  Kyiv and Romania (May 2023). The activity is publicly described as
+  the "Diplomatic Orbiter" campaign.
 quantified_impact:
   countries_affected: 1
 false_flag_risk: none
 operators_named: []
 summary: |
   Companion to the October 2023 APT28 attribution: France's CERT
-  publicly attributing sustained Russian foreign-intelligence
-  (SVR) operations against French diplomacy. Editorially
-  significant as one of the most detailed European national-CERT
-  reports on APT29 to date and as evidence of ANSSI's continued
-  willingness to publish adversary attribution.
+  publishing its view of sustained Russian foreign-intelligence
+  (SVR)-linked operations against French diplomacy. ANSSI reports
+  that Nobelium activity "has been publicly linked to the Russian
+  foreign intelligence service SVR" and, in its own prose,
+  characterizes APT29 / The Dukes, Dark Halo and Nobelium as three
+  distinct "SVR-related intrusion sets"; its own high-confidence
+  assessment states only that Nobelium is "almost certainly operated
+  on behalf of a state actor." Editorially significant as evidence
+  of ANSSI's continued willingness to publish adversary attribution,
+  mirroring the CERT-FR APT28 report eight months earlier.
 attributions:
   - actor_id: ru/svr/apt29
     attributing_org: ANSSI / CERT-FR
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-unit
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-06-19
     attribution_source_id: anssi/2024-06-19_nobelium-malicious-activities
+    notes: |
+      ANSSI names the SVR — a specific foreign-intelligence service —
+      in its own prose ("three different and full-fledged SVR-related
+      intrusion sets"), hence attribution_level: named-unit (not
+      nation / activity-cluster). Two caveats drive concur-with-caveat:
+      (1) ANSSI frames the SVR link as adopted public/community
+      attribution ("have been publicly linked to the Russian foreign
+      intelligence service SVR"), and its own fresh high-confidence
+      sentence names only "a state actor" ("Nobelium is almost
+      certainly operated on behalf of a state actor"); (2) ANSSI splits
+      APT29 / The Dukes, Dark Halo and Nobelium into three distinct SVR
+      intrusion sets, whereas AUSPEX maps Nobelium / Midnight Blizzard
+      to the APT29 actor record (both are equivalent aliases there).
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-defensive
     perspective: defender-response
@@ -40,25 +66,130 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      A CERT-FR public attribution of foreign adversary activity is
-      consistent with the LID coordination pillar; the report does
-      not name 'lutte informatique défensive (LID)', so the
-      doctrine-document linkage is inferred.
+      A CERT-FR public report characterizing a foreign adversary's
+      intrusion set affecting French diplomatic and government
+      entities is a canonical instance of the LID CERT-FR-coordination
+      / advisory-publication pillar. strongly_inferred, not attested:
+      the report performs the defensive-coordination function but does
+      not name 'lutte informatique défensive (LID)' or state that
+      doctrinal purpose, so the doctrine-document linkage is AUSPEX's
+      inference (mirrors the 2023-10 ANSSI / APT28 sibling event).
     attesting_source_id: anssi/2024-06-19_nobelium-malicious-activities
     inference_basis:
       source_id: anssi/2024-06-19_nobelium-malicious-activities
       signals:
-        - "ANSSI/CERT-FR publicly attributes Nobelium/APT29 activity against French diplomacy (defender-response coordination function)"
+        - "ANSSI/CERT-FR publicly characterizes the Nobelium intrusion set affecting French diplomatic entities (the CERT-FR coordination / advisory-publication function)"
+        - "The report is an instance of the CERTFR-NNNN-CTI advisory series the pillar names (CERTFR-2024-CTI-006)"
       ruled_out: "the LID doctrine by name — not named in the report"
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/fpc-2023
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      SVR (Nobelium / APT29 / Midnight Blizzard) sustained espionage
+      against a leading NATO/EU state's foreign ministry, government
+      bodies and embassies — to "exfiltrate strategic intelligence"
+      per ANSSI — is strategic foreign-policy collection against an
+      "unfriendly state," the license the FPC-2023 anti-Anglo-Saxon
+      pillar encodes (operations "against Western foreign-ministries
+      ... perceived as instruments of Western policy"). The pillar's
+      target_sectors include government/foreign-ministry, the
+      doctrine's own cyber-relevance names "SVR-led intelligence
+      collection against MFAs ... (Midnight Blizzard mailbox theft)",
+      and the pillar is in APT29's default_doctrine_alignment_ids.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "ANSSI states the purpose is espionage / to 'exfiltrate strategic intelligence' and 'exfiltrate valuable intelligence' — covert intelligence collection, no leak/influence/destabilization component"
+        - "Actor is SVR foreign intelligence (Nobelium / APT29); victims are a NATO/EU state's foreign ministry, government agencies and embassies, amid 'geopolitical tensions ... in relation to Russia's aggression against Ukraine' (ANSSI) — France is an 'unfriendly state' under FPC-2023"
+        - "Target profile matches the anti-anglo-saxon pillar's enumerated sectors (government/foreign-ministry)"
+      ruled_out: "ru/info-security-2016/information-sphere-as-domain (information confrontation / influence in the media / social-platform / NGO space): ruled out because this campaign is covert diplomatic email-collection espionage with no influence, leak or information-psychological component"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government/foreign-ministry
-    country: FR
+    country: fr
     role: primary
   - target_id: sectors/government
-    country: FR
+    country: fr
     role: primary
 sources:
   - anssi/2024-06-19_nobelium-malicious-activities
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs ANSSI/CERT-FR CERTFR-2024-CTI-006 "Malicious activities linked to the
+    Nobelium intrusion set" (19 Jun 2024, English, TLP:CLEAR, 3 pp). RAW captured: the cited
+    CERT-FR landing-page HTML (sha256 0e954d26…5767904b, 16,288 B) and the report PDF it
+    links, /uploads/CERTFR-2024-CTI-006.pdf (raw_snapshot; sha256 2ecb16bb…bd3782cf,
+    930,774 B) — all facts verified against the PDF. attesting_source is the real ANSSI
+    first-party advisory, NOT a phantom: the landing page resolves and links the substantive
+    PDF. The PDF is byte-identical (same sha256) to the copy already captured under the
+    duplicate source certssigouv/2024-06_anssicert-fr-diplomatic-orbiter-report-n.
+    [a] FACTS (corrected). Verified verbatim: Nobelium "active since at least October 2020";
+    "most likely for espionage purposes"; "publicly described as a campaign called
+    'Diplomatic Orbiter'"; French MFA — unsuccessful Cobalt Strike attempt + Apr–May 2022
+    phishing on "dozens of email addresses"; Ministry of Culture + ANCT via "Strategic
+    Review" lure Feb–May 2021, attackers "did not manage to move laterally"; French embassies
+    in Kyiv ("Diplomatic car for sale", May 2023) + Romania (May 2023, unsuccessful); a
+    European embassy in South Africa emailed by an account impersonating a French embassy
+    (Mar 2022). CORRECTIONS: removed "diplomatic communications infrastructure" from
+    outcome_summary (not in the report — ANSSI names compromised email accounts of diplomatic
+    staff, MFA, Ministry of Culture, ANCT); replaced "overlapping APT29 subclusters" with
+    ANSSI's explicit "three different and full-fledged SVR-related intrusion sets"
+    (APT29/The Dukes · Dark Halo · Nobelium); removed the summary claim "one of the most
+    detailed European national-CERT reports on APT29 to date" (unsupported — this is a concise
+    3-page TLP:CLEAR summary, not a detailed technical report); named the Ministry of
+    Culture/ANCT victims.
+    [b] ATTRIBUTION (corrected). Added attribution_level: named-unit — ANSSI names the SVR in
+    its OWN prose ("three ... SVR-related intrusion sets"), a specific foreign-intelligence
+    service. Changed auspex_assessment concur → concur-with-caveat + added an attribution
+    notes block: (i) ANSSI frames the SVR link as adopted public attribution ("have been
+    publicly linked to ... SVR") and its own fresh high-confidence sentence names only "a
+    state actor"; (ii) ANSSI splits APT29/Dark Halo/Nobelium into three intrusion sets while
+    AUSPEX maps Nobelium to the APT29 actor. attributing_org_confidence high retained. This
+    matches the audited duplicate event's identical named-unit + concur-with-caveat reading.
+    [c] DATES (corrected). start_date 2020-01-01 → 2020-10-01 (ANSSI: "active since at least
+    October 2020"; no January-2020 date in the source). disclosure_date/attribution_date/
+    end_date = 2024-06-19 (report date); end_date kept at the publication date per the
+    documentary-event convention (cf. the 2023-10 APT28 sibling); activity ongoing ("Nobelium
+    remains an active threat"). Source published_on 2024-06-19 matches the PDF header.
+    [d] DOCTRINE_LINKS (kept + added). LID/cert-fr-coordination (defender-response,
+    strongly_inferred) KEPT — correct per the known ANSSI convention (report performs the LID
+    coordination function but does not name the doctrine); attesting_source_id = the primary
+    supporting ANSSI source, inference_basis present. ADDED the attacker-rationale link
+    ru/fpc-2023/anti-anglo-saxon (strongly_inferred, attesting_source_id null), mirroring the
+    APT28 sibling's Russian-doctrine link: ANSSI states only the proximate purpose (espionage
+    / "exfiltrate strategic intelligence"), so NOT attested; SVR vs a NATO/EU state's foreign
+    ministry + embassies amid the Ukraine-war backdrop triangulates to strategic foreign-policy
+    collection against an "unfriendly state" — pillar target_sectors include
+    government/foreign-ministry, its doctrine cyber-relevance literally names "SVR-led
+    intelligence collection against MFAs ... (Midnight Blizzard mailbox theft)", and the pillar
+    is in APT29's default alignment. NB on the task's "info-sphere pillar": I RULED OUT
+    ru/info-security-2016/information-sphere-as-domain (its domain is information confrontation
+    / influence across media / social-platform / NGO sectors) because this campaign is covert
+    diplomatic email-collection espionage with no influence/leak/info-psychological component;
+    fpc-2023/anti-anglo-saxon is the correct fit. Both links strongly_inferred, not attested
+    (the "strongly_inferred not attested" ceiling is honored).
+    [e] ATTRIBUTION_LEVEL set to named-unit (see [b]).
+    [f] ACTOR_ID ru/svr/apt29 resolves → atlas/actors/ru/apt29.yaml (id: ru/svr/apt29); actor
+    well-sourced (WhiteHouse/Treasury/NCSC-UK/MSRC/CISA), status sanctioned, not provisional;
+    its default_doctrine_alignment_ids include ru/fpc-2023/anti-anglo-saxon. No actor edit.
+    TARGETS (corrected): lowercased country FR → fr on both; kept sectors/government/
+    foreign-ministry (MFA heavily targeted — supported here, unlike the APT28 sibling) +
+    sectors/government (Ministry of Culture, ANCT). No sector inflation.
+    Level: full — load-bearing source fully snapshotted (HTML + PDF) and every retained claim
+    source-carried.
+    FLAG (DUPLICATE / MERGE candidate): this event and
+    2024-06/anssicert-fr-diplomatic-orbiter-report-nobeliummidnight-blizzard-svr-e both rest
+    on the SAME report CERTFR-2024-CTI-006 (byte-identical PDF, sha256 2ecb16bb…bd3782cf) via
+    two source records — anssi/2024-06-19_nobelium-malicious-activities (tier primary, kind
+    cert-advisory) vs certssigouv/2024-06_anssicert-fr-diplomatic-orbiter-report-n (tier
+    secondary, kind industry, understated). Kara to merge/retire.

@@ -32,6 +32,7 @@ attributions:
   - actor_id: ir/irgc-io/apt42
     attributing_org: Mandiant (Google Cloud)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2024-05-01
     attribution_source_id: mandiant/2024-05-01_apt42-untangling
@@ -45,17 +46,34 @@ doctrine_links:
       services, activists) maps to the IRGC's constitutional
       counter-foreign-threat tasking.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Mandiant (tier-1 vendor) names the strategic purpose at the service-remit level: APT42 'operates on behalf of the Islamic Revolutionary Guard Corps Intelligence Organization (IRGC-IO)', which is 'responsible for monitoring and preventing foreign threats to the Islamic Republic and domestic unrest' — the counter-foreign-threat / regime-preservation goal this pillar encodes."
+        - "Source victimology (Western and Middle Eastern NGOs, media, academia, legal services, activists; Cluster C targets 'individuals perceived as a threat to the Iranian regime, including researchers, journalists, NGO leaders, and human rights activists') maps to the pillar's counter-dissident tasking."
+        - "Mandiant states the actor 'covertly exfiltrated data of strategic interest to Iran' — collection serving the regime, not revenue or sanctions-evasion."
+      ruled_out: "Financially-motivated / independent-hacktivist reading — the source frames the activity as state-directed espionage on behalf of a named IRGC intelligence unit, with no revenue, extortion, or hacktivist-front element."
     contested: false
     analyst: claude
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/diaspora-targeting
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Persona-led credential phishing against diaspora-adjacent
-      journalists and activists is the diaspora-targeting pattern
-      the doctrine pillar describes.
+      APT42's persona-driven credential theft touches diaspora-
+      adjacent journalists, NGO leaders, and activists (the
+      source's Cluster C), overlapping this pillar — which itself
+      names APT42 as "adjacent." The label is only plausible: the
+      parent doctrine encodes DENIABLE retaliation laundered
+      through hacktivist personas that publicly claim-and-leak,
+      whereas this operation is clandestine espionage with no
+      hacktivist front, so the straightforward espionage /
+      regime-preservation reading (the constitutional-irgc-role
+      link above) is a serious — indeed dominant — competitor.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Deniable-retaliation / diaspora-targeting reading: APT42's persona-driven credential theft against journalists, NGO leaders, and human-rights activists (source Cluster C) overlaps this pillar, which names APT42 as 'adjacent'."
+        - "Clandestine espionage / regime-preservation reading (the dominant competitor, already captured by the constitutional-irgc-role link): the source describes covert collection of 'data of strategic interest to Iran', not the hacktivist-persona claim-and-leak laundering mechanism the cyber-deniable-retaliation doctrine encodes — no Telegram/X front, no publicly claimed attack, no deniable destructive act."
     contested: false
     analyst: claude
 targets:
@@ -69,3 +87,83 @@ targets:
     role: primary
 sources:
   - mandiant/2024-05-01_apt42-untangling
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    Audited vs Mandiant/Google Cloud "Uncharmed: Untangling Iran's APT42
+    Operations" (2024-05-01). Raw snapshot RE-VERIFIED on disk
+    (mandiant__2024-05-01_apt42-untangling.html, sha256 0ba9f779…92a1b383,
+    631576 bytes — matches recorded content_sha256; hash re-verified, not
+    re-fetched). NOT a phantom: URL is the real article; every load-bearing
+    claim carried verbatim.
+    [a] FACTS ✓ all source-carried. Three clusters: "Mandiant identified at
+    least three clusters of infrastructure used by APT42 to harvest credentials
+    from targets in the policy and government sectors, media organizations and
+    journalists, and NGOs and activists." Victimology verbatim: "The actor is
+    targeting Western and Middle Eastern NGOs, media organizations, academia,
+    legal services and activists." Backdoors verbatim: "NICECURL A backdoor
+    written in VBScript … including data mining and arbitrary command execution /
+    TAMECAT A PowerShell toehold that can execute arbitrary PowerShell or C#
+    content"; "Both … were delivered with decoy content (likely via spear
+    phishing)." Personas + cloud creds: "APT42 was observed posing as
+    journalists and event organizers … enabled APT42 to harvest credentials and
+    use them to gain initial access to cloud environments"; "covertly
+    exfiltrated data of strategic interest to Iran." (Cosmetic: outcome_summary
+    renders the title with an em-dash for the RAW colon, and attributes
+    "data-mining" to both backdoors collectively where RAW scopes it to NICECURL
+    — substantively accurate, not corrected.) Summary's forward-references
+    (Sept-2024 DOJ IRGC-trio indictment; ARIA SEPEHR AYANDEHSAZAN FBI advisory;
+    Oct-2024 Israeli academic targeting) are EDITORIAL corpus-navigation, not
+    claims of the Mandiant source; all three resolve to real corpus events
+    (2024-05/irgc-trio-trump-campaign-hack-leak,
+    2024-08/aria-sepehr-ayandehsazan-fbi-advisory,
+    2024-10/microsoft-apt42-israeli-targeting) — kept.
+    [b] ATTRIBUTION ✓. Mandiant (Google Cloud) / high / concur — RAW states
+    flatly "Mandiant assesses APT42 operates on behalf of the Islamic
+    Revolutionary Guard Corps Intelligence Organization (IRGC-IO)"; no confidence
+    hedge on the actor or the IRGC-IO tie; tier-1 vendor naming its own tracked
+    cluster → high upheld.
+    [c] DATES ✓. Source published_on 2024-05-01 = RAW metadata
+    "datePublished":"2024-05-01" (byline "May 1, 2024"); disclosure_date matches.
+    start_date 2024-01-01 / end_date 2024-04-30 = editorial "recent operational
+    window" for this reference/disclosure event; NOTE the report documents
+    activity 2019–2024 (clusters "Active: 2019/2021/2022 – today"), newest
+    concrete op date in-source is March 2024 (shortlinkview[.]live). Defensible
+    recent-window bound; not fabricated, left as-is.
+    [d] DOCTRINE — two corrections. (1) constitutional-irgc-role/
+    regime-preservation: KEPT strongly_inferred (attesting null) + ADDED
+    inference_basis.signals+ruled_out. Mandiant DOES state the goal at the
+    service-remit level (IRGC-IO "responsible for monitoring and preventing
+    foreign threats to the Islamic Republic and domestic unrest"; "APT42
+    targeting and missions are consistent with its assessed affiliation") — a
+    credible attested argument — BUT corpus convention reserves `attested` on
+    this pillar for GOVERNMENT purpose-statements (sands-casino→ODNI,
+    apt39-rana→Treasury, irgc-trio→DOJ) and labels vendor-only Iran-collection
+    ops strongly_inferred (siblings apt42-israeli-cyber-experts, earth-simnavaz/
+    apt34, apt35-treasury). Held to convention; the remit quote is captured in
+    signals[] so an upgrade is a one-edit Kara call. (2) cyber-deniable-
+    retaliation/diaspora-targeting: DOWNGRADED strongly_inferred → plausible +
+    added inference_basis.alternatives. Parent doctrine encodes DENIABLE
+    retaliation laundered through hacktivist claim-and-leak personas
+    (HomeLand Justice, CyberAv3ngers); this op is clandestine espionage with no
+    hacktivist front, and the espionage/regime-preservation reading (link 1) is a
+    serious, dominant competitor, so strongly_inferred's "no serious competitor"
+    test fails. Kept (pillar name-drops APT42) but FLAGGED as removal/merge
+    candidate — mechanism-mismatched and largely redundant with link 1.
+    [e] ATTRIBUTION_LEVEL — ADDED `named-unit` (was missing). Mandiant names both
+    the actor (APT42) and the specific service (IRGC Intelligence Organization),
+    a named intelligence unit.
+    [f] ACTOR ✓ resolves — ir/irgc-io/apt42 (atlas/actors/ir/apt42.yaml, id
+    ir/irgc-io/apt42, primary_service_id ir/irgc-io, +ir/irgc). Placement
+    service-verified 2026-06-24 off this same source's IRGC-IO quote; NO change
+    (orchestrator's "ir/irgc/apt42" note superseded by the more-specific verified
+    IRGC-IO placement). Malware families NICECURL (VBScript) + TAMECAT
+    (PowerShell) and the IRGC-IO named-unit affiliation both independently
+    confirmed in RAW. Source tier kept `secondary` (Mandiant actor-mapping/
+    profile genre is tiered secondary in-corpus — apt34/apt39/charming-kitten
+    profiles, APT43 report — and the prior audit kept it); FLAGGED
+    defensible-either-way (a case exists for primary given net-new NICECURL/
+    TAMECAT discovery).

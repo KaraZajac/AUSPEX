@@ -2,44 +2,126 @@ id: 2024-04/change-healthcare-ransomhub-repost
 name: RansomHub re-extortion of Change Healthcare data
 start_date: 2024-04-08
 disclosure_date: 2024-04-08
-end_date: 2024-05-31
+end_date: null  # AUDIT 2026-07-04: no source bounds the extortion window; prior 2024-05-31 was unsourced
 incident_type:
+  - extortion
   - data-theft
-initial_vector: unknown  # data already exfiltrated by ALPHV affiliate
+  - leak
+initial_vector: unknown  # no new intrusion — data already exfiltrated in the Feb 2024 ALPHV event
 outcome_summary: |
-  RansomHub posted ~4TB of Change Healthcare patient and claims
-  data — the same dataset previously held by the ALPHV affiliate
-  "Notchy" after the February 2024 intrusion — on its leak site
-  April 8, 2024. The repost followed ALPHV's late-February exit
-  scam, in which the ALPHV operator pocketed UnitedHealth's
-  approximately USD 22M ransom payment and left the affiliate
-  with the stolen data. The affiliate migrated to RansomHub and
-  re-monetized the dataset under the RansomHub brand. The
-  episode is the canonical case of RaaS affiliate-portability
-  defeating ransom-payment-based incident closure.
+  RansomHub, a ransomware-as-a-service brand that emerged in February
+  2024, posted to its dark-web leak site on April 8, 2024 that it held
+  ~4TB (claimed) of Change Healthcare patient and claims data and
+  threatened to sell it to the "highest bidder" unless UnitedHealth
+  paid a fresh ransom; it published a sample subset that WIRED and
+  BleepingComputer assessed as appearing legitimate. The dataset was
+  the same trove retained by the ALPHV affiliate "Notchy" after the
+  February 2024 intrusion. The repost followed ALPHV's late-February–
+  early-March 2024 exit scam, in which the ALPHV operator pocketed
+  UnitedHealth's ~USD 22M ransom payment (paid March 1) and left the
+  affiliate holding the stolen data. The affiliate re-monetized the
+  trove under the RansomHub brand — RansomHub itself told WIRED it
+  "is not affiliated with AlphV," i.e. the affiliate, not the ALPHV
+  operator, carried the data across brands. The episode is a canonical
+  case of RaaS affiliate-portability defeating ransom-payment-based
+  incident closure: the $22M payment did not prevent re-extortion.
 quantified_impact:
-  data_exfiltrated_tb: 4
+  data_exfiltrated_tb: 4  # RansomHub's claimed volume; WIRED notes it is unclear they hold the full 4TB
 false_flag_risk: none
 campaign_id: change-healthcare-alphv-ransomhub
 summary: |
-  Important AUSPEX criminal-baseline case for an unusual reason:
-  the ALPHV cluster carrying the original intrusion is tracked
-  at `ru/proxies/alphv` as Russian-state-tolerated, but the
-  same affiliate's RansomHub-branded re-extortion lives in the
-  criminal-baseline corpus. The asymmetry illustrates how
-  affiliate portability between state-tolerated and non-
-  attributed brand operators makes operator-level doctrinal
-  classification unstable across an incident lifecycle.
+  AUSPEX criminal-baseline case documenting how ransomware-as-a-
+  service affiliate portability destabilizes operator-level doctrinal
+  classification across an incident lifecycle. The original February
+  2024 intrusion is tracked at `criminal/alphv` and this RansomHub
+  re-extortion at `criminal/ransomhub`; both sit in the criminal
+  baseline — neither carries a source-documented state nexus (ALPHV
+  was re-homed from `ru/proxies/alphv` to `criminal/alphv` for lack of
+  documented Russia-state tasking). The same stolen dataset moves from
+  one branded RaaS operator to another via a portable affiliate
+  ("Notchy"), so the perpetrating brand changes mid-incident while the
+  underlying operator (the affiliate) does not — which is why AUSPEX
+  models the two stages as separate events under one `campaign_id`.
 attributions:
   - actor_id: criminal/ransomhub
-    attributing_org: HHS + Mandiant + journalism consensus
+    attributing_org: "RansomHub (self-claimed, leak site) + security-journalism consensus (WIRED, BleepingComputer, KrebsOnSecurity)"
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-04-15
-    attribution_source_id: cisa/2024-08-29_aa24-242a-ransomhub-advisory
-doctrine_links: []
+    attribution_date: 2024-04-12
+    attribution_source_id: wired/2024-04-12_change-healthcare-another-ransomware-threat
+    notes: "RansomHub self-claimed the Change Healthcare data on its leak site (Apr 8, 2024). WIRED received sample records and assessed the threat as 'Looks Credible'; BleepingComputer said the leaked data 'does appear to belong to the company' (neither could independently verify full provenance). RansomHub told WIRED it 'is not affiliated with AlphV' — the ALPHV affiliate 'Notchy' carried the trove to the separate RansomHub brand. named-actor (RansomHub group named), high confidence on the reposter's identity."
+doctrine_links: []  # pure criminal-baseline financial extortion; no state doctrine genuinely applies (actor has no documented state nexus)
 targets:
   - target_id: orgs/change-healthcare
     role: primary
 sources:
+  - wired/2024-04-12_change-healthcare-another-ransomware-threat
+  - bleepingcomputer/2024-04-15_ransomhub-change-healthcare-data-leak
+  - krebs/2024-03-05_blackcat-implodes-change-healthcare
   - cisa/2024-08-29_aa24-242a-ransomhub-advisory
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-04
+  level: full
+  notes: |
+    PHANTOM/WRONG-SOURCE REMEDIATION → RE-SOURCE (badrabbit model). The event's
+    sole prior citation AND attribution_source_id was
+    cisa/2024-08-29_aa24-242a-ransomhub-advisory — a real CISA advisory but a
+    GENERAL RansomHub TTP advisory: curl HTTP 200 (sha cde72d5a…c9099fb7,
+    124,716 bytes), title "#StopRansomware: RansomHub Ransomware", but it names
+    "Change Healthcare" 0 times, "Notchy" 0 times, and does not mention the
+    April-2024 repost or the exit scam. It supports only the summary's
+    "RansomHub = ALPHV-successor RaaS" sub-claim, so it is RETAINED as background
+    but DEMOTED from the attribution/incident role. Re-sourced to three sources
+    that name the victim + repost, all snapshotted:
+    [WIRED] Matt Burgess, 2024-04-12 (sha 7a127aa9…63b0ad95, 1,350,370 B) —
+    new attribution_source_id; [BleepingComputer] Lawrence Abrams, 2024-04-15
+    (sha 236239d6…c35de324, 88,469 B); [KrebsOnSecurity] 2024-03-05 (existing
+    record, sha cb400c4d…e029f71d, 105,934 B — hash re-verified).
+
+    [a] FACTS — all now source-carried. "RansomHub posted ~4TB … April 8, 2024
+    … sell to 'highest bidder'": WIRED "Since Monday [=Apr 8], RansomHub … has
+    posted to its dark-web site that it has 4 terabytes of Change Healthcare's
+    stolen data, which it threatened to sell to the 'highest bidder'". 4TB now
+    framed as CLAIMED (WIRED: unclear they hold the full 4TB; BleepingComputer
+    "cannot verify … it does appear to belong to the company"). "same dataset
+    held by ALPHV affiliate 'Notchy'": BleepingComputer "the affiliate known as
+    'Notchy'"; Krebs (affiliate 'Notchy' on Ramp). "$22M exit scam, operator
+    kept the payment": WIRED "AlphV stole our share of the payment and performed
+    an exit scam"; Krebs "$22 million … On March 3 a BlackCat affiliate posted a
+    complaint … exit scamming their affiliates". CORRECTIONS: prior summary
+    claimed ALPHV "is tracked at ru/proxies/alphv as Russian-state-tolerated" —
+    STALE/FALSE (file is now criminal/alphv, no ru/proxies/alphv exists);
+    rewritten. outcome_summary "late-February exit scam" → "late-February–early-
+    March" (payment Mar 1, affiliate complaint Mar 3 per Krebs). Added WIRED's
+    "not affiliated with AlphV" nuance (affiliate, not operator, ported the data).
+    [b] ATTRIBUTION — attributing_org corrected from "HHS + Mandiant + journalism
+    consensus" (HHS/Mandiant attributed the FEB ALPHV intrusion, not this repost)
+    to "RansomHub (self-claimed, leak site) + security-journalism consensus".
+    high confidence retained: reposter identity is RansomHub's own leak-site
+    claim, corroborated by WIRED sample verification + BleepingComputer + the
+    affiliate's own Ramp complaint (Krebs); auspex_assessment concur.
+    [c] DATES — start/disclosure 2024-04-08 confirmed (WIRED "Since Monday",
+    Fri-dated Apr 12 → Mon = Apr 8). attribution_date moved 2024-04-15 →
+    2024-04-12 (WIRED). end_date 2024-05-31 → null (unsourced; no source bounds
+    the window). Source published_on dates verified against bylines (WIRED
+    2024-04-12, BleepingComputer 2024-04-15, Krebs 2024-03-05, CISA 2024-08-29).
+    [d] DOCTRINE_LINKS — [] retained and correct: pure criminal-baseline
+    financial extortion; criminal/ransomhub has no documented state nexus, so no
+    state doctrine genuinely applies (not invented).
+    [e] ATTRIBUTION_LEVEL — set named-actor (RansomHub named group; no unit/state).
+    [f] ACTOR_ID — criminal/ransomhub resolves to atlas/actors/criminal/ransomhub.yaml
+    (well-formed, MISP-galaxy 9d218bb3-…, active_since 2024-02). No actor edit.
+    incident_type broadened [data-theft] → [extortion, data-theft, leak] (this
+    stage = re-extortion + partial leak of already-stolen data).
+
+    FLAGS for orchestrator: (1) target atlas/targets/orgs/change-healthcare.yaml
+    has sources: [] (empty) — registry gap, not edited per protocol. (2) CISA
+    AA24-242A kept as background here; if Kara prefers incident sources only,
+    it can be dropped (still cited by criminal/ransomhub actor + 2024-08
+    events, so not orphaned). (3) Two-stage structure confirmed intact and NOT
+    conflated: primary intrusion = 2024-02/change-healthcare-alphv; this event =
+    the Apr-2024 RansomHub re-extortion; shared campaign_id
+    change-healthcare-alphv-ransomhub.
