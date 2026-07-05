@@ -13,15 +13,22 @@ outcome_summary: |
   the Nobelium / Midnight Blizzard intrusion set, which ANSSI dates
   to at least October 2020 and treats as one of three distinct
   SVR-related intrusion sets (alongside APT29 / The Dukes and Dark
-  Halo). The report documents Nobelium activity against French
-  diplomatic and government entities: the Ministry for Europe and
-  Foreign Affairs (an unsuccessful Cobalt Strike attempt plus
-  Apr–May 2022 phishing against dozens of MFA email addresses), the
-  Ministry of Culture and the National Agency for Territorial
-  Cohesion (ANCT) (compromised via a "Strategic Review" lure,
-  Feb–May 2021, no lateral movement), and the French embassies in
-  Kyiv and Romania (May 2023). The activity is publicly described as
-  the "Diplomatic Orbiter" campaign.
+  Halo). The report documents the "Diplomatic Orbiter" campaign
+  against French diplomatic and government entities. From February to
+  May 2021 Nobelium ran phishing campaigns from compromised email
+  accounts of the Ministry of Culture and the National Agency for
+  Territorial Cohesion (ANCT) using a "Strategic Review" attachment,
+  without moving laterally inside those systems; those same
+  compromised accounts were then used to target the Ministry for
+  Europe and Foreign Affairs (MFA), where operators made an
+  unsuccessful attempt to install Cobalt Strike. In March 2022 a
+  compromised French diplomat's account sent a European embassy in
+  South Africa a malicious email impersonating a French embassy
+  (announcing the embassy's closure over an unspecified terrorist
+  act). In April–May 2022 dozens of MFA email addresses were phished.
+  In May 2023 the French embassy in Kyiv was targeted via a
+  "Diplomatic car for sale" lure, and a detected attempt against the
+  French embassy in Romania was unsuccessful.
 quantified_impact:
   countries_affected: 1
 false_flag_risk: none
@@ -131,8 +138,9 @@ qc:
     links, /uploads/CERTFR-2024-CTI-006.pdf (raw_snapshot; sha256 2ecb16bb…bd3782cf,
     930,774 B) — all facts verified against the PDF. attesting_source is the real ANSSI
     first-party advisory, NOT a phantom: the landing page resolves and links the substantive
-    PDF. The PDF is byte-identical (same sha256) to the copy already captured under the
-    duplicate source certssigouv/2024-06_anssicert-fr-diplomatic-orbiter-report-n.
+    PDF. The PDF is byte-identical (same sha256) to the copy captured under the now-orphaned
+    duplicate source certssigouv/2024-06_anssicert-fr-diplomatic-orbiter-report-n (superseded
+    by this anssi/ source after the 2026-07-05 merge; see MERGE note below).
     [a] FACTS (corrected). Verified verbatim: Nobelium "active since at least October 2020";
     "most likely for espionage purposes"; "publicly described as a campaign called
     'Diplomatic Orbiter'"; French MFA — unsuccessful Cobalt Strike attempt + Apr–May 2022
@@ -187,9 +195,18 @@ qc:
     sectors/government (Ministry of Culture, ANCT). No sector inflation.
     Level: full — load-bearing source fully snapshotted (HTML + PDF) and every retained claim
     source-carried.
-    FLAG (DUPLICATE / MERGE candidate): this event and
-    2024-06/anssicert-fr-diplomatic-orbiter-report-nobeliummidnight-blizzard-svr-e both rest
+    MERGE (resolved 2026-07-05): this event and the former
+    2024-06/anssicert-fr-diplomatic-orbiter-report-nobeliummidnight-blizzard-svr-e both rested
     on the SAME report CERTFR-2024-CTI-006 (byte-identical PDF, sha256 2ecb16bb…bd3782cf) via
     two source records — anssi/2024-06-19_nobelium-malicious-activities (tier primary, kind
     cert-advisory) vs certssigouv/2024-06_anssicert-fr-diplomatic-orbiter-report-n (tier
-    secondary, kind industry, understated). Kara to merge/retire.
+    secondary, kind industry, understated). 2026-07-05: merged the anssicert-fr-diplomatic-orbiter
+    duplicate into this event per Kara; both rested on the identical CERTFR-2024-CTI-006 PDF. The
+    orbiter event has been deleted (git rm). Its source-carried operational detail that this
+    event's prose previously lacked — the causal linkage that the compromised Ministry of
+    Culture/ANCT accounts were then used to target the MFA, the March 2022 impersonation of a
+    French embassy in an email to a European embassy in South Africa, and the Kyiv "Diplomatic
+    car for sale" lure + unsuccessful Romania attempt — was folded into outcome_summary above
+    (each verbatim in the PDF, already itemized under [a]). This event correctly keeps the
+    primary anssi/ source; the now-orphaned certssigouv/ duplicate source is annotated
+    orphaned/superseded in its own record (left for a source-dedup pass, not deleted).
