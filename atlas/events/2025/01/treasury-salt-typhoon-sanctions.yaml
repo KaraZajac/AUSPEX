@@ -4,46 +4,65 @@ start_date: 2025-01-17
 disclosure_date: 2025-01-17  # Treasury press release
 end_date: 2025-01-17
 incident_type:
-  - documentary  # policy / sanctions action; not a cyber op
-initial_vector: unknown
+  - documentary  # OFAC sanctions designation (paper counter-action)
+  - policy       # a sanction is a US cost-imposition policy action; both meta types (cf. sibling 2025-01/ofac-flax-typhoon-integrity-tech)
+initial_vector: unknown  # meta counter-action (OFAC paper designation) — no initial-access vector applies
 outcome_summary: |
-  OFAC SDN listing of Sichuan Juxinhe Network Technology and
-  individual Yin Kecheng — a PRC MSS-linked contractor enabling Salt
-  Typhoon operations against US telecoms. Cost imposition under NCS
-  2023 Pillar 2 (disrupt and dismantle).
+  OFAC SDN listing (pursuant to E.O. 13694, as further amended) of two
+  parties: Sichuan Juxinhe Network Technology Co., Ltd. — a
+  Sichuan-based company OFAC states had "direct involvement in the Salt
+  Typhoon cyber group" and in "the exploitation of these U.S.
+  telecommunication and internet service provider companies," and with
+  which "the MSS has maintained strong ties" — and Yin Kecheng, a
+  Shanghai-based cyber actor OFAC states "is affiliated with the
+  People's Republic of China Ministry of State Security (MSS)" and who
+  was associated with the recent compromise of Treasury's Departmental
+  Offices network. AUSPEX maps this cost-imposition action to NCS-2023
+  Pillar 2 (disrupt-and-dismantle); the release itself cites only E.O.
+  13694 authorities, not NCS-2023.
 false_flag_risk: none
 campaign_id: salt-typhoon-telecoms
 summary: |
-  Administrative event — not a cyber operation — modeled in the
-  AUSPEX atlas because it is the canonical exercise of cost-
-  imposition policy under NCS 2023 Pillar 2 against a PRC MSS
-  contractor. Treasury identifies Sichuan Juxinhe Network
-  Technology as the MSS-linked contractor enabling Salt Typhoon's
-  2023-2024 intrusions into US telecom carriers (AT&T, Verizon,
-  T-Mobile, Lumen, others) and into the CALEA lawful-intercept
-  systems used for court-authorized wiretaps. Salt Typhoon
-  tradecraft per CISA / FBI / NSA reporting includes living off
-  the land on Cisco IOS routers and Windows hosts, exploitation
-  of unpatched network-edge devices, valid-credentials abuse and
-  credential dumping inside telecom NOC environments, the
-  JumbledPath custom router implant, and selective access to the
-  lawful-intercept portal to surveil US political-campaign targets
-  and senior officials.
+  Administrative counter-action — not a cyber operation — modeled in
+  the AUSPEX atlas as a US cost-imposition action against the PRC
+  cyber-services ecosystem behind Salt Typhoon. In a single action
+  (OFAC press release jy2792), Treasury designated two parties under
+  E.O. 13694 (as further amended by the new E.O. on Strengthening and
+  Promoting Innovation in the Nation's Cybersecurity): (1) Sichuan
+  Juxinhe Network Technology Co., Ltd., a Sichuan-based cybersecurity
+  company that OFAC states had "direct involvement in the Salt Typhoon
+  cyber group" and in "the exploitation of these U.S. telecommunication
+  and internet service provider companies," and with which "the MSS has
+  maintained strong ties"; and (2) Yin Kecheng, a Shanghai-based cyber
+  actor OFAC states "is affiliated with the People's Republic of China
+  Ministry of State Security (MSS)" and who was associated with the
+  recent compromise of Treasury's Departmental Offices network. Per
+  OFAC, Salt Typhoon has "been active since at least 2019" and recently
+  "compromised the network infrastructure of multiple major U.S.
+  telecommunication and internet service provider companies." (The
+  specific carrier victims and Salt Typhoon's detailed tradecraft are
+  documented in the cn/mss/salt-typhoon actor record and its CISA / FBI
+  / Cisco sources — NOT in this OFAC release, this event's sole cited
+  source.)
 attributions:
-  - actor_id: null
+  - actor_id: null  # counter-action (US state action); subject actor is cn/mss/salt-typhoon — see summary + notes
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
+    attribution_level: named-unit  # OFAC names the group (Salt Typhoon) AND ties its operating company (Sichuan Juxinhe) to the MSS — a named PRC service ("The MSS has maintained strong ties with … Sichuan Juxinhe")
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-01-17
     attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
     notes: |
-      OFAC sanctions designation of Sichuan Juxinhe (a Salt Typhoon
-      MSS contractor). This is a US sanctions action, not a cyber
-      operation by a US actor, so actor_id is null (was a
-      us/cybercom/cnmf-actor placeholder — corrected per AUDIT-2026-05-29 C1).
-      NOTE: the sibling event fbi-salt-typhoon-bounty attributes the
-      underlying activity to cn/mss/salt-typhoon; the disruption/sanction-
-      event actor convention (null vs disrupted-party) is a pending decision.
+      OFAC SDN designation of Sichuan Juxinhe (the Salt Typhoon
+      operating company; MSS strong-ties) and Yin Kecheng (MSS-affiliated
+      individual, Treasury network compromise). This is a US sanctions
+      counter-action, not a cyber operation by a US actor, so actor_id is
+      null (was a us/cybercom/cnmf-actor placeholder — corrected per
+      AUDIT-2026-05-29 C1). attribution_level named-unit: unlike the Flax
+      Typhoon / Integrity Tech designation (named-actor, no PRC service
+      named → cn/unscoped), this release ties the Salt Typhoon operating
+      company to the MSS, reaching the named service. Subject actor
+      cn/mss/salt-typhoon (status: sanctioned).
 doctrine_links:
   - doctrine_id: us/ncs-2023
     perspective: defender-response
@@ -64,7 +83,99 @@ doctrine_links:
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/sichuan-juxinhe
+  - target_id: orgs/sichuan-juxinhe  # the SANCTIONED entity (subject of the counter-action); no registry file under atlas/targets/orgs/ → informational danglingOrgs gap, cf. sibling orgs/integrity-technology-group (not an error)
     role: primary
 sources:
   - treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    6-point audit of the OFAC Salt Typhoon / Sichuan Juxinhe + Yin
+    Kecheng designation against the RAW Treasury press release jy2792
+    (raw_snapshot treasury__2025-01-17_salt-typhoon-sichuan-juxinhe.html,
+    sha256 7c2cfe78…93652451, 124,947 B — hash RE-VERIFIED unchanged;
+    tier primary PRESERVED, snapshot pre-captured 2026-06-24 by a sibling
+    audit). Single-source event; sole source is a first-party US-govt
+    primary and IS snapshotted → level full. Counter-action (US OFAC acts
+    against the PRC ecosystem behind Salt Typhoon) → actor_id null.
+
+    [a] FACTS — corrected against the RAW (normalized full-text
+    membership tests on the snapshot). VERBATIM-CARRIED: OFAC "is
+    sanctioning Yin Kecheng … a Shanghai-based cyber actor" and "Sichuan
+    Juxinhe Network Technology Co., LTD., a Sichuan-based cybersecurity
+    company with direct involvement in the Salt Typhoon cyber group";
+    "had direct involvement in the exploitation of these U.S.
+    telecommunication and internet service provider companies"; "The MSS
+    has maintained strong ties with multiple computer network
+    exploitation companies, including Sichuan Juxinhe"; Yin Kecheng "is
+    affiliated with the People's Republic of China Ministry of State
+    Security (MSS)" and "was associated with the recent compromise of the
+    Department of the Treasury's Departmental Offices network"; Salt
+    Typhoon "has been active since at least 2019"; designations "pursuant
+    to Executive Order (E.O.) 13694, as further amended by the new E.O. on
+    Strengthening and Promoting Innovation in the Nation's Cybersecurity"
+    (grep "13694" ×4 in RAW). STRIPPED as NOT carried by the sole OFAC
+    source (all return ZERO occurrences in the snapshot): the carrier list
+    "(AT&T, Verizon, T-Mobile, Lumen, others)" — 0; "CALEA" / "lawful" /
+    "wiretap" / "court-authorized" — 0 each; the whole "Salt Typhoon
+    tradecraft per CISA / FBI / NSA reporting" sentence — "JumbledPath" 0,
+    "Cisco" 0, "IOS" 0, "living off the land" 0, "credential" 0, "router"
+    0, "NOC" 0; the "2023-2024 intrusions" window — "2023-2024" 0 (RAW
+    gives only "active since at least 2019" + "recently"). This is the
+    same unsourced boilerplate stripped from the sibling
+    2025-04/fbi-salt-typhoon-bounty; NO CISA/FBI/NSA source is cited on
+    this event, so the tradecraft cannot ride the OFAC citation. Rewrote
+    summary + outcome_summary to OFAC's own words and added Yin Kecheng's
+    actual role (previously omitted from the summary body). incident_type
+    documentary → [documentary, policy] (a sanction is a policy
+    counter-action; both meta), matching sibling ofac-flax-typhoon.
+
+    [b] ATTRIBUTION — actor_id null retained (counter-action; acting body
+    US Treasury OFAC). high + concur-with-caveat carried (formal OFAC
+    designation, stated flatly). ADDED missing attribution_level =
+    named-unit: OFAC names the group (Salt Typhoon) AND ties its operating
+    company (Sichuan Juxinhe) to the MSS — a named PRC service ("Ministry
+    of State Security" ×2 in RAW). This is the level the sibling
+    fbi-bounty audit points here for ("the MSS/named-unit tie is carried
+    by the … January 2025 OFAC designation"), and it is the discriminator
+    vs the Flax Typhoon designation (named-actor → cn/unscoped, MSS not
+    named there).
+
+    [c] DATES — RAW dated "January 17, 2025" / "2025-01-17"; single-day
+    designation → start_date = disclosure_date = end_date = 2025-01-17 ✓
+    (no start/disclosure conflation). Source published_on 2025-01-17 ✓.
+
+    [d] DOCTRINE — us/ncs-2023 / disrupt-dismantle KEPT at
+    strongly_inferred + perspective: defender-response (harmonized
+    2026-07-05; not re-touched). NOT upgraded to attested: the RAW body
+    states no disrupt/dismantle goal and never names NCS-2023/Pillar
+    ("NCS" 0, "National Cybersecurity Strategy" 0, "Pillar" 0). The only
+    "disrupt"/"dismantle" hits in the file (×2 each) are unrelated
+    June-2026 press-release navigation links in the page chrome, NOT the
+    Salt Typhoon article body (verified by context extraction). RAW cites
+    only E.O. 13694 → the doctrine mapping is honestly inferred. Pillar FK
+    us/ncs-2023/disrupt-dismantle resolves.
+
+    [e] ATTRIBUTION_LEVEL — set named-unit (see [b]).
+
+    [f] ACTOR — actor_id null (FK n/a). Subject actor RESOLVES:
+    atlas/actors/cn/salt-typhoon.yaml, id cn/mss/salt-typhoon,
+    primary_service_id cn/mss, status sanctioned (well-scoped; the MSS
+    placement rests on this very OFAC release). Not edited.
+
+    FLAG (informational, out of audit scope): target orgs/sichuan-juxinhe
+    has no registry file under atlas/targets/orgs/ — a danglingOrgs gap,
+    same convention as the sibling orgs/integrity-technology-group (tallied
+    informationally by validate.ts, not an error). Registry creation left
+    for Kara if wanted.
+
+    RESIDUAL: the carrier victims (AT&T/Verizon/T-Mobile/Lumen) and the
+    JumbledPath/Cisco-IOS/CALEA-portal tradecraft are real and
+    well-documented in the broader Salt Typhoon corpus (actor record +
+    CISA/FBI/Cisco Talos), but are NOT carried by this event's sole OFAC
+    source, so they were removed from the event prose rather than sourced
+    here. level=full: sole source snapshotted + hash-verified and every
+    retained claim is source-carried.

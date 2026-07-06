@@ -1,73 +1,192 @@
 id: 2014-08/usis-contractor-breach
 name: USIS background-investigation contractor breach
-start_date: 2013-12-01
-disclosure_date: 2014-08-06
-end_date: 2014-07-31
+start_date: 2013-12-01  # "late 2013" access per Onapsis forensic analysis (infosecurity/2015-05-13); exact date unknown — Dec-2013 is the best estimate
+disclosure_date: 2014-08-06  # public disclosure (Washington Post, 6 Aug 2014)
+end_date: 2014-06-30  # intrusion undetected "until June 2014" (Onapsis); the prior 2014-07-31 had no source — access window is ~late 2013 to detection in June 2014
 incident_type:
   - intrusion
   - data-theft
-initial_vector: n-day  # SAP vulnerability per subsequent litigation
+initial_vector: n-day  # SAP attack vector per Onapsis forensic analysis — "likely exploited either an unpatched or zero-day SAP vulnerability" (hedged: n-day is the conservative reading of "unpatched"; 0-day is the alternative)
 outcome_summary: |
-  US Investigations Services LLC — the largest contractor
-  conducting OPM background investigations for security
-  clearance applicants — disclosed an intrusion affecting at
-  least 27,000 DHS / federal personnel records. USIS lost its
-  OPM contract in September 2014 and filed for bankruptcy in
-  February 2015. The intrusion is generally treated as the
-  contractor-pivot stage of the broader OPM operation that
-  exfiltrated 22.1M SF-86 records via the parallel KeyPoint
-  compromise.
+  The intrusion exposed the personal records of an estimated 25,000
+  DHS / ICE / CBP personnel (some later reporting cited ~27,000 federal
+  employees). After the breach, OPM declined to renew USIS's
+  background-investigation contracts past their 30 September 2014
+  expiration — vetting work that had brought in roughly $304M (~22% of
+  revenue) — and USIS's parent, Altegrity Inc., filed for Chapter 11
+  bankruptcy in February 2015.
 false_flag_risk: none
 campaign_id: prc-bulk-pii-collection-wave
 summary: |
-  USIS and KeyPoint Government Solutions — the two largest
-  OPM background-investigation contractors — were compromised
-  in the same operational window (late 2013 – mid 2014) by
-  PRC-attributed operators. The USIS breach was the first
-  publicly disclosed component; the subsequent June 2015 OPM
-  disclosure absorbed the contractor compromises into the
-  broader bulk-PII narrative. The combined operation produced
-  the canonical MSS bulk-PII collection set on US cleared
-  personnel.
+  US Investigations Services (USIS) — then the largest commercial
+  provider of background investigations for US federal security
+  clearances (it "had performed the bulk of background checks for
+  federal security clearances") — was compromised by an intrusion that,
+  per later Onapsis forensic analysis, "most likely utilized an SAP
+  attack vector": the attackers "likely exploited either an unpatched
+  or zero-day SAP vulnerability" to reach the network "in late 2013"
+  and remained undetected "until June 2014." The breach exposed the
+  personal details of an estimated 25,000 Department of Homeland
+  Security, ICE and CBP personnel and was publicly disclosed on 6
+  August 2014.
+
+  Public attribution was HEDGED and largely victim-originated: USIS
+  characterized the intrusion as having "all the markings of a
+  state-sponsored attack" (its CFO later called it a "state-sponsored
+  data intrusion" in the Altegrity bankruptcy court filing), and press
+  reporting linked it by analogy to prior China-attributed intrusions
+  ("Chinese hackers had roamed ... inside the network of USIS") — but
+  there was NO formal US-government or DOJ attribution naming a Chinese
+  service or actor. AUSPEX assigns the operation, as a working cluster,
+  to the same Deep Panda / Black Vine (cn/unscoped) cluster it assigns
+  to the contemporaneous OPM and Anthem thefts, and treats USIS as one
+  component of the broader 2014–2015 PRC-attributed wave against US
+  background-check / bulk-PII holders (campaign_id). NB (AUSPEX
+  correction): USIS was a DISTINCT contractor compromise — it was the
+  parallel KeyPoint credential compromise, not USIS, that served as the
+  pivot into OPM for the 22.1M-record SF-86 theft.
 attributions:
-  - actor_id: cn/unscoped/deep-panda
-    attributing_org: US Intelligence Community (public attribution)
-    attributing_org_confidence: moderate
+  - actor_id: cn/unscoped/deep-panda  # AUSPEX working-cluster assignment (shared with OPM/Anthem); NO cited source names Deep Panda for USIS. Actor demoted cn/mss->cn/unscoped 2026-06-24 (its sole source names no Chinese service).
+    attributing_org: USIS company statement ("all the markings of a state-sponsored attack") + its CFO's bankruptcy court filing ("state-sponsored data intrusion"); press (WaPo "officials say"; Infosecurity) linked it to prior China-attributed intrusions — NOT a formal US-government / DOJ attribution
+    attributing_org_confidence: moderate  # "state-sponsored" is moderately supported (victim + officials + court filing); the CHINA-specific naming is press inference by analogy — suspected/hedged
+    attribution_level: nation  # press named a nation (China), hedged; USIS's own statement said only "state-sponsored". No named-actor/named-unit in any cited source — the Deep Panda cluster is AUSPEX's assignment, not source-named
     auspex_assessment: concur-with-caveat
-    attribution_date: 2014-08-22
+    attribution_date: 2014-08-06  # first public disclosure/attribution (WaPo, 6 Aug 2014); corrected from 2014-08-22 (the source slug's date — the cited WaPo article URL is dated 2014/08/06)
     attribution_source_id: wapo/2014-08-22_usis-attribution
     notes: |
-      Public press attribution to PRC state operators citing IC
-      officials; not tied to a DOJ indictment. Working cluster
-      assignment is to the same MSS-Jiangsu-linked Deep Panda
-      cluster that subsequent reporting attributed to the OPM
-      and Anthem operations.
+      Public attribution was hedged and substantially victim-originated:
+      USIS said the breach had "all the markings of a state-sponsored
+      attack" and its CFO Jeffrey Campbell called it a "state-sponsored
+      data intrusion" in the Altegrity bankruptcy court filing
+      (databreaches/2015-02-09_altegrity-bankruptcy-usis); press linked
+      it by analogy to prior China intrusions ("Chinese hackers had
+      roamed ... inside the network of USIS" —
+      infosecurity/2015-05-13_usis-sap-vector). There was NO formal
+      US-government or DOJ attribution naming a Chinese service or actor.
+      The cn/unscoped/deep-panda assignment is AUSPEX's working cluster
+      (shared with the OPM/Anthem campaign events), NOT named by any
+      cited source; the earlier "MSS-Jiangsu-linked" framing overstated
+      it and was removed (the actor was itself demoted cn/mss->cn/unscoped
+      on 2026-06-24 for lack of a service-naming source). The cited WaPo
+      disclosure is bot-walled — see qc level: partial.
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/bulk-pii-humint-enabling
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Contractor-pivot stage of the bulk-PII/SF-86 collection
-      operation; the cited WaPo press attribution says only
-      'state-sponsored' and does not name Military-Civil Fusion or
-      the counterintelligence-vetting purpose, so the MCF linkage is
-      inferred.
-    attesting_source_id: wapo/2014-08-22_usis-attribution
+      A suspected state-sponsored intrusion into the largest US
+      security-clearance background-check contractor, exfiltrating
+      personnel PII on ~25,000 DHS/ICE/CBP staff, reads squarely as
+      bulk-PII collection for HUMINT vetting — the same pattern as the
+      contemporaneous OPM/Anthem thefts AUSPEX clusters with it. The
+      label is strongly_inferred rather than attested because no cited
+      source names Military-Civil Fusion or states a counterintelligence-
+      vetting purpose (the sources say only "state-sponsored" and, by
+      press analogy, "Chinese"); it is held no higher than inferred also
+      because the China/state attribution itself is hedged/suspected.
+    attesting_source_id: databreaches/2015-02-09_altegrity-bankruptcy-usis
     inference_basis:
-      source_id: wapo/2014-08-22_usis-attribution
+      source_id: databreaches/2015-02-09_altegrity-bankruptcy-usis
       signals:
-        - "WaPo attributes the USIS breach to PRC state-sponsored operators (contractor-pivot stage of the bulk-PII operation)"
-      ruled_out: "Military-Civil Fusion / the counterintelligence-vetting purpose by name — not in the WaPo text (says only 'state-sponsored')"
+        - "The breach exposed personnel PII on an estimated 25,000 DHS/ICE/CBP staff held by the largest US security-clearance background-check contractor, characterized (by USIS's CFO, in a court filing) as a 'state-sponsored data intrusion' — a bulk-PII theft on cleared/federal personnel, the signature of the HUMINT-vetting collection pattern"
+      ruled_out: "Military-Civil Fusion / a counterintelligence-vetting purpose by name — no cited source states the strategic goal (sources say only 'state-sponsored'); a purely-criminal/financial reading is weak given the target (federal background-check data, no monetization reported)"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/usis
+  - target_id: orgs/usis  # FLAG: no registry file atlas/targets/orgs/usis.yaml (same informational gap flagged for orgs/keypoint on the OPM event); verify_atlas treats orgs/ gaps as informational, not a hard FK error
     country: us
     role: primary
     outcome: |
-      ~27,000 federal personnel records disclosed; USIS lost
-      OPM contract and entered bankruptcy.
+      ~25,000 DHS/ICE/CBP personnel records exposed; OPM declined to
+      renew USIS's contracts (Sept 2014) and parent Altegrity filed
+      Chapter 11 (Feb 2015).
 sources:
   - wapo/2014-08-22_usis-attribution
-  - reuters/2014-11-02_keypoint-breach
+  - govexec/2014-09-10_opm-terminates-usis
+  - databreaches/2015-02-09_altegrity-bankruptcy-usis
+  - infosecurity/2015-05-13_usis-sap-vector
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    Audited vs the raw sources (phantom/wrong-source remediation, "badrabbit" RE-SOURCE path).
+    level: partial because the load-bearing disclosure/attribution source — the WaPo article
+    (wapo/2014-08-22_usis-attribution) — is BOT-WALLED (curl HTTP 000; WebFetch HTTP 403 on
+    2026-07-05), so its Aug-6-2014 disclosure + "officials say" attribution are only
+    mirror-corroborated; every OTHER load-bearing claim is now hash-verified against three
+    newly-captured snapshots.
+
+    RE-SOURCE (STEP 0/0b): the two originally-cited sources were both un-snapshottable and one
+    was the WRONG event. (1) wapo/... = the genuine USIS disclosure but bot-walled (kept, not
+    hashed, mirror-corroborated). (2) reuters/2014-11-02_keypoint-breach = a real article about
+    the KeyPoint contractor (a DISTINCT breach), NOT USIS — a wrong-event citation; reuters.com
+    is also DataDome-walled (HTTP 401 captcha page). REMOVED it from sources[] and annotated its
+    record as orphaned (it was the only event citing it). Added three reachable, snapshotted USIS
+    sources: govexec/2014-09-10_opm-terminates-usis (sha 79ca44d4…05ac456d, 148,820 B),
+    databreaches/2015-02-09_altegrity-bankruptcy-usis (sha b1fc0fe8…0b8dfc99, 158,664 B),
+    infosecurity/2015-05-13_usis-sap-vector (sha b9a14e6a…f9ce3ed8, 103,157 B).
+
+    [a] FACTS — now source-carried: USIS = largest fed background-check contractor ("had
+    performed the bulk of background checks for federal security clearances", govexec; "the
+    biggest commercial provider of background investigations to the federal US government",
+    infosec); ~25,000 DHS/ICE/CBP personnel exposed (databreaches: "estimated 25,000 employees of
+    the Department of Homeland Security, U.S. Immigrations and Customs Enforcement, and the U.S.
+    Customs and Border Protection agency"); access "in late 2013", undetected "until June 2014"
+    (infosec/Onapsis); OPM declined to renew contracts past "the September 30, 2014 expiration"
+    (databreaches + govexec); Altegrity Chapter 11 Feb-2015 + "$304 million…22 percent of revenue"
+    (databreaches). CORRECTIONS: (i) victim count 27,000 -> ~25,000 (the hashed source's figure +
+    orchestrator note; kept "~27,000 federal" as a later/broader figure, hedged). (ii) STRIPPED the
+    outcome/summary conflation that USIS "is generally treated as the contractor-pivot stage of the
+    broader OPM operation that exfiltrated 22.1M SF-86 records via the parallel KeyPoint compromise"
+    — factually muddled: it was the KeyPoint credential compromise, not USIS, that pivoted into OPM
+    for the 22.1M SF-86 theft; USIS was a distinct ~25k-record contractor breach. Retained the
+    campaign linkage as an explicitly-labelled AUSPEX assessment (campaign_id). (iii) initial_vector
+    kept n-day but re-annotated: source says "likely…either an unpatched or zero-day SAP
+    vulnerability" (Onapsis) — the prior "per subsequent litigation" was wrong (the SAP finding is
+    Onapsis forensic analysis, not litigation).
+
+    [b] ATTRIBUTION — modelled at the HEDGED/suspected level per guidance. Rewrote attributing_org
+    from "US Intelligence Community (public attribution)" (overstated — there was no formal IC/DOJ
+    attribution) to: USIS's own statement ("all the markings of a state-sponsored attack") + CFO
+    court-filing ("state-sponsored data intrusion", databreaches) + press analogy to prior China
+    intrusions ("Chinese hackers", infosec). Kept attributing_org_confidence: moderate (state-
+    sponsored is moderately supported; the China nation-naming is press inference — hedged), added
+    attribution_level: nation (a nation named but hedged; NO named-actor/unit in any source — the
+    Deep Panda cluster is AUSPEX's assignment, not source-named), kept auspex_assessment:
+    concur-with-caveat. Removed the "same MSS-Jiangsu-linked Deep Panda cluster" over-claim (the
+    actor was demoted cn/mss->cn/unscoped 2026-06-24 precisely for lack of a service-naming source).
+
+    [c] DATES — attribution_date 2014-08-22 -> 2014-08-06 (the cited WaPo URL is dated 2014/08/06;
+    the "…08-22" was the source slug's stale date). disclosure_date 2014-08-06 confirmed (WaPo).
+    end_date 2014-07-31 -> 2014-06-30 (unsourced -> "undetected until June 2014", Onapsis).
+    start_date 2013-12-01 kept as the "late 2013" best estimate (re-annotated). New source
+    published_on all verified from the snapshots (govexec 2014-09-10; databreaches 2015-02-09;
+    infosec 2015-05-13).
+
+    [d] DOCTRINE_LINKS — cn/mcf/bulk-pii-humint-enabling kept strongly_inferred (correct: bulk-PII-
+    for-HUMINT is the dominant reading of a state-suspected theft of cleared/federal personnel PII,
+    with the criminal/financial alternative weak; but NO source names MCF/the vetting goal, and the
+    attribution is hedged — so not attested, not plausible). Re-pointed attesting_source_id +
+    inference_basis.source_id from the bot-walled wapo to the hashed
+    databreaches/2015-02-09_altegrity-bankruptcy-usis; rewrote the signal (removed the
+    "contractor-pivot stage of the bulk-PII operation" conflation) and ruled_out. Pillar
+    cn/mcf/bulk-pii-humint-enabling resolves in atlas/doctrines/cn/mcf.yaml.
+
+    [e] ATTRIBUTION_LEVEL — added: nation (was missing).
+
+    [f] ACTOR_ID — cn/unscoped/deep-panda resolves (file atlas/actors/cn/deep-panda.yaml carries
+    id cn/unscoped/deep-panda). It is AUSPEX's working cluster for this campaign, not source-named
+    for USIS — noted, not flagged as an actor-file defect. FLAG: target orgs/usis has no registry
+    file (atlas/targets/orgs/usis.yaml absent) — same pre-existing informational orgs/ gap flagged
+    for orgs/keypoint on the OPM event; left as-is (not created — outside audit mandate; verify_atlas
+    treats orgs/ gaps as informational).
+
+    RESIDUAL UNCERTAINTY: WaPo disclosure un-hashable (bot-walled) — hence level: partial; the
+    n-day-vs-0-day SAP distinction is source-hedged ("either…or"); the ~25k vs ~27k figure reflects
+    a DHS-only vs later federal-wide count; and the China nation-attribution is press-inferred, not
+    government-confirmed. FLAG (orchestrator): reuters/2014-11-02_keypoint-breach is now orphaned —
+    retire or repurpose to a future standalone KeyPoint event.

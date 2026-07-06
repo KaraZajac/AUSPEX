@@ -1,64 +1,247 @@
 id: 2010-06/stuxnet-natanz
 name: Stuxnet — destructive cyber-physical attack on Natanz enrichment centrifuges
 start_date: 2009-06-01  # earliest known infections; campaign likely earlier
-disclosure_date: 2010-06-17  # initial Symantec / VirusBlokAda public detection
+disclosure_date: 2010-06-17  # initial VirusBlokAda / Symantec public detection
 end_date: 2010-12-31
 incident_type:
   - destructive
-  - supply-chain
-initial_vector: supply-chain  # USB-borne; allegedly via insider / supply-chain entry
+  - cyber-physical
+initial_vector: supply-chain  # USB / removable-media borne to bridge the Natanz air gap; entry via insider/contractor supply-chain
 outcome_summary: |
-  Physical destruction of approximately 1,000 IR-1 centrifuges at
-  the Natanz uranium-enrichment facility via PLC manipulation
-  (Siemens S7-300/400) and engineering-workstation compromise
-  (Step7). Significant setback to Iran's enrichment programme.
+  Approximately 1,000 IR-1 centrifuges at the Natanz Fuel
+  Enrichment Plant (FEP) were decommissioned and replaced in late
+  2009 / early 2010 (ISIS/Albright assessment), widely correlated
+  with Stuxnet's sabotage of the Siemens S7-315 PLCs that drove the
+  centrifuge frequency-converter drives, executed via Step7
+  engineering-workstation compromise. A significant setback to
+  Iran's uranium-enrichment programme. (ISIS hedges exact
+  causation; the centrifuge-breakage count is the source-carried
+  figure, not a claimed precise destruction total.)
 quantified_impact:
-  centrifuges_destroyed: 1000
+  centrifuges_destroyed: 1000  # ISIS: ~1,000 IR-1 centrifuges decommissioned/replaced late-2009/early-2010, correlated with Stuxnet
 false_flag_risk: none
 campaign_id: olympic-games
 summary: |
-  Stuxnet is included in the Iran event log as the **precipitating
-  context** — not as an Iranian operation. Widely attributed to a
-  joint US-Israeli program ("Olympic Games") per NYT / Sanger
-  reporting; never formally acknowledged. The operation
-  catalyzed Iran's offensive cyber buildup: Khamenei and senior
-  IRGC commanders have repeatedly cited Stuxnet as the case for
-  asymmetric cyber investment. Every subsequent Iranian doctrine
-  in this atlas (Asymmetric Warfare, Cyber-Deniable-Retaliation,
-  Forward Defense) is downstream of this event.
+  Stuxnet was a destructive cyber-physical sabotage operation that
+  covertly manipulated the Siemens S7-315 PLCs and Step7 engineering
+  workstations controlling IR-1 centrifuge cascades at Iran's Natanz
+  Fuel Enrichment Plant, propagating via removable media to bridge
+  the facility's air gap and exploiting four Windows zero-day
+  vulnerabilities. It is widely attributed to a joint US-Israeli
+  covert program code-named "Olympic Games" — begun under President
+  Bush and accelerated under President Obama, the malware "developed
+  by the United States and Israel" (journalistically, NSA/TAO with
+  Israel's Unit 8200) per NYT / David Sanger reporting — but was
+  never officially acknowledged by either government. **Iran (ir) is
+  the victim; the United States and Israel are the attackers.**
+
+  In the Iran event log Stuxnet is also the **precipitating context**
+  for Tehran's offensive cyber buildup: Khamenei and senior IRGC
+  commanders have repeatedly cited it as the case for asymmetric
+  cyber investment, and subsequent Iranian doctrines in this atlas
+  (Asymmetric Warfare, Cyber-Deniable-Retaliation, Forward Defense)
+  are framed as downstream of this event.
 attributions:
-  - actor_id: null  # not formally indicted; "Olympic Games" per NYT
-    attributing_org: NYT / David Sanger (Confront and Conceal reporting)
+  - actor_id: us/olympic-games-team  # joint US+Israel; anchored us/ via NSA/TAO, Unit 8200 noted in the actor record
+    attributing_org: NYT / David E. Sanger ("Obama Order Sped Up Wave of Cyberattacks Against Iran", 2012)
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2012-06-01
     attribution_source_id: nyt/2012-06-01_sanger-olympic-games
     notes: |
-      US-Israeli operation. Iran is the **victim** here. This
-      attribution is to the operation's authors; the Iran-side
-      event significance is that Stuxnet became the regime's
-      narrative anchor for its offensive cyber buildup.
+      DIRECTIONALITY: attacker = United States + Israel (joint covert
+      program "Olympic Games"); VICTIM = Iran (ir). Sanger's NYT
+      reporting attributes Stuxnet to a US-Israeli program begun under
+      Bush and accelerated under Obama (malware "developed by the
+      United States and Israel"); corroborated by Zetter (Countdown to
+      Zero Day, 2014) and Snowden-era disclosures. auspex_assessment =
+      concur-with-caveat (not concur): the attribution rests on tier-1
+      journalism of an operation NEVER officially acknowledged by
+      either government — high confidence but journalism-sourced.
+      attribution_level = named-actor (the Olympic Games team cluster;
+      NSA/TAO + Unit 8200 are journalistically named but the specific
+      units are officially unconfirmed, so not named-unit). actor_id
+      set us/olympic-games-team (was null): a dedicated, well-sourced
+      actor record exists for exactly this operation and was
+      previously orphaned; state derives to us via us/nsa/tao.
 doctrine_links:
+  - doctrine_id: us/title-10-title-50
+    pillar_id: null
+    program_id: null
+    perspective: attacker-rationale
+    confidence: strongly_inferred
+    reasoning: |
+      Olympic Games was run as a US covert action, not an overt
+      military operation: Sanger reports a program authorized at
+      presidential level and briefed to congressional leadership — the
+      Title 50 covert-action track (50 U.S.C. §3093) that the Title 10
+      / Title 50 framework encodes as the offensive/covert-action
+      authority under US cyber operations. The more specific US
+      operational cyber doctrines (NSPM-13, Defend Forward) postdate
+      the 2009-2010 operation, so the covert-action statutory frame is
+      the applicable US doctrinal linkage for this foundational case.
+      strongly_inferred, not attested: no govt / tier-1-vendor source
+      formally states the legal-authority basis; it is triangulated
+      from Sanger's covert-action reporting.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Sanger reports Olympic Games as a covert program authorized at presidential level and briefed to congressional leadership — the hallmark of a Title 50 covert action (finding + notification), not a Title 10 traditional military activity."
+        - "The operation (2009-2010) predates NSPM-13 (2018) and Defend Forward (2018), so no more-specific US operational cyber doctrine existed at the time; the actor record flags it as a pre-NSPM-13 foundational case."
+        - "The underlying covert-action authority (National Security Act §503 / 50 U.S.C. §3093) long predates Stuxnet, even though the cyber-specific NDAA-2018 codification is later."
+      ruled_out: "Title 10 traditional-military-activity framing: Sanger describes a covert action with presidential authorization and congressional-leadership notification (CIA-involved), not an overt USCYBERCOM / Title 10 operation."
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: il/begin-doctrine
+    pillar_id: il/begin-doctrine/counter-wmd-cyber-sabotage
+    program_id: null
+    perspective: attacker-rationale
+    confidence: strongly_inferred
+    reasoning: |
+      The Israeli half of Olympic Games fits the Begin Doctrine's
+      counter-WMD-cyber-sabotage pillar precisely: code-as-strike
+      against a regional adversary's nuclear-enrichment programme when
+      kinetic action is politically or operationally constrained.
+      Sanger's reporting frames the cyber operation partly as an
+      alternative to an Israeli conventional strike on Natanz — the
+      exact "sabotage when a strike is infeasible" logic the doctrine
+      encodes — and the il/begin-doctrine record itself lists Stuxnet /
+      Olympic Games under this pillar. strongly_inferred, not attested:
+      Israel has never acknowledged the operation and no Israeli govt
+      source states the purpose; the inference rests on US-side
+      reporting plus the doctrine's own explicit framing.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target is Iran's IR-1 uranium-enrichment centrifuges at Natanz — a WMD fuel-cycle asset, the core object of the Begin Doctrine's counter-proliferation frame."
+        - "Sanger reports the cyber program was pursued partly to forestall or substitute for an Israeli conventional military strike on Iran's nuclear facilities — the doctrine's sabotage-when-kinetic-action-is-constrained logic."
+        - "The il/begin-doctrine record explicitly names Stuxnet and Olympic Games as key terms under the counter-wmd-cyber-sabotage pillar."
+      ruled_out: "Generic espionage / collection motive: Stuxnet was a destructive sabotage payload physically degrading centrifuges, not an intelligence-collection operation (contrast Flame / Duqu)."
+    counter_explanation: null
+    contested: false
+    analyst: claude
   - doctrine_id: ir/asymmetric-warfare
     perspective: victim-response
     pillar_id: null
     program_id: null
     confidence: strongly_inferred  # downgraded 2026-06-09: 'attested' requires attesting_source_id (audit H6)
     reasoning: |
-      Khamenei and senior IRGC commanders (Hajizadeh, Salami)
-      have repeatedly cited Stuxnet as the case for cyber as
-      asymmetric equalizer. The doctrine linkage here is from
-      effect-on-Iran-doctrine rather than Iran-as-perpetrator.
+      Khamenei and senior IRGC commanders (Hajizadeh, Salami) have
+      repeatedly cited Stuxnet as the case for cyber as an asymmetric
+      equalizer. This link is victim-response context (the effect on
+      Iran's own doctrine), NOT attacker-rationale — Iran is the victim
+      here — and is retained as atlas context, not as a who×why
+      training signal.
     attesting_source_id: null
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/natanz-enrichment
+  - target_id: orgs/natanz-fuel-enrichment-plant
     role: primary
+    country: ir
     outcome: |
-      Approximately 1,000 IR-1 centrifuges destroyed; significant
-      delay to Iranian enrichment program.
+      Approximately 1,000 IR-1 centrifuges decommissioned and replaced
+      (late 2009 / early 2010), widely correlated with Stuxnet's
+      centrifuge sabotage; significant delay to Iran's enrichment
+      programme.
 sources:
   - nyt/2012-06-01_sanger-olympic-games
   - symantec/2011_stuxnet-dossier
+  - isis/2010-12-22_stuxnet-1000-centrifuges-natanz
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    HISTORICAL/canonical audit vs RAW. Level = PARTIAL: the load-bearing
+    ATTRIBUTION source (NYT/Sanger) is bot-walled (HTTP 403 DataDome JS
+    challenge, 774-byte non-article) and un-snapshottable; the US+Israel
+    attribution is mirror-corroborated only. Technical + centrifuge
+    claims are fully snapshotted.
+
+    SNAPSHOTS: symantec/2011_stuxnet-dossier (W32.Stuxnet Dossier v1.4,
+    docs.broadcom.com PDF, 69 pp) sha256 9149e107…7b63ecd7, 4,332,399
+    bytes. isis/2010-12-22_stuxnet-1000-centrifuges-natanz (Albright et
+    al., ISIS, PDF 10 pp) sha256 84855f3e…6def0c87, 493,154 bytes —
+    ADDED this pass to source-carry the ~1,000 figure. NYT/Sanger: NOT
+    snapshotted (403); junk bot-wall page discarded, no content hash.
+
+    [a] FACTS — all technical claims verbatim-carried by the Symantec
+    dossier: "first to exploit four 0-day" (verifies the 4 zero-days,
+    now stated in summary); Siemens SIMATIC Step 7 + WinCC; 315-2 CPU
+    PLC via CP 342-5 Profibus; frequency-converter drives (Fararo Paya
+    Tehran + Vacon) manipulated between 807–1210 Hz (the rotor-speed
+    sabotage / cyber-physical mechanism); "Self-replicates through
+    removable drives" to bridge the air gap; PLC rootkit hiding the
+    changes. The ~1,000 IR-1 figure is source-carried by ISIS: "In late
+    2009 or early 2010, Iran decommissioned and replaced about 1,000
+    IR-1 centrifuges in the Fuel Enrichment Plant (FEP) at Natanz,
+    implying that these centrifuges broke" — ISIS hedges exact causation
+    ("Stuxnet's exact purpose or its overall effect on the FEP remains
+    hard to determine"), so outcome_summary reworded from flat "physical
+    destruction" to the decommissioned/replaced + widely-correlated
+    framing. No fabricated tradecraft found; "S7-300/400" tightened to
+    the source-carried "S7-315" (the S7-417/400-family targeting is
+    Langner/later analysis, outside my snapshotted set).
+
+    [b] ATTRIBUTION — actor_id null → us/olympic-games-team (dedicated,
+    well-sourced actor existed but was orphaned; state derives us via
+    us/nsa/tao). auspex_assessment concur → concur-with-caveat and
+    attribution_level=named-actor added, per: Sanger's NYT reporting
+    ("developed by the United States and Israel", Bush-begun/Obama-
+    accelerated, Olympic Games), corroborated via WebSearch (NBC
+    reprint, globalsecurity, Wikipedia, ISIS technical concurrence) and
+    Zetter/Snowden — high confidence but journalism of a NEVER-officially
+    -acknowledged covert op, hence the caveat. Not named-unit (NSA/TAO +
+    Unit 8200 journalistically named, officially unconfirmed). Symantec
+    deliberately made no geopolitical attribution — it carries the
+    technical facts, not the who.
+
+    [c] DATES — start 2009-06-01 (earliest known infections; Symantec
+    samples from mid-2009), disclosure 2010-06-17 (VirusBlokAda/Symantec
+    detection), end 2010-12-31: all consistent with the sources. Source
+    published_on dates verified: Symantec 2011-02-01, ISIS 2010-12-22,
+    NYT 2012-06-01. No conflation.
+
+    [d] DOCTRINE_LINKS — was a single victim-response link only (no
+    attacker-rationale link for an attributed op = a gap). ADDED two
+    attacker-rationale links: us/title-10-title-50 (Title 50 covert-
+    action authority — the applicable US frame since NSPM-13/Defend
+    Forward postdate the op) and il/begin-doctrine/counter-wmd-cyber-
+    sabotage (the doctrine record itself names Stuxnet/Olympic Games
+    under this pillar). Both strongly_inferred, NOT attested: the only
+    source stating strategic purpose is journalism of an unacknowledged
+    covert op (no govt/tier-1-vendor attestation, and Sanger is bot-
+    walled), so no attesting_source_id — kept the honest label with
+    signals[] + ruled_out. Kept ir/asymmetric-warfare as victim-response
+    context (already strongly_inferred). NOTE: il/begin-doctrine on a
+    us-actor event is a cross-state attacker-rationale link — correct
+    for a genuinely joint US+Israel operation (tagged, so the
+    doctrine-state-mismatch surfacer is expected to flag it for review).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was missing).
+
+    [f] ACTOR_ID — us/olympic-games-team resolves to
+    atlas/actors/us/olympic-games-team.yaml (solid, well-sourced; its
+    own auspex_assessment is concur-with-caveat; it explicitly says
+    "event-level attributions list both nation-states as appropriate").
+    No actor-file edit made.
+
+    FLAGS for orchestrator: (1) DUPLICATE SOURCE — the same Sanger NYT
+    article exists under two source ids: nyt/2012-06-01_sanger-olympic-
+    games (this event) and nyt/2012-06-01_sanger-obama-order-
+    cyberattacks-iran (cited by the actor); the latter's own notes
+    already flag it for slug-cleanup. (2) TARGET FK FIXED — event
+    pointed at non-existent orgs/natanz-enrichment; corrected to
+    orgs/natanz-fuel-enrichment-plant (the real registry id; possible
+    latent conformance gap since nothing else defined the old id).
+    (3) TIER CONSIDERATION — symantec/2011_stuxnet-dossier is first-
+    party vendor original research currently tier:secondary; preserved
+    (protocol), but a future pass could re-tier to primary. (4) NYT
+    Sanger source is live-but-bot-walled (not link-rotted); a Wayback
+    archive_url is already recorded but archive.org is blocked for this
+    fetcher, so it remains un-snapshotted.

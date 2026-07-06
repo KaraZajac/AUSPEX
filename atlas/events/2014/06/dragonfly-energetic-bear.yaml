@@ -5,82 +5,279 @@ disclosure_date: 2014-06-30
 end_date: 2014-12-31
 incident_type:
   - intrusion
+  - espionage
   - pre-positioning
   - supply-chain
-initial_vector: supply-chain  # ICS vendor watering-hole + trojanized installers
+initial_vector: supply-chain  # signature vector: trojanized ICS-vendor installers (also used spearphishing + watering-hole)
 outcome_summary: |
-  Symantec disclosed a multi-year campaign against energy-sector
-  targets in the US and Europe — operators, grid operators, ICS
-  equipment manufacturers — via trojanized installers from three
-  compromised ICS vendor websites (eWON, MB Connect Line, MESA
-  Imaging) and the Havex / Karagany / Oldrea malware family.
-  Subsequent CrowdStrike "Energetic Bear" reporting and US-CERT
-  ICS-ALERT advisories framed the campaign as Russian state-
-  sponsored pre-positioning against Western energy infrastructure.
-  The 2014 phase wound down; the operator cluster reappeared as
-  "Berserk Bear" / Dragonfly 2.0 (Symantec, 2017) — eventually
-  tied to FSB Center 16 / "Energetic Bear" by 2018 US-government
-  attribution and 2022 DOJ indictment.
+  Symantec disclosed a multi-year cyberespionage campaign against
+  energy-sector targets in the US and Europe — energy firms and, in the
+  2013-2014 phase, industrial-control-system (ICS) companies — using
+  three infection vectors: spearphishing (2013), watering-hole redirects
+  via the Lightsout / Hello exploit kit (from mid-2013), and trojanized
+  installers planted on three compromised ICS-software vendor websites.
+  The group's tools were Backdoor.Oldrea (also known as Havex or the
+  "Energetic Bear RAT"), whose OPC module enumerated ICS/SCADA devices,
+  and Trojan.Karagany. Symantec assessed the access gave the operators a
+  latent capability to "mount sabotage operations" against energy supply,
+  though it observed only espionage. Symantec named the "Dragonfly"
+  activity cluster and a UTC+4 working-hours pattern but did NOT attribute
+  to a state; the Russian-state / FSB attribution came later (US-CERT
+  TA18-074A, 2018; DOJ + CISA/FBI/DOE AA22-083A, 2022, which folds this
+  2013-2014 Havex activity into the FSB "Center 16" / Berserk Bear
+  2011-2018 energy campaign). The Havex phase wound down after the 2014
+  exposure; the operator cluster re-emerged as "Dragonfly 2.0" / Berserk
+  Bear (2016-2018), modeled as separate later events.
 false_flag_risk: none
 summary: |
-  Dragonfly is the foundational publicly documented Russian
-  energy-sector pre-positioning campaign — the operational
-  predecessor of the 2015–2016 Ukraine power-grid attacks and
-  the 2017 Triton / Trisis assault on a Saudi petrochemical
-  facility. The campaign's supply-chain leverage via ICS vendor
-  installer compromise is a doctrinal pattern that recurred in
-  later Russian and PRC operations.
+  Dragonfly / Energetic Bear / Havex is the foundational publicly
+  documented Russian (FSB "Center 16" / Berserk Bear) energy-sector
+  pre-positioning campaign. Its signature was supply-chain compromise —
+  trojanizing legitimate ICS-vendor software updates to push the Havex
+  RAT into operational-technology environments, where an OPC module
+  fingerprinted control-systems devices. Symantec documented that the
+  intrusions conferred a latent sabotage capability against energy supply
+  but observed only espionage; US and allied governments later attributed
+  the 2011-2018 energy campaign to the FSB and, in 2022, indicted three
+  Center 16 officers. The operation is the canonical cyber instance of
+  the Russian energy-weaponization posture — access and ICS
+  pre-positioning as coercive leverage, without (in this phase)
+  disruptive action.
 attributions:
   - actor_id: ru/fsb/center-16/berserk-bear
-    attributing_org: Symantec + CrowdStrike (cluster naming)
+    attributing_org: Symantec
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2014-06-30
     attribution_source_id: symantec/2014-06-30_dragonfly
     notes: |
-      Initial vendor attribution to Russian state-aligned
-      operators; subsequent US-government attribution via the
-      March 2018 US-CERT TA18-074A advisory and 2022 DOJ
-      indictment of FSB Center 16 officers consolidates the
-      identification.
+      Symantec's 2014 report coined and characterised the "Dragonfly"
+      activity cluster (noting the vendor alias "Energetic Bear") and
+      placed the operators in the UTC+4 working-hours band, but did NOT
+      attribute to Russia or the FSB — hence attribution_level is
+      activity-cluster, not a nation/unit call. The Russian-state / FSB
+      identification is retrospective (row below). "+ CrowdStrike" was
+      dropped: no CrowdStrike source is cited; the Russia implication of
+      the "Energetic Bear" bear-name is carried, as an alias, by the
+      actor record, not by this 2014 attribution.
   - actor_id: ru/fsb/center-16/berserk-bear
-    attributing_org: US DOJ + DHS / CISA
+    attributing_org: US DOJ (indictment) + CISA/FBI/DOE (AA22-083A)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-03-24
     attribution_source_id: doj/2022-03-24_berserk-bear-triton-indictment
+    notes: |
+      24 Mar 2022 DOJ indictment of three FSB "Center 16" officers for
+      the 2011-2018 energy-sector campaign; the co-published CISA/FBI/DOE
+      advisory AA22-083A (snapshotted) reproduces the state-sponsored-
+      Russian / FSB attribution: "From at least 2011 through 2018, the
+      FSB (also known as Berserk Bear, Energetic Bear ... Dragonfly,
+      Havex, Crouching Yeti ...) conducted an intrusion campaign against
+      international and U.S. Energy Sector organizations." named-unit: a
+      specific FSB unit + named officers. The DOJ press release itself is
+      bot-walled (Akamai); attribution corroborated via AA22-083A.
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
-    pillar_id: ru/energy-weaponization/grid-attack
+    pillar_id: ru/energy-weaponization/oil-gas-pre-positioning
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Pre-positioning against Western grid and energy
-      infrastructure is the canonical Russian energy-
-      weaponization doctrine in operational form. The 2022 DOJ
-      Berserk Bear indictment explicitly identifies the
-      pre-positioning purpose against US energy infrastructure.
-    attesting_source_id: doj/2022-03-24_berserk-bear-triton-indictment
+      A Russian state-sponsored (FSB) multi-year intrusion campaign that
+      gained access to US and European energy-sector networks and deployed
+      ICS-focused malware (Havex/Oldrea, whose OPC module enumerates
+      control-systems devices) — with no observed disruptive action — is
+      exactly the energy-ICS pre-positioning the oil-gas-pre-positioning
+      pillar encodes (its own summary names Berserk Bear / FSB Center 16,
+      Havex and watering-hole). This corrects the prior pillar
+      (grid-attack), which encodes Sandworm-style electric-grid
+      DISRUPTION and does not fit a no-disruption pre-positioning
+      campaign. Label is strongly_inferred, not attested: no cited source
+      states a coercive-leverage GOAL — CISA/FBI/DOE (AA22-083A) document
+      access, ICS-focused malware and data collection and explicitly note
+      "no information to indicate these actors have intentionally
+      disrupted any U.S. Energy Sector infrastructure", while Symantec
+      frames intent as espionage yet records that the access "gave
+      attackers the ability to mount sabotage operations ... could have
+      caused damage or disruption to the energy supply". Target (US/EU
+      energy ICS) + actor-mission (an energy-focused FSB unit) + the
+      ICS/OPC-specific tradecraft + documented latent sabotage capability
+      triangulate to one strategic reading — pre-positioning for coercive
+      energy leverage — with no serious competitor.
+    attesting_source_id: cisa/2022-03-24_aa22-083a-energy-sector
+    inference_basis:
+      signals:
+        - "Russian state-sponsored FSB intrusion campaign against US + international Energy Sector networks, 2011-2018 (CISA AA22-083A)"
+        - "ICS-focused malware Havex/Oldrea enumerates OPC servers and 'can cause PLCs inability to control connected systems' — access aimed at the OT/control layer, not just enterprise IT (CISA AA22-083A)"
+        - "Symantec: access 'gave attackers the ability to mount sabotage operations ... could have caused damage or disruption to the energy supply' — latent disruptive capability pre-positioned, not used"
+        - "no observed disruptive action ('no information to indicate these actors have intentionally disrupted any U.S. Energy Sector infrastructure') — i.e. pre-positioning, not attack"
+      ruled_out: "Pure intelligence-collection espionage — rejected because the tradecraft specifically targets the ICS/OPC/PLC control layer and Symantec assessed it conferred a sabotage capability against energy supply, which exceeds document/secret collection; that energy-ICS-with-latent-sabotage pattern is what the energy-weaponization posture encodes."
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Pre-positioning against NATO-state critical infrastructure
-      embodies non-contact warfare as articulated in the 2014
-      Russian Military Doctrine.
+      Persistent Russian intrusion into NATO-state critical infrastructure
+      below the threshold of armed conflict fits the non-contact /
+      gray-zone rubric. The label is plausible, not higher, for two
+      reasons: (1) TEMPORAL — this campaign ran 2011-2014 (disclosed Jun
+      2014), predating the Military Doctrine of 25 Dec 2014, so the link
+      reads as alignment with a persistent non-contact posture (already
+      present in the 2010 doctrine) rather than op-follows-publication;
+      and (2) no cited source names a non-contact-warfare purpose, and
+      this framing is a generic overlay that competes with the more
+      specific energy-weaponization reading — more than one strategic
+      reading survives.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Non-contact / gray-zone warfare: sustained sub-threshold intrusion into NATO-state CII fits the rubric, but the campaign predates the cited 2014 doctrine text and no source names this purpose."
+        - "Energy-weaponization (the primary link): the energy-sector-ICS specificity is better explained by the energy-weapon posture than by generic non-contact doctrine."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/energy
-    country: us
+    country: null
     role: primary
-  - target_id: sectors/energy/electric-power/grid-ot
-    country: us
+  - target_id: sectors/ics
+    country: null
     role: primary
 sources:
   - symantec/2014-06-30_dragonfly
+  - cisa/2022-03-24_aa22-083a-energy-sector
   - doj/2022-03-24_berserk-bear-triton-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the RAW primary sources (not the event prose). Path:
+    NORMAL AUDIT + one re-sourced corroborator — the "phantom" suspicion
+    is DISCONFIRMED (the Symantec source is the genuine primary; the DOJ
+    source is genuine but bot-walled). Snapshots: Symantec "Dragonfly:
+    Cyberespionage Attacks Against Energy Suppliers" (v1.21, 7 Jul 2014
+    revision of the 30 Jun 2014 original) PDF, 2,885,807 bytes, sha256
+    30ce77b9...9a9b6464; CISA/FBI/DOE AA22-083A HTML, 122,852 bytes,
+    sha256 d9ba7a0c...cda81c25 (NEW source record created +
+    snapshotted); DOJ press release UN-SNAPSHOTTABLE (live justice.gov
+    serves an Akamai bm-verify interstitial stub, 2,561 bytes — no hash
+    recorded).
+
+    [a] FACTS — corrected against Symantec + CISA:
+      * REMOVED the three vendor names "eWON, MB Connect Line, MESA
+        Imaging": true historically but named in NEITHER cited source
+        (Symantec says only "three ICS software producers"; CISA says
+        "multiple ICS vendor websites"); F-Secure's Havex report, which
+        named them, is 404 on all three known URLs so it could not be
+        added. Softened to "three compromised ICS-software vendor
+        websites" (Symantec: "three ICS software producers are known to
+        have been compromised").
+      * FIXED malware description: Havex IS Oldrea (Symantec: "Backdoor.
+        Oldrea, which is also known as Havex or the Energetic Bear RAT")
+        — the prior "Havex / Karagany / Oldrea family" implied three
+        distinct families. Now Backdoor.Oldrea (aka Havex) + Trojan.
+        Karagany; OPC/ICS-scanning carried by CISA ("uses the Open
+        Platform Communications (OPC) standard to gather information
+        about connected control systems devices").
+      * REMOVED "CrowdStrike 'Energetic Bear' reporting" as a distinct
+        body — no CrowdStrike source is cited; "Energetic Bear" is
+        carried only as an alias (Symantec: "also known by other vendors
+        as Energetic Bear"; CISA lists it).
+      * REMOVED/CORRECTED "US-CERT ICS-ALERT advisories framed the
+        campaign as Russian state-sponsored pre-positioning": no US-CERT
+        source is cited here, and the 2014 ICS-CERT Havex advisories were
+        technical, NOT a Russia attribution. The state-sponsored framing
+        is 2018 (TA18-074A) / 2022 (DOJ+CISA); reworded accordingly.
+      * summary DE-CONFLATED: dropped "operational predecessor of the
+        2015-2016 Ukraine grid attacks and 2017 Triton" (those are GRU
+        Sandworm and TsNIIKhM respectively — different services/actors)
+        and the unsourced "recurred in later ... PRC operations."
+      * Vector reality (both sources): spearphishing + watering-hole
+        (Lightsout/Hello EK) + trojanized ICS installers; initial_vector
+        kept supply-chain (the campaign's ICS signature) with a clarifying
+        comment. ADDED incident_type espionage (Symantec "cyberespionage";
+        CISA "collected and exfiltrated ... ICS data"); kept pre-
+        positioning (Symantec's latent-sabotage assessment) + supply-chain
+        + intrusion.
+
+    [b] ATTRIBUTION — over-attribution fixed:
+      * Row 1 (Symantec 2014): attributing_org "Symantec + CrowdStrike
+        (cluster naming)" -> "Symantec" (only Symantec is cited).
+        attribution_level ADDED = activity-cluster: Symantec named the
+        "Dragonfly" cluster + UTC+4 working hours and did NOT name Russia
+        or FSB (parallels the schema's Tortoiseshell activity-cluster
+        case). Prior row implied moderate confidence in a Russian-unit ID
+        Symantec never made — corrected via level + notes.
+      * Row 2 (DOJ 2022): attribution_level ADDED = named-unit (FSB
+        "Center 16" + three named officers). attributing_org refined to
+        "US DOJ (indictment) + CISA/FBI/DOE (AA22-083A)". Kept high /
+        concur. Attribution corroborated verbatim by the snapshotted CISA
+        advisory ("three Russian Federal Security Service (FSB) officers";
+        "From at least 2011 through 2018, the FSB ... conducted an
+        intrusion campaign against ... U.S. Energy Sector organizations").
+
+    [c] DATES — verified: start 2011-01-01 (Symantec "in operation since
+      at least 2011"; CISA "From at least 2011"; energy focus began early
+      2013). disclosure 2014-06-30 (Symantec report date; snapshot is the
+      7 Jul v1.21 point-revision, published_on preserved). end 2014-12-31
+      = bound on the Havex phase (CISA: "Beginning in 2013 and continuing
+      through 2014, the threat actor leveraged Havex"). Source
+      published_on dates confirmed (Symantec 2014-06-30; CISA 2022-03-24).
+
+    [d] DOCTRINE_LINKS — two corrections:
+      * Link 1 energy-weaponization: pillar grid-attack -> oil-gas-pre-
+        positioning (grid-attack encodes Sandworm-style DISRUPTION; this
+        is no-disruption pre-positioning — CISA: "no information to
+        indicate these actors have intentionally disrupted any U.S. Energy
+        Sector infrastructure"; the oil-gas-pre-positioning pillar names
+        Berserk Bear/Havex/watering-hole/Wolf Creek explicitly).
+        Confidence attested -> strongly_inferred (DOWNGRADE): the prior
+        reasoning claimed "the 2022 DOJ ... explicitly identifies the
+        pre-positioning purpose", but no cited source states a coercive-
+        leverage GOAL — CISA documents behaviour + declines disruptive
+        intent, Symantec frames intent as espionage. Added
+        inference_basis.signals + ruled_out (rejected: pure intel-
+        collection espionage). attesting_source_id repointed to the
+        snapshotted CISA advisory as the primary SUPPORTING source.
+      * Link 2 military-doctrine-2014/non-contact-warfare: strongly_
+        inferred -> plausible (DOWNGRADE): the campaign (2011-2014,
+        disclosed Jun 2014) PREDATES the doctrine (issued 25 Dec 2014),
+        so op-follows-publication does not hold; the non-contact framing
+        is a generic overlay competing with the energy-weaponization
+        reading. Added inference_basis.alternatives + temporal caveat.
+      Both links are attacker-rationale (Russian doctrine on a Russian
+      op) — no perspective tag needed.
+
+    [e] ATTRIBUTION_LEVEL — set on both rows (was missing): activity-
+      cluster (Symantec 2014) and named-unit (DOJ/CISA 2022).
+
+    [f] ACTOR_ID — ru/fsb/center-16/berserk-bear RESOLVES to
+      atlas/actors/ru/berserk-bear.yaml (internal id matches). Actor
+      record is well-formed (indicted status; MISP-galaxy G0035 /
+      ENERGETIC BEAR; sourced to DOJ 2022 + TA18-074A + CISA 2025) — its
+      default_doctrine_alignment_ids already point at oil-gas-pre-
+      positioning, consistent with this event's corrected pillar. NO
+      actor edit made / NO flag.
+
+    TARGETS — corrected: replaced sectors/energy/electric-power/grid-ot
+      (over-specific electric-grid-OT; Dragonfly's trojanized vendors were
+      general industrial remote-access/ICS products, and Symantec frames
+      victims as "energy" + "energy control systems") with sectors/ics.
+      Country changed us -> null on both: Symantec found US infections
+      "mostly ... collateral damage", with top true-victim countries Spain,
+      then US, France, Italy, Germany — a multinational US+EU campaign, so
+      a single primary us was misleading for this phase.
+
+    RESIDUAL / for orchestrator: the DOJ press release is bot-walled and
+    un-snapshottable; it is corroborated by its co-published, snapshotted
+    CISA/FBI/DOE companion AA22-083A (added), so level = full. The one
+    item resting solely on the bot-walled DOJ is the "Center 16" named-
+    unit sub-label + officer names (not in the event text; corroborated by
+    Treasury OFAC + TA18-074A per the actor record). A stricter auditor
+    applying "load-bearing source un-snapshottable" could read this as
+    partial. Source records updated: symantec (+raw_snapshot+sha256),
+    doj (+AUDIT note, no hash), cisa AA22-083A (CREATED).

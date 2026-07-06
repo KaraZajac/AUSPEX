@@ -8,50 +8,95 @@ incident_type:
   - wiper
 initial_vector: phishing
 outcome_summary: |
-  Spear-phishing-delivered wiper malware (Jokra / HastatiWiper)
-  with delayed-trigger payload deployed against three ROK
-  broadcasters (KBS, MBC, YTN) and three banks (Shinhan,
-  Nonghyup, Jeju). Approximately 32,000 systems wiped in
-  coordinated detonation; multi-day banking and broadcasting
-  outage.
+  Spear-phishing-delivered wiper malware (Trojan.Jokra /
+  DarkSeoul) with a delayed 14:00 KST trigger deployed against
+  three ROK broadcasters (KBS, MBC, YTN) and three banks
+  (Shinhan, NongHyup, Jeju). Approximately 32,000 systems wiped
+  in a coordinated detonation; multi-day banking and
+  broadcasting outage.
 quantified_impact:
   systems_wiped: 32000
 false_flag_risk: none
 summary: |
   First major destructive DPRK cyber operation against ROK
-  critical sectors. Established the destructive-wiper pattern
-  later reused at Sony (2014) and operationalized by Andariel in
-  subsequent operations. Initial access was achieved via spear-
-  phishing of broadcaster and bank IT staff, followed by months
-  of dwell in which operators harvested valid credentials for
-  patch-management and remote-administration consoles (notably
-  AhnLab APC and Hauri ViRobot) and used them to push the Jokra
-  / HastatiWiper / Korhigh wiper to ~32,000 endpoints in a
-  coordinated 14:00 KST detonation. The wiper overwrites the MBR
-  with "HASTATI" / "PRINCPES" / "PR!NCPES" strings and zeros disk
-  contents; Symantec's "Four Years of DarkSeoul" reporting links
-  the Trojan.Castov, Trojan.Jokra, and Tdrop tools as a single
-  cluster prefiguring Lazarus's later Sony Pictures destructive
-  operation.
+  critical sectors (the 2009 and 2011 precursors were DDoS, not
+  wiper). It established the destructive-wiper pattern later
+  reused against Sony Pictures (2014); AUSPEX places the actor in
+  the Lazarus umbrella, into which the contemporaneous "DarkSeoul"
+  cluster and the later-named Andariel sub-cluster are folded (see
+  the attributions block for the contemporaneous-vs-retrospective
+  attribution boundary). Initial access was achieved via spear-
+  phishing of broadcaster and bank IT staff; operators harvested
+  valid credentials for patch-management / remote-administration
+  consoles (AhnLab and Hauri update infrastructure) and used them
+  to push the Trojan.Jokra / DarkSeoul wiper to ~32,000 endpoints
+  in a coordinated 14:00 KST detonation. The wiper overwrites the
+  MBR/VBR and logical drives with repeating "HASTATI" or
+  "PR!NCPES" strings (per Symantec / Secureworks wiper analysis)
+  and zeros disk contents. Symantec's "Four Years of DarkSeoul"
+  report (June 2013) tied the March wiper into a multi-year
+  DarkSeoul family sharing tooling (e.g. Trojan.Castov); the
+  DarkSeoul-to-Destover/Sony lineage was drawn by Symantec's later
+  "From Seoul to Sony" reporting (Dec 2014). The separate 25 June
+  2013 anniversary wave (Trojan.Korhigh / Castov DDoS) is a
+  distinct event and is not part of this March-20 wiper.
 attributions:
   - actor_id: kp/rgb/lazarus
-    attributing_org: ROK NIS / Symantec
+    attributing_org: ROK Ministry of Science, ICT and Future Planning (joint government/NIS investigation)
     attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur
+    attribution_date: 2013-07-16
+    attribution_source_id: bbc/2013-07-16_north-korea-behind-cyber-attack-south-websites
+    notes: |
+      Contemporaneous STATE attribution, at NATION level: the ROK
+      government (Ministry of Science, ICT and Future Planning,
+      leading a joint investigation) attributed the 20 March wiper to
+      North Korea. Stated basis (via BBC): a North Korean IP found in
+      the malicious code and damaged systems ("I can say this is the
+      decisive evidence"), plus 82 malware samples and internet
+      addresses matching prior Pyongyang hacking patterns. No unit was
+      named and the government did not use "Lazarus"; actor_id
+      resolves the DPRK perpetrator to the Lazarus umbrella per corpus
+      modeling. The early Chinese-IP lead (NPR, 2013-03-21) was a
+      preliminary regulator finding later revised, not a false flag.
+  - actor_id: kp/rgb/lazarus
+    attributing_org: Symantec
+    attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2013-06-26
     attribution_source_id: symantec/2013-06-26_darkseoul-four-years
-  - actor_id: kp/rgb/andariel
-    attributing_org: Symantec (historical DarkSeoul attribution)
-    attributing_org_confidence: moderate
-    auspex_assessment: concur-with-caveat
-    attribution_date: 2013-06-26
-    attribution_source_id: symantec/2013-06-26_darkseoul-four-years
     notes: |
-      Cluster boundaries between Lazarus core and Andariel for
-      DarkSeoul are historically fuzzy; AUSPEX retains both
-      attributions with concur-with-caveat for Andariel.
+      Contemporaneous VENDOR attribution, at ACTIVITY-CLUSTER level:
+      Symantec's "Four Years of DarkSeoul" (2013-06-26) attributed the
+      March wiper and four years of prior ROK attacks to the
+      "DarkSeoul" crew. It named NO nation and did not use "Lazarus"
+      or "Andariel" (corroborated by SecurityWeek,
+      securityweek/2013-06-27_south-korea-attack-tied-darkseoul-crew-symantec).
+      DarkSeoul is folded into the Lazarus umbrella by Symantec's later
+      "From Seoul to Sony" (2014) and industry / MISP-galaxy consensus;
+      the corpus retains "Operation DarkSeoul" / "Dark Seoul" as
+      Lazarus aliases.
+  - actor_id: kp/rgb/andariel
+    attributing_org: AUSPEX (retrospective Lazarus/Andariel sub-cluster note)
+    attributing_org_confidence: moderate
+    attribution_level: named-unit
+    auspex_assessment: concur-with-caveat
+    attribution_date: null
+    attribution_source_id: null
+    notes: |
+      RETROSPECTIVE / not carried by any 2013 source. The "Andariel"
+      designation dates to ~2015; no contemporaneous report named
+      Andariel for the March 2013 wiper. Retained only because the
+      corpus deliberately models DarkSeoul as a fuzzy Lazarus-core /
+      Andariel-boundary case (see atlas/actors/kp/andariel.yaml, which
+      keeps DarkSeoul as a "historical alias only"). Kept with
+      concur-with-caveat because it is post-hoc clustering, not an
+      independently sourced 2013 attribution.
 doctrine_links:
   - doctrine_id: kp/songun
+    perspective: attacker-rationale
     pillar_id: kp/songun/military-intel-cyber
     program_id: null
     confidence: strongly_inferred
@@ -60,16 +105,37 @@ doctrine_links:
       destructive capability against ROK critical sectors. Target
       mix (broadcasters + banks) consistent with regime narrative
       defense and Juche asymmetric-response posture rather than
-      financial extraction.
+      financial extraction. Strongly_inferred, not attested: no
+      cited source states a Songun terminal goal for this
+      operation; the link is AUSPEX's reading of the target set
+      and timing.
+    attesting_source_id: null
+    inference_basis:
+      source_id: bbc/2013-07-16_north-korea-behind-cyber-attack-south-websites
+      signals:
+        - "Purely destructive wiper (no data-theft or extortion motive) detonated against ROK national broadcasters and banks — a capability demonstration, not a revenue operation"
+        - "Timing amid heightened inter-Korean tension following the DPRK 12 February 2013 nuclear test (BBC: the attack came 'at a time of heightened tensions ... following Pyongyang's nuclear test on 12 February')"
+        - "ROK-government attribution to North Korea, a Songun-era military-intelligence actor, at nation level"
+      ruled_out: "a financial-extraction motive — the operation wiped ~32,000 systems rather than monetising access"
     contested: false
     analyst: claude
   - doctrine_id: kp/juche
+    perspective: attacker-rationale
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
       Asymmetric response posture against perceived adversary
-      media and financial sectors.
+      media and financial sectors. Strongly_inferred, not
+      attested: no cited source states a Juche terminal goal; the
+      link is AUSPEX's doctrine-fit reading of the target choice.
+    attesting_source_id: null
+    inference_basis:
+      source_id: bbc/2013-07-16_north-korea-behind-cyber-attack-south-websites
+      signals:
+        - "Low-cost, high-visibility strike against ROK media + finance — an asymmetric substitute for conventional force consistent with the Juche self-reliance / asymmetric-response frame"
+        - "Attack coincided with sanctions- and exercise-driven tension after the February 2013 nuclear test"
+      ruled_out: "an espionage-only or criminal-financial framing — the payload was destructive, targeting national-morale and economic-confidence sectors"
     contested: false
     analyst: claude
 targets:
@@ -84,5 +150,111 @@ targets:
       Shinhan, Nonghyup, Jeju Bank systems wiped; ATM and online
       banking disruption.
 sources:
+  - bbc/2013-07-16_north-korea-behind-cyber-attack-south-websites
   - symantec/2013-06-26_darkseoul-four-years
+  - securityweek/2013-06-27_south-korea-attack-tied-darkseoul-crew-symantec
+  - theregister/2013-03-25_sk-data-wiping-malware-spread-by-patching-system
+  - npr/2013-03-21_south-korea-cyberattack-traced-chinese-ip
+  - wikipedia/2013-south-korea-cyberattack
   - mcafee/2013-07-09_operation-troy
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial   # every core claim snapshotted (BBC/Register/Wikipedia/NPR/SecurityWeek); only the exact MBR ASCII strings rest on un-snapshottable Symantec/Secureworks vendor analysis
+  notes: |
+    Fresh audit (prior agent interrupted by session restart; it had only stamped
+    the two legacy source records, not the event body). HISTORICAL DarkSeoul wiper,
+    20 March 2013.
+
+    [a] FACTS — verified + corrected. CONFIRMED & snapshotted: date 20 March 2013
+    (BBC "20 March"; theregister URL /2013/03/25/); ~32,000 systems wiped (BBC
+    "32,000"); six named victims — broadcasters KBS/MBC/YTN + banks
+    Shinhan/NongHyup(NACF)/Jeju (Wikipedia raw carries all six; BBC carries
+    "broadcasters"+"banks"; Register carries "Shinhan"); coordinated 14:00 KST
+    time-triggered detonation (Register raw "14:00" x2; Secureworks: "If it is
+    earlier than March 20, 2013 14:00, then Wiper B will sleep"); vector =
+    spear-phish -> stolen admin credentials -> push via patch-management/update
+    infrastructure (Register raw "patch management" x2 + "AhnLab" x3 + "stolen"/
+    "credentials"; contagio raw confirms Jokra + MBR wipe + AhnLab). CORRECTED: (1)
+    STRIPPED "HastatiWiper" — not a real vendor name, an AUSPEX portmanteau of the
+    HASTATI MBR string; vendors used Trojan.Jokra / DarkSeoul / "Wiper B/C". (2)
+    STRIPPED "Korhigh" from the March-20 wiper — Trojan.Korhigh belongs to the
+    SEPARATE 25 June 2013 anniversary wave (changes passwords to "highanon2013"),
+    a conflation error; added an explicit fence in the summary. (3) FIXED
+    ANACHRONISM — the summary claimed Symantec's "Four Years of DarkSeoul" (June
+    2013) linked tools "prefiguring Lazarus's later Sony Pictures" operation; the
+    June-2013 report cannot prefigure a Nov-2014 event. The DarkSeoul->Destover/Sony
+    lineage is Symantec's LATER "From Seoul to Sony" (Dec 2014); reworded, dropped
+    the specific "Tdrop" claim (not carried by the June-2013 report). (4) MBR strings
+    trimmed to the two documented ("HASTATI"/"PR!NCPES"; dropped redundant unpunctuated
+    "PRINCPES") and attributed to Symantec/Secureworks. (5) Removed unsourced "months
+    of dwell" duration.
+
+    [b] ATTRIBUTION — over-attestation + source mismatch fixed. The event cited
+    symantec/...four-years as the attribution source for a "Lazarus" (high/concur)
+    AND "Andariel" attribution, org="ROK NIS / Symantec". BUT the cited Symantec
+    report named ONLY the "DarkSeoul" crew (an activity-cluster) — NO nation, NO
+    "Lazarus", NO "Andariel" (SecurityWeek raw confirms "DarkSeoul"+"Crew"+"Castov",
+    sha c36c93a2...). Restructured into 3 correctly-levelled, correctly-sourced
+    entries: (1) ROK govt (Ministry of Science, ICT & Future Planning joint/NIS
+    investigation) -> North Korea, NATION level, 2013-07-16, sourced to NEW BBC record
+    (raw: "We speculate the hacking was done by North Korea"; "82 malignant codes";
+    "North Korean IP ... I can say this is the decisive evidence"; sha 6b0a9086...).
+    (2) Symantec -> "DarkSeoul" crew, ACTIVITY-CLUSTER level, 2013-06-26 (source
+    unchanged). (3) kp/rgb/andariel kept as concur-with-caveat but relabelled AUSPEX
+    retrospective (attribution_date null, source null) — the "Andariel" name dates to
+    ~2015, unsupported by any 2013 source; retained only because the corpus itself
+    models the Lazarus/Andariel boundary as fuzzy (kp/andariel.yaml keeps DarkSeoul
+    as "historical alias only"). Corrected org "ROK NIS" -> "ROK Ministry of Science,
+    ICT and Future Planning" (BBC names Park Jae-moon of MSIP, not the NIS).
+
+    [c] DATES — start=disclosure=end 2013-03-20 correct (single-day 14:00 detonation).
+    FIXED attribution_date: was 2013-06-26 (Symantec's PUBLICATION date) reused for a
+    nation/Lazarus attribution; now 2013-07-16 for the ROK-govt nation attribution
+    (BBC), 2013-06-26 for the Symantec activity-cluster attribution, null for the
+    retrospective Andariel note. Source published_on verified in raw: BBC 2013-07-16,
+    SecurityWeek datePublished 2013-06-27T16:14:23+00:00, Register 2013-03-25, NPR
+    2013-03-21.
+
+    [d] DOCTRINE_LINKS — kp/songun (pillar military-intel-cyber) + kp/juche, both
+    kept strongly_inferred (correct: no source states either doctrine's terminal
+    goal, so NOT attested). Brought to schema: added perspective: attacker-rationale
+    (DPRK's own doctrine on an attack DPRK carried out), attesting_source_id: null,
+    and inference_basis {source_id: bbc..., signals[], ruled_out} (signals = purely
+    destructive payload vs national broadcasters+banks, timing after the 12 Feb 2013
+    DPRK nuclear test per BBC, nation-level DPRK attribution; ruled_out = financial
+    extraction).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both original entries; added: nation
+    (ROK govt), activity-cluster (Symantec), named-unit (retrospective Andariel).
+
+    [f] ACTOR_ID — kp/rgb/lazarus resolves to atlas/actors/kp/lazarus.yaml (id
+    kp/rgb/lazarus; aliases incl. "Operation DarkSeoul"/"Dark Seoul"/"Andariel"),
+    kp/rgb/andariel resolves to atlas/actors/kp/andariel.yaml — both VALID. Not a
+    counter-action; actor_ids stay populated.
+
+    SNAPSHOTS (all curl 200, hashed 2026-07-05): NEW bbc__2013-07-16_north-korea-
+    behind-cyber-attack-south-websites.html (6b0a90865e82fe1f326a34fe5a0fc82dc3b94236e24313821e1d34258d323f58,
+    399206 B); NEW securityweek__2013-06-27_south-korea-attack-tied-darkseoul-crew-
+    symantec.html (c36c93a2202822988f2b804c133a9e7de4af2e438551b084a489cea6508416d9,
+    158007 B); NEW theregister__2013-03-25_sk-data-wiping-malware-spread-by-patching-
+    system.html (a5b72af19094f7ca04dff629baca5f74d8459e45996d7ebb9839eb18c950df9d,
+    157818 B); NEW npr__2013-03-21_south-korea-cyberattack-traced-chinese-ip.html
+    (7c8b183b05c8a28d1df7e5ab6938234b0ec6ede71c24ea946d137be33d4b442b, 75091 B);
+    wikipedia__2013-south-korea-cyberattack.html
+    (26943a83a1109a5c0a493bb938b8fa978ed3f10b7f63747bebaa7ddca4d126ce, 197211 B,
+    added to the pre-existing tertiary record). Legacy symantec/...four-years +
+    mcafee/...operation-troy remain UN-SNAPSHOTTABLE (Broadcom 404 / mcafee PDF 403
+    Akamai; archive.org unreachable this session) — re-verified as REAL link-rotted
+    reports, NOT phantoms; their 2026-07-05 audit notes stand.
+
+    LEVEL = partial: every core claim (date, ~32k scope, six named victims,
+    destructive MBR wiper, 14:00 trigger, AhnLab patch-management vector, ROK-govt
+    North-Korea nation attribution, Symantec DarkSeoul-cluster attribution) IS carried
+    by a snapshotted source. The SOLE un-snapshotted load-bearing detail is the exact
+    MBR ASCII strings ("HASTATI"/"PR!NCPES"), which live only in the un-snapshottable
+    Symantec/Secureworks wiper analysis (Sophos /research URL timed out; the Register
+    and Wikipedia snapshots confirm the Trojan.Jokra MBR-wipe mechanism but not the
+    literal ASCII strings) — hence partial, not full. No make/commit/git run; no actor/doctrine/
+    other-event files edited.

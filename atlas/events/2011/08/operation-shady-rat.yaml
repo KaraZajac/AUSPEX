@@ -6,85 +6,178 @@ end_date: 2011-08-02
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  McAfee (Dmitri Alperovitch) disclosed a five-year intrusion
-  campaign against 71 organizations across 14 countries —
-  including the IOC, the World Anti-Doping Agency, the UN, ASEAN
-  Secretariat, defense contractors, US federal contractors, and
-  the Government of Canada. Sustained C2 from a single log
-  server allowed McAfee to reconstruct dwell times ranging from
-  one month to 28 months. While McAfee did not name the
-  sponsoring state, the target list and timing around the 2008
-  Beijing Olympics led contemporaneous reporting to attribute
-  the campaign to the PRC.
+  McAfee (Dmitri Alperovitch) disclosed a five-year targeted
+  intrusion campaign against 72 identified organizations across
+  14 geographic locations — including the International Olympic
+  Committee, the World Anti-Doping Agency, the United Nations, the
+  ASEAN Secretariat, 13 defense contractors, U.S. federal/state/
+  county government agencies, and Canadian government agencies.
+  Access to a single command-and-control log server let McAfee
+  reconstruct per-victim dwell times ranging from under a month to
+  28 months. McAfee suspected "a state actor" — inferring it from
+  the Olympic-committee targeting, which offered "likely no
+  commercial benefit" — but explicitly declined to name any nation;
+  contemporaneous reporting (Vanity Fair) inferred the PRC.
 false_flag_risk: none
 summary: |
-  Operation Shady RAT was the second-major public exposure of
-  a long-running PRC-aligned campaign (after Aurora 2010) and
-  contributed to the late-2011 — early-2012 inflection in
-  Western public framing of PRC cyber. The 2008-Olympics-adjacent
-  IOC and WADA targeting is doctrinally distinctive: prestige
-  collection rather than narrow IP theft. The campaign is part
-  of the broader Comment Crew / APT1 milieu though McAfee did
-  not at the time use that label.
+  Operation Shady RAT was, after Operation Aurora (2010), an early
+  large-scale public exposure of long-dwell state-actor cyber
+  espionage, and McAfee framed it explicitly as one operation by a
+  single actor/group. Its doctrinally distinctive feature is the
+  2008-Beijing-Olympics-adjacent targeting of the IOC, national
+  Olympic committees, and the World Anti-Doping Agency: McAfee
+  singled this out as pointing to a state actor precisely because
+  there was "likely no commercial benefit" — prestige/political
+  collection rather than narrow IP theft. McAfee named no
+  sponsoring nation; the attribution to China is press inference
+  (Vanity Fair, "fingers point to China"), itself hedged. (The
+  later APT1 / Comment Crew label from Mandiant's 2013 report is
+  not applied by either 2011 source and is not asserted here.)
 attributions:
   - actor_id: null
     attributing_org: McAfee (Dmitri Alperovitch)
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2011-08-02
     attribution_source_id: mcafee/2011-08-02_shady-rat
     notes: |
-      McAfee report declined to name the state actor. Press
-      attribution (Vanity Fair, Reuters) named China. Cluster
-      overlaps significantly with the APT1 / Comment Crew
-      campaign disclosed by Mandiant two years later. Leaving
-      actor_id null per editorial norm; the doctrine tag is
-      load-bearing.
+      McAfee named and scoped a single actor/group from one
+      command-and-control log server and assessed the Olympic-
+      committee targeting "potentially pointed a finger at a state
+      actor behind the intrusions, because there is likely no
+      commercial benefit" — but explicitly declined to name any
+      nation and named no group. activity-cluster: one coherent
+      actor, no nation, no named group. actor_id null per the
+      editorial norm for vendor disclosures that name no group
+      (mirrors Operation Night Dragon).
+  - actor_id: null
+    attributing_org: Vanity Fair (Michael Joseph Gross)
+    attributing_org_confidence: low
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2011-09-01
+    attribution_source_id: vanityfair/2011-09_shady-rat
+    notes: |
+      Contemporaneous long-form journalism that inferred China at
+      the nation level ("fingers point to China as the culprit")
+      where McAfee named no state — but hedged it ("because the
+      People's Republic of China is such a massive entity, it is
+      impossible to know how much Chinese hacking is done on
+      explicit orders from the government"). Names the nation, not a
+      specific group; actor_id null. nation-level, low confidence
+      (press inference, not a vendor/govt technical attribution).
 doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/dual-use-research
     program_id: null
     confidence: plausible
     reasoning: |
-      Defense contractor and federal-IT-services targeting maps
-      to the dual-use research collection pattern. Retrospective
-      framing — MCF as a named national strategy postdates the
-      campaign.
+      The bulk of the identified victims — 13 defense contractors
+      plus U.S. federal/state/county government and IT/electronics/
+      satellite firms — maps to the dual-use R&D collection pattern
+      (the pillar's target sectors include defense/contractor and
+      ICT). The label is plausible, not higher, on two grounds: the
+      China attribution is itself press inference (McAfee named no
+      nation), and MCF as a named national strategy (2014-2017)
+      postdates the 2006-2011 campaign, so this is a retrospective
+      doctrinal frame and no source states an MCF purpose.
     attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      IOC and WADA targeting in the run-up to Beijing 2008 is the
-      prestige-defense / regime-narrative aspect of the broader
-      MSS collection portfolio that the 2017 law later codified.
-    attesting_source_id: null
-    counter_explanation: |
-      IOC / WADA targeting could equally serve athletics-program
-      intelligence collection rather than dissident surveillance.
+    inference_basis:
+      alternatives:
+        - "MCF dual-use R&D collection: the defense-contractor + government + IT victim concentration is the archetypal PRC dual-use collection pattern MCF later formalized; fits if the press China attribution holds."
+        - "Undifferentiated state espionage: McAfee frames the operation only as one state actor's 'hunger for secrets and intellectual property' without naming a nation or a specific strategic program, so a generic state-collection reading survives alongside the MCF-specific one."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/ioc
-    country: ch  # IOC HQ Lausanne
+    country: ch  # McAfee table lists the IOC under Switzerland (HQ Lausanne)
     role: primary
   - target_id: orgs/wada
-    country: ca
+    country: ca  # McAfee table lists WADA under Canada (HQ Montreal)
     role: primary
   - target_id: orgs/un
-    country: us  # NYC
+    country: ch  # McAfee table lists the United Nations under Switzerland (Geneva)
     role: primary
   - target_id: orgs/asean-secretariat
-    country: id  # Jakarta
+    country: id  # McAfee table lists the ASEAN Secretariat under Indonesia (Jakarta)
     role: primary
-  - target_id: orgs/government-of-canada
+  - target_id: sectors/defense/contractor
+    country: us
+    role: primary  # McAfee: 13 defense contractors — the single largest category
+  - target_id: sectors/government
+    country: us
+    role: primary  # McAfee: 6 federal + 5 state + 3 county U.S. government agencies
+  - target_id: sectors/government
     country: ca
-    role: primary
+    role: primary  # McAfee: 2 Canadian government agencies (report anonymizes them)
 sources:
   - mcafee/2011-08-02_shady-rat
   - vanityfair/2011-09_shady-rat
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited against both cited RAW sources (snapshots captured + hashed).
+    McAfee "Revealed: Operation Shady RAT" PDF sha256 b85852bf...70fafb9f
+    (5,145,815 bytes; 14-page, PDF CreationDate 2011-08-02, doc
+    33000wp_shady-rat_0811 — authentic primary via airandspaceforces.com
+    mirror). Vanity Fair "Enter the Cyber-dragon" HTML sha256 782f5776...4fccf01d
+    (1,238,539 bytes; byline Michael Joseph Gross).
+    [a] FACTS: KEY CORRECTION — victim count 71 -> 72. McAfee states it verbatim
+    twice ("we identified 72 compromised parties"; "the complete list of all 72
+    targets") and the country table (USA 49 + 13 others) sums to 72. "14
+    countries" confirmed (McAfee: "14 geographic locations" — USA, Canada, S.Korea,
+    Taiwan, Japan, Switzerland, UK, Indonesia, Vietnam, Denmark, Singapore, Hong
+    Kong, Germany, India). Single C2 log server, spear-phishing initial access,
+    five-year window from mid-2006, dwell "less than a single month" to 28 months —
+    all verbatim-supported (fixed "one month" -> "under a month"). Added
+    incident_type: espionage (McAfee: "targeted espionage operations"). STRIPPED the
+    anachronistic "Comment Crew / APT1 milieu" claim (Mandiant's APT1 report is Feb
+    2013, 2 yrs after both cited sources; neither carries it) and the unsourced
+    "late-2011 inflection in Western framing" editorializing.
+    [b] ATTRIBUTION: McAfee explicitly declined to name any nation — it assessed the
+    Olympic-committee targeting "potentially pointed a finger at a state actor ...
+    because there is likely no commercial benefit", i.e. suspected a STATE actor but
+    named no country and no group. Modeled actor_id null, activity-cluster, moderate,
+    concur-with-caveat (added attribution_level; mirrors sibling Night Dragon). ADDED
+    a 2nd null-actor entry for Vanity Fair at nation level / low confidence: VF
+    inferred China ("fingers point to China as the culprit") but hedged ("impossible
+    to know how much Chinese hacking is done on explicit orders from the government").
+    No specific group named by either 2011 source -> actor_id stays null on both
+    (China nation-level = SUSPECTED / press-inferred, not firm).
+    [c] DATES: McAfee published_on 2011-08-02 confirmed by PDF CreationDate; VF
+    2011-09-01 (Sept 2011 issue). start_date 2006-07-01 = earliest table start
+    ("mid-2006"). end_date 2011-08-02 (== disclosure) retained as the accepted corpus
+    convention for McAfee-disclosure campaigns (matches Night Dragon), not a conflation.
+    [d] DOCTRINE_LINKS: REMOVED cn/national-intelligence-law-2017/diaspora-and-
+    dissident-collection — genuine mismatch: that pillar encodes Tibetan/Uyghur/
+    dissident targeting, not IOC/WADA/Olympics prestige collection; NIL-2017 is a 2017
+    supply-side vendor-compulsion statute (11 yrs post-campaign) and no source supports
+    a dissident-collection purpose. KEPT cn/mcf/dual-use-research at plausible (already
+    plausible — not over-attested; attesting_source_id null): 13 defense contractors +
+    US federal/state/county govt + IT/electronics/satellite victims fit the pillar's
+    sectors; reasoning made honest about China being press-inferred and MCF postdating;
+    added inference_basis.alternatives. No corpus China doctrine cleanly encodes foreign
+    prestige/political collection, so the Olympics-prestige aspect correctly carries no
+    doctrine link ("do not invent one").
+    [e] ATTRIBUTION_LEVEL: set activity-cluster (McAfee — no nation/no group) and nation
+    (Vanity Fair — China, no group).
+    [f] ACTOR_ID: null on both entries (unattributed to a named group) — trivially
+    resolves; no actor file involved.
+    TARGETS: fixed orgs/un country us -> ch (McAfee's table lists the UN under
+    Switzerland/Geneva, not NYC). Removed orgs/government-of-canada — NOT a McAfee-named
+    entity (the report anonymizes "Canadian Government Agency #1/#2"); replaced with
+    sectors/government (ca). Added sectors/defense/contractor (us) and sectors/government
+    (us) — the numerically dominant, fully-documented victim classes. Kept the 4
+    McAfee-NAMED orgs (ioc/wada/un/asean-secretariat).
+    FLAGS: (1) target-registry gap — orgs/ioc, orgs/un, orgs/asean-secretariat are
+    genuinely McAfee-named victims but lack atlas/targets/orgs/*.yaml records (kept as
+    sourced targets; validator treats orgs/* gaps as informational "normalization
+    deferred"). Orchestrator should create these 3 registry files (orgs/wada exists).
+    (2) doctrine link removal recorded above.

@@ -2,54 +2,104 @@ id: 2015-03/casper-syria-eset-disclosure
 name: ESET Casper disclosure (April 2014 Syrian watering-hole campaign)
 start_date: 2014-04-01
 disclosure_date: 2015-03-05
-end_date: 2014-04-30
+end_date: null  # AUDIT 2026-07-05: only April 2014 activity is documented (payload config timestamp Mon 2014-04-07 21:27 GMT; Flash 0-day exploits observed mid-April 2014 by Zakorzhevsky); site was clean by the 2015-03 disclosure. 2014-04-30 was an unsourced month-end bound.
 incident_type:
   - espionage
 initial_vector: 0-day
 outcome_summary: |
   ESET WeLiveSecurity (Joan Calvet) disclosure on 5 March 2015 of
-  the Casper implant, deployed in April 2014 against Syrian
-  targets via the Jubilee.sy compromised Syrian Ministry of
-  Justice website. Casper leveraged CVE-2014-0515 (Adobe Flash
-  zero-day) to deliver a multi-stage backdoor with anti-analysis
-  features and modular post-exploitation. ESET identified
-  French-language code artifacts ("MEDIA-MOTHER" PDB string,
-  identical naming idiom to Babar) and joined Casper to the
-  Animal Farm family disclosed earlier the same month by G Data
-  and Cyphort.
+  the Casper implant, deployed in April 2014 against targets in
+  Syria via the compromised Syrian Justice Ministry website
+  "jpic.gov.sy" (a 2011 civil-war-reparations complaints portal).
+  Casper leveraged CVE-2014-0515 (Adobe Flash zero-day) to deliver
+  a multi-stage backdoor (dropper + reconnaissance payload) with
+  extensive anti-analysis / anti-AV logic and modular
+  post-exploitation (SYSINFO / EXEC / SYSTEM commands, PLUGIN
+  deployment). ESET assessed "with high confidence that Bunny,
+  Babar, NBOT and Casper were all developed by the same
+  organization", basing that same-developer link on shared code
+  constructs (identical API-name hashing, WMI antivirus-detection,
+  C&C delimiter generation, dropper self-removal, an incrementing
+  operation-ID scheme) and the shared cartoon-character naming
+  idiom — NOT on any French-origin artifact. ESET explicitly found
+  "no signs of French origin, as suggested by CSEC for Babar … in
+  the binaries." Kaspersky GReAT (6 March 2015) independently named
+  the "Animal Farm" group, listed Casper among its Trojans, and
+  described the operation as "a watering-hole attack in Syria".
 quantified_impact:
   countries_affected: 1
-false_flag_risk: none
+false_flag_risk: suspected  # AUDIT 2026-07-05: ESET states hosting the exploits/Casper/C&C on the Syrian government server "would mislead attribution efforts by raising suspicion against the Syrian government" — a source-stated misdirection consideration (not a confirmed false flag).
 operators_named: []
 summary: |
   Casper sits in the middle of the Animal Farm cluster timeline:
-  deployed April 2014 (one month after the Le Monde Snowglobe
-  reporting), disclosed publicly March 2015. The Syrian targeting
-  (Ministry of Justice watering-hole during the civil war
-  conflict period) is editorially consistent with French foreign-
-  intelligence priorities in the Levant theater. ESET stopped
-  short of formal French attribution but used "previously linked
-  to a French intelligence service" framing. AUSPEX records
-  the auspex_assessment as concur on the basis of vendor consensus
-  + Le Monde precedent.
+  deployed April 2014 (about one month after Le Monde's March 2014
+  report of the CSEC "SNOWGLOBE" material), disclosed publicly
+  March 2015. Two vendors place Casper in a single coherent
+  operator: ESET links it with high confidence to the same
+  organisation behind Babar / Bunny / NBOT, and Kaspersky names
+  the "Animal Farm" group and lists Casper among its tools. The
+  French provenance is NOT attributed by either vendor to Casper:
+  it rests on CSEC's (Communications Security Establishment Canada)
+  suspicion that FRANCE developed the parent Babar malware —
+  revealed by Le Monde (March 2014) and Der Spiegel (January 2015)
+  from Snowden's leaked SNOWGLOBE slides — applied to Casper only
+  transitively via the same-developer cluster. ESET explicitly
+  found "no signs of French origin … in the binaries" of Casper and
+  named no French intelligence service. The narrow targeting of
+  people in Syria (via a Syrian Justice-Ministry civil-war
+  reparations portal) fits a foreign-intelligence interest in the
+  Syrian theatre — ESET calls it "a likely interest in
+  geopolitics". AUSPEX therefore records the attribution as
+  concur-with-caveat: the same-developer cluster is robust, but the
+  France placement is a suspected (CSEC), not vendor-attributed,
+  inference and no French service is named — hence the actor is
+  held at fr/unscoped.
 attributions:
   - actor_id: fr/unscoped/casper-actor
     service_id: null  # was fr/dgse/technical-directorate; nulled 2026-06-24 (claude-opus-4.8/max): unsourced — ESET names only "France"/CSEC, never the DGSE. See actor notes.
     attributing_org: ESET (Joan Calvet)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor  # AUDIT 2026-07-05: ESET (high conf) + Kaspersky establish a named same-developer group (the "Animal Farm" operator behind Babar/Bunny/NBOT/Casper). NATION not reached by the cited vendors — France is only CSEC-"suspected" for the parent Babar; no named-unit (no DGSE). Hence named-actor, moderate.
+    auspex_assessment: concur-with-caveat
     attribution_date: 2015-03-05
     attribution_source_id: eset/2015-03-05_casper-malware-babar-bunny
+    notes: |
+      ESET assessed "with high confidence that Bunny, Babar, NBOT and
+      Casper were all developed by the same organization" (same-developer
+      cluster) but of Casper itself found "no signs of French origin, as
+      suggested by CSEC for Babar … in the binaries" — i.e. ESET makes NO
+      nation attribution of Casper. The France placement is transitive:
+      CSEC "suspected" France of developing the parent Babar (Le Monde
+      2014-03; Der Spiegel 2015-01; Snowden SNOWGLOBE material), and Casper
+      is the same operator's tool. Kaspersky ("Animals in the APT Farm",
+      2015-03-06) names the "Animal Farm" group and lists Casper, but does
+      NOT attribute to France (its sole "French" mention is an Occitan
+      etymology aside). No cited source names the DGSE or any French service
+      → actor held at fr/unscoped; confidence moderate; concur-with-caveat.
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-offensive
     pillar_id: fr/lutte-informatique-offensive/intelligence-preparation
     program_id: null
     confidence: plausible
     reasoning: |
-      Pre-codification operation (LIO articulated 2019, Casper
-      deployed 2014) aligns with intelligence-preparation function
-      LIO subsequently codified. Linked at plausible.
+      Pre-codification operation (LIO publicly articulated 2019,
+      Casper deployed 2014) mapped retroactively to the
+      intelligence-preparation-of-the-environment function LIO later
+      codified — the mapping the LIO doctrine record itself
+      prescribes for the Animal Farm family ("fits this pillar
+      retroactively at plausible confidence"). Casper is a
+      reconnaissance / espionage implant narrowly targeting people in
+      Syria; ESET reads that as "a likely interest in geopolitics".
+      Held at plausible because no source states a French strategic
+      purpose, ESET makes no nation attribution of Casper, and the
+      France provenance itself is only CSEC-suspected for the parent
+      Babar.
     attesting_source_id: eset/2015-03-05_casper-malware-babar-bunny
+    inference_basis:
+      alternatives:
+        - "French intelligence-preparation / foreign-intelligence collection (the LIO intelligence-preparation pillar, applied retroactively): a reconnaissance implant narrowly targeting people in Syria via a Justice-Ministry portal, consistent with the CSEC-suspected French provenance of the Animal Farm family and ESET's 'likely interest in geopolitics'."
+        - "Pre-doctrinal DGSE foreign-intelligence collection under pre-2018 authorities with no reference to LIO: LIO was articulated in 2019, five years after the operation, so the mapping is anachronistic and the op may be generic espionage rather than preparation for later military cyber effects."
+        - "Attribution-contingent: France is only CSEC-suspected for the parent Babar and explicitly NOT evidenced in Casper by ESET, so any French-doctrine reading is contingent on the cluster's suspected French provenance holding."
     counter_explanation: |
       DGSE foreign-intelligence collection under pre-2018
       authorities, without specific reference to LIO doctrine.
@@ -57,15 +107,110 @@ doctrine_links:
     analyst: claude
 targets:
   - target_id: sectors/government/judicial
-    role: primary
+    country: sy
+    role: staging
     outcome: |
-      Syrian Ministry of Justice (Jubilee.sy) website
-      compromised as watering-hole; visitor population
-      (presumably Syrian government employees and
-      external interlocutors) targeted for implant delivery.
-  - target_id: sectors/government
+      Syrian Justice Ministry website "jpic.gov.sy" (a 2011 portal
+      for civil-war reparations complaints) compromised / co-opted:
+      the Flash 0-day exploits, the Casper binaries and the C&C were
+      all hosted on this server. ESET floats two hypotheses — a
+      watering-hole targeting the site's visitors, or the site merely
+      hacked as a storage area — and notes the choice "would mislead
+      attribution efforts by raising suspicion against the Syrian
+      government". Delivery vehicle, not the ultimate victim.
+  - target_id: sectors/civil-society
     country: sy
     role: primary
+    outcome: |
+      Per ESET telemetry, "all the people targeted during this
+      operation were located in Syria" — most likely "Syrian citizens
+      who want to file a complaint" via jpic.gov.sy. ESET could not
+      confirm the victims were the site's visitors versus redirected
+      from elsewhere (a link in an email or another hacked site). The
+      earlier "Syrian government employees and external interlocutors"
+      framing was unsupported and has been corrected.
 sources:
   - eset/2015-03-05_casper-malware-babar-bunny
   - kaspersky/2015-03-06_animals-in-the-apt-farm
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Full 6-point audit vs the two cited RAW snapshots (both re-verified this date,
+    hashes UNCHANGED; tier=primary PRESERVED):
+      • ESET welivesecurity Casper article — content_sha256 349ffdc9…f34558, 93212 bytes.
+      • Kaspersky "Animals in the APT Farm" — content_sha256 25c24574…066e5, 180845 bytes.
+    PHANTOM CHECK (event was flagged phantom-suspect): NOT phantoms — both URLs resolve
+    to the genuine articles (ESET <title> "Casper Malware: After Babar and Bunny…";
+    Kaspersky <title> "Animals in the APT Farm | Securelist"), and bodies carry the
+    claims. No re-sourcing needed.
+
+    [a] FACTS — corrected several fabrications / over-claims:
+      • DOMAIN: event said the watering-hole was "Jubilee.sy" — FALSE. ESET says the site
+        is "jpic.gov.sy" (grep of raw: "jpic"=5, "Jubilee"=0), "set up in 2011 by the
+        Syrian Justice Ministry … to allow Syrian people to ask for reparation for the
+        damage of the civil war." Corrected throughout.
+      • "MEDIA-MOTHER" PDB string / ESET-"identified French-language code artifacts" in
+        Casper — FALSE. Neither string occurs in either raw ("MEDIA-MOTHER"=0, "PDB"=0 in
+        both). ESET's same-developer link rests on shared CODE constructs (API-name
+        hashing, WMI AV-detection, C&C delimiter generation, dropper self-removal,
+        incrementing operation IDs 13001 / 12075-01 / 08184) + cartoon naming — and ESET
+        EXPLICITLY says "no signs of French origin, as suggested by CSEC for Babar, were
+        found in the binaries." Rewrote outcome_summary to the real evidence + disclaimer.
+      • VICTIMS: event said "Syrian government employees and external interlocutors" —
+        unsupported. ESET: "all the people targeted during this operation were located in
+        Syria … Syrian citizens who want to file a complaint." Re-modelled targets.
+      • '"previously linked to a French intelligence service" framing' — fabricated quote;
+        "intelligence service" does not occur in ESET (grep=0). Removed.
+      • end_date 2014-04-30 was an unsourced month-end bound → null (only April 2014
+        activity documented: payload config timestamp Mon 2014-04-07 21:27 GMT; exploits
+        observed mid-April 2014; site clean by the 2015-03 disclosure).
+      • false_flag_risk none→suspected: ESET states the Syrian-server hosting "would
+        mislead attribution efforts by raising suspicion against the Syrian government" —
+        a source-stated misdirection (not a confirmed false flag).
+      • CONFIRMED true: April 2014 deployment; CVE-2014-0515 Adobe Flash 0-day; multi-stage
+        dropper+reconnaissance-payload backdoor with anti-AV logic + modular
+        SYSINFO/EXEC/SYSTEM/PLUGIN post-exploitation; Kaspersky "watering-hole attack in
+        Syria"; only 1 country affected (Syria).
+
+    [b] ATTRIBUTION — ESET verbatim: "we assess with high confidence that Bunny, Babar,
+      NBOT and Casper were all developed by the same organization" (CLUSTER, high conf);
+      and "In March 2014, French newspaper Le Monde revealed that France is suspected by
+      the Communications Security Establishment Canada (CSEC) of having developed and
+      deployed malicious software … based on presentation slides leaked by Edward Snowden
+      … published by … Der Spiegel in January 2015" (France = CSEC SUSPICION re Babar).
+      Casper→France is thus transitive, and ESET disclaims French signs in Casper itself.
+      Kaspersky names the "Animal Farm" group + lists Casper but does NOT attribute to
+      France (sole "French" = an Occitan etymology aside). Corrections: auspex_assessment
+      concur→concur-with-caveat (aligns with the actor record); added attribution_level:
+      named-actor (vendors name a group; nation only suspected; no unit) + a
+      per-attribution notes block. attributing_org_confidence kept moderate. service_id
+      already correctly null (no DGSE named).
+
+    [c] DATES — disclosure_date 2015-03-05 = ESET pub date ("Joan Calvet 05 Mar 2015") ✓.
+      start_date 2014-04-01 = April-2014 deployment ✓ (payload timestamp 2014-04-07).
+      end_date → null (see [a]). Le Monde March 2014 / Der Spiegel January 2015 verified in
+      the ESET text. Source published_on (ESET 2015-03-05, Kaspersky 2015-03-06) ✓.
+
+    [d] DOCTRINE_LINKS — one link, fr/lutte-informatique-offensive/intelligence-preparation,
+      confidence PLAUSIBLE (correct — NOT attested: no source states a French strategic
+      purpose and ESET makes no nation attribution of Casper). The LIO doctrine record
+      itself prescribes this retroactive plausible mapping for the Animal Farm family.
+      Added the ladder-required inference_basis.alternatives[] (3, colon-space-quoted);
+      kept counter_explanation. perspective = attacker-rationale (default; French doctrine
+      on a French-suspected op; actor-state fr = doctrine-state fr, no mismatch). pillar FK
+      fr/lutte-informatique-offensive/intelligence-preparation exists ✓.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (see [b]).
+
+    [f] ACTOR_ID — fr/unscoped/casper-actor resolves to atlas/actors/fr/casper-actor.yaml
+      (id fr/unscoped/casper-actor) ✓; already correctly demoted from fr/dgse/* on
+      2026-06-24. No actor edit made. FLAG for orchestrator: the actor file's ttp_summary
+      also carries the wrong "Jubilee.sy" domain (should be jpic.gov.sy).
+
+    RESIDUAL UNCERTAINTY: France is suspected (CSEC), not vendor-attributed for Casper; the
+    "Casper operator" is an AUSPEX editorial sub-split of the Animal Farm cluster; and
+    whether the victims were the portal's visitors or redirected from elsewhere is
+    unresolved per ESET.

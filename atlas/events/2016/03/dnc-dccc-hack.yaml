@@ -6,6 +6,7 @@ end_date: 2016-11-08
 incident_type:
   - intrusion
   - data-theft
+  - leak
   - influence-operation
 initial_vector: phishing
 outcome_summary: |
@@ -32,33 +33,39 @@ operators_named:
   - potemkin-aleksey  # GRU Unit 74455, Mueller 2018
   - kovalev-anatoliy  # GRU Unit 74455, Mueller 2018 (also NotPetya / Sandworm Six 2020)
 summary: |
-  Mueller's July 2018 indictment named twelve GRU officers across
-  Unit 26165 (spear-phishing / exfiltration) and Unit 74455
-  (election-infrastructure targeting and laundering). Tradecraft
-  per the indictment and CrowdStrike's "Bears in the Midst"
-  reporting: spear-phishing of DNC, DCCC, and Clinton-campaign
-  staff with credential-harvesting URL-shortener links (the
-  "fancybear-securitymail" pretext), follow-on deployment of the
-  X-Agent (CHOPSTICK) modular backdoor and the X-Tunnel network
-  proxy, lateral movement across the DNC's Active Directory using
-  valid credentials, Mimikatz-style credential dumping, and bulk
-  staged exfiltration of email and document repositories. Unit
-  74455 / Sandworm laundered the stolen material through the
-  Guccifer 2.0 persona, the DCLeaks website, and WikiLeaks, timed
-  with the Democratic National Convention (July 2016) and the
-  pre-election Podesta drop (October–November 2016). The
-  Intelligence Community Assessment (ICA 2017-01D) named Vladimir
-  Putin as the directing authority.
+  Mueller's July 2018 indictment charged twelve GRU officers across
+  Unit 26165 — which "had primary responsibility for hacking the DCCC
+  and DNC" and the Clinton-campaign email accounts — and Unit 74455,
+  which "assisted in the release of stolen documents through the
+  DCLeaks and Guccifer 2.0 personas" and the promotion of those
+  releases. Per the indictment: starting by at least March 2016 the
+  conspirators spearphished DNC, DCCC, and Clinton-campaign staff
+  (over 300 individuals), masking credential-harvesting links with a
+  URL-shortening service (the "john356gh" account) and phishing the
+  Clinton-campaign chairman (John Podesta by public record); they
+  deployed the X-Agent implant to log keystrokes and capture
+  screenshots, used "a publicly available tool" to compress stolen
+  files, and exfiltrated the staged data over X-Tunnel to GRU-leased
+  servers (Arizona, Illinois). Unit 74455 laundered the material
+  through the Guccifer 2.0 persona, the DCLeaks website, and
+  Organization 1 (WikiLeaks, named in the ICA), timed with the
+  Democratic National Convention (July 2016) and the pre-election
+  Podesta release (October–November 2016). The Intelligence Community
+  Assessment (ICA 2017-01D) assessed that Vladimir Putin ordered the
+  influence campaign, whose goals were to "undermine public faith in
+  the US democratic process" and denigrate Secretary Clinton.
 attributions:
   - actor_id: ru/gru/26165/apt28
     attributing_org: US Department of Justice (Mueller)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2018-07-13
     attribution_source_id: doj/2018-07-13_mueller-gru-twelve-indictment
   - actor_id: ru/gru/74455/sandworm
     attributing_org: US Department of Justice (Mueller)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2018-07-13
     attribution_source_id: doj/2018-07-13_mueller-gru-twelve-indictment
@@ -70,8 +77,16 @@ attributions:
   - actor_id: ru/gru/26165/apt28
     attributing_org: US ODNI (Intelligence Community Assessment)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2017-01-06
+    notes: |
+      The ICA attributes to the GRU (military-intelligence service)
+      and to Vladimir Putin as directing authority; it does not name
+      the numbered Unit 26165 (that specificity comes from the 2018
+      Mueller indictment). attribution_level: named-unit reflects the
+      named GRU service; the actor_id maps that GRU cyber activity to
+      APT28 for atlas resolution.
     attribution_source_id: odni/2017-01-06_ica-2017-01d-russia-election-assessment
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
@@ -86,6 +101,10 @@ doctrine_links:
       means as a military threat — which doctrinally legitimizes
       mirror operations against adversaries.
     attesting_source_id: odni/2017-01-06_ica-2017-01d-russia-election-assessment
+    inference_basis:
+      source_quote: "We assess Russian President Vladimir Putin ordered an influence campaign in 2016 aimed at the US presidential election. Russia's goals were to undermine public faith in the US democratic process, denigrate Secretary Clinton, and harm her electability and potential presidency."
+      source_id: odni/2017-01-06_ica-2017-01d-russia-election-assessment
+    perspective: attacker-rationale
     counter_explanation: null
     contested: false
     analyst: claude
@@ -99,6 +118,11 @@ doctrine_links:
       as plausible rather than attested because the Gerasimov
       framework is informal and Galeotti has retracted the label.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Military Doctrine 2014 destabilization-via-info: the same hack-and-leak is more cleanly captured by the formal 2014 doctrine's 'destabilization of internal political and social situation' via information means (the attested link above); the Gerasimov tag duplicates that reading under an informal label."
+        - "No coherent 'Gerasimov doctrine': Galeotti — who coined the phrase — has publicly retracted it as a Western misreading of Gerasimov's 2013 article, so the framework label may name no discrete Russian doctrine at all."
+    perspective: attacker-rationale
     counter_explanation: |
       Better captured under the formal Military Doctrine 2014
       destabilization-via-info pillar; the Gerasimov tag is
@@ -117,3 +141,85 @@ targets:
 sources:
   - doj/2018-07-13_mueller-gru-twelve-indictment
   - odni/2017-01-06_ica-2017-01d-russia-election-assessment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the two cited primaries, both snapshotted + hashed and
+    content-verified from the raw PDFs (pdftotext).
+
+    [a] FACTS — carried by the DOJ indictment (sha b2bc..7696) and ICA
+    (sha 5876..2257). Verbatim confirmations: Unit 26165 "had primary
+    responsibility for hacking the DCCC and DNC" (para 9); Unit 74455
+    "assisted in the release of stolen documents through the DCLeaks and
+    Guccifer 2.0 personas" (para 18); "Starting in at least March 2016"
+    and "Beginning by at least March 2016, the Conspirators targeted over
+    300 [individuals]"; URL-shortening service, the "john356gh" account
+    used by LUKASHEV to spearphish the Clinton-campaign chairman; X-Agent
+    (x19) keylog/screenshot implant, X-Tunnel (x4) exfil to GRU-leased
+    computers in Arizona/Illinois; "a publicly available tool to gather
+    and compress"; Organization 1 (WikiLeaks); object of the conspiracy
+    "to ... interfere with the 2016 U.S. presidential election" (para 20).
+    ICA: "Putin" x28, "WikiLeaks" x12, goal statement on p.ii.
+    STRIPPED as uncited embellishment (in neither cited source): the
+    X-Agent "(CHOPSTICK)" alias, "Mimikatz-style credential dumping",
+    "lateral movement across the DNC's Active Directory", and the
+    "fancybear-securitymail" pretext (the indictment's masking account
+    was "john356gh", not that string) — all CrowdStrike/FireEye-derived;
+    also removed the summary's explicit "CrowdStrike 'Bears in the Midst'
+    reporting" attribution since CrowdStrike is not in sources[]. Summary
+    rewritten to the indictment+ICA record. Podesta retained as the
+    public-record identity of "the chairman of the Clinton Campaign"
+    (neither cited source prints the surname).
+
+    [b] ATTRIBUTION — DOJ names the numbered Units 26165 + 74455 and 12
+    officers ⇒ both DOJ entries concur/high/named-unit (no over-attest).
+    ICA attributes to the GRU service + Putin as directing authority but
+    does NOT name 26165; kept as concur/high/named-unit (service-level)
+    with an added notes: caveat. NB: APT29/SVR (Cozy Bear) is NOT
+    attributed here and correctly so — neither cited source names it; the
+    second-bear co-intrusion is a CrowdStrike June-2016 finding outside
+    sources[]. See FLAG re: optional CrowdStrike enrichment.
+
+    [c] DATES — start 2016-03-01 ✓ (indictment's "at least March 2016"
+    onset). disclosure 2016-06-14 = the WaPo/CrowdStrike public
+    disclosure (correct public record, but NOT carried by either cited
+    source — minor gap). end 2016-11-08 = US election day, editorial
+    op-culmination boundary. Source bylines verified: DOJ "RECEIVED JUL
+    13 2018" ⇒ published_on 2018-07-13 ✓; ICA "6 January 2017" ⇒
+    2017-01-06 ✓.
+
+    [d] DOCTRINE — attested ru/military-doctrine-2014/
+    destabilization-via-info RETAINED: the ICA states the strategic
+    purpose at goal level; added inference_basis.source_quote ("...
+    Russia's goals were to undermine public faith in the US democratic
+    process, denigrate Secretary Clinton ...") + source_id, and
+    perspective: attacker-rationale (Russia's own doctrine explaining a
+    Russian op). plausible ru/gerasimov-framework/hybrid-toolkit retained
+    with inference_basis.alternatives (Galeotti retraction of the label).
+
+    [e] ATTRIBUTION_LEVEL — added named-unit to all three attributions
+    (was absent). DOJ = numbered units + named officers; ICA = named GRU
+    service.
+
+    [f] ACTOR_ID — ru/gru/26165/apt28 → atlas/actors/ru/apt28.yaml ✓;
+    ru/gru/74455/sandworm → atlas/actors/ru/sandworm.yaml ✓. Directionality
+    ✓: US victims (targets DNC/DCCC/Clinton/state-election-infra) vs RU
+    GRU attacker. incident_type gained "leak" (hack-and-leak release phase).
+
+    SNAPSHOT — DOJ live URL 200; ICA live dni.gov URL now 403 (anti-bot)
+    but raw snapshot held + hashed + content-verified, wayback archive_url
+    (2025-11-29) as backstop.
+
+    FLAGS (not edited — outside event+sources scope):
+    - Missing target records: atlas/targets/orgs/dccc.yaml,
+      orgs/clinton-campaign.yaml, orgs/us-state-election-infrastructure.yaml
+      (only orgs/dnc.yaml exists; this event is the sole referencer).
+    - Optional enrichment: add CrowdStrike "Bears in the Midst"
+      (2016-06-14) as a source to re-introduce, with support, the
+      APT29/SVR co-intrusion and the CHOPSTICK/Mimikatz tradecraft that
+      were stripped above; would also source disclosure_date 2016-06-14.
+    - Removed stray scratch file atlas/sources/raw/_ica.txt left by the
+      interrupted prior run.

@@ -6,57 +6,98 @@ end_date: 2025-03-18  # vendor-stated end of observed campaign
 incident_type:
   - intrusion
   - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Vendor reporting documented a MuddyWater (MOIS-attributed)
-  campaign running from late September 2024 through mid-March
-  2025 against Israeli targets, introducing two new tools:
-  the Fooder loader and the MuddyViper backdoor. Tradecraft
-  emphasised stealth, persistence, and credential harvesting
-  with reduced reliance on commodity remote-management tools
-  that had drawn detection in prior MuddyWater operations.
+  ESET attributed to MuddyWater (assessed MOIS-affiliated) a
+  cyber-espionage campaign running 30 September 2024 to 18 March
+  2025 against Israeli entities across academia, engineering,
+  local government, manufacturing, technology, transportation
+  and utilities (plus one Egyptian technology company).
+  Spear-phishing PDFs linked to legitimate remote-desktop tools
+  (Atera, Level, PDQ, SimpleHelp) — the cluster's long-favoured
+  access approach — while it introduced two previously
+  undocumented bespoke components: the Fooder loader (some
+  variants impersonating the Snake game, with delayed execution)
+  and the C/C++ MuddyViper backdoor, which supports 20 commands
+  and exfiltrates Windows login credentials and browser data.
+  ESET called this "an evolution in the operational maturity of
+  MuddyWater", aimed at enhanced stealth, persistence and
+  credential harvesting.
 false_flag_risk: none
 summary: |
-  Confirms the MOIS-MuddyWater cluster's continued operational
-  tempo through the run-up to the June 2025 Israel-Iran war and
-  beyond. MuddyViper represents toolset evolution under
-  detection pressure — the cluster has burned multiple commodity
-  RMM tools (ScreenConnect, RemoteUtilities) across the 2022-25
-  period and is investing in bespoke implants.
+  MOIS-affiliated MuddyWater continues its espionage tempo
+  against Israeli government, critical-infrastructure and
+  adjacent sectors. Per ESET, the Fooder/MuddyViper toolset
+  marks an evolution in the cluster's operational maturity: it
+  keeps abusing legitimate remote-desktop utilities for access
+  but is now layering bespoke, credential-focused implants over
+  that tradecraft. ESET additionally observed operational
+  overlaps with the Iran-aligned actor Lyceum (a subgroup of
+  OilRig / APT34), with MuddyWater likely acting as an
+  initial-access broker in a January–February 2025 intrusion at
+  an Israeli manufacturing organisation.
 attributions:
   - actor_id: ir/mois/muddywater
-    attributing_org: The Hacker News / vendor reporting
+    attributing_org: ESET
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2025-12-02
     attribution_source_id: thehackernews/2025-12-02_muddyviper-israel
+    notes: |
+      The Hacker News (2025-12-02) relays ESET's research: "The activity
+      has been attributed by ESET to a hacking group known as MuddyWater
+      … a cluster assessed to be affiliated with Iran's Ministry of
+      Intelligence and Security (MOIS)." ESET attributes to the named
+      cluster without hedging (high); the MOIS tie is stated as an
+      assessed affiliation (the established CISA AA22-055A consensus),
+      hence attribution_level named-actor. MOIS is explicitly named as
+      the affiliated service, so Kara may elect named-unit; kept at the
+      conservative named-actor floor to avoid over-attestation.
+      attributing_org set to ESET (the actual attributor); THN is the
+      secondary relaying outlet and remains the cited source.
 doctrine_links:
-  - doctrine_id: ir/resistance-axis
-    pillar_id: ir/resistance-axis/anti-israel-coercion
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Persistent MOIS-attributed targeting of Israeli sectors fits
-      the anti-Israel-coercion pillar; the vendor article describes
-      the espionage campaign but does not name an 'axis of
-      resistance' strategic goal, so the linkage is inferred.
-    attesting_source_id: thehackernews/2025-12-02_muddyviper-israel
-    inference_basis:
-      source_id: thehackernews/2025-12-02_muddyviper-israel
-      signals:
-        - "The Hacker News documents MOIS/MuddyWater espionage targeting of Israeli sectors (target set + behaviour)"
-      ruled_out: "the resistance-axis / 'axis of resistance' strategic goal — not named in the article"
-    contested: false
-    analyst: claude
   - doctrine_id: ir/forward-defense
     pillar_id: ir/forward-defense/integrated-asymmetric-portfolio
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Sustained cyber-pressure operations against Israel during
-      the regional escalation cycle 2024-25 form the cyber leg
-      of the forward-defense integrated-asymmetric portfolio.
+      MOIS-affiliated MuddyWater conducting sustained cyber-espionage
+      against Israeli government, critical-infrastructure and adjacent
+      sectors during the 2024-25 regional escalation is the cyber
+      expression of Iran's forward-defense posture — projecting into an
+      adversary's networks at near-zero physical risk to collect on
+      capability and enable further access. Strongly inferred, not
+      attested: ESET/THN describe the espionage activity and toolset but
+      do not state Iran's strategic purpose.
+    attesting_source_id: thehackernews/2025-12-02_muddyviper-israel
+    inference_basis:
+      signals:
+        - "ESET (via THN) attributes a Sept-2024-to-Mar-2025 espionage campaign against Israeli government, utilities, transport and manufacturing to MOIS-affiliated MuddyWater"
+        - "MuddyViper backdoor collects system information and exfiltrates Windows credentials and browser data — intelligence-collection tradecraft, the cyber leg of forward defense"
+        - "Timing sits inside the post-Oct-2023 Israel-Iran escalation cycle, when Iran's MOIS/IRGC cyber tasking against Israel intensified"
+      ruled_out: "purely criminal/financial motive — no ransomware, extortion or monetisation; MuddyWater is a state-tasked MOIS espionage cluster"
+    contested: false
+    analyst: claude
+  - doctrine_id: ir/resistance-axis
+    pillar_id: ir/resistance-axis/anti-israel-coercion
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Persistent MOIS targeting of Israeli sectors is adjacent to the
+      Resistance-Axis anti-Israel posture, but this operation is
+      intelligence collection (credential and browser-data theft), not
+      the destructive or coercive action the anti-Israel-coercion pillar
+      centres on, and ESET/THN state no strategic goal — so more than one
+      strategic reading survives. Graded plausible, consistent with the
+      corpus's other MuddyWater/MOIS-vs-Israel events (2024-07 BugSleep,
+      2024-12 DIB), which grade this same pillar plausible.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Resistance-Axis anti-Israel coercion: sustained MOIS cyber operations against Israeli targets fit the axis's anti-Israel posture and could prepare or accompany coercive action"
+        - "Forward-defense intelligence collection: the espionage character (credential/browser-data exfiltration, no destructive effect) reads primarily as intelligence-prep under forward defense rather than coercion — captured as the forward-defense strongly_inferred link"
     contested: false
     analyst: claude
 targets:
@@ -68,3 +109,70 @@ targets:
     role: primary
 sources:
   - thehackernews/2025-12-02_muddyviper-israel
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs The Hacker News "Iran-Linked Hackers Hit Israeli Sectors with
+    New MuddyViper Backdoor in Targeted Attacks" (2025-12-02), which relays
+    ESET's research. Raw snapshot captured + hashed:
+    sha256 29db4003…d5764284, 177,673 bytes. NOT a phantom — the live article's
+    title and body match the event (STEP-0 triage: 200, no redirect; MuddyViper
+    ×13, Fooder ×4, MuddyWater ×12 in body). Path taken: normal audit (real
+    event, real source); no re-source/retire needed. NOT a duplicate of the
+    2024-12 MuddyWater DIB event (that is US defense-industrial-base, CISA/
+    CrowdStrike, PowGoop/SnailResin) nor the 2024-07 BugSleep event.
+    [a] FACTS ✓ carried verbatim: "The campaign took place between September 30,
+    2024, and March 18, 2025"; "a loader named Fooder that's designed to decrypt
+    and execute the C/C++-based MuddyViper backdoor"; MuddyViper "supports 20
+    commands" and "exfiltrate Windows login credentials and browser data";
+    delivery via "phishing emails containing PDF attachments that link to
+    legitimate remote desktop tools like Atera, Level, PDQ, and SimpleHelp";
+    ESET quote "an evolution in the operational maturity of MuddyWater" /
+    "enhance stealth, persistence, and credential harvesting capabilities".
+    STRIPPED as unsupported AI-embellishment: (1) "ScreenConnect, RemoteUtilities"
+    — ZERO occurrences in the raw (the article names Atera/Level/PDQ/SimpleHelp
+    as the abused RMM tools); fabricated tool names. (2) "reduced reliance on
+    commodity remote-management tools" — CONTRADICTED: the raw says MuddyWater
+    keeps deploying "legitimate remote management tools – a long-favored
+    approach" and merely ADDED bespoke implants. (3) "continued operational
+    tempo through the run-up to the June 2025 Israel-Iran war and beyond" —
+    unsupported and misleading: the observed campaign ENDS 2025-03-18, months
+    before June 2025, and the article makes no June-2025 claim. Added
+    incident_type espionage ("The cyber espionage group…", byline category
+    "Cyber Espionage / Malware"). Rewrote summary/outcome_summary to source-
+    carried prose; added the Egyptian collateral victim and the ESET-observed
+    MuddyWater↔Lyceum (OilRig/APT34) operational overlap (Jan–Feb 2025 Israeli
+    manufacturing intrusion, MuddyWater as initial-access broker) — both carried.
+    [b] ATTRIBUTION CORRECTED: attributing_org "The Hacker News / vendor
+    reporting" → ESET, per "The activity has been attributed by ESET to a
+    hacking group known as MuddyWater … a cluster assessed to be affiliated with
+    Iran's Ministry of Intelligence and Security (MOIS)." Confidence high (ESET
+    attributes to the named cluster with no hedge); auspex concur. THN kept as
+    the cited secondary relay (attribution_source_id).
+    [c] DATES ✓: source published_on 2025-12-02 = byline "Ravie Lakshmanan
+    Dec 02, 2025" = disclosure_date; start_date 2024-09-30 + end_date 2025-03-18
+    are the source's verbatim campaign bounds.
+    [d] DOCTRINE: neither link attested (source states no strategic goal — no
+    attesting quote exists). resistance-axis/anti-israel-coercion DOWNGRADED
+    strongly_inferred → plausible: this is intelligence collection, not the
+    destructive/coercive action that pillar centres on, so >1 reading survives;
+    matches corpus precedent (2024-07 BugSleep and 2024-12 DIB grade this same
+    pillar plausible). forward-defense/integrated-asymmetric-portfolio KEPT
+    strongly_inferred (matches the 2024-12 DIB sibling), reordered to primary;
+    added inference_basis {signals[], ruled_out} + supporting attesting_source_id
+    (THN). Removed the off-schema source_id key from the old inference_basis.
+    [e] ATTRIBUTION_LEVEL added: named-actor (ESET names the cluster MuddyWater;
+    MOIS given as an assessed affiliation, not a fresh unit pin — kept the
+    conservative floor to avoid over-attestation; MOIS IS named, so Kara may
+    elect named-unit).
+    [f] ACTOR_ID ir/mois/muddywater RESOLVES → atlas/actors/ir/muddywater.yaml
+    (file path ir/muddywater.yaml, internal id ir/mois/muddywater; MOIS
+    placement independently verified 2026-06-24 against CISA AA22-055A). Correct
+    corpus id — the orchestrator's "verify corpus id" confirms OK.
+    RESIDUAL: THN is a secondary relay of ESET; ESET's own report is not
+    separately cited/snapshotted, but every retained claim is carried verbatim
+    by THN, so level=full. A later pass could add ESET's primary report as an
+    additional source.

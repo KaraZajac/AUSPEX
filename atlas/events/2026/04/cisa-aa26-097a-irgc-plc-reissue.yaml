@@ -1,55 +1,118 @@
 id: 2026-04/cisa-aa26-097a-irgc-plc-reissue
-name: CISA AA26-097A — reissue of IRGC PLC exploitation warning
-start_date: 2026-01-01
+name: CISA AA26-097A — Iranian-affiliated APT exploitation of Rockwell/Allen-Bradley PLCs across US critical infrastructure
+start_date: 2026-03-01  # AA26-097A: disruptive campaign "Since at least March 2026"; IOC infra actor-association reaches back to Jan 2025 (residual uncertainty on true op start)
 disclosure_date: 2026-04-07
 end_date: null
 incident_type:
   - intrusion
   - disruption
-initial_vector: n-day  # exposed PLCs; default / weak credentials
+  - cyber-physical
+initial_vector: unknown  # AA26-097A: internet-exposed Rockwell/Allen-Bradley PLCs reached via legitimate config software (Studio 5000 Logix Designer) over leased overseas infra; no exploit or credential mechanism stated (NOT the historical Unitronics default-cred/TCP-20256 vector)
 outcome_summary: |
-  CISA reissued the IRGC-affiliated PLC exploitation advisory
-  for US critical infrastructure (water, energy, manufacturing)
-  during continued post-strike tensions. Renewed defensive
-  posture and notification of IRGC-affiliated TTP continuity.
+  Multi-agency US advisory (FBI, CISA, NSA, EPA, DOE, USCYBERCOM
+  CNMF) documenting an ongoing Iranian-affiliated APT campaign
+  disrupting internet-exposed Rockwell Automation/Allen-Bradley
+  PLCs across US Government Services and Facilities, Water and
+  Wastewater Systems, and Energy sectors, amid escalation "likely
+  in response to hostilities between Iran, and the United States
+  and Israel." Publishes IOCs and defensive mitigations; draws a
+  historical parallel to the November 2023 CyberAv3ngers /
+  Unitronics campaign (IRGC Cyber-Electronic Command) without
+  identifying the 2026 actors as CyberAv3ngers.
 false_flag_risk: none
-campaign_id: cyberav3ngers-water-utility-wave
+campaign_id: cyberav3ngers-water-utility-wave  # NB loose thematic Iran-PLC-targeting-of-US-CII cluster ONLY; the 2026 op is NOT attributed to CyberAv3ngers by CISA (historical comparison) — FLAGGED for orchestrator to reconsider/rename
 summary: |
-  Follow-on advisory to the December 2023 AA23-335A — IRGC PLC
-  exploitation operations continued or resumed under post-Israel-
-  Iran-strike tensions. The CyberAv3ngers operational pattern
-  carries over: internet-exposed Unitronics Vision-series PLCs
-  (TCP 20256), default integrated-HMI credentials, OT-defacement
-  with anti-Israel banners overwriting ladder-logic and HMI
-  graphics, and Telegram persona claims. AA26-097A extends the
-  target watchlist to Schneider Modicon, Siemens S7, and
-  Allen-Bradley PLC families newly observed in IRGC-IO scanning
-  data, and warns that the operators may pivot from defacement
-  to process-manipulation in tense windows.
+  On 7 April 2026 the FBI, CISA, NSA, EPA, DOE and US Cyber
+  Command's Cyber National Mission Force jointly issued AA26-097A,
+  warning of ongoing exploitation of internet-facing operational-
+  technology devices — principally Rockwell Automation/Allen-
+  Bradley programmable logic controllers (CompactLogix, Micro850)
+  — across multiple US critical-infrastructure sectors: Government
+  Services and Facilities (including local municipalities), Water
+  and Wastewater Systems (WWS), and Energy. The authoring agencies
+  assess "a group of Iranian-affiliated advanced persistent threat
+  (APT) actors" is conducting the activity "to cause disruptive
+  effects within the United States," noting the campaign has
+  "recently escalated, likely in response to hostilities between
+  Iran, and the United States and Israel." Since at least March
+  2026 the agencies identified, through victim engagements, PLC
+  disruptions across these sectors; some victims experienced
+  operational disruption and financial loss (IOC infrastructure
+  association reaches back to January 2025). Reported tradecraft:
+  actors reached exposed PLCs from leased, overseas-hosted
+  infrastructure using legitimate configuration software (Rockwell
+  Studio 5000 Logix Designer) to create an accepted connection;
+  used OT ports 44818, 2222, 102, 22 and 502; deployed Dropbear
+  SSH on victim endpoints for remote access over port 22; and
+  achieved impact by extracting the device project file (.ACD) and
+  manipulating data on HMI/SCADA displays (ATT&CK T1565). Port
+  targeting suggests possible additional targeting of Siemens S7
+  PLCs. The advisory references the November 2023 CyberAv3ngers
+  (aka Shahid Kaveh Group) Unitronics campaign — attributed to
+  Iran's IRGC Cyber-Electronic Command (CEC) — only as SIMILAR
+  HISTORICAL activity; it does NOT attribute the 2026 Rockwell/
+  Allen-Bradley campaign to CyberAv3ngers, and describes no
+  hacktivist persona, Telegram claims, anti-Israel HMI defacement,
+  Unitronics devices, or the default-credential / TCP-20256 vector
+  of the historical campaign.
 attributions:
   - actor_id: ir/irgc-cec/cyberav3ngers
-    attributing_org: US CISA
+    attributing_org: "US authoring agencies (FBI, CISA, NSA, EPA, DOE, USCYBERCOM CNMF)"
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2026-04-07
     attribution_source_id: cisa/2026-04-07_aa26-097a-irgc-plc
+    notes: |
+      AA26-097A attributes the 2026 campaign only to "a group of
+      Iranian-affiliated advanced persistent threat (APT) actors"
+      (nation level; the specific 2026 group is NOT named). It does
+      NOT identify the 2026 actors as CyberAv3ngers — CyberAv3ngers
+      / IRGC-CEC is cited solely as a "similar" November 2023
+      historical comparison ("The authoring agencies previously
+      reported on similar activity targeting PLCs by CyberAv3ngers
+      … affiliated with Iran's Islamic Revolutionary Guard Corps
+      (IRGC) Cyber Electronic Command (CEC)"). attributing_org_
+      confidence=high applies to the Iranian-affiliated-APT (nation)
+      attribution, which the FBI/authoring agencies assess with
+      confidence; auspex_assessment=concur-with-caveat because
+      mapping this event to the specific ir/irgc-cec/cyberav3ngers
+      actor is an AUSPEX inference drawn from CISA's own stated
+      CyberAv3ngers lineage, not a CISA same-actor identification
+      for 2026. Sub-org note: where the advisory names a sub-
+      organization it names the IRGC Cyber-Electronic Command (CEC);
+      the strings "IRGC-IO" and "Intelligence Organization" do not
+      appear.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
-    pillar_id: ir/cyber-deniable-retaliation/persona-laundering
+    pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Continuation of the CyberAv3ngers / IRGC-IO PLC-exploitation
-      pattern; AA26-097A documents the IRGC-affiliated TTP
-      continuity but does not name a 'deniable-retaliation'
-      doctrine, so the linkage is inferred.
+      The 2026 campaign is retaliatory and deniable: CISA assesses
+      the activity "escalated, likely in response to hostilities
+      between Iran, and the United States and Israel," and
+      attributes it only to unnamed "Iranian-affiliated APT actors"
+      — deniability achieved here through non-attribution rather
+      than the doctrine's usual named-hacktivist-persona front. No
+      source names a deniable-retaliation doctrine, so the link is
+      inferred.
     attesting_source_id: cisa/2026-04-07_aa26-097a-irgc-plc
     inference_basis:
       source_id: cisa/2026-04-07_aa26-097a-irgc-plc
       signals:
-        - "AA26-097A documents continued IRGC-IO PLC exploitation of US CII (TTP continuity)"
-      ruled_out: "a 'cyber-deniable-retaliation' doctrine — not named in the advisory"
-    counter_explanation: null
+        - "AA26-097A: disruptive PLC activity attributed only to unnamed 'Iranian-affiliated APT actors' — deniable via non-attribution"
+        - "CISA: activity 'escalated, likely in response to hostilities between Iran, and the United States and Israel' — retaliatory timing"
+      ruled_out: "covert espionage / intelligence-collection reading — AA26-097A documents disruptive effects (project-file manipulation, HMI/SCADA data manipulation, operational disruption and financial loss), not quiet collection"
+    counter_explanation: |
+      This doctrine is normally instantiated through a named
+      hacktivist / proxy front (the CyberAv3ngers persona). The
+      2026 activity documents NO persona, Telegram claim, or
+      defacement — those appear only in the cited historical
+      CyberAv3ngers comparison — so the fit is at the "deniable
+      retaliation" concept level (unattributed + retaliatory
+      timing), not the persona-laundering mechanism; pillar left
+      null.
     contested: false
     analyst: claude
   - doctrine_id: ir/forward-defense
@@ -57,20 +120,28 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      US CII PLC operations fit a forward-defense reading; the
-      advisory does not name 'forward defense', so the linkage is
+      Iranian-affiliated APT operations projecting into US critical-
+      infrastructure OT networks at range, escalating in step with
+      Iran-US-Israel kinetic hostilities, are the cyber expression
+      of forward defense (fighting at maximum range, at near-zero
+      physical risk, sequenced with kinetic events). The advisory
+      does not name a forward-defense doctrine, so the link is
       inferred.
     attesting_source_id: cisa/2026-04-07_aa26-097a-irgc-plc
     inference_basis:
       source_id: cisa/2026-04-07_aa26-097a-irgc-plc
       signals:
-        - "AA26-097A documents IRGC-IO PLC targeting of US CII (target set)"
-      ruled_out: "the 'forward-defense' doctrine — not named in the advisory"
+        - "AA26-097A: Iranian-affiliated APT targeting of US CII PLCs across Government Services and Facilities, WWS and Energy — adversary-network target set"
+        - "CISA: campaign 'escalated, likely in response to hostilities between Iran, and the United States and Israel' — cyber sequenced with kinetic exchange"
+      ruled_out: "financially-motivated / criminal PLC compromise — no ransom, extortion or financial-crime persona; the FBI/CISA assessment is state-nexus Iranian-affiliated APT with disruptive intent"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/critical-infrastructure
+    country: us
+    role: primary
+  - target_id: sectors/government
     country: us
     role: primary
   - target_id: sectors/ics/water
@@ -81,3 +152,131 @@ targets:
     role: primary
 sources:
   - cisa/2026-04-07_aa26-097a-irgc-plc
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs CISA joint advisory AA26-097A "Iranian-Affiliated
+    Cyber Actors Exploit Programmable Logic Controllers Across US
+    Critical Infrastructure" (source cisa/2026-04-07_aa26-097a-irgc-
+    plc). Raw snapshot on disk re-verified: content_sha256
+    58482fe2…caf895f4 (58482fe23b7804970e634edc38753070200024f18219e6a0fdc9976acaf895f4),
+    96,758 bytes. SOURCE IS GENUINE (real CISA page: full body,
+    Release Date April 07 2026, "Version History: April 7, 2026:
+    Initial version," related advisories AA26-113A/AA25-343A) — NOT
+    a phantom. Path taken: CORRECT-IN-PLACE (real event, real
+    source; the DEFECT was the event prose importing historical
+    Unitronics TTPs as if they were the 2026 activity).
+
+    [a] FACTS — major corrections. The advisory documents a NEW
+    2026 campaign against Rockwell Automation/Allen-Bradley PLCs
+    (CompactLogix, Micro850), NOT Unitronics. Verbatim: "programmable
+    logic controllers (PLCs) manufactured by Rockwell Automation/
+    Allen-Bradley," "Targeted devices include CompactLogix and
+    Micro850 PLC devices." Initial access: "The actors used leased,
+    third-party hosted infrastructure with configuration software,
+    such as Rockwell Automation's Studio 5000 Logix Designer
+    software, to create an accepted connection to the victim's PLC."
+    C2 ports: "44818, 2222, 102, 22, or 502"; "deployed Dropbear
+    Secure Shell (SSH) software on victim endpoints … through port
+    22." Impact: "extraction of the device's project file and data
+    manipulation on HMI and SCADA displays [T1565]"; project file =
+    ".ACD file" on Rockwell. Siemens S7 named only as INFERRED
+    possible additional target ("suggests these actors may also be
+    targeting devices manufactured by companies other than Rockwell
+    … including the Siemens S7 PLC"). STRIPPED as fabricated /
+    historical-conflation (none carried by the 2026 advisory):
+    "Unitronics Vision-series PLCs (TCP 20256)"; "default integrated-
+    HMI credentials"; "OT-defacement with anti-Israel banners
+    overwriting ladder-logic and HMI graphics"; "Telegram persona
+    claims"; "Schneider Modicon … newly observed in IRGC-IO scanning
+    data" (Schneider Modicon and "scanning data" appear NOWHERE;
+    "IRGC-IO" appears 0×); "pivot from defacement to process-
+    manipulation in tense windows." Unitronics/CyberAv3ngers appear
+    ONLY as the Nov-2023 historical comparison ("During a similar
+    campaign beginning in November 2023, the IRGC CEC-affiliated
+    cyber threat actors known as 'CyberAv3ngers' targeted U.S.-based
+    … Unitronics PLC devices … at least 75 devices"). Summary +
+    outcome_summary fully rewritten to the 2026 Rockwell campaign.
+    outcome_summary "manufacturing" → the actual named sectors
+    (Government Services and Facilities, WWS, Energy — "manufacturing"
+    is not named). name "reissue of IRGC PLC exploitation warning" →
+    accurate title (it is a new advisory on a new campaign with a
+    historical parallel, not a reissue of AA23-335A). id preserved
+    (stable-forever), though it retains the now-inaccurate "reissue"
+    slug.
+
+    [b] ATTRIBUTION — downgraded over-attribution. Was named-actor-
+    implied / high / concur to CyberAv3ngers. The advisory attributes
+    the 2026 op only to "a group of Iranian-affiliated advanced
+    persistent threat (APT) actors" (unnamed) and separately says
+    "The authoring agencies previously reported on similar activity
+    targeting PLCs by CyberAv3ngers." Set attribution_level=nation
+    (source pins Iran, does not name the 2026 group); auspex_
+    assessment concur→concur-with-caveat (the ir/irgc-cec/
+    cyberav3ngers mapping is an AUSPEX inference from CISA's own
+    historical lineage, not a CISA same-actor call). attributing_org
+    "US CISA"→"US authoring agencies (FBI, CISA, NSA, EPA, DOE,
+    USCYBERCOM CNMF)". attributing_org_confidence kept high (applies
+    to the Iranian-affiliated-APT nation attribution). Added notes.
+
+    [c] DATES — source published_on 2026-04-07 confirmed ("Release
+    Date April 07, 2026"; "Version History: April 7, 2026: Initial
+    version"). disclosure_date 2026-04-07 ✓. start_date 2026-01-01 →
+    2026-03-01 ("Since at least March 2026, the authoring agencies
+    identified … an Iranian-affiliated APT-group that disrupted the
+    function of PLCs"). Residual uncertainty: IOC table shows actor-
+    association of 185.82.73.x infrastructure from January 2025
+    through March 2026 — possible earlier staging; noted in summary.
+    end_date null ✓ (ongoing).
+
+    [d] DOCTRINE_LINKS — both kept at strongly_inferred (per event
+    directive; neither is attested — the advisory names no doctrine).
+    Link ir/cyber-deniable-retaliation: pillar persona-laundering →
+    null (the 2026 activity has NO persona/Telegram/defacement — the
+    persona is historical-only), added counter_explanation making the
+    persona-mechanism absence explicit; reasoning + signals rewritten
+    to ground deniability in non-attribution and retaliatory timing;
+    "IRGC-IO" removed; malformed ruled_out (self-reference) replaced
+    with a genuine competitor (espionage/collection). Link ir/forward-
+    defense: reasoning + signals rewritten to actual advisory content
+    (US-CII OT targeting escalating with Iran-US-Israel hostilities);
+    "IRGC-IO" removed; malformed ruled_out replaced (criminal/financial
+    reading). attesting_source_id retained on both as the primary
+    SUPPORTING source (schema-permitted on strongly_inferred).
+
+    [e] ATTRIBUTION_LEVEL — set to nation (was missing). Source:
+    "Iranian-affiliated APT actors" (nation named; specific 2026
+    group not named).
+
+    [f] ACTOR_ID — ir/irgc-cec/cyberav3ngers RESOLVES (actor file
+    atlas/actors/ir/cyberav3ngers.yaml carries id: ir/irgc-cec/
+    cyberav3ngers, primary_service_id: ir/irgc-cec re-homed 2026-07-05;
+    service ir/irgc-cec exists). Targets: added sectors/government
+    (advisory prominently names "Government Services and Facilities
+    (to include local municipalities)"); kept critical-infrastructure,
+    ics/water (WWS), energy. incident_type: added cyber-physical (OT/
+    PLC function disruption + operational disruption in water/energy/
+    gov CII). initial_vector n-day → unknown (no exploit/CVE claimed
+    for 2026; the CVE-2021-22681 mention is background Rockwell
+    guidance, not the 2026 vector).
+
+    FLAGS (orchestrator / Kara — not edited here): (1) ACTOR FILE
+    atlas/actors/ir/cyberav3ngers.yaml has STALE audit comments
+    (header lines 1-13 and notes) still asserting "The id keeps
+    primary_service_id ir/irgc-io," contradicting the current line-15
+    primary_service_id: ir/irgc-cec (Kara re-home 2026-07-05); also
+    status comment says "IRGC-IO officials." Needs comment cleanup.
+    (2) FILE-PATH/ID: actor id is ir/irgc-cec/cyberav3ngers but file
+    lives at atlas/actors/ir/cyberav3ngers.yaml (FK resolves by id;
+    noted only). (3) SERVICE ir/irgc-cec.yaml sources[] omits the
+    AA26-097A source though its summary cites it. (4) campaign_id
+    "cyberav3ngers-water-utility-wave" is a loose thematic cluster;
+    the 2026 op is not CyberAv3ngers-attributed nor water-utility-
+    specific — reconsider/rename (e.g. iran-plc-targeting-us-cii).
+    (5) Source record notes call AA26-097A a "Reissue of the AA23-335A
+    warning" — mild mischaracterization (new campaign); left intact
+    per PRESERVE. Snapshot + hash pre-existed (2026-06-24 audit) and
+    were re-verified this pass — no source-record edits needed.

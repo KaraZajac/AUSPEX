@@ -28,43 +28,94 @@ summary: |
   same target — a clear illustration of the procurement-led
   pattern.
 
-  Mansoor was arrested in March 2017 and sentenced in May 2018
-  to ten years' imprisonment on speech-related charges. He
-  remains imprisoned as of 2026.
+  Mansoor was detained on 20 March 2017 and sentenced on
+  29 May 2018 to ten years' imprisonment on speech-related
+  charges — Amnesty International designates him a prisoner of
+  conscience. His un-remitted ten-year sentence runs into the
+  late 2020s and no release has been reported; he remains
+  imprisoned as of 2026.
 attributions:
   - actor_id: ae/unscoped/stealth-falcon  # not strictly a Stealth Falcon op; see notes
     service_id: ae/state-security
     attributing_org: The Citizen Lab + Lookout
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate  # AUDIT 2026-07-05: OPERATOR attribution is hedged ("likely operator", "strong circumstantial evidence") — downgraded from high (over-attestation)
+    attribution_level: nation  # source names "the UAE government" as likely operator; no specific service/unit named for the 2016 op
     auspex_assessment: concur-with-caveat
     attribution_date: 2016-08-25
     attribution_source_id: citizenlab/2016-08-25_million-dollar-dissident
     notes: |
-      Citizen Lab attribution: NSO Group Pegasus deployment by a
-      UAE-state customer. The operator-cluster assignment is
-      *not* to Stealth Falcon — Pegasus deployments attribute to
-      the *customer state* per AUSPEX modeling of NSO Group as a
-      commercial vendor — but to the UAE State Security service
-      customer side. AUSPEX uses the ae/unscoped/stealth-falcon
-      actor placeholder reluctantly here; consumers should read
-      the service_id (ae/state-security) as the load-bearing
-      attribution, not the actor placeholder.
+      Two attributions of differing confidence are bundled here.
+      (1) The spyware is NSO Group's Pegasus, delivered via the
+      "Trident" three-zero-day iOS chain (CVE-2016-4655 / 4656 /
+      4657) — stated with HIGH technical confidence and
+      independently confirmed by Lookout's analysis of the live
+      captured sample. (2) The OPERATOR (customer state) is the
+      UAE government — stated only CIRCUMSTANTIALLY: Citizen Lab
+      writes that "the high cost of iPhone zero-days, the apparent
+      use of NSO Group's government-exclusive Pegasus product, and
+      prior known targeting of Mansoor by the UAE government provide
+      indicators that point to the UAE government as the likely
+      operator," and that there is "strong circumstantial evidence"
+      the operator is "connected to an entity within the UAE
+      Government." Hence attributing_org_confidence: moderate and
+      attribution_level: nation — the source names the UAE
+      government, not a specific service or unit, as the likely
+      operator of the 2016 op.
 
-      Subsequent Citizen Lab Pegasus operator tracking
-      (Pegasus-1, Pegasus-2, Pegasus-3 — 2018 Hide and Seek
-      report) more precisely identifies UAE-specific operator
-      infrastructure but those granular operator-cluster slugs
-      are not modeled as distinct actors in AUSPEX.
+      Directionality: Mansoor / UAE dissident = victim; the UAE
+      government = attacker (the Pegasus operator/customer); NSO
+      Group = the commercial spyware vendor, modeled as a
+      vendor/service and NOT as the attributed actor. Pegasus
+      deployments attribute to the *customer state* per AUSPEX's
+      NSO-as-commercial-vendor modeling.
+
+      The op was discovered through Citizen Lab's Stealth Falcon
+      research: the Mansoor link (sms.webadv.co) mapped into the
+      same NSO exploit infrastructure Citizen Lab found while
+      tracking Stealth Falcon. Citizen Lab is explicit, however,
+      that the Mansoor domains "did not match our Stealth Falcon
+      fingerprint" — this is NSO-Pegasus infrastructure reached via
+      Stealth Falcon research, not a firm Stealth-Falcon-cluster
+      attribution of the Mansoor op. AUSPEX therefore uses the
+      ae/unscoped/stealth-falcon placeholder reluctantly; consumers
+      should read the UAE-government nexus (nation level) as the
+      load-bearing attribution, not the actor placeholder. The
+      service_id (ae/state-security) is an AUSPEX modeling overlay —
+      the cited source names "the UAE government," not State
+      Security specifically. (The earlier 2012 Hacking Team attack
+      on Mansoor was tied by Citizen Lab to "a UAE intelligence
+      agency, apparently operating under the auspices of the office
+      of Sheikh Tahnoon bin Zayed" — but that is the 2012 op, not
+      this 2016 Pegasus op.)
+
+      Subsequent Citizen Lab Pegasus operator tracking (Pegasus-1,
+      Pegasus-2, Pegasus-3 — 2018 Hide and Seek report) more
+      precisely identifies UAE-specific operator infrastructure but
+      those granular operator-cluster slugs are not modeled as
+      distinct actors in AUSPEX.
 doctrine_links:
   - doctrine_id: ae/regime-protection-surveillance
     pillar_id: ae/regime-protection-surveillance/domestic-dissidents
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Mansoor is the canonical UAE domestic-dissident target.
-      Victim selection is the regime-protection-surveillance
-      signature.
+      Ahmed Mansoor is the canonical UAE domestic-dissident /
+      human-rights-defender target, and victim selection is the
+      regime-protection-surveillance signature. Citizen Lab frames
+      the operators as "targeting individuals critical of the UAE
+      government at home and abroad," and names the UAE government
+      as the likely Pegasus operator. Strongly_inferred rather than
+      attested: the source characterises the targeting of
+      government critics, but the operator attribution itself is
+      circumstantial ("likely operator"), so the strategic-purpose
+      reading does not rest on a firm, named-operator finding.
     attesting_source_id: citizenlab/2016-08-25_million-dollar-dissident
+    inference_basis:
+      signals:
+        - "Victim is the canonical UAE human-rights defender / domestic dissident (Ahmed Mansoor), previously targeted by the UAE government in 2011 (FinFisher) and 2012 (Hacking Team RCS)."
+        - "Citizen Lab characterises the operators as 'targeting individuals critical of the UAE government at home and abroad' and names the UAE government as the likely Pegasus operator."
+        - "Lure content (SMS promising secrets about detainees tortured in UAE jails) is tailored to a domestic human-rights target, not to espionage or financial ends."
+      ruled_out: "Foreign-intelligence espionage — the victim is a domestic civil-society individual, not a foreign government or commercial target, so the domestic-dissident regime-protection reading dominates over an external-collection framing."
     contested: false
     analyst: claude
   - doctrine_id: ae/procurement-led-capability
@@ -72,9 +123,25 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pegasus deployment by a UAE-state customer is the
-      paradigmatic commercial-spyware-procurement event.
+      Deployment of NSO Group's Pegasus — a government-exclusive
+      commercial spyware product — by a UAE-government customer is
+      the paradigmatic commercial-spyware-procurement event, and the
+      third commercial "lawful intercept" suite (after FinFisher
+      2011 and Hacking Team RCS 2012) used against the same target.
+      Per the doctrine's own calibration guidance the
+      commercial-spyware pillar is tagged attested only where a
+      primary source explicitly names UAE procurement of the
+      specific capability (Reuters Project Raven, NSO customer-state
+      listings); here procurement is inferred from Pegasus being
+      vendor-sold and government-exclusive plus the circumstantial
+      UAE-operator finding — hence strongly_inferred.
     attesting_source_id: citizenlab/2016-08-25_million-dollar-dissident
+    inference_basis:
+      signals:
+        - "The implant is NSO Group's Pegasus, sold (per Citizen Lab and Lookout) exclusively to governments — a procured commercial capability, not indigenous UAE tradecraft."
+        - "Citizen Lab documents this as the third commercial 'lawful intercept' suite used against Mansoor (FinFisher 2011, Hacking Team RCS 2012, NSO Pegasus 2016) — a successive-procurement pattern."
+        - "The likely operator is the UAE government, matching the procurement-led doctrine's UAE-customer-state model."
+      ruled_out: "Indigenous offensive-cyber development (the pattern AUSPEX reserves for Russia, China, Iran, DPRK) — the capability is a purchased Israeli commercial product delivered by the vendor's own exploit infrastructure, not home-grown tradecraft."
     contested: false
     analyst: claude
 targets:
@@ -87,3 +154,40 @@ targets:
 sources:
   - citizenlab/2016-08-25_million-dollar-dissident
   - lookout/2016-08-25_pegasus-technical-analysis
+  - amnesty/2018-05-31_mansoor-sentenced-10-years  # AUDIT 2026-07-05: carries the 2017 arrest / 2018 sentence coda (postdates the 2016 sources)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Full 6-point audit against RAW snapshots of all three cited sources.
+    HISTORICAL/canonical event — the first forensic-chain disclosure of
+    UAE-deployed NSO Pegasus (Ahmed Mansoor / "Trident"). NOT a phantom:
+    both 2016 sources triaged as the real articles (title + body carry the
+    event's claims). Snapshots (raw_snapshot + content_sha256 added to each
+    source record):
+      • citizenlab/2016-08-25_million-dollar-dissident — sha256 b194af1a…20b1235d, 255,818 bytes (HTML). Title "The Million Dollar Dissident…"; Mansoor 153×, Trident 31×, NSO 275×, Pegasus 67×, all three CVEs 5× each, 9.3.5 13×.
+      • lookout/2016-08-25_pegasus-technical-analysis — sha256 b95b01e7…68c5096d, 1,879,562 bytes (35-page PDF). "Technical Analysis of Pegasus Spyware"; Trident 10×, all three CVEs, NSO 14×, jailbreak 26×.
+      • amnesty/2018-05-31_mansoor-sentenced-10-years — sha256 69b2dd5e…017f0c79, 116,947 bytes (HTML). ADDED this audit (badrabbit re-source model) to carry the imprisonment coda, which postdates both 2016 sources.
+
+    [a] FACTS — all carried:
+      • SMS lures 10–11 Aug 2016 promising "new secrets about detainees tortured in UAE jails"; Mansoor forwarded (did NOT click) to Citizen Lab. Verbatim: "On August 10 and 11, 2016, Mansoor received SMS text messages … Instead of clicking, Mansoor sent the messages to Citizen Lab." (event correctly models a THWARTED targeting — his device was never infected; Citizen Lab detonated the chain on a test iPhone.)
+      • "Trident" = three iOS 0-days CVE-2016-4655 (kernel info-leak / KASLR), 4656 (kernel memory-corruption → jailbreak), 4657 (Safari WebKit) — confirmed verbatim in BOTH sources.
+      • NSO Group Pegasus, "government-exclusive lawful-intercept" product — confirmed.
+      • Apple iOS 9.3.5 patch on 25 Aug 2016 — confirmed in Lookout Disclosure Timeline verbatim: "the release of the vulnerability patches in iOS 9.3.5 on August 25, 2016"; Citizen Lab released "to coincide with the availability of the iOS 9.3.5 patch."
+      • Prior targeting: FinFisher/FinSpy 2011 + Hacking Team **Remote Control System (RCS)** 2012 — verbatim: "In 2011, he was targeted with FinFisher's FinSpy spyware, and in 2012 … Hacking Team's Remote Control System." ("RCS" is source-exact, not an embellishment.)
+      • "third … spyware-vendor capability" — verbatim: "this case marks the third commercial 'lawful intercept' spyware suite employed in attempts to compromise Mansoor."
+      • CORRECTION: the 2017-arrest / 2018-sentence / still-imprisoned coda postdated both 2016 sources (unsourced as originally written). Re-sourced to Amnesty (2018-05-31): detained 20 Mar 2017, sentenced 29 May 2018 to 10 years on speech charges, "prisoner of conscience"; tightened the summary to those exact dates. "Remains imprisoned as of 2026" retained as an entailment of the un-remitted 10-yr sentence (runs to ~2028; no release reported) — noted as residual, not a positively-dated 2026 citation.
+
+    [b] ATTRIBUTION — DOWNGRADED high → moderate (over-attestation). The OPERATOR attribution is explicitly hedged: "indicators that point to the UAE government as the likely operator" and "strong circumstantial evidence to support the conclusion that the operator … is connected to an entity within the UAE Government." The NSO-Pegasus/Trident technical finding is high-confidence (and Lookout-corroborated on a live sample), but the customer-state attribution — which is what this event's actor/service entry encodes — is circumstantial. attributing_org preserved (Citizen Lab + Lookout). Rewrote notes to separate the two confidence levels and to record that the Mansoor domains "did not match our Stealth Falcon fingerprint" (so the ae/unscoped/stealth-falcon actor is a placeholder reached via SF infrastructure research, not a firm SF-cluster attribution). NSO modeled as vendor; UAE as operator, per task.
+
+    [c] DATES — verified. start_date 2016-08-10 (SMS delivery, forensic timeline) ✓; disclosure_date 2016-08-25 (both reports released with the patch) ✓; end_date 2016-08-25 kept (exploit chain viable until the 9.3.5 patch/infra burn) — defensible, though the targeting itself was 10–11 Aug. Both 2016 sources' published_on = 2016-08-25 = actual publication date ✓ (Lookout confirms same-day patch release). Amnesty published_on 2018-05-31 (article date; sentence handed down 29 May 2018).
+
+    [d] DOCTRINE_LINKS — both kept strongly_inferred (honest; NOT attested, because the operator attribution is circumstantial). regime-protection-surveillance/domestic-dissidents and procurement-led-capability/commercial-spyware. Added inference_basis {signals[], ruled_out} to BOTH (were missing) and enriched reasoning with source-grounded quotes. attesting_source_id retained on each as the primary supporting source (permitted on strongly_inferred; the attested-only gate requirement does not bite). No `attested` link → no attesting-gate exposure. doctrine_links non-empty and both genuinely apply.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set to `nation`. Citizen Lab names "the UAE government" as the likely operator of the 2016 op; no specific service/unit is named for THIS op (the one named-service reference — "office of Sheikh Tahnoon bin Zayed" — attaches to the 2012 Hacking Team op, not 2016).
+
+    [f] ACTOR_ID — ae/unscoped/stealth-falcon resolves to atlas/actors/ae/stealth-falcon.yaml (id ae/unscoped/stealth-falcon), already audited/de-provisionalized 2026-06-24. service_id ae/state-security resolves. No actor-file edit. FLAG (minor, no fix needed): the actor slug is a reluctant placeholder — the load-bearing attribution is nation-level (UAE government); the ae/state-security service_id is an AUSPEX overlay the cited source does not name. Left intact per the actor record's own note that this event carries its own per-event service_id override.
+
+    RESIDUALS: (1) "remains imprisoned as of 2026" is an entailment, not a dated citation. (2) Lookout is first-party vendor technical research on its own captured sample and could arguably be tier `primary`; PRESERVED at secondary for parity with Citizen Lab (lead discloser, also secondary) per the preserve-tier default. (3) end_date 2016-08-25 aligns to disclosure rather than the 10–11 Aug targeting window — a defensible modeling choice, left as-is.

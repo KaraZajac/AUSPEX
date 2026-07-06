@@ -1,8 +1,9 @@
 # Added 2026-06-08 — source curl-verified, candidate reviewed by analyst before incorporation.
+# AUDIT 2026-07-05 (claude-opus-4.8/max): re-sourced to the Volexity primary; summary/dates/attribution corrected; attribution_level + inference_basis added. See qc.notes.
 id: 2026-06/unc5221-verdantbamboo-brickstorm-m365-espionage-us
 name: "Volexity discloses UNC5221 (VerdantBamboo) BRICKSTORM M365 espionage against US legal, SaaS and tech firms"
-start_date: 2024-12-01        # approximate onset; Volexity reports >=18-month dwell before the 2026 detection
-disclosure_date: 2026-06-05
+start_date: 2024-03-01        # approximate onset: Volexity found the Storage Sync appliance AND the MSP firewall each compromised "at least 18 months" before its ~Sept-2025 investigation (floor estimate; "at least", so possibly earlier)
+disclosure_date: 2026-06-04    # Volexity primary blog; the BleepingComputer write-up followed 2026-06-05
 end_date: null
 incident_type:
   - espionage
@@ -11,29 +12,49 @@ incident_type:
   - supply-chain
 false_flag_risk: none
 summary: |
-  Volexity — with Google and CISA — disclosed (June 5 2026) a long-running China-nexus espionage operation tracked as UNC5221 (VerdantBamboo) that accessed victims' Microsoft 365 environments using the BRICKSTORM backdoor (Go and Rust variants) alongside two previously undocumented malware families, Plenet (also "Grimbolt") and AgentPSD. The intrusion persisted at least 18 months before detection, and the actor compromised both the victim organization and its managed service provider simultaneously — a supply-chain pivot to reach the target. Reported victims span US legal services, SaaS providers, business-process outsourcers and technology firms. The UNC5221 + BRICKSTORM footprint is the canonical PRC edge/cloud-access operator cluster also seen in the 2024–2025 Ivanti / F5 / VMware appliance campaigns.
+  Volexity disclosed (June 4 2026) a long-running China-nexus espionage operation it tracks as VerdantBamboo — which it equates with UNC5221 (Mandiant/Google) and WARP PANDA (CrowdStrike) — that accessed a US victim organization's Microsoft 365 environment using the BRICKSTORM backdoor (Go and Rust variants, plus a FreeBSD variant found on the managed service provider's pfSense firewall) together with two previously undocumented malware families: PLENET (a .NET-Native-AOT backdoor that Google tracks as "Grimbolt") and AGENTPSD (a Python fallback backdoor). From a compromised Egnyte Storage Sync appliance the actor used BRICKSTORM's SOCKS proxy and stolen credentials to reach M365 and evade Conditional Access policies. Volexity found that both the victim and its managed service provider had each been compromised at least 18 months before detection, and assesses with medium confidence that the victim was breached by way of the MSP (with high confidence that the actor obtained MSP credentials and infrastructure usable to do so). The BRICKSTORM/UNC5221 activity has been separately reported by Google (April 2024; and September 2025 — describing targeting of US legal services, SaaS providers, business-process outsourcers and technology firms) and by CISA (VMware vSphere), and Google independently named PLENET as Grimbolt. The UNC5221 + BRICKSTORM footprint is the canonical PRC edge/cloud-access operator cluster also seen in the 2024–2025 Ivanti / F5 / VMware appliance campaigns.
 attributions:
   - actor_id: null
     attributing_org: Volexity
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
-    attribution_date: 2026-06-05
-    attribution_source_id: bleepingcomputer/2026-06-05_unc5221-verdantbamboo-china
+    attribution_date: 2026-06-04
+    attribution_source_id: volexity/2026-06-04_verdantbamboo-brickstorm-firewall
     notes: |
-      Volexity attributes to China-nexus UNC5221 (VerdantBamboo),
-      corroborated by Google and CISA. AUSPEX does not model UNC5221 as
-      a discrete named actor pending cluster consolidation with the
-      broader BRICKSTORM-ecosystem disclosures (consistent with the
-      2025 Ivanti CVE-2025-22457 record). Primary disclosure: Volexity;
-      the cited source is the BleepingComputer write-up (URL verified).
+      Volexity flatly attributes to "a Chinese threat actor, which Volexity
+      tracks as VerdantBamboo (WARP PANDA, UNC5221)" — a named China-nexus
+      cluster, unhedged (-> attributing_org_confidence high), with no
+      specific Chinese service (MSS/PLA/unit) named, hence attribution_level
+      named-actor. AUSPEX still carries actor_id null here, consistent with
+      the sibling UNC5221/BRICKSTORM events (mandiant-brickstorm-saas-legal,
+      ivanti CVE-2025-22457, cisa-nsa-cccs-brickstorm). Volexity's explicit
+      VerdantBamboo = WARP PANDA = UNC5221 equivalence now bridges these
+      clusters to the existing cn/unscoped/warp-panda actor — FLAGGED for a
+      corpus-wide consolidation decision (see qc.notes). Primary source:
+      Volexity (added this audit); BleepingComputer retained as
+      corroborating secondary.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Long-dwell PRC espionage that pivots through a managed service provider into customers' Microsoft 365 tenants is the operational expression of compelled / leveraged vendor access — the same MSS-tasked-cluster signature AUSPEX assigns to the UNC5221 / BRICKSTORM edge-appliance campaigns.
+      Long-dwell PRC espionage that leverages a compromised managed service
+      provider and a SaaS storage-sync appliance to reach a customer's
+      Microsoft 365 tenant (the MSP pivot assessed by Volexity at medium
+      confidence; MSP-credential/infrastructure access at high confidence)
+      is the operational expression of leveraged vendor access — the
+      MSS-tasked-cluster signature AUSPEX assigns to the UNC5221 / BRICKSTORM
+      edge-appliance campaigns. strongly_inferred, not attested: no cited
+      source states the strategic purpose.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Actor-mission: Volexity/Mandiant/CrowdStrike assess VerdantBamboo/UNC5221/WARP PANDA as a China-nexus espionage cluster with no financial motive."
+        - "Tradecraft: compromising a managed-services provider and a SaaS/storage-sync appliance to reach a downstream customer's M365 tenant is the vendor-access supply-chain behaviour the compelled-vendor-cooperation pillar encodes."
+        - "Pattern: the same UNC5221/BRICKSTORM footprint recurs across the 2024-2025 Ivanti/F5/VMware appliance campaigns and the Sept-2025 Mandiant BRICKSTORM disclosure, all mapped to this pillar in AUSPEX."
+      ruled_out: "cn/intelligentized-warfare SIGINT/C4ISR collection also fits the espionage purpose, but it grades WHY data is collected rather than the distinctive vendor-access MECHANISM this event turns on; the National-Intelligence-Law vendor-leverage reading has no serious competitor for the MSP/SaaS-pivot signature."
     contested: false
     analyst: claude
 targets:
@@ -47,4 +68,19 @@ targets:
     country: us
     role: primary
 sources:
+  - volexity/2026-06-04_verdantbamboo-brickstorm-firewall
   - bleepingcomputer/2026-06-05_unc5221-verdantbamboo-china
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the Volexity primary "VerdantBamboo: Just Another BRICKSTORM in the Firewall" (2026-06-04; raw HTTP 200, 81,669 bytes, sha256 1e9fd60b..bc1e1b93) — ADDED this audit as the primary source — and the previously sole-cited BleepingComputer secondary (2026-06-05; raw 90,637 bytes, sha256 c500a3a4..fd34770f). NOT a phantom: both snapshots are the real, on-point articles and the event is genuine (it post-dates the Jan-2026 model cutoff; confirmed live via web search + curl). PATH TAKEN: RE-SOURCE (badrabbit model) — a single-secondary-source event upgraded with the Volexity primary; attribution_source_id and the disclosure/attribution dates re-pointed to it.
+    [a] FACTS: BRICKSTORM Go+Rust confirmed ("variants written initially in Golang and later in Rust") plus a FreeBSD variant on the MSP pfSense ("FreeBSD compatible variant of the backdoor"); PLENET = .NET-Native-AOT, aka Google's "Grimbolt" ("PLENET (aka GRIMBOLT)"); AGENTPSD = Python fallback backdoor — all verbatim-supported. M365 reached via BRICKSTORM SOCKS proxy + stolen creds to "blend in ... and evade Conditional Access policies" (high conf on that purpose). 18-month dwell confirmed ("the initial compromise had actually occurred at least 18 months earlier"; firewall "also ... compromised at least 18 months earlier"). CORRECTIONS: (1) "Volexity — with Google and CISA — disclosed" overstated joint disclosure -> rewritten: Volexity is the sole discloser; Google (Apr-2024, Sep-2025) and CISA (VMware vSphere) SEPARATELY reported BRICKSTORM/UNC5221, and Google independently named PLENET=Grimbolt. (2) "compromised both ... simultaneously — a supply-chain pivot to reach the target" asserted as fact -> downgraded to Volexity's own calibration: victim + MSP each compromised >=18 months earlier; MSP credential/infrastructure access at HIGH confidence, but the victim-breached-VIA-MSP pivot only MEDIUM confidence ("Volexity assesses with medium confidence that the victim organization had been compromised by way of VerdantBamboo's breach of the MSP"). (3) The "US legal / SaaS / BPO / tech" victimology is Google's Sept-2025 characterization of the broader UNC5221 campaign (carried by BleepingComputer), NOT Volexity's single named victim (whose sector Volexity does not name) — summary reframed to attribute the sector spread to Google's reporting; targets[] (legal, ict/software, ict/managed-services) retained as source-carried by the cited article, with managed-services also directly = Volexity's own MSP finding.
+    [b] ATTRIBUTION: Volexity flatly attributes to "a Chinese threat actor, which Volexity tracks as VerdantBamboo (WARP PANDA, UNC5221)" — unhedged Chinese nexus (-> attributing_org_confidence high, retained); named cluster + nation, NO MSS/PLA/unit named. attributing_org retained (Volexity); attribution_source_id re-pointed bleepingcomputer -> volexity primary; attribution_date 2026-06-05 -> 2026-06-04. auspex_assessment concur-with-caveat retained (concur on the China-nexus/named-actor finding; caveat = AUSPEX has not resolved the cluster to a service and models actor_id null).
+    [c] DATES: start_date 2024-12-01 (approx 9 months, too late; its inline comment also wrongly said "2026 detection") -> 2024-03-01 (approx 18 months before Volexity's ~Sept-2025 investigation; floor estimate, "at least" so possibly earlier). disclosure_date 2026-06-05 -> 2026-06-04 (Volexity primary; BleepingComputer followed 06-05). Detection occurred in 2025, NOT 2026 — 2026-06 is the DISCLOSURE, not detection. Source published_on values unchanged (BleepingComputer 2026-06-05 correct; new Volexity record 2026-06-04, URL /2026/06/04/).
+    [d] DOCTRINE_LINKS: cn/national-intelligence-law-2017/compelled-vendor-cooperation HELD at strongly_inferred (matches all three sibling BRICKSTORM events); attesting_source_id null is correct — NO cited source states the strategic goal, so NOT attested. Reasoning tightened to reflect the medium-confidence MSP pivot; ADDED inference_basis{signals[], ruled_out} to ground the strongly_inferred label (competing cn/intelligentized-warfare SIGINT reading ruled out as purpose-not-mechanism). No doctrine invented; doctrine matches the attacker state (cn) so no perspective tag needed.
+    [e] ATTRIBUTION_LEVEL: was MISSING -> set named-actor. Volexity names VerdantBamboo (a proper named cluster, not a bare UNC number) + Chinese nexus, and equates it with WARP PANDA (already named-actor in the corpus) and UNC5221 — matching the Agrius / WARP-PANDA precedent (named vendor cluster + nation = named-actor). Alternative reading (activity-cluster, weighting Mandiant's UNC="uncategorized") considered but rejected: the attributing org for THIS attribution is Volexity, whose designation is a named China-nexus cluster.
+    [f] ACTOR_ID: null resolves trivially (no FK). FLAG for orchestrator/Kara: cn/unscoped/warp-panda (CrowdStrike's WARP PANDA) is the existing AUSPEX actor, and Volexity (June 2026) now DOCUMENTS VerdantBamboo == WARP PANDA == UNC5221. Four events — this one + 2025-09/mandiant-brickstorm-saas-legal + 2025-04/ivanti-cve-2025-22457-unc5221 + 2025-12/cisa-nsa-cccs-brickstorm-advisory — all carry actor_id null "pending cluster consolidation"; that consolidation is now source-supported. RECOMMEND deciding whether to point these four events' attributions to cn/unscoped/warp-panda and to add VerdantBamboo + UNC5221 aliases to atlas/actors/cn/warp-panda.yaml. Not done here (kept null for cross-event consistency; no actor-file edits per protocol).
+    RESIDUAL: initial_vector left unset — Volexity states the original access vector only at medium confidence (MSP pivot) and could not determine how the web-SSL-VPN foothold was first obtained ("logs did not go back far enough"); no 0-day is claimed for THIS specific victim, so no vector is asserted. incident_type data-theft retained as an espionage-collection inference from the documented M365 access (Volexity documents access + proxying, not an explicitly quantified exfiltration); supply-chain rests partly on the medium-confidence MSP pivot but the MSP compromise itself is high-confidence.

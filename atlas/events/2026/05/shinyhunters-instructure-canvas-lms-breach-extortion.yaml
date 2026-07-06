@@ -1,25 +1,58 @@
 # Added 2026-06-08 — sources curl-verified, candidate reviewed by analyst before incorporation.
+# AUDIT 2026-07-05 (claude-opus-4.8/max): re-sourced single-source event to 4 snapshotted sources; see qc block.
 id: 2026-05/shinyhunters-instructure-canvas-lms-breach-extortion
 name: "ShinyHunters breach and extortion of Instructure Canvas LMS — claimed 3.65 TB across ~9,000 institutions"
-start_date: 2026-05-01
-disclosure_date: 2026-05-01
-end_date: 2026-05-11        # ransom agreement reached
+start_date: 2026-04-30      # exposure window opened ~30 Apr 2026 (Bitdefender / Reed Smith); Register dates detection to 29 Apr
+disclosure_date: 2026-05-01  # Instructure CISO notified customers (Reed Smith)
+end_date: 2026-05-11        # paid ransom agreement reached, one day before the deadline
 incident_type:
   - data-theft
   - extortion
   - intrusion
-initial_vector: valid-creds
+initial_vector: unknown     # undisclosed, since-patched vulnerability in the Free-For-Teacher environment ("regarding support tickets"); technical mechanism not disclosed
 false_flag_risk: none
 summary: |
-  Instructure disclosed (May 1 2026) a breach of its Canvas learning-management platform; the extortion group ShinyHunters claimed responsibility, alleging theft of more than 3.65 TB of data affecting roughly 9,000 educational institutions worldwide and as many as 275 million students, teachers and staff, along with billions of private messages — which, if the actor's figures are accurate, would rank among the largest education-sector breaches on record. The intrusion reportedly abused Canvas's "Free-For-Teacher" account program to reach institutional course data, student records and private communications. Instructure reached a ransom agreement with ShinyHunters on May 11 2026, one day before the threatened leak deadline; the actors reportedly returned the stolen data and supplied "shred logs" as proof of destruction. This was ShinyHunters' second compromise of Instructure within roughly eight months, following a September 2025 social-engineering breach of the company's Salesforce instance.
+  Instructure — the US (Utah) educational-technology company behind the Canvas learning-management
+  system — disclosed a breach of its Canvas platform when its CISO, Steve Proud, notified customers
+  on May 1 2026; by May 2 the company said the situation had been "contained." The intruder had
+  exploited an undisclosed, since-patched vulnerability in Canvas's free "Free-For-Teacher" account
+  environment (reported as an issue "regarding support tickets"); Bitdefender dates the exposure
+  window to 30 April–7 May 2026. On May 7 a second wave tied to the same incident defaced roughly
+  330 Canvas login portals with extortion messages and set a May 12 leak deadline. The data-theft
+  and extortion crew ShinyHunters publicly claimed the breach (a self-claim; Instructure did not name
+  the group in its own notice) and claimed to have stolen roughly 3.65 TB of data affecting about
+  9,000 educational institutions worldwide (Bitdefender counts 8,809) and as many as ~275 million
+  individuals — students, teachers and staff — figures Instructure has not confirmed. Instructure
+  confirmed only that names, email addresses, student ID numbers and some private messages between
+  Canvas users were exposed, and said it found no evidence that passwords, dates of birth, government
+  identifiers, financial information, or Canvas course content, submissions or credentials were
+  involved. Instructure then took the controversial step of paying a ransom, reaching an agreement
+  with ShinyHunters on May 11 2026 — one day before the deadline; the actors reportedly returned the
+  stolen data and provided digital confirmation of its destruction (the ransom amount was not
+  disclosed). This was ShinyHunters' second confirmed compromise of Instructure in roughly eight
+  months, following a September 2025 social-engineering breach of the company's Salesforce
+  environment. If the actor's scale figures held, the incident would rank among the largest
+  education-sector breaches on record, but those figures remain the group's unverified claims.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: "The Hacker News (reporting ShinyHunters self-attribution)"
-    attributing_org_confidence: high
-    auspex_assessment: concur-with-caveat   # the 3.65 TB / ~9,000-institution / 275M figures are the actor's own claims, unverified
-    attribution_date: 2026-05-01
-    attribution_source_id: thehackernews/2026-05-11_instructure-shinyhunters-canvas
-doctrine_links: []   # criminal e-crime extortion — no state doctrine
+    attributing_org: "The Register / Bitdefender (reporting ShinyHunters' self-claim; Instructure did not name the group)"
+    attributing_org_confidence: moderate   # self-claim relayed by press/vendors; no independent forensic attribution; victim did not name the crew
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat   # the 3.65 TB / ~9,000-institution / ~275M figures are the actor's own claims, unverified by Instructure
+    attribution_date: 2026-05-07
+    attribution_source_id: theregister/2026-05-12_double-canvas-shinyhunters-leak-deadline
+    notes: |
+      ShinyHunters publicly claimed the Canvas breach and drove the extortion — the May 7 2026
+      second wave defaced ~330 Canvas login portals with the group's extortion messages. The
+      ~3.65 TB / ~9,000-institution / ~275M-individual figures are the actor's own unverified
+      claims (Bitdefender: "ShinyHunters claims ... however, Instructure has not confirmed these
+      figures"). Confidence set to moderate rather than high: the attribution rests on
+      ShinyHunters' self-claim relayed by security press and vendors — "Instructure didn't name
+      the crew in its latest disclosure" (The Register) — with no independent forensic
+      attribution. attribution_level named-actor: ShinyHunters is a named criminal collective /
+      leak-site brand (no individual operator or state unit named for this op); per the actor
+      record it is a fuzzy brand/handle overlapping UNC5537 / UNC6040 / IntelBroker.
+doctrine_links: []   # criminal e-crime data-theft/extortion — no state doctrine
 targets:
   - target_id: sectors/academic
     role: primary
@@ -28,3 +61,71 @@ targets:
     role: primary
 sources:
   - thehackernews/2026-05-11_instructure-shinyhunters-canvas
+  - theregister/2026-05-12_double-canvas-shinyhunters-leak-deadline
+  - bitdefender/2026-05-08_shinyhunters-instructure-canvas-advisory
+  - reedsmith/2026-05-14_canvas-instructure-cyberattack-developments
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Full 6-point audit against 4 snapshotted sources. SNAPSHOTS (sha256 first8...last8, bytes):
+    THN 8fa01da5...68006c8e, 169,943 B; The Register e392d5f0...252284bf, 165,214 B;
+    Bitdefender 7f8c1bd4...33e7c971, 81,832 B; Reed Smith 6010de6b...9e2e6c9c, 216,392 B.
+
+    RE-SOURCE PATH: the cited THN article is REAL (not a phantom) and carries the core
+    breach/extortion facts, but the single-source event asserted several true-but-uncited claims
+    (Sept 2025 Salesforce breach, "eight months", 275M individuals, May 1 disclosure). Added 3
+    corroborating sources (Register, Bitdefender, Reed Smith) so every claim is now source-carried,
+    and hedged the leak-site self-claim.
+
+    [a] FACTS — corrections: (1) initial_vector valid-creds -> unknown: the May 2026 intrusion
+    exploited an UNDISCLOSED, since-patched vulnerability in the Free-For-Teacher environment ("an
+    issue related to Free-For-Teacher accounts" / "regarding support tickets"; "Instructure has not
+    disclosed the technical mechanism") — NOT valid-creds (that was the Sept 2025 Salesforce vector).
+    (2) Stripped "billions of private messages" — absent from all 4 snapshots (0 hits for "billion");
+    Instructure confirmed only "some private messages". (3) "shred logs" -> "digital confirmation of
+    data destruction" (THN's actual phrasing; "shred logs" absent from all sources). (4) misleading
+    "institutional course data / student records" -> the actual confirmed exposure (names, emails,
+    student IDs, some private messages) plus the explicit not-compromised set (passwords, DOB, gov
+    IDs, financial info, course content/submissions/credentials) — Bitdefender + THN verbatim. (5)
+    275M reframed as the actor's claim of ~275 million INDIVIDUALS (Register: "more than 275 million
+    students, teachers, and staff"; Bitdefender: "275 million users ... Instructure has not confirmed
+    these figures") — THN alone labelled them "records". (6) 3.65 TB / ~9,000-institution figures
+    marked as unverified actor claims (Bitdefender counts 8,809). Dropped an unsourced ~$10M ransom
+    figure (search-rumor only, not in any snapshot) -> "amount not disclosed". Added sourced context:
+    CISO notified customers May 1, contained by May 2 (Reed Smith); exposure window 30 Apr-7 May
+    (Bitdefender); worldwide impact incl. US / Australia / EU (Bitdefender).
+
+    [b] ATTRIBUTION — attributing_org_confidence high -> MODERATE (hedged per remit): attribution
+    rests on ShinyHunters' own extortion/self-claim relayed by press/vendors; "Instructure didn't
+    name the crew in its latest disclosure" (Register); no independent forensic attribution.
+    auspex_assessment kept concur-with-caveat (figures are unverified actor claims).
+    attribution_source_id repointed THN -> The Register (best documents the self-claim + Instructure-
+    did-not-name nuance).
+
+    [c] DATES — start_date 2026-05-01 -> 2026-04-30, decoupled from disclosure (Bitdefender exposure
+    window "30 April"; Reed Smith access ~30 Apr; Register dates DETECTION to 29 Apr — spread noted).
+    disclosure_date 2026-05-01 KEPT and now sourced (Reed Smith: CISO Steve Proud "notified customers
+    on May 1"). end_date 2026-05-11 kept (agreement "reached on May 11, 2026 - one day before the
+    hackers' deadline", Reed Smith). attribution_date 2026-05-01 -> 2026-05-07 (public self-claim via
+    the May 7 portal-defacement extortion messages). Source fix: THN published_on 2026-05-11 ->
+    2026-05-12 (on-page byline "May 12, 2026"; slug immutable).
+
+    [d] DOCTRINE_LINKS — [] correct: criminal e-crime data-theft/extortion, no state doctrine; actor
+    default_doctrine_alignment_ids is []. No attesting source needed.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor: ShinyHunters is a named criminal collective / leak-site
+    brand; no individual operator or state unit named for this operation.
+
+    [f] ACTOR_ID — criminal/shinyhunters resolves. FLAG (not an error): the actor record itself notes
+    "ShinyHunters" is a fuzzy brand/handle overlapping UNC5537 / UNC6040 / IntelBroker / Scattered
+    Spider, so the named-actor attribution is brand-level. Directionality OK: US (Utah) edtech vendor
+    Instructure (sectors/ict/software, us) + worldwide education-sector student/teacher/staff data
+    (sectors/academic).
+
+    RESIDUAL UNCERTAINTY: all scale figures (3.65 TB, ~9,000 / 8,809 institutions, ~275M individuals)
+    are ShinyHunters' unverified claims — Instructure has confirmed neither the figures nor the ransom
+    amount. Op-start day varies across outlets (29-30 Apr 2026). DarkReading corroboration was
+    bot-walled (HTTP 403) and not used.

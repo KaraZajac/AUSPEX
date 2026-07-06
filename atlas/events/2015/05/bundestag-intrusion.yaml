@@ -8,43 +8,175 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  ~16 GB of data exfiltrated from the German Bundestag's
-  parliamentary network. Network offline for days. UK FCDO Oct
-  2020 sanctions on GRU Unit 26165 and officer Dmitry Badin;
-  German federal prosecutor issued an arrest warrant for Badin.
+  Roughly 16 GB of data — including complete mailboxes of German
+  MPs — was exfiltrated from the Bundestag network, which was taken
+  offline for four days for remediation. Germany's Federal
+  Prosecutor issued a May 2020 arrest warrant for GRU officer
+  Dmitriy Badin (a suspected Unit 26165 / APT28 member); in October
+  2020 the UK imposed asset freezes and travel bans on GRU Unit
+  26165 and two GRU officers over the attack.
 quantified_impact:
   data_exfiltrated_gb: 16
 false_flag_risk: none
 summary: |
-  Fancy Bear / APT28 spearphishing → X-Agent deployment → lateral
-  movement → prolonged compromise of the German federal
-  parliamentary network. Among the longest publicly known GRU
-  intrusions of a NATO legislature.
+  Fancy Bear / APT28 (Russian GRU Unit 26165) compromised the German
+  federal parliament (Deutscher Bundestag). Initial access came via a
+  UN-themed spear-phishing email to MPs whose malicious link
+  installed malware (the X-Tunnel implant) that then spread laterally
+  across the parliamentary network. The intruders held access for
+  several months before detection in May 2015, reaching a computer in
+  the parliamentary office of the Chancellor; roughly 16 GB of data,
+  including MPs' mailboxes, was stolen.
 attributions:
   - actor_id: ru/gru/26165/apt28
-    attributing_org: German BfV / UK FCDO
+    attributing_org: UK FCDO (NCSC) / German authorities
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2020-10-22
     attribution_source_id: ukgov/2020-10-22_bundestag-gru-26165-sanctions
+    notes: "Named-unit: the UK FCDO page names 'the GRU's military intelligence unit 26165 – codenamed APT28 and Fancy Bear' as responsible, and NCSC assesses 'with high confidence that the GRU was almost certainly responsible'. German authorities (per the CCDCOE toolkit) independently attribute the hack to APT28; Germany's Federal Prosecutor issued a May 2020 arrest warrant for GRU officer Dmitriy Badin (Bellingcat). Contemporaneous forensic reporting (netzpolitik, June 2015) tied the intrusion to Sofacy/APT28 of likely Russian origin. attributing_org generalised from the prior 'German BfV' to 'German authorities' — no cited source names the BfV verbatim."
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/nato-as-principal-threat
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting of a NATO legislature for strategic political
-      espionage. UK sanctions language frames the operation as
-      a GRU campaign against allied governments — consistent with
-      NATO-as-principal-threat targeting under the 2014 Military
-      Doctrine.
+      GRU Unit 26165 political-espionage penetration of the national
+      legislature of Germany — a NATO member state — fits the 2014
+      Military Doctrine's framing of NATO enlargement as the principal
+      external military danger, whose nato-as-principal-threat pillar
+      scopes cyber operations against allied-state political stability.
+      The UK FCDO frames the operation as a Russian state cyber attack
+      "designed to undermine Western democracies" and to "undermine
+      international law and institutions". strongly_inferred rather
+      than attested: the attributing source names a general
+      undermining-of-allied-democracies purpose but not the specific
+      NATO-adversary goal the pillar encodes.
     attesting_source_id: ukgov/2020-10-22_bundestag-gru-26165-sanctions
+    inference_basis:
+      signals:
+        - "Target is the national parliament of Germany, a NATO member state (the intruders reached a computer in the Chancellor's parliamentary office) — the class of allied-state political target the nato-as-principal-threat pillar scopes."
+        - "Perpetrator is GRU Unit 26165 (APT28), a Russian military-intelligence unit whose remit is strategic political and military espionage against NATO and allied governments."
+        - "The attributing government (UK FCDO / NCSC) characterises the operation as a Russian state cyber attack 'designed to undermine Western democracies' and to 'undermine international law and institutions' — i.e. directed at the allied political order the doctrine treats as the principal adversary."
+      ruled_out: "Generic opportunistic espionage with no doctrinal specificity: the deliberate targeting of a NATO-member legislature (and the Chancellor's office) by a military-intelligence unit points to the allied-political-stability objective the pillar encodes rather than untargeted collection."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/germany-bundestag
+  - target_id: sectors/government
+    country: de
     role: primary
 sources:
   - ukgov/2020-10-22_bundestag-gru-26165-sanctions
-  - ncsc-uk/2018-10_reckless-campaign-of-cyber-attacks
+  - ccdcoe/2021-06-04_bundestag-hack-2015-toolkit
+  - bellingcat/2020-05-05_who-is-dmitry-badin-gru-bundestag
+  - netzpolitik/2015-06-19_digital-attack-german-parliament
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs 4 raw-snapshotted sources (RE-SOURCED per the badrabbit
+    model: the event previously carried claims — 16 GB, X-Agent,
+    "offline for days", the Badin name/warrant — that neither cited
+    source supported; the UK FCDO page carries the attribution but not
+    those specifics). Snapshots (first8…last8 · bytes):
+      ukgov  c9c4560d…65d2cc70 · 79,623
+      ccdcoe 096725cf…881bfc2e7c · 30,549 (curl 200; WebFetch 403-walled)
+      belling 94f2b671…f88deb3c · 83,032
+      netzp  d1c2ca9b…d5467b01 · 233,560
+
+    [a] FACTS — all retained claims now source-carried.
+    • 16 GB: CCDCOE "Approximately over 16 GB of data was stolen";
+      Bellingcat "over 16 gigabytes of data had been sucked up ...
+      complete mailboxes of German parliamentarians". quantified_impact
+      data_exfiltrated_gb: 16 kept.
+    • Network offline: CCDCOE "The German parliament's computer system
+      was shut down for four days" — sharpened the vague "offline for
+      days" to "four days".
+    • Initial vector = phishing: CCDCOE "MPs received an email from the
+      address 'UN.org' ... designed like a UN News Bulletin. Clicking
+      on the link ... led to the installation of the malware ... The
+      malware was then able to spread and eventually infiltrated the
+      networks of the Parliament" — supports spear-phishing + lateral
+      spread + several-months access.
+    • CORRECTION: "X-Agent" → "X-Tunnel". netzpolitik (the June-2015
+      forensic report) documents the implant as Xtunnel: "the same
+      authors of the malware seem to have called it „Xtunnel" ... acts
+      as a tunnel for the attacker to remotely access the internal
+      network and maintain persistence." NO snapshotted source names
+      X-Agent for this hack.
+    • REMOVED unsourced superlative "Among the longest publicly known
+      GRU intrusions of a NATO legislature" (no source carries it).
+    • Chancellor's-office access: CCDCOE "managed to access a computer
+      in the parliamentary office of the chancellor"; UK FCDO appendix
+      "Chancellor Angela Merkel ... affected".
+    • Badin: CORRECTION to outcome — the UK FCDO page sanctions "two
+      Russian GRU officers and ... unit 26165" but does NOT print the
+      officers' names (no "Badin" on the page). Reworded so the Badin
+      NAME is tied to its actual source — Germany's Federal Prosecutor's
+      May 2020 warrant (Bellingcat: "On 5 May 2020 ... Germany's Federal
+      Prosecutor has issued an arrest warrant against Russian citizen
+      Dmitry Badin", "member of GRU's elite hacking unit 26165 ...
+      APT28") — and the UK sanctions to "unit 26165 and two GRU
+      officers".
+
+    [b] ATTRIBUTION — UK FCDO: "the GRU's military intelligence unit
+    26165 – codenamed APT28 and Fancy Bear – which were responsible for
+    the 2015 cyber attacks on Germany's Parliament"; "NCSC assess with
+    high confidence that the GRU was almost certainly responsible."
+    Kept attributing_org_confidence: high, auspex concur. Changed
+    attributing_org "German BfV / UK FCDO" → "UK FCDO (NCSC) / German
+    authorities" (BfV not named verbatim in any cited source; CCDCOE
+    carries "German Authorities indicate ... 'APT 28' is responsible").
+
+    [c] DATES — source published_on set to true pub dates (ukgov
+    2020-10-22, ccdcoe 2021-06-04 "last edited", bellingcat 2020-05-05,
+    netzpolitik 2015-06-19). Event start 2015-04-30 / disclosure
+    2015-05-15 / end 2015-05-31 kept: consistent with UK FCDO "In April
+    and May 2015 the German federal parliament ... was attacked" and
+    CCDCOE "detected in May 2015" (minor tension: CCDCOE also says the
+    lure arrived "At the beginning of 2015" and access ran "several
+    months" — start could be earlier; the primary source's "April"
+    framing is retained).
+
+    [d] DOCTRINE_LINKS — kept ru/military-doctrine-2014 /
+    nato-as-principal-threat at strongly_inferred (NOT upgraded to
+    attested): the UK source names a general "undermine Western
+    democracies" purpose, not the specific NATO-adversary goal the
+    pillar encodes. Added inference_basis {signals[], ruled_out}.
+    attesting_source_id kept = the UK FCDO page (permitted on
+    strongly_inferred as the primary supporting source). perspective
+    absent → attacker-rationale (ru doctrine on ru actor; no
+    state-mismatch).
+
+    [e] ATTRIBUTION_LEVEL — set named-unit (was missing): UK FCDO names
+    GRU unit 26165 explicitly.
+
+    [f] ACTOR_ID — ru/gru/26165/apt28 RESOLVES: declared as the id of
+    atlas/actors/ru/apt28.yaml (short file path, full-hierarchy id);
+    primary_service_id ru/gru/26165 exists at
+    atlas/services/ru/gru/26165.yaml. No actor edit.
+
+    FLAGS for orchestrator:
+    • TARGET dangling FK (fixed defensively): orgs/germany-bundestag had
+      NO registry file and was referenced by no other event. Repointed
+      to sectors/government (country: de) to keep referential integrity.
+      RECOMMEND creating orgs/germany-bundestag (national-CII German
+      government/legislature target) and repointing this event's target
+      to it to restore the named-org feature.
+    • SOURCE dropped from this event: ncsc-uk/2018-10_reckless-campaign-
+      of-cyber-attacks — the Oct-2018 NCSC "reckless campaign" statement
+      does not name the Bundestag (it lists BadRabbit/WADA/DNC/a UK TV
+      station) and is un-snapshottable here (url: null tombstoned;
+      archive.org-only, blocked). Not orphaned — still referenced by
+      actor ru/apt28, doctrine uk/national-cyber-security-strategy-2016,
+      events wada-iaaf-campaign + ncsc-gru-calling-out, service uk/ncsc,
+      target orgs/wada.
+
+    RESIDUAL UNCERTAINTY: precise operation start (late-April vs
+    "beginning of 2015"); exact disclosure day (mid-May 2015 public
+    reporting, day-level approximate); whether X-Agent was also present
+    (only X-Tunnel is documented in the snapshotted sources).

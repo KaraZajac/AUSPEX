@@ -20,54 +20,85 @@ outcome_summary: |
 false_flag_risk: none
 summary: |
   Buckshot Yankee is the inflection event for institutional US
-  military cyber. The worm was retrospectively attributed to
-  Russian foreign intelligence by then-Deputy Secretary of Defense
-  William Lynn in his August 2010 Foreign Affairs article, which
-  declassified the incident and used it as the rationale for the
-  forthcoming DoD Strategy for Operating in Cyberspace and the
-  standup of USCYBERCOM. The attribution to Russia has been
-  reaffirmed in subsequent retrospectives although no DOJ
+  military cyber. In his Foreign Affairs article "Defending a New
+  Domain" (released online 25 August 2010; Sept/Oct 2010 issue),
+  then-Deputy Secretary of Defense William J. Lynn III declassified
+  the 2008 intrusion, writing that an infected flash drive inserted
+  into a US military laptop at a Middle East base uploaded malicious
+  code — "placed there by a foreign intelligence agency" — onto a
+  US Central Command network, where it "spread undetected on both
+  classified and unclassified systems." Lynn named NO nation; he
+  used the incident as the public rationale for USCYBERCOM and the
+  Pentagon's emerging cyber strategy. The worm was identified by
+  analysts as "agent.btz." A specific state was never officially
+  attributed: later reporting widely suspected Russian intelligence,
+  some analysts noted Chinese-language code indicators, and some
+  insiders doubted a foreign-espionage origin altogether. No
   indictment ever issued.
 attributions:
   - actor_id: null
     attributing_org: US DoD (Deputy SecDef William J. Lynn III)
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2010-08-25
     attribution_source_id: foreign-affairs/2010-09_lynn-defending-new-domain
     notes: |
-      Lynn's Foreign Affairs article attributed agent.btz to a
-      "foreign intelligence agency"; subsequent reporting and
-      retrospectives narrow the assignment to Russian foreign
-      intelligence (FSB or GRU). No actor slug in the atlas
-      cleanly resolves to the agent.btz operator cluster; Turla
-      (FSB Center 16) is the most often-cited candidate via
-      operational lineage but the linkage is not formally
-      asserted.
+      attribution_source (Lynn, Foreign Affairs, raw-verified) states
+      the code was "placed there by a foreign intelligence agency" —
+      asserting state sponsorship but naming NO nation and NO actor.
+      Hence actor_id: null and attribution_level: activity-cluster
+      (the enum floor; Lynn named neither a nation nor a specific
+      named cluster). The state assignment is HEDGED/CONTESTED: later
+      reporting widely SUSPECTED Russian intelligence, but no official
+      attribution was ever made; the agent.btz sample carried Chinese-
+      language code indicators, and some insiders doubted a foreign-
+      espionage origin at all (Brookings). agent.btz was later linked
+      by malware lineage to Turla (Uroburos/Snake, associated with
+      ru/fsb Center 16), but that code lineage is not a formal
+      attribution of THIS 2008 operation and is not asserted here.
 doctrine_links:
   - doctrine_id: us/cmf-doctrine
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
+    perspective: victim-response
     reasoning: |
       Buckshot Yankee is the institutional pretext for USCYBERCOM
-      (stood up 2009) and the Cyber Mission Force; Lynn's Foreign
-      Affairs article uses the incident to make the case for the
-      doctrinal architecture that the CMF embodies. Retrospective
-      framing — the doctrine emerged in response to the event
-      rather than the other way around.
+      (established June 2009) and the Cyber Mission Force it later
+      presented; Lynn's Foreign Affairs article uses the incident to
+      make the case for the doctrinal architecture the CMF embodies.
+      Victim-response framing: this is the US (victim) state's own
+      force-structure doctrine, which emerged IN RESPONSE TO the
+      event rather than motivating it — the null/suspected-foreign
+      attacker's motive is unknown.
     attesting_source_id: foreign-affairs/2010-09_lynn-defending-new-domain
+    inference_basis:
+      signals:
+        - "Lynn's Foreign Affairs article (raw-verified) frames Buckshot Yankee as 'a turning point in U.S. cyberdefense strategy' and the wake-up call behind the Pentagon's new cyber posture."
+        - "USCYBERCOM was established June 2009 (months after the incident); the CMF is the force structure that architecture institutionalized (established 2012, FOC 2018)."
+        - "Temporal order is retrospective: the doctrine / force-structure post-dates and responds to the event, not the reverse."
+      ruled_out: "Persistent Engagement / Defend Forward (2018) as the strongly-inferred fit — those later operational concepts sit a decade downstream; the immediate, best-supported institutional response to Buckshot Yankee is the USCYBERCOM/CMF force-structure architecture, so the 2018 posture is modeled separately as only a plausible downstream link (doctrine_links[1])."
     contested: false
     analyst: claude
   - doctrine_id: us/persistent-engagement
     pillar_id: null
     program_id: null
     confidence: plausible
+    perspective: victim-response
     reasoning: |
-      Persistent Engagement as articulated by GEN Nakasone in
-      2018 is doctrinally downstream of the lesson Buckshot Yankee
-      taught about reactive postures. Retrospective framing.
+      Persistent Engagement, as articulated by GEN Nakasone in the
+      2018 CYBERCOM Command Vision, is doctrinally downstream of the
+      lesson Buckshot Yankee taught about the inadequacy of reactive
+      / defensive postures. Victim-response framing, and only
+      plausible: a decade separates the event from the 2018 concept,
+      which responds to many accumulated intrusions rather than this
+      one specifically.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Direct antecedent: Buckshot Yankee's demonstration that reactive network defense fails is a specific spur toward the continuous-contact / cost-imposition logic Persistent Engagement later codified."
+        - "Diffuse influence: Persistent Engagement (2018) answers a decade of accumulated adversary activity, not the 2008 event specifically, so Buckshot Yankee is one antecedent among many and the causal link is weak."
     contested: false
     analyst: claude
 targets:
@@ -80,3 +111,100 @@ targets:
 sources:
   - foreign-affairs/2010-09_lynn-defending-new-domain
   - wapo/2010-12-08_cyber-command-buckshot
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    HISTORICAL/canonical event. Audited vs the two cited sources.
+    Foreign Affairs (Lynn, "Defending a New Domain") snapshotted +
+    hashed: raw sha256 f166cf53…486407 (487,782 bytes). WaPo
+    (Nakashima, "Cyber-intruder sparks massive federal response")
+    is bot-walled (curl → HTTP 000, confirming the source record's
+    existing note) → its specifics are MIRROR-CORROBORATED only,
+    hence level: partial.
+
+    [a] FACTS — FA raw carries verbatim: "In 2008, the U.S.
+    Department of Defense suffered a significant compromise of its
+    classified military computer networks. It began when an infected
+    flash drive was inserted into a U.S. military laptop at a base in
+    the Middle East. The flash drive's malicious computer code,
+    placed there by a foreign intelligence agency, uploaded itself
+    onto a network run by the U.S. Central Command. That code spread
+    undetected on both classified and unclassified systems…" and
+    "…the most significant breach of U.S. military computers ever…
+    The Pentagon's operation to counter the attack, known as
+    Operation Buckshot Yankee, marked a turning point in U.S.
+    cyberdefense strategy." FA does NOT use the name "agent.btz",
+    does NOT name SIPRNet/JWICS, and does NOT give a duration or an
+    exact detection date. Those specifics — worm named "agent.btz",
+    reached SIPRNet (secret) and JWICS (TS/SCI), detected Oct 2008,
+    ~14-month remediation, drove the USB-media ban and USCYBERCOM
+    creation — are carried by the WaPo source and corroborated via
+    independent mirrors (Netsurion, Brookings, Control Engineering,
+    Schneier's summary of the Nakashima piece). outcome_summary and
+    targets[].outcome retained on that basis. NOTE: whether agent.btz
+    truly reached JWICS is contested in the broader literature but is
+    what the cited WaPo report states, so it is kept and flagged, not
+    stripped.
+
+    [b] ATTRIBUTION — MAJOR CORRECTION. The prior summary asserted
+    "The worm was retrospectively attributed to Russian foreign
+    intelligence by … Lynn in his … Foreign Affairs article" and
+    "The attribution to Russia has been reaffirmed in subsequent
+    retrospectives." This is a FABRICATION/over-attribution: the FA
+    raw shows Lynn wrote only "placed there by a foreign intelligence
+    agency" — he named NO nation. Summary rewritten to quote Lynn
+    accurately and to frame the Russia assignment as HEDGED/CONTESTED
+    (widely suspected in later reporting, never officially attributed;
+    Chinese-language code indicators noted; Brookings reports insiders
+    doubted a foreign-espionage origin at all). actor_id kept null.
+    attributing_org_confidence kept moderate (Lynn states the
+    foreign-intel-agency claim flatly but offers no evidence and no
+    nation; the useful state assignment is unresolved).
+
+    [c] DATES — start_date 2008-10-24 = the widely-cited detection
+    date (FA says only "2008"; the day is from secondary reference
+    and WaPo-lineage reporting of an Oct-2008 detection — retained,
+    provenance noted). disclosure_date/attribution_date 2010-08-25 =
+    online release of Lynn's article ahead of the Sept/Oct 2010 print
+    issue (source published_on 2010-09-01 = issue date; both kept,
+    distinction noted). end_date 2009-12-31 = estimate consistent
+    with the ~14-month remediation (detection Oct-2008 + ~14 mo).
+    All internally consistent; no conflation found.
+
+    [d] DOCTRINE_LINKS — both are the US (VICTIM) state's own
+    doctrine responding to an intrusion AGAINST the US, so both
+    tagged perspective: victim-response (were untagged → would have
+    tripped verify_atlas.py doctrine-state-mismatch and, worse,
+    mis-fed the engine, which trains only on attacker-rationale
+    links). us/cmf-doctrine kept strongly_inferred (NOT upgraded per
+    the never-upgrade rule, though FA arguably attests the turning-
+    point framing); added inference_basis.signals + ruled_out;
+    attesting_source_id (FA) retained as the primary SUPPORTING
+    source, which is permitted on strongly_inferred. us/persistent-
+    engagement kept plausible (decade gap; diffuse causation); added
+    inference_basis.alternatives. Neither link is `attested`, so the
+    attesting-source gate is satisfied. Both doctrines confirmed
+    pillar-less → pillar_id: null correct.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set activity-cluster. Lynn
+    asserts a state-sponsored actor ("a foreign intelligence agency")
+    but names neither a nation nor a specific cluster/actor, so this
+    sits at (indeed just below) the enum floor; activity-cluster is
+    the honest closest fit, explained in the attribution notes.
+
+    [f] ACTOR_ID — null, correct and required by the hedged/contested
+    attribution (no atlas actor cleanly resolves to the agent.btz
+    operator, and asserting one would over-attribute). No actor file
+    to check. FLAG: agent.btz↔Turla (ru/fsb Center 16) is a MALWARE-
+    LINEAGE observation only, not a formal attribution of this op —
+    left unmodeled by design; noted so a future editor does not
+    mistake the lineage for an attribution.
+
+    RESIDUAL UNCERTAINTY: WaPo un-snapshottable (bot-wall) → SIPRNet/
+    JWICS naming, the "agent.btz" label, the 14-month figure and the
+    Oct-2008 detection day rest on mirror corroboration, not a hashed
+    primary. Hence level: partial. The JWICS-reach and the precise
+    start day (2008-10-24) carry the most residual doubt.

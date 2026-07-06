@@ -7,13 +7,15 @@ end_date: null
 incident_type:
   - espionage
   - intrusion
+initial_vector: phishing        # AUDIT 2026-07-05: Unit 42 — infection chains "begin with targeted spear phishing lures, leveraging DLL sideloading"; recruitment/hiring-portal lures
 false_flag_risk: none
 summary: |
   Palo Alto Networks Unit 42 disclosed (May 22 2026) an Iran-nexus espionage campaign by Screening Serpens (aka UNC1549, Smoke Sandstorm — the "Iranian Dream Job" cluster) running mid-February through April 2026, timed closely to the Middle East regional conflict that began Feb 28 2026. The actor used fake-recruitment social-engineering to target aerospace, defense-manufacturing, telecommunications and technology organizations in the United States, Israel and the United Arab Emirates, plus two additional Middle-Eastern entities. Unit 42 documented RAT payloads across two families — MiniUpdate (four variants) and MiniJunk V2 — and a new AppDomainManager-hijacking technique that manipulates the initialization phase of .NET applications to proactively disable their own security mechanisms via a legitimate configuration file. Sector/country pairings on the target list below are representative; the summary is authoritative on scope.
 attributions:
   - actor_id: ir/unscoped/screening-serpens   # FK-propagated 2026-06-24: actor demoted ir/irgc→ir/unscoped (cited Unit 42 source names no service)
     attributing_org: "Palo Alto Networks Unit 42"
-    attributing_org_confidence: high   # Unit 42 attributes an Iran-nexus cluster "aligned with Iranian intelligence objectives" at moderate-high confidence; names no specific service (see actor record)
+    attributing_org_confidence: moderate   # AUDIT 2026-07-05: was `high` (over-attestation). Unit 42's exact words: "We assess with moderate-high confidence that the campaigns discussed in this article are conducted by Screening Serpens" — no-upgrade rule maps moderate-high → moderate. Attributes an Iran-nexus cluster "aligned with Iranian intelligence objectives"; names no specific service (see actor record)
+    attribution_level: named-actor   # AUDIT 2026-07-05 (added): Unit 42 names the cluster (Screening Serpens / UNC1549) + nation (Iran-nexus) but NO service/unit — 0 hits for IRGC/MOIS/Quds/Pasdaran on the page
     auspex_assessment: concur
     attribution_date: 2026-05-22
     attribution_source_id: unit42/2026-05-22_screening-serpens-unc1549
@@ -25,6 +27,12 @@ doctrine_links:
     reasoning: |
       Conflict-timed intelligence collection against adversary aerospace, defense-manufacturing and telecommunications sectors is the intelligence-preparation component of Iran's Forward / Mosaic Defense posture — feeding the integrated asymmetric portfolio rather than producing an immediate disruptive effect. The campaign's onset alongside the Feb 28 2026 regional conflict supports the forward-defense reading.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Conflict-synchronized tempo per source: Unit 42 states the campaigns' timing 'aligns closely with that of the regional conflict that started in the Middle East on Feb. 28, 2026', with a surge in coordinated attacks following the conflict's onset — cyber sequenced with a kinetic confrontation against the same adversary set."
+        - "Adversary military-industrial victimology: aerospace, defense-manufacturing and telecommunications organizations in the U.S., Israel and the UAE — the defense-industrial base and telecom backbone of Iran's principal regional adversaries, the natural intelligence-preparation target set of forward / mosaic defense."
+        - "Actor mission per source: Unit 42 assesses Screening Serpens 'an Iran-nexus APT group operating as a cyberespionage group aligned with Iranian intelligence objectives' — a proximate intelligence-collection purpose the forward-defense posture specializes into strategic intelligence-preparation at range."
+      ruled_out: "Anti-Israel destructive coercion (ir/resistance-axis): rejected because this is a pure multi-country espionage campaign (US/Israel/UAE + two additional Middle-Eastern entities) with no destructive or deniable-disruption effect and no Israel-specific framing — intelligence collection feeding the integrated asymmetric portfolio, not coercive signalling against Israel."
     contested: false
     analyst: claude
 targets:
@@ -39,3 +47,61 @@ targets:
     role: primary
 sources:
   - unit42/2026-05-22_screening-serpens-unc1549
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs the captured primary raw of Palo Alto Networks Unit 42, "Tracking Iranian APT
+    Screening Serpens' 2026 Espionage Campaigns" (2026-05-22) — raw_snapshot
+    unit42__2026-05-22_screening-serpens-unc1549.html, sha256 db47aabe…37cac9b2, 291,630 bytes;
+    hash RE-VERIFIED against the recorded content_sha256 (exact match). NOT a phantom: og:type=article,
+    canonical = the cited URL, article:published_time 2026-05-22T13:00:42Z; body carries Executive
+    Summary + Screening Serpens Overview + MiniUpdate/MiniJunk V2 analysis + IOCs.
+    [a] FACTS — every summary claim source-carried: "Iran-nexus advanced persistent threat (APT)
+    group Screening Serpens (aka UNC1549, Smoke Sandstorm and Iranian Dream Job)"; campaign
+    "mid-February through April 2026"; timing "aligns closely with that of the regional conflict that
+    started in the Middle East on Feb. 28, 2026" (the Feb-28 conflict framing is UNIT 42'S OWN, not
+    AUSPEX editorial); victims "in the U.S., Israel and the United Arab Emirates, and likely two
+    additional Middle Eastern entities"; sectors "aerospace, defense manufacturing and
+    telecommunications" + technology-sector professionals; "six new RAT variants ... split into two
+    distinct malware families" — MiniUpdate (4 samples) + MiniJunk V2 (2 samples); AppDomainManager
+    hijacking that "manipulates the initialization phase of .NET applications to proactively disable
+    the application's own security mechanisms via a legitimate configuration file" (near-verbatim). No
+    fabrication found; nothing stripped. Orchestrator MINIBIKE/MINIBUS/Azure/LinkedIn cross-check on
+    the raw: MINIBIKE = 0 and MINIBUS = 0 hits (those are the 2024 Mandiant-era names; this 2026 report
+    is EVOLVED tradecraft, correctly NOT claimed by the event); Azure C2 = present (C2 "mostly hosted by
+    Azure", *.azurewebsites[.]net domains); recruitment/hiring-platform lures incl. LinkedIn = present
+    (14 hits). ADDED initial_vector: phishing (source: infection chains "begin with targeted spear
+    phishing lures, leveraging DLL sideloading").
+    [b] ATTRIBUTION — CORRECTED over-attestation: attributing_org_confidence high → moderate. Unit 42's
+    exact words (1 occurrence): "We assess with moderate-high confidence that the campaigns discussed in
+    this article are conducted by Screening Serpens" — no-upgrade rule maps moderate-high → moderate.
+    actor_id ir/unscoped/screening-serpens RESOLVES (file atlas/actors/ir/screening-serpens.yaml, id
+    ir/unscoped/screening-serpens). auspex_assessment concur retained (multi-vendor Iran-nexus
+    consensus: UNC1549/Mandiant, Smoke Sandstorm/Microsoft, Nimbus Manticore/Check Point).
+    [c] DATES — source published_on 2026-05-22 = article:published_time 2026-05-22 (modified 2026-06-11);
+    start_date 2026-02-15 = "mid-February 2026" onset (earliest sample Feb 17); disclosure_date
+    2026-05-22; end_date null retained (last observed sample Apr 17 2026; Unit 42 frames a "continuous
+    cycle of development and deployment", no declared end).
+    [d] DOCTRINE_LINK — kept ir/forward-defense / integrated-asymmetric-portfolio at strongly_inferred
+    (per orchestrator; honest: source names only a proximate purpose "aligned with Iranian intelligence
+    objectives" + explicit kinetic-conflict timing/surge, which forward/mosaic defense specializes into
+    strategic intelligence-preparation). ADDED the required inference_basis {signals[], ruled_out} — it
+    was MISSING on a strongly_inferred link. attesting_source_id stays null (not attested). perspective
+    absent → defaults attacker-rationale (correct — the Iranian actor's own doctrine).
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor (Unit 42 names the cluster + Iran-nexus nation, no
+    service/unit; mirrors the Agrius named-actor precedent). Fixed-string sweep of the page: 0 hits for
+    IRGC / MOIS / Quds / Pasdaran / Revolutionary Guard → ir/unscoped is honest.
+    [f] ACTOR_ID — resolves; actor already audited & demoted ir/irgc→ir/unscoped on 2026-06-24 (its own
+    2026-06-24 AUDIT note documents 0 service hits). FLAG (minor, NOT edited — actor files are out of
+    scope): the source says Screening Serpens "has been active since at least 2022" whereas the actor's
+    active_since is 2024-01-01 (~first public disclosure) — Kara may wish to backdate active_since to
+    2022. Source tier PRESERVED secondary (orchestrator PRESERVE instruction + explicit corpus convention
+    that Unit 42 research-blogs tier secondary — the 2026-07-04 vendor-research audit names screening-serpens
+    itself as the exemplar). Source record needed no change (raw_snapshot + content_sha256 already present
+    from the 2026-06-24 capture; hash re-verified today).
+    Residual uncertainty: the sector↔country pairings in targets[] are representative modeling (the
+    source does not pin specific sectors to specific countries) — already disclosed in the summary; the
+    overall scope (US / Israel / UAE + 2 additional ME entities) is source-exact.

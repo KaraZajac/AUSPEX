@@ -1,45 +1,84 @@
 id: 2012-05/flame
 name: Flame (sKyWIper) intelligence-collection toolkit
-start_date: 2010-01-01  # operational date estimated; discovered May 2012
-disclosure_date: 2012-05-28  # Kaspersky / MAHER CERT joint disclosure
-end_date: 2012-06-30  # operators self-destructed implants after exposure
+start_date: 2010-01-01  # Kaspersky: project created "no earlier than 2010"; seen in the wild Feb-Mar 2010; in use since Aug 2010. Publicly discovered May 2012.
+disclosure_date: 2012-05-28  # parallel Kaspersky / CrySyS Lab ("sKyWIper") / Iran Maher CERT ("Flamer") disclosure
+end_date: 2012-06-30  # operators pushed the "browse32" self-removal module after exposure; the self-uninstall capability is documented in the 28-May Kaspersky Q&A, the actual purge was reported in June 2012
 incident_type:
-  - intrusion
-initial_vector: unknown
+  - espionage
+  - surveillance
+initial_vector: unknown  # Kaspersky: "The initial point of entry of Flame is unknown"
 outcome_summary: |
-  Extensive collection from Iranian Oil Ministry and the Iranian
-  National Oil Company plus broader Middle East targets. Used an MD5
-  collision attack abusing a Microsoft Terminal Services licensing
-  certificate to MITM Windows Update — spurring Microsoft to deprecate
-  weak hash algorithms industry-wide. Iranian discovery led to the
-  "Wiper" malware sweep that revealed the Flame toolkit.
-false_flag_risk: none
+  Long-haul intelligence collection across the Middle East — Iran the
+  top-affected country, with Lebanon, Syria, Israel and others also hit —
+  against state-related organisations, academic institutions and
+  individuals (Kaspersky saw "no specific signs indicating a particular
+  target such as the energy industry"). Flame's most distinctive
+  propagation method hijacked Windows Update: its SNACK / MUNCH / GADGET
+  modules man-in-the-middled the Windows Update service and served WU
+  payloads fraudulently signed as "Microsoft". The counterfeit signature
+  chained to a Microsoft Certificate Authority; Microsoft issued emergency
+  Security Advisory 2718704 revoking the abused "Microsoft Enforced
+  Licensing" (Terminal-Server licensing) intermediate certificates.
+  Microsoft's own analysis attributed the forgery to a chosen-prefix MD5
+  collision against that licensing certificate. Flame was itself found by
+  Kaspersky during an ITU-requested investigation into the separate "Wiper"
+  data-deletion attacks; Kaspersky found no evidence tying Wiper to Flame.
+false_flag_risk: none  # operators falsified file timestamps (anti-forensic) but did not impersonate another actor
 campaign_id: olympic-games
 summary: |
-  Massive 20MB modular collection toolkit. Audio, screen, and
-  Bluetooth-proximity collection modules. Code-overlap with Stuxnet's
-  resource section established Tilded Platform authorship. Washington
-  Post (Nakashima/Miller, June 19, 2012) reported the operation as a
-  joint US/IL effort. Kaspersky and MAHER (Iranian CERT) disclosed in
-  parallel May 28, 2012.
+  A ~20MB modular cyber-espionage toolkit — one of the most complex threats
+  discovered to its date — carrying audio-via-microphone, screenshot and
+  Bluetooth-proximity collection modules, keyboard interception and network
+  sniffing, scripted in Lua over compiled C/C++ libraries. Kaspersky, CrySyS
+  Lab ("sKyWIper") and Iran's Maher CERT ("Flamer") disclosed it in parallel
+  on 28 May 2012. Kaspersky initially assessed Flame as a project running
+  PARALLEL to Stuxnet/Duqu, built by a likely separate group and NOT on the
+  Tilded platform, though it shared some Stuxnet tradecraft (the autorun.inf
+  method unique to Stuxnet; the MS10-061 print-spooler exploit). On 11 June
+  2012 Kaspersky found the missing link: an early Stuxnet module ("Resource
+  207", present in the June-2009 Stuxnet variant) was in fact a Flame plugin
+  — establishing that the Flame and Stuxnet development teams cooperated and
+  shared code at least at the outset, while Flame itself remained a distinct
+  (non-Tilded) platform. The Washington Post (Nakashima, Miller & Tate,
+  19 June 2012) reported the platform as a joint US-Israeli intelligence-
+  collection program built to slow Iran's nuclear efforts; never officially
+  acknowledged. DIRECTIONALITY: attacker = US + Israel; victim = Iran and
+  the broader Middle East.
 attributions:
   - actor_id: us/olympic-games-team
-    attributing_org: Washington Post (Nakashima/Miller) + Kaspersky technical clustering
+    attributing_org: The Washington Post (Nakashima, Miller & Tate)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2012-06-19
     attribution_source_id: wapo/2012-06-19_flame-us-israel
     notes: |
-      Attribution is `journalistic + technical clustering`; not
-      officially acknowledged.
+      Nation-state (US + Israel) attribution is JOURNALISM-ONLY: the
+      Washington Post, citing anonymous US officials, tied Flame to the
+      joint US-Israeli program ("Olympic Games" family) built to slow
+      Iran's nuclear program; never officially acknowledged by either
+      government. Kaspersky, by contrast, explicitly DECLINED nation-state
+      attribution ("There is no information in the code or otherwise that
+      can tie Flame to any specific nation state ... its authors remain
+      unknown") — its contribution was technical clustering only, so it is
+      no longer co-listed as an attributing org for the US/IL claim.
+      Level named-actor (a named joint program + two named nations); WaPo's
+      exact agency-level wording is not re-verifiable at audit because the
+      source is bot-walled (see qc: level partial). us/olympic-games-team is
+      the joint US+IL actor anchor; the IL co-attacker rationale is carried
+      by the two IL doctrine links below.
 doctrine_links:
   - doctrine_id: us/title-10-title-50
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Counter-proliferation collection in the Olympic Games family.
-      Pre-NSPM-13 / Defend Forward authority climate.
+      Foreign-intelligence SIGINT collection: Title 50 authority (NSA
+      collection, not covert action) is the statutory backstop for a
+      US-run espionage platform of this kind, predating the NSPM-13 /
+      Defend Forward operational doctrines. No more-specific US operational
+      doctrine existed in the 2010-2012 window, so this framework entry is
+      the applicable legal frame.
     attesting_source_id: null
     contested: false
     analyst: claude
@@ -49,10 +88,15 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      WaPo (Nakashima/Miller 2012-06-19) attributes Flame to a joint
-      US-Israeli SIGINT-collection program against the Iranian
-      nuclear program — counter-WMD collection under the Begin
-      Doctrine's cyber extension. No formal Israeli attestation.
+      WaPo (Nakashima/Miller/Tate 2012-06-19) attributes Flame to a joint
+      US-Israeli intelligence-collection program built to slow Iran's
+      nuclear program — counter-WMD collection under the Begin Doctrine's
+      cyber extension (the doctrine's counter-WMD-cyber-sabotage pillar
+      explicitly encompasses Flame as "long-haul SIGINT collection across
+      Iranian nuclear-program personnel and infrastructure"). strongly_
+      inferred not attested: the purpose statement comes from journalism
+      (not a govt / tier-1-vendor attribution) and the source is bot-walled
+      / un-quote-verifiable at audit; no formal Israeli attestation.
     attesting_source_id: wapo/2012-06-19_flame-us-israel
     contested: false
     analyst: claude
@@ -62,17 +106,115 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting Iranian Oil Ministry and the National Iranian Oil
-      Company is part of the counter-nuclear-program economic and
-      personnel-collection envelope.
+      Persistent SIGINT collection against Iranian government / state-
+      related targets (Iran the top-affected country) sits within the
+      counter-nuclear-program collection envelope of Israel's operational
+      counter-Iran posture, consistent with WaPo's stated purpose of
+      slowing Iran's nuclear efforts. strongly_inferred: no source names
+      this specific goal beyond the journalistic collection framing, and
+      Flame's very broad Middle East targeting leaves more than the
+      strictly-nuclear reading alive.
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/iranian-oil-ministry
+  - target_id: sectors/government
+    country: ir
     role: primary
-  - target_id: orgs/national-iranian-oil-company
+  - target_id: sectors/academic
     role: primary
 sources:
   - kaspersky/2012-05-28_flame-skywiper
+  - kaspersky/2012-06-04_gadget-in-the-middle
+  - kaspersky/2012-06-11_back-to-stuxnet-missing-link
+  - microsoft/2012-06-03_advisory-2718704-unauthorized-certificates
   - wapo/2012-06-19_flame-us-israel
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW snapshots. LEVEL partial: the sole nation-state
+    (US+Israel) attribution source (wapo/2012-06-19_flame-us-israel) is bot-
+    walled (HTTP/2 reset, curl exit 92) and could not be snapshotted/quote-
+    verified; corroborated by public record. Re-sourced three real-but-uncited
+    canonical facts (badrabbit re-source model). Snapshots (sha256 first8..last8,
+    bytes): kaspersky 28-May Q&A a3f25be0..d2987676 / 196,604; kaspersky 04-Jun
+    Gadget c60666e5..cb810965 / 187,899; kaspersky 11-Jun Missing-Link
+    c46078378..2c83c66 / 188,099; microsoft Advisory-2718704 ef5fbe83..e30636df
+    / 52,652.
+
+    [a] FACTS. VERIFIED vs 28-May Kaspersky raw: ~20MB modular toolkit ("almost
+    20 MB ... when fully deployed"); audio-via-microphone, screenshot (incl.
+    on "interesting" apps / IMs) and Bluetooth-proximity collection modules;
+    keyboard interception + network sniffing; Lua-over-C/C++; initial vector
+    unknown; ITU→Wiper-investigation→Flame discovery; and parallel 28-May
+    disclosure with CrySyS ("SkyWiper") + Iran Maher CERT ("Flamer") (Update 1).
+    CORRECTIONS (all were unsupported by / contradicted by the cited sources):
+    (1) STRIPPED the false "Code-overlap with Stuxnet's resource section
+    established Tilded Platform authorship." The 28-May source says the OPPOSITE
+    ("Flame appears to be a project that ran in parallel ... not using the
+    Tilded platform"; "Flame and Stuxnet/Duqu were probably developed by two
+    separate groups"). Re-sourced the REAL code link to kaspersky 11-Jun
+    "Back to Stuxnet: the missing link": Resource 207 (in the June-2009 Stuxnet)
+    was a Flame plugin → the two teams cooperated, yet "Flame and Tilded are
+    completely different projects based on different architectures". Reworded
+    summary accordingly. (2) STRIPPED "Extensive collection from Iranian Oil
+    Ministry and the Iranian National Oil Company" — this is a WIPER fact, not
+    Flame; the 28-May source explicitly says "there is no information currently
+    that ties Flame to the Wiper attacks" and "we have not seen any specific
+    signs indicating a particular target such as the energy industry". Also the
+    two org FKs (orgs/iranian-oil-ministry, orgs/national-iranian-oil-company)
+    DO NOT EXIST in the registry (dangling). Replaced targets with source-carried
+    sectors/government (ir) + sectors/academic ("state-related organizations or
+    educational institutions", Iran top-affected). (3) MD5-collision Windows-
+    Update spoof was NOT in the 28-May source; re-sourced to kaspersky 04-Jun
+    "Gadget in the middle" (WU MITM via SNACK/MUNCH/GADGET; payloads "signed by
+    'MS'") + microsoft Advisory 2718704 (revokes the "Microsoft Enforced
+    Licensing" = Terminal-Server licensing intermediate CAs used for MITM). The
+    granular "chosen-prefix MD5 collision" phrasing is Microsoft's SRD-blog
+    analysis (that page is now a JS SPA, un-snapshottable) — kept, attributed to
+    Microsoft, corroborated by the advisory. (4) DROPPED the embellishment
+    "spurring Microsoft to deprecate weak hash algorithms industry-wide" (no
+    source; Microsoft revoked the specific certs + hardened Windows Update).
+    (5) incident_type intrusion → [espionage, surveillance] (raw: "cyber
+    espionage worm ... general cyber-espionage purposes" + microphone/screen/
+    keylog = surveillance).
+
+    [b] ATTRIBUTION. Nation-state (US+IL) attribution is journalism-only (WaPo).
+    Cleaned attributing_org from "Washington Post ... + Kaspersky technical
+    clustering" to "The Washington Post (Nakashima, Miller & Tate)" — Kaspersky
+    explicitly declined any nation-state attribution, so co-listing it over-
+    attributed. auspex_assessment concur-with-caveat retained (journalism, never
+    acknowledged). attributing_org_confidence high retained (WaPo reported
+    declaratively; caveat carried by the assessment + notes). actor_id
+    us/olympic-games-team (joint US+IL) preserved.
+
+    [c] DATES. disclosure_date 2012-05-28 ✓ (Kaspersky/CrySyS/Maher). start_date
+    2010-01-01 estimate consistent with raw ("no earlier than 2010"; wild
+    Feb-Mar 2010). end_date 2012-06-30 = post-exposure browse32 self-removal
+    (capability in 28-May raw; purge June 2012). New source published_on set to
+    actual pub dates (04-Jun, 11-Jun, 03-Jun) — not the campaign month.
+
+    [d] DOCTRINE_LINKS. 3 links kept, none attested (correct: purpose statement
+    is journalism, not govt/tier-1-vendor, and un-quote-verifiable). il/begin-
+    doctrine and il/counter-iran-posture both name Flame in their own pillar/
+    cyber_relevance text, so the placements are corpus-consistent; both stay
+    strongly_inferred. Reworded the counter-iran reasoning to REMOVE its reliance
+    on the (stripped) Oil-Ministry/NIOC targeting. begin-doctrine keeps WaPo as
+    its supporting (not attesting-for-attested) source per schema; that source is
+    bot-walled, reinforcing strongly_inferred. Both IL links carry
+    perspective: attacker-rationale (joint US+IL actor → declared cross-state
+    rationale, not a mismatch). us/title-10-title-50 reasoning refined to Title-50
+    SIGINT collection authority.
+
+    [e] ATTRIBUTION_LEVEL. Added named-actor (was missing) — WaPo names a named
+    joint program + two nations; agency/unit granularity not snapshot-verifiable.
+
+    [f] ACTOR_ID. us/olympic-games-team resolves (atlas/actors/us/olympic-games-
+    team.yaml). FLAG: that actor's ttp_summary miscategorizes Flame (and Gauss)
+    as "Tilded Platform" family — Kaspersky's own 11-Jun finding is that Flame is
+    NOT on the Tilded platform (Duqu/Stuxnet are); Flame/Gauss are a separate
+    platform, linked to Stuxnet only via the shared Resource-207 module. Actor
+    file not edited (per protocol) — for orchestrator/Kara to fix.

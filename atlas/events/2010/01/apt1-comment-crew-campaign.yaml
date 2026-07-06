@@ -8,12 +8,17 @@ incident_type:
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  PLA Unit 61398 / APT1 conducted long-running spear-phishing
-  intrusions against 141 organizations across 20 industries —
-  including Westinghouse (nuclear reactor designs), US Steel,
-  Alcoa, SolarWorld, Allegheny Technologies, and the United
-  Steelworkers — exfiltrating hundreds of terabytes of IP to
-  Shanghai netblocks via HTRAN proxy chains.
+  Mandiant documented APT1 / PLA Unit 61398 systematically
+  compromising at least 141 organizations across 20 major
+  industries since 2006 via spear-phishing and exfiltrating
+  hundreds of terabytes of IP through HTRAN proxy chains to
+  Shanghai netblocks (the 141 victims were anonymized in the
+  report). The 2014 DOJ indictment separately named six specific
+  Unit 61398 victims — Westinghouse (AP1000 nuclear power-plant
+  design specs), US Steel, Alcoa, SolarWorld, Allegheny
+  Technologies, and the United Steelworkers — charging theft of
+  trade secrets and internal communications for the commercial
+  advantage of Chinese SOEs.
 false_flag_risk: none
 summary: |
   Mandiant's February 2013 APT1 report was the first vendor
@@ -26,12 +31,14 @@ attributions:
   - actor_id: cn/pla/apt1
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2013-02-19
     attribution_source_id: mandiant/2013-02-19_apt1-report
   - actor_id: cn/pla/apt1
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2014-05-19
     attribution_source_id: doj/2014-05-19_pla-five-officers-indictment
@@ -60,12 +67,25 @@ doctrine_links:
   - doctrine_id: cn/mcf
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
       PLA Unit 61398 tasking against US dual-use civilian industry
-      is the canonical MCF pattern; MCF was elevated to national
-      strategy 2014–2015 and codifies what APT1 was already doing.
+      (aerospace, telecom, nuclear, semiconductors) fits the MCF
+      pattern of acquiring foreign technology to advance both
+      military and civilian capability; MCF was elevated to national
+      strategy 2014–2015 and can be read as codifying what APT1 was
+      already doing. Downgraded to plausible (from strongly_inferred,
+      2026-07-05 audit) because no cited source states a
+      military-civil-fusion purpose — the DOJ indictment frames the
+      theft as commercial/economic advantage to Chinese SOEs — and a
+      competing, better-sourced strategic reading (industrial
+      modernization / MIC2025 family) survives, so more than one
+      reading holds.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Military-Civil Fusion: a PLA unit stealing US dual-use industrial IP feeds the civilian-to-military technology-transfer apparatus MCF encodes, but no cited source states a military end-use."
+        - "Industrial modernization (MIC2025 / 12th-Five-Year-Plan family): the DOJ indictment names commercial advantage to Chinese SOEs in nuclear/steel/solar — the proximate purpose the industrial-policy doctrine specializes — making it the better-sourced competing reading."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -81,3 +101,19 @@ targets:
 sources:
   - mandiant/2013-02-19_apt1-report
   - doj/2014-05-19_pla-five-officers-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-05
+  level: full
+  notes: |
+    Audited vs both cited PRIMARY sources; raw snapshots pre-existing on disk, sha256 re-verified (both match the recorded hashes).
+    SOURCES: mandiant/2013-02-19_apt1-report — mandiant__2013-02-19_apt1-report.pdf, sha256 763a94ce…4721dcdd, 6,797,621 bytes, 76pp. doj/2014-05-19_pla-five-officers-indictment — doj__2014-05-19_pla-five-officers-indictment.html (Wayback capture; live justice.gov URL 404s), sha256 3650dcdd…e0383a0c, 115,089 bytes.
+    [a] FACTS — all source-carried. Mandiant (verbatim): "Since 2006, Mandiant has observed APT1 compromise 141 companies spanning 20 major industries"; "APT1 has systematically stolen hundreds of terabytes of data from at least 141 organizations"; "767 separate instances in which APT1 intruders used the 'HUC Packet Transmit Tool' or HTRAN"; "613 (99.8%) were registered to one of four Shanghai net blocks"; Unit 61398 on Datong Road, Pudong New Area, Shanghai. NOTE Mandiant ANONYMIZED its 141 victims — the six named companies appear nowhere in the PDF (0 hits for Westinghouse/US Steel/Alcoa/SolarWorld/Allegheny/Steelworkers); they come solely from the DOJ indictment. CORRECTION: rewrote outcome_summary to separate the two evidence bodies (Mandiant 141-anonymized vs DOJ 6-named) and drop the unsupported implication that the DOJ six are a subset of Mandiant's 141; refined "Westinghouse (nuclear reactor designs)" → "AP1000 nuclear power-plant design specs" (DOJ: Sun stole "design specifications for pipes, pipe supports, and pipe routing within the AP1000 plant buildings"). DOJ (verbatim): six victims Westinghouse, SolarWorld, U.S. Steel, ATI, USW, Alcoa; "six American victims in the U.S. nuclear power, metals and solar products industries"; theft for commercial advantage of Chinese SOEs.
+    [b] ATTRIBUTION — both correct, no over-attestation. Mandiant high: "We believe the totality of the evidence … bolsters the claim that APT1 is Unit 61398" / "we conclude that PLA Unit 61398 is APT1." DOJ high: five officers "in Unit 61398 of the Third Department of the Chinese People's Liberation Army (PLA)"; headline "First Time Criminal Charges Are Filed Against Known State Actors for Hacking." auspex_assessment concur kept for both.
+    [c] DATES — source published_on correct (Mandiant 2013-02-19, DOJ 2014-05-19). Event start_date 2006-01-01 = Mandiant "Since 2006" ✓; disclosure_date 2013-02-19 = Mandiant report ✓; end_date 2013-12-31 is an estimate (USW "continued to beacon … until at least early 2013"; unit publicly exposed Feb-2013) — defensible bound, left as-is. Event id 2010-01 is a stable mid-campaign filing anchor, not a factual date; campaign 2006→2013, disclosure 2013 — start vs disclosure correctly distinguished.
+    [d] DOCTRINE_LINKS — neither link is attested, so no attesting-source gate issue. cn/mic2025 (strongly_inferred) KEPT: well-formed inference_basis (sector-map signal + anachronism ruled_out); DOJ names the nuclear/steel/solar sectors + SOE commercial-advantage purpose the industrial-policy doctrine specializes; record honestly flags MIC2025 postdates the op (real-time doctrine = 12th-FYP / Strategic Emerging Industries). cn/mcf DOWNGRADED strongly_inferred → plausible: it carried NO inference_basis, no cited source states a military-civil-fusion purpose (DOJ frames the theft as commercial/economic advantage to SOEs), and the MIC2025/industrial-policy reading is a serious, better-sourced surviving competitor → fails the "no serious competitor" bar. Added inference_basis.alternatives (colon-space items quoted per YAML rule). FLAG: contradicts the actor's default_doctrine_alignment_ids [cn/mcf, cn/mic2025] house default — reverse if a corpus rule requires both at strongly_inferred.
+    [e] ATTRIBUTION_LEVEL — was MISSING on both attributions; ADDED named-unit to each (Mandiant names PLA Unit 61398 = 2nd Bureau, GSD 3rd Dept; DOJ names Unit 61398 + five individual officers).
+    [f] ACTOR_ID — cn/pla/apt1 resolves (file atlas/actors/cn/apt1.yaml, internal id cn/pla/apt1; primary_service_id cn/pla/unit-61398). Actor record sourced + service-verified 2026-06-24. No actor edit (per protocol); no defect.
+    TARGETS — content-correct (orgs/westinghouse, orgs/us-steel, orgs/alcoa, orgs/solarworld are all genuine DOJ-named primary victims; no sector inflation). FLAG (out-of-scope like actors): all four target registry records are MISSING from atlas/targets/orgs/ — these are DANGLING FKs (this event is their only referencer) and will fail the site FK validator until Kara creates the records (or converts them to sector refs). DOJ also names Allegheny Technologies (ATI) + United Steelworkers (USW) as the 5th/6th victims — candidates to add once the registry exists.
+    RESIDUAL: end_date 2013-12-31 is an estimate; top-level summary's "first vendor exposure of a named PLA cyber unit" is accepted historical characterization (not a source-verbatim quote) but substantially accurate and consistent with the Mandiant report.
