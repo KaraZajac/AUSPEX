@@ -1,65 +1,102 @@
 id: 2025-06/salt-typhoon-canada-telecom
-name: Canadian Centre for Cyber Security confirms Salt Typhoon compromise of Canadian telecom
-start_date: 2025-02-01  # CCCS-stated mid-February compromise window
-disclosure_date: 2025-06-20
+name: CCCS/FBI bulletin — Salt Typhoon compromise of a Canadian telecom via Cisco CVE-2023-20198
+start_date: 2025-02-15  # CCCS: devices "compromised by likely Salt Typhoon actors in mid-February 2025"
+disclosure_date: 2025-06-19  # joint CCCS/FBI cyber threat bulletin (date_created/modified)
 end_date: null
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: n-day  # Cisco CVE-2023-20198
+  - espionage
+initial_vector: n-day  # Cisco IOS XE Web UI CVE-2023-20198 (disclosed Oct 2023)
 outcome_summary: |
-  The Canadian Centre for Cyber Security publicly confirmed
-  that Salt Typhoon compromised at least one Canadian
-  telecommunications provider in mid-February 2025, exploiting
-  Cisco IOS XE Web UI CVE-2023-20198 to extract running
-  configuration files and establish a GRE tunnel for traffic
-  exfiltration. Rogers, Bell, Telus, and SaskTel publicly
-  acknowledged active monitoring; specific victim attribution
-  among the four major carriers was not formally disclosed.
-  The Canadian compromise pre-dates and feeds into the August
-  AA25-239A 13-government Salt Typhoon advisory.
+  On 2025-06-19 the Canadian Centre for Cyber Security (Cyber Centre)
+  and the US Federal Bureau of Investigation (FBI) jointly published a
+  cyber threat bulletin reporting that three network devices registered
+  to an unnamed Canadian telecommunications company were compromised in
+  mid-February 2025 by actors it assessed to be "almost certainly PRC
+  state-sponsored actors, specifically Salt Typhoon" (the devices were
+  "compromised by likely Salt Typhoon actors"). The actors exploited
+  Cisco IOS XE Web UI CVE-2023-20198 to retrieve the running
+  configuration files from all three devices and modified at least one
+  to configure a GRE tunnel, "enabling traffic collection from the
+  network." The affected carrier was not named. The Cyber Centre
+  assessed that PRC cyber actors "will almost certainly continue to
+  target Canadian organizations as part of this espionage campaign,
+  including telecommunications service providers and their clients,
+  over the next two years."
 false_flag_risk: none
 campaign_id: salt-typhoon-telecoms
 summary: |
-  Confirms the Five Eyes lateral spread of Salt Typhoon beyond
-  the original nine US telecom victims; combined with the June
-  Viasat / Comcast / Digital Realty disclosures, establishes
-  that the campaign's scope had expanded by mid-2025 to all
-  major Anglo-Saxon SIGINT-cooperative jurisdictions.
+  Extends the Salt Typhoon telecom-collection campaign into Canada, a
+  Five Eyes / SIGINT-cooperative jurisdiction, beyond the original
+  cluster of US telecom victims. Combined with the June 2025 Viasat /
+  Comcast / Digital Realty disclosures (sibling event), it marks the
+  campaign's expansion across the Anglo-Saxon SIGINT-cooperative
+  jurisdictions by mid-2025. This Canadian compromise pre-dates and is
+  folded into the 13-government AA25-239A Salt Typhoon advisory of
+  2025-08-27.
 attributions:
   - actor_id: cn/mss/salt-typhoon
-    attributing_org: Canadian Centre for Cyber Security (CCCS)
+    attributing_org: Canadian Centre for Cyber Security (Cyber Centre) + US FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-06-20
-    attribution_source_id: globemail/2025-06-20_canadian-telecom-salt-typhoon
+    attribution_date: 2025-06-19
+    attribution_source_id: cccs/2025-06-19_prc-salt-typhoon-telecom-bulletin
+    notes: |
+      The joint CCCS/FBI bulletin names the actor at nation +
+      named-actor level and hedges: "The responsible actors are almost
+      certainly PRC state-sponsored actors, specifically Salt Typhoon"
+      and the devices were "compromised by likely Salt Typhoon actors."
+      It names NO Chinese service (no MSS / Ministry of State Security)
+      and NO unit, and does not name the affected carrier — hence
+      attribution_level: named-actor. The actor_id cn/mss/salt-typhoon
+      carries the MSS service placement, but that MSS naming lives in
+      the actor record's own sources (OFAC 2025-01-17 designation of
+      the Salt Typhoon operating company Sichuan Juxinhe), NOT in this
+      event's CCCS/FBI source. AUSPEX concurs: Salt Typhoon is the
+      consensus PRC telecom-espionage cluster and the compromise itself
+      is first-party confirmed by Canada's national CERT jointly with
+      the FBI.
 doctrine_links:
   - doctrine_id: cn/intelligentized-warfare
     pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      CCCS framing of the telecom compromise aligns with the
-      SIGINT-collection pillar; the cited Globe & Mail article does
-      not name a SIGINT-collection doctrine (the attestation comes
-      from the later August AA25-239A advisory), so as cited the
-      linkage is inferred.
-    attesting_source_id: globemail/2025-06-20_canadian-telecom-salt-typhoon
+      The joint CCCS/FBI bulletin frames the compromise as part of a
+      "global cyberespionage campaign" and states the collection
+      purpose of the telecom access in substance: the actors modified a
+      configuration file "to configure a GRE tunnel, enabling traffic
+      collection from the network," and hostile state actors "rely on
+      access to telecommunications service providers (TSPs) and
+      telecommunications networks around the world as a key source of
+      foreign intelligence." That is the SIGINT / C4ISR-collection
+      pillar's terminal goal stated by the attesting source.
+    attesting_source_id: cccs/2025-06-19_prc-salt-typhoon-telecom-bulletin
     inference_basis:
-      source_id: globemail/2025-06-20_canadian-telecom-salt-typhoon
-      signals:
-        - "CCCS confirms Salt Typhoon compromise of a Canadian telecom carrier (SIGINT-relevant target); the SIGINT-doctrine attestation is in the later AA25-239A, not this source"
-      ruled_out: "a SIGINT-collection / intelligentized-warfare doctrine named in the cited article"
+      source_id: cccs/2025-06-19_prc-salt-typhoon-telecom-bulletin
+      source_quote: "Hostile state actors very likely rely on access to telecommunications service providers (TSPs) and telecommunications networks around the world as a key source of foreign intelligence."
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Same MSS-contractor (Sichuan Juxinhe / related) ecosystem
-      identified in the August 2025 joint advisory.
+      Salt Typhoon's OFAC-designated operating company (the MSS
+      contractor Sichuan Juxinhe, per OFAC 2025-01-17 and the August
+      2025 AA25-239A advisory) sits in the compelled-vendor-cooperation
+      ecosystem — but neither source cited by THIS event names the
+      National Intelligence Law, vendor cooperation, or the contractor
+      cluster; the June 2025 CCCS/FBI bulletin describes only
+      exploitation of a Cisco N-day. The linkage is an actor-ecosystem
+      inference not carried by this event's sources.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Salt Typhoon's OFAC-designated operating company Sichuan Juxinhe is an MSS contractor (actor-record attribution) — the pattern the compelled-vendor-cooperation pillar describes"
+      alternatives:
+        - "Opportunistic N-day (CVE-2023-20198) exploitation of edge devices with no vendor-cooperation nexus present in the cited CCCS/FBI or Dark Reading reporting"
     contested: false
     analyst: claude
 targets:
@@ -67,5 +104,94 @@ targets:
     country: ca
     role: primary
 sources:
-  - globemail/2025-06-20_canadian-telecom-salt-typhoon
+  - cccs/2025-06-19_prc-salt-typhoon-telecom-bulletin
   - darkreading/2025-06_salt-typhoon-canada
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit + re-source + snapshot (claude-opus-4.8/max,
+    2026-07-10) against RAW cited sources. RESULT: event REAL and
+    correct; one WRONG-SOURCE fixed (badrabbit model).
+
+    [a] FACTS — all load-bearing claims now carried by the snapshotted
+    primary CCCS/FBI bulletin (sha256 b338bde0…e66e3, live HTTP 200):
+    "Three network devices registered to a Canadian telecommunications
+    company were compromised by likely Salt Typhoon actors in
+    mid-February 2025. The actors exploited CVE-2023-20198 to retrieve
+    the running configuration files from all three devices and modified
+    at least one of the files to configure a GRE tunnel, enabling
+    traffic collection from the network." Corroborated by Dark Reading
+    (sha256 0fbf49e1…d27c4d). CORRECTIONS: incident_type data-theft ->
+    espionage (bulletin frames it as a "cyberespionage campaign" /
+    "foreign intelligence"); "traffic exfiltration" -> "traffic
+    collection" (source wording); "at least one provider" -> "three
+    network devices at one unnamed carrier" (precise); dropped the
+    "Rogers/Bell/Telus/SaskTel monitoring" naming (that was from the
+    removed Dec-2024 Globe & Mail article, not the June-2025 bulletin;
+    the June bulletin leaves the carrier unnamed). Moved the AA25-239A
+    forward-reference into summary as analytic framing.
+
+    [b] ATTRIBUTION — attributing_org corrected to the joint "Canadian
+    Centre for Cyber Security (Cyber Centre) + US FBI" (prior record
+    said CCCS only; the bulletin is jointly issued with the FBI).
+    Confidence high retained ("almost certainly PRC state-sponsored
+    actors, specifically Salt Typhoon" = high in the intel lexicon);
+    the specific-actor call is hedged ("likely Salt Typhoon"),
+    documented in the attribution notes. auspex_assessment: concur.
+    NO over-attestation: the bulletin names NO MSS/service and NO unit
+    (do-not-over-specify honoured) — actor_id cn/mss/salt-typhoon
+    carries the MSS placement only via the actor record's own OFAC
+    source, not this event's source.
+
+    [c] DATES — start_date 2025-02-01 -> 2025-02-15 (source says
+    "mid-February 2025"). disclosure_date 2025-06-20 -> 2025-06-19
+    (CCCS bulletin date_created/date_modified 2025-06-19). Source-date
+    fixes in the source records: Dark Reading 2025-06-21 -> 2025-06-24
+    (byline "June 24, 2025"); Globe & Mail 2025-06-20 -> 2024-12-11
+    (article stamped "Published December 11, 2024").
+
+    [d] DOCTRINE_LINKS — link 1 (intelligentized-warfare /
+    sigint-c4isr-collection): strongly_inferred -> attested. The prior
+    strongly_inferred rested on the (wrong) Globe & Mail source saying
+    nothing about SIGINT purpose; the correct CCCS/FBI bulletin states
+    the collection purpose in substance ("a key source of foreign
+    intelligence"; GRE tunnel "enabling traffic collection") — added
+    inference_basis.source_quote + attesting_source_id. perspective:
+    attacker-rationale (default). link 2 (national-intelligence-law /
+    compelled-vendor-cooperation): strongly_inferred -> plausible
+    (DOWNGRADE; neither cited source names the NIL / vendor-cooperation
+    / contractor nexus — it derives from the actor's OFAC/AA25-239A
+    attribution). Added inference_basis {signals[], alternatives[]}.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (was missing). Source
+    supports nation (PRC) + named-actor (Salt Typhoon); no unit/MSS.
+
+    [f] ACTOR_ID — cn/mss/salt-typhoon VERIFIED: resolves to
+    atlas/actors/cn/salt-typhoon.yaml (id field cn/mss/salt-typhoon).
+    Directionality correct (Canadian telecom victim, PRC attacker).
+
+    RE-SOURCE (badrabbit model): the cited Globe & Mail article
+    (globemail/2025-06-20_canadian-telecom-salt-typhoon) is actually
+    the 2024-12-11 monitoring story ("Cyber Centre was not aware of any
+    Canadian networks impacted") — it did NOT support this June-2025
+    confirmation and was mis-dated 2025-06-20 in its record. Located +
+    snapshotted the genuine primary (joint CCCS/FBI bulletin, cyber.gc.ca)
+    and re-pointed sources[] + attribution_source_id + doctrine
+    attesting_source_id to it; Dark Reading retained as corroborating
+    secondary. Globe & Mail REMOVED from sources[]; its record date was
+    corrected to 2024-12-11 and it is flagged as a RE-HOME candidate
+    (now orphaned; do NOT delete — orchestrator to re-home/retire).
+
+    SNAPSHOTS (PRESERVE tier; only added snapshot keys): CCCS bulletin
+    cccs__2025-06-19_prc-salt-typhoon-telecom-bulletin.html sha256
+    b338bde09fd3e1d9b83955507744950df61abf6be87ab090143aef44815e66e3
+    (live 200, primary, NEW record). Dark Reading
+    darkreading__2025-06_salt-typhoon-canada.html sha256
+    0fbf49e12263ec243b5838f35a342af464e29679383744d8409169b563d27c4d
+    (live 403 Cloudflare-walled; snapshot from archive_url Wayback
+    capture, body intact). level: full — every load-bearing claim is
+    carried by the fully-snapshotted CCCS primary (live 200), with Dark
+    Reading corroborating.

@@ -1,66 +1,262 @@
 id: 2024-06/snowflake-unc5537
 name: UNC5537 / Snowflake customer-tenant mass-credential intrusion
-start_date: 2024-04-14
-disclosure_date: 2024-06-02
-end_date: 2024-09-30
+start_date: 2024-04-14  # earliest documented campaign exfil (AT&T, per 8-K "between April 14 and April 25, 2024"); Mandiant "In April 2024"
+disclosure_date: 2024-05-31  # first public framing as a Snowflake-customer campaign (Live Nation/Ticketmaster 8-K + BleepingComputer roundup)
+end_date: null  # not cleanly bounded by any cited source (prior 2024-09-30 was unsourced); operator arrests late Oct 2024 effectively ended it (see 2024-11/moucka-snowflake-indictment)
 incident_type:
   - intrusion
   - data-theft
+  - extortion
 initial_vector: valid-creds
 outcome_summary: |
-  UNC5537 used infostealer logs (RedLine / Raccoon / LummaC2)
-  purchased from criminal markets to access ~165 Snowflake
-  customer tenants lacking MFA. Major victims (rolled out via
-  ShinyHunters / IntelBroker BreachForums posts April–September
-  2024): Ticketmaster / Live Nation (~560M records), AT&T
-  (~110M call detail records, ransom ~USD 370K paid), Santander
-  (~30M records), Advance Auto Parts (~2.3M records), Neiman
-  Marcus, Pure Storage, LendingTree, Anheuser-Busch. Snowflake
-  itself was not breached — the failure was at customer-tenant
-  identity hygiene. Connor Moucka ("Judische") arrested in
-  Canada Oct 30 2024 on a US warrant; co-conspirator John Erin
-  Binns previously detained in Turkey.
+  UNC5537 — a financially motivated actor (Mandiant) — used credentials
+  "previously stolen via infostealer malware" (Mandiant names VIDAR,
+  RISEPRO, REDLINE, RACOON STEALER, LUMMA and METASTEALER) to log into
+  Snowflake CUSTOMER instances whose accounts "did not have multi-factor
+  authentication (MFA) enabled," exfiltrate data, advertise it on
+  cybercrime forums, and "attempt to extort many of the victims."
+  Mandiant and Snowflake "notified approximately 165 potentially exposed
+  organizations." Snowflake's own platform was not breached: Mandiant
+  found the campaign "is not the result of any particularly novel or
+  sophisticated tool, technique, or procedure" but "the consequence of
+  the growing infostealer marketplace and missed opportunities to further
+  secure credentials" — a customer-tenant identity-hygiene failure (the
+  early theory of a breached Snowflake employee account was retracted;
+  Snowflake's CISO said "customer accounts were compromised on May 23").
+  Independently disclosed victims: AT&T (~110M call/text-metadata records;
+  AT&T paid ~USD 370K / 5.72 BTC on 2024-05-17 for deletion + proof —
+  8-K / Krebs / WIRED) and Ticketmaster / Live Nation (Live Nation 8-K;
+  ShinyHunters advertised ~1.3TB / ~560M-customer data for USD 500K on
+  BreachForums — the 560M is the actor's RESALE CLAIM, not an independent
+  count — BleepingComputer / TechCrunch). Additional organizations were
+  NAMED BY THE THREAT ACTOR as targets/victims — Santander, Advance Auto
+  Parts, Neiman Marcus, Anheuser-Busch and others — several of which
+  denied impact (BleepingComputer). DOJ later charged Connor Riley Moucka
+  ("Judische") and John Erin Binns (indictment filed 2024-10-10) with
+  "wire fraud, computer fraud, aggravated identity theft, and related
+  conspiracies ... to hack into at least 10 victim organizations," access
+  "billions of sensitive customer records," and "extort[] millions of
+  dollars"; Moucka consented to extradition from Canada (2025-03-21),
+  Binns "not presently in U.S. custody."
 quantified_impact:
-  organizations_affected: 165
-  individuals_affected: 700000000  # cumulative across published exfils
-  at_t_ransom_paid_usd: 370000
+  organizations_affected: 165  # Mandiant/Snowflake "notified approximately 165 potentially exposed organizations" (NOTIFIED as potentially exposed — not all confirmed-accessed)
+  at_t_ransom_paid_usd: 370000  # AT&T-specific: ~USD 373,646 / 5.72 BTC paid 2024-05-17 for deletion (WIRED / TRM Labs)
+  # individuals_affected REMOVED (was 700000000, an unsourced cumulative sum): no source carries a campaign-wide
+  # count; the two flagship per-victim figures are AT&T ~110M (confirmed) + Ticketmaster ~560M (ACTOR RESALE CLAIM,
+  # not independently verified) — not summable into a defensible headline number.
 false_flag_risk: none
-campaign_id: shinyhunters-snowflake-cluster
+campaign_id: shinyhunters-snowflake-cluster  # corpus grouping key shared with the AT&T, Ticketmaster and Moucka-indictment siblings (no campaigns/ registry file)
 operators_named:
-  - moucka-connor-riley  # UNC5537 "Judische", DOJ Nov 2024
-  - binns-john-erin  # Snowflake co-conspirator, detained in Turkey
+  - moucka-connor-riley  # UNC5537 "Judische"; DOJ indictment filed 2024-10-10; consented to extradition from Canada 2025-03-21
+  - binns-john-erin      # co-defendant "irdev"; "not presently in U.S. custody" per DOJ (the "detained in Turkey" specific is press-only, removed)
 summary: |
-  Largest cumulative-records-exfiltrated data-theft event on
-  public record (depends on counting method). Catalyzed
-  industry-wide push for mandatory MFA on cloud-data-warehouse
-  tenants (Snowflake announced default MFA Oct 2024). The case
-  is the AUSPEX type-specimen for "infostealer-logs-to-
-  enterprise-SaaS-tenant access at scale."
+  The AUSPEX type-specimen for "infostealer-logs-to-enterprise-SaaS-tenant
+  access at scale": a low-sophistication, high-impact criminal campaign
+  whose blast radius came entirely from the customer-side MFA gap, not from
+  any Snowflake product vulnerability. Among the largest cumulative-records
+  data-theft events on public record (depends on counting method — and the
+  single largest figure, Ticketmaster's ~560M, is an unverified actor
+  resale claim). Catalyzed an industry-wide push toward mandatory MFA on
+  cloud-data-warehouse tenants. A useful AUSPEX boundary case: high
+  state-interest datasets (bulk CDR metadata) exfiltrated by a purely
+  financial operator with no state nexus.
 attributions:
   - actor_id: criminal/unc5537
-    attributing_org: Mandiant + Snowflake
+    attributing_org: Mandiant (with Snowflake)
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2024-06-10
     attribution_source_id: mandiant/2024-06-10_unc5537-snowflake
-  - actor_id: criminal/shinyhunters
-    attributing_org: Mandiant + journalism consensus
-    attributing_org_confidence: moderate
-    auspex_assessment: partial
-    attribution_date: 2024-06-10
-    attribution_source_id: mandiant/2024-06-10_unc5537-snowflake
     notes: |
-      ShinyHunters and IntelBroker were the resale / leak-site
-      personas; UNC5537 was the intrusion operator cluster.
-      Cluster boundary is fuzzy by design.
+      Mandiant tracks the Snowflake mass-tenant intrusion wave as UNC5537,
+      an uncategorized, financially motivated activity cluster (no nation):
+      "Mandiant tracks this cluster of activity as UNC5537, a financially
+      motivated threat actor." Its public blog names the campaign, TTPs and
+      the ~165 figure but NAMES NO VICTIM ORG — the AT&T / Ticketmaster /
+      Santander victim links are carried by the sibling primaries (SEC
+      8-Ks, Krebs, WIRED, BleepingComputer, TechCrunch), not by Mandiant.
+  - actor_id: criminal/shinyhunters
+    attributing_org: BleepingComputer / journalism consensus
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-05-31
+    attribution_source_id: bleepingcomputer/2024-05-31_ticketmaster-confirms-breach
+    notes: |
+      ShinyHunters is the resale / leak-site persona (BreachForums) that
+      posted and priced the stolen data; BleepingComputer names it directly
+      ("ShinyHunters has been attempting to sell the Ticketmaster data on a
+      hacking forum for $500,000"). UNC5537 was the intrusion operator
+      cluster; the ShinyHunters<->UNC5537 boundary is fuzzy by design
+      (concur-with-caveat). CORRECTION: the prior attribution_source_id was
+      mandiant/2024-06-10 — but the Mandiant blog does NOT mention
+      ShinyHunters at all; re-pointed to the source that actually names it.
 doctrine_links: []
 targets:
-  - target_id: orgs/snowflake
-    role: primary
   - target_id: orgs/att
     role: primary
   - target_id: orgs/ticketmaster
     role: primary
+  - target_id: orgs/snowflake
+    role: collateral  # the compromised platform; Snowflake's own corporate environment was not breached — customer tenants were
 sources:
   - mandiant/2024-06-10_unc5537-snowflake
   - doj/2024-11-04_moucka-snowflake-indictment
+  - sec/2024-07-12_att-8k-snowflake-cdr-breach
+  - krebs/2024-07-12_hackers-steal-phone-sms-records-att
+  - wired/2024-07-14_att-paid-hacker-370k-delete-records
+  - sec/2024-05-31_live-nation-8k-ticketmaster-breach
+  - bleepingcomputer/2024-05-31_ticketmaster-confirms-breach
+  - techcrunch/2024-05-31_live-nation-confirms-ticketmaster-hack
+  - bleepingcomputer/2024-05-31_snowflake-hacks-santander-ticketmaster
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    RE-SOURCE (badrabbit model) + full 6-point audit of the CAMPAIGN
+    umbrella event. The event was REAL but heavily over-sourced against its
+    two cited primaries: it asserted a full victim roster + record counts +
+    an AT&T ransom + a 700M individuals figure while citing ONLY Mandiant +
+    DOJ, NEITHER of which names any victim or carries any count. Re-pointed
+    to the genuine per-victim primaries (all already snapshotted from the
+    sibling audits) + one new snapshotted roundup, and stripped the
+    unsupportable specifics. Sibling events (all Kara-audited):
+    2024-04/att-snowflake-shinyhunters, 2024-05/ticketmaster-shinyhunters-
+    leak, 2024-11/moucka-snowflake-indictment.
+
+    [a] FACTS — every load-bearing claim now carried by a snapshotted
+    source; embellishment stripped:
+    • CAMPAIGN core — Mandiant (548dd3cc…a721e10, 301,145 B): "Mandiant
+      tracks this cluster of activity as UNC5537, a financially motivated
+      threat actor"; "systematically compromising Snowflake customer
+      instances using stolen customer credentials, advertising victim data
+      for sale on cybercrime forums, and attempting to extort many of the
+      victims"; "credentials previously stolen via infostealer malware …
+      VIDAR, RISEPRO, REDLINE, RACOON STEALER, LUMMA and METASTEALER"; "the
+      account did not have multi-factor authentication (MFA) enabled";
+      "Mandiant and Snowflake have notified approximately 165 potentially
+      exposed organizations."
+    • 165 = NOTIFIED / "potentially exposed", NOT "165 accessed tenants" —
+      prior wording "used … to access ~165 Snowflake customer tenants" was
+      an embellishment of Mandiant's "notified approximately 165 potentially
+      exposed organizations"; corrected. organizations_affected: 165 kept
+      with a corrected comment.
+    • NO-SNOWFLAKE-BREACH framing (task-checked) — CONFIRMED as a
+      customer-side root cause, carried by Mandiant: "UNC5537's campaign …
+      is not the result of any particularly novel or sophisticated tool,
+      technique, or procedure. This campaign's broad impact is the
+      consequence of the growing infostealer marketplace and missed
+      opportunities to further secure credentials." Corroborated by the
+      BleepingComputer roundup (b032555b…3693eadc, 95,360 B): "Update
+      6/1/24: Hudson Rock has taken down their report that a hacker breached
+      Snowflake"; Snowflake CISO Brad Jones "customer accounts were
+      compromised on May 23." NOTE: no cited source uses the literal phrase
+      "Snowflake was not breached"; it is framed as Mandiant's customer-side
+      root-cause finding + the retracted employee-breach theory.
+    • AT&T figures (task-checked) — NOT in Mandiant/DOJ; RE-SOURCED: Krebs
+      (7dff0e18…b94804c8): "phone call and text message records for roughly
+      110 million people — nearly all of its customers"; ransom via WIRED
+      (a11080e9…3ad6f56e): "paid a member of the hacking team more than
+      $300,000 to delete the data and provide a video … about 5.72 bitcoin
+      (the equivalent of $373,646)"; AT&T 8-K (8ebb2dc7…0ec84148) confirms
+      the incident. → at_t_ransom_paid_usd: 370000 retained (now sourced).
+    • Ticketmaster figures (task-checked) — NOT in Mandiant/DOJ;
+      RE-SOURCED: BleepingComputer (ab06d2b5…e311c643): "over 560 million
+      Ticketmaster users"; "ShinyHunters … for $500,000 … 1.3TB of data";
+      TechCrunch (be30f135…9db6efcd): "selling 560 million customer
+      records"; "its stolen database was hosted on Snowflake"; Live Nation
+      8-K (c07e0b81…4708320b) confirms the incident. The 560M is EXPLICITLY
+      the actor's resale claim — labelled as such (COUNT-EMBELLISHMENT
+      guardrail applied).
+    • Long-tail roster — Santander / Advance Auto Parts / Neiman Marcus /
+      Anheuser-Busch etc. are NOT in Mandiant or DOJ; sourced (as
+      actor-claimed) to the BleepingComputer roundup: the actor "claims" to
+      have breached "Anheuser-Busch, State Farm, Mitsubishi, Progressive,
+      Neiman Marcus, Allstate, and Advance Auto Parts … they say they
+      bypassed Okta's …". Reframed from "Major victims" to "NAMED BY THE
+      THREAT ACTOR … several of which denied impact." Per-victim RECORD
+      COUNTS (Santander ~30M, Advance Auto ~2.3M) are carried by NO cited
+      source → STRIPPED. LendingTree / Pure Storage removed (no source).
+    • STRIPPED as unsourced: individuals_affected 700000000 (an
+      AUSPEX-constructed sum of a confirmed ~110M + an unverified 560M
+      actor-claim — not a defensible headline; removed); "Snowflake
+      announced default MFA Oct 2024" (real but no cited source; softened to
+      the general MFA-catalyst framing); "arrested in Canada Oct 30 2024"
+      and "Binns … detained in Turkey" (the DOJ page carries neither — see
+      [c]); AT&T ransom-recipient identity (WIRED names only "a member of
+      the hacking team", not Moucka).
+    • DOJ counter-action facts — DOJ (9c5d3561…570ddba3, 95,629 B):
+      "charged with wire fraud, computer fraud, aggravated identity theft,
+      and related conspiracies … to hack into at least 10 victim
+      organizations"; "billions of sensitive customer records, including
+      call and text history records, banking and other financial
+      information"; "to have extorted millions of dollars"; "extradition
+      from Canada" (consented 2025-03-21); "John Binns is not presently in
+      U.S. custody." indictment "filed and bench warrants issued: October
+      10, 2024".
+
+    [b] ATTRIBUTION:
+    • criminal/unc5537 — Mandiant (with Snowflake), high, concur,
+      2024-06-10; attribution_level activity-cluster ADDED (was missing).
+      Honest scope note: Mandiant names no victim org.
+    • criminal/shinyhunters — attribution_source_id CORRECTED from
+      mandiant/2024-06-10 (which never mentions ShinyHunters) to
+      bleepingcomputer/2024-05-31_ticketmaster-confirms-breach (names it
+      directly). attributing_org → "BleepingComputer / journalism
+      consensus"; auspex_assessment "partial" → "concur-with-caveat"
+      (standard value); attribution_level named-actor ADDED; date
+      2024-06-10 → 2024-05-31.
+
+    [c] DATES: disclosure_date 2024-06-02 (unsourced Snowflake-advisory
+      date) → 2024-05-31 (first public campaign framing, source-carried by
+      the Live Nation 8-K + BleepingComputer roundup). end_date 2024-09-30
+      (unsourced) → null (no cited source bounds the campaign; the operator
+      arrests that ended it are the Nov 2024 counter-action sibling).
+      start_date 2024-04-14 kept (AT&T 8-K exfil window; within Mandiant's
+      "In April 2024"). Source published_on values verified: Mandiant
+      2024-06-10, DOJ case page 2024-11-04, AT&T 8-K/Krebs 2024-07-12, WIRED
+      2024-07-14, Live Nation 8-K/BleepingComputer/TechCrunch 2024-05-31,
+      roundup 2024-05-31 (datePublished; dateModified 2024-06-01).
+
+    [d] DOCTRINE_LINKS: [] — correct and preserved. Financially motivated
+      criminal actors (UNC5537 + ShinyHunters); NO state doctrine applies.
+      Matches all three siblings. Per task: per-event doctrine none.
+
+    [e] ATTRIBUTION_LEVEL — both ADDED (were absent): UNC5537 =
+      activity-cluster (Mandiant "UNC" = uncategorized, no nation);
+      ShinyHunters = named-actor (self-claimed brand, no nation). Event is
+      named-actor grade overall (resolves to atlas actor ids).
+
+    [f] ACTOR_ID: both resolve — criminal/unc5537 and criminal/shinyhunters
+      exist under atlas/actors/ and are correctly scoped (criminal/*, no
+      state nexus). No actor-file edits made. targets: orgs/snowflake role
+      primary → collateral (platform, not the breached party — its own env
+      was not breached; matches both siblings); orgs/att + orgs/ticketmaster
+      remain primary (representative confirmed victims).
+
+    SNAPSHOT DISCIPLINE (PRESERVE tier): Mandiant + DOJ hashes RE-VERIFIED
+    unchanged (548dd3cc… 301,145 B; 9c5d3561… 95,629 B) — one-line audit
+    notes appended to each source record (fields preserved). Six sibling
+    primaries reused from their prior audits (raw on disk, hashes above,
+    re-verified present). One NEW source created + snapshotted +
+    hashed this batch: bleepingcomputer/2024-05-31_snowflake-hacks-santander-
+    ticketmaster (b032555b…3693eadc, 95,360 B, HTTP 200 live). All nine
+    sources reachable + hashed → level: full.
+
+    RESIDUAL / FLAGS (for orchestrator/Kara, not edited here):
+    • criminal/unc5537 actor record ttp_summary still asserts "AT&T (~110M …
+      ransom paid USD ~370K), Ticketmaster (~560M), Santander, Advance Auto
+      Parts, Pure Storage, Neiman Marcus" and "arrested in Canada Oct 30
+      2024" / "20-count US indictment unsealed Nov 4 2024" — the same
+      over-attestation this event just fixed; flag for a sourcing pass
+      (per-victim counts are sibling-carried; the arrest/count specifics are
+      press-only). Not edited (actor file out of scope).
+    • campaign_id shinyhunters-snowflake-cluster has no campaigns/ registry
+      file (shared by 4 events as a grouping key) — flag if a registry is
+      expected.
+    • orgs/att, orgs/ticketmaster, orgs/snowflake target records — verify
+      they carry these sources (the ticketmaster sibling flagged
+      orgs/ticketmaster has sources: []).

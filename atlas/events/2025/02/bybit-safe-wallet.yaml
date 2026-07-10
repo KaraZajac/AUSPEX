@@ -1,77 +1,162 @@
 id: 2025-02/bybit-safe-wallet
 name: Bybit theft via Safe{Wallet} supply-chain compromise
-start_date: 2025-02-04  # initial Safe{Wallet} developer-machine compromise window
+start_date: 2025-02-04  # Safe{Wallet} developer macOS workstation compromised (Sygnia forensic)
 disclosure_date: 2025-02-21
 end_date: 2025-02-21
 incident_type:
+  - intrusion
   - financial-theft
-  - supply-chain
 initial_vector: supply-chain
 outcome_summary: |
   Largest cryptocurrency theft in history. Approximately
-  $1.5 billion in virtual assets stolen from Bybit via
-  supply-chain compromise of Safe{Wallet} (Gnosis Safe)
-  developer environment. Vector: compromise of a
-  Safe{Wallet} developer's machine; injection of malicious
-  JavaScript into the Safe UI loaded specifically for
-  Bybit's multisig transactions; manipulation of a
-  scheduled cold-to-warm-wallet transfer to redirect funds
-  to attacker-controlled addresses. Funds subsequently
-  converted to BTC and dispersed across thousands of
-  addresses on multiple chains within 48 hours.
+  $1.5 billion in virtual assets (~401,000 ETH) stolen from
+  Bybit via supply-chain compromise of the Safe{Wallet}
+  (Gnosis Safe) developer environment. Vector: a Safe{Wallet}
+  developer's macOS workstation was compromised (4 Feb 2025);
+  the attackers were present in Safe's AWS environment and
+  injected malicious JavaScript into the Safe UI served
+  specifically for Bybit's multisig transactions, so that a
+  routine 21 Feb transfer from Bybit's Ethereum cold wallet to
+  a warm/hot wallet was unknowingly signed as an
+  attacker-controlled transaction redirecting the funds. The
+  proceeds were rapidly swapped to BTC and DAI and dispersed
+  across thousands of addresses on multiple blockchains via
+  DEXs, cross-chain bridges and no-KYC swaps.
 quantified_impact:
-  usd_stolen: 1500000000
+  usd_stolen: 1500000000  # "approximately/nearly $1.5B" per FBI + Chainalysis (~401,000 ETH)
   asset_classes:
     - ETH
-    - stETH
-    - mETH
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
   Definitional 2025 event. Establishes the scale ceiling for
   DPRK supply-chain-driven crypto theft (~$1.5B in one
-  operation) and the first publicly clean USG mapping of
-  TraderTraitor to the 3rd Bureau of the RGB (FBI IC3 PSA
-  PSA250226, 26 February 2025). (The WMD-financing framing is the
-  standard pattern, not explicit in the PSA itself.) Chainalysis tagged this single event
-  as exceeding the combined annual DPRK crypto-theft totals
-  for all years through 2023.
+  operation) and is, per Chainalysis, "the largest digital heist
+  in the history of cryptocurrency." The FBI IC3 PSA (PSA250226,
+  26 February 2025) attributes the theft to the DPRK and names
+  the activity "TraderTraitor"; the raw PSA names NO service /
+  sub-bureau (no "RGB"/"3rd Bureau" string) and carries no
+  WMD-financing language, so the revenue-doctrine goal is
+  inferred, not attested. Chainalysis noted the Bybit theft alone
+  (~$1.5B) exceeded all funds North Korea stole across the whole
+  of 2024 (~$1.34B) by roughly $160M — it does NOT claim the
+  single event exceeds combined multi-year DPRK totals.
 attributions:
   - actor_id: kp/rgb/tradertraitor
     attributing_org: US FBI (IC3)
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2025-02-26
+    attribution_level: named-actor
     attribution_source_id: fbi/2025-02-26_bybit-tradertraitor-psa
     notes: |
-      FBI PSA explicitly maps TraderTraitor to the 3rd Bureau
-      of the Reconnaissance General Bureau — first clean
-      sub-bureau-level USG attribution.
+      FBI IC3 PSA attributes the ~$1.5B Bybit theft to the DPRK /
+      North Korea ("was responsible") and labels the activity
+      "TraderTraitor." The PSA names NO service or sub-bureau — no
+      "RGB" / "Reconnaissance General Bureau" / "3rd Bureau" string
+      occurs in the raw (verified 2026-06-24 + re-verified
+      2026-07-10) — so this is a nation + named-activity attribution,
+      not named-unit. Independently corroborated by Chainalysis
+      on-chain analysis (Bybit proceeds consolidated with addresses
+      holding funds from other known DPRK-linked attacks).
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
     confidence: strongly_inferred
     reasoning: |
-      FBI's Feb 2025 IC3 PSA cleanly maps TraderTraitor to RGB 3rd
-      Bureau; the fetched PSA does not contain WMD-financing language
-      or name the 8th-Congress defense plan, so the strategic-goal
-      linkage is inferred from the standard DPRK revenue pattern.
+      No cited source states a WMD-financing or 8th-Congress
+      defense-plan goal for this theft: the FBI PSA (raw, verified)
+      attributes only the who (DPRK / TraderTraitor) with no
+      strategic-purpose language, and the Chainalysis / Sygnia
+      sources are technical / quantitative. The revenue-aggregation
+      -> crypto-bridge-theft linkage is inferred from the
+      established DPRK state-revenue pattern (TraderTraitor's default
+      doctrine alignment), not attested here.
     attesting_source_id: fbi/2025-02-26_bybit-tradertraitor-psa
     inference_basis:
-      source_id: fbi/2025-02-26_bybit-tradertraitor-psa
       signals:
-        - "FBI IC3 PSA attributes the ~$1.5B Bybit theft to TraderTraitor / RGB 3rd Bureau (attribution + revenue behaviour)"
-      ruled_out: "WMD-financing / 8th-Congress defense plan by name — not in the fetched PSA"
+        - "FBI IC3 PSA attributes the ~$1.5B Bybit theft to DPRK / TraderTraitor — state-directed, revenue-generating crypto theft"
+        - "Scale (largest crypto theft in history) plus immediate laundering to BTC/DAI across thousands of addresses fits a revenue-extraction operation, not espionage/sabotage (FBI, Chainalysis)"
+      ruled_out: "WMD-financing / 8th-Congress defense plan by name — no such language in any cited source; kept strongly_inferred rather than attested."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/bybit
     role: primary
-    outcome: ~$1.5B in virtual assets drained from cold-to-warm transfer.
+    outcome: ~$1.5B (~401,000 ETH) drained from a cold-to-warm multisig transfer.
   - target_id: orgs/safe-wallet
     role: staging
-    outcome: Developer environment compromised; malicious JS injected into Bybit-specific Safe UI.
+    outcome: Developer macOS workstation + AWS environment compromised; malicious JS injected into the Bybit-specific Safe UI.
 sources:
   - fbi/2025-02-26_bybit-tradertraitor-psa
+  - sygnia/2025-03-16_bybit-hack-investigation
+  - chainalysis/2025-02-24_bybit-exchange-hack-dprk
   - chainalysis/2025-12-18_crypto-hacking-2026-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / max, 6-point audit vs RAW snapshots. RE-SOURCE (badrabbit
+    model): event REAL; the two originally-cited sources were REAL but did NOT
+    carry the load-bearing supply-chain vector, the "largest in history" claim,
+    or the asset detail — added two genuine sources that do (Sygnia forensic +
+    Chainalysis Bybit post), both snapshotted.
+
+    [a] FACTS — now all carried:
+      • "~$1.5B / ~401,000 ETH, largest theft in history": Chainalysis Bybit
+        post (sha 8b5191a8…) "loss of nearly $1.5 billion worth of ether (ETH).
+        This incident stands as the largest digital heist in the history of
+        cryptocurrency"; FBI PSA (sha f083c2fe…) "approximately $1.5 billion USD
+        in virtual assets." usd_stolen kept 1.5e9 (both say "approximately/
+        nearly"; actual ~$1.46B).
+      • Safe{Wallet} vector: Sygnia (sha 1e25327b…) "a macOS workstation
+        belonging to a Safe{Wallet} developer … was compromised on February 4,
+        2025"; attackers "present in Safe{Wallet}'s AWS account between February
+        5th and February 21st"; UI "modified and injected with malicious code."
+        Chainalysis: "gained access to a Safe developer's computer to control
+        the Safe UI that was specifically used for Bybit transactions … added
+        the malicious JavaScript … routine transfer from Bybit's Ethereum cold
+        wallet to a hot wallet, Bybit unknowingly signed the malicious
+        transaction … ~401,000 ETH."
+      • Laundering: FBI "converted some of the stolen assets to Bitcoin …
+        dispersed across thousands of addresses on multiple blockchains";
+        Chainalysis "swapped … for tokens including BTC and DAI … DEXs,
+        cross-chain bridges, and a no-KYC instant swap."
+      STRIPS: (1) "within 48 hours" — not in any source (FBI says only
+      "rapidly"); reworded. (2) asset_classes stETH + mETH — real (Bybit cold
+      wallet held Lido stETH / mETH-cmETH) but NOT carried by any cited source
+      (all say ETH / "virtual assets"); reduced to [ETH]. (3) summary claim
+      "exceeding the combined annual DPRK crypto-theft totals for all years
+      through 2023" — Chainalysis actually says the Bybit theft alone exceeded
+      *all of 2024* (~$1.34B) by ~$160M; 2023+2024 combined (~$2.0B) is > $1.5B,
+      so the old claim was false — corrected.
+    [b] ATTRIBUTION — FBI IC3 PSA, firm ("was responsible"), attributing_org_
+      confidence high, auspex concur (independently corroborated by Chainalysis
+      on-chain clustering). CORRECTED the false "first clean USG mapping of
+      TraderTraitor to the 3rd Bureau of the RGB" claim in summary + attribution
+      notes: the raw PSA names NO service/sub-bureau (0 "RGB"/"3rd Bureau"
+      strings; matches the 2026-06-24 source-record correction).
+    [c] DATES — start 2025-02-04 now SOURCED (Sygnia: dev workstation
+      compromised 4 Feb 2025); disclosure/end 2025-02-21 (FBI "on or about
+      February 21, 2025"; Chainalysis "On February 21, 2025"). Source
+      published_on verified: FBI 2025-02-26, Chainalysis Bybit 2025-02-24,
+      Sygnia 2025-03-16, Chainalysis 2026 report 2025-12-18 — all match raw
+      metadata.
+    [d] DOCTRINE — kp/8th-congress-defense-plan/revenue-aggregation/
+      crypto-bridge-theft kept strongly_inferred (NOT attested): no cited source
+      states the WMD-financing terminal goal in substance (WMD/ballistic/nuclear/
+      missile term-scan = 0 across FBI + both Chainalysis + Sygnia raws). Added
+      signals + ruled_out. perspective = attacker-rationale (default; DPRK
+      revenue doctrine on a DPRK operation).
+    [e] ATTRIBUTION_LEVEL — added named-actor (FBI names DPRK + the group
+      "TraderTraitor"; no service named → not named-unit).
+    [f] ACTOR_ID — kp/rgb/tradertraitor resolves (atlas/actors/kp/tradertraitor.yaml
+      id: kp/rgb/tradertraitor, Kara-approved 2026-07-02 re-home). Most-specific
+      correct actor (FBI PSA explicitly says "TraderTraitor"), preferred over the
+      generic kp/rgb/lazarus. FK check: orgs/bybit, orgs/safe-wallet, doctrine
+      pillar/program, campaign apt38-crypto-pivot all resolve.
+    SNAPSHOTS: fbi f083c2fe… (preserved), chainalysis-2026 f9f7811d…,
+    chainalysis-bybit 8b5191a8…, sygnia 1e25327b….

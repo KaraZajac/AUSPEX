@@ -1,45 +1,169 @@
 id: 2025-05/adidas-shinyhunters-salesforce
 name: Adidas customer-contact data theft via Salesforce vishing chain
 start_date: 2025-04-01
-disclosure_date: 2025-05-27
-end_date: 2025-05-31
+disclosure_date: 2025-05-23
+end_date: 2025-05-23
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # via UNC6040 vishing → Salesforce OAuth
+  - extortion
+initial_vector: phishing  # campaign-inferred: UNC6040 vishing → Salesforce OAuth (not confirmed by adidas)
 outcome_summary: |
-  On May 27 2025 Adidas disclosed that customer contact data
-  had been stolen via an unauthorized intrusion into a
-  third-party customer-service provider. Exposed fields
-  included names, email addresses, phone numbers, dates of
-  birth, and addresses; no payment-card or password data.
-  Subsequent Google Threat Intelligence Group reporting and
-  October 2025 Krebs on Security coverage attributed the
-  intrusion to the UNC6040 / ShinyHunters voice-phishing /
-  Salesforce-OAuth campaign. First publicly-disclosed major
-  victim of the 2025 campaign.
+  On 23 May 2025 adidas published a breach notice stating that
+  "an unauthorized external party obtained certain consumer data
+  through a third-party customer service provider." adidas
+  characterized the affected data only as "contact information
+  relating to consumers who had contacted our customer service
+  help desk in the past" and stated it did "not contain passwords,
+  credit card or any other payment-related information";
+  contemporaneous reporting characterized the exposed fields as
+  customer names, email addresses and phone numbers. adidas named
+  neither the third-party provider, the data volume, the intrusion
+  date, nor any threat actor. The breach was subsequently placed by
+  security-industry reporting within the 2025 UNC6040 / ShinyHunters
+  voice-phishing Salesforce-OAuth campaign that Google Threat
+  Intelligence Group documented on 4 June 2025 — a linkage made by
+  pattern-matching (third-party customer-service provider + contact
+  data + timing), not confirmed by adidas and not named by GTIG
+  (whose report names no victim). Among the earliest major consumer
+  brands publicly linked to the campaign.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event of the 2025 Salesforce-cloud
-  campaign umbrella. ShinyHunters-brand attribution per GTIG
-  cluster identification rather than direct-claim evidence.
+  Per-victim child event of the 2025 Salesforce-cloud campaign
+  umbrella (campaign_id shinyhunters-salesforce-2025). adidas's own
+  notice attributes nothing beyond a "third-party customer service
+  provider"; the Salesforce / UNC6040 / ShinyHunters placement is
+  security-community consensus, not a victim confirmation or a GTIG
+  victim-naming. "ShinyHunters" is recorded as the extortion self-
+  claim brand (GTIG tracks the clusters as UNC6040 / UNC6240), not a
+  confirmed stable group — hence attribution is hedged. No Adidas-
+  specific extortion demand is publicly documented (adidas was not on
+  the Oct-2025 "Scattered LAPSUS$ Hunters" leak-site list); the
+  extortion incident_type is inherited from the campaign chain.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group (Mandiant)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-06-04
-    attribution_source_id: mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: Google Threat Intelligence Group (campaign) + security-industry consensus (adidas placement)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-06-04
+    attribution_source_id: mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
+    notes: |
+      GTIG's 4 June 2025 report documents the UNC6040 vishing /
+      Salesforce-OAuth campaign and the UNC6240 extortion follow-on,
+      which "has consistently claimed to be the threat group
+      ShinyHunters" — a self-claim GTIG reports "likely as a method
+      to increase pressure," not a confidence assertion of identity.
+      GTIG names NO victim (no Adidas). Placing adidas in this
+      campaign is a security-press inference from adidas's own
+      description (third-party customer-service provider + contact
+      data), not an adidas or GTIG confirmation.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism consensus
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-10-07
+    attribution_source_id: krebs/2025-10_shinyhunters-corporate-extortion-spree
+    notes: |
+      Campaign-cluster-level overlap only. Krebs describes "Scattered
+      LAPSUS$ Hunters" as "an amalgamation of three hacking groups —
+      Scattered Spider, Lapsus$ and ShinyHunters." No Adidas-specific
+      Scattered Spider evidence exists; GTIG frames the "Com" overlap
+      as "plausible ... rather than indicating a direct operational
+      relationship." (attribution_source_id re-pointed this audit from
+      mandiant/2025-08-08, which is not among this event's sources, to
+      the cited Krebs article that actually carries the amalgamation.)
+    attribution_level: activity-cluster
 doctrine_links: []
 targets:
   - target_id: orgs/adidas
     role: primary
 sources:
+  - adidas/2025-05-23_data-security-information
+  - bleepingcomputer/2025-05-27_adidas-customer-service-provider-breach
+  - theregister/2025-05-27_adidas-data-theft-customer-service
   - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW (all 5 sources snapshotted this
+    audit). The two originally-cited sources (Mandiant 06-04, Krebs 10)
+    are REAL but name NO victim — neither carries any Adidas-specific
+    fact — so this was a RE-SOURCE (badrabbit model): three Adidas-
+    specific sources created + snapshotted and added.
+
+    [a] FACTS — corrected & now carried verbatim by the adidas primary
+    (sha256 f6e80296..d5f19d00) + BleepingComputer (sha256 bfbd7f90..
+    2e926608) + The Register (sha256 edeca61f..d21ad0ee):
+      - Disclosure "published on 23 May 2025" (adidas notice) / "The
+        company said on May 23" (Register) → disclosure_date 2025-05-27
+        FIXED to 2025-05-23.
+      - Scope: adidas gave ONLY "contact information relating to
+        consumers who had contacted our customer service help desk in
+        the past"; "does not contain passwords, credit card or any
+        other payment-related information." STRIPPED "dates of birth,
+        and addresses" from the old summary — those belong to the
+        SEPARATE adidas Turkey / South Korea breaches (BC: "Earlier
+        this month, Adidas disclosed data breaches impacting customers
+        in Turkey and South Korea ... The stolen information in these
+        breaches includes names, email addresses, phone numbers,
+        birthdates, and addresses") and the 2018 US breach — a
+        conflation. Field characterization (names/email/phone) is press
+        inference (Register: signup minimum "first and last names, and
+        email addresses"); adidas "declined to provide any further
+        details."
+      - STRIPPED superlative "First publicly-disclosed major victim" →
+        hedged "Among the earliest major consumer brands publicly
+        linked to the campaign" (unsourceable as a firm first; adidas
+        Turkey/Korea disclosures predate the global notice).
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters
+        downgraded high→moderate, concur→concur-with-caveat: GTIG names
+        no victim and reports "UNC6240 has consistently claimed to be
+        the threat group ShinyHunters ... likely as a method to increase
+        pressure" (self-claim, snapshot 4dce0e4b..f79c1051), so the
+        Adidas placement is press inference, not a GTIG/adidas
+        confirmation. Scattered Spider re-pointed from the un-cited
+        mandiant/2025-08-08 to the cited krebs/2025-10 (which carries
+        "an amalgamation of ... Scattered Spider, Lapsus$ and
+        ShinyHunters", sha256 9c2d11a8..97619835), confidence moderate→
+        low (no Adidas-specific SS evidence; campaign-cluster overlap
+        only). false_flag_risk: suspected retained (deliberate ShinyHunters
+        brand-borrowing).
+    [c] DATES — disclosure 2025-05-27→2025-05-23 (source-anchored);
+        end_date 2025-05-31 (unsourced) → 2025-05-23 (theft was
+        contained/disclosed same day; adidas gave no intrusion date).
+        start_date 2025-04-01 KEPT as campaign-window estimate (adidas
+        withheld the intrusion date; some reporting labels it "April
+        2025") — flagged estimate, not source-exact. Source published_on
+        corrected on the Krebs record 2025-10-08→2025-10-07 (byline).
+    [d] DOCTRINE_LINKS — none (per scope). Correct: criminal financially-
+        motivated actor, no strategic-doctrine terminal goal.
+    [e] ATTRIBUTION_LEVEL — added: activity-cluster. GTIG's own tracking
+        is UNC6040 (vishing) + UNC6240 (extortion) activity clusters;
+        "ShinyHunters" is a self-applied brand over those clusters
+        (actor file: "a brand / forum-handle as much as a stable
+        cluster"), and the Adidas placement is inferential — so
+        activity-cluster is the honest granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider
+        both resolve to existing atlas actor ids. Not a counter-action
+        (no LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] → [intrusion, data-theft, extortion]:
+    intrusion + data-theft are Adidas-supported (third-party provider
+    access + contact-data theft); extortion is inherited from the
+    campaign chain (UNC6240) — NO Adidas-specific ransom demand is
+    documented and adidas was absent from the Oct-2025 leak-site list.
+    This caveat is stated in summary.
+
+    FLAGS (not edited — outside event/own-source scope):
+    - actor criminal/shinyhunters roster line lists Adidas among "2025
+      Salesforce-cloud campaign" victims — consistent with the hedged
+      placement here; no change needed.
+    - Krebs source record's prior notes were factually wrong (claimed
+      the article names Adidas/LVMH/Allianz/Qantas/etc.); corrected on
+      that record this audit. Other events citing krebs/2025-10 for a
+      victim in that false list should be re-checked by the orchestrator.

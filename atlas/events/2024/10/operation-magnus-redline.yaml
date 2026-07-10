@@ -4,17 +4,22 @@ start_date: 2024-10-28
 disclosure_date: 2024-10-29
 end_date: 2024-10-29
 incident_type:
+  - law-enforcement  # meta type: multinational LE takedown counter-action — added per audit 2026-07-10 (protocol [f]; cf. orchestrator NB)
   - disruption
-initial_vector: unknown
+initial_vector: unknown  # meta counter-action (LE takedown) — no attacker initial-access vector applies
 outcome_summary: |
   Dutch National Police–led international operation against
-  RedLine and META infostealer infrastructure. Seizure of three
-  servers in the Netherlands, two domains, 1,200 servers in
-  related infrastructure. RedLine alleged developer Maxim
-  Rudometov (Russian national) indicted in the Western District
-  of Texas. Eurojust / FBI / NCA / UK / Belgian / Portuguese /
-  Australian partners. Operation included an "Operation Magnus"
-  taunting site informing infostealer customers that their
+  RedLine and META infostealer infrastructure. Takedown of three
+  servers in the Netherlands and seizure of two domains; over
+  1,200 servers in dozens of countries were identified running the
+  malware (per Eurojust). RedLine's suspected developer/administrator
+  Maxim Rudometov (a Russian national) was charged by US criminal
+  complaint in the Western District of Texas — access device fraud,
+  conspiracy to commit computer intrusion, and money laundering.
+  Partners: the Netherlands, FBI/US, UK NCA, Belgian, Portuguese
+  (Polícia Judiciária) and Australian (AFP) authorities, coordinated
+  by Eurojust. The coalition also pushed a taunting video/message to
+  the operators (the public "Operation Magnus" reveal) showing their
   infrastructure was now in police hands.
 false_flag_risk: none
 campaign_id: operation-magnus
@@ -28,6 +33,7 @@ attributions:
   - actor_id: null
     attributing_org: Eurojust + FBI + Dutch + Belgian + 5 partners
     attributing_org_confidence: high
+    attribution_level: named-actor  # DOJ named an individual — RedLine's suspected developer/administrator Maxim Rudometov (a named person, not a nation/state unit; RedLine is a criminal MaaS operation) — added per audit 2026-07-10 (protocol [e])
     auspex_assessment: concur-with-caveat
     attribution_date: 2024-10-29
     attribution_source_id: eurojust/2024-10-29_operation-magnus
@@ -43,13 +49,22 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Disrupt-and-Dismantle pillar operation against criminal
-      tooling infrastructure. Downgraded from attested: the Eurojust
-      attesting release is descriptive of the takedown operation and
-      carries no official statement of the disrupt-and-dismantle /
-      hold-accountable / impose-cost strategic purpose; as an
-      EU-agency release it does not articulate the US NCS-2023 pillar.
-      The link is inferred from the operation's takedown structure.
+      Disrupt-and-Dismantle pillar operation against criminal tooling
+      infrastructure. The US was a full participant, not merely an
+      associate of an EU-led coalition: DOJ/FBI unsealed a
+      Western-District-of-Texas warrant to seize two RedLine/META C2
+      domains and charged Rudometov, joining JCAT Operation Magnus
+      "to disrupt the operations of the RedLine and META
+      administrators" (USAO-WDTX). On that US component the NCS-2023
+      disrupt-and-dismantle link is apt. Confidence held at
+      strongly_inferred (not attested): neither cited source — the
+      Eurojust release nor the USAO-WDTX release — invokes NCS-2023 by
+      name or states the disrupt-and-dismantle / hold-accountable /
+      impose-cost strategic purpose in an official's words. The
+      2026-07-05 sweep downgrade attested→strongly_inferred is VERIFIED
+      to hold (audit 2026-07-10); the sweep's "EU/Dutch-led, not US"
+      premise is refined here — the US ran its own disrupt action, so
+      the link is apt, but the confidence outcome is unchanged.
     attesting_source_id: eurojust/2024-10-29_operation-magnus
     inference_basis:
       source_id: eurojust/2024-10-29_operation-magnus
@@ -57,12 +72,108 @@ doctrine_links:
         - "Coordinated multilateral infrastructure takedown: the coalition 'shut down three servers in the Netherlands, seized two domains, unsealed charges in the United States and took two people into custody in Belgium' — the seize/dismantle behaviour the pillar encodes"
         - "Scale of infrastructure disruption: authorities identified 'over 1 200 servers in dozens of countries' running RedLine/META and took the infrastructure down on 28 October 2024"
         - "Stated forward intent to disrupt and pursue: the coalition message shows it 'will shut down their criminal activities' and 'Investigations will now continue into the criminals using the stolen data'"
-      ruled_out: "Attested confidence — the Eurojust release states no disrupt-and-dismantle / hold-accountable / impose-cost strategic purpose in an official's words (no such quote exists in it) and, as an EU body, does not invoke the US NCS-2023 pillar; it only describes the operation and the crime"
+        - "US disrupt action inside Magnus (USAO-WDTX release): the coalition moved 'to seize domains, servers, and Telegram accounts used by the RedLine and META administrators to disrupt the operations,' and DOJ unsealed a Western-District-of-Texas warrant to seize two C2 domains plus charges against RedLine's developer/administrator — a US law-enforcement disrupt-and-dismantle action"
+      ruled_out: "Attested confidence — neither cited source states a disrupt-and-dismantle / hold-accountable / impose-cost strategic purpose in an official's words (no such quote exists): the Eurojust release only describes the operation and the crime, and the USAO-WDTX release frames the seizures operationally ('to disrupt the operations') without invoking the US NCS-2023 pillar or its strategic aim"
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/redline-stealer
+  - target_id: orgs/redline-stealer  # the subject of the counter-action (RedLine MaaS operation, incl. META); no registry file under atlas/targets/orgs/ → informational danglingOrgs gap, not an error (cf. sibling 2025-01/treasury-salt-typhoon-sanctions orgs/sichuan-juxinhe)
     role: primary
 sources:
   - eurojust/2024-10-29_operation-magnus
   - doj/2024-10-29_rudometov-redline-indictment
+  - bleepingcomputer/2024-10-29_rudometov-redline-charges  # secondary carrier: Rudometov "a Russian national" (nationality absent from both cited primaries) + charges + 1,200-server ESET map — added audit 2026-07-10
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit vs RAW. Snapshots (PRESERVE tier): Eurojust
+    (sha256 a22a76cba6c6f534a7af48fc316fcf21fa4bad5d1e11c2e4c9d0faaefe682ebb),
+    USAO-WDTX/DOJ via Wayback id_ 20241029113648
+    (sha256 da34dd11077802a5656e1d6c9d60a2836eab4b7dd3abbfb28c0d950de93655c5),
+    BleepingComputer
+    (sha256 e42342bea588ac91ad9c734a21c034b7d1c113fe20a8a782ed2cae17c19ed485).
+
+    [a] FACTS — all load-bearing claims carried + snapshotted.
+    Eurojust (verbatim): "The infostealers, RedLine and META, taken
+    down today targeted millions of victims worldwide, making it one of
+    the largest malware platforms globally"; "Three servers were taken
+    down in the Netherlands, two domains were seized, charges were
+    unsealed in the United States and two people were taken into custody
+    in Belgium"; "over 1 200 servers in dozens of countries were running
+    the malware." CORRECTED: the event previously read "1,200 servers in
+    related infrastructure" (implying seizure) — the raw says 1,200 were
+    IDENTIFIED running the malware; reworded. Partner list verified
+    verbatim (Netherlands National Police / Team Cybercrime Limburg /
+    Public Prosecution; US FBI + NCIS + IRS-CI + DoD-CIS + Army CID;
+    Belgium Federal Prosecutor + Federal Police; Portugal Polícia
+    Judiciária; UK National Crime Agency; Australia AFP). "Taunting site"
+    reworded to "taunting video/message" to match Eurojust ("a message
+    was sent to the alleged perpetrators, including a video … will shut
+    down their criminal activities"); the operation-magnus.net reveal is
+    widely reported but the raw carries the video/message.
+    Rudometov / charges — USAO-WDTX (verbatim): "the Justice Department
+    unsealed charges against Maxim Rudometov, one of the developers and
+    administrators of RedLine Infostealer … charged with access device
+    fraud, in violation of 18 U.S.C. § 1029, conspiracy to commit
+    computer intrusion … and money laundering." CORRECTED: event said
+    "indicted" — it was a criminal COMPLAINT ("The complaint is merely
+    an allegation"); reworded to "charged by US criminal complaint."
+    "(Russian national)" is NOT in either cited primary (WDTX omits
+    nationality; Eurojust does not name him) — added BleepingComputer as
+    secondary carrier: "announced charges today against Maxim Rudometov,
+    a Russian national, for being the suspected developer and
+    administrator of the RedLine" (also "over 1,200 servers … which
+    communicated with the central" server, ESET-mapped). No fabricated
+    malware/CVE/victim/figure found.
+
+    [b] ATTRIBUTION — actor_id null (counter-action); attributing_org /
+    high / concur-with-caveat / 2024-10-29 unchanged and correct. ADDED
+    attribution_level: named-actor (DOJ named an individual developer;
+    RedLine is a criminal MaaS operation, no nation/unit) — cf. sibling
+    treasury-salt-typhoon-sanctions convention.
+
+    [c] DATES — start 2024-10-28 verified (Eurojust: takedown "took
+    place on 28 October"); disclosure/end 2024-10-29 (Eurojust dated
+    "29 October 2024"). Eurojust published_on 2024-10-29 verified. DOJ
+    source published_on CORRECTED 2024-10-29→2024-10-28 (real USAO-WDTX
+    byline "Monday, October 28, 2024"); source-id slug (…2024-10-29…)
+    preserved for citation lineage.
+
+    [d] DOCTRINE — us/ncs-2023 / disrupt-dismantle / defender-response /
+    strongly_inferred. VERIFIED the 2026-07-05 sweep downgrade
+    attested→strongly_inferred HOLDS: neither cited source invokes
+    NCS-2023 or states the disrupt-and-dismantle/hold-accountable/
+    impose-cost purpose in an official's words. Refined the sweep's
+    "EU/Dutch-led, not US" premise — the US ran its own disrupt action
+    (WDTX warrant seizing two C2 domains + Rudometov charges, JCAT
+    Magnus "to disrupt the operations"), so the US-doctrine link is APT;
+    confidence outcome unchanged. All inference_basis Eurojust quotes
+    re-checked verbatim; added a WDTX disrupt signal. perspective
+    defender-response correct (US defender doctrine on a counter-action).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (was missing); see [b].
+
+    [f] ACTOR_ID — null, correct (LE takedown counter-action; subject
+    RedLine/Rudometov named in prose). incident_type CORRECTED
+    [disruption] → [law-enforcement, disruption] (meta type added).
+    Target orgs/redline-stealer = subject of the counter-action;
+    dangling (no targets/orgs file) but an accepted informational gap,
+    annotated inline.
+
+    RE-SOURCE (badrabbit): the DOJ citation's URL
+    (justice.gov/archives/opa/pr/operation-magnus-redline-meta-infostealer)
+    is an unverifiable OPA slug — no 2024 Wayback capture on either
+    /opa/pr/ or the policy-action's alternate OPA slug, and live DOJ is
+    Akamai bot-walled (interstitial on direct fetch, Wayback, and
+    WebFetch 403). Re-pointed the doj/…_rudometov-redline-indictment
+    source in place to the REAL archived primary — USAO-WDTX
+    "U.S. Joins International Action Against RedLine and META
+    Infostealers" (2024-10-28), which has clean 2024 Wayback captures —
+    and snapshotted it. FLAG (out of edit scope): policy-action
+    us/2024-10-29_rudometov-redline-indictment cites this same source and
+    carries its own unverified OPA official_url
+    (…/justice-department-and-international-partners-disrupt-redline-and-meta-infostealer-malware,
+    also zero Wayback) — orchestrator should review/repoint it too.

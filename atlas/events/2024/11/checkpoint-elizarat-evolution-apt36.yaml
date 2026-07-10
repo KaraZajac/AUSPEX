@@ -1,17 +1,18 @@
 id: 2024-11/checkpoint-elizarat-evolution-apt36
-name: Check Point publishes ElizaRAT and ApolloIOU deep-dive for APT36
-start_date: 2024-04-01
+name: Check Point publishes ElizaRAT and ApoloStealer deep-dive for APT36
+start_date: 2024-01-01
 disclosure_date: 2024-11-04
-end_date: 2024-11-04
+end_date: 2024-08-10
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
   Check Point Research published a technical deep-dive on APT36 /
   Transparent Tribe's ElizaRAT implant family observed in 2024,
-  documenting three ElizaRAT variants and the companion ApolloIOU
-  stealer. The piece documented the cluster's adoption of
+  documenting three ElizaRAT variants (across the Slack, Circle,
+  and Google Drive campaigns) and the companion ApoloStealer
+  file-stealer. The piece documented the cluster's adoption of
   legitimate cloud services (Google Drive, Telegram, Slack) as
   command-and-control and exfiltration channels — a meaningful
   tradecraft modernization for a cluster historically reliant on
@@ -22,19 +23,24 @@ outcome_summary: |
 false_flag_risk: none
 summary: |
   Most operationally significant Transparent Tribe tradecraft
-  development of 2024: cloud-C2 adoption. The pattern mirrors a
-  broader cluster-wide shift in espionage operators (Russian,
-  Chinese, North Korean) toward SaaS-hidden C2 and is a
-  meaningful Pakistani-cluster modernization data point.
-  ElizaRAT is Check Point's OWN discovery in this Oct/Nov-2024
-  report — NOT, as an earlier version of this record wrongly
-  stated, a "BlackBerry June-2024 finding." The BlackBerry report
-  (actually May-2024) documented Transparent Tribe's GLOBSHELL /
+  development documented in 2024: systematic abuse of legitimate
+  cloud services (Google Drive, Telegram, Slack) for C2 — a
+  meaningful modernization for the Pakistani-aligned cluster.
+  ElizaRAT itself is NOT a Check Point discovery: it was "first
+  publicly disclosed in September 2023." This November-2024 Check
+  Point report documents ElizaRAT's EVOLUTION across three 2024
+  campaigns (Slack, Circle, Google Drive) and introduces the
+  newly-named ApoloStealer file-stealer (Check Point's own
+  naming, after the "Apolo Jones" operator persona reused in the
+  samples). This record is NOT, as an earlier version wrongly
+  stated, a "BlackBerry June-2024 finding": the BlackBerry report
+  (May 2024) documented Transparent Tribe's GLOBSHELL /
   PYSHELLFOX / Poseidon toolset and never mentions ElizaRAT.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Check Point Research
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-11-04
     attribution_source_id: checkpoint/2024-11-04_elizarat-apolloiou-apt36
@@ -46,15 +52,127 @@ doctrine_links:
     reasoning: |
       Indian government and defense targeting via ElizaRAT
       continues the canonical military-collection pillar pattern.
+      Held at strongly_inferred (NOT attested): Check Point
+      corroborates the espionage/intelligence-collection PURPOSE
+      and the Indian government/military target set, but names no
+      Pakistani strategic/doctrinal tasking, and the
+      pk/asymmetric-posture-india doctrine is itself an AUSPEX
+      inference (no published Pakistani text).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Check Point: APT36 is 'notorious for persistently targeting Indian government organizations, diplomatic personnel, and military facilities' — the military-collection pillar's target set."
+        - "Military-themed lures: 'Threat Alert 1307-JS-9.pdf issued vide NATRAD note number 2511 … in aspect of exercise Tarang Shakti-2024' (Indian Air Force exercise) and dropper 'Award Verification to Air Cmde GS Matharu.cpl' (an Air Commodore) — matching the pillar's 'phishing lures themed on military circulars.'"
+        - "Check Point: the campaigns 'exclusively targeted Indian systems' (India Standard Time victim checks), and the methods 'underscore their sustained emphasis on intelligence gathering and espionage' — collection intent against Indian equities."
+      ruled_out: "pk/asymmetric-posture-india/kashmir-political — the targeting is Indian government/defense technical-collection with military-themed lures; the report names no Kashmir/journalist/dissident targeting, so the Kashmir-political pillar does not fit."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/indian-government
+  - target_id: sectors/government
     country: in
     role: primary
-  - target_id: orgs/indian-mod
+  - target_id: sectors/defense
     country: in
     role: primary
 sources:
   - checkpoint/2024-11-04_elizarat-apolloiou-apt36
   - blackberry/2024-06-18_transparent-tribe-elizarat
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit vs RAW Check Point report "Cloudy With a Chance of
+    RATs: Unveiling APT36 and the Evolution of ElizaRAT" (2024-11-04),
+    snapshotted this pass: checkpoint__2024-11-04_elizarat-apolloiou-apt36.html
+    sha256 c8f52c55ccd8c3c3e63299e0f40dc47564921c468d0e521e55673126b507a7bb
+    (curl of the live url, 205,315 B; JSON-LD datePublished
+    2024-11-04T13:33:15+00:00 confirms published_on). Corroborant
+    blackberry__2024-06-18_transparent-tribe-elizarat.html sha256
+    12b84de281745588cf85fdf4d0660e448462f66f63d57e68b7dec9c4778f70db
+    (re-verified this pass, byte-match).
+
+    [a] FACTS. FABRICATED MALWARE NAME CORRECTED: "ApolloIOU" ->
+    "ApoloStealer". The report names the stealer "ApoloStealer" (one
+    'L'; 12 occurrences in body+IOC table): "introducing a new stealer
+    payload called 'ApoloStealer'" / "an additional payload, which we
+    named ApoloStealer." The name derives from the actor's "Apolo
+    Jones" persona (Attribution: "all the samples presented here used
+    the name Apolo Jones"; password "ApoloJones2024"; a function named
+    "ApoloJones"). "ApolloIOU" appears NOWHERE in the source. (The
+    report's Conclusion once writes "ApolloStealer" with two L's, but
+    body + IOC table use the canonical "ApoloStealer.") name +
+    outcome_summary corrected. Three ElizaRAT variants VERIFIED:
+    "three distinct campaigns … a different variant of ElizaRAT"
+    (Slack / Circle / Google Drive campaigns). Cloud-C2 VERIFIED:
+    "systematic abuse of cloud-based services, including Telegram,
+    Google Drive, and Slack, to facilitate command and control." SUMMARY
+    CORRECTED: the prior claim "ElizaRAT is Check Point's OWN discovery"
+    is FALSE — the report states ElizaRAT was "First publicly disclosed
+    in September 2023"; Check Point's OWN new discovery/naming is
+    ApoloStealer. "Oct/Nov-2024" -> "November 2024" (pub 2024-11-04).
+    Dropped the unsourced "Russian/Chinese/North Korean SaaS-C2"
+    cross-cluster comparison (AI-embellishment, not in source).
+
+    [b] ATTRIBUTION. Check Point -> Transparent Tribe / APT36, high,
+    concur: PRESERVED. Report attributes firmly — "ElizaRAT is a custom
+    tool known to be employed exclusively by 'Transparent Tribe'" +
+    "Apolo Jones" persona + overlapping email with a Linux-targeting
+    cluster. PAKISTAN NEXUS HEDGE HELD: report says only "Pakistan-based
+    threat actor" (vendor assessment); NO ISI / Inter-Services
+    Intelligence / any Pakistani service named (word-boundary grep: 0
+    hits) — actor correctly placed at pk/unscoped/transparent-tribe.
+
+    [c] DATES. start_date 2024-04-01 (unsourced — nothing in the report
+    points to April) -> 2024-01-01: report frames these as "campaigns of
+    Transparent Tribe in India in 2024" occurring "at the end of 2023 and
+    the beginning of 2024," Circle variant "Compiled in January 2024."
+    end_date 2024-11-04 conflated activity-end with the disclosure date
+    -> 2024-08-10: last source-dated activity is the Google Drive
+    campaign lure referencing a note "dated 10 Aug 2024" (exercise
+    Tarang Shakti-2024); campaign described as ongoing/"persistent" as of
+    the Nov-4 disclosure. disclosure_date 2024-11-04 VERIFIED.
+
+    [d] DOCTRINE_LINKS. pk/asymmetric-posture-india / military-collection
+    held at strongly_inferred (NOT attested): Check Point corroborates
+    the espionage PURPOSE + Indian govt/military target set but names no
+    Pakistani strategic tasking, and the doctrine is an AUSPEX inference.
+    Added attesting_source_id: null + inference_basis {signals[],
+    ruled_out} per corpus convention (cf. sibling apt36-blackberry /
+    apt36-nickavach events). Perspective = attacker-rationale (default;
+    Pakistan's own posture vs India). ruled_out kashmir-political (no
+    Kashmir/dissident nexus in report).
+
+    [e] ATTRIBUTION_LEVEL. Added: named-actor — Check Point names the
+    group (Transparent Tribe / APT36), not a nation-only origin and not
+    a specific ISI unit.
+
+    [f] ACTOR_ID. pk/unscoped/transparent-tribe resolves to
+    atlas/actors/pk/transparent-tribe.yaml (id field match). VERIFIED.
+
+    TARGETS. Rebuilt to source-carried, corpus-consistent sector
+    targets. Removed orgs/indian-government — DANGLING FK (no target
+    with id orgs/indian-government exists). Removed orgs/indian-mod —
+    over-precise (report names no MoD victim). Report supports SECTOR
+    altitude: "Indian government organizations … and military
+    facilities" + military-themed lures (Air Force exercise, Air
+    Commodore); hard 2024 victim evidence is India-Standard-Time checks
+    ("exclusively targeted Indian systems"). Set sectors/government +
+    sectors/defense (country in) — the pattern every sibling APT36 India
+    event uses.
+
+    incident_type [intrusion, data-theft] -> [intrusion, espionage] per
+    directive; espionage carried ("cyber-espionage campaigns"; "sustained
+    emphasis on intelligence gathering and espionage").
+
+    SOURCE-RECORD ACTIONS (own sources only): checkpoint source snapshot
+    + hash added; tier secondary -> primary (first-party vendor original
+    research — Check Point's own ElizaRAT campaign tracking + ApoloStealer
+    discovery/IOCs), matching the blackberry sibling precedent
+    (secondary->primary, 2026-07-04) and zscaler apt36 tiering. Its id/
+    slug retains the misleading "apolloiou" token (immutable — not
+    renamed; "apolloiou" is a garbled ApoloStealer). blackberry source
+    already snapshotted/audited 2026-07-04; unchanged (context citation
+    for the "not-a-BlackBerry-finding" correction). level=full: every
+    load-bearing claim carried by a snapshotted source.

@@ -1,38 +1,54 @@
-id: 2024-06/apt42-israeli-cyber-experts-impersonation
+id: 2024-06/apt42-israeli-cyber-experts-impersonation   # FLAG (AUDIT 2026-07-10): id/path encode 2024-06 but the documented activity is mid-June 2025 (see start_date) — REHOME candidate 2024/06 -> 2025/06 for the orchestrator (id not FK-referenced elsewhere; out of audit scope to rename)
 name: APT42 impersonates cybersecurity professionals to phish Israeli academics
-start_date: 2024-06-15
-disclosure_date: 2025-06-15
-end_date: 2025-06-30
+start_date: 2025-06-15        # AUDIT 2026-07-10: CORRECTED 2024-06-15 -> 2025-06-15. Check Point dates the cybersecurity-firm-impersonation phase to "Starting mid-June" 2025, "Following the outbreak of the Iran-Israel war"; the custom React phishing kit dates to January 2025. NO 2024 date appears in Check Point — the 2024 value was an anachronism (bled from the separate Google TAG Aug-2024 tempo-surge report).
+disclosure_date: 2025-06-25   # AUDIT 2026-07-10: CORRECTED 2025-06-15 -> 2025-06-25 (Check Point article:published_time 2025-06-25T12:55:49Z; visible byline "June 25, 2025")
+end_date: null                # AUDIT 2026-07-10: was 2025-06-30 (unsourced specific date). Check Point "continues to track the large and evolving cluster" -> ongoing at disclosure; null per corpus convention.
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: phishing
+  - espionage                 # AUDIT 2026-07-10: was data-theft. Check Point frames the credential-harvesting as "in support of Educated Manticore's cyber-espionage activities" ("social-engineering" is not a schema incident_type/initial_vector value; the spear-phishing/rapport tradecraft is described in prose)
+initial_vector: phishing      # Check Point: "Initial Vector: Spear-phishing" (rapport-building social engineering via email + WhatsApp)
 outcome_summary: |
-  Beginning mid-June 2024 and continuing through the 2025 Israel-
-  Iran war period, APT42 (Educated Manticore / Charming Kitten /
-  Mint Sandstorm) operators impersonated fictitious cybersecurity-
-  firm employees via email and WhatsApp to phish top cyber and
-  computer-science researchers at leading Israeli universities.
-  Operators lured targets to fake Gmail and Google Meet pages
-  to harvest credentials and 2FA codes. Lure text appears AI-
-  generated; some lures detected via operator-error name
-  mismatches between sender display-name and email-account name.
+  Following the outbreak of the June 2025 Iran-Israel war, the
+  IRGC-IO actor APT42 -- which Check Point tracks as "Educated
+  Manticore" and aligns with the wider community's APT42 /
+  Charming Kitten / Mint Sandstorm -- ran a spear-phishing
+  phase in which operators posed as fictitious cybersecurity-
+  firm employees, approaching top cyber and computer-science
+  experts at leading Israeli universities via email and
+  WhatsApp. After building rapport, operators steered targets
+  to attacker-controlled pages mimicking Google authentication
+  and Google Meet to harvest Gmail credentials and 2FA codes
+  for account takeover. Check Point assessed the custom React
+  phishing kit in use since January 2025. Lure emails appeared
+  AI-assisted (formal tone, error-free grammar); some were
+  exposed by operator-error name mismatches between the sender
+  display-name and the email-account name (email body "Sarah
+  Novominski" vs. sender account "Sara Noviminski").
 false_flag_risk: none
 summary: |
-  Sustained Israeli-academic credential-collection campaign
-  paralleling the broader APT42 anti-Israel tempo surge that
-  Google TAG documented in August 2024 (the 45-campaigns-per-
-  day peak). Doctrinally tags the constitutional-IRGC-role
-  pillar (counter-foreign-threat tasking against Israeli
-  defense-and-research community) and the Resistance-Axis
-  anti-Israel-coercion pillar. Notable as a tradecraft data
-  point for the cluster's AI-generated lure adoption.
+  IRGC-IO (APT42 / "Educated Manticore") credential-collection
+  against Israeli cyber and computer-science academics,
+  disclosed by Check Point Research on 25 June 2025 during the
+  June 2025 Iran-Israel war. Google TAG supplies companion
+  context only: an APT42 phishing-tempo surge against Israeli
+  and U.S. users between February and late July 2024, with the
+  U.S. and Israel together making up roughly 60% of APT42's
+  known geographic targeting (TAG, 14 Aug 2024) -- a distinct,
+  earlier campaign, not this event's academic-impersonation
+  phase. Doctrinally tags the IRGC's standing constitutional-
+  role intelligence/credential-theft mandate (the doctrine text
+  explicitly aligns APT42 operations to the regime-preservation
+  pillar) and the war-sequenced anti-Israel dimension of the
+  Resistance-Axis posture -- both strongly-inferred, neither
+  stated by the vendor. Notable tradecraft: AI-assisted lures
+  plus operator-error persona slips.
 attributions:
   - actor_id: ir/irgc-io/apt42
     attributing_org: Check Point Research
-    attributing_org_confidence: high
+    attributing_org_confidence: high   # Check Point states it as a standing assessment: Educated Manticore "is believed to operate on behalf of the ... IRGC-IO" and is "associated with the Islamic Revolutionary Guard Corps" (tier-1 vendor, multi-year tracking; APT42=IRGC-IO is Mandiant/DOJ-consensus)
+    attribution_level: named-unit      # AUDIT 2026-07-10 (added): Check Point names the actor (APT42/Educated Manticore) AND the specific service (IRGC Intelligence Organization / IRGC-IO); schema maps a named service ("e.g. IRGC") to named-unit
     auspex_assessment: concur
-    attribution_date: 2025-06-15
+    attribution_date: 2025-06-25       # AUDIT 2026-07-10: was 2025-06-15; Check Point published 2025-06-25
     attribution_source_id: checkpoint/2025_educated-manticore-tech-academics
 doctrine_links:
   - doctrine_id: ir/constitutional-irgc-role
@@ -40,10 +56,19 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Targeting Israeli academic cyber-and-CS research community
-      maps to the IRGC's constitutional counter-foreign-threat
-      tasking against an adversary's defense-research base.
+      IRGC-IO credential-theft against individuals judged hostile
+      to the Revolution -- here Israeli cyber/CS academics, and
+      (per Check Point) Israeli journalists -- is the standing
+      intelligence/credential-theft mission the regime-preservation
+      pillar encodes; the pillar text itself lists APT42 operations
+      as aligning here.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Actor->service per source: Check Point states Educated Manticore 'is believed to operate on behalf of the Islamic Revolutionary Guard Corps' Intelligence Organization (IRGC-IO)' and is 'associated with the Islamic Revolutionary Guard Corps' -- placing the operation inside the IRGC's institutional intelligence apparatus."
+        - "Mechanism match: covert credential/account access ('intercept both passwords and 2FA codes and gain unauthorized access to the victims' accounts') 'in support of Educated Manticore's cyber-espionage activities' -- the surveillance/credential-theft method the regime-preservation pillar authorizes; Check Point also notes compromise of Israeli journalists' accounts, a pillar target sector."
+        - "Doctrine text self-links the actor: the regime-preservation pillar summary names 'APT42 operations' (alongside APT35/Charming Kitten, APT39) as aligning here."
+      ruled_out: "attested -- rejected: Check Point never states the constitutional/regime-preservation terminal goal (safeguarding the Revolution); it asserts only the IRGC-IO tasking and a cyber-espionage purpose, so the doctrinal terminal goal is inferred, not vendor-stated."
     contested: false
     analyst: claude
   - doctrine_id: ir/resistance-axis
@@ -51,10 +76,18 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Sustained credential-collection against Israeli academic
-      and cyber-research targets through the active Israel-Hamas
-      and Israel-Iran war periods.
+      Wholly Israel-directed IRGC cyber activity cadenced to the
+      active June 2025 Iran-Israel war fits the Resistance-Axis
+      pattern of cyber operations against Israeli targets sequenced
+      to kinetic confrontation -- though here the effect is
+      espionage rather than the destructive/coercive ops the pillar
+      most often illustrates.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Israel-specific victimology: Check Point -- 'targeting Israeli journalists, high-profile cyber security experts and computer science professors from leading Israeli universities'; the campaign is entirely Israel-directed."
+        - "Kinetic-conflict sequencing per source: the academic-impersonation phase began 'Following the outbreak of the Iran-Israel war' (mid-June 2025) -- cyber activity cadenced to the war, the Resistance-Axis anti-Israel signature."
+      ruled_out: "attested -- rejected: Check Point frames the activity as Iran-Israel-tensions context plus cyber-espionage, not as coercive signalling, so the coercion terminal goal is inferred. NB the pillar's canonical examples are destructive (Moses Staff, CyberAv3ngers); this link rests on the Israel-directed + war-sequenced signal, not on a destructive effect -- a weaker fit than the regime-preservation link above."
     contested: false
     analyst: claude
 targets:
@@ -64,6 +97,76 @@ targets:
   - target_id: sectors/academic/research-lab
     country: il
     role: primary
+  # AUDIT 2026-07-10: source-exact anchor is "leading Israeli universities" (university=primary). research-lab retained as the Israeli cyber-security-expert/researcher segment ("high-profile cyber security experts"); Check Point also names Israeli journalists (media/journalism) but as its long-running op, not this academic-impersonation phase -> not added.
 sources:
-  - checkpoint/2025_educated-manticore-tech-academics
-  - google-tag/2024-08-14_apt42-israel-us-phishing
+  - checkpoint/2025_educated-manticore-tech-academics   # PRIMARY: the academic cybersecurity-firm-impersonation phase (mid-June 2025)
+  - google-tag/2024-08-14_apt42-israel-us-phishing       # COMPANION CONTEXT ONLY: APT42/IRGC + Israel-targeting pattern, Feb-late-July 2024 surge (a separate event: atlas/events/2024/08/google-tag-apt42-tempo-surge.yaml)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs captured raw of both cited sources. PRIMARY: Check Point Research, "Iranian
+    Educated Manticore Targets Leading Tech Academics" -- raw_snapshot
+    checkpoint__2025_educated-manticore-tech-academics.html, sha256
+    7f1148645b1925f2644952e3304e6e3f82186b6c80440fdff4d5febd5cbbe0e9 (192,794 bytes), live URL
+    HTTP 200. COMPANION: Google TAG, "Iranian backed group steps up phishing campaigns against
+    Israel, U.S." -- raw_snapshot google-tag__2024-08-14_apt42-israel-us-phishing.html, sha256
+    ed18dcfebe00b221a5e831d265bf3f665a17de1dd9f9ec25f3a37a9a8c44d44f (396,988 bytes), hash
+    RE-VERIFIED (exact match to recorded content_sha256). Both REAL (og:type=article; canonical =
+    cited URLs), not phantom.
+    [a] FACTS -- core TTP fully source-carried by Check Point: operators "posed as fictitious
+    assistant to technology executives or researchers through emails and WhatsApp messages",
+    "directed victims ... to fake Gmail login pages or Google Meet invitations", to "intercept
+    both passwords and 2FA codes and gain unauthorized access to the victims' accounts";
+    AI-assisted lure ("the email appears to have been crafted with AI assistance"); operator-error
+    persona slip ("a mismatch between the name in the email body 'Sarah Novominski' and the
+    sender's email account name, 'Sara Noviminski'"). STRIPPED one FABRICATION: the prior summary's
+    "45-campaigns-per-day peak" attributed to Google TAG does NOT appear in the Google TAG raw
+    (0 hits for "45"/"per day"/"a day"/"daily"); TAG's actual figures are "Between February and late
+    July 2024, APT42 heavily targeted users in Israel and the U.S." and "the U.S. and Israel
+    accounted for roughly 60% of APT42's known geographic targeting" -- summary corrected to those.
+    [b] ATTRIBUTION -- ir/irgc-io/apt42 CONFIRMED and source-faithful: Check Point "This group
+    aligns with activity tracked by the wider security community as APT42, Charming Kitten, or Mint
+    Sandstorm, and is believed to operate on behalf of the ... IRGC-IO." The APT35/APT42-conflation
+    watch RESOLVES in favour of APT42: Check Point itself equates its "Educated Manticore" tracking
+    name to APT42 and attributes to IRGC-IO -- so the corpus split (APT42=IRGC-IO vs APT35=IRGC) is
+    preserved and this activity is correctly APT42; Check Point's loose "Charming Kitten" synonym is
+    community-list framing, not an APT35 placement (reframed in prose to make that explicit).
+    attributing_org_confidence high retained (standing tier-1 assessment; APT42=IRGC-IO is
+    Mandiant/DOJ-consensus); auspex_assessment concur retained. Google TAG corroborates at the
+    nation/service level ("Associated with Iran's Islamic Revolutionary Guard Corps (IRGC)").
+    [c] DATES -- THREE corrections. start_date 2024-06-15 -> 2025-06-15: Check Point dates the
+    cybersecurity-firm-impersonation phase to "Starting mid-June" 2025 "Following the outbreak of
+    the Iran-Israel war", with the custom React phishing kit "in ... January 2025"; NO 2024 date
+    exists in Check Point (the 2024 value was an anachronism bled from the separate Google TAG
+    Aug-2024 tempo-surge report -- note TAG's own June-2024 item is a DIFFERENT campaign against
+    Israeli NGOs impersonating "Project Aladdin"). disclosure_date 2025-06-15 -> 2025-06-25
+    (article:published_time 2025-06-25T12:55:49Z; byline "June 25, 2025"). end_date 2025-06-30 ->
+    null (unsourced specific date; Check Point "continues to track ... the evolving cluster").
+    Google TAG published_on 2024-08-14 = article:published_time (verified).
+    [d] DOCTRINE_LINKS -- both kept strongly_inferred (Check Point states neither doctrine's terminal
+    goal). ADDED the required inference_basis {signals[], ruled_out} to BOTH (was missing).
+    regime-preservation is the stronger link (the pillar text explicitly names "APT42 operations",
+    and Check Point supplies the IRGC-IO tasking + credential-theft mechanism + journalist-account
+    compromise). anti-israel-coercion kept as the weaker link (Israel-directed + June-2025-war
+    sequencing), with ruled_out flagging that the pillar's canonical effect is destructive whereas
+    this is espionage. perspective absent -> defaults attacker-rationale (correct: Iran's own
+    doctrine on Iran's own operation). incident_type data-theft -> espionage ("in support of ...
+    cyber-espionage activities"); "social-engineering" is not a schema enum value (incident_type or
+    initial_vector) so the tradecraft stays in prose; initial_vector phishing retained ("Initial
+    Vector: Spear-phishing").
+    [e] ATTRIBUTION_LEVEL -- ADDED named-unit (was absent). Check Point names both the actor
+    (APT42/Educated Manticore) and the specific service (IRGC Intelligence Organization / IRGC-IO);
+    the schema's named-unit definition is "(+ specific service/unit, e.g. IRGC)" -> a named IRGC
+    organ reaches named-unit (one level above screening-serpens' named-actor, where no service was
+    named).
+    [f] ACTOR_ID -- ir/irgc-io/apt42 RESOLVES (file atlas/actors/ir/apt42.yaml, id field
+    ir/irgc-io/apt42; primary_service_id ir/irgc-io). Split from ir/irgc/apt35 preserved.
+    FLAGS (out of audit scope, for orchestrator): (1) REHOME -- id/path encode 2024-06 but the
+    activity is mid-June 2025; suggest 2024/06 -> 2025/06 (id is NOT FK-referenced by any other
+    file, so low-risk). (2) The shared Google TAG source note carried the same fabricated
+    "45 campaigns per day" -- corrected in the source record this pass; its dedicated event
+    atlas/events/2024/08/google-tag-apt42-tempo-surge.yaml should be checked for the same phantom
+    figure. Source tiers PRESERVED (both secondary).

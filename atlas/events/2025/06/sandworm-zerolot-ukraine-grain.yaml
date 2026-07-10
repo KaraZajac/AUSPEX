@@ -1,35 +1,38 @@
 id: 2025-06/sandworm-zerolot-ukraine-grain
 name: Sandworm ZEROLOT and Sting wipers — Ukraine grain, energy, logistics sectors
-start_date: 2025-04-01  # ESET-reported initial ZEROLOT deployment against Ukrainian university
-disclosure_date: 2025-05-19  # ESET APT Activity Report H1 2025
+start_date: 2025-04-01  # AUDIT: earliest precisely-dated ZEROLOT+Sting deployment — April 2025, Ukrainian university (ESET follow-on report via BleepingComputer). ESET's May report already showed ZEROLOT vs Ukrainian energy within its Oct 2024–Mar 2025 window (onset not precisely dated), so this is the earliest firm date, not necessarily campaign onset
+disclosure_date: 2025-05-19  # first public naming of ZEROLOT (ESET APT report, deployed vs Ukrainian energy). The April university + June/Sept grain escalation were disclosed later in ESET's follow-on report (BleepingComputer 2025-11-06)
 end_date: null
 incident_type:
   - destructive
   - wiper
-initial_vector: valid-creds
+initial_vector: unknown  # AUDIT: was valid-creds. Sources don't state the initial vector — ESET/BleepingComputer say UAC-0099 brokered initial access for some incidents (method unstated), then Sandworm distributed ZEROLOT via Active Directory Group Policy (a post-access deployment technique, not initial access)
 outcome_summary: |
-  ESET's H1 and H2 2025 APT Activity Reports documented a
-  sustained Sandworm destructive campaign against Ukrainian
-  governmental, energy, logistics, and grain-export entities
-  using new wiper families ZEROLOT and Sting. ZEROLOT abuses
-  Active Directory Group Policy to deploy across enterprise
-  estates. June and September 2025 waves specifically targeted
-  organisations supporting Ukraine's grain exports — one of the
-  country's principal hard-currency revenue streams during the
-  war economy.
+  ESET's May 2025 APT Activity Report first named Sandworm's new
+  ZEROLOT wiper, deployed against Ukrainian energy companies and
+  distributed by abusing Active Directory Group Policy. ESET's
+  follow-on report (disclosed November 2025) documented ZEROLOT
+  and a second new wiper, Sting, deployed in April 2025 against a
+  Ukrainian university, plus June and September 2025 waves that
+  hit Ukrainian entities across the governmental, energy, logistics
+  and grain sectors. ESET flagged the grain sector as a
+  not-so-frequent target and assessed the targeting "likely
+  reflects an attempt to weaken the country's war economy", grain
+  export being one of Ukraine's main revenue streams.
 false_flag_risk: none
 summary: |
-  Continues the Sandworm IT-network wiper pattern observed since
-  WhisperGate (2022) and HermeticWiper, but with a deliberate
-  shift toward economic-warfare targeting: grain-export
-  infrastructure rather than purely military or governmental
-  systems. Vendor reporting (ESET) is the primary documentary
-  record; no separate US-government joint advisory has been
-  issued specific to ZEROLOT as of mid-2026.
+  Continues the Sandworm IT-network wiper pattern (HermeticWiper,
+  CaddyWiper, SwiftSlicer since 2022), but with a shift toward
+  economic-warfare targeting: grain-export infrastructure rather
+  than purely military or governmental systems. Vendor reporting
+  (ESET) is the primary documentary record; no separate
+  US-government joint advisory has been issued specific to ZEROLOT
+  as of mid-2026.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: ESET Research
     attributing_org_confidence: high
+    attribution_level: named-unit  # AUDIT (added): ESET names "Sandworm", which AUSPEX resolves to GRU Unit 74455 (GTsST) — a firmly-established unit pin (DOJ 2020 indictment of six named officers, US/EU/UK sanctions, Mandiant APT44 promotion), not a fresh service assertion
     auspex_assessment: concur
     attribution_date: 2025-05-19
     attribution_source_id: eset/2025-05-19_apt-activity-report-h1-2025
@@ -37,24 +40,39 @@ doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # AUDIT: DOWNGRADED from attested — no cited source states the Russkiy-Mir goal; ESET describes the destructive activity, not the civilizational/near-abroad purpose the pillar encodes
     reasoning: |
-      Destructive operations against Ukrainian state and economic
-      infrastructure during the war are the operational core of
-      the Ukraine-theater pillar.
-    attesting_source_id: eset/2025-05-19_apt-activity-report-h1-2025
+      Sustained Sandworm destructive wiper operations against
+      exclusively Ukrainian entities during the war are the
+      operational core of the Ukraine-theater pillar. The pillar's
+      terminal (civilizational near-abroad) purpose is not stated
+      by ESET, so this is inferred, not attested.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Actor is GRU Unit 74455 / Sandworm (ESET attribution, resolved by AUSPEX to the named unit) — a General Staff military instrument operating in Russia's priority near-abroad theater."
+        - "Targeting is exclusively Ukrainian entities (governmental, energy, logistics, grain) with destructive wiper intent during the active Russo-Ukrainian war — the operational signature of the Ukraine-as-priority-theater pillar."
+      ruled_out: "A non-Russkiy-Mir reading (financially-motivated or opportunistic wiping) is rejected: this is a GRU military unit deploying non-monetised destructive wipers against a single adversary state at war with Russia."
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
-    confidence: strongly_inferred
+    confidence: strongly_inferred  # AUDIT: kept strongly_inferred — ESET states the war-economy goal but HEDGES it ("likely reflects an attempt"), below the unhedged-verbatim bar for attested; see qc Kara-flag
     reasoning: |
-      Targeting grain-export logistics — a war-economy revenue
-      stream — extends the doctrine's "non-contact" attrition
-      logic beyond strictly military targets to civilian
-      economic infrastructure.
-    attesting_source_id: null
+      Targeting the grain-export sector — a war-economy revenue
+      stream — extends the doctrine's non-kinetic / indirect
+      attrition logic to civilian economic infrastructure. ESET
+      states this economic-warfare purpose but hedges it ("likely
+      reflects an attempt"), so it is graded strongly_inferred
+      rather than attested.
+    attesting_source_id: bleepingcomputer/2025-11-19_sandworm-grain-wipers
+    inference_basis:
+      signals:
+        - "ESET (via BleepingComputer) states the strategic purpose at goal level: 'Considering that grain export remains one of Ukraine's main sources of revenue, such targeting likely reflects an attempt to weaken the country's war economy.' — a hedged goal-statement ('likely reflects an attempt')."
+        - "ESET adds the grain sector 'stands out as a not-so-frequent target', underscoring a deliberate economic-attrition choice rather than incidental collateral."
+        - "Wiper (destructive, non-monetised) effect against a wartime adversary's economic base is non-kinetic / indirect warfare against war-making capacity."
+      ruled_out: "Military/OT sabotage under energy-weaponization/grid-attack is rejected as the primary reading: the headline effect here is IT-network data destruction against grain/logistics/government revenue-and-administration systems, not electric-grid OT disruption (no power outage claimed)."
     contested: false
     analyst: claude
 targets:
@@ -73,3 +91,101 @@ targets:
 sources:
   - eset/2025-05-19_apt-activity-report-h1-2025
   - bleepingcomputer/2025-11-19_sandworm-grain-wipers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs both cited RAW sources, curl-captured + hashed today. STEP-0 triage:
+    both live, HTTP 200, on-topic (NOT phantoms) — normal audit path.
+    S1 ESET press release "Russian cyberattacks in Ukraine intensify; Sandworm
+    unleashes new destructive wiper" — raw_snapshot
+    eset__2025-05-19_apt-activity-report-h1-2025.html,
+    sha256 2f37dd23…616b8bfe, 118,790 bytes (primary; covers Oct 2024–Mar 2025).
+    S2 BleepingComputer "Sandworm hackers use data wipers to disrupt Ukraine's
+    grain sector" — raw_snapshot bleepingcomputer__2025-11-19_sandworm-grain-wipers.html,
+    sha256 566e6765…8e8fabcf, 90,887 bytes (secondary; relays ESET's follow-on
+    report covering Apr–Sep 2025).
+    KEY SPLIT: the two sources carry DIFFERENT slices. S1 carries ZEROLOT + energy
+    + AD-Group-Policy ONLY (grain=0 hits, Sting-as-wiper=0, April=0, university=0,
+    logistics=0 in S1). S2 carries Sting, April/university, June/September, grain
+    (×26), logistics, and the four-sector list + the war-economy goal-quote. The
+    pre-audit event mis-credited grain/Sting/four-sector to "H1 and H2" — corrected.
+    [a] FACTS — corrected to source-exact:
+      • ZEROLOT vs energy + AD Group Policy: S1 verbatim — "The Russia-aligned
+        Sandworm group intensified destructive operations against Ukrainian energy
+        companies, deploying a new wiper named ZEROLOT" and (Jean-Ian Boutin) "the
+        attackers abused Active Directory Group Policy in the affected
+        organizations". The flagged AD-GPO detail IS genuine ESET wording (kept);
+        stripped the embellishment "to deploy across enterprise estates".
+      • Sting + April + university: S2 verbatim — "APT44 also deployed 'ZeroLot'
+        and 'Sting' wipers in April 2025, targeting a university in Ukraine" ("Sting
+        was executed through a Windows scheduled task named after the traditional
+        Hungarian dish goulash"). NB in S1 the 6 "Sting" hits were all substrings
+        (job liSTINGs / targeting) — NOT a wiper; Sting is an S2-only fact.
+      • June/Sept four-sector waves + grain: S2 verbatim ESET quote — "In June and
+        September, Sandworm deployed multiple data-wiping malware variants against
+        Ukrainian entities active in the governmental, energy, logistics, and grain
+        sectors" / grain "stands out as a not-so-frequent target".
+      • outcome_summary REWRITTEN so each report is credited with what it actually
+        carried (May report = ZEROLOT/energy/AD-GPO; follow-on report = Sting +
+        April university + June/Sept grain/4-sector). summary WhisperGate FIX:
+        removed "since WhisperGate (2022)" — WhisperGate is attributed to Cadet
+        Blizzard/DEV-0586 (GRU 29155), NOT Sandworm; replaced with Sandworm-
+        attributed wipers (HermeticWiper/CaddyWiper/SwiftSlicer). No fabricated
+        CVEs/victims/figures in the event (it is appropriately org-anonymised).
+    [b] ATTRIBUTION — ESET attributes to Sandworm with no hedge → attributing_org_
+      confidence high retained; auspex concur retained (bedrock GRU-74455 consensus:
+      DOJ 2020 indictment, Treasury/EU/UK sanctions, Mandiant APT44). actor_id
+      ru/gru/74455/sandworm RESOLVES → atlas/actors/ru/sandworm.yaml (internal id
+      ru/gru/74455/sandworm). No over-attestation at the org level.
+    [c] DATES — start_date 2025-04-01 kept but RE-COMMENTED: it is the earliest
+      PRECISELY-dated deployment (April 2025 university, S2), not campaign onset —
+      S1 already had ZEROLOT vs energy inside its Oct 2024–Mar 2025 window (undated).
+      disclosure_date 2025-05-19 kept = first public naming of ZEROLOT (report
+      release corroborated by GlobeNewswire 2025-05-20; the gr-en localized page
+      displays 30/05/2025 as a repost date — noted on the source record).
+      SOURCE-DATE FIX: S2 published_on corrected 2025-11-19 → 2025-11-06 (byline +
+      JSON-LD datePublished/dateModified both 2025-11-06T05:01:28-05:00); the S2 id
+      slug still reads 2025-11-19 (cosmetic FK-bearing mismatch, left for
+      orchestrator — not renamed here).
+    [d] DOCTRINE_LINKS:
+      • russkiy-mir/ukraine-theater DOWNGRADED attested → strongly_inferred
+        (over-attestation fix): no cited source states the Russkiy-Mir civilizational/
+        near-abroad goal; ESET describes the WHAT, not that WHY. attesting_source_id
+        nulled; added inference_basis {signals[], ruled_out}.
+      • military-doctrine-2014/non-contact-warfare kept strongly_inferred; added
+        inference_basis carrying the ESET war-economy goal-quote and attesting_
+        source_id=S2 (supporting). NOT elevated to attested because the goal-quote is
+        HEDGED ("such targeting LIKELY REFLECTS an attempt to weaken the country's
+        war economy"), below the kept-attested bar (unhedged verbatim goal-naming).
+      • perspective absent on both → defaults attacker-rationale (correct: Russian
+        actor's own doctrine).
+      >>> KARA-FLAGS (doctrine files NOT edited — out of scope):
+        (1) ESET DOES state the war-economy goal (hedged). If you read the 2026-06-19
+            attested reframe as crediting a tier-1 vendor's hedged goal-assessment,
+            you may ELEVATE the non-contact-warfare link (or a better home) to attested
+            on that verbatim quote. Held at strongly_inferred per the systemic over-
+            attestation correction + hedge-downgrade rule.
+        (2) The grain/economic-warfare goal has NO clean doctrine home: ru/energy-
+            weaponization is energy-only (pillars grid-attack / oil-gas / SIS — none
+            covers food/agriculture) and its grid-attack pillar implies OT power-
+            disruption this IT-wiper campaign did not cause. Recommend considering a
+            food/economic-weaponization pillar (or extending energy-weaponization) so
+            this and future grain-targeting events have a proper home. energy-
+            weaponization/grid-attack deliberately NOT added here to avoid over-
+            claiming an OT effect the sources don't support.
+    [e] ATTRIBUTION_LEVEL — ADDED named-unit (was missing). ESET names "Sandworm";
+      AUSPEX resolves to GRU Unit 74455/GTsST — a bedrock-established unit pin (six
+      indicted officers, sanctions, APT44), so named-unit is honest here (contrast
+      the conservative named-actor floor used for fresher service pins).
+    [f] ACTOR_ID — ru/gru/74455/sandworm RESOLVES to the atlas actor id (file
+      atlas/actors/ru/sandworm.yaml). Not a counter-action; actor_id correctly non-null.
+    incident_type [destructive, wiper] ✓ correct (ESET: destructive wipers). targets
+    (agriculture/energy/transport-logistics/government, all ua, all primary) — all four
+    resolve in atlas/sectors/sectors.yaml and are the four sectors ESET names for the
+    June/Sept waves; all-primary defensible (ESET lists them co-equally, grain the
+    standout). initial_vector valid-creds → unknown (see field comment).
+    Residual: S2 is a secondary relay of ESET's follow-on report; ESET's own H2/Nov
+    report is not separately cited, but every S2-carried claim is verbatim, so full.

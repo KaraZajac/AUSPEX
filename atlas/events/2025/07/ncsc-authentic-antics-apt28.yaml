@@ -1,70 +1,117 @@
 id: 2025-07/ncsc-authentic-antics-apt28
 name: UK NCSC attributes "Authentic Antics" Outlook credential-theft malware to GRU Unit 26165 / APT28
-start_date: 2023-01-01  # NCSC-stated original incident investigation
+start_date: 2023-01-01  # MAR: "AUTHENTIC ANTICS was observed in use in 2023" (year-only anchor; malware found after a 2023 incident)
 disclosure_date: 2025-07-18
 end_date: null
 incident_type:
-  - intrusion
+  - espionage
+  - intrusion   # credential/OAuth-token theft = access mechanism ("credential-theft" is not a schema enum)
   - data-theft
 initial_vector: unknown
 outcome_summary: |
   The UK NCSC publicly attributed the "Authentic Antics"
   malware to GRU Unit 26165 (APT28 / Fancy Bear / Forest
-  Blizzard). The malware runs inside the Outlook process,
-  generates fake Microsoft login prompts to harvest Office 365
-  credentials and OAuth tokens, then exfiltrates victim data by
-  sending email from the victim's mailbox to attacker-controlled
-  addresses while suppressing the send from the "Sent Items"
-  folder. The campaign targeted Western logistics and
-  technology sectors and was investigated jointly by NCC Group
-  and Microsoft after a 2023 incident.
+  Blizzard). Per the NCSC Malware Analysis Report, the malware
+  runs within the Outlook process, displays malicious login
+  prompts to steal Microsoft cloud-account credentials and
+  OAuth 2.0 tokens, then exfiltrates victim data by
+  authenticating to the victim's own Outlook web account and
+  sending email to an actor-controlled address, with the emails
+  not showing in the victim's "sent" folder and no traditional
+  command-and-control. The malware was discovered after a 2023
+  incident jointly investigated by Microsoft and the
+  NCSC-assured responder NCC Group; the NCSC associates Unit
+  26165 with targeting of Western logistics entities and
+  technology companies (the specific 2023 victim is not
+  sector-identified in the sources).
 false_flag_risk: none
 campaign_id: gru-26165-western-logistics
 summary: |
   Companion to the May 2025 NCSC + Five Eyes AA25-141A advisory
   on GRU Unit 26165 targeting of Western logistics and tech
   firms supporting Ukraine aid. The Authentic Antics disclosure
-  came alongside UK sanctions on three GRU units (26165, 29155,
-  74455) and 18 GRU officers — the largest cyber-themed UK
-  sanctions package to date. Doctrinally consistent with the
-  FPC-2023 anti-Anglo-Saxon / Ukraine-support-interdiction
-  pattern.
+  came alongside UK Foreign Office sanctions on three GRU units
+  (26165, 29155, 74455) and 18 GRU officers and agents for
+  cyber and information-interference operations across the
+  globe. Doctrinally consistent with the FPC-2023
+  anti-Anglo-Saxon / Ukraine-support-interdiction pattern and
+  Russia's continuous information-confrontation posture (Info
+  Security Doctrine 2016).
 attributions:
   - actor_id: ru/gru/26165/apt28
+    attribution_level: named-unit  # NCSC: APT28 = GRU 85th Main Special Service Centre, Military Unit 26165
     attributing_org: UK NCSC
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2025-07-18
-    attribution_source_id: ncsc-uk/2025-07-18_authentic-antics
+    attribution_source_id: ncsc-uk/2025-07-18_authentic-antics  # news article makes the attribution; the MAR is purely technical (no attribution)
 doctrine_links:
+  - doctrine_id: ru/info-security-2016
+    pillar_id: ru/info-security-2016/information-sphere-as-domain
+    program_id: null
+    confidence: strongly_inferred
+    perspective: attacker-rationale
+    reasoning: |
+      AUTHENTIC ANTICS is a persistent credential/OAuth-2.0-token
+      collection tool run by a GRU information unit against Western
+      Microsoft-cloud email accounts — the operational expression
+      of the 2016 Information Security Doctrine's framing of
+      information confrontation as continuous and existential and
+      its bureaucratic licence for GRU external information
+      operations. No source names the doctrine, so the linkage is
+      inferred from the espionage-collection character of the tool
+      and the attributed actor.
+    attesting_source_id: null
+    inference_basis:
+      source_id: ncsc-uk/2025-07-18_authentic-antics
+      signals:
+        - "NCSC attributes a persistent Microsoft-cloud email/credential-espionage tool to GRU information Unit 26165 (APT28) operating against Western targets (external collection by a GRU information unit)"
+      ruled_out: "the 2016 Information Security Doctrine by name — not named in the disclosure or the malware-analysis report"
+    contested: false
+    analyst: claude
   - doctrine_id: ru/fpc-2023
     pillar_id: ru/fpc-2023/anti-anglo-saxon
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      Targeting Western logistics and tech firms supporting Ukraine
-      fits the FPC-2023 anti-Anglo-Saxon priority; the Authentic
-      Antics disclosure documents the Outlook credential-theft
-      malware and the GRU attribution but does not name the FPC-2023
-      doctrine, so the linkage is inferred from the target set.
-    attesting_source_id: ncsc-uk/2025-07-18_authentic-antics
+      NCSC frames the espionage as directed against Western
+      interests and Foreign Secretary Lammy describes a GRU campaign
+      "to destabilise Europe" — consistent with the FPC-2023
+      anti-Anglo-Saxon / collective-West priority. The disclosure
+      documents the malware and the GRU attribution but does not
+      name FPC-2023, so the linkage is inferred from the anti-Western
+      framing and target set.
+    attesting_source_id: null
     inference_basis:
       source_id: ncsc-uk/2025-07-18_authentic-antics
       signals:
-        - "NCSC attributes the Authentic Antics Outlook credential-theft malware to GRU 26165 (APT28) targeting Western logistics/tech sectors (attribution + target set)"
+        - "NCSC: espionage against Western interests; Foreign Secretary Lammy: GRU 'running a campaign to destabilise Europe, undermine Ukraine's sovereignty' (anti-collective-West framing + target set)"
       ruled_out: "the Foreign Policy Concept 2023 / anti-Anglo-Saxon priority by name — not named in the disclosure"
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Logistics-and-tech targeting tied to Ukraine-aid flows is
-      the operational expression of the Ukraine-support-
-      interdiction pillar within the broader NATO-ultimatum
-      doctrine.
+      The event is a companion to the May 2025 AA25-141A advisory on
+      Unit 26165 targeting Western logistics and technology firms
+      supporting Ukraine aid, and shares campaign_id
+      gru-26165-western-logistics. The specific AUTHENTIC ANTICS
+      victim (a 2023 incident) is not sector-identified in the
+      sources, so the interdiction linkage rests on the campaign
+      association rather than a confirmed logistics/aid victim —
+      hence plausible, not strongly_inferred.
     attesting_source_id: null
+    inference_basis:
+      source_id: infosec-magazine/2025-07-18_authentic-antics
+      signals:
+        - "May 2025 NSA/NCSC advisory (AA25-141A) ties APT28/Unit 26165 to targeting Western logistics entities and technology companies; this disclosure is presented alongside that campaign"
+      alternatives:
+        - "AUTHENTIC ANTICS is a general-purpose GRU email-espionage tool not specific to the Ukraine-aid interdiction mission; the 2023 victim sector is unstated"
+      ruled_out: "a confirmed logistics / Ukraine-aid victim for this specific malware incident — victim sector unspecified in the sources"
     contested: false
     analyst: claude
 targets:
@@ -74,4 +121,59 @@ targets:
     role: primary
 sources:
   - ncsc-uk/2025-07-18_authentic-antics
+  - ncsc-uk/2025-07-18_mar-authentic-antics
   - infosec-magazine/2025-07-18_authentic-antics
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    [a] FACTS — all load-bearing claims now carried by snapshotted sources.
+    The Outlook-embedded credential-harvest + OAuth-2.0 exfiltration tradecraft is
+    verified against the NCSC Malware Analysis Report (ADDED as a source): "Authentic
+    Antics runs within the Outlook process, displaying malicious login prompts to steal
+    credentials and OAuth 2.0 tokens" and "Victim data is exfiltrated by sending emails
+    from the victim's account to an actor-controlled email address. The emails will not
+    show in the victim's sent folder" (MAR sha256 60b4c5fe…). The "runs inside the
+    Outlook process" detail was ABSENT from the two originally-cited sources — the NCSC
+    news article never uses the word "Outlook"; Infosecurity only says the malware
+    achieves "the appearance of authentic Microsoft Outlook activity" — so the MAR was
+    fetched + snapshotted to carry it (fabricated-tradecraft check per task: all
+    tradecraft traces to the MAR; nothing beyond it was invented). CORRECTED "Office
+    365" → "Microsoft cloud-account" credentials (NCSC news: "Microsoft cloud accounts";
+    MAR: "Microsoft Office account credentials", apps = Exchange Online/SharePoint/
+    OneDrive — no source says "Office 365"); "OAuth tokens" → "OAuth 2.0 tokens" (MAR);
+    "Sent Items" → "sent" folder (raw). STRIPPED the unsourced superlative "the largest
+    cyber-themed UK sanctions package to date" (neither raw contains "largest"). Softened
+    the logistics/tech claim: the specific 2023-incident victim is not sector-identified;
+    NCSC only "previously called out" Unit 26165 for targeting Western logistics/tech.
+    Confirmed verbatim: NCC Group + Microsoft joint investigation "in 2023"; three GRU
+    units 26165/29155/74455 + 18 officers and agents sanctioned.
+    [b] ATTRIBUTION — NCSC formal attribution of APT28 = "Russia's GRU 85th Main Special
+    Service Centre, Military Unit 26165"; high / concur retained (firm government
+    attribution). The MAR makes NO actor attribution (purely technical), so
+    attribution_source_id stays the NCSC news article (ncsc-uk/2025-07-18_authentic-antics
+    sha256 382dff38…). No over-attestation.
+    [c] DATES — start 2023 anchored to MAR "AUTHENTIC ANTICS was observed in use in 2023";
+    disclosure 2025-07-18 (both sources bylined 18 Jul 2025; article says "today (18
+    July)"). MAR is internally Version 1 / 06 May 2025, publicly released 18 Jul 2025.
+    [d] DOCTRINE — no source names any doctrine, so NONE attested. ADDED
+    info-security-2016/information-sphere-as-domain (strongly_inferred; the
+    espionage/continuous-information-confrontation doctrine — the per-event doctrine).
+    Kept fpc-2023/anti-anglo-saxon (strongly_inferred; NCSC "against Western interests" +
+    Lammy "destabilise Europe"; removed its incorrect attesting_source_id since it is not
+    attested). DOWNGRADED nato-ultimatum-2021/ukraine-support-interdiction strongly_inferred
+    → plausible (2023 victim sector unspecified; linkage via the AA25-141A campaign only)
+    and added its missing inference_basis. All three set perspective: attacker-rationale
+    (Russia's own doctrine on a Russian operation).
+    [e] ATTRIBUTION_LEVEL — ADDED named-unit (was absent); NCSC names GRU Military Unit
+    26165 / 85th Main Special Service Centre.
+    [f] ACTOR_ID — ru/gru/26165/apt28 resolves to atlas actor. Attack event (not a
+    counter-action): actor_id = attacker APT28; the UK sanctions are context. incident_type
+    set to [espionage, intrusion, data-theft] — "credential-theft" is not a schema enum, so
+    credential/token theft is rendered as intrusion (access mechanism) + data-theft (email
+    exfil), with espionage as the strategic frame (both sources headline "espionage").
+    SNAPSHOTS (PRESERVE tier, keys added only): NCSC news 382dff38… (132,133 B, HTML);
+    NCSC MAR 60b4c5fe… (335,175 B, PDF 20pp); Infosecurity 11585c01… (104,792 B, HTML).
+    level=full — every load-bearing claim is carried by a snapshotted source.

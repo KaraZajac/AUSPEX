@@ -1,70 +1,129 @@
 id: 2024-01/carr-texas-water-utility-intrusions
-name: Cyber Army of Russia Reborn — Texas water utility intrusions (Muleshoe, Abernathy, Stanton)
-start_date: 2024-01-18  # Muleshoe earliest dated incident
-disclosure_date: 2024-04-17  # Mandiant attribution to Sandworm
-end_date: 2024-03-01
+name: Cyber Army of Russia Reborn — Texas water-utility HMI manipulation (Muleshoe, Abernathy)
+start_date: 2024-01-17  # Mandiant APT44: CARR posted HMI-manipulation videos at Polish + US water utilities "Between 17 and 18 January 2024"
+disclosure_date: 2024-04-17  # Mandiant APT44 report publicly tied the CyberArmyofRussia_Reborn persona to APT44/Sandworm
+end_date: 2024-03-02  # Mandiant APT44: last dated CARR OT-manipulation video ("On 02 March 2024", French hydroelectric)
 incident_type:
   - intrusion
+  - cyber-physical
   - disruption
-  - influence-operation
-initial_vector: n-day  # exposed HMIs / weak credentials on small-utility ICS
+initial_vector: unknown  # not named in cited sources; Treasury: "various unsophisticated techniques"; reported mechanism = internet-exposed, weakly-secured small-utility HMIs
 outcome_summary: |
-  Compromise and HMI manipulation of small US water utilities in
-  Muleshoe, Abernathy, and Stanton, Texas (and an Indiana wastewater
-  facility) by the "Cyber Army of Russia Reborn" Telegram persona.
-  Muleshoe experienced a physical tank overflow; total observed
-  impact was low. Telegram-published proof videos were the strategic
-  product. US Treasury OFAC designated CARR operators Pankratova and
-  Degtyarenko on 19 July 2024 and characterized CARR as "founded,
-  funded, and directed by the GRU."
+  Between 17 January and 2 March 2024 the pro-Russia "Cyber Army
+  of Russia Reborn" (CyberArmyofRussia_Reborn / CARR) Telegram
+  persona posted videos claiming manipulation of human-machine
+  interfaces (HMIs) at small US water utilities in the Texas
+  Panhandle. Muleshoe experienced a confirmed water-storage-tank
+  overflow; US Treasury (Jul 2024) attributes CARR-claimed
+  overflows at both Abernathy and Muleshoe, TX. Observed physical
+  impact was low and the Telegram "proof" videos — which Mandiant
+  says show an actor "haphazardly interacting" with OT interfaces
+  — were the strategic product. Mandiant (Apr 2024 APT44 report)
+  assessed the persona as "created and controlled by APT44"
+  (Sandworm) but "cannot independently verify the ... claimed
+  intrusion activity or its links to APT44," noting affected US
+  utility officials later publicly acknowledged incidents.
+  Treasury designated CARR members Pankratova and Degtyarenko
+  (19 Jul 2024) as a "Russian government-aligned hacktivist
+  group"; the DOJ Dec 2025 indictment states CARR (aka Z-Pentest)
+  was "founded, funded, and directed by the ... GRU" — the parent
+  GRU, not a named unit.
 quantified_impact:
-  utilities_affected: 4  # Muleshoe, Abernathy, Stanton, Indiana wastewater
-  tank_overflow_incidents: 1  # Muleshoe
-false_flag_risk: none
+  utilities_affected: 2  # Treasury-named TX water utilities (Muleshoe, Abernathy); Mandiant's broader campaign also claimed additional US + Polish water utilities and a French hydro facility, not enumerated here
+  tank_overflow_incidents: 1  # Muleshoe (publicly confirmed physical overflow); Treasury also attributes a CARR-claimed overflow at Abernathy
+false_flag_risk: none  # CARR openly self-claimed on Telegram; obfuscation is via a "hacktivist front" persona (Mandiant/DOJ), not a false-flag blaming a third party
 summary: |
-  Canonical attested event for the post-2022 sanctions-response
-  performative-disruption pillar. Note: this event is distinct from
-  the November 2023 Aliquippa, PA water-utility incident, which was
-  CyberAv3ngers / IRGC-IO (Iran), not Russian — frequently conflated
-  in popular reporting. Mandiant's April 2024 analysis assessed CARR
-  as Sandworm-affiliated; Treasury's July 2024 designation made the
-  GRU link official. The Texas water-utility set is what CARR
-  actually hit; Aliquippa is what Iran's CyberAv3ngers hit.
+  Post-2022 sanctions-response performative-disruption by a
+  Russian state-aligned hacktivist front. SOURCING CORRECTED
+  (AUDIT 2026-07-10): the CARR->GRU service link rests on the DOJ
+  Dec 2025 indictment ("founded, funded, and directed by the ...
+  GRU"), NOT on Treasury — the Jul 2024 OFAC release makes NO
+  GRU/Sandworm claim and calls CARR only a "Russian
+  government-aligned hacktivist group." The Sandworm tie is
+  Mandiant's (Apr 2024 APT44 report), which assesses the persona
+  as APT44-controlled yet explicitly "cannot independently
+  verify" the water-utility claims or their APT44 link — hence
+  hedged (attribution_level named-actor; GRU at parent level, not
+  Unit 74455). Distinct from the Nov 2023 Aliquippa, PA incident
+  (CyberAv3ngers / IRGC-IO, Iran), frequently conflated with this
+  Russian campaign. The former Mandiant citation
+  (sandworm-water-utility-attribution) was a WRONG-SOURCE — its
+  URL resolves to the Nov 2023 Ukraine power-grid OT blog (0
+  mentions of CARR/water/Texas) — and has been repointed here to
+  the genuine APT44 report.
 attributions:
   - actor_id: ru/gru/carr
     attributing_org: Mandiant (Google Threat Intelligence)
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
     attribution_date: 2024-04-17
-    attribution_source_id: mandiant/2024-04-17_sandworm-water-utility-attribution
+    attribution_level: named-actor
+    attribution_source_id: mandiant/2024-04-17_apt44-unearthing-sandworm
+    notes: |
+      Mandiant aligns with Google TAG that "CyberArmyofRussia_Reborn
+      is created and controlled by APT44" and links the persona's
+      intrusion activity to APT44 "with high confidence," but for
+      the water-utility claims specifically states it "cannot
+      independently verify the ... claimed intrusion activity or its
+      links to APT44 at this time" — hence concur-with-caveat /
+      moderate. Named-actor (persona = CARR); the Unit 74455 /
+      Sandworm operational tie is not asserted.
   - actor_id: ru/gru/carr
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2024-07-19
+    attribution_level: named-actor
     attribution_source_id: treasury/2024-07-19_carr-gru-sanctions
     notes: |
       OFAC designated Yuliya Vladimirovna Pankratova and Denis
-      Olegovich Degtyarenko and stated CARR was "founded, funded,
-      and directed by the GRU."
+      Olegovich Degtyarenko (E.O. 13694) as members of the "Russian
+      government-aligned hacktivist group Cyber Army of Russia
+      Reborn (CARR)" and stated: "In January 2024, CARR claimed
+      responsibility for the overflow of water storage tanks in
+      Abernathy and Muleshoe, Texas, posting video of the
+      manipulation of human-machine interfaces at each facility on
+      a public forum." NB: this release makes NO GRU/Sandworm claim
+      (0 mentions) — the earlier attribution to Treasury of
+      "founded, funded, and directed by the GRU" was a
+      MISATTRIBUTION (that wording is the DOJ Dec 2025 indictment's).
+  - actor_id: ru/gru/carr
+    attributing_org: US Department of Justice
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_date: 2025-12-09
+    attribution_level: named-actor
+    attribution_source_id: doj/2025-12_carr-noname-actions
+    notes: |
+      DOJ Dec 9, 2025 indictment: "CARR, also known as Z-Pentest,
+      was founded, funded, and directed by the Main Directorate of
+      the General Staff of the Armed Forces of the Russian
+      Federation (GRU)"; an individual as "Cyber_1ce_Killer," a
+      moniker "associated with at least one GRU officer," instructed
+      CARR leadership on targeting. GRU named at the PARENT level
+      only — 0 mentions of Unit 74455 / GTsST / Sandworm — so the
+      service tie is hedged to the parent GRU.
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/performative-disruption
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      Treasury 2024-07-19 characterized CARR as a GRU-directed
-      persona conducting demonstrative actions against US critical
-      infrastructure 'supporting Russia's geopolitical interests' —
-      the performative-disruption behaviour. Treasury does not name
-      a codified 2022 sanctions-response doctrine, so the strategic
-      label is inferred.
+      Treasury attests the performative-disruption BEHAVIOUR — a
+      "Russian government-aligned hacktivist group" manipulating US
+      water-utility ICS and posting "proof" videos of HMI
+      manipulation "on a public forum," i.e. demonstrative action
+      against US critical infrastructure. Treasury names no codified
+      2022 sanctions-response doctrine, so the strategic label is
+      inferred.
     attesting_source_id: treasury/2024-07-19_carr-gru-sanctions
     inference_basis:
       source_id: treasury/2024-07-19_carr-gru-sanctions
       signals:
-        - "Treasury: CARR is GRU-directed, conducting demonstrative actions against US CII 'supporting Russia's geopolitical interests' (behaviour + motive)"
-      ruled_out: "a codified 'sanctions-response-2022' doctrine / strategic-goal construct — not named by Treasury"
+        - "Treasury: 'Russian government-aligned hacktivist group Cyber Army of Russia Reborn' whose members conducted cyber operations 'against U.S. critical infrastructure' (state-aligned + CII targeting)"
+        - "Treasury: 'In January 2024, CARR claimed responsibility for the overflow of water storage tanks in Abernathy and Muleshoe, Texas, posting video of the manipulation of human-machine interfaces ... on a public forum' (demonstrative / publicised)"
+      ruled_out: "a codified 'sanctions-response-2022' doctrine or strategic-goal construct — not named by Treasury"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -72,43 +131,187 @@ doctrine_links:
     pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      The "Cyber Army" Telegram persona is the criminal-proxy layer
-      over what Treasury characterizes as direct GRU command —
-      Treasury attests the GRU-direction mechanism ('founded,
-      funded, and directed by the GRU') but does not name the 2022
-      sanctions-response doctrine, so the strategic label is inferred.
-    attesting_source_id: treasury/2024-07-19_carr-gru-sanctions
+      The volunteer "Cyber Army" hacktivist persona layered over
+      GRU tasking is the criminal-proxy-mobilization mechanism. DOJ
+      Dec 2025 attests the mechanism as fact — CARR was "founded,
+      funded, and directed by the ... GRU" and a GRU officer
+      instructed CARR leadership on targeting — but names no 2022
+      sanctions-response doctrine, so the strategic label is
+      inferred.
+    attesting_source_id: doj/2025-12_carr-noname-actions
     inference_basis:
-      source_id: treasury/2024-07-19_carr-gru-sanctions
+      source_id: doj/2025-12_carr-noname-actions
       signals:
-        - "Treasury: CARR 'founded, funded, and directed by the GRU' (criminal-proxy mechanism attested as fact)"
-      ruled_out: "the 'sanctions-response-2022' strategic doctrine — not named by Treasury"
+        - "DOJ: 'CARR, also known as Z-Pentest, was founded, funded, and directed by the Main Directorate of the General Staff of the Armed Forces of the Russian Federation (GRU)' (GRU-directed proxy mechanism attested as fact)"
+        - "DOJ: 'Cyber_1ce_Killer,' a moniker associated with at least one GRU officer, instructed CARR leadership on what kinds of victims to target (tasking channel)"
+      ruled_out: "the 'sanctions-response-2022' strategic doctrine label — not named by DOJ"
+    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Target selection — US small water utilities during sustained
-      US support for Ukraine — fits NATO-degradation signaling
-      logic. Demonstrative rather than damaging.
+      Target selection — small US water utilities during sustained
+      US/NATO military support for Ukraine — is consistent with
+      NATO-degradation morale-signaling, but the action is
+      demonstrative rather than damaging and no cited source ties it
+      to a NATO-degradation objective; retained as the actor's
+      standing alignment at a downgraded (plausible) confidence.
     attesting_source_id: null
+    inference_basis:
+      source_id: null
+      signals:
+        - "target = US critical infrastructure during sustained US military support for Ukraine; low physical impact / demonstrative"
+      alternatives:
+        - "the sanctions-response-2022 performative-disruption pillar alone explains the target and behaviour without a distinct NATO-degradation objective"
+        - "generic pro-Russia hacktivist morale-signaling with no NATO-specific terminal goal"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/muleshoe-water-utility
     role: primary
+    country: us
     outcome: |
-      Storage tank overflow caused by HMI manipulation; Telegram-
-      posted proof video.
+      Water-storage-tank overflow (publicly confirmed by the city)
+      following CARR-claimed HMI manipulation; Telegram "proof"
+      video posted 17-18 Jan 2024.
   - target_id: orgs/abernathy-water-utility
     role: primary
-  - target_id: orgs/stanton-water-utility
-    role: primary
-  - target_id: orgs/indiana-wastewater-utility
-    role: primary
+    country: us
+    outcome: |
+      CARR-claimed water-storage-tank overflow via HMI manipulation
+      (Treasury); Telegram video posted 17-18 Jan 2024.
 sources:
-  - mandiant/2024-04-17_sandworm-water-utility-attribution
+  - mandiant/2024-04-17_apt44-unearthing-sandworm
   - treasury/2024-07-19_carr-gru-sanctions
+  - doj/2025-12_carr-noname-actions
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs RAW cited snapshots (all sha256-verified). The event
+    was carrying a MISATTRIBUTION (a "founded, funded, and directed
+    by the GRU" quote credited to Treasury) and a WRONG-SOURCE (the
+    Mandiant citation); both corrected.
+
+    [a] FACTS — verified + corrected. Tank overflow + HMI
+    manipulation CARRIED by Treasury (jy2473, sha256 90a61347…)
+    verbatim: "In January 2024, CARR claimed responsibility for the
+    overflow of water storage tanks in Abernathy and Muleshoe,
+    Texas, posting video of the manipulation of human-machine
+    interfaces at each facility on a public forum"; and "CARR has
+    been responsible for manipulating industrial control system
+    equipment at water supply, hydroelectric, wastewater, and
+    energy facilities in the U.S. and Europe." STRIPPED the
+    misattributed quote in the old outcome_summary ('Treasury ...
+    characterized CARR as "founded, funded, and directed by the
+    GRU"') — Treasury's raw has 0 mentions of GRU/Sandworm/74455/
+    "founded, funded" (that wording is DOJ's). REMOVED unsourced
+    targets Stanton (in NO cited source) and Indiana-wastewater (in
+    NO cited source; a separate, later Apr-2024 claim) — Treasury
+    names only Abernathy + Muleshoe; utilities_affected 4→2,
+    tank_overflow_incidents kept 1 (Muleshoe confirmed). Mandiant
+    APT44 (sha256 efa07dc1…): videos show "an actor haphazardly
+    interacting with interfaces," and Mandiant "cannot independently
+    verify the above claimed intrusion activity or its links to
+    APT44 at this time. However ... officials from the affected U.S.
+    utilities later publicly acknowledged incidents."
+
+    [b] ATTRIBUTION — 3 attributions, hedged per source. Mandiant
+    (2024-04-17): "align with TAG's assessment that
+    CyberArmyofRussia_Reborn is created and controlled by APT44";
+    persona intrusion activity linked to APT44 "with high
+    confidence"; BUT cannot independently verify the water-utility
+    claims / APT44 link → concur-with-caveat, org_confidence
+    moderate. Treasury (2024-07-19): designation of Pankratova +
+    Degtyarenko, "government-aligned hacktivist," no GRU → concur.
+    DOJ (2025-12-09, sha256 261fa447…): "CARR, also known as
+    Z-Pentest, was founded, funded, and directed by the ... GRU" →
+    concur; GRU at PARENT level only (0 mentions of 74455/GTsST/
+    Sandworm). No over-attestation: actor kept at ru/gru/carr but
+    the Sandworm/unit operational tie is NOT asserted.
+
+    [c] DATES — all now snapshot-sourced to Mandiant APT44. start
+    2024-01-18→2024-01-17 (raw: "Between 17 and 18 January 2024, the
+    group's Telegram channel posted videos taking credit for the
+    manipulation of human machine interfaces (HMI) controlling
+    operational technology (OT) assets at Polish and U.S. water
+    utilities"). end 2024-03-01→2024-03-02 (raw: "On 02 March 2024,
+    the group posted an additional video ... French hydroelectric
+    facility"). disclosure 2024-04-17 kept = APT44 report
+    publication (now correctly anchored to the genuine report, not
+    the phantom). published_on re-checked vs raw: Treasury Jul 19
+    2024 ✓, DOJ "Tuesday, December 9, 2025" ✓, Mandiant APT44 Apr 17
+    2024 ✓.
+
+    [d] DOCTRINE_LINKS — 3 links, all perspective attacker-rationale
+    (RU doctrine on a RU actor). (1) sanctions-response-2022/
+    performative-disruption strongly_inferred — re-anchored to
+    Treasury (the old reasoning falsely cited "Treasury: GRU-
+    directed"; stripped); signals = government-aligned hacktivist +
+    US-CII targeting + public HMI "proof" videos; ruled_out = a
+    codified doctrine (not named). (2) sanctions-response-2022/
+    criminal-proxy-mobilization strongly_inferred — moved the
+    "founded, funded, directed by GRU" mechanism from Treasury
+    (MISATTRIBUTION) to DOJ (correct source) + "GRU officer
+    'Cyber_1ce_Killer'" tasking signal; ruled_out = the doctrine
+    label. (3) nato-ultimatum-2021/nato-degradation downgraded
+    strongly_inferred→plausible + added inference_basis {signals,
+    alternatives} (no source ties the hits to a NATO-degradation
+    goal; alternatives = performative-disruption alone / generic
+    morale-signaling). KEPT sanctions-response-2022 per instruction
+    (state-adjacent hacktivist).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor to all 3
+    attributions. Not named-unit: DOJ/Treasury name the GRU only at
+    parent level and Mandiant explicitly hedges the Unit-74455/APT44
+    tie for these claims.
+
+    [f] ACTOR_ID — resolves to ru/gru/carr (the id inside
+    atlas/actors/ru/carr.yaml; the task-suggested ru/proxies/carr
+    and ru/unscoped/carr do NOT exist). Kept ru/gru/carr — the
+    2026-06-24 actor audit set it at the GRU parent on the strength
+    of DOJ Dec 2025; the event hedges the operational Sandworm/unit
+    tie via attribution_level + notes rather than by changing the id.
+
+    SNAPSHOT — all 3 cited sources already snapshotted + sha256-
+    verified this pass: treasury/2024-07-19_carr-gru-sanctions
+    (90a61347…, html), doj/2025-12_carr-noname-actions (261fa447…,
+    html), mandiant/2024-04-17_apt44-unearthing-sandworm (efa07dc1…,
+    pdf). PRESERVE tier untouched (no url/tier changes to cited
+    records).
+
+    RE-SOURCE (badrabbit path) — the former Mandiant citation
+    mandiant/2024-04-17_sandworm-water-utility-attribution is a
+    WRONG-SOURCE: its URL (…/sandworm-disrupts-power-ukraine-
+    operational-technology) resolves to Mandiant's Nov 9 2023
+    Ukraine power-grid OT blog — 0 mentions of CARR / Cyber Army /
+    Reborn / water / Texas / Muleshoe / HMI (the "carr" grep hits
+    are substrings of "carried out"). Repointed the event to the
+    genuine mandiant/2024-04-17_apt44-unearthing-sandworm (which
+    DOES carry the CyberArmyofRussia_Reborn↔APT44 material + the
+    water-utility timeline + the hedge). Removed the phantom from
+    this event; it remains cited by atlas/actors/ru/carr.yaml, so
+    LEFT in place (not orphaned) and flagged for the orchestrator.
+
+    OUT-OF-SCOPE FLAGS (not edited here): (1) atlas/actors/ru/carr.yaml
+    still cites the phantom mandiant/2024-04-17_sandworm-water-utility-
+    attribution → repoint to …_apt44-unearthing-sandworm. (2) the
+    phantom source record is a RETIRE-or-REPOINT candidate (already
+    flagged by the 2026-06-24 audit; still cited by the actor, so not
+    deleted). (3) target org registry files are MISSING (dangling
+    FKs): create orgs/muleshoe-water-utility + orgs/abernathy-water-
+    utility (kept); orgs/stanton-water-utility + orgs/indiana-
+    wastewater-utility were removed from this event.
+
+    level: full — every load-bearing fact/attribution/date is carried
+    by a snapshotted, hash-verified source (Treasury + DOJ + genuine
+    Mandiant APT44).

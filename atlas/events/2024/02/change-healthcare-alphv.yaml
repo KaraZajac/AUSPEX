@@ -1,59 +1,224 @@
 id: 2024-02/change-healthcare-alphv
 name: ALPHV ransomware against Change Healthcare / UnitedHealth
-start_date: 2024-02-21
-disclosure_date: 2024-02-22
-end_date: 2024-04-30
+start_date: 2024-02-12  # initial Citrix-portal access (op onset); ransomware deployed nine days later on 2024-02-21
+disclosure_date: 2024-02-22  # UnitedHealth 8-K identifying a cyber threat actor (status-page outage notice 2024-02-21)
+end_date: 2024-04-30  # approximate close of the primary outage/recovery window; not a precisely sourced event date (see qc[c])
 incident_type:
   - ransomware
+  - extortion
   - data-theft
   - disruption
 initial_vector: valid-creds
 outcome_summary: |
-  ALPHV affiliate intrusion of Change Healthcare (UnitedHealth
-  subsidiary processing ~50% of US healthcare claims). Multi-month
-  outage of US-wide prescription-claim and clinical-billing systems;
-  small / mid-sized US healthcare providers reportedly went weeks
-  without revenue. UnitedHealth paid approximately USD 22M ransom
-  in Bitcoin (Mar 1, on-chain visible). ALPHV operator exit-scammed
-  the affiliate ("Notchy") who kept ~4TB of stolen data; the data
-  was subsequently re-posted via RansomHub in April 2024. CEO
-  Andrew Witty testified before Congress May 1 2024 confirming
-  the breach affected approximately one-third of all Americans
-  (~110M individuals).
+  ALPHV/BlackCat affiliate intrusion of Change Healthcare (the
+  UnitedHealth/Optum claims-clearinghouse that processes health
+  insurance and billing claims for around half of all US residents).
+  Initial access on Feb 12 2024 via compromised credentials on a
+  Change Healthcare Citrix remote-access portal that lacked
+  multi-factor authentication; the affiliate moved laterally and
+  exfiltrated data, and ALPHV deployed ransomware nine days later, on
+  Feb 21, forcing UnitedHealth to sever connectivity and triggering a
+  US-wide outage of prescription-claim, medical-claim and payment
+  systems. The acute prescription-claim outage ran ~2+ weeks (99% of
+  pharmacies processing again by Mar 7 per Witty), with medical-claims
+  and payment restoration extending over the following ~2 months;
+  small and rural providers went weeks without reimbursement
+  ("struggling to make payroll"). UnitedHealth paid an approximately
+  USD 22M Bitcoin ransom (a single on-chain transaction on Mar 1). The
+  ALPHV operator then exit-scammed the affiliate ("Notchy"), keeping
+  the full payment; the affiliate retained ~4TB of stolen data, which
+  was re-posted for a second extortion via RansomHub in April 2024
+  (tracked separately at 2024-04/change-healthcare-ransomhub-repost).
+  CEO Andrew Witty testified before the House E&C Oversight
+  subcommittee on May 1 2024 that the stolen files "could cover a
+  substantial proportion of people in America"; UnitedHealth
+  subsequently confirmed the breach exposed ~100M individuals
+  (Oct 2024 — then the largest US healthcare data breach on record)
+  and revised the total to ~190M (Jan 2025).
 quantified_impact:
-  individuals_affected: 110000000
-  ransom_paid_usd: 22000000
-  ransom_recovered_usd: 0  # not recovered; exit-scammed by ALPHV operator
-  disclosed_impact_usd: 2870000000  # UnitedHealth Q3 2024 SEC disclosure
+  individuals_affected: 190000000  # UnitedHealth final confirmed count (Jan 2025); ~100M first confirmed Oct 2024 (then largest-ever); Witty testimony said only "a substantial proportion of people in America" — see qc[a]
+  ransom_paid_usd: 22000000  # single on-chain BTC tx, Mar 1 2024 (Krebs); the decision to pay was Witty's per his testimony
+  ransom_recovered_usd: 0  # not recovered; ALPHV operator exit-scammed its own affiliate
+  disclosed_impact_usd: 3100000000  # final FY2024 cost per UnitedHealth Q4/FY2024 results (Jan 2025); Q3-2024 full-year estimate was ~$2.87B, ~$2.5B booked through 9 months
 false_flag_risk: none
 campaign_id: change-healthcare-alphv-ransomhub
 summary: |
-  Largest US healthcare data breach on record by individuals
-  affected. The ALPHV operator's exit scam — keeping the full
-  USD 22M and dropping the affiliate — marked the end of ALPHV's
-  operational viability and triggered an immediate ~3-month
-  hiatus of major US healthcare ransomware (until June 2024) as
-  affiliates re-aligned with RansomHub and Qilin.
+  Largest US healthcare data breach on record by individuals affected.
+  A single stolen Citrix credential on an internet-facing portal
+  without MFA cascaded into a national healthcare-payment outage and a
+  ~USD 22M ransom. The ALPHV operator's exit scam — pocketing the full
+  payment and abandoning the affiliate — ended ALPHV/BlackCat's
+  operational viability (the crew ceased operations in March 2024) and
+  pushed its affiliates onto successor RaaS brands, notably RansomHub,
+  which the abandoned affiliate used to re-extort the same stolen trove
+  (2024-04/change-healthcare-ransomhub-repost).
 attributions:
-  - actor_id: criminal/alphv  # was ru/proxies/alphv; demoted 2026-06-24 (claude-opus-4.8/max) — no source-documented Russia-state nexus, see actor notes
-    attributing_org: HHS + UnitedHealth + Mandiant
+  - actor_id: criminal/alphv  # ALPHV/BlackCat; was ru/proxies/alphv -> demoted to criminal/alphv 2026-06-24/25 (claude-opus-4.8/max) — no source-documented Russia-state nexus, see actor notes
+    attributing_org: "UnitedHealth (self / Witty testimony) + Mandiant (incident response) + HHS HC3"
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-02-29
-    attribution_source_id: hhs/2024-04-19_change-healthcare-bulletin
-doctrine_links:
-  - doctrine_id: ru/sanctions-response-2022
-    pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
-    program_id: null
-    confidence: plausible
-    reasoning: |
-      Russian-tolerated RaaS targeting US healthcare CII; operator-
-      direction is opportunistic-affiliate rather than state-tasked.
-    contested: false
-    analyst: claude
+    attribution_source_id: congress/2024-05-01_witty-testimony
+    notes: "ALPHV/BlackCat self-claimed Change Healthcare on its leak site (late Feb 2024); UnitedHealth confirmed the ALPHV/BlackCat attribution on 2024-02-29, and Witty named 'ALPHV or BlackCat' in sworn testimony (May 1 2024, p.4). Mandiant + Palo Alto Networks were the incident responders (Witty testimony p.7); HHS HC3 issued a sector alert. Uncontested; named-actor (a RaaS group, not a nation/unit)."
+doctrine_links: []  # DROPPED ru/sanctions-response-2022/criminal-proxy-mobilization (2026-07-10, claude-opus-4.8/max). ALPHV is stateless profit-criminal RaaS (DarkSide/REvil pattern — both dropped as stateless), NOT state-adjacent like Conti (no self-declared pro-Russia stance / no leaked state contacts). Actor was already demoted ru/proxies/alphv -> criminal/alphv for lack of any source-documented Russia-state nexus, the actor audit dropped this same doctrine alignment as unsourced AND flagged this event link for review, and the companion event is likewise doctrine_links:[]. See qc[d]. FLAGGED for Kara.
 targets:
   - target_id: orgs/change-healthcare
     role: primary
 sources:
-  - hhs/2024-04-19_change-healthcare-bulletin
   - congress/2024-05-01_witty-testimony
+  - cybersecuritydive/2024-04-30_change-healthcare-compromised-credentials-no-mfa
+  - techcrunch/2024-04-30_change-healthcare-stolen-credentials-no-mfa
+  - krebs/2024-03-05_blackcat-implodes-change-healthcare
+  - wired/2024-04-12_change-healthcare-another-ransomware-threat
+  - bleepingcomputer/2024-04-15_ransomhub-change-healthcare-data-leak
+  - cybersecuritydive/2025-01-27_change-healthcare-190-million
+  - healthcaredive/2024-10-15_unitedhealth-q3-change-cyberattack
+  - healthcaredive/2025-01-16_unitedhealth-2024-record-revenue
+  - hhs/2024-04-19_change-healthcare-bulletin
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    PHANTOM/WRONG-SOURCE REMEDIATION -> RE-SOURCE (badrabbit model). Both
+    prior citations were un-snapshottable: hhs/2024-04-19_change-healthcare-
+    bulletin returns an Akamai 403 (curl "Access Denied", 476 B; no
+    wayback), and congress/2024-05-01_witty-testimony had url:null (dead
+    Senate Finance slug). STEP-0 triage confirmed the event itself is REAL
+    (one of the best-documented cyber incidents on record). Re-sourced +
+    snapshotted 6 new sources (1 govt-primary recovered, 5 journalism) and
+    verified the 3 pre-existing snapshots (Krebs/WIRED/BleepingComputer).
+
+    SNAPSHOTS (all curl HTTP 200; sha256 recorded on each source):
+    - congress/2024-05-01_witty-testimony — URL RECOVERED: House E&C
+      written testimony is on congress.gov (HHRG-118-IF02-Wstate-WittyS-
+      20240501-U5.pdf), fetched 200 (PDF, 10 pp, sha 8e672e9f…9f526e3b).
+      Upgraded from unfetchable to snapshotted govt-primary; now the
+      attribution_source_id.
+    - cybersecuritydive/2024-04-30 (sha e804978d…cd7cdfc, 273,031 B)
+    - techcrunch/2024-04-30 (sha 47e8c943…1a781b96, 237,174 B)
+    - cybersecuritydive/2025-01-27 (sha 6ce27c48…079c7b8d8, 270,574 B)
+    - healthcaredive/2024-10-15 (sha 12f1d4ad…9f0eeab5, 286,798 B)
+    - healthcaredive/2025-01-16 (sha ed0fa94d…047ccaeca, 316,426 B)
+    - krebs/2024-03-05 (sha cb400c4d…e029f71d), wired/2024-04-12 (sha
+      7a127aa9…63b0ad95), bleepingcomputer/2024-04-15 (sha 236239d6…
+      c35de324) — pre-existing, hashes re-verified.
+    hhs/2024-04-19_change-healthcare-bulletin RETAINED as govt-primary
+    corroboration (still cited by actor criminal/alphv, so NOT orphaned)
+    but noted un-snapshottable; every fact it carries is now mirror-
+    corroborated by snapshotted sources, so event = full.
+
+    [a] FACTS — all load-bearing claims now carried by a snapshotted source.
+    ~$22M ransom, single on-chain BTC tx Mar 1: Krebs "On March 1, a
+    cryptocurrency address that security researchers had already mapped to
+    BlackCat received a single transaction worth approximately $22 million"
+    (also WIRED, TechCrunch). The Witty testimony confirms the ransom
+    DECISION ("the decision to pay a ransom was mine") but NOT the $22M
+    figure. CITRIX / NO-MFA initial access (task ask): Witty testimony p.5
+    "On February 12, criminals used compromised credentials to remotely
+    access a Change Healthcare Citrix portal … The portal did not have
+    multi-factor authentication … Ransomware was deployed nine days later"
+    (corroborated verbatim by Cyber Dive + TechCrunch). This detail was
+    ABSENT from the prior prose — added; initial_vector:valid-creds is
+    correct (stolen valid creds). EXIT SCAM / RansomHub re-extortion (task
+    ask): Krebs (Wosar: "They are exit scamming their affiliates"; affiliate
+    "Notchy" on Ramp), WIRED ("AlphV stole our share of the payment and
+    performed an exit scam"; RansomHub 4TB), BleepingComputer. ~50% of US
+    claims: TechCrunch "processes health insurance and billing claims for
+    around half of all U.S. residents." OUTAGE: rewritten to match the
+    Witty recovery timeline (99% of pharmacies by Mar 7; medical claims/
+    payments restored over the following weeks-to-~2 months) — the prior
+    flat "multi-month outage" over-stated the acute phase. RECORDS COUNT
+    (task ask: "watch count embellishment"): the prior "one-third of all
+    Americans (~110M)" was attributed to Witty's testimony, but the WRITTEN
+    testimony says only files "could cover a substantial proportion of
+    people in America" — the "maybe a third" was oral Q&A, not the written
+    record. Corrected: individuals_affected set to UnitedHealth's own
+    confirmed counts — ~100M (Oct 2024, "the largest healthcare data breach
+    ever reported to federal regulators") revised to ~190M (Jan 2025), both
+    verbatim in Cyber Dive 2025-01-27 ("compromised the data of about 190
+    million people"; "nearly doubles the company's previous report of 100
+    million affected individuals"). Field carries the final 190M (the most
+    authoritative confirmed total, directly snapshotted) — this is an
+    upward REVISION by the victim company, not AUSPEX inflation. STRIPPED
+    the unsourced analytical tail from the summary ("immediate ~3-month
+    hiatus of major US healthcare ransomware until June 2024 … Qilin"): no
+    snapshotted source carries it and its June-2024 anchor (Qilin/Synnovis)
+    was a UK NHS incident, not "US healthcare." Kept the sourceable core
+    (ALPHV imploded; affiliates migrated to RansomHub). FINANCIAL: prior
+    disclosed_impact_usd $2.87B ("Q3 2024 SEC disclosure") was the Oct-2024
+    full-year ESTIMATE and is not directly snapshottable (SEC/BankInfoSec/
+    GovInfoSec all bot-wall). Set to the final FY2024 ACTUAL $3.1B, verbatim
+    in Healthcare Dive 2025-01-16 ("cyberattack costs of $3.1 billion");
+    Healthcare Dive 2024-10-15 brackets it with the ~$2.5B booked-through-
+    9-months figure. "Largest US healthcare breach on record" confirmed
+    (Cyber Dive; TechCrunch "largest known digital theft of U.S. medical
+    records").
+    [b] ATTRIBUTION — actor criminal/alphv (ALPHV/BlackCat) confirmed
+    correct. attributing_org tightened to "UnitedHealth (self / Witty
+    testimony) + Mandiant (IR) + HHS HC3": UnitedHealth self-attributed
+    (Witty p.4 names "ALPHV or BlackCat"), Mandiant + Palo Alto were the
+    responders (p.7), HHS HC3 issued the sector alert. Uncontested ->
+    high / concur retained. attribution_source_id RE-POINTED from the
+    unfetchable hhs bulletin to the snapshotted congress/witty-testimony.
+    attribution_date 2024-02-29 verified (UnitedHealth's ALPHV confirmation).
+    [c] DATES — start_date moved 2024-02-21 -> 2024-02-12 (op onset = the
+    initial Citrix credential access per Witty p.5; ransomware deployment
+    Feb 21 and disclosure Feb 22 documented in prose). disclosure_date
+    2024-02-22 kept (8-K). end_date 2024-04-30 kept but flagged APPROXIMATE
+    — no source bounds a precise close; it marks substantial recovery
+    (medical claims "near normal", payments ~86% by late April per Witty)
+    and pre-dates the May-1 testimony. All source published_on verified
+    against bylines/metadata (Witty 2024-05-01; Cyber Dive 2024-04-30 Kapko
+    & 2025-01-27 Olsen; TechCrunch 2024-04-30 Whittaker; Krebs 2024-03-05;
+    WIRED 2024-04-12; BleepingComputer 2024-04-15; Healthcare Dive
+    2024-10-15 & 2025-01-16 Olsen, datePublished metadata confirmed).
+    [d] DOCTRINE_LINKS — ru/sanctions-response-2022/criminal-proxy-
+    mobilization DROPPED to []. ASSESSMENT (task ask — Conti-keep vs
+    DarkSide/REvil-drop): ALPHV patterns with DarkSide/REvil (both dropped
+    as stateless), NOT Conti (kept for its self-declared pro-Russia pledge
+    + Conti-Leaks FSB contacts). Grounds: (1) the actor was demoted
+    ru/proxies/alphv -> criminal/alphv precisely because NONE of its cited
+    sources documents a Russia-state nexus (tasking/tolerance/handoff/
+    safe-harbor); (2) the actor audit already dropped this exact pillar
+    alignment as an "unsourced state-nexus claim" and explicitly FLAGGED
+    this event's link for the same review; (3) ALPHV made no Conti-style
+    political pledge — it is DarkSide->BlackMatter->ALPHV profit-criminal
+    lineage, and CIS-sparing config is a criminal trait, not a state nexus;
+    (4) "Russian-speaking"/"Russian-language forum" in the sources are
+    LINGUISTIC descriptors, not a state relationship; (5) the prior link's
+    own reasoning conceded "operator-direction is opportunistic-affiliate
+    rather than state-tasked," which contradicts the MOBILIZATION pillar;
+    (6) the companion event (change-healthcare-ransomhub-repost) is already
+    doctrine_links:[]. This is an in-scope edit of the event's own field
+    (the doctrine FILE is untouched) but is FLAGGED for Kara as the
+    analytical call the actor audit deferred.
+    [e] ATTRIBUTION_LEVEL — added named-actor (ALPHV/BlackCat is a named
+    RaaS group; no nation/unit is asserted).
+    [f] ACTOR_ID — criminal/alphv resolves to atlas/actors/criminal/
+    alphv.yaml (well-formed; MISP-galaxy Alpha Spider 6149f3b6-…). No actor
+    edit made (out of scope).
+    incident_type broadened [ransomware, data-theft, disruption] ->
+    [ransomware, extortion, data-theft, disruption] (the ~$22M ransom
+    demand is core extortion).
+
+    FLAGS for orchestrator / Kara:
+    (1) DOCTRINE DECISION — the ru/sanctions-response-2022 drop is the
+    assessment requested; confirm the DarkSide/REvil (stateless) vs Conti
+    (state-adjacent) placement. If accepted, the STALE actor note in
+    atlas/actors/criminal/alphv.yaml ("event-level doctrine_link … left
+    untouched … FLAGGED for the same review") should be updated to note the
+    link is now resolved/dropped (actor file not edited per scope).
+    (2) COUNT/COST — field carries the FINAL confirmed figures (190M /
+    $3.1B, Jan 2025). If the event should be pinned to its Feb–Apr 2024
+    scope, the Oct-2024 milestones (~100M / ~$2.87B FY estimate) are the
+    alternative; both progressions are documented in prose/comments.
+    (3) TARGET DESYNC — atlas/targets/orgs/change-healthcare.yaml still
+    says "~110M individuals" / "$2.87B … largest disclosed" and has
+    sources:[] (registry gap). It should be reconciled to ~190M / $3.1B
+    (not edited here — target files are out of audit scope).
+    (4) HHS bulletin remains Akamai-walled (un-snapshottable); a working
+    archive/mirror URL is still wanted (it is real govt-primary, retained,
+    cited by the actor).

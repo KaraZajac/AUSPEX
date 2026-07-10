@@ -5,54 +5,144 @@ disclosure_date: 2024-05-09
 end_date: 2024-06-14
 incident_type:
   - ransomware
+  - extortion
   - disruption
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Black Basta ransomware shut down clinical IT systems at 140
-  Ascension hospitals across 19 US states for approximately
-  five weeks. Manual paper-record fallback; ambulance diversion
-  at multiple facilities; patient-safety concerns reported in
-  several Ascension press releases. Estimated 5.6M patient
-  records affected. CISA released joint advisory AA24-131A
-  May 10 2024 with FBI, HHS, MS-ISAC.
+  Ransomware attributed to Black Basta disrupted clinical IT
+  systems across Ascension's network of ~140 hospitals in 19 US
+  states and the District of Columbia for roughly five weeks
+  (detected 8 May 2024; EHR access restored hospital-wide 14 June
+  2024). Facilities reverted to manual paper records and several
+  diverted ambulances, with reported strain on patient care. A
+  December 2024 breach notification put the number of affected
+  individuals at 5,599,699 (~5.6M). The federal #StopRansomware
+  advisory AA24-131A (CISA/FBI/HHS/MS-ISAC) and an AHA / Health-ISAC
+  sector alert on Black Basta were both issued 10 May 2024 in the
+  incident's immediate wake.
 quantified_impact:
   hospitals_affected: 140
-  individuals_affected: 5600000
+  individuals_affected: 5599699
   downtime_weeks: 5
 false_flag_risk: none
 summary: |
-  Most disruptive US healthcare ransomware incident since Change
-  Healthcare (Feb 2024). Initial access into Ascension came via
-  a phishing email opened by a contractor that delivered the
-  Qakbot-successor loader DarkGate, followed by Black Basta
-  affiliate tradecraft per CISA AA24-131A: Cobalt Strike beacons,
-  credential dumping via Mimikatz, lateral movement on valid
-  credentials through Ascension's hospital network, PSExec and
-  RDP for hands-on-keyboard intrusion, BlackByte / WMI-based
-  defense evasion, and bulk data exfiltration over rclone before
-  the Black Basta ChaCha20 encryptor was detonated network-wide.
-  Together with the Change Healthcare incident the breach
-  catalyzed HHS Office for Civil Rights' move toward mandatory
-  cybersecurity-rule updates for HIPAA-covered entities (NPRM Dec
-  2024).
+  One of the two defining US-healthcare ransomware disruptions of
+  2024, alongside Change Healthcare (Feb 2024). Ascension's own
+  post-incident statement (12 June 2024) traced initial access to
+  "an individual working in one of our facilities [who] accidentally
+  downloaded a malicious file that they thought was legitimate"; no
+  loader was publicly named and reporting treated a phishing-style
+  delivery as the likely-but-unconfirmed vector. Ascension did not
+  name the perpetrator — the Black Basta attribution rests on press
+  reporting (CNN, citing four sources) and the AHA / Health-ISAC
+  sector warning, with the federal AA24-131A advisory issued
+  alongside. AA24-131A does not itself detail the Ascension
+  intrusion; it documents Black Basta's general tradecraft under a
+  double-extortion model — spearphishing and Qakbot for initial
+  access, Cobalt Strike, Mimikatz credential theft, PsExec/RDP
+  lateral movement, rclone exfiltration, and a ChaCha20 / RSA-4096
+  encryptor. Together with Change Healthcare the incident sharpened
+  federal and sector scrutiny of healthcare cybersecurity resilience.
 attributions:
   - actor_id: criminal/black-basta
-    attributing_org: CISA + FBI + HHS
+    attributing_org: Health-ISAC + AHA; press reporting (CNN, four sources)
     attributing_org_confidence: high
-    auspex_assessment: concur
+    auspex_assessment: concur-with-caveat
+    attribution_level: named-actor
     attribution_date: 2024-05-10
-    attribution_source_id: cisa/2024-05-10_aa24-131a-black-basta-advisory
+    attribution_source_id: healthcareitnews/2024-05-13_aha-hisac-warn-black-basta-ascension
 doctrine_links: []
-# Emptied 2026-06-25 (claude-opus-4.8/max, flag-cleanup): dropped the
-# ru/sanctions-response-2022/criminal-proxy-mobilization link. The actor is the STATELESS
-# criminal/black-basta (moved out of ru/proxies on 2026-06-25 — no documented state nexus), and the
-# sole source (CISA #StopRansomware AA24-131A) documents no Russia-state tasking. Per the criminal/
-# convention this carries no attacker-rationale doctrine link — consistent with the now-emptied
-# sibling black-basta events (the ExploitWhispers chat-leak + the Storm-1811 vishing event).
+# Doctrine link deliberately EMPTY. History: the ru/sanctions-response-2022/
+# criminal-proxy-mobilization link was dropped 2026-06-25 when the actor moved
+# ru/unscoped/black-basta -> criminal/black-basta (stateless profit-criminal, per
+# the emotet precedent; no source-documented Russian-state nexus).
+# AUDIT 2026-07-10 (claude-opus-4.8/max) — ASSESSED keep-vs-drop (per task) and
+# CONCUR WITH THE DROP. Black Basta is Conti-lineage and Russian-SPEAKING (Healthcare
+# IT News: "this known Russian-speaking group"), but Russian-speaking is not Russian-
+# state. No cited source documents FSB/GRU/SVR tasking; AA24-131A and the AHA/H-ISAC
+# advisory frame it purely as a RaaS crew, and MISP-galaxy (UNC4393) records it as
+# "financially motivated" with no state-sponsor field. This is the stateless
+# DarkSide/REvil treatment, NOT the state-coupled Conti treatment. The Feb-2025
+# BlackBasta chat-leak (Russia-based ops + tacit protection expectation) is criminal
+# self-protection, modeled at plausible on the leak event (techcrunch-sourced) — not
+# doctrine tasking here. FLAG for human: if the inherited Conti nexus is later judged
+# sufficient to re-home the actor into the RU bucket, reconsider this link in tandem.
 targets:
   - target_id: orgs/ascension-health
     role: primary
 sources:
   - cisa/2024-05-10_aa24-131a-black-basta-advisory
-  - hhs/2024-05-10_ascension-black-basta-bulletin
+  - aha/2024-05-10_black-basta-health-sector-advisory
+  - healthcareitnews/2024-05-13_aha-hisac-warn-black-basta-ascension
+  - infosecurity/2024-06-13_ascension-attack-employee-malicious-file
+  - healthcarefinancenews/2024-06-14_ascension-restores-ehr-hospital-wide
+  - bleepingcomputer/2024-12-20_ascension-health-data-56-million-stolen
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW snapshots. RE-SOURCE path taken (badrabbit model):
+    event is REAL but the pre-audit sourcing was thin/mis-applied — the sole
+    attribution source (AA24-131A) never names Ascension, and the HHS HC3 companion
+    carried url:null (unfetchable). Added five snapshotted sources carrying the
+    Ascension-specific claims; removed the unfetchable HHS bulletin from this event
+    (it remains cited on actor criminal/black-basta, so not orphaned).
+
+    [a] FACTS — STRIPPED three fabrications/embellishments the raw does not carry:
+      * "phishing email opened by a CONTRACTOR that delivered the Qakbot-successor
+        loader DARKGATE" — Ascension's own 12 Jun 2024 statement says "an individual
+        working in one of our facilities accidentally downloaded a malicious file
+        that they thought was legitimate" (infosecurity 89c6605e…: 0 "contractor",
+        0 "DarkGate"). DarkGate is a documented Black Basta tool in the Feb-2025 chat
+        leaks but NO source ties it to the Ascension intrusion. Reworded to the
+        sourced "employee downloaded a malicious file; phishing-style delivery
+        likely but unconfirmed" ("it seems likely to be a phishing-related attack").
+      * "BlackByte / WMI-based defense evasion" — BlackByte is a separate crew; not
+        in AA24-131A (b5d6e1ff…: 0 "BlackByte"). The advisory's EDR-disable tool is
+        "Backstab". Removed.
+      * The generic AA24-131A kill chain was presented "per CISA AA24-131A" as the
+        OBSERVED Ascension chain; AA24-131A contains 0 "ascension" tokens. Reframed
+        explicitly as Black Basta's GENERAL tradecraft (verbatim-carried: spearphishing
+        [T1566] + "Qakbot during initial access"; "ChaCha20 algorithm with an RSA-4096
+        public key fully encrypts files"; Cobalt Strike/Mimikatz/PsExec/RDP/rclone;
+        "double-extortion model, both encrypting systems and exfiltrating data").
+      * Dropped the unsourced causal claim that the breach "catalyzed HHS OCR … HIPAA
+        NPRM (Dec 2024)" (over-reach; no snapshot). Softened "most disruptive since
+        Change Healthcare" to "one of the two defining 2024 healthcare disruptions."
+      Corroborated & KEPT: 140 hospitals / 19 states + DC (healthcareitnews d299e58e…:
+      "140 hospitals in 19 states and the District of Columbia"); 5,599,699 affected
+      (bleepingcomputer 167688dd…: "5,599,699 affected individuals"); EHR restored
+      hospital-wide 14 Jun 2024 (healthcarefinancenews 174ee735…). Fixed
+      individuals_affected 5600000 -> 5599699 (precise Dec-2024 figure).
+    [b] ATTRIBUTION — re-pointed attribution_source_id from AA24-131A (does not name
+      Ascension) to healthcareitnews (ties AHA/H-ISAC Black Basta warning to Ascension).
+      attributing_org corrected CISA+FBI+HHS -> "Health-ISAC + AHA; press reporting
+      (CNN, four sources)"; auspex_assessment concur -> CONCUR-WITH-CAVEAT (sources
+      hedge: "linked to"/"suspected"; Ascension never confirmed the group). org
+      confidence high retained (broad sector/media consensus).
+    [c] DATES — start 2024-05-08 (detection, "this past Wednesday"), disclosure
+      2024-05-09, end 2024-06-14 (EHR restored hospital-wide, healthcarefinancenews
+      byline "June 14, 2024") all corroborated/unchanged. Each new source's
+      published_on set from its byline (aha 05-10; healthcareitnews 05-13;
+      infosecurity 06-13; healthcarefinancenews 06-14; bleepingcomputer 12-20).
+    [d] DOCTRINE_LINKS — empty retained; assessed keep-vs-drop per task and CONCUR
+      WITH DROP (stateless DarkSide/REvil treatment, not Conti). See block comment.
+    [e] ATTRIBUTION_LEVEL — added: named-actor (Black Basta named; no unit/nation).
+    [f] ACTOR_ID — criminal/black-basta resolves (id field in
+      atlas/actors/criminal/black-basta.yaml). incident_type: added "extortion"
+      (double-extortion documented); ransomware/disruption/data-theft retained.
+
+    SNAPSHOTS (sha256, all HTTP 200, verified this pass):
+      cisa/…aa24-131a  b5d6e1ffb09b3aa0c51cbd2a8b02296d6c1b31a721c186b3f8c7980759e96d78 (pre-existing, re-verified)
+      aha/…advisory    abaf6bf5cf4b9957d9044b3711194294a1ed02d1ac8c42052f39081bc2c78c86
+      healthcareitnews d299e58eb468653825d3115acde2d0d39c24de2743f12142439a4a9dba946db2
+      infosecurity     89c6605e98bd93a0efc82ad32f4b7bc819ed21def1d4ea775470b01277cbde0d
+      healthcarefinance 174ee7356f7b79c3b0769bc379c2f320a8bb13a72ddc635538a61c99304de012
+      bleepingcomputer 167688dd024eff98e3a5c2ac28d969d89d4199e11f3c4c8e80b732d2d65eab91
+    FLAGS (out of edit scope): (1) broken FK — target orgs/ascension-health has no
+      file under atlas/targets/orgs/ (referenced only by this event); orchestrator
+      to create. (2) HHS HC3 bulletin (hhs/2024-05-10_ascension-black-basta-bulletin,
+      url:null) removed from this event; still cited on actor criminal/black-basta.

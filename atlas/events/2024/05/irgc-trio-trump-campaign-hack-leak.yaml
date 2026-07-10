@@ -1,8 +1,8 @@
 id: 2024-05/irgc-trio-trump-campaign-hack-leak
 name: IRGC trio hack-and-leak against Trump campaign — APT42 / Mint Sandstorm overlap
-start_date: 2024-05-01
-disclosure_date: 2024-08-19  # ODNI joint statement
-end_date: 2024-09-27
+start_date: 2024-05-01  # DOJ: "in or around May" the trio began targeting the Trump campaign; Google TAG: APT42 campaign targeting "In May and June"
+disclosure_date: 2024-08-19  # ODNI/FBI/CISA joint statement (first US-govt attribution; Google TAG vendor confirmation Aug 14)
+end_date: 2024-08-31  # DOJ: last dated hack-and-leak distribution "on or about Aug. 31" — the Sept 27 indictment is a counter-action, captured as an attribution_date, not the op end
 incident_type:
   - intrusion
   - data-theft
@@ -11,10 +11,13 @@ initial_vector: phishing
 outcome_summary: |
   Spear-phishing and social engineering against Trump-campaign
   staff, current and former US officials, journalists, and
-  NGOs. Mailbox compromise; "hack-and-leak" attempted via
-  media and supposed Biden-campaign-associate intermediaries.
-  Campaign documents obtained; major US media outlets declined
-  to publish; some material leaked to alternative outlets.
+  NGOs; personal-account/mailbox compromise via credential
+  harvesting and MFA-code social engineering. In a late-June
+  "hack-and-leak" phase (distribution running ~June 27–Aug 31),
+  stolen campaign material — including vice-presidential vetting
+  documents — was emailed to news-media organizations and to
+  individuals believed associated with the Biden campaign in an
+  attempt to induce publication; direct recipients did not reply.
 false_flag_risk: none
 operators_named:
   - jalili-masoud  # IRGC, DOJ Sep 2024
@@ -30,50 +33,86 @@ summary: |
   doctrines codified by a US criminal indictment.
 attributions:
   - actor_id: ir/irgc-io/apt42
-    attributing_org: US DOJ
+    attributing_org: Google Threat Analysis Group (TAG)
     attributing_org_confidence: high
+    attribution_level: named-actor  # names "APT42", "Associated with Iran's Islamic Revolutionary Guard Corps (IRGC)"; confirms APT42 targeting of accounts associated with the 2024 US presidential campaigns
     auspex_assessment: concur
-    attribution_date: 2024-09-27
-    attribution_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+    attribution_date: 2024-08-14
+    attribution_source_id: google-tag/2024-08-14_apt42-israel-us-phishing
   - actor_id: ir/irgc-io/apt42
     attributing_org: US ODNI / FBI / CISA
     attributing_org_confidence: high
+    attribution_level: nation  # Aug 19 joint statement attributes only at NATION level — "which the IC attributes to Iran" (no IRGC/IRGC-IO in the text)
     auspex_assessment: concur
     attribution_date: 2024-08-19
     attribution_source_id: odni/2024-08-19_election-joint-statement
+  - actor_id: ir/irgc-io/apt42
+    attributing_org: US DOJ
+    attributing_org_confidence: high
+    attribution_level: named-unit  # indicts 3 named "IRGC employees" (Jalili, Aghamiri, Balaghi); DOJ resolves to the IRGC parent service — the IRGC-IO / APT42 refinement is Mandiant's (in sources[])
+    auspex_assessment: concur
+    attribution_date: 2024-09-27
+    attribution_source_id: doj/2024-09-27_irgc-trio-trump-campaign
 doctrine_links:
   - doctrine_id: ir/post-soleimani-retaliation
     pillar_id: ir/post-soleimani-retaliation/electoral-discord
     program_id: null
     confidence: attested
     reasoning: |
-      DOJ indictment explicitly cites Soleimani revenge as a
-      motivating factor — the rare cyber doctrine attested by
-      a US criminal indictment.
+      The DOJ indictment states the doctrine's terminal goal in
+      substance — the activity advances IRGC efforts "to avenge
+      the death of Qasem Soleimani" — one of the few cyber
+      doctrines attested by a US criminal indictment. Attacker's
+      own doctrine on the attacker's operation (perspective:
+      attacker-rationale, default).
     attesting_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+    inference_basis:
+      source_quote: "The activity was part of Iran's continuing efforts to stoke discord, erode confidence in the U.S. electoral process, and unlawfully acquire information relating to current and former U.S. officials that could be used to advance the malign activities of the IRGC, including ongoing efforts to avenge the death of Qasem Soleimani, the former commander of the IRGC – Qods Force (IRGC-QF)."
+      source_id: doj/2024-09-27_irgc-trio-trump-campaign
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: null
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      Hack-and-leak via journalist intermediaries fits the
-      deniable-retaliation pattern; DOJ attribution makes the
-      doctrine linkage attested.
-    attesting_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+      DOWNGRADED attested → plausible (2026-07-10 audit). No cited
+      source states this doctrine's terminal goal, and the operation
+      lacks the doctrine's DEFINING mechanism — laundering through a
+      named hacktivist persona running Telegram/X claim-and-leak
+      channels. Here the stolen material was emailed directly to news
+      media and Biden-campaign associates under no persona (the trio
+      merely obscured location with VPNs/VPSs). DOJ attribution of the
+      ACTOR does not make the DOCTRINE linkage attested — the prior
+      reasoning was a non-sequitur.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Cyber-deniable-retaliation (persona-laundering): a covert, deniable hack-and-leak is loosely consistent with the posture, but the corpus doctrine specializes in hacktivist-persona / Telegram-X claim-and-leak laundering (Emennet Pasargad, CyberAv3ngers) which this operation did not use."
+        - "Post-Soleimani electoral-discord (better-sourced competitor): the DOJ verbatim ties the same activity to Soleimani-revenge electoral discord — the reading that survives at attested, making the deniable-retaliation reading redundant/weaker here."
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/constitutional-irgc-role
     pillar_id: ir/constitutional-irgc-role/regime-preservation
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      IRGC counter-foreign-threat tasking against named
-      adversary officials.
-    attesting_source_id: doj/2024-09-27_irgc-trio-trump-campaign
+      DOWNGRADED attested → strongly_inferred (2026-07-10 audit). The
+      DOJ does not cite Article 150 / the constitutional role as the
+      goal, so it is not attested; but the IRGC-IO's constitutional
+      counter-foreign-threat function is the foundational statute the
+      Post-Soleimani posture inherits from, and the tasking (IRGC
+      intelligence-gathering against US adversary officials, media and
+      NGOs) fits the regime-preservation pillar.
+    attesting_source_id: null
+    inference_basis:
+      source_id: mandiant/2024-05-01_apt42-untangling
+      signals:
+        - "Mandiant (captured raw): APT42 operates for the IRGC-IO, 'a part of the Iranian intelligence apparatus that is responsible for monitoring and preventing foreign threats to the Islamic Republic and domestic unrest' — the constitutional counter-foreign-threat function."
+        - "DOJ (captured raw): frames the trio as intelligence-gathering by 'a state-sponsored terrorist organization' against current/former US officials, media and NGOs — targets of the regime-preservation pillar."
+      ruled_out: "Attested — the DOJ never states the constitutional / regime-preservation goal (Article 150 / 'safeguard the Revolution') in substance; only the Soleimani-revenge goal is attested, so this inherited-statute link is inferred, not attested."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -89,3 +128,24 @@ targets:
 sources:
   - doj/2024-09-27_irgc-trio-trump-campaign
   - odni/2024-08-19_election-joint-statement
+  - google-tag/2024-08-14_apt42-israel-us-phishing  # APT42 named-actor attribution + confirms 2024 US-campaign targeting (May/June); snapshotted+hashed
+  - mandiant/2024-05-01_apt42-untangling  # APT42 = IRGC-IO named-unit identity / service placement; snapshotted+hashed
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs cited sources; all four now snapshotted+hashed on disk. DOJ + ODNI
+    captured this pass via web.archive.org (prior source notes' "unfetchable /
+    web.archive.org blocked" claim is SUPERSEDED — Wayback is reachable in this
+    environment; live justice.gov/dni.gov still Akamai-403 scripted fetches).
+    SOURCES: doj/2024-09-27_irgc-trio-trump-campaign — doj__2024-09-27_irgc-trio-trump-campaign.html (Wayback), sha256 da850ed1…4763a9b, 99,450 B. odni/2024-08-19_election-joint-statement — odni__2024-08-19_election-joint-statement.html (Wayback), sha256 61674d94…6146054b, 66,440 B. google-tag/2024-08-14_apt42-israel-us-phishing — sha256 ed18dcfe…8c44d44f (pre-existing, re-verified). mandiant/2024-05-01_apt42-untangling — sha256 0ba9f779…92a1b383 (pre-existing, re-verified).
+    EVENT MODELS THE OPERATION (not the indictment): actor ir/irgc-io/apt42, Trump campaign = victim, Iran = attacker; the Sept-27 DOJ indictment + the same-day Treasury sanctions are the counter-actions, captured here as an attribution/attesting source, not as the event shape (correct per the dual-event convention; the counter-action is separately modelled — see policy-actions/us/2024-09-27_irgc-election-interference-sanctions).
+    [a] FACTS — all load-bearing claims source-carried. DOJ (verbatim): trio = "Islamic Revolutionary Guard Corps (IRGC) employees, Masoud Jalili … Seyyed Ali Aghamiri … Yaser Balaghi"; "in or around May … the conspirators … begin targeting … an identified U.S. [Presidential Campaign 1]"; "The activity broadened in late June, when the conspirators engaged in a 'hack-and-leak' operation"; leak "to members of the media and individuals associated with … [Presidential Campaign 2]"; VP-vetting material sent "to multiple members of the news media, in an attempt to induce the news media to publish"; distribution "between on or about July 22 and on or about Aug. 31". Google TAG (verbatim): "In May and June, APT42 targets included the personal email accounts of roughly a dozen individuals affiliated with President Biden and with former President Trump … individuals associated with the respective campaigns." CORRECTION: outcome_summary trimmed — "major US media outlets declined to publish; some material leaked to alternative outlets" is NOT in any cited source (true public record — Politico/NYT/WaPo sat on it, later published by alternative outlets — but uncited), replaced with the DOJ-carried "attempt to induce publication; direct recipients did not reply". operators_named (Jalili/Aghamiri/Balaghi) = free-text prose (no person registry), all DOJ-named ✓.
+    [b] ATTRIBUTION — no over-attestation after fix. Added a Google TAG row (named-actor: "APT42", "Associated with … IRGC"; confirms the US-campaign targeting) — this is the vendor source that actually attributes the OPERATION to the APT42 actor + carries the "APT42" label in the event NAME (DOJ/ODNI use neither "APT42" nor "Mint Sandstorm"). "Mint Sandstorm" in the name is the actor's Microsoft alias (per actor file, confidence: overlapping) resolved via actor_id — no cited source uses it (acceptable actor-alias framing; not stripped). auspex concur kept on all three.
+    [c] DATES — start_date 2024-05-01 VERIFIED (DOJ "in or around May"; Google TAG "In May and June") — NOT a Mandiant-report-date artifact despite the coincidental 2024-05-01 match. disclosure_date 2024-08-19 kept = ODNI joint statement (note Google TAG Aug 14 + Trump-campaign Aug 10 public surfacing predate it; defensible govt-attribution anchor). end_date CORRECTED 2024-09-27 → 2024-08-31: the old value conflated the op end with the indictment (a counter-action); DOJ's last dated hack-and-leak distribution is "on or about Aug. 31". Source published_on: DOJ 2024-09-27 ✓, ODNI 2024-08-19 ✓ (capture title dated "August 19, 2024"), Google TAG 2024-08-14 ✓, Mandiant 2024-05-01 ✓.
+    [d] DOCTRINE_LINKS — one attested KEPT, two DOWNGRADED. (1) ir/post-soleimani-retaliation/electoral-discord KEPT attested: DOJ states the terminal goal in substance ("avenge the death of Qasem Soleimani") — added inference_basis.source_quote (verbatim) + source_id; perspective attacker-rationale (default). (2) ir/cyber-deniable-retaliation attested→PLAUSIBLE: no source states its goal and the op lacks the doctrine's defining hacktivist-persona / Telegram-X laundering mechanism (direct-to-media/Biden emailing, no persona); prior "DOJ attribution makes the doctrine linkage attested" was a non-sequitur; added inference_basis.alternatives. (3) ir/constitutional-irgc-role/regime-preservation attested→STRONGLY_INFERRED: DOJ never states the Article-150 / "safeguard the Revolution" goal; kept as the inherited foundational statute with inference_basis.signals (Mandiant IRGC-IO "monitoring and preventing foreign threats" + DOJ IRGC-targeting-of-adversaries) + ruled_out(attested). attesting_source_id set null on both downgrades. colon-space list items quoted per YAML rule.
+    [e] ATTRIBUTION_LEVEL — was MISSING on all rows; ADDED per source: Google TAG named-actor (names APT42), ODNI nation ("attributes to Iran", zero IRGC in text), DOJ named-unit (indicts 3 IRGC employees by name; DOJ resolves to IRGC parent — the IRGC-IO/APT42 refinement is Mandiant's, now in sources[]).
+    [f] ACTOR_ID — ir/irgc-io/apt42 resolves (atlas/actors/ir/apt42.yaml, internal id ir/irgc-io/apt42; primary_service_id ir/irgc-io, additional ir/irgc). Service placement is Mandiant-backed (verbatim: "Mandiant assesses APT42 operates on behalf of the Islamic Revolutionary Guard Corps Intelligence Organization (IRGC-IO)"). Added Mandiant to sources[] so the named-unit/IRGC-IO identity is snapshot-carried. No actor-file edit (per protocol).
+    FLAGS (out of scope — not edited): (1) DUPLICATE SOURCE — doj/2024-09-27_irgc-2024-election-indictment is the SAME DOJ press release (identical url/date/publisher) under a second id; cited by events/2024/08/cybercom-iran-2024-election + the sanctions policy-action. RETIRE/MERGE candidate → canonical target doj/2024-09-27_irgc-trio-trump-campaign (the widely-cited, now-snapshotted one). (2) DANGLING TARGET FKs — orgs/trump-2024-campaign, sectors/government/civilian, sectors/media/journalism have no registry records under atlas/targets/ (corpus-wide condition; DOJ-named NGO + Biden-campaign-as-leak-conduit are candidate additions once the registry exists). (3) TIER — google-tag kept secondary per PRESERVE (first-party TAG telemetry arguably primary; flagged in its own record).

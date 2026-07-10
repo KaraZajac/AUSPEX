@@ -1,45 +1,53 @@
 id: 2024-09/kimsuky-klogexe-fpspy
 name: Kimsuky KLogEXE keylogger and FPSpy surveillance tool
-start_date: 2024-06-01  # earliest sample dates from Unit 42 telemetry
+start_date: 2024-06-26  # FPSpy first uploaded to VirusTotal 2024-06-26 (earliest hard telemetry; compile timestamps timestomped to 2018 per Unit 42)
 disclosure_date: 2024-09-26
 end_date: null
 incident_type:
   - intrusion
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Palo Alto Unit 42 documented two new Kimsuky / APT43
-  tools — KLogEXE (keylogger) and FPSpy (surveillance
-  utility) — used in spear-phishing campaigns against
-  South Korea-related individuals. Sample collection from
-  June 2024; vendor disclosure 26 September 2024.
+  Palo Alto Unit 42 documented two malware samples used by
+  Sparkling Pisces (aka Kimsuky / APT43): an undocumented
+  keylogger, KLogEXE, and a previously undocumented variant of a
+  backdoor, FPSpy, delivered via spear phishing. Most observed
+  targets originated from South Korea and Japan, congruent with
+  prior Kimsuky targeting. FPSpy first seen on VirusTotal
+  26 June 2024; vendor disclosure 26 September 2024.
   Continuous-compromise pattern consistent with Kimsuky's
   strategic-intelligence mission profile.
 false_flag_risk: none
 summary: |
-  Routine Kimsuky tradecraft-evolution disclosure. Unit 42's
-  reporting describes spear-phishing of South Korea-related
-  researchers and dissidents with weaponized Hangul HWP / Microsoft
-  Office documents that drop the KLogEXE keylogger (a C++ tool
-  capturing keystrokes, window titles, and active processes) and
-  the FPSpy surveillance utility (PowerShell-staged downloader
-  with system-survey, file-listing, screenshot, and additional-
-  module-download capabilities). The KLogEXE / FPSpy pair sits
-  alongside Kimsuky's existing AppleSeed, BabyShark, ReconShark,
-  and FlowerPower toolset and is delivered via the same LNK / CHM
-  / MSC initial-access patterns Kimsuky has used since 2022.
-  AUSPEX flags this and the broader Kimsuky activity stream as
-  candidates for the v0.1 Campaign entity (continuous-compromise
-  grouping) rather than a single event.
+  Routine Kimsuky tradecraft-evolution disclosure. Unit 42 found two
+  malware samples used by Sparkling Pisces (aka Kimsuky): KLogEXE, an
+  undocumented C++ keylogger that reimplements a JPCERT-documented
+  PowerShell keylogger and collects running applications, keystrokes
+  (via GetAsyncKeyState) and mouse clicks, exfiltrating over HTTP
+  POST; and FPSpy, a DLL backdoor (sys.dll) dropped by a custom
+  loader that performs a system survey, downloads and executes
+  additional encrypted modules, runs arbitrary commands, and
+  enumerates drives, folders and files via the PowerShell `tree`
+  command. Unit 42 assessed FPSpy as a variant of malware from a
+  2022 campaign against a South Korean technology conglomerate that
+  closely resembles the 2020 KGHSpy backdoor; the two samples share
+  a codebase (HackingTeam-leaked dynamic-API code, an identical HTTP
+  packet structure, and a decade-old Chrome/31 User-Agent). Most
+  observed victims originated from South Korea and Japan. AUSPEX
+  flags this and the broader Kimsuky activity stream as candidates
+  for the v0.1 Campaign entity (continuous-compromise grouping)
+  rather than a single event.
 attributions:
   - actor_id: kp/rgb/kimsuky
     attributing_org: Palo Alto Unit 42
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2024-09-26
     attribution_source_id: unit42/2024-09-26_klogexe-fpspy
 doctrine_links:
   - doctrine_id: kp/strategic-information
-    pillar_id: null
+    pillar_id: kp/strategic-information/policy-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
@@ -58,10 +66,107 @@ doctrine_links:
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/civil-society/dissident
+  - target_id: sectors/civil-society/think-tank
     role: primary
-  - target_id: sectors/government/foreign-ministry
+  - target_id: sectors/academic/research-lab
+    role: primary
+  - target_id: sectors/government
     role: primary
 sources:
   - unit42/2024-09-26_klogexe-fpspy
   - treasury/2023-11-30_kimsuky-sanction
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Both cited sources snapshotted on disk with
+    matching sha256; PRESERVE tier (no tier/url change). REAL event (Unit 42
+    article + Treasury jy1938 both resolve to the correct topic) — normal audit,
+    no re-source needed.
+    Sources:
+      - unit42/2024-09-26_klogexe-fpspy (secondary) sha256
+        80338f45a919ec1b0d3cf4508ad5572b632e8da87b87217a729c7185b754d5c4 — re-hashed on disk, MATCH.
+      - treasury/2023-11-30_kimsuky-sanction (primary) sha256
+        dfaa6e4a2afdf7a75de213c793b5ee150d8968606f28f6e2103ed2d864039d19 — re-hashed on disk, MATCH.
+
+    [a] FACTS — corrected several fabrications not carried by the Unit 42 raw:
+      * STRIPPED "weaponized Hangul HWP / Microsoft Office documents" — grep of raw:
+        HWP=0, Hangul=0, macro=0; the only "Office" hits are the artefact path
+        C:\Users\user\AppData\Local\Microsoft\WPSOffice\, NOT a lure format. Raw
+        describes delivery as spear phishing only.
+      * STRIPPED "delivered via the same LNK / CHM / MSC initial-access patterns
+        Kimsuky has used since 2022" — LNK=0, .chm=0, .msc=0 in raw; wholly
+        fabricated tradecraft.
+      * KLogEXE capabilities corrected to raw: "Applications currently running",
+        "Keyboard keylogging using the GetAsyncKeyState method", "Mouse clicks".
+        Removed fabricated "window titles" (0 in raw); restored mouse clicks +
+        running applications. Exfil "sends it over HTTP to the C2" / "POST request".
+        Written "in C++".
+      * FPSpy recharacterized from "surveillance utility / PowerShell-staged
+        downloader" to "backdoor (DLL sys.dll dropped by a custom loader)" — raw:
+        "an undocumented variant of a backdoor dubbed FPSpy"; "FPSpy is a DLL named
+        sys.dll". Removed fabricated "screenshot" capability (0 in article body; the
+        6 HTML hits are page metadata). Kept raw-carried capabilities: system survey
+        (Sysinfo_<date>_.txt), "Downloading and executing additional encrypted
+        modules", "Executing arbitrary commands", and the PowerShell `tree`
+        enumeration of drives/folders/files.
+      * STRIPPED unsupported tool list "AppleSeed, BabyShark, ReconShark,
+        FlowerPower" (AppleSeed/ReconShark/FlowerPower=0 in raw; BabyShark only in
+        page furniture, 0 in body). Reframed to raw-carried lineage: KLogEXE
+        reimplements a JPCERT-documented PowerShell keylogger; FPSpy = "a variant of
+        malware mentioned in a campaign carried out in 2022 ... targeted users of a
+        South Korean technology conglomerate", "closely resemble[s] ... KGHSpy
+        backdoor discovered in 2020"; shared codebase (HackingTeam leaked dynamic-API
+        code, identical HTTP packet structure, Chrome/31.0.1650.57 User-Agent).
+      * ADDED Japan victimology — raw: "Most of the targets we observed during our
+        research originated from South Korea and Japan, which is congruent with
+        previous Kimsuky targeting." Event previously said South Korea only.
+
+    [b] ATTRIBUTION — Palo Alto Unit 42 / high / concur PRESERVED. Raw self-attributes:
+        "two malware samples used by the Sparkling Pisces (aka Kimsuky) threat group";
+        "The North Korean APT group Sparkling Pisces (aka Kimsuky, THALLIUM, Velvet
+        Chollima)". Not over-attested — Unit 42 asserts DPRK + named group only.
+
+    [c] DATES — start_date 2024-06-01 -> 2024-06-26 (raw: "FPSpy was first uploaded to
+        VirusTotal on June 26, 2024" — the only hard telemetry date; compile timestamps
+        are timestomped to 2018 per raw, and the earlier 2022 relates to a prior
+        campaign, not this tooling's onset). disclosure_date 2024-09-26 matches byline
+        "Published: September 26, 2024". end_date null (continuous). Source published_on
+        dates match bylines (unit42 2024-09-26; treasury 2023-11-30).
+
+    [d] DOCTRINE — kp/strategic-information KEPT and CONFIRMED correct. Verified the
+        8th-Congress revenue/weapons-tech doctrine does NOT fit: Kimsuky is
+        espionage/strategic-intelligence-focused (raw: "sophisticated cyberespionage
+        operations"; actor file already removed the 8th-Congress link, that pillar is
+        Andariel's lane). confidence strongly_inferred is correct: Treasury attests the
+        actor-level terminal goal verbatim — "OFAC sanctioned cyber espionage group
+        Kimsuky for gathering intelligence to support the DPRK's strategic objectives"
+        — but predates and does not mention the 2024 KLogEXE/FPSpy tooling, so
+        event-specificity remains inferred (not attested). TIGHTENED pillar_id null ->
+        kp/strategic-information/policy-collection (that pillar's target sectors =
+        think-tank / foreign-ministry / academic / journalism, matching this event's
+        victimology). Perspective = attacker-rationale (default; DPRK doctrine on its
+        own operation).
+
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor (was missing). The Unit 42 attribution
+        names the group (Sparkling Pisces / Kimsuky) and the DPRK nation but NO DPRK
+        service ("RGB"/"Reconnaissance General Bureau" absent from the article); the RGB
+        unit placement is carried only by the separate Treasury source, so this
+        attribution entry is named-actor, not named-unit.
+
+    [f] ACTOR_ID — kp/rgb/kimsuky RESOLVES to atlas/actors/kp/kimsuky.yaml (internal
+        id: kp/rgb/kimsuky). RGB placement corroborated by the Treasury raw
+        ("Reconnaissance General Bureau (RGB)") and equated to APT43/Emerald Sleet/
+        Velvet Chollima/TA406/Black Banshee. KEPT. incident_type [intrusion] ->
+        [intrusion, espionage]. Directionality correct (Kimsuky/DPRK = attacker via
+        attribution; South Korea + Japan victims, role primary). Targets corrected to
+        raw-carried sectors — civil-society/think-tank + academic/research-lab +
+        government (was civil-society/dissident + government/foreign-ministry; neither
+        "dissident" nor "foreign-ministry" appears in the raw, which states "South
+        Korean government agencies, research institutions and think tanks").
+
+    FLAGS (out-of-scope, not edited): none for actor/doctrine/other-event files — the
+    kp/rgb/kimsuky actor, the kp/strategic-information doctrine (+ policy-collection
+    pillar), and both source records are already consistent with this audit.
