@@ -5,7 +5,7 @@ disclosure_date: 2022-06-01  # FBI Director Wray public statement
 end_date: 2021-06-30
 incident_type:
   - intrusion
-initial_vector: n-day  # Fortinet vulnerability
+initial_vector: n-day  # CNN/US officials: Fortinet-software exploitation to control the network; specific CVEs NOT in either cited source
 outcome_summary: |
   Iran government-sponsored intrusion attempt against Boston
   Children's Hospital blocked before operational impact thanks
@@ -15,55 +15,67 @@ outcome_summary: |
 false_flag_risk: none
 summary: |
   Notable as a US-government public attribution of an attempted
-  civilian-hospital cyber operation to Iran. Aligns with the
-  Najee Technology / Afkar System cluster's broader targeting of
-  US healthcare via exploitation of Fortinet FortiOS
-  vulnerabilities (CVE-2018-13379, CVE-2019-5591, CVE-2020-12812),
-  Microsoft Exchange ProxyShell (CVE-2021-34473), and VMware
-  Horizon Log4Shell (CVE-2021-44228) — the same n-day intrusion
-  tradecraft catalogued in CISA AA22-257A, with post-exploitation
-  via PowerShell, scheduled tasks, Mimikatz credential dumping,
-  abuse of valid credentials for lateral movement, and
-  BitLocker-driven full-disk encryption used as a destructive
-  primitive masquerading as ransomware. FBI did not name a
-  specific Iranian actor in the public statement.
+  civilian-hospital cyber operation to Iran. Per CNN citing US
+  officials, the June 2021 intrusion exploited software made by
+  Fortinet to gain control of the hospital's network; the FBI was
+  tipped by "a valued partner within the intelligence community,"
+  and its Boston Field Office notified the hospital and helped
+  identify and mitigate the threat before impact. FBI SAC Joseph
+  Bonavolonta stated the activity was thwarted "before it was
+  clear what the hackers' end goal on the hospital's network was"
+  and that "there was no ransomware deployed." Wray attributed the
+  operation to "the Iranian government" and named no specific
+  actor, unit, contractor, CVE, or post-exploitation tooling.
+  ANALYST NOTE (inference — not carried by either cited source):
+  the Iran-government + Fortinet-exploitation + US-healthcare
+  profile is consistent with the IRGC-affiliated Najee Technology /
+  Afkar System cluster later catalogued in CISA AA22-257A (Sept
+  2022), but that advisory is uncited here and neither source ties
+  it — or any specific CVE — to this intrusion.
 attributions:
   - actor_id: null
-    service_id: ir/irgc
+    service_id: null  # neither cited source names a specific Iranian service
     attributing_org: FBI (Director Wray)
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2022-06-01
     attribution_source_id: fbi/2022-06-01_wray-boston-college
     notes: |
-      Wray named "Iran government-sponsored" without naming a
-      specific contractor. Per §"What we don't do", we do not
-      upgrade service-level FBI language to a specific cluster.
-      The Najee Technology / Afkar System indictment context is
-      consistent with this targeting pattern but is not what
+      Wray attributed the intrusion to "hackers sponsored by the
+      Iranian government" (nation level); CNN likewise says "Iran"
+      / "Iranian hackers." Neither cited source names IRGC, a
+      specific service, contractor, or named actor — so
+      attribution_level is nation and service_id is null. The prior
+      ir/irgc value asserted a service the sources do not state (and
+      that the entry's own note disclaimed upgrading to); contrast
+      Bowman Dam, where service_id ir/irgc IS carried by a DOJ
+      indictment that explicitly names the IRGC. The Najee
+      Technology / Afkar System / IRGC context (CISA AA22-257A,
+      Sept 2022) is a consistent but uncited inference, not what
       Wray attested.
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
-    confidence: attested
-    reasoning: |
-      FBI Director's public attribution emphasized the civilian-
-      hospital character of the target as the asymmetric
-      coercion vector.
-    attesting_source_id: fbi/2022-06-01_wray-boston-college
-    counter_explanation: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ir/cyber-deniable-retaliation
-    pillar_id: null
-    program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pattern fits contractor-laundered destructive / coercive
-      operation against US CII.
+      A state deliberately targeting a US civilian pediatric
+      hospital squarely fits the civilian-CII-coercion pillar
+      (healthcare/hospital is one of its target_sectors). But no
+      cited source states an asymmetric-warfare / CII-coercion
+      strategic GOAL — US officials said the operation was thwarted
+      before the hackers' end goal was known — so the doctrinal
+      purpose is inferred, not attested (mirrors sibling Bowman Dam:
+      same pillar, strongly_inferred, even with a firmer attribution).
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "Wray attributes the intrusion to 'hackers sponsored by the Iranian government' and calls the deliberate targeting of a children's hospital 'one of the most despicable cyberattacks' — a civilian critical-infrastructure (healthcare/hospital) target within the pillar's target_sectors"
+        - "CNN citing US officials: the attackers 'exploit[ed] popular software made by ... Fortinet to control the hospital's computer network' — a state intrusion into US civilian CII"
+      ruled_out: "Financially-motivated ransomware/extortion: FBI SAC Bonavolonta stated 'there was no ransomware deployed' — this was a state intrusion, not cybercrime"
+      alternatives:
+        - "Espionage, access-development, or pre-positioning rather than coercive disruption: US officials said it was thwarted 'before it was clear what the hackers' end goal on the hospital's network was', so a collection/pre-positioning purpose cannot be excluded and no source states a coercion goal"
     contested: false
     analyst: claude
 targets:
@@ -75,3 +87,58 @@ targets:
 sources:
   - fbi/2022-06-01_wray-boston-college
   - cnn/2022-06-01_wray-boston-childrens
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against both cited RAW sources (snapshots captured + hashed 2026-07-10).
+    FBI Director Wray "Boston Conference on Cyber Security" speech HTML sha256
+    5f975d0b...16af7194 (77,540 bytes; full page — Boston Children's passage verbatim).
+    CNN "FBI Director Says Iran Attempted Cyber Attack on Boston Children's Hospital"
+    HTML sha256 ecfe5b85...7c7f4690 (4,014,500 bytes; Bonavolonta quotes verbatim).
+    [a] FACTS: MAJOR STRIP of unsourced/embellished technical detail from the summary —
+    neither cited source carries it. Term-scan of the FBI speech: 0 hits for CVE,
+    Fortinet, ProxyShell, Log4, Najee, Mimikatz, BitLocker; CNN mentions "Fortinet"
+    generically (x2) but has 0 CVE / ProxyShell / Najee / Mimikatz / BitLocker.
+    Removed: CVE-2018-13379 / 2019-5591 / 2020-12812, ProxyShell CVE-2021-34473,
+    Log4Shell CVE-2021-44228 / VMware Horizon, CISA AA22-257A framed as if it described
+    THIS op, and the PowerShell / scheduled-tasks / Mimikatz / valid-cred lateral-
+    movement / "BitLocker full-disk encryption ... masquerading as ransomware" chain.
+    The BitLocker/ransomware claim is not merely unsourced but CONTRADICTED — FBI SAC
+    Bonavolonta: "there was no ransomware deployed." ProxyShell (disclosed Aug 2021) and
+    Log4Shell (Dec 2021) are also ANACHRONISTIC for a June 2021 intrusion. KEPT (sourced):
+    June 2021; Fortinet-software exploitation to control the network ("according to US
+    officials", CNN); intelligence-community-partner tip; Boston Field Office notified
+    the hospital; thwarted before impact / before the end goal was known; no ransomware.
+    Najee / Afkar / AA22-257A retained only as an explicitly-labelled uncited inference.
+    [b] ATTRIBUTION: DOWNGRADED service specificity. Wray: "hackers sponsored by the
+    Iranian government" (nation); CNN: "Iran" / "Iranian hackers". Neither names IRGC or
+    any service/actor. Set attribution_level: nation and service_id null (was ir/irgc —
+    an unsourced service upgrade the entry's own note disclaimed; contrast Bowman Dam,
+    where ir/irgc IS carried by a DOJ indictment naming the IRGC). Kept actor_id null,
+    attributing_org FBI (Director Wray), attributing_org_confidence high (Wray stated it
+    flatly as fact), auspex_assessment concur.
+    [c] DATES: start/end June 2021 confirmed (CNN "which took place in June 2021"; Wray
+    "in the summer of 2021"). disclosure_date 2022-06-01 = speech date; CNN published_on
+    2022-06-01 (Wray spoke "Wednesday" = 1 Jun 2022); FBI published_on 2022-06-01 ok. No
+    start/disclosure conflation.
+    [d] DOCTRINE_LINKS: (1) ir/asymmetric-warfare/civilian-cii-coercion DOWNGRADED
+    attested -> strongly_inferred. Even Bowman Dam (firmer: DOJ IRGC named-unit + SCADA
+    sluice-gate access) rates this same pillar only strongly_inferred because the source
+    states no CII-coercion GOAL; here the goal was explicitly UNKNOWN ("thwarted before
+    it was clear what the hackers' end goal ... was"), so attested is untenable.
+    attesting_source_id set null; added inference_basis (signals + ruled_out [no
+    ransomware] + alternatives [espionage / pre-positioning]). (2) REMOVED
+    ir/cyber-deniable-retaliation — genuine mismatch: that doctrine's defining mechanism
+    is hacktivist-persona laundering via Telegram/X claim-and-leak, and this intrusion
+    had NO persona, NO public claim, NO leak (thwarted quietly, goal unknown); its
+    "contractor-laundered destructive/coercive" reasoning was also unsupported.
+    [e] ATTRIBUTION_LEVEL: added — set nation (Wray "Iranian government"; no unit/actor).
+    [f] ACTOR_ID: null retained (no named actor in either source) — correct; not a
+    counter-action, so no meta incident_type needed.
+    FLAGS (orchestrator — NOT edited here per scope rules): (1) target-registry gap —
+    target_id orgs/boston-childrens-hospital has no atlas/targets/orgs/*.yaml record;
+    create it (a genuine, sourced victim). (2) initial_vector kept n-day (Fortinet per US
+    officials, CNN) — sourced only generically; do NOT re-add specific CVEs.

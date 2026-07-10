@@ -5,16 +5,21 @@ disclosure_date: 2021-05-31
 end_date: 2021-06-03
 incident_type:
   - ransomware
+  - extortion
   - disruption
-initial_vector: valid-creds
+initial_vector: unknown  # AUDIT 2026-07-10: JBS access vector never officially confirmed (was: valid-creds). Leading vendor theory = compromised employee creds (SecurityScorecard), but no cited source states it.
 outcome_summary: |
   REvil affiliate intrusion of JBS USA — the world's largest meat
   processor. North American and Australian plants shut down for
-  approximately three days affecting roughly one-quarter of US
-  beef-processing capacity and one-fifth of US pork capacity.
-  USDA released emergency stocks; spot beef prices spiked ~10%.
-  JBS paid USD 11M (Bitcoin) ransom on June 9 2021; CEO Andre
-  Nogueira publicly confirmed the payment.
+  approximately three days, taking offline roughly one-quarter of
+  US beef-processing capacity and about one-fifth of US pork
+  capacity (JBS runs ~20% of US cattle and hog slaughter). The USDA
+  could not publish June-1 wholesale prices and urged other
+  processors to increase output; wholesale boxed-beef prices rose
+  ~1% (USDA). JBS publicly confirmed on June 9 2021 that it had paid
+  a USD 11M ransom in Bitcoin; CEO Andre Nogueira said the payment
+  was made — after most plants had resumed — to prevent any further
+  risk to customers.
 quantified_impact:
   usd_ransom_paid: 11000000
   downtime_days: 3
@@ -23,16 +28,20 @@ false_flag_risk: none
 campaign_id: revil-kaseya-jbs-cluster
 summary: |
   Second major US-CII ransomware incident in the May–July 2021
-  cluster (Colonial → JBS → Kaseya). Agriculture sector inclusion
-  in CISA's CI-16 framework was reinforced after this incident.
-  White House follow-up included the June 16 2021 Biden–Putin
-  Geneva summit, which placed Russian-territorial harboring of
-  ransomware actors on the bilateral agenda for the first time.
+  cluster (Colonial → JBS → Kaseya). The incident underscored the
+  standing of Food & Agriculture as one of the 16 US critical-
+  infrastructure sectors. White House follow-up included the
+  June 16 2021 Biden–Putin Geneva summit, at which Biden presented
+  a list of "16 specific entities ... defined as critical
+  infrastructure under U.S. policy" as off-limits and pressed that
+  "responsible countries need to take action against criminals who
+  conduct ransomware activities on their territory."
 attributions:
   - actor_id: criminal/revil
     attributing_org: FBI
     attributing_org_confidence: high
     auspex_assessment: concur
+    attribution_level: named-actor  # FBI named "REvil and Sodinokibi" — a criminal brand/group, not a state unit
     attribution_date: 2021-06-02
     attribution_source_id: fbi/2021-06-02_jbs-revil-attribution
 doctrine_links:
@@ -41,14 +50,84 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Pre-Feb-2022 incident; doctrinal frame is retroactive. REvil
-      enjoyed Russian-territorial tolerance through 2021 and was
-      raided only after sustained US-diplomatic pressure (Jan 2022).
+      Pre-Feb-2022 incident; the doctrinal frame is retroactive.
+      REvil enjoyed Russian-territorial tolerance through 2021 and
+      was raided only after sustained US-diplomatic pressure
+      (Jan 2022). Retained at plausible for consistency with the
+      Colonial and Kaseya cluster siblings; see counter_explanation.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Pure financial-criminal motive with no state direction: no cited source documents a Russian-state nexus (tasking / tolerance / harbor) for the JBS operation; the actor is now criminal/revil (stateless profit-criminal, default_doctrine_alignment_ids cleared on the 2026-06-25 criminal/ move), and REvil's own posture was apolitical big-game-hunting for ransom."
+        - "Anachronism: the ru/sanctions-response-2022 posture postdates this June-2021 incident by ~8 months; JBS is better read as an inflection event that helped catalyze that posture than as an execution of it."
+    perspective: attacker-rationale
+    counter_explanation: |
+      Pure financial-criminal motive with no state direction is fully
+      consistent with the evidence; the doctrine link is an analytical
+      overlay, not attested. FLAG (2026-07-10 audit): the actor was
+      re-homed to criminal/ (stateless) with doctrine alignments
+      cleared — this link is a human-pending DROP candidate across the
+      whole Colonial → JBS → Kaseya cluster, not JBS alone; left in
+      place here only to avoid singling out one cluster member.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/jbs-foods
+  - target_id: orgs/jbs-foods  # FLAG 2026-07-10: target record atlas/targets/orgs/jbs-foods.yaml is MISSING (broken FK) — orchestrator to create
     role: primary
+    outcome: |
+      ~3-day shutdown of all US beef plants (~one-quarter of US beef
+      capacity) plus pork/poultry slowdowns and Australian/Canadian
+      plant halts; USD 11M ransom paid.
 sources:
   - fbi/2021-06-02_jbs-revil-attribution
+  - abc/2021-06-09_jbs-paid-11-million-ransom
+  - cnbc/2021-06-01_jbs-cyberattack-russia-slaughter-resuming
+  - aljazeera/2021-06-02_jbs-begins-reopening-meat-plants
   - whitehouse/2021-06-16_geneva-summit-readout
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs RAW; all 5 cited sources snapshotted (PRESERVE tier on the two pre-existing).
+    [a] FACTS: two fabrications STRIPPED from outcome_summary. (1) "USDA released emergency
+    stocks" — unsupported; record shows USDA "contacted several major meat processors to
+    encourage them to keep supplies moving and slaughter additional livestock" (CNBC) and could
+    not publish June-1 wholesale prices — corrected. (2) "spot beef prices spiked ~10%" — refuted;
+    the USDA figure is boxed beef "jumped more than 1%" (CNBC) — corrected to ~1%. $11M/Bitcoin
+    CONFIRMED: JBS "paid the ransom ... announced Wednesday night [June 9]"; Nogueira "'This was
+    a very difficult decision ... to prevent any potential risk for our customers'" (ABC). Payment
+    was made after most plants resumed and publicly confirmed June 9 — prose de-conflated. Capacity
+    CONFIRMED: "almost a quarter of American [beef] supplies" (AlJazeera) + "about 20% of the
+    slaughtering capacity for U.S. cattle and hogs" (CNBC). Geography (US/Canada/Australia) + ~3-day
+    recovery CONFIRMED (AlJazeera/CNBC). Dropped the unverifiable "for the first time" superlative;
+    softened the CI-16 wording to a sourced characterization (Food & Agriculture is 1 of the 16 US
+    CI sectors under PPD-21).
+    [b] ATTRIBUTION: FBI→"REvil and Sodinokibi" verbatim (fbi): "We have attributed the JBS attack
+    to REvil and Sodinokibi." concur/high retained — matches the source. Directionality intact
+    (JBS US/global victim; Russia-based attacker per White House/CNBC).
+    [c] DATES: start 2021-05-30 (Memorial-Day-weekend onset), disclosure 2021-05-31, end 2021-06-03
+    (recovery) hold; attribution_date 2021-06-02 = FBI statement date (raw "June 2, 2021"). Source
+    published_on verified vs bylines: fbi 2021-06-02, whitehouse 2021-06-16, cnbc 2021-06-01, abc
+    2021-06-09, aljazeera 2021-06-02.
+    [d] DOCTRINE: ru/sanctions-response-2022/criminal-proxy-mobilization kept at plausible (cluster-
+    consistent with Colonial + Kaseya) and upgraded to the richer schema (inference_basis.alternatives
+    + perspective: attacker-rationale + counter_explanation). FLAG: actor is now criminal/revil
+    (stateless, default_doctrine_alignment_ids cleared 2026-06-25) — this link is a human-pending
+    DROP candidate across the whole Colonial → JBS → Kaseya cluster.
+    [e] ATTRIBUTION_LEVEL: added named-actor (FBI named the REvil/Sodinokibi brand, not a state unit).
+    [f] ACTOR_ID: criminal/revil resolves to atlas/actors/criminal/revil.yaml (id: criminal/revil).
+    OTHER CORRECTIONS: initial_vector valid-creds → unknown (JBS access vector never officially
+    confirmed; leading vendor theory = compromised employee creds, SecurityScorecard, but no cited
+    source states it). incident_type ransomware+disruption → ransomware+extortion+disruption (added
+    "extortion" per the $11M ransom; retained the heavily-sourced "disruption").
+    FLAGS for orchestrator: (1) target atlas/targets/orgs/jbs-foods.yaml is MISSING (broken FK; only
+    this event references it) — needs creation. (2) doctrine-link cluster-wide drop decision (above).
+    (3) initial_vector could be restored to valid-creds if SecurityScorecard is accepted as a citable
+    vendor source. Reuters $11M article (reuters.com/.../2021-06-09) is 401-walled — ABC used instead.
+    Snapshot sha256: fbi b87bcdb7a8e43b833f2c3f1ea05ca61c4de4d1d4b756150bc0be92cc86a117a9;
+    whitehouse 35c62c2e460a14b69326b05350755477d64d0a0d8c138a346fd11b8ca2bc4396;
+    cnbc 0977abb79dcdc6421fe743fbed4fa93e0f45dd843160c3e22a48efa1d8fd367b;
+    abc 2df4615f8e55aab343492b6f468e5b3254d8567149b4380b9212bc5fc8e90a49;
+    aljazeera 5a559800a7a1f9eacefd5f840a94737a092bfac27a37c8fcf27a3ee3ad99160b.

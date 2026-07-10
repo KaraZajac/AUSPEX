@@ -1,8 +1,8 @@
 id: 2015-06/dino-eset-disclosure
 name: ESET Dino implant disclosure (Iranian-targeted Animal Farm backdoor)
-start_date: 2013-01-01  # earliest Dino samples per ESET telemetry; precise deployment-date range unpublished
+start_date: 2013-01-01  # AUDIT 2026-07-10: ESET documents ONE Dino sample "used in 2013 against targets in Iran"; 2013-01-01 = year-floor placeholder, precise deployment date unpublished (v1.3 "likely deployed at some point," undated)
 disclosure_date: 2015-06-30
-end_date: 2015-06-30
+end_date: null  # AUDIT 2026-07-10: was 2015-06-30 (= the disclosure date — a conflation). ESET documents only 2013 targeting; operational END is unpublished. disclosure != end.
 incident_type:
   - documentary
   - espionage
@@ -10,43 +10,95 @@ initial_vector: unknown
 outcome_summary: |
   ESET WeLiveSecurity (Joan Calvet) disclosure on 30 June 2015 of
   the Dino espionage backdoor, joined to the Animal Farm tooling
-  family (Babar, Bunny / EvilBunny, Casper). ESET analyzed a
-  modular implant featuring a custom command interpreter, a
-  bespoke virtual file-system, French-language code artifacts
-  ("arithmetique" string, French date / time formatting in code
-  paths), and Iranian targeting in the available telemetry.
-quantified_impact: {}
+  family (Babar, Bunny / EvilBunny, Casper). ESET analyzed a C++
+  modular implant (named modules PSM / CORE / CRONTAB / FMGR /
+  CMDEXEC / CMDEXECQ / ENVVAR) whose main goal "seems to be the
+  exfiltration of files from its targets," featuring a custom
+  in-memory file system the developers named "ramFS" and a
+  cron-like task-scheduling module (CRONTAB). ESET's two
+  French-speaking-developer artifacts are a Windows resource
+  language code 1036 = "French (France)" and GnuMP build paths
+  containing the French word "arithmetique" ("the French
+  translation of 'arithmetic'"). The documented sample "was used
+  in 2013 against targets in Iran."
+quantified_impact:
+  countries_affected: 1  # AUDIT 2026-07-10: Iran (ESET: victims "located in Iran in 2013"). Was {}.
 false_flag_risk: none
 operators_named: []
 summary: |
-  Dino deepens the Animal Farm cluster characterization by
-  adding a fourth distinct implant (after Babar, Bunny / EvilBunny,
-  Casper) with shared French-language tradecraft. The Iranian
-  targeting orientation is editorially consistent with French
-  foreign-intelligence priorities and with the Le Monde / CSEC
-  Snowglobe framing. ESET stops short of formal French
-  attribution but uses "allegedly French" language; AUSPEX
-  records auspex_assessment as concur on the basis of vendor
-  consensus plus Snowden / Le Monde precedent.
+  Dino deepens the Animal Farm cluster characterization by adding a
+  fourth distinct implant (after Babar, Bunny / EvilBunny, Casper).
+  ESET is "very confident that Dino was developed by the Animal Farm
+  group," basing that on shared code — the same Casper API-name
+  hashing (ROL-7 + XOR), the shared sandbox-process-name check also
+  seen in Bunny, the ramFS custom file system present in Animal Farm
+  droppers, and a sysinfo "beacon" resembling the leaked CSE SNOWBALL
+  implant. ESET stops short of formal French attribution: the title
+  calls it an "allegedly French espionage group" and ESET relays
+  CSE's assessment "with 'moderate certainty' that this group is a
+  French intelligence agency," while adding its own
+  French-speaking-developer indicators for Dino (resource language
+  code 1036 = French (France); "arithmetique" build paths). The
+  Iranian targeting is editorially consistent with French
+  foreign-intelligence priorities and with the CSE Snowglobe framing.
+  AUSPEX records auspex_assessment as concur-with-caveat: the Animal
+  Farm cluster membership is robust, but France-as-state remains a
+  CSE moderate-certainty relay with no French service named, so the
+  actor is held at fr/unscoped.
 attributions:
   - actor_id: fr/unscoped/animal-farm
-    service_id: null  # was fr/dgse/technical-directorate; demoted 2026-06-24 — no cited source names the DGSE/Technical Directorate (see actor notes)
+    service_id: null  # was fr/dgse/technical-directorate; demoted 2026-06-24 — no cited source names the DGSE/Technical Directorate (see actor notes). Re-verified 2026-07-10: "DGSE"=0 in the ESET raw.
     attributing_org: ESET (Joan Calvet)
-    attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attributing_org_confidence: moderate  # AUDIT 2026-07-10: ESET is "very confident" of Dino's Animal Farm membership (high, cluster) but France-as-state is only CSE "moderate certainty" (relayed) + French-speaking-developer artifacts; net moderate for the fr/ actor.
+    attribution_level: named-actor  # AUDIT 2026-07-10 (was MISSING): ESET firmly names the Animal Farm GROUP (high conf). NATION reached only via CSE's relayed "moderate certainty that this group is a French intelligence agency"; no named-unit (no DGSE). Matches the Casper sibling.
+    auspex_assessment: concur-with-caveat  # AUDIT 2026-07-10: was concur. ESET is hedged on France ("allegedly French"; CSE moderate-certainty relay). Robust Animal Farm cluster membership; caveat = France-as-state unproven, no service named, actor held at fr/unscoped. Aligns with the actor record + Casper sibling.
     attribution_date: 2015-06-30
     attribution_source_id: eset/2015-06-30_dino-spying-malware-analyzed
+    notes: |
+      ESET is "very confident that Dino was developed by the Animal
+      Farm group," basing that NAMED-GROUP link on shared code (the
+      same Casper API-name hashing ROL-7/XOR; the shared
+      sandbox-process-name check also present in Bunny; the ramFS
+      custom file system present in Animal Farm droppers; a sysinfo
+      beacon resembling the leaked CSE SNOWBALL implant). On
+      nationality ESET relays CSE, which "assess with 'moderate
+      certainty' that this group is a French intelligence agency,"
+      and titles the post "allegedly French," while adding its own
+      French-speaking-developer artifacts for Dino specifically: a
+      Windows resource language code 1036 = "French (France)" and
+      GnuMP build paths "..\\..\\src\\arithmetique\\...". No cited
+      source names the DGSE or any French service ("DGSE"=0 in the
+      raw) -> service_id null; actor held at fr/unscoped;
+      attribution_level named-actor; auspex_assessment
+      concur-with-caveat. NB: Dino's in-binary French artifacts make
+      its France nexus somewhat firmer than Casper's (where ESET
+      found "no signs of French origin"), but France-as-state remains
+      CSE's relayed assessment, not an ESET assertion. ESET also
+      raised and REJECTED a false-flag reading of the 1036 language
+      code ("Someone using the language code as a false flag would
+      have likely kept the strategy going") -> false_flag_risk none.
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-offensive
     pillar_id: fr/lutte-informatique-offensive/intelligence-preparation
     program_id: null
     confidence: plausible
     reasoning: |
-      Dino operational window (samples 2013-2015) pre-dates LIO's
-      formal codification in 2019. Linked at plausible with the
-      doctrine-codified-later caveat the Animal Farm cluster
-      events share.
+      The documented Dino sample "was used in 2013" (ESET) — six
+      years before LIO was publicly articulated (2019). Mapped
+      retroactively to the intelligence-preparation-of-the-environment
+      function LIO later codified — the mapping the LIO doctrine
+      record itself prescribes for the Animal Farm family ("fits this
+      pillar retroactively at plausible confidence"). Held at
+      PLAUSIBLE, not attested: no cited source states a French
+      strategic GOAL for Dino — ESET describes only the malware's
+      technical goal, "the exfiltration of files from its targets" —
+      and France-as-state is itself only CSE moderate-certainty.
     attesting_source_id: eset/2015-06-30_dino-spying-malware-analyzed
+    inference_basis:
+      alternatives:
+        - "French intelligence-preparation / foreign-intelligence collection (the LIO intelligence-preparation pillar, applied retroactively): Dino is a modular espionage backdoor whose main goal ESET reads as file exfiltration, deployed against targets in Iran — consistent with the CSE-relayed French provenance of the Animal Farm family and French foreign-intelligence priorities."
+        - "Pre-doctrinal DGSE foreign-intelligence collection under pre-2018 authorities with no reference to LIO: the documented Dino sample was used in 2013, six years before LIO was articulated (2019), so the mapping is anachronistic and the op is more precisely generic espionage than preparation for later military cyber effects."
+        - "Attribution-contingent: France-as-state rests on CSE's 'moderate certainty' relayed by ESET plus French-speaking-developer artifacts, not a formal French attestation, so any French-doctrine reading is contingent on the cluster's France provenance holding."
     counter_explanation: |
       DGSE foreign-intelligence collection under pre-2018
       authorities, without specific reference to LIO doctrine.
@@ -54,9 +106,104 @@ doctrine_links:
     analyst: claude
 targets:
   - target_id: sectors/government
+    country: ir
     role: primary
-  - target_id: sectors/government/foreign-ministry
-    role: primary
+    outcome: |
+      AUDIT 2026-07-10: ESET states only that "the sample of Dino
+      documented in this blog post was used in 2013 against targets
+      in Iran" and that "we know very little except that they were
+      located in Iran in 2013," which ESET notes "is in accordance
+      with the victimology described by Canada's CSE." NO specific
+      victim sector is stated for the Dino sample. sectors/government
+      is retained as the broadest node consistent with the
+      CSE-described state-espionage victimology and country: ir pins
+      the one hard fact; the earlier sectors/government/foreign-ministry
+      sub-sector was UNSOURCED (no "foreign-ministry"/diplomatic
+      mention in either raw) and has been removed, as was the second
+      bare sectors/government entry (no country). Kaspersky's
+      cluster-wide Tafacalou victimology lists Iran among nine
+      affected countries (Syria, Iran, Malaysia, USA, China, Turkey,
+      Netherlands, Germany, Great Britain), not Dino-specifically.
 sources:
   - eset/2015-06-30_dino-spying-malware-analyzed
   - kaspersky/2015-03-06_animals-in-the-apt-farm
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs the two cited RAW snapshots (tier=primary PRESERVED):
+      • ESET welivesecurity Dino article — NEWLY captured + hashed this date:
+        content_sha256 f4e1bc0d…f2519, 97627 bytes. STEP-0 triage: NOT a phantom —
+        curl HTTP 200, <title> "Dino – the latest spying malware from an allegedly
+        French espionage group analyzed"; body carries the claims.
+      • Kaspersky "Animals in the APT Farm" — content_sha256 25c24574…066e5, 180845
+        bytes, RE-VERIFIED unchanged (secondary corroborator).
+
+    [a] FACTS — corrected AI-embellishment + an unsourced target:
+      • FABRICATION: outcome_summary claimed a French-language artifact of "French
+        date / time formatting in code paths" — NOT in the raw. ESET's TWO
+        French-speaking-developer artifacts are (1) a Windows resource language code
+        "1036 … French (France)" and (2) GnuMP build paths "..\..\src\arithmetique\..."
+        ("'arithmetique' is the French translation of 'arithmetic'"). Rewrote to the
+        real evidence. ("arithmetique"=6 hits in raw; the date strings 04/01/2015 /
+        "7th April 2015" are ESET's own illustrative sysinfo/cron EXAMPLES, never
+        described as French formatting.)
+      • "bespoke virtual file-system" → ESET's exact object is a "custom file system
+        named 'ramFS'" held in memory; "custom command interpreter" → the named
+        modular command architecture (PSM/CORE/CRONTAB/FMGR/CMDEXEC/CMDEXECQ/ENVVAR)
+        + cron-like CRONTAB scheduler. Reworded to source wording.
+      • CONFIRMED true: Dino a modular C++ espionage backdoor; main goal "the
+        exfiltration of files from its targets"; joined to Animal Farm (Babar/Bunny/
+        Casper); "allegedly French"; disclosed 30 Jun 2015 by Joan Calvet; sample
+        "used in 2013 against targets in Iran."
+      • quantified_impact {} → {countries_affected: 1} (Iran).
+
+    [b] ATTRIBUTION — ESET verbatim: "All these indicators together make us very
+      confident that Dino was developed by the Animal Farm group" (CLUSTER, high
+      conf) and, on nation, relays CSE: "CSE assess with 'moderate certainty' that
+      this group is a French intelligence agency"; title = "allegedly French
+      espionage group." Corrections: auspex_assessment concur → concur-with-caveat
+      (hedged France link; aligns with actor record + Casper sibling); added
+      attribution_level: named-actor (group named high-conf; nation only CSE-moderate;
+      no unit) + a per-attribution notes block. service_id already correctly null —
+      grep "DGSE"=0 in the 97 KB raw. attributing_org_confidence kept moderate.
+
+    [c] DATES — disclosure_date 2015-06-30 = ESET byline ("Joan Calvet 30 Jun 2015") ✓.
+      start_date 2013 = "used in 2013 against targets in Iran" ✓ (year-floor comment
+      corrected: ESET documents ONE sample, not "2013-2015 telemetry"). end_date
+      2015-06-30 → null: it equalled the disclosure date (conflation the protocol
+      forbids); operational end is unpublished (v1.3 "likely deployed at some point,"
+      undated). Source published_on (ESET 2015-06-30; Kaspersky 2015-03-06) ✓.
+
+    [d] DOCTRINE_LINKS — one link, fr/lutte-informatique-offensive/intelligence-
+      preparation, confidence PLAUSIBLE (correct — NOT attested: ESET states only the
+      malware's technical goal, file exfiltration, no French strategic GOAL; France
+      itself only CSE-moderate). Added the ladder-required inference_basis.alternatives[]
+      (3, colon-space-quoted); fixed reasoning ("samples 2013-2015" → the single 2013
+      sample). perspective = attacker-rationale (default; French doctrine on a
+      French-suspected op; actor-state fr = doctrine-state fr). pillar FK
+      fr/lutte-informatique-offensive/intelligence-preparation EXISTS ✓.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (see [b]).
+
+    [f] ACTOR_ID — fr/unscoped/animal-farm resolves to atlas/actors/fr/animal-farm.yaml
+      (id fr/unscoped/animal-farm) ✓; already demoted from fr/dgse/* on 2026-06-24.
+      No actor edit made.
+
+    TARGETS — replaced two UNSOURCED bare targets (sectors/government +
+      sectors/government/foreign-ministry, no country) with a single
+      sectors/government + country: ir. ESET gives NO victim sector ("we know very
+      little except that they were located in Iran in 2013"); the taxonomy has no
+      "unknown-sector" node, so government is retained as the broadest CSE-victimology-
+      consistent node and ir pins the fact. foreign-ministry had zero support in
+      either raw.
+
+    false_flag_risk none = CORRECT: ESET raised and REJECTED a false-flag reading of
+      the 1036 language code. incident_type [documentary, espionage] LEFT AS-IS
+      (matches Babar + Kaspersky-cluster siblings; disclosure-anchored espionage).
+
+    RESIDUAL UNCERTAINTY: France-as-state is CSE "moderate certainty" (relayed), not
+      an ESET assertion; the Dino victim SECTOR is genuinely unstated by ESET; and
+      the operational end date is unpublished.

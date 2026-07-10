@@ -2,58 +2,249 @@ id: 2019-12/bapco-dustman-wiper
 name: Bapco Dustman wiper attack — Bahrain national oil company
 start_date: 2019-12-29
 disclosure_date: 2020-01-09
-end_date: 2019-12-30
+end_date: null  # AUDIT 2026-07-10: the wiper detonated 29 Dec 2019 (malware compiled that morning, GMT+3); no source documents a Dec-30 end/recovery. Prior 2019-12-30 was unsourced -> null.
 incident_type:
   - destructive
   - wiper
 initial_vector: n-day
 outcome_summary: |
-  Dustman wiper deployed against Bahrain's national oil company
-  Bapco. Partial disruption of Bapco IT operations.
+  The "Dustman" disk-wiper was detonated against Bapco (Bahrain
+  Petroleum Company), Bahrain's national oil company, on 29
+  December 2019. Only a portion of Bapco's Windows hosts were
+  wiped; the Saudi NCA report notes multiple OPSEC failures and
+  several "failed wipes," and contemporary reporting confirms the
+  company avoided disruption to its core operations and continued
+  functioning. No public host-damage count was disclosed.
 false_flag_risk: none
 summary: |
-  Attributed to APT34 / OilRig by IBM X-Force and the Saudi
-  National Cybersecurity Authority (January 2020). Forward-Defense
-  Gulf-rival targeting. Dustman is a wiper derived from the
-  ZeroCleare lineage that abuses the EldoS RawDisk signed driver
-  (loaded via a bring-your-own-vulnerable-driver primitive) to
-  obtain raw write access and overwrite the MBR, partition tables,
-  and disk contents of victim Windows hosts. Initial access into
-  Bapco's environment is reported to have used credential abuse
-  against an internet-facing VPN appliance, followed by lateral
-  movement on valid credentials, PowerShell-based staging, and
-  scheduled-task-triggered detonation of the wiper across Bapco
-  IT endpoints.
+  Dustman is a disk-wiper that the Saudi National Cybersecurity
+  Authority (NCSC/NCA) assessed as a new variant of the ZeroCleare
+  wiper (IBM X-Force, December 2019) — distinct from, though
+  sharing the third-party "EldoS RawDisk" driver with, the Shamoon
+  family. To obtain raw write access on modern Windows, Dustman
+  bundles its payload and drivers into a single executable built on
+  a modified "Turla Driver Loader (TDL)": a signed-but-vulnerable
+  VBoxDrv (Oracle VirtualBox) driver is loaded to map the unsigned
+  EldoS RawDisk (ElRawDisk) driver into the kernel, bypassing
+  Windows Driver Signature Enforcement, after which the driver
+  overwrites the Master Boot Record and the physical drive
+  contents. (This single-executable packaging is Dustman's main
+  optimization over ZeroCleare, which shipped the loader and wiper
+  as two files.)
+
+  Per the NCA report, initial access into Bapco was assessed "with
+  moderate confidence" to have come from exploiting a publicly
+  disclosed (n-day) remote-code-execution vulnerability in an
+  internet-facing VPN appliance, with early signs of compromise a
+  few months before the wipe. The actor obtained domain-admin and
+  service accounts and used the victim's anti-virus management
+  console service account to distribute and execute the wiper
+  across the network via PsExec, deleting VPN logs to cover its
+  tracks.
+
+  ATTRIBUTION (audited — the prior text over-attributed): the NCA
+  primary report leaves attribution "still not determined,"
+  assessing only "possibly an act of one nation state actor" — it
+  names NEITHER Iran NOR APT34. The Iran / APT34 (OilRig) reading
+  is an inference via the ZeroCleare lineage: IBM X-Force attributed
+  the parent ZeroCleare wiper to the ITG13 group (APT34/OilRig) plus
+  at least one other likely-Iran-based group (reported elsewhere as
+  Hive0081/xHunt), "aligning with Iranian objectives in the region,"
+  and NCA + multiple vendors class Dustman as a ZeroCleare variant.
+  The prior claim of a direct APT34 attribution "by IBM X-Force and
+  the Saudi NCA," plus PowerShell/scheduled-task detonation and
+  credential-abuse initial access, was unsupported and has been
+  corrected against the raw sources.
 attributions:
   - actor_id: ir/mois/apt34
-    attributing_org: IBM X-Force
+    attributing_org: IBM X-Force (ZeroCleare report; parent-malware attribution extended to Dustman by variant lineage)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2020-01-09
-    attribution_source_id: ibm-xforce/2020-01_dustman-bapco
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2019-12-04  # date of the IBM ZeroCleare report where the APT34 attribution originates; no IBM report attributes Dustman-Bapco directly
+    attribution_source_id: ibm-xforce/2019-12_zerocleare
+    notes: |
+      IBM X-Force attributed the PARENT malware ZeroCleare — not the
+      Dustman-Bapco incident directly — to "the ITG13 group ... and at
+      least one additional group, likely Iran-based," i.e. APT34/OilRig
+      plus a second Iranian group (named Hive0081/xHunt in secondary
+      reporting: Deep Instinct, The Hacker News). Dustman inherits the
+      APT34/OilRig label via the NCA-and-vendor-confirmed "Dustman is a
+      new variant of ZeroCleare" lineage. Two caveats hold confidence
+      to concur-with-caveat: (1) this is a lineage inference, not an
+      independent Dustman attribution; (2) IBM itself flags that
+      "ITG13's traditional mission ... has not included executing
+      destructive attacks," so a destructive op is atypical for APT34.
+      The corpus has no xHunt/Hive0081 actor; APT34 (the group IBM
+      places on initial access) is used as the named actor.
   - actor_id: ir/mois/apt34
-    attributing_org: Saudi NCA
-    attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attributing_org: Saudi NCA (NCSC)
+    attributing_org_confidence: low
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
     attribution_date: 2020-01-09
     attribution_source_id: saudi-nca/2020-01_dustman-bapco
+    notes: |
+      CORRECTED over-attribution: the NCA primary report does NOT name
+      APT34 or Iran. Verbatim: "The attribution and the threat actor
+      behind these attacks is still not determined. However, commitment,
+      persistence and TTPs observed indicates that these are possibly an
+      act of one nation state actor," following "the typical attack life
+      cycle of nation-state threat actor." NCA therefore supports only a
+      nation-level, UNNAMED nation-state actor (not even Iran-named). The
+      Iran/APT34 specificity is AUSPEX's via the ZeroCleare-lineage row
+      above, not NCA's. actor_id kept ir/mois/apt34 for corpus/lineage
+      continuity; attribution_level nation reflects what THIS source
+      actually carries.
 doctrine_links:
-  - doctrine_id: ir/forward-defense
-    pillar_id: null
+  - doctrine_id: ir/asymmetric-warfare
+    perspective: attacker-rationale
+    pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Bahrain energy target consistent with Gulf-rival forward-
-      defense projection.
+      A purpose-built disk-wiper detonated against a Gulf-rival state's
+      national oil company reads as the asymmetric coercion of an
+      adversary's civilian critical infrastructure that this pillar
+      encodes (target_sectors include energy). No cited source states
+      the operation's strategic purpose — the NCA primary names no goal
+      and no actor — so this is AUSPEX's triangulated inference, not a
+      source-stated aim.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "Target + method: a purpose-built disk wiper (no theft/ransom) against Bahrain's national oil company — destruction of an adversary's civilian energy CII, the pillar's core pattern."
+        - "Campaign fit: Dustman is a ZeroCleare variant, and IBM attributes the ZeroCleare Gulf-energy wiper campaign to Iranian APT34/xHunt — the same Shamoon-lineage EldoS-RawDisk destructive toolset Iran has aimed at Gulf energy since 2012 (Aramco/RasGas)."
+        - "Timing: detonated 29 Dec 2019 amid the escalating US-Iran maximum-pressure confrontation, the canonical Iranian asymmetric-retaliation window."
+      ruled_out: "Espionage or financial motive — the payload is purpose-built destruction (MBR + physical-drive overwrite) with no exfiltration, ransom, or collection rationale evidenced. Note the underpinning Iranian attribution is itself lineage-inferred (see attributions), not stated by the NCA primary."
+    contested: false
+    analyst: claude
+  - doctrine_id: ir/forward-defense
+    perspective: attacker-rationale
+    pillar_id: ir/forward-defense/proxy-projection
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Destructive cyber against a US-aligned Gulf monarchy's national
+      energy company (Bahrain hosts the US Navy Fifth Fleet) can also
+      be read as projecting Iranian coercive reach extraterritorially,
+      at near-zero physical risk — the forward-defense proxy-projection
+      logic. Kept only plausible: no source ties this op to that
+      posture, and the civilian-CII-coercion reading above is the
+      tighter fit. (This link replaces the prior bare, under-graded
+      forward-defense entry.)
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Forward-defense proxy projection: a destructive strike into a US-aligned Gulf monarchy (Bahrain, home of the US Fifth Fleet) projects Iranian reach into adversary-partner territory."
+        - "Simple asymmetric civilian-CII coercion (the reading above) with no distinct extraterritorial-projection intent."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/bapco
+    country: bh
     role: primary
     outcome: |
-      Partial disruption of Bapco IT.
+      A portion of Bapco's Windows hosts wiped (MBR + physical-drive
+      contents overwritten); core operations avoided disruption and
+      the company continued functioning. No public host-count disclosed.
 sources:
-  - ibm-xforce/2020-01_dustman-bapco
   - saudi-nca/2020-01_dustman-bapco
+  - ibm-xforce/2019-12_zerocleare
+  - kaspersky-ics-cert/2020-01-10_bapco-dustman
+  - zdnet/2020-01-09_dustman-bapco
+  - swapcontext/2020-01-20_dustman-copy-paste
+  - deepinstinct/2020-02-03_dustman-byte-the-dust
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs raw sources; level=full — every load-bearing claim is carried by a
+    snapshotted, hashed source. Both originally-cited source URLs were PHANTOM shells
+    (STEP-0 triage): ibm-xforce/2020-01_dustman-bapco -> https://www.ibm.com/security/xforce
+    (redirects to the /x-force product page; IBM never published a Dustman-Bapco article) and
+    saudi-nca/2020-01_dustman-bapco -> https://nca.gov.sa (homepage, redirects to /ar/). RE-SOURCED
+    (badrabbit model) to genuine primary + secondaries.
+
+    SOURCES / HASHES (all HTTP 200, snapshotted to atlas/sources/raw/ 2026-07-10):
+    - saudi-nca/2020-01_dustman-bapco (PRIMARY): NCSC/NCA "Destructive Attack 'DUSTMAN'
+      Technical Report (TLP:WHITE)", 22pp. Prior homepage-shell url re-pointed to a faithful
+      public mirror (lastwatchdog.com) because nca.gov.sa link-rotted. raw
+      03a60ace…613410d9, 1,168,094 bytes.
+    - ibm-xforce/2019-12_zerocleare (SECONDARY, shared w/ 2019/06 DHS event): Wayback capture
+      of the Security Intelligence ZeroCleare report. raw 29a0603f…efe08b93, 169,784 bytes
+      (content_sha256 realigned from the concurrent DHS-audit's 079c6fad…; Wayback wrapper
+      drifts a few bytes/fetch, body identical). Carries the APT34/ITG13 attribution.
+    - kaspersky-ics-cert/2020-01-10_bapco-dustman (NEW): raw 871181ff…c737df46, 71,240 bytes.
+    - zdnet/2020-01-09_dustman-bapco (NEW, Cimpanu): raw ebfc3f25…5246a962, 1,120,680 bytes.
+    - swapcontext/2020-01-20_dustman-copy-paste (NEW, hfiref0x/TDL author): raw
+      9d48543b…36093e39, 56,954 bytes.
+    - deepinstinct/2020-02-03_dustman-byte-the-dust (NEW): raw 891d3866…3470b1fc, 79,921 bytes.
+
+    [a] FACTS — corrected. Confirmed by NCA primary: Bapco = Bahrain's national oil company;
+    "DUSTMAN ... detonated on December 29, 2019"; "can be considered as a new variant of
+    'ZeroCleare' malware," distinct from Shamoon though "they all use the same third-party
+    driver 'Eldos RawDisk'" (ZeroCleare-lineage kept; NOT conflated with Shamoon). Impact
+    softened: "Only some of the computers on the Bapco network were infected and the company was
+    able to avoid disruption to its operations" (Kaspersky) — prior "Partial disruption of Bapco
+    IT operations" overstated. TWO fabrications STRIPPED from the summary: (1) initial access
+    was NOT "credential abuse against a VPN appliance" — NCA: "moderate confidence ... exploiting
+    one of the remote execution vulnerabilities in a VPN appliance that was disclosed" (n-day RCE
+    exploit, months prior); (2) execution was NOT "PowerShell-based staging, scheduled-task-
+    triggered detonation" — NCA: "the anti-virus management console service account ... PSEXEC"
+    (domain admin/service accounts + PsExec). Driver mechanism made precise: EldoS RawDisk is the
+    UNSIGNED wiper driver; the SIGNED-but-vulnerable driver is VBoxDrv, loaded via a modified
+    Turla Driver Loader (TDL) to "bypass Window's Driver Signature Enforcement (DSE)"
+    (NCA + swapcontext/hfiref0x). Overwrite target = "MBR (Master Boot Record) and other disks" /
+    "overwrites the volume" (swapcontext/Kaspersky) — prior "partition tables" softened to
+    "physical-drive contents." Single-executable packaging (vs ZeroCleare's two files) confirmed.
+
+    [b] ATTRIBUTION — DOUBLE over-attestation FIXED. Prior: both rows asserted "APT34/OilRig
+    ... by IBM X-Force AND Saudi NCA, moderate, concur." Reality: (1) Saudi NCA row corrected to
+    attribution_level=nation, confidence LOW, concur-with-caveat — the NCA primary leaves
+    attribution "still not determined," saying only "possibly an act of one nation state actor";
+    it names NEITHER Iran NOR APT34. (2) IBM row re-sourced from the phantom Dustman URL to the
+    real ZeroCleare report; IBM attributed the PARENT ZeroCleare (not Dustman-Bapco) to "the
+    ITG13 group ... and at least one additional group, likely Iran-based" (APT34/OilRig +
+    xHunt/Hive0081), "aligning with Iranian objectives" — attribution_level=named-actor,
+    moderate, concur-with-caveat (lineage inference; IBM flags destructive ops are atypical for
+    ITG13/APT34). No source firmer than "nation-state" (NCA) or "APT34 via ZeroCleare-lineage"
+    (IBM) exists; nothing supports a Dustman-specific APT34 attribution by NCA.
+
+    [c] DATES — start_date 2019-12-29 ✓ (NCA detonation; malware Compilation Date "Sun Dec 29
+    08:57:19 2019 (GMT+3)"). end_date 2019-12-30 -> null (unsourced; single-day wipe).
+    disclosure_date 2020-01-09 ✓ (public disclosure: ZDNet 2020-01-09T04:28 Cimpanu; Rendition
+    01-09; Kaspersky 01-10). Source published_on verified: IBM ZeroCleare 2019-12-04 (JSON-LD);
+    ZDNet 2020-01-09; Kaspersky 2020-01-10; swapcontext 2020-01-20 (Malpedia); Deep Instinct
+    2020-02-03 (JSON-LD — its raw filename/slug corrected from 2020-01). NCA report has no
+    explicit internal date; kept 2020-01-09 (public-disclosure alignment).
+
+    [d] DOCTRINE_LINKS — restructured. Prior: a single bare ir/forward-defense link
+    (strongly_inferred, reasoning only, no perspective/pillar/inference_basis). Now two graded,
+    attacker-rationale links mirroring the audited sister Shamoon events (rasgas/aramco):
+    PRIMARY ir/asymmetric-warfare/civilian-cii-coercion (strongly_inferred; destructive wiper on
+    civilian energy CII; inference_basis.signals + ruled_out; attesting null); SECONDARY
+    ir/forward-defense/proxy-projection (plausible; Bahrain = US-aligned Gulf monarchy hosting
+    the US Fifth Fleet; inference_basis.alternatives; attesting null). Neither is attested — no
+    source states a strategic goal — correct per protocol. NOT linked: ir/post-soleimani-
+    retaliation (anachronistic — Dustman 29 Dec 2019 PRE-dates the 3 Jan 2020 Soleimani strike).
+
+    [e] ATTRIBUTION_LEVEL — added per row: named-actor (IBM/ZeroCleare-lineage APT34) and nation
+    (Saudi NCA's unnamed nation-state actor).
+
+    [f] ACTOR_ID — ir/mois/apt34 RESOLVES (atlas/actors/ir/apt34.yaml, id ir/mois/apt34). Kept
+    over an "ir/unscoped" alternative because (i) no bare ir/unscoped actor exists in the corpus,
+    and (ii) malware-lineage.yaml places DUSTMAN under ZeroCleare->APT34 and IBM names APT34 for
+    ZeroCleare. FLAG for orchestrator: the MOIS specificity is doubly inherited — Dustman->APT34
+    is a malware-lineage inference (no primary named APT34 for Dustman), and APT34->MOIS itself
+    rests (per the actor file) on the tertiary 2019 Lab Dookhtegan leak. This is a named-actor
+    claim carrying real uncertainty; the firmly-supported layer is nation-level ("one nation
+    state actor," Iran by ZeroCleare lineage).
+
+    RESIDUAL / FLAGS: (1) Phantom source ibm-xforce/2020-01_dustman-bapco removed from this
+    event but LEFT IN PLACE (not orphaned — still cited by atlas/events/2019/06/
+    iran-linked-wiper-us-dhs.yaml, which is out of scope here); it is a WRONG-SOURCE/phantom
+    (invented title, /x-force shell url) and should be remediated on the DHS event too. (2)
+    Corpus lacks an xHunt/Hive0081 actor — the ZeroCleare second group is captured only in prose.

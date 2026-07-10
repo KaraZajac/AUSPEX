@@ -1,8 +1,8 @@
 id: 2016-10/kaspersky-strongpity-disclosure
 name: Kaspersky discloses StrongPity watering-hole campaign against encryption-tool users
-start_date: 2016-05-01
+start_date: 2016-05-24  # earliest raw-attested watering-hole delivery: winrar[.]it "started serving these executables ... on 5/24" (2016)
 disclosure_date: 2016-10-03
-end_date: null
+end_date: 2016-09-30  # last watering-hole activity Kaspersky documents: deployment "continued mostly within Turkey in July and September 2016"
 incident_type:
   - intrusion
   - supply-chain
@@ -11,8 +11,10 @@ outcome_summary: |
   Kaspersky published the first detailed analysis of the
   StrongPity malware family, documenting trojanized installers
   of legitimate encryption tools (WinRAR, TrueCrypt) delivered
-  via compromised download mirrors to users in Italy, Belgium,
-  Algeria, and other countries. Subsequent vendor and Citizen
+  through manipulated software-distributor sites and
+  attacker-controlled download mirrors to users concentrated in
+  Italy, Belgium, and Algeria (with Turkey and France also in the
+  top-five infected countries). Subsequent vendor and Citizen
   Lab work tied the cluster (under the name PROMETHIUM) to
   Turkish state interests, with Türk Telekom-mediated ISP-level
   redirection documented in the 2018 Citizen Lab "Bad Traffic"
@@ -30,26 +32,75 @@ attributions:
   - actor_id: tr/unscoped/promethium
     attributing_org: Kaspersky (Securelist)
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2016-10-03
     attribution_source_id: kaspersky/2016-10_strongpity-watering-hole
     notes: |
-      Kaspersky's 2016 disclosure did not name a sponsor; the
-      Turkish-aligned attribution rests on subsequent Citizen
-      Lab and Bitdefender work documenting ISP-level injection
-      via Türk Telekom infrastructure.
+      Kaspersky (Securelist, Kurt Baumgartner) named ONLY the
+      "StrongPity" malware/APT cluster and made NO nation, state,
+      or sponsor attribution — verified against the raw snapshot:
+      "Turkey" appears solely as victim geolocation (top-five
+      infected countries "Italy, Turkey, Belgium, Algeria, and
+      France"), and the words government / state / Turkish /
+      sponsor / PROMETHIUM do not occur anywhere in the report.
+      The cluster name PROMETHIUM is Microsoft's designation (Dec
+      2016), not Kaspersky's — hence attribution_level:
+      activity-cluster and auspex_assessment: concur-with-caveat.
+      Corrected a prior note that credited Bitdefender with the
+      Türk Telekom ISP-injection finding: that finding is Citizen
+      Lab's ("Bitdefender" = 0 occurrences in the Citizen Lab raw),
+      and Bitdefender's 2020 report is not cited on this event.
+      Held at moderate for consistency with the sibling 2020
+      talos-promethium-strongpity3 event.
+  - actor_id: tr/unscoped/promethium
+    attributing_org: Citizen Lab (University of Toronto)
+    attributing_org_confidence: moderate
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2018-03-09
+    attribution_source_id: citizenlab/2018-03-09_bad-traffic-strongpity
+    notes: |
+      The Turkish-state nexus that the tr/unscoped/promethium id
+      encodes derives from Citizen Lab's 2018 "Bad Traffic" report,
+      NOT from the 2016 Kaspersky disclosure. Citizen Lab documents
+      Türk Telekom-network middleboxes redirecting "hundreds of
+      users in Turkey and Syria to nation-state spyware" and notes
+      the injected spyware was "similar to that used in the
+      StrongPity APT attacks" — a NATION-level attribution of the
+      injection operation. It is explicitly hedged on the cluster
+      itself: "StrongPity was an unattributed APT operation in
+      2016." It names the MİT (Milli İstihbarat Teşkilatı) only as
+      surveillance-law background (Law No. 6532), never as the
+      operator — hence tr/unscoped (no service named) and
+      attribution_level: nation. concur-with-caveat: the
+      cluster<->injection tie is by tooling similarity, not a hard
+      identity.
 doctrine_links:
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
     pillar_id: null
     program_id: null
     confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Encryption-tool user targeting and ISP-level injection
-      via Türk Telekom fit the broader Turkish-aligned
-      surveillance posture; specific Kurdish or Gülen-related
-      victim attribution is documented in the 2020 Bitdefender
-      Syrian-Kurd reporting more clearly than in the 2016
-      disclosure.
+      The 2016 Kaspersky disclosure documents targeting of
+      encryption-tool users concentrated in Italy, Belgium, and
+      Algeria (with Turkey and France in the top five) — it does
+      NOT document Kurdish- or Gülen-specific victimology, so
+      neither doctrine pillar is asserted (pillar_id null). The
+      Turkish-aligned surveillance reading rests on the later
+      cited Citizen Lab "Bad Traffic" report (2018), which
+      documents Türk Telekom-mediated, nation-state ISP-level
+      injection of StrongPity-similar spyware — a nation-level
+      signal, not a diaspora-targeting one. Held at plausible: the
+      doctrinal fit is directional (a Turkish-state surveillance
+      nexus) rather than victim-specific in this event's own
+      cited sources.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Turkish-state diaspora-surveillance posture: the encryption-tool-user victimology plus the later Türk Telekom nation-state injection (Citizen Lab 2018) fit the broader TR surveillance pattern, but neither cited source documents Kurdish / Gülen victim selection for THIS 2016 campaign."
+        - "Generic espionage against privacy-conscious users: Kaspersky documents only that victims were users of encryption tools (WinRAR / TrueCrypt) across Europe, North Africa, and Turkey, with no cited evidence tying the target set to a specific TR political-opposition class."
     contested: false
     analyst: claude
 targets:
@@ -58,3 +109,112 @@ targets:
 sources:
   - kaspersky/2016-10_strongpity-watering-hole
   - citizenlab/2018-03-09_bad-traffic-strongpity
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit against BOTH cited raw snapshots (hashes
+    RECOMPUTED, match the source records exactly): kaspersky__2016-
+    10_strongpity-watering-hole.html (sha256 2e23998b…e9ef822d,
+    197,447 bytes) and citizenlab__2018-03-09_bad-traffic-
+    strongpity.html (sha256 f2f803b7…d6b043fe, 321,174 bytes).
+    BITDEFENDER-MISLABEL check CLEARED: the cited primary IS the real
+    Kaspersky (Securelist) StrongPity article (Kurt Baumgartner, 03
+    Oct 2016), not a mislabeled Bitdefender record; and the event's
+    prior attribution note wrongly co-credited Bitdefender with the
+    Türk Telekom ISP-injection finding — that finding is Citizen
+    Lab's alone ("Bitdefender" = 0 occurrences in the Citizen Lab
+    raw; Bitdefender is not even a cited source here). Fixed. Neither
+    source is a phantom; NO re-sourcing needed.
+
+    [a] FACTS — all load-bearing claims carried by the raw. Kaspersky
+    raw confirms: trojanized installers of WinRAR and TrueCrypt
+    ("trojanized WinRAR installers hosted from the winrar.it site
+    itself"; "poisoned TrueCrypt installer redirects"; "Both WinRAR
+    and TrueCrypt help provide strong and reliable encryption");
+    watering-hole delivery via manipulated legit distributor sites
+    ("placed links on a legitimate 'certified distributor' site in
+    Europe to redirect to their poisoned installers") + attacker
+    hosts (ralrab[.]com, true-crypt[.]com); victim concentration
+    "the country with the overwhelming number of detections was in
+    Italy followed by Belgium and Algeria" and overall "top five
+    countries include Italy, Turkey, Belgium, Algeria, and France."
+    Tightened outcome_summary's loose "compromised download mirrors"
+    to "manipulated software-distributor sites and attacker-
+    controlled download mirrors" (Kaspersky does not assert the
+    distributor sites were compromised), and added the Turkey/France
+    top-five detail. No fabricated malware/CVE/victim/figure found.
+
+    [b] ATTRIBUTION — corrected over-reach and split by source
+    (mirrors the sibling 2016-10 fruityarmor pattern). Kaspersky
+    names ONLY the "StrongPity" activity cluster and makes NO nation/
+    state/sponsor attribution (verified 0 occurrences of government /
+    state / Turkish / sponsor / PROMETHIUM in the raw; "Turkey" =
+    victim geolocation only) → attribution_level: activity-cluster,
+    moderate, concur-with-caveat. Added a second, dated Citizen Lab
+    entry (2018-03-09) that actually carries the Turkish-state nexus
+    the tr/ id encodes: Citizen Lab attributes the Türk Telekom
+    injection to "nation-state spyware" (nation level) but calls
+    StrongPity "an unattributed APT operation in 2016" and names the
+    MİT only as Law-No.-6532 background, never as operator →
+    attribution_level: nation, moderate, concur-with-caveat (cluster
+    tie is by tooling similarity: "similar to that used in the
+    StrongPity APT attacks"). PROMETHIUM is Microsoft's Dec-2016
+    name, noted.
+
+    [c] DATES. disclosure_date 2016-10-03 CONFIRMED (raw byline "03
+    Oct 2016"). start_date corrected 2016-05-01 (unsourced round) →
+    2016-05-24, the earliest raw-attested watering-hole delivery
+    (winrar[.]it "started serving these executables ... on 5/24";
+    winrar[.]be→ralrab[.]com first redirect "May 28th, 2016").
+    end_date corrected null → 2016-09-30, the last activity month
+    Kaspersky documents ("deployment of the installers continued
+    mostly within Turkey in July and September 2016") — bounding THIS
+    watering-hole campaign, whose infrastructure the Oct disclosure
+    burned; the StrongPity cluster itself remains active (modeled on
+    the actor record, not here). Citizen Lab published_on 2018-03-09
+    consistent with the event's "2018 ... 'Bad Traffic' report" prose
+    (source tier/hash re-verified 2026-06-28).
+
+    [d] DOCTRINE_LINK. tr/counter-gulen-kurdish-surveillance held at
+    plausible (correct: this event's sources support a directional
+    Turkish-state surveillance nexus, NOT victim-specific diaspora
+    targeting). NOT attested → attesting_source_id null. pillar_id
+    kept null — honest: Kaspersky documents encryption-tool users in
+    Italy/Belgium/Algeria/Turkey/France, no Kurdish/Gülen victimology
+    (unlike the 2020 sibling, which uses the kurdish-diaspora pillar
+    off Talos/Bitdefender). Removed the reasoning's lean on the
+    uncited "2020 Bitdefender Syrian-Kurd reporting" and regrounded
+    it on the two cited sources; added perspective: attacker-rationale
+    (Turkey's own doctrine on a Turkish operation) and inference_basis
+    {alternatives} (diaspora-surveillance vs generic-privacy-user
+    espionage).
+
+    [e] ATTRIBUTION_LEVEL. Added on both entries (was absent):
+    activity-cluster (Kaspersky/StrongPity), nation (Citizen Lab/
+    Türk Telekom nation-state injection).
+
+    [f] ACTOR_ID. tr/unscoped/promethium resolves (actor file
+    atlas/actors/tr/promethium.yaml, id: field tr/unscoped/promethium
+    — FK resolves by id, not path). Actor already audited/demoted
+    tr/mit→tr/unscoped 2026-06-25 (no cited source names the MİT as
+    operator); correct as-is, NOT reverted. Directionality correct:
+    the encryption-tool users are the primary TARGETS (victims), role
+    primary. Not a counter-action, so actor_id populated (no meta
+    incident_type needed).
+
+    NB DATA-INTEGRITY FLAG (out of scope — orchestrator): target FK
+    orgs/encryption-tool-users-europe has NO registry file under
+    atlas/targets/ (corpus-wide deferred-targets registry gap; the
+    sibling's orgs/strongpity3-various-international is likewise
+    unregistered). Kept the FK as the most faithful victim
+    representation; validator-informational, not fixed here. Minor:
+    the target NAME says "europe" but the victim set also spans North
+    Africa (Algeria, Morocco, Tunisia, Côte d'Ivoire) and Turkey —
+    flagged for the target record if/when created.
+    incident_type [intrusion, supply-chain] + initial_vector
+    supply-chain PRESERVED for sibling consistency, though the
+    mechanism is watering-hole + trojanized-installer social
+    engineering, not a genuine vendor build-pipeline compromise.

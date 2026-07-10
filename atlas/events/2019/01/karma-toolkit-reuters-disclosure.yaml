@@ -2,26 +2,41 @@ id: 2019-01/karma-toolkit-reuters-disclosure
 name: Karma iOS zero-click toolkit — Reuters discloses DarkMatter / Project Raven mobile-collection operations
 start_date: 2016-01-01  # earliest documented Karma operational use
 disclosure_date: 2019-01-30
-end_date: 2017-12-31  # iOS patching closed the underlying primitives by 2017-18
+end_date: 2017-12-31  # by end-2017 Apple iOS updates made Karma "far less effective" (Reuters); exact end of use unclear
 incident_type:
-  - intrusion
-  - surveillance
-initial_vector: 0-day  # iMessage delivery; no user interaction required
+  - surveillance   # task's "targeted-surveillance" -> valid enum: the toolkit's mobile-collection purpose
+  - intrusion      # task's "mobile-exploitation" -> valid enum: zero-click iOS device compromise
+initial_vector: 0-day  # iMessage-flaw implant; no user interaction (vuln unpatched at time of use)
 outcome_summary: |
   Reuters companion piece to the Project Raven main investigation
-  detailed "Karma" — a zero-click iOS exploit toolkit acquired
-  and operationalized by DarkMatter for Project Raven personnel.
-  Karma did not require user interaction: a target's phone
-  number was sufficient to begin compromise. Reuters reported
-  that DarkMatter operators used Karma against Qatari royal-
-  family members during the 2017 GCC blockade context, regional
-  political figures including Saudi opposition (Mohammed bin
-  Nayef referenced indirectly), and Emirati activists.
+  detailed "Karma" — a zero-click iOS exploit toolkit used by an
+  Abu Dhabi offensive-cyber unit code-named Project Raven, made up
+  of Emirati security officials and former US intelligence
+  operatives "working as contractors for the UAE's intelligence
+  services" and paid through the Emirati firm DarkMatter. Karma
+  required no user interaction: uploading a target's phone number
+  or email into an automated system, then sending an iMessage
+  text, was enough to implant malware and compromise the iPhone
+  (Reuters: the flaw worked "even if the phone's owner didn't use
+  the iMessage program"). Karma collected photos, emails, text
+  messages, location data and saved passwords.
 
-  Karma was *not* NSO Pegasus; Reuters explicitly distinguished
-  the two and reported Karma was acquired by DarkMatter from a
-  non-NSO vendor. By 2017–2018, iOS patching had closed the
-  underlying primitives and Karma fell out of operational use.
+  Reuters named specific 2016–2017 targets: in 2017 the operators
+  hacked the iPhone of Qatar's Emir Sheikh Tamim bin Hamad
+  al-Thani, Turkey's then-Deputy Prime Minister Mehmet Şimşek, and
+  Oman's head of foreign affairs Yusuf bin Alawi bin Abdullah;
+  they also hacked Yemeni Nobel-laureate human-rights activist
+  Tawakkol Karman. More broadly Reuters described targeting of
+  "activists critical of the government," regional rivals
+  "including Qatar," and the UAE's ideological opponent the Muslim
+  Brotherhood.
+
+  Reuters reported the UAE government purchased Karma "from a
+  vendor outside the country" and "could not determine the tool's
+  creator." (This article does NOT mention NSO Group or Pegasus —
+  the not-Pegasus framing below is AUSPEX analysis, not a Reuters
+  statement.) By the end of 2017, Apple iOS security updates had
+  made Karma "far less effective."
 false_flag_risk: none
 summary: |
   Karma is the canonical example of UAE procurement-led-capability
@@ -38,21 +53,33 @@ attributions:
     auspex_assessment: concur
     attribution_date: 2019-01-30
     attribution_source_id: reuters/2019-01-30_karma-uae-iphone-hack
+    attribution_level: named-actor  # Reuters names the operator cluster (DarkMatter / Project Raven) + the UAE nation; the specific UAE state service (NESA/SIA/State Security) is NOT pinned — "the UAE's intelligence services" generically
     notes: |
-      Reuters reporting with multiple named ex-NSA operators.
-      Karma toolkit attribution is to DarkMatter / Project Raven
-      operationally; UAE state is the customer.
+      Reuters (Schectman/Bing; "five former operatives and program
+      documents reviewed by Reuters"): Karma "was used by an
+      offensive cyber operations unit in Abu Dhabi comprised of
+      Emirati security officials and former American intelligence
+      operatives working as contractors for the UAE's intelligence
+      services … code named Project Raven," staff "paid through an
+      Emirati cyber security firm named DarkMatter." UAE state is
+      the customer; the ex-NSA operators are contractors. concur.
 doctrine_links:
   - doctrine_id: ae/procurement-led-capability
     pillar_id: ae/procurement-led-capability/commercial-spyware
     program_id: null
     confidence: attested
     reasoning: |
-      Reuters explicitly described Karma as acquired from a
-      non-NSO vendor and operationalized by DarkMatter on UAE
-      state tasking — i.e., commercial-spyware capability
-      procurement.
+      Reuters states the UAE government purchased the Karma mobile-
+      implant toolkit from a vendor outside the country and had it
+      operationalized by the DarkMatter / Project Raven unit — the
+      external-channel capability procurement this doctrine encodes.
+      (Reuters did not name the vendor and "could not determine the
+      tool's creator"; it does NOT mention NSO — the vendor identity
+      is unpinned, but the procurement-from-outside fact is direct.)
     attesting_source_id: reuters/2019-01-30_karma-uae-iphone-hack
+    inference_basis:
+      source_quote: "The UAE government purchased Karma from a vendor outside the country, the operatives said. Reuters could not determine the tool's creator."
+      source_id: reuters/2019-01-30_karma-uae-iphone-hack
     contested: false
     analyst: claude
   - doctrine_id: ae/regional-influence-realigned
@@ -60,10 +87,16 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Reuters reported Karma deployments against Qatari royal-
-      family targets during the GCC-blockade window — directly
-      named in the reporting.
+      Reuters directly reports Karma was used in 2017 to hack the
+      iPhone of Qatar's Emir Sheikh Tamim bin Hamad al-Thani, and
+      frames Qatar as a UAE "regional rival" — the Qatar political-
+      targeting this pillar encodes. (Reuters uses neither "blockade"
+      nor "royal family"; the 2017–21 GCC-blockade framing is AUSPEX
+      context. The Emir-targeting fact is direct.)
     attesting_source_id: reuters/2019-01-30_karma-uae-iphone-hack
+    inference_basis:
+      source_quote: "In 2017, for instance, the operatives used Karma to hack an iPhone used by Qatar's Emir Sheikh Tamim bin Hamad al-Thani, as well as the devices of Turkey's former Deputy Prime Minister Mehmet Şimşek, and Oman's head of foreign affairs, Yusuf bin Alawi bin Abdullah."
+      source_id: reuters/2019-01-30_karma-uae-iphone-hack
     contested: false
     analyst: claude
   - doctrine_id: ae/regime-protection-surveillance
@@ -71,17 +104,115 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Karma's documented victim profile (regional political
-      figures, dissidents) fits the regime-protection-surveillance
-      regional-targets pillar.
+      Karma's Reuters-named victim set beyond Qatar — Yemeni human-
+      rights activist / Nobel laureate Tawakkol Karman, "activists
+      critical of the government," the Muslim Brotherhood, and
+      regional officials (Turkey's Deputy PM, Oman's foreign-affairs
+      chief) — is the regime-protection surveillance of regime-
+      critical individuals and regional political figures this
+      pillar encodes. Reuters reports the targeting but does not
+      articulate a regime-protection strategic goal, so inferred
+      (the dissident-surveillance doctrine dimension for this event).
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Reuters: Karma let operators 'gather evidence on scores of targets — from activists critical of the government to regional rivals, including Qatar, and the UAE's ideological opponent, the Islamic political Muslim Brotherhood movement.'"
+        - "Reuters: 'Raven also hacked Tawakkol Karman, a human rights activist known as the Iron Woman of Yemen' — a regime-critical individual, the pillar's target class."
+        - "Named regional political figures hacked (Qatar's Emir, Turkey's Deputy PM Şimşek, Oman's foreign-affairs chief bin Alawi) match the pillar's regional-political-targets enumeration."
+      ruled_out: "Pure espionage/SIGINT collection with no regime-protection dimension — ruled out by the explicit targeting of domestic-critic activists and the UAE's named ideological opponent (the Muslim Brotherhood), which is protection-of-regime targeting, not only foreign-state espionage."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government
-    role: primary
+    role: primary  # rival foreign leaders / heads of state (Qatar's Emir)
+  - target_id: sectors/government/foreign-ministry
+    role: primary  # "diplomats" — Oman's head of foreign affairs bin Alawi; Turkey's Deputy PM Şimşek
   - target_id: sectors/civil-society/dissident
-    role: primary
+    role: primary  # "activists critical of the government"; Tawakkol Karman
 sources:
   - reuters/2019-01-30_karma-uae-iphone-hack
   - reuters/2019-01-30_project-raven
+
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. The decisive source — the Reuters Karma
+    companion article (reuters/2019-01-30_karma-uae-iphone-hack) — is fully
+    snapshotted and re-verified this pass: sha256
+    169826b7a10e41877cac156d7f435f9f08316e4ee268383e48d9cdfc82b7b5d5, 367,462
+    bytes. Every load-bearing event claim is carried by that snapshot, so
+    LEVEL=full despite the un-snapshottable second source (below).
+
+    [a] FACTS — corrected against the captured raw. STRIPPED as unsupported:
+    (i) "Saudi opposition (Mohammed bin Nayef referenced indirectly)" — "Nayef"
+    0×, "Pegasus" 0× in the raw; "Saudi" appears only as a RIVAL STATE also
+    "competing for the most sophisticated hacking tools," NOT as a Karma target.
+    (ii) "2017 GCC blockade context" attributed to Reuters — "blockade" 0×;
+    reframed as AUSPEX context. (iii) "Karma is not NSO Pegasus; Reuters
+    explicitly distinguished the two … non-NSO vendor" — NSO/Pegasus 0× as real
+    words (the prior source-record census "NSO 17×" was a FALSE POSITIVE
+    matching "co-NSO-le"/"spo-NSO-red" substrings in page JS). Reuters actually
+    says only: "The UAE government purchased Karma from a vendor outside the
+    country … Reuters could not determine the tool's creator." (iv) "Emirati
+    activists" → "activists critical of the government" (raw wording; the one
+    named activist, Tawakkol Karman, is Yemeni). INSERTED the real Reuters-named
+    targets: Qatar's Emir Sheikh Tamim bin Hamad al-Thani (2017), Turkey's
+    Deputy PM Mehmet Şimşek, Oman's foreign-affairs chief Yusuf bin Alawi bin
+    Abdullah, and Tawakkol Karman. VERIFIED verbatim: zero-click ("did not
+    require a target to click on a link"; "Karma needed only to send the target
+    a text message — the hack then required no action"), phone-number/email
+    delivery, iMessage-flaw implant "even if the phone's owner didn't use the
+    iMessage program," collection set (photos/emails/texts/location/passwords),
+    2016–2017 window, and "by the end of 2017 … made Karma far less effective."
+
+    [b] ATTRIBUTION — Reuters, high, concur, attributing to the DarkMatter /
+    Project Raven operator cluster with the UAE state as customer. Verbatim:
+    Karma "was used by an offensive cyber operations unit in Abu Dhabi … working
+    as contractors for the UAE's intelligence services … code named Project
+    Raven"; staff "paid through an Emirati cyber security firm named DarkMatter."
+    No over-attestation: the specific UAE service (NESA/SIA/State Security) is
+    NOT pinned. actor_id ae/darkmatter/karma-operators VERIFIED — resolves to the
+    id: field in atlas/actors/ae/karma-operators.yaml. Directionality confirmed:
+    UAE-govt/Project-Raven attacker; activists + rival officials the victims.
+
+    [c] DATES — start 2016 ("beginning in 2016"/"introduced in 2016"), disclosure
+    2019-01-30 (byline verified), end 2017-12-31 (iOS updates "far less
+    effective" by end-2017; Reuters explicitly "isn't clear whether the Karma
+    hack remains in use" — end-comment softened accordingly). No conflation.
+
+    [d] DOCTRINE_LINKS — all three retargeted with inference_basis.
+    procurement-led/commercial-spyware KEPT attested; source_quote = "The UAE
+    government purchased Karma from a vendor outside the country …" (direct
+    external-channel procurement). regional-influence/qatar-pre-2021 KEPT
+    attested; source_quote = the Emir-Tamim hack sentence (Qatar political
+    targeting direct); reasoning corrected (no "royal family"/"blockade" in
+    source). regime-protection/regional-political-targets KEPT strongly_inferred
+    with signals[] (Tawakkol Karman, "activists critical of the government," the
+    Muslim Brotherhood, regional officials) + ruled_out (pure SIGINT) — this is
+    the per-event dissident-surveillance doctrine dimension the task flags. All
+    three are attacker-rationale (UAE doctrine on the UAE operation) → perspective
+    left default.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (was absent): Reuters names the
+    operator group (DarkMatter / Project Raven) + the UAE nation, but not the
+    specific state service, so not named-unit.
+
+    [f] ACTOR_ID — ae/darkmatter/karma-operators resolves cleanly; UAE-govt
+    attacker, not a counter-action, so a real actor_id is correct (no meta type).
+
+    SNAPSHOT/SOURCES: Karma article snapshot re-hashed OK (PRESERVE tier,
+    secondary, unchanged). Second source reuters/2019-01-30_project-raven remains
+    un-snapshottable this pass (live URL HTTP 401 / 771-byte DataDome CAPTCHA;
+    web.archive.org id_ capture is metadata-only, 388 visible chars, og:title
+    "Exclusive: Ex-NSA cyberspies reveal how they helped hack foes of UAE," no
+    article body) — matches prior 2026-06-24 audits; raw_snapshot left null. It
+    is a corroborating companion, NOT the sole carrier of any event claim, so it
+    does not reduce level below full. FLAG (not edited — actor file, out of
+    scope): atlas/actors/ae/karma-operators.yaml and .../project-raven.yaml carry
+    the same "NSO 17×" census in their AUDIT notes and a "not Pegasus / non-NSO
+    vendor" framing sourced to this article; per this pass NSO/Pegasus are 0× in
+    the raw and that census is a substring false positive — the actor-file notes
+    should be corrected by the orchestrator.

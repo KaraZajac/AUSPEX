@@ -1,22 +1,24 @@
 id: 2018-11/samsam-savandi-mansouri
 name: SamSam ransomware campaign — Atlanta and 200+ victims
 start_date: 2015-12-01  # campaign onset
-disclosure_date: 2018-11-28  # DOJ indictment
-end_date: 2018-11-28
+disclosure_date: 2018-11-28  # DOJ indictment + OFAC designation
+end_date: 2018-11-28  # counter-action date; last alleged SamSam attack was Sept 25, 2018
 incident_type:
-  - ransomware
-  - financial-theft
-initial_vector: valid-creds  # RDP brute-force
+  - law-enforcement  # DOJ indictment of Savandi & Mansouri
+  - policy  # OFAC SDN designation of Khorashadizadeh & Ghorbaniyan
+initial_vector: n-day  # DOJ/OFAC: access via exploiting "computer network vulnerabilities"; the vendor-reported RDP brute-force is NOT stated by the two cited primaries
 outcome_summary: |
-  200+ US and Canadian victims including City of Atlanta, City
-  of Newark, Port of San Diego, Hollywood Presbyterian Medical
-  Center, Colorado DOT, and the Bowman Avenue Dam-adjacent
-  Hollywood Presbyterian. ~USD 30M extorted; >USD 30M in
-  remediation costs to victims.
+  200+ victims across the US, UK, and Canada. DOJ names the
+  City of Atlanta, the City of Newark, the Port of San Diego,
+  the Colorado Department of Transportation, the University of
+  Calgary, and health-care providers Hollywood Presbyterian
+  Medical Center, Kansas Heart Hospital, and LabCorp. Per DOJ,
+  the defendants collected over USD 6M in ransom and caused
+  over USD 30M in losses to victims.
 quantified_impact:
-  usd_extorted: 30000000
-  usd_victim_remediation: 30000000
-  affected_orgs: 200
+  usd_extorted: 6000000  # DOJ: "collected over $6 million USD in ransom payments to date"
+  usd_victim_losses: 30000000  # DOJ: "over $30 million USD in losses to victims" (field was mislabeled usd_victim_remediation)
+  affected_orgs: 200  # DOJ: "more than 200 victims"
 false_flag_risk: none
 operators_named:
   - savandi-faramarz-shahi  # SamSam, DOJ Nov 2018
@@ -24,37 +26,61 @@ operators_named:
   - khorashadizadeh-ali  # OFAC SDN crypto facilitator, Nov 2018
   - ghorbaniyan-mohammad  # OFAC SDN crypto facilitator, Nov 2018
 summary: |
-  Defendants Faramarz Shahi Savandi and Mohammad Mehdi Shah
-  Mansouri indicted November 28, 2018; OFAC SDN-designated the
-  same day along with cryptocurrency-exchange facilitators
-  Ali Khorashadizadeh and Mohammad Ghorbaniyan. Attribution
-  to Iran-based individuals attested; state-direction is not
-  asserted by DOJ. Included as a sanctions-evasion-aligned
-  cybercrime tolerated by the state.
+  Companion DOJ / OFAC counter-action of November 28, 2018.
+  A federal grand jury in Newark, NJ returned a six-count
+  indictment charging Faramarz Shahi Savandi and Mohammad Mehdi
+  Shah Mansouri, both of Iran and acting from inside Iran, over
+  the SamSam ransomware scheme — a 34-month campaign (first
+  SamSam build Dec 2015; most recent alleged attack Sept 25,
+  2018) against 200+ US, UK, and Canadian victims. The same
+  day, OFAC designated Iran-based bitcoin facilitators Ali
+  Khorashadizadeh and Mohammad Ghorbaniyan under EO 13694 for
+  converting SamSam ransom proceeds into Iranian rial and — for
+  the first time ever — publicly attributed two Bitcoin
+  addresses to the designated individuals. Attribution to
+  Iran-based individuals is well supported; state direction is
+  NOT asserted — DOJ frames the scheme as criminal. Retained as
+  a sanctions-evasion-adjacent cybercrime tolerated within
+  Iran's revenue ecosystem, not a state-directed operation.
 attributions:
-  - actor_id: null  # individuals, not state actor — Iran-based but state-direction not asserted
+  - actor_id: null  # counter-action (DOJ indictment + OFAC sanctions); named individuals, not a tracked/state actor — Iran-based but state-direction not asserted
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor  # DOJ names the two individual operators (Savandi, Mansouri) personally
     auspex_assessment: concur-with-caveat
     attribution_date: 2018-11-28
     attribution_source_id: doj/2018-11-28_samsam-indictment
     notes: |
-      Indictment names Iran-based individuals; state-direction
-      is not asserted but the case is canonically cited as
-      part of Iran's cybercrime-revenue ecosystem.
+      Indictment names two Iran-based individuals (Savandi,
+      Mansouri) acting from inside Iran; state direction is NOT
+      asserted (DOJ frames it as criminal). Companion OFAC action
+      (EO 13694) designates two Iran-based bitcoin facilitators.
+      Kept as part of Iran's tolerated cybercrime-revenue
+      ecosystem, not a state-directed op.
 doctrine_links:
   - doctrine_id: ir/sanctions-evasion
     pillar_id: ir/sanctions-evasion/ransomware-revenue
     program_id: null
     confidence: plausible
     reasoning: |
-      Iran-based revenue-generation cybercrime tolerated /
-      enabled by the regime; state-direction not asserted but
-      pattern fits.
+      Iran-based ransomware-for-revenue: OFAC records that the
+      defendants' facilitators converted the bitcoin ransom
+      proceeds into Iranian rial and deposited them in Iranian
+      banks — a signal consistent with the sanctions-evasion /
+      ransomware-revenue pillar. Held at plausible, NOT attested:
+      neither the DOJ indictment nor the OFAC action states a
+      state-revenue terminal goal or state tasking (DOJ frames
+      the scheme as criminal), and Savandi / Mansouri are not
+      among the IRGC-affiliated contractors the pillar names.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Purely opportunistic Iran-based cybercrime with no state tasking — DOJ frames the scheme as criminal and does not assert state direction"
+        - "Tolerated / enabled cybercrime feeding Iran's sanctions-evaded revenue ecosystem — proceeds converted to rial via Iran-based exchangers and deposited in Iranian banks (OFAC), inferred as regime-tolerated rather than stated as a state goal"
     counter_explanation: |
       Could be purely opportunistic cybercrime with no state
-      tasking — DOJ indictment does not assert state direction.
+      tasking — neither the DOJ indictment nor the OFAC action
+      asserts state direction or a state-revenue purpose.
     contested: false
     analyst: claude
 targets:
@@ -67,3 +93,85 @@ targets:
 sources:
   - doj/2018-11-28_samsam-indictment
   - treasury/2018-11-28_samsam-ofac
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the two cited primaries, both snapshotted via their
+    Wayback archive_url (live justice.gov + home.treasury.gov are
+    Akamai/bot-walled) — the justice.gov bypass; the captures carry
+    the full verbatim article text. RAW:
+    doj__2018-11-28_samsam-indictment.html sha256
+    b1d2ac74139af26d0b13b37a13a646fd0edc53d0189c1ced56389fe0d3688de1;
+    treasury__2018-11-28_samsam-ofac.html sha256
+    7d37c8ef9cc3bdbf3a286c1f0fd1ddbd1f8282d8da12fac6362d3f2163a021ca.
+
+    [a] FACTS — corrected. (1) STRIPPED a fabricated garble from
+    outcome_summary: "the Bowman Avenue Dam-adjacent Hollywood
+    Presbyterian" — the Bowman Avenue Dam is an unrelated 2013 IRGC
+    intrusion (Rye Brook, NY), not a SamSam victim, and the phrase
+    also duplicated Hollywood Presbyterian. (2) MONEY was wrong: the
+    event carried usd_extorted 30M, but DOJ says "collected over $6
+    million USD in ransom payments to date, and caused over $30
+    million USD in losses to victims." Fixed usd_extorted 30M->6M;
+    renamed the 30M figure usd_victim_remediation->usd_victim_losses
+    (DOJ says "losses," not remediation). affected_orgs 200 kept
+    ("more than 200 victims"). (3) The named-victim list is REAL and
+    now matches DOJ verbatim: "the City of Atlanta, Georgia; the
+    City of Newark, New Jersey; the Port of San Diego, California;
+    the Colorado Department of Transportation; the University of
+    Calgary ...; Hollywood Presbyterian Medical Center ...; Kansas
+    Heart Hospital ...; Laboratory Corporation of America (LabCorp)."
+    Scope US/UK/Canada per OFAC ("United States, United Kingdom, and
+    Canada since 2015"). First SamSam build Dec 2015; most recent
+    alleged attack Sept 25, 2018 (a 34-month scheme) — DOJ-verbatim.
+
+    [b] ATTRIBUTION — DOJ names two Iranian individuals "both of
+    Iran," "acting from inside Iran"; state direction NOT asserted
+    (OFAC calls them "criminal actors"). attributing_org US DOJ,
+    confidence high, concur-with-caveat — all correct, kept.
+
+    [c] DATES — start_date 2015-12-01 (campaign onset: "created the
+    first version ... in December 2015" / "beginning in December
+    2015"); disclosure/end 2018-11-28 = DOJ indictment + OFAC
+    designation (counter-action date; last attack was 2018-09-25).
+    Both sources' published_on 2018-11-28 confirmed against the
+    bylines (DOJ "Wednesday, November 28, 2018"; OFAC "November 28,
+    2018"). Both source titles corrected to the exact headlines
+    (were truncated paraphrases) — the verbatim DOJ headline carries
+    "Causing Over $30 Million in Losses," the OFAC one "for the First
+    Time Identifies Associated Digital Currency Addresses."
+
+    [d] DOCTRINE — ir/sanctions-evasion/ransomware-revenue kept at
+    plausible (harmonized) — correct, NOT attested. OFAC does show a
+    real revenue signal (facilitators "exchange digital currency
+    ... into Iranian rial and ... deposited the rial into Iranian
+    banks"), but neither primary states a state-revenue terminal
+    goal or state tasking, and Savandi/Mansouri are not the
+    IRGC-affiliated contractors the pillar names. ADDED the missing
+    inference_basis.alternatives (the required shape for a plausible
+    link); perspective omitted = attacker-rationale default (Iran's
+    own doctrine on an Iran-nexus op).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (was absent); DOJ
+    names the two operators personally.
+
+    [f] ACTOR_ID — null is correct: this is a counter-action (DOJ
+    indictment + OFAC sanctions), no tracked/state actor. incident_
+    type reframed [ransomware, financial-theft]->[law-enforcement,
+    policy] (law-enforcement = indictment, policy = OFAC
+    designation) per the counter-action rule; the four subjects stay
+    in operators_named + summary (free-string person slugs,
+    consistent with corpus convention — not FKs). initial_vector
+    valid-creds/"RDP brute-force" was unsourced vendor knowledge ->
+    n-day (both primaries: access via exploiting "computer network
+    vulnerabilities"). Both target FKs (sectors/government/local,
+    sectors/healthcare/hospital) resolve. FIRST-ever OFAC
+    crypto-address attribution verified verbatim: "today's action
+    marks the first time OFAC is publicly attributing digital
+    currency addresses to designated individuals" (addresses
+    149w62rY42aZBox8fGcmqNsXUzSStKeq8C /
+    1AjZPMsnmpdK2Rv9KQNfMurTXinscVro9V; EO 13694). level: full — all
+    load-bearing claims carried by the two snapshotted primaries.

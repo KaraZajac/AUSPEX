@@ -1,47 +1,105 @@
 id: 2020-12/shirbit-leak
 name: Shirbit Insurance leak — Black Shadow against Israel
 start_date: 2020-12-01
-disclosure_date: 2020-12-03
+disclosure_date: 2020-12-01
 end_date: 2020-12-31
 incident_type:
+  - intrusion
   - data-theft
-  - ransomware
-  - influence-operation
+  - leak
+  - extortion
 initial_vector: unknown
 outcome_summary: |
-  Intrusion of Shirbit Insurance (Israel); bitcoin ransom
-  demand; serial leak of customer PII. Shirbit declined to
-  pay. Extensive PII leak.
+  Intrusion of Shirbit Insurance (Israel). The "Black Shadow"
+  persona demanded 50 BTC (~$950,000), threatening to double the
+  sum to 100 then 200 BTC and to sell the data to third parties.
+  Shirbit refused, framing the operation as cyberterrorism with
+  "no financial motive." Black Shadow then serially leaked
+  customer, employee and government-employee PII via Telegram and
+  claimed to still hold ~10 TB more.
 false_flag_risk: none
 summary: |
-  Attributed to Black Shadow (Iran-aligned) by INCD and Israeli
-  reporting. Persona Telegram channel used for the serial leak.
-  Operators initially demanded a 50 BTC ransom; after Shirbit
-  refused, the persona released customer PII (national ID
-  numbers, scanned driver's licenses, financial records,
-  medical-claim documents) in scheduled drops as coercive
-  pressure. Subsequent INCD reporting links the Black Shadow
-  persona to MuddyWater / MOIS tradecraft — initial access via
-  exploitation of an exposed Pulse Secure VPN gateway, lateral
-  movement using valid credentials, and follow-on use of
-  PowerShell-based persistence consistent with the broader
-  MOIS-aligned hack-and-leak pattern later seen in Pay2Key and
-  Moses Staff operations against Israeli targets.
+  A group calling itself Black Shadow (BlackShadow) claimed the
+  Shirbit breach in a series of poorly-spelled tweets and, per
+  Times of Israel reporting, "did not give any motive for the
+  hack." Israel's Capital Markets Authority and the Israel National
+  Cyber Directorate jointly confirmed the attack and the data leak
+  on Dec 1, 2020, but published no perpetrator attribution.
+
+  Black Shadow demanded 50 bitcoins (~$950,000) by Friday morning,
+  warning the sum would double to 100 BTC after 9 a.m. Friday and
+  to 200 BTC after 9 a.m. Saturday, and that the data would be sold
+  to third parties if unpaid. Shirbit refused, stating that after
+  overnight negotiations "all the relevant professionals came to
+  the unanimous conclusion that cyberterrorism is aimed at causing
+  strategic harm — and there is no financial motive behind it."
+  Beginning Friday the operators ran a serialized leak on an open
+  Telegram channel — customer / employee / government-employee
+  identity documents, financial statements and other records —
+  released WhatsApp negotiation screenshots (the "be a mensch"
+  exchange), and claimed to still hold roughly ten terabytes of
+  data.
+
+  Iranian attribution is analytic and hedged, not government-
+  declared. Israeli researchers assessed Black Shadow as an
+  attention-seeking hack-and-leak / information operation that
+  "appears to be aligned with Iranian government interests" and is
+  "thought to be operated in conjunction with the government of
+  Iran" (CyberScoop, Dec 2021); one analyst put it as "cyber
+  attribution is hard, but in this case it does look like [Iran]."
+  SentinelLabs equates the Black Shadow persona with the Iran-
+  affiliated Agrius cluster (one of "several" extortion aliases).
+  No cited source names a specific Iranian service, and the group's
+  tradecraft was assessed as low-sophistication (scanning for known
+  Fortinet / Microsoft vulnerabilities) — hence the corpus places
+  it at ir/unscoped/agrius. The escalating theatrical extortion,
+  direct media courting, and the choice of a civilian Israeli
+  insurer holding civil-servant data are the basis for the
+  "coercion, not profit" reading.
 attributions:
   - actor_id: ir/unscoped/agrius
-    attributing_org: Israel National Cyber Directorate
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-12-03
-    attribution_source_id: incd/2020-12_shirbit
+    attributing_org: SentinelLabs
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2021-12-06
+    attribution_level: named-actor
+    attribution_source_id: cyberscoop/2021-12_black-shadow-israeli-victims
+    notes: |
+      Iran nexus is analytic and HEDGED, not state-declared. As
+      carried by CyberScoop (2021-12-06), SentinelLabs' Amitai Ben
+      Shushan Ehrlich equates the Black Shadow persona with the
+      Iran-affiliated Agrius cluster ("one of several" extortion
+      aliases); other Israeli researchers (CYE, Profero) assess it
+      as "thought to be operated in conjunction with the government
+      of Iran" ("it does look like [Iran]"). No source names a
+      specific Iranian service -> ir/unscoped, named-actor level
+      only. Contemporaneously (Dec 2020) the Shirbit-specific Iran
+      link was softer still: ClearSky reportedly flagged only a
+      "possible connection to Iran" at medium confidence, and
+      Shirbit itself framed the attack as cyberterrorism (a motive
+      claim, not a formal state attribution). The INCD / Capital
+      Markets Authority Dec-1 joint statement confirmed the incident
+      but made NO Iran attribution. The prior record over-attested
+      this to INCD at high confidence via a phantom gov.il source
+      (removed this audit).
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Black Shadow persona used to launder coercive PII leak
-      against Israeli civilian target.
+      The Black Shadow hacktivist persona launders a coercive
+      PII-leak against an Israeli civilian target — the exact
+      persona-laundering pattern this doctrine's pillar names Black
+      Shadow as its example of ("Black Shadow for Israeli data-leak
+      extortion").
+    perspective: attacker-rationale
+    inference_basis:
+      signals:
+        - "Named hacktivist persona ('Black Shadow') claims the op on Twitter/Telegram, affording a state sponsor plausible deniability."
+        - "Coercive serialized PII leak against an Israeli civilian insurer holding civil-servant data, staged on a public Telegram channel for maximum media effect."
+        - "This doctrine's persona-laundering pillar explicitly cites Black Shadow as its example persona for Israeli data-leak extortion."
+      ruled_out: "Purely financial ransomware — Shirbit and Israeli analysts assessed no financial motive; the theatrical, escalating extortion and direct media outreach fit coercion/messaging rather than profit-seeking crime."
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -49,10 +107,19 @@ doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Israeli civilian target consistent with Forward Defense
-      anti-Israel projection.
+      An Iran-aligned persona striking an Israeli civilian target is
+      consistent with projecting power onto adversary networks via
+      deniable proxies, but the tie to the high-level Forward Defense
+      posture is a broad structural read, not source-stated — and
+      the Iran nexus itself is only moderately attested.
+    perspective: attacker-rationale
+    inference_basis:
+      alternatives:
+        - "Forward Defense projection via a deniable persona (adversary-network power projection at near-zero physical risk to Iran)."
+        - "Resistance-axis anti-Israel coercion (ir/resistance-axis/anti-israel-coercion, the Agrius actor record's own default alignment) — arguably the more on-point doctrine."
+        - "Opportunistic anti-Israel hacktivism only loosely tied to any formal state posture, given the hedged Iran nexus."
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -61,5 +128,104 @@ targets:
   - target_id: orgs/shirbit-insurance
     role: primary
 sources:
-  - incd/2020-12_shirbit
   - timesofisrael/2020-12_shirbit
+  - timesofisrael/2020-12_shirbit-ransom-refused
+  - cyberscoop/2021-12_black-shadow-israeli-victims
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / effort max. Full 6-point audit vs raw snapshots.
+    RE-SOURCE path (badrabbit model): the event is REAL but was
+    built on a PHANTOM primary — incd/2020-12_shirbit cited
+    https://www.gov.il/en/departments/israel_national_cyber_directorate,
+    which returns a 3,280-byte generic INCD department homepage with
+    ZERO Shirbit content (title/body fabricated). Removed from
+    sources[] and from the attribution; it is now orphaned (cited
+    nowhere else) -> RETIRE candidate (annotated in place, not
+    deleted). Re-pointed to three genuine, snapshotted sources.
+
+    [a] FACTS — Rewrote summary/outcome_summary to the raw. STRIPPED
+    a fabricated technical paragraph (MuddyWater / MOIS tradecraft,
+    "Pulse Secure VPN" initial access, PowerShell persistence, and a
+    Pay2Key / Moses Staff equivalence) — none of it appears in any
+    cited source, and CyberScoop in fact rates Black Shadow's
+    tradecraft "super weak" (scanning known Fortinet/Microsoft
+    vulns, not Pulse Secure) and treats Moses Staff and Pay2Key as
+    SEPARATE-but-similar groups (Check Point), not the same actor.
+    Verified vs raw: ToI breach — "A group calling itself
+    BlackShadow took responsibility… It did not give any motive for
+    the hack"; joint Capital Markets Authority + INCD statement
+    "confirmed that there had been a cyberattack on the Shirbit
+    insurance company and that information had been leaked." ToI
+    ransom — "50 bitcoins ($950,000)… would double to 100 bitcoins
+    after 9 a.m. Friday and to 200 bitcoins after 9 a.m. Saturday…
+    they will sell the information to third parties"; Shirbit:
+    "cyberterrorism is aimed at causing strategic harm — and there
+    is no financial motive behind it"; "At 9 a.m. Friday the leaks
+    began on an open channel on the Telegram app"; "we still have
+    ten terabytes of information left"; "be a mentch" negotiation
+    screenshots. Dropped incident_type ransomware (no file
+    encryption — a hack-and-leak extortion, cf. Netenrich/analysts)
+    and influence-operation (kept as narrative note only) -> now
+    [intrusion, data-theft, leak, extortion].
+
+    [b] ATTRIBUTION — Was over-attested: actor ir/unscoped/agrius
+    "attributed by INCD, high confidence." INCD never attributed
+    Shirbit to Iran/Black Shadow — it only co-confirmed the
+    incident. Re-anchored to SentinelLabs (Black Shadow ≡ Iran-
+    affiliated Agrius) as carried by CyberScoop, attributing_org_
+    confidence moderate, auspex_assessment concur-with-caveat.
+    Iran link kept HEDGED per the raw ("appears to be aligned",
+    "thought to be operated in conjunction with", "it does look like
+    [Iran]"). ClearSky's Dec-2020 "possible connection to Iran /
+    medium confidence" is noted as REPORTED context (not
+    snapshotted) and is NOT load-bearing.
+
+    [c] DATES — disclosure_date 2020-12-03 -> 2020-12-01 (ToI breach
+    datePublished 2020-12-01T10:30:19; joint statement "Tuesday" =
+    Dec 1 2020). start 2020-12-01 and end 2020-12-31 kept (active
+    leak campaign ran through December). Source published_on fixed:
+    ToI breach 2020-12-04 -> 2020-12-01.
+
+    [d] DOCTRINE — Both links kept (each doctrine file explicitly
+    names Black Shadow). persona-laundering: strongly_inferred (Black
+    Shadow is the doctrine's own textbook example), perspective
+    attacker-rationale, inference_basis signals/ruled_out added,
+    reasoning retained, attesting_source_id null (no source states
+    Iran's terminal goal in substance). forward-defense: DOWNGRADED
+    strongly_inferred -> plausible (broad umbrella read + hedged Iran
+    nexus), inference_basis.alternatives added (incl. the actor's own
+    default ir/resistance-axis/anti-israel-coercion as the arguably
+    more on-point doctrine — flagged for orchestrator).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (Black Shadow named
+    persona ≡ Agrius; Iran nexus asserted, no service named).
+
+    [f] ACTOR_ID — ir/unscoped/agrius resolves (atlas/actors/ir/
+    agrius.yaml; Black Shadow was merged into it per Kara 2026-06-24,
+    MISP Pink Sandstorm + Unit 42 equivalence). Kept.
+
+    SNAPSHOTS (sha256 · bytes):
+    timesofisrael/2020-12_shirbit (breach; live)
+    bf1494f8…eb4f93ec · 388,690;
+    timesofisrael/2020-12_shirbit-ransom-refused (NEW; live)
+    243a0e46…8069d944 · 394,743;
+    cyberscoop/2021-12_black-shadow-israeli-victims (NEW; live)
+    15426bcf…2c818b5a · 110,469. All three fetched HTTP 200 with
+    full article text -> level: full.
+
+    FLAGS for orchestrator: (1) incd/2020-12_shirbit = PHANTOM,
+    RETIRE candidate (now orphaned). (2) Sibling incd/2021-10_
+    cyberserve-atraf is the SAME phantom pattern (identical gov.il
+    homepage URL) and 2021-10/cyberserve-atraf-leak.yaml carries the
+    identical fabricated MuddyWater/Pulse-Secure/Pay2Key/Moses-Staff
+    paragraph — needs the same RE-SOURCE treatment. (3) target
+    orgs/shirbit-insurance has no backing file in atlas/targets/orgs/
+    (corpus-wide gap; sibling orgs/cyberserve, orgs/atraf also
+    missing) — target_id left as-is. (4) timesofisrael/2020-12_shirbit
+    record title previously claimed "Iran-Linked Black Shadow Leaks
+    Customer PII" — corrected to the real ToI headline (article makes
+    no Iran claim).

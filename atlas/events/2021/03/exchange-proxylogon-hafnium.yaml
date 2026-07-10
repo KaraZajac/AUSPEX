@@ -5,43 +5,49 @@ disclosure_date: 2021-03-02
 end_date: 2021-03-31
 incident_type:
   - intrusion
-  - supply-chain
+  - espionage
+  - data-theft
 initial_vector: 0-day
 outcome_summary: |
   Zero-day chain CVE-2021-26855, -26857, -26858, -27065 against
   on-prem Microsoft Exchange Server enabled bulk web-shell
-  deployment at unprecedented scale (~250,000 servers affected
-  globally). Selective downstream exploitation of high-value
-  organizations including infectious-disease researchers, law
-  firms, universities, defense contractors, think tanks, NGOs.
+  deployment at unprecedented scale (tens of thousands of victim
+  organizations worldwide, per the July 2021 US/allied statements).
+  Selective downstream exploitation of high-value organizations
+  including infectious-disease researchers, law firms, universities,
+  defense contractors, think tanks, NGOs.
 false_flag_risk: none
 summary: |
   The White House issued a high-confidence MSS attribution on 19
   July 2021, joined by Five Eyes plus NATO and EU partners. ODNI
-  / NCSC bulletin issued the same day. ProxyLogon defined PRC
-  bulk-initial-access tradecraft at industrial scale: a four-bug
+  / NCSC bulletin issued the same day. Microsoft's MSTIC had named
+  the actor Hafnium and disclosed the zero-days on 2 March 2021,
+  concurrent with Volexity's discovery report. ProxyLogon defined
+  PRC bulk-initial-access tradecraft at industrial scale: a four-bug
   zero-day chain against on-premises Microsoft Exchange Server
-  (CVE-2021-26855 SSRF, CVE-2021-26857 deserialization,
-  CVE-2021-26858 + CVE-2021-27065 arbitrary file write) was used
-  to plant web shells (China Chopper variants, ASPX shells) on
-  the Outlook Web Access front end at unprecedented scale, after
-  which Hafnium and follow-on actors performed credential dumping
-  (LSASS) and lateral movement via valid credentials. Hafnium
-  tooling included PowerShell post-exploitation, Procdump, and
-  Nishang offensive PowerShell modules; the same web shells were
-  rapidly re-used by additional PRC clusters (later tracked as
-  Silk Typhoon) and by criminal ransomware operators in the days
-  after Microsoft's emergency patch.
+  (CVE-2021-26855 SSRF, CVE-2021-26857 Unified Messaging
+  deserialization, CVE-2021-26858 + CVE-2021-27065 post-auth
+  arbitrary file write) was used to plant ASPX web shells (China
+  Chopper) on the Outlook Web Access front end at unprecedented
+  scale, after which Hafnium performed credential dumping (LSASS,
+  via Procdump) and mailbox exfiltration. Hafnium post-exploitation
+  tooling included Procdump, Nishang, and PowerCat. After Microsoft's
+  emergency patch the same web shells were rapidly re-used by
+  numerous other threat actors — additional China-nexus espionage
+  groups and criminal ransomware operators (DearCry) — driving the
+  mass-compromise well beyond the original Hafnium operation.
 attributions:
   - actor_id: cn/mss/hafnium
     attributing_org: The White House + Five Eyes + NATO + EU
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-07-19
     attribution_source_id: state/2021-07-19_white-house-mss-attribution
   - actor_id: cn/mss/hafnium
     attributing_org: ODNI / NCSC
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-07-19
     attribution_source_id: odni/2021-07-19_hafnium-exchange
@@ -51,29 +57,45 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      The White House attribution frames the operation as MSS
-      'irresponsible behavior' and IP theft 'for commercial
-      advantage'; it does not name Military-Civil Fusion or
-      dual-use/strategic collection. The MCF dual-use-research
-      linkage is inferred from the strategic-collection target set.
-    attesting_source_id: state/2021-07-19_white-house-mss-attribution
+      No cited source names Military-Civil Fusion; the White House
+      statement frames the activity as MSS 'irresponsible behavior'
+      and IP theft 'for commercial advantage'. The MCF
+      dual-use-research linkage is a strong structural inference from
+      the MSTIC-documented target set — infectious-disease
+      researchers, defense contractors, higher-education institutions
+      and policy think tanks — the classic dual-use / strategic-R&D
+      collection footprint rather than an opportunistic or purely
+      financial one.
+    attesting_source_id: microsoft/2021-03-02_hafnium-exchange-0day
     inference_basis:
-      source_id: state/2021-07-19_white-house-mss-attribution
+      source_id: microsoft/2021-03-02_hafnium-exchange-0day
       signals:
-        - "WH/ODNI attribute bulk Exchange exploitation to MSS (Hafnium) across strategic-collection sectors (target set)"
-      ruled_out: "Military-Civil Fusion / dual-use-research goal — the statement frames 'criminal contract hackers' + IP theft 'for commercial advantage', not MCF"
+        - "MSTIC target set: 'infectious disease researchers, law firms, higher education institutions, defense contractors, policy think tanks, and NGOs' — a dual-use / strategic-R&D collection footprint"
+        - "Hafnium is an MSS-affiliated foreign-intelligence actor (WH/ODNI), consistent with MCF-tasked strategic collection rather than commodity crime"
+      ruled_out: "Purely commercial / financially-motivated intrusion — the fixed high-value R&D + policy target set, not a broad monetizable victim pool, is inconsistent with a criminal-profit motive"
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      The strategic-collection scale aligns with the Intelligence
-      Law's compelled-cooperation logic, though no PRC vendor was
-      compelled in this specific compromise.
+      Carried as a background legal-regime alignment (it is one of
+      the actor's default_doctrine_alignment_ids), NOT as an
+      operative rationale for this compromise. The 2017 Intelligence
+      Law is a supply-side compelled-cooperation statute aimed at
+      PRC-domiciled vendors; no PRC vendor was compelled in the
+      ProxyLogon operation (a direct mass-exploitation of
+      foreign-hosted Exchange servers), so the statute does not
+      explain the WHY of this event. Downgraded from strongly_inferred
+      on the 2026-07-10 audit as over-attribution.
     attesting_source_id: null
+    inference_basis:
+      source_id: null
+      alternatives:
+        - "MSS foreign-intelligence collection under its standing mission (the National Intelligence Law as generic legal backdrop only)"
+        - "Military-Civil Fusion strategic-R&D collection (see the cn/mcf link) — the stronger doctrinal fit for the observed target set"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -86,6 +108,66 @@ targets:
     role: primary
   - target_id: sectors/defense/contractor
     role: primary
+  - target_id: sectors/civil-society/think-tank
+    role: primary
+  - target_id: sectors/civil-society/ngo
+    role: primary
 sources:
+  - microsoft/2021-03-02_hafnium-exchange-0day
+  - volexity/2021-03-02_active-exploitation-exchange-0day
+  - cisa/2021-03-03_aa21-062a-exchange
   - state/2021-07-19_white-house-mss-attribution
   - odni/2021-07-19_hafnium-exchange
+qc:
+  verified_by: claude-opus-4.8
+  verified_on: 2026-07-10
+  level: full
+  effort: max
+  notes: |
+    Full 6-point audit vs raw snapshots (all sha256-pinned in the source records).
+    [a] FACTS — corrected. The two pre-existing cited sources (WH statement + ODNI
+    bulletin) carry the MSS attribution + scale but NOT the CVE/web-shell tradecraft,
+    the actor name "Hafnium", or the downstream target list. Added and snapshotted the
+    load-bearing FACTS primaries: microsoft/2021-03-02_hafnium-exchange-0day (MSTIC
+    origin report — names HAFNIUM 48x; the four CVEs with roles "CVE-2021-26855 is a
+    server-side request forgery (SSRF)", "-26857 is an insecure deserialization ...
+    Unified Messaging", "-26858"/"-27065" post-auth arbitrary file write; ASPX web
+    shells; Procdump/Nishang/PowerCat; LSASS; MEGA exfil; target set verbatim
+    "infectious disease researchers, law firms, higher education institutions, defense
+    contractors, policy think tanks, and NGOs"); volexity/2021-03-02 (discovery report,
+    CVE-2021-26855 SSRF + China Chopper + early-Jan onset); cisa/2021-03-03_aa21-062a
+    (all four CVEs, China Chopper 11x, DearCry ransomware follow-on). Stripped the
+    unsourced "~250,000 servers" figure -> "tens of thousands of victim organizations
+    worldwide" (verbatim WH "tens of thousands of computers and networks worldwide";
+    ODNI "tens of thousands of victim organizations"). Fixed a factual error: the
+    follow-on wave was NOT "Silk Typhoon" (Silk Typhoon = Hafnium's own 2023 Microsoft
+    rename) — corrected to "numerous other threat actors ... criminal ransomware
+    operators (DearCry)", the CISA-carried widening. Aligned tooling to MSTIC
+    (Procdump/Nishang/PowerCat). incident_type: removed the incorrect 'supply-chain'
+    (ProxyLogon is direct 0-day mass-exploitation of internet-facing servers, not a
+    vendor/update supply-chain compromise) -> intrusion/espionage/data-theft.
+    [b] ATTRIBUTION — KEEP. WH high-confidence "affiliated with PRC's MSS ... utilizing
+    the zero-day vulnerabilities in Microsoft Exchange Server disclosed in early March
+    2021"; ODNI PDF (now captured via Wayback) names "Ministry of State Security (MSS)".
+    concur / high retained.
+    [c] DATES — verified. start 2021-01-03 (early-Jan 2021 first exploitation,
+    Volexity-corroborated); disclosure 2021-03-02 (MSTIC + Volexity + MS patches,
+    byline-verified); attribution 2021-07-19 (both govt sources, byline-verified); end
+    2021-03-31 acute window. Kept.
+    [d] DOCTRINE — cn/mcf/dual-use-research kept strongly_inferred but inference_basis
+    rewritten and re-grounded on the MSTIC target set (signals + ruled_out = commercial-
+    crime motive); the prior ruled_out had inverted MCF into itself. cn/national-
+    intelligence-law-2017 DOWNGRADED strongly_inferred -> plausible (background legal-
+    regime alignment, not operative — no PRC vendor compelled in a foreign-server
+    mass-exploitation) with inference_basis.alternatives added. Both are attacker (PRC)
+    doctrine on a PRC operation -> perspective attacker-rationale (schema default, left
+    implicit).
+    [e] ATTRIBUTION_LEVEL — added named-actor to both attribution entries (MSTIC named
+    Hafnium + nation China; WH/ODNI named the MSS-affiliated Hafnium cluster).
+    [f] ACTOR_ID — cn/mss/hafnium resolves to the id: field of atlas/actors/cn/hafnium.yaml
+    (canonical_name "Hafnium / Silk Typhoon") — correct, not the filepath; the task's
+    cn/mss/silk-typhoon alternative is an alias, not the canonical id.
+    DIRECTIONALITY: attacker = cn/mss/hafnium (China / MSS); victims = global on-prem
+    Exchange servers across the six MSTIC sectors (targets[] stamped; think-tank + NGO
+    added to match the source). ODNI PDF capture upgraded from prior FAILED state via
+    Wayback (sha256 pinned).

@@ -1,49 +1,134 @@
 id: 2020-05/shinyhunters-data-broker-wave-may
 name: ShinyHunters May 2020 data-broker wave (aggregate)
 start_date: 2020-04-01
-disclosure_date: 2020-05-10
+disclosure_date: 2020-05-09
 end_date: 2020-07-31
 incident_type:
   - data-theft
+  - leak
 initial_vector: unknown
 outcome_summary: |
-  Aggregate event for the April-May 2020 ShinyHunters data-
-  broker wave covering datasets posted on RaidForums and
-  EmpireMarket beyond the headline Tokopedia and Wishbone
-  postings. Confirmed victim datasets in this wave include:
-  Mathway (~25M records), Chatbooks (~15M), Promo.com (~22M),
-  ProctorU (~444K), HomeChef (~8M), Star Tribune,
-  Bhinneka (~1.2M, Indonesia), Mindful, Minted, GGuMim,
-  Mathway, and others. Aggregate dataset size reported by
-  ZDNET on 10 May 2020 as >73M records across an initial
-  cluster of ten companies; the wave continued through July
-  2020 covering ~30 additional companies.
+  Aggregate event for the ShinyHunters April-May 2020 data-
+  broker wave: user databases stolen from ten companies and
+  offered for sale on a dark-web marketplace, beyond the
+  separately-modeled Tokopedia (91M) and Wishbone (40M)
+  postings. Per ZDNET (Cimpanu, 9 May 2020), ShinyHunters
+  claimed to have breached ten companies and listed their
+  databases -- totalling 73.2 million user records -- for a
+  combined ~$18,000, with each database sold separately:
+  Zoosk (30M), Chatbooks (15M), Home Chef (8M),
+  SocialShare (6M, South Korea), Minted (5M),
+  Chronicle of Higher Education (3M), GGuMim (2M, South Korea),
+  Mindful (2M), Bhinneka (1.2M, Indonesia), and StarTribune (1M).
+  ZDNET verified that samples from some datasets contained
+  legitimate user records, but noted the authenticity of some
+  listed databases could not be confirmed. The US DoJ (2024)
+  later stated that, between April 2020 and July 2021,
+  ShinyHunters posted sales of hacked data from more than 60
+  companies on RaidForums, EmpireMarket, and Exploit -- the
+  wave continued well beyond this initial ten-company cluster.
 quantified_impact:
-  individuals_affected: 200000000
+  individuals_affected: 73200000
   asking_price_usd: 18000
 false_flag_risk: suspected
 summary: |
   Aggregate "wave" event for the 2020 ShinyHunters data-broker
-  output. Modeled as a single event rather than per-company
-  to avoid corpus saturation; per-company events are stubbed
-  only for the most consequential cases (Tokopedia, Wishbone,
-  Microsoft GitHub, ProctorU). Includes a `suspected` false-
-  flag-risk because the ShinyHunters handle is a brand: some
-  postings in this wave may have been re-postings of datasets
-  originally compromised by other operators, with the
-  ShinyHunters name attached for credit / monetization
-  purposes.
+  output. Modeled as a single event rather than per-company to
+  avoid corpus saturation; per-company events are stubbed only
+  for the most consequential cases (Tokopedia, Wishbone, and
+  Microsoft GitHub). Carries a `suspected` false-flag-risk
+  because the ShinyHunters handle is a brand: some postings in
+  this wave may have been re-postings of datasets originally
+  compromised by other operators, with the ShinyHunters name
+  attached for credit / monetization purposes.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: ZDNET + journalism consensus
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-05-10
+    attributing_org: ZDNET + threat-intel consensus (Nightlion, Under the Breach, ZeroFOX)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-05-09
     attribution_source_id: zdnet/2020-05-10_shinyhunters-73m-records
 doctrine_links: []
 targets:
   - target_id: sectors/retail
     role: primary
+  - target_id: sectors/media
+    role: primary
 sources:
   - zdnet/2020-05-10_shinyhunters-73m-records
   - doj/2024-01-09_raoult-shinyhunters-sentencing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8, effort max) vs RAW snapshots.
+    Sources re-hashed: zdnet__2020-05-10_shinyhunters-73m-records.html
+    sha256 86a069b2..000dafc4 (994,599 B); doj__2024-01-09_raoult-
+    shinyhunters-sentencing.html sha256 eb577ef4..757c3cb9 (101,375 B).
+    Both match the source records exactly.
+
+    [a] FACTS -- CORRECTED (embellishment stripped). Prior outcome_summary
+    listed Mathway (~25M), Promo.com (~22M) and ProctorU (~444K) as
+    "confirmed" victims and set individuals_affected=200,000,000. NONE of
+    those three companies, and no 200M figure, appears in either cited
+    source; 200M also silently double-counted the separately-modeled
+    Tokopedia (91M) and Wishbone (40M) events. Stripped. ZDNET JSON-LD
+    articleBody: ShinyHunters "claims to have breached ten companies" and
+    lists exactly Zoosk (30M), Chatbooks (15M), Home Chef (8M), SocialShare
+    (6M), Minted (5M), Chronicle of Higher Education (3M), GGuMim (2M),
+    Mindful (2M), Bhinneka (1.2M), StarTribune (1M) -- "total for 73.2
+    million user records, which the hacker is selling for around $18,000,
+    with each database sold separately." individuals_affected 200,000,000 ->
+    73,200,000; asking_price_usd 18000 confirmed verbatim. The prior list
+    also OMITTED the single largest ZDNET-confirmed victim (Zoosk 30M) -- a
+    confabulated-substitution signature. "~30 additional companies through
+    July 2020" was unsourced precision; replaced with DoJ-carried "more than
+    60 companies" (April 2020-July 2021). summary parenthetical fixed: stub
+    events exist for Tokopedia/Wishbone/Microsoft-GitHub only -- there is NO
+    ProctorU event in the corpus (grep-confirmed), so ProctorU was removed
+    from the "stubbed cases" list.
+
+    [b] ATTRIBUTION -- HEDGED DOWN. Self-claim: ZDNET = "A hacker group going
+    by the name of ShinyHunters claims to have breached ten companies."
+    ZDNET "verified [samples] to include legitimate user records" but "the
+    authenticity of some of the listed databases cannot be verified"; threat-
+    intel sources "Nightlion Security, Under the Breach, and ZeroFOX believe
+    ShinyHunters is a legitimate threat actor." DoJ (2024) corroborates the
+    actor is real (member Sebastien Raoult convicted; "Millions of victims
+    had their personal information stolen and sold by 'ShinyHunters' group").
+    Given self-claim origin + ZDNET's own authenticity hedge + the brand/
+    re-poster false_flag_risk=suspected, attributing_org_confidence high->
+    moderate and auspex_assessment concur->concur-with-caveat. attributing_org
+    expanded to name the threat-intel sources ZDNET actually cited.
+
+    [c] DATES -- CORRECTED. RAW ZDNET JSON-LD datePublished
+    2020-05-09T14:10:00Z + visible byline "May 9, 2020 at 7:10 a.m. PT"
+    (dateModified 2020-05-20; no "May 10" anywhere in the raw). disclosure_date
+    and attribution_date 2020-05-10 -> 2020-05-09; source published_on likewise
+    corrected (id-slug retains ..._2020-05-10 unchanged to avoid FK churn).
+    start_date 2020-04-01 = DoJ "Between April 2020..." onset (kept). end_date
+    2020-07-31 is a modeling boundary for the May wave (DoJ activity actually
+    ran to July 2021; stated in prose). DoJ published_on 2024-01-09 confirmed
+    by dateline "Tuesday, January 9, 2024".
+
+    [d] DOCTRINE_LINKS -- none. Financially-motivated criminal data-broker
+    activity, no strategic doctrine; [] retained.
+
+    [e] ATTRIBUTION_LEVEL -- added named-actor. ShinyHunters is a named brand/
+    forum-handle (not a nation or unit); self-claim + journalism identify a
+    named actor, nothing narrower.
+
+    [f] ACTOR_ID -- criminal/shinyhunters resolves to atlas actor id
+    criminal/shinyhunters (verified). incident_type [data-theft] ->
+    [data-theft, leak] (task "leak/sale" mapped to the schema-valid enum
+    `leak`; `leak/sale` is not in the incident_type enum). NB marketplace
+    names RaidForums/EmpireMarket/Exploit are carried by DoJ ("RaidForums,
+    EmpireMarket, and Exploit"), NOT by the ZDNET article (which names only
+    "a dark web marketplace"). targets: added sectors/media (StarTribune,
+    Chronicle of Higher Education, GGuMim, Mindful) beside sectors/retail to
+    model the multi-company, multi-sector victim spread (directionality:
+    many companies as victims). false_flag_risk=suspected retained (valid
+    enum; consistent with the brand/re-poster caveat).

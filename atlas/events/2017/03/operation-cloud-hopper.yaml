@@ -9,42 +9,52 @@ incident_type:
   - supply-chain
 initial_vector: phishing
 outcome_summary: |
-  APT10 / MSS Tianjin via contractor Huaying Haitai phished managed
-  service providers (HPE, IBM, Fujitsu, NTT, others), harvested
-  admin credentials, then pivoted into customer environments in
-  12+ countries. Theft from aerospace, satellite, telecom,
-  healthcare, manufacturing, and the US Navy explicitly cited
-  in the DOJ indictment. Touched every MIC2025-listed sector
-  ("10/10").
+  APT10 (per the DOJ indictment, the MSS Tianjin State Security
+  Bureau operating via front company Huaying Haitai) spear-phished
+  managed service providers, harvested administrator credentials,
+  then pivoted through shared MSP management systems into
+  downstream customer environments across 12+ countries. The DOJ
+  indictment charges IP theft across aerospace, satellite, telecom
+  and manufacturing verticals plus direct theft of >100,000 US
+  Navy personnel records; PwC/BAE map the victim sectors onto
+  multiple Made in China 2025 pillars.
 false_flag_risk: none
 campaign_id: cloud-hopper
 summary: |
-  The canonical MSP supply-chain compromise. PwC + BAE Systems
+  The canonical MSP supply-chain compromise. PwC UK + BAE Systems
   jointly published the "Operation Cloud Hopper" report in April
-  2017; UK NCSC and Five Eyes joint statement followed the
-  December 2018 DOJ indictment. APT10 / Stone Panda / MenuPass
-  ran high-volume spear-phishing of managed service provider
-  administrators, then used PlugX, ChChes, RedLeaves, QuasarRAT,
-  and PoisonIvy backdoors with DLL side-loading via legitimately
-  signed binaries for defense evasion, Mimikatz for credential
-  dumping, and valid credentials harvested from MSP jump hosts
-  to lateral-move into downstream customer environments — pivoting
-  from a single HPE / IBM / Fujitsu / NTT administrator into
-  hundreds of customer Active Directories. The indictment also
-  charges direct intrusions at US Navy personnel records, NASA,
-  and the DOE Lawrence Berkeley Lab, demonstrating MSP-pivot and
-  direct-collection used as alternating modes inside the same
-  cluster.
+  2017, assessing APT10 (Red Apollo / CVNX / Stone Panda / menuPass)
+  as "highly likely to be a China-based threat actor"; a Five Eyes
+  attribution and the December 2018 DOJ indictment followed, the
+  latter naming the MSS Tianjin State Security Bureau and two
+  officers (Zhu Hua, Zhang Shilong) working through the Huaying
+  Haitai front company. Per PwC/BAE, APT10 ran high-volume
+  spear-phishing of MSP administrators, then used PlugX, ChChes,
+  RedLeaves and Quasar RAT (having retired Poison Ivy after the
+  2013 FireEye exposure) with DLL search-order hijacking /
+  side-loading via legitimately signed binaries (e.g. Windows
+  Defender) for defense evasion, Mimikatz and PwDump for credential
+  dumping, and valid MSP credentials to pivot from shared MSP
+  management systems into downstream customer environments. The DOJ
+  indictment additionally charges direct theft of >100,000 US Navy
+  personnel records and intrusions at multiple US government
+  agencies, demonstrating MSP-pivot and direct-collection used as
+  alternating modes inside the same cluster. (The specific MSP
+  victim identities — reported by Reuters in 2019 as HPE, IBM,
+  Fujitsu and NTT — appear in neither cited source and are not
+  asserted here as cited.)
 attributions:
   - actor_id: cn/mss/apt10
     attributing_org: PwC + BAE Systems
     attributing_org_confidence: high
+    attribution_level: nation  # PwC/BAE go only to "highly likely ... a China-based threat actor"; they never name the MSS / Tianjin SSB / Huaying Haitai (verified 0 hits in the 25-page PDF)
     auspex_assessment: concur
     attribution_date: 2017-04-03
     attribution_source_id: pwc-bae/2017-04_operation-cloud-hopper
   - actor_id: cn/mss/apt10
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ indictment names the MSS Tianjin State Security Bureau + Huaying Haitai front company + officers Zhu Hua & Zhang Shilong
     auspex_assessment: concur
     attribution_date: 2018-12-20
     attribution_source_id: doj/2018-12-20_apt10-indictment
@@ -54,11 +64,22 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      DOJ indictment names victims and sectors that map 1:1 onto
-      MIC2025 pillars: aerospace, satellite, telecom, mining,
-      pharma, biotech, IT. PwC + BAE describe Cloud Hopper as a
-      strategic-IP-collection program at MIC2025-pillar scale.
-    attesting_source_id: doj/2018-12-20_apt10-indictment
+      The cited PwC/BAE report states the strategic end at the goal
+      level: it maps APT10's target set directly onto the ten "Made
+      in China 2025" industries (its Figure 13) and China's 13th
+      Five-Year Plan, assessing the targeting "would provide valuable
+      information to advance the domestic innovation goals held within
+      China." Directed collection of foreign IP in MIC2025 priority
+      sectors to advance China's indigenous industrial base is the
+      terminal purpose this doctrine encodes. (Corrected: the prior
+      attesting_source_id was the DOJ indictment, a US prosecutorial
+      document that never mentions MIC2025; re-pointed to the PwC/BAE
+      report, which names the doctrine + its goal in substance and is
+      snapshotted + hashed.)
+    attesting_source_id: pwc-bae/2017-04_operation-cloud-hopper
+    inference_basis:
+      source_quote: "China is also promoting ten key industries in which it wants to improve innovation in manufacturing as part of the 'Made in China 2025' initiative. ... Observed APT10 targeting is in line with many of the historic compromises we have outlined previously as originating from China. This targeting spans industries that align with China's 13th FYP which would provide valuable information to advance the domestic innovation goals held within China."
+      source_id: pwc-bae/2017-04_operation-cloud-hopper
     counter_explanation: null
     contested: false
     analyst: claude
@@ -67,10 +88,16 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Victim mix straddles civilian and dual-use research; MCF is
-      the meta-doctrine that licenses MSS to treat both as one
-      target set.
+      Victim mix straddles civilian MSPs and dual-use research/tech
+      targets; MCF is the meta-doctrine that licenses the MSS to treat
+      civilian and defense-relevant collection as one target set. No
+      cited source names MCF, so this stays strongly_inferred.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "PwC/BAE: APT10 targeting 'spans industries that align with China's 13th FYP ... to advance the domestic innovation goals held within China' — state-directed absorption of foreign IP into the national industrial base."
+        - "Target set spans civilian MSPs, aerospace, telecom and manufacturing — the civ-mil dual-use collection surface MCF encodes."
+      ruled_out: "Financially-motivated crime: PwC/BAE describe espionage-only exfiltration (IP and sensitive data), with no ransom or monetisation observed."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -80,23 +107,78 @@ doctrine_links:
     confidence: plausible
     reasoning: |
       Telecom-vendor and carrier targets in the victim list are
-      consistent with standards-2035-aligned collection, though
-      MIC2025 framing is more direct.
+      consistent with standards-2035-aligned collection, though the
+      MIC2025 framing (explicit in the cited PwC/BAE report) is more
+      direct.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "PwC/BAE note APT10's historical focus on the 'technology and telecommunications sector' plus telecom targets in the victim set."
+      alternatives:
+        - "The MIC2025 next-gen-IT / telecom pillar is the more direct, source-named frame; standards-2035 is a downstream inference not named by any cited source."
     counter_explanation: null
     contested: false
     analyst: claude
+# NB: 4 dangling org targets removed 2026-07-10 (orgs/hpe, orgs/ibm, orgs/fujitsu,
+# orgs/ntt) — no target file exists for any (UNRESOLVED FKs) and the MSP victim
+# IDENTITIES are in NEITHER cited source (see qc [a]). Kept the resolving sector target.
 targets:
-  - target_id: orgs/hpe
-    role: staging
-  - target_id: orgs/ibm
-    role: staging
-  - target_id: orgs/fujitsu
-    role: staging
-  - target_id: orgs/ntt
-    role: staging
   - target_id: sectors/ict/managed-services
     role: primary
 sources:
   - doj/2018-12-20_apt10-indictment
   - pwc-bae/2017-04_operation-cloud-hopper
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Audited vs the two cited sources. pwc-bae/2017-04_operation-cloud-hopper: raw_snapshot
+    present + hash re-verified (sha256 8da2fdd15a79d777a17efb0adb6fc15ea9ff64edde8ea743395235f2816356c3,
+    25-page PDF, CreationDate 2017-04-04). doj/2018-12-20_apt10-indictment: re-checked 2026-07-10 and
+    STILL bot-walled — the justice.gov/archives URL returns HTTP 200 but only a 2,574-byte Akamai
+    "bm-verify" JS-challenge page (no article body); the Reuters Cloud Hopper report is DataDome-401.
+    No DOJ content hash; DOJ-only facts are mirror-corroborated (CyberScoop / FBI Wanted / Nextgov
+    2018-12-20 + MITRE G0045, which quotes the indictment) -> event level: partial.
+    [a] FACTS carried verbatim by the snapshotted PwC/BAE report: MSP supply-chain, spear-phishing of
+    MSP admins, pivot on valid MSP credentials from shared MSP management systems into customer
+    networks, 12+ countries (PwC map shows ~15: USA, Canada, UK, France, Switzerland, Sweden, Norway,
+    Finland, Brazil, South Africa, India, Thailand, South Korea, Japan, Australia), PlugX / ChChes /
+    RedLeaves / Quasar RAT, DLL search-order hijacking + sideloading via legitimately signed binaries
+    ("using legitimate, signed software, such as Windows Defender to load the malicious payloads"),
+    Mimikatz / PwDump credential dumping. CORRECTIONS: (1) removed 4 dangling/unsourced org targets
+    orgs/hpe, orgs/ibm, orgs/fujitsu, orgs/ntt — no target file exists for any (UNRESOLVED FKs), and
+    the MSP victim IDENTITIES appear in NEITHER cited source (PwC 0 hits; the DOJ indictment
+    anonymised them as MSP-1 etc.). Their public naming came from Reuters (2019); consistent with the
+    already-audited sibling event 2018-12/apt10-cloud-hopper-indictment they are disclaimed in prose,
+    not asserted as cited. Kept the one resolving target sectors/ict/managed-services. (2) removed
+    "hundreds of customer Active Directories" (figure in no source). (3) removed the "Touched every
+    MIC2025-listed sector (10/10)" over-claim — PwC says APT10 targeting is "in line with MANY of"
+    the MIC2025 / 13th-FYP industries, not all ten. (4) corrected malware framing: PwC states APT10
+    "ceased its use of the Poison Ivy malware family after a 2013 FireEye report", so Poison Ivy is
+    historical, not a Cloud Hopper (2016-17) backdoor.
+    [b] ATTRIBUTION: PwC/BAE attribute at NATION level only — "PwC UK and BAE Systems assess APT10 as
+    highly likely to be a China-based threat actor", targeting "closely aligned with strategic Chinese
+    interests"; they NEVER name the MSS / Tianjin / Huaying (verified 0 hits). MSS Tianjin SSB +
+    Huaying Haitai + officers Zhu Hua & Zhang Shilong come solely from the DOJ indictment (cited,
+    bot-walled, mirror-corroborated). auspex concur retained.
+    [c] DATES: start 2014 (PwC: "likely that APT10 had already begun to do so from as early as 2014");
+    disclosure 2017-04-03 (report says "April 2017", PDF created 2017-04-04); end 2018-12-20
+    (indictment) — all check out. The 2017-03 slug is a stable id (disclosure is April) — not changed,
+    per house convention. Both source published_on dates verified.
+    [d] DOCTRINE: cn/mic2025 KEPT attested but attesting_source_id corrected doj -> pwc-bae (the DOJ
+    indictment never mentions MIC2025; PwC/BAE name it explicitly — Figure 13 "Industries of interest
+    outlined by 'Made in China 2025' initiative" — and state the goal: APT10 targeting "spans
+    industries that align with China's 13th FYP which would provide valuable information to advance the
+    domestic innovation goals held within China"); added inference_basis.source_quote (verbatim,
+    de-interleaved from the two-column layout). cn/mcf (strongly_inferred) + cn/standards-2035
+    (plausible) each given a proper inference_basis (signals + ruled_out / alternatives). All three
+    are attacker-rationale (Chinese doctrine on a China op) -> default perspective, no field needed.
+    [e] ATTRIBUTION_LEVEL (added, was missing): PwC/BAE attribution -> nation; DOJ attribution ->
+    named-unit (MSS Tianjin State Security Bureau + Huaying Haitai front company + two named officers).
+    [f] ACTOR_ID: cn/mss/apt10 resolves to atlas/actors/cn/apt10.yaml (id: cn/mss/apt10). This is the
+    espionage-campaign event (actor retained); the LE counter-action lives in the separate event
+    2018-12/apt10-cloud-hopper-indictment. incident_type intrusion/data-theft/supply-chain correct.
+    Source records: appended fresh 2026-07-10 audit notes to both; PwC/BAE snapshot keys unchanged
+    (PRESERVE), DOJ left un-snapshotted (bot-wall re-confirmed).

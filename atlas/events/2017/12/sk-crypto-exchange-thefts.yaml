@@ -1,64 +1,258 @@
 id: 2017-12/sk-crypto-exchange-thefts
-name: 2017–2018 South Korean cryptocurrency exchange thefts (Youbit, Bithumb, Coinis, Yapizon)
-start_date: 2017-04-01  # Yapizon April 2017; multiple exchanges through 2018
-disclosure_date: 2017-12-19  # Youbit bankruptcy disclosure
-end_date: 2018-12-31
+name: 2017 South Korean cryptocurrency exchange thefts (Youbit/Yapizon, Bithumb, Coinis)
+start_date: 2017-02-01  # Bithumb theft (Feb 2017) is the earliest sourced DPRK crypto op; Yapizon Apr 2017; Youbit Dec 2017
+disclosure_date: 2017-12-19  # Youbit bankruptcy filing (Security Affairs / Newsweek)
+end_date: 2017-12-31  # sourced SK-exchange thefts are all 2017; Treasury's regional five-exchange window runs to Sept 2018 but is not SK-specific
 incident_type:
-  - financial-theft
   - intrusion
+  - financial-theft
 initial_vector: phishing
 outcome_summary: |
-  Multi-exchange spear-phishing campaign against ROK
-  cryptocurrency exchanges and their employees. Wallet-key
-  extraction; tens of millions stolen cumulatively across Yapizon
-  (April 2017), Coinis, Bithumb (multiple), and Youbit
-  (December 2017, forcing the exchange into bankruptcy).
+  Campaign of thefts against South Korean cryptocurrency exchanges
+  and their users through 2017. Bithumb lost ~$7M (February 2017);
+  Yapizon lost ~4,000 BTC (~$5M at the time, ~40% of its assets) in
+  April 2017; after rebranding to Youbit the same exchange was
+  hacked a second time in December 2017 (losing 17% of assets) and
+  filed for bankruptcy on 19 December 2017 — the first South Korean
+  cryptocurrency exchange to fail from a hack (customers recovered
+  ~75% pending proceedings). Coinis and Coinlink were also targeted
+  by spear-phishing.
 quantified_impact:
-  usd_stolen_estimate: 75000000  # cumulative
+  usd_stolen_estimate: 12000000  # sum of the two cleanly-sourced SK-exchange thefts: Bithumb ~$7M (Feb, Recorded Future) + Yapizon ~$5M (Apr, Security Affairs). The Dec-2017 Youbit loss (17% of assets) was not disclosed in USD. NB Treasury 2019 gives a REGIONAL ~$571M / five-Asian-exchange figure (Jan 2017–Sept 2018) that is not SK-exchange-specific and is not summed here.
+  notes: |
+    Prior value 75000000 was a misattribution: it is the DOJ 2021
+    indictment's "$75 million from a Slovenian cryptocurrency
+    company in December 2017" (a NiceHash-class victim), which is
+    not a South Korean exchange and was wrongly imported here as the
+    SK "cumulative" total. Corrected 2026-07-10.
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Early pivot from SWIFT-network bank theft to direct
-  cryptocurrency exchange theft. Established the operational
-  pattern — spear-phishing of exchange engineers and finance
-  staff with weaponized resume / Hangul HWP / Microsoft Office
-  documents, follow-on delivery of the Manuscrypt / NukeSped
-  remote-access trojans and the FALLCHILL backdoor, valid-
-  credentials lateral movement on the exchange's internal
-  network, and hot-wallet key extraction — that TraderTraitor
-  would systematize post-2018. Symantec / Kaspersky / FireEye
-  observed BLINDINGCAN, RatankbaPOS, and Volgmer artifacts
-  consistent with Lazarus / APT38 / Bluenoroff overlap across
-  the Yapizon, Coinis, Bithumb, and Youbit intrusions.
+  Early expression of the DPRK pivot from SWIFT-network bank theft
+  toward direct cryptocurrency-exchange theft. Recorded Future
+  (Insikt Group, January 2018) documented a late-2017 spear-
+  phishing campaign against South Korean cryptocurrency users and
+  exchanges delivered through Hancom Hangul Word Processor (.hwp)
+  documents carrying a Ghostscript exploit (CVE-2017-8291); the
+  payloads were 32-bit DLLs built on Destover infostealer code
+  previously seen in the 2014 Sony Pictures attack, the January
+  2017 Polish banking attacks, and the first WannaCry victim —
+  Recorded Future's basis for the North Korea attribution. Korea
+  Internet & Security Agency (KISA) attributed the first Youbit
+  (Yapizon) theft of ~4,000 BTC to hackers based in North Korea,
+  and researchers cited by Newsweek tied the activity to the
+  BlueNoroff subgroup of Lazarus. US Treasury (2019) and DOJ (2021)
+  later attributed DPRK cryptocurrency-exchange theft broadly to
+  Lazarus / BlueNoroff / APT38, with Treasury assessing that the
+  three RGB-controlled groups likely stole around $571 million in
+  cryptocurrency from five Asian exchanges between January 2017 and
+  September 2018.
 attributions:
   - actor_id: kp/rgb/lazarus
-    attributing_org: ROK NIS / US Treasury
+    attributing_org: Recorded Future (Insikt Group)
     attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2018-01-16
+    attribution_source_id: recordedfuture/2018-01-16_north-korea-late-2017-cryptocurrency-campaign
+    notes: "Insikt Group attributes the late-2017 SK crypto spear-phishing campaign to North Korea on Destover code reuse ('32-bit DLLs built in part on the Destover malware code'; Destover is the Lazarus toolset used against Sony 2014 / Polish banks Jan 2017 / first WannaCry victim). named-actor via the Destover/Lazarus toolset lineage; the report says 'North Korea' and does not name the RGB service."
+  - actor_id: kp/rgb/lazarus
+    attributing_org: ROK Korea Internet & Security Agency (KISA), reported by Newsweek
+    attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2017-12-19
+    attribution_source_id: newsweek/2017-12-19_north-korea-bitcoin-exchanges-sting
+    notes: "KISA attributed the first Youbit/Yapizon theft (~4,000 BTC) to 'hackers based in North Korea' — nation-level ROK govt attribution. concur-with-caveat: KISA's public attribution is nation-level; the named-actor / subgroup mapping (Lazarus / BlueNoroff) rests on the Recorded Future and Treasury sources and on the researchers Newsweek cites for the BlueNoroff naming."
+  - actor_id: kp/rgb/bluenoroff
+    attributing_org: US Department of the Treasury (OFAC)
+    attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-09-13
     attribution_source_id: treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
+    notes: "Treasury designates BlueNoroff (an RGB-controlled Lazarus subgroup) and states DPRK cyber operations 'target Virtual Asset Providers and cryptocurrency exchanges' and that 'these three state-sponsored hacking groups likely stole around $571 million in cryptocurrency alone, from five exchanges in Asia between January 2017 and September 2018' — the regional exchange-theft campaign encompassing these SK thefts. Treasury does NOT name Youbit/Yapizon/Bithumb/Coinis individually. BlueNoroff is also the subgroup Newsweek's researchers name for this activity."
   - actor_id: kp/rgb/apt38
-    attributing_org: US DOJ
+    attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-02-17
     attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+    notes: "DOJ's superseding indictment attributes DPRK cryptocurrency theft to RGB units 'known … as Lazarus Group and Advanced Persistent Threat 38 (APT38)'. Corroborates the actor/pattern only: DOJ's enumerated December-2017 crypto victim is a Slovenian company ('$75 million from a Slovenian cryptocurrency company'), NOT a South Korean exchange, so this source does not carry the SK-exchange victims of this event."
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Treasury 2019 designation and DOJ 2021 indictment both
-      attest to the WMD-financing strategic goal underlying this
-      campaign. Early-era hard-currency mechanism operating in
-      the Byungjin window.
+      2017 is squarely inside the Byungjin window (2013–2018,
+      parallel nuclear/economy development). Treasury 2019 ties DPRK
+      cyber-enabled financial theft to weapons-program revenue, but
+      the crypto-exchange-specific WMD statement is HEDGED ('possibly
+      assist … potentially fund'), and the unhedged WMD-goal sentence
+      describes BlueNoroff's bank/SWIFT heists rather than these
+      crypto thefts — so the terminal WMD end-use is inferred, not
+      attested, for this event.
     attesting_source_id: treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
+    inference_basis:
+      source_id: treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
+      signals:
+        - "Treasury: DPRK 'cyber operations also target Virtual Asset Providers and cryptocurrency exchanges to possibly assist in obfuscating revenue streams and cyber-enabled thefts that also potentially fund North Korea's WMD and ballistic missile programs' (crypto WMD link present but hedged)."
+        - "Treasury: BlueNoroff heists 'generate revenue, in part, for its growing nuclear weapons and ballistic missile programs' (unhedged WMD goal, but stated for bank/SWIFT heists, not these crypto thefts)."
+        - "Event window (Feb–Dec 2017) falls inside the Byungjin line (2013–2018)."
+      ruled_out: "attested — the crypto-exchange WMD end-use in the cited source is hedged ('potentially fund') and the direct WMD-goal statement applies to BlueNoroff bank heists, not these SK-exchange thefts; the terminal-goal bar is not cleared."
+    contested: false
+    analyst: claude
+  - doctrine_id: kp/8th-congress-defense-plan
+    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      Per AUSPEX convention, DPRK hard-currency revenue theft is
+      tagged to the active 8th-Congress five-year defense plan's
+      revenue-aggregation pillar (kp/byungjin, linked separately,
+      carries the 2017 origin). This 2017 campaign is an early
+      template for the exchange-theft revenue stream the plan later
+      systematizes. strongly_inferred, not attested: the cited
+      Treasury crypto-WMD link is hedged, and the 8th-Congress plan
+      post-dates the event (issued 2021-01-09), so this doctrine's
+      own per-event attestation bar (the cited source must state the
+      terminal WMD goal in substance) is not met. program_id null:
+      the crypto-bridge-theft program is scoped 2022+ (Ronin /
+      Harmony / …), which this 2017 exchange campaign predates.
+    attesting_source_id: treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
+    inference_basis:
+      source_id: treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
+      signals:
+        - "Treasury ties DPRK crypto-exchange theft to WMD / ballistic-missile financing (hedged for crypto: 'potentially fund'); DOJ 2021 corroborates the proximate regime-funding purpose (the units 'further the strategic and financial interests of the DPRK government and its leader')."
+        - "Per AUSPEX convention the active-era revenue-aggregation pillar carries all DPRK hard-currency crypto theft; byungjin (linked separately) carries the 2017 origin."
+        - "Actor is the DPRK RGB financial-tasking lineage (Lazarus / BlueNoroff / APT38), whose crypto-theft proceeds the US IC consistently assess as underwriting the strategic-weapons program."
+      ruled_out: "attested — hedged crypto-WMD language in the cited Treasury source, and the 8th-Congress plan (2021) post-dates this 2017 event; the terminal-goal attestation bar is not cleared."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/finance/crypto-exchange
     role: primary
 sources:
+  - recordedfuture/2018-01-16_north-korea-late-2017-cryptocurrency-campaign
+  - securityaffairs/2017-12-19_youbit-exchange-shutdown
+  - newsweek/2017-12-19_north-korea-bitcoin-exchanges-sting
   - treasury/2019-09-13_dprk-lazarus-bluenoroff-andariel
   - doj/2021-02-17_lazarus-three-officers-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW + phantom/wrong-source remediation
+    (badrabbit re-source). BEFORE this pass the event cited ONLY
+    treasury/2019-09-13 and doj/2021-02-17, NEITHER of which names a
+    single South Korean exchange — raw term-scan of both snapshots:
+    Youbit=0, Yapizon=0, Bithumb=0, Coinis=0. The SK-exchange subject
+    was therefore entirely unsourced, and the malware paragraph was
+    fabricated. Path taken: RE-SOURCE — the event is REAL (well-
+    documented 2017 DPRK campaign) so three genuine primary/secondary
+    sources were created, snapshotted, and hashed, and sources[] /
+    attributions were re-pointed. The two govt sources were KEPT
+    (real, on-point for the actor + WMD-financing framing) and their
+    hashes RE-VERIFIED on disk 2026-07-10 (treasury 11307c91…,
+    doj 4e3209c4…).
+
+    NEW SOURCES (snapshotted + sha256 on disk 2026-07-10):
+    - securityaffairs/2017-12-19_youbit-exchange-shutdown
+      (sha256 5ed9aea1…, 102,701 B) — Youbit bankruptcy after 2nd
+      2017 hack, 17% loss, April ~4,000 BTC / $5M / 40%-of-assets
+      first hack, 'The company blamed North Korea for the attack',
+      75% customer recovery.
+    - newsweek/2017-12-19_north-korea-bitcoin-exchanges-sting
+      (sha256 d9860595…, 428,705 B) — 'Korea Internet and Security
+      Agency (KISA) attributed the first attack on Youbit … to
+      hackers based in North Korea'; names Bithumb, Yapizon, Coinis;
+      'hackers from Bluenoroff, a subgroup of … Lazarus'.
+    - recordedfuture/2018-01-16_north-korea-late-2017-cryptocurrency-campaign
+      (sha256 f7dcbdb5…, 27,174 B; Wayback-rendered capture — the
+      live RF page is a JS shell) — Bithumb Feb-2017 $7M theft,
+      Coinlink lure, HWP + Ghostscript CVE-2017-8291 tradecraft,
+      Destover/Lazarus code overlap (Sony 2014 / Polish banks Jan
+      2017 / first WannaCry).
+
+    [a] FACTS. STRIPPED (carried by NO source in sources[], several
+    anachronistic): the entire malware list — Manuscrypt, NukeSped,
+    FALLCHILL, BLINDINGCAN (first reported 2020), RatankbaPOS,
+    Volgmer, TraderTraitor (a 2022 designation) — and the sentence
+    'Symantec / Kaspersky / FireEye observed BLINDINGCAN, RatankbaPOS,
+    and Volgmer artifacts' (no such source is cited; 0 hits for every
+    one of these strings across all five snapshots). Also stripped:
+    'weaponized resume / Microsoft Office documents', 'valid-
+    credentials lateral movement', 'hot-wallet key extraction', and
+    'that TraderTraitor would systematize post-2018' (unsourced
+    embellishment / forward-reference). KEPT + newly sourced: the
+    Youbit-bankruptcy-after-2nd-hack fact (Security Affairs), the
+    April Yapizon ~4,000 BTC / ~$5M hack (Security Affairs, Newsweek),
+    Bithumb ~$7M Feb 2017 (Recorded Future), the Coinis/Coinlink
+    targeting (Newsweek / Recorded Future), and the HWP + CVE-2017-8291
+    + Destover spear-phishing tradecraft (Recorded Future).
+    QUANTIFIED_IMPACT corrected: usd_stolen_estimate 75000000 was a
+    MISATTRIBUTION — that is DOJ 2021's '$75 million from a Slovenian
+    cryptocurrency company in December 2017' (NiceHash-class, NOT a SK
+    exchange), wrongly imported as the SK 'cumulative'. Reset to
+    12000000 = the two cleanly-sourced SK thefts (Bithumb ~$7M +
+    Yapizon ~$5M); Dec Youbit loss (17%) undisclosed in USD; Treasury's
+    ~$571M is a regional five-exchange figure, not summed.
+
+    [c] DATES. start_date 2017-04-01 -> 2017-02-01 (Bithumb Feb-2017
+    theft is the earliest sourced op, Recorded Future). end_date
+    2018-12-31 -> 2017-12-31 and name '2017–2018' -> '2017': every
+    sourced SK-exchange theft is 2017; the 2018 tail was unsourced
+    (Treasury's Jan-2017–Sept-2018 window is regional, not SK-specific).
+    disclosure_date 2017-12-19 verified (Security Affairs + Newsweek
+    both datePublished 2017-12-19). New-source published_on verified
+    against page metadata (2017-12-19 / 2017-12-19 / 2018-01-16).
+
+    [b]/[e] ATTRIBUTION + LEVEL. Rebuilt to four source-matched
+    attributions, each with attribution_level (was missing entirely).
+    The old 'ROK NIS / US Treasury' attributing_org was unsupportable
+    (Treasury source is OFAC-only, no NIS) — replaced with the actual
+    ROK attributor KISA, carried by the new Newsweek source, at
+    attribution_level nation (KISA publicly said 'North Korea', not a
+    named actor) -> auspex concur-with-caveat. Recorded Future =
+    named-actor (Lazarus via Destover lineage), concur. Treasury =
+    kp/rgb/bluenoroff named-actor (the crypto financial subgroup),
+    concur. DOJ retained as kp/rgb/apt38 named-actor concur but re-
+    noted honestly: DOJ corroborates the actor/pattern only, its
+    enumerated Dec-2017 crypto victim is the Slovenian company, not a
+    SK exchange. Directionality confirmed: SK exchanges = victims
+    (targets sectors/finance/crypto-exchange), DPRK RGB = attacker.
+
+    [d] DOCTRINE_LINKS. Old single link kp/byungjin/sanctions-evasion-
+    revenue @ attested was over-attested. Rebuilt to TWO links, both
+    strongly_inferred with inference_basis {source_id, signals[],
+    ruled_out}, mirroring the sibling 2018-01/applejeus-campaign
+    convention: kp/byungjin/sanctions-evasion-revenue carries the 2017
+    (Byungjin-window) origin; kp/8th-congress-defense-plan/revenue-
+    aggregation is the active-doctrine anchor per AUSPEX 'tag events to
+    the active doctrine' convention (program_id null — crypto-bridge-
+    theft is scoped 2022+). NOT attested: the cited Treasury crypto-WMD
+    language is HEDGED ('possibly assist … potentially fund'), and the
+    only unhedged Treasury WMD-goal sentence is about BlueNoroff bank/
+    SWIFT heists, not these crypto thefts — so the terminal-goal bar
+    (this doctrine's own per-event rule + SCHEMA attestation boundary)
+    is not cleared. The 8th-Congress plan (2021) also post-dates the
+    2017 event.
+
+    [f] ACTOR_ID. All resolve to atlas actor ids (verified): kp/rgb/
+    lazarus -> atlas/actors/kp/lazarus.yaml; kp/rgb/bluenoroff ->
+    kp/bluenoroff.yaml; kp/rgb/apt38 -> kp/apt38.yaml. Not edited (per
+    protocol; actor/doctrine files are flag-only).
+
+    FLAGS for orchestrator: (1) kp/rgb/bluenoroff and kp/rgb/apt38 are
+    cross-aliased separate actor records (each lists the other as an
+    alias) — this event now carries both (Treasury names 'Bluenoroff',
+    DOJ names 'APT38'); if the roster later merges them, collapse these
+    two attributions. (2) Recorded Future raw_snapshot is a Wayback-
+    rendered capture because the live page is a JS shell; archive_url
+    records the exact Wayback timestamp. (3) DOJ 2021 is a weak
+    SK-specific source (no SK exchange named) — retained as a broad
+    actor/pattern corroborant only.

@@ -9,43 +9,153 @@ incident_type:
 initial_vector: phishing
 outcome_summary: |
   Cisco Talos published a technical disclosure of the ObliqueRAT
-  implant family observed in late 2019 and early 2020 against
-  targets in South Asia. The implant was delivered via weaponized
-  Microsoft Office documents themed on Indian and South Asian
-  diplomatic and government lures. Talos's 2020-02 publication
-  did not yet attribute the operator cluster definitively, but
-  the lure-mix and victimology were consistent with Transparent
-  Tribe operations; subsequent Talos research (February 2021)
-  formally linked ObliqueRAT to Transparent Tribe via infrastructure
-  and TTP overlap with Crimson RAT operations.
+  remote-access-trojan family, delivered via password-protected
+  malicious Microsoft Word documents whose VBA macros dropped the
+  implant (ObliqueRAT v5.2, compiled 4 and 27 November 2019). The
+  2020-02-20 post described the campaign as targeting "organizations
+  in Southeast Asia" — Talos's label at the time — and linked
+  ObliqueRAT to a December 2019 CrimsonRAT campaign via shared maldocs
+  and macros, noting CrimsonRAT "has been known to target diplomatic
+  and government organizations." The 2020 post made NO operator
+  attribution. Talos's follow-on (2 March 2021) reframed the target
+  region as "South Asia" and stated ObliqueRAT "has been linked to the
+  Transparent Tribe APT group in the past," resting that link on the
+  earlier CrimsonRAT maldoc/macro overlap; the 2021 post's only newly
+  reported C2-infrastructure overlap was with a RevengeRAT campaign,
+  assessed at low confidence.
 false_flag_risk: none
 summary: |
-  Foundational disclosure for the ObliqueRAT tool family. Tagged
-  to Transparent Tribe based on the subsequent Talos 2021
-  attribution-linking publication; the initial 2020 disclosure
-  stopped short of cluster attribution.
+  Foundational disclosure for the ObliqueRAT tool family. The 2020 post
+  made no operator attribution and labelled the target region
+  "Southeast Asia"; the Transparent Tribe / APT36 tag derives entirely
+  from Talos's March 2021 follow-on, which reframed the region as "South
+  Asia" and referenced the prior CrimsonRAT-based linkage. No cited
+  source names India, Pakistan, or a specific victim organisation for
+  this campaign.
 attributions:
   - actor_id: pk/unscoped/transparent-tribe
     attributing_org: Cisco Talos
-    attributing_org_confidence: moderate
+    attribution_level: named-actor  # 2021 follow-on names "the Transparent Tribe APT group"; no Pakistani unit named
+    attributing_org_confidence: moderate  # 2021 phrasing is by-reference ("has been linked ... in the past"); 2020 post attributes nothing
     auspex_assessment: concur-with-caveat
-    attribution_date: 2021-02-09
+    attribution_date: 2021-03-02  # corrected from 2021-02-09; the linking follow-on published 2 March 2021
     attribution_source_id: cisco-talos/2021-02_obliquerat-new-campaign
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Indian government and diplomatic lure mix and victim sector
-      align with the military-collection pillar; cluster attribution
-      strengthened by subsequent Talos linkage to Transparent Tribe.
+      Neither cited Talos source states a Pakistani anti-India tasking
+      or goal, names India or Pakistan, or identifies a military/defense
+      victim: the 2020 post labels the target region "Southeast Asia"
+      and the March 2021 follow-on "South Asia," with only a generic
+      "government"/"diplomatic" sector inferred from the CrimsonRAT
+      association. The doctrine link therefore rests solely on actor
+      identity — Talos's March 2021 attribution of ObliqueRAT to
+      Transparent Tribe / APT36, whose documented mission (per the actor
+      record) is Pakistan-aligned collection against South Asian / Indian
+      government, defense and diplomatic targets. Held at plausible (not
+      strongly_inferred) because the event's own sources do not
+      corroborate Indian or specifically military victimology.
+    inference_basis:
+      signals:
+        - "March 2021 Talos follow-on: 'ObliqueRAT has been linked to the Transparent Tribe APT group in the past.'"
+        - "ObliqueRAT shares maldocs and macros with CrimsonRAT, Transparent Tribe's long-running Windows implant (2020 Talos post links the two campaigns)."
+        - "Transparent Tribe / APT36 is a documented Pakistan-aligned collector against Indian government, defense and diplomatic targets (actor record)."
+      alternatives:
+        - "The 2020 primary source's literal 'Southeast Asia' label would place victims outside the India-focused doctrine; Talos itself reframed this to 'South Asia' only in 2021."
+        - "A commodity/criminal operator reusing CrimsonRAT-style maldocs cannot be excluded from the 2020 evidence alone, absent the later actor linkage."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/indian-government
+  - target_id: sectors/government  # was orgs/indian-government; neither source names a specific Indian-govt org. Sector "government/diplomatic" carried via the 2020 CrimsonRAT association; country in is actor-inferred (Transparent Tribe), NOT source-stated (2020 says "Southeast Asia", 2021 "South Asia")
     country: in
     role: primary
 sources:
   - cisco-talos/2020-02_obliquerat-maldocs
   - cisco-talos/2021-02_obliquerat-new-campaign
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs both cited Talos posts, snapshotted from Wayback (live
+    blog.talosintelligence.com returns 403 to non-browser fetchers; both
+    archive captures returned HTTP 200 with full article text). Snapshots:
+    - cisco-talos__2020-02_obliquerat-maldocs.html
+      sha256 d88840c194448755…b0d8111fca8eba7, 110754 bytes.
+    - cisco-talos__2021-02_obliquerat-new-campaign.html
+      sha256 1e8b3f1a1d19f209…587a07ad6c7f16b8, 95679 bytes.
+
+    [a] FACTS — corrections against the raw:
+    • STRIPPED "targets in South Asia" and "themed on Indian and South
+      Asian diplomatic and government lures" from the 2020 framing —
+      FABRICATED. The 2020 post says verbatim "This campaign appears to
+      target organizations in Southeast Asia" (3x) and names no country,
+      no "Indian" lure, and no India at all (grep of the 2020 raw:
+      India/Indian/Pakistan/South Asia = 0 hits; Southeast Asia = 3). The
+      "diplomatic and government" sector is carried only as CrimsonRAT's
+      *known* history ("CrimsonRAT has been known to target diplomatic and
+      government organizations in Southeast Asia"), not as confirmed
+      ObliqueRAT victims. Rewrote outcome_summary/summary to the raw.
+    • Delivery/vector VERIFIED: password-protected malicious Word docs +
+      VBA macros; "The initial infection vector of this threat is most
+      likely email based" -> initial_vector: phishing retained. Raw maldoc
+      filenames: "Company-Terms.doc", "DOT_JD_GM.doc".
+    • Malware/compile facts VERIFIED: ObliqueRAT v5.2, compile times
+      "04/11/2019" and "27/11/2019" (DD/MM = Nov 2019); linked Dec 2019
+      CrimsonRAT campaign. 2021 timeline: "November 2019 Version 5.2 of
+      ObliqueRAT created, eventually disclosed in February 2020 by Talos".
+    • "formally linked ... via infrastructure and TTP overlap with Crimson
+      RAT" CORRECTED: the TT link rests on shared maldoc/macro mechanisms
+      with CrimsonRAT; the only NEW infra overlap in the 2021 post is with
+      a RevengeRAT campaign, assessed "with low confidence" — softened.
+
+    [b] ATTRIBUTION: the 2020 post attributes NOTHING (Transparent
+      Tribe/APT36 = 0 hits in the raw). The tag is carried ONLY by the
+      2021 follow-on: "ObliqueRAT has been linked to the Transparent Tribe
+      APT group in the past" — passive/by-reference. Kept actor
+      pk/unscoped/transparent-tribe at attributing_org_confidence moderate
+      + concur-with-caveat (deliberately more cautious than the sibling
+      2021 event, which sets high/concur on the same source — FLAGGED).
+      The ObliqueRAT=APT36 link IS source-carried; the *victims* were the
+      fabricated part.
+
+    [c] DATES: start 2019-11-01 = "November 2019" v5.2 creation (compiles
+      4-27 Nov 2019) — carried. disclosure/end 2020-02-20 VERIFIED
+      (JSON-LD datePublished 2020-02-20T16:06Z + byline "Thursday,
+      February 20, 2020"). attribution_date CORRECTED 2021-02-09 ->
+      2021-03-02: the 2021 source's real date is 2 March 2021 (JSON-LD
+      datePublished 2021-03-02T13:04Z + byline "Tuesday, March 2, 2021"),
+      NOT 9 Feb 2021. Same fix applied to that source record's published_on.
+
+    [d] DOCTRINE: not attested (no source states a Pakistani anti-India
+      goal). Downgraded strongly_inferred -> plausible; the link rests
+      solely on actor identity while the event's own sources say
+      Southeast/South Asia with no India and no military victim. Removed
+      the fabricated "Indian government and diplomatic lure mix" from
+      reasoning; added perspective attacker-rationale + inference_basis
+      {signals, alternatives}.
+
+    [e] ATTRIBUTION_LEVEL: added named-actor (2021 names "the Transparent
+      Tribe APT group"; no Pakistani unit named — consistent with the
+      actor's pk/unscoped placement).
+
+    [f] ACTOR_ID: pk/unscoped/transparent-tribe resolves (atlas/actors/pk/
+      transparent-tribe.yaml). Target changed orgs/indian-government ->
+      sectors/government; country in kept as an actor-inferred value, NOT
+      a source-stated one (disclosed in the target comment + [a]/[d]).
+
+    FLAGS (out of scope — orchestrator):
+    • Source id slug "cisco-talos/2021-02_obliquerat-new-campaign" is
+      date-wrong (should be 2021-03); cited by this event + the sibling
+      2021 event, so the id rename + FK propagation is left to the
+      orchestrator.
+    • Sibling event 2021-02/talos-obliquerat-new-campaign carries the same
+      wrong 2021-02-09 date, the same fabricated "Indian" websites/lures/
+      victimology, orgs/indian-government + orgs/indian-mod targets not
+      source-named, and attributing_org_confidence high — recommend the
+      same audit treatment.

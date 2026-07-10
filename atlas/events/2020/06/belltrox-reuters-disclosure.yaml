@@ -1,46 +1,72 @@
 id: 2020-06/belltrox-reuters-disclosure
 name: Reuters / Citizen Lab disclose BellTroX hack-for-hire (Dark Basin)
-start_date: 2013-01-01
-disclosure_date: 2020-06-09
-end_date: 2020-06-09
+start_date: 2013-01-01  # earliest Dark Basin activity; belltrox[.]org domain registered 2013-07-27 (Citizen Lab); Reuters frames the spree as "a period of seven years" ending ~2020
+disclosure_date: 2020-06-09  # joint Citizen Lab report + Reuters exclusive, both dated "June 9, 2020"
+end_date: 2020-06-09  # operation active until public exposure; neither source dates a distinct cessation (proxy = disclosure). Matches actor in/belltrox active_until
 incident_type:
-  - intrusion
-  - data-theft
-initial_vector: phishing
+  - espionage   # Citizen Lab: "commercial espionage on behalf of their clients"; Reuters headline: "spied on politicians, investors" (schema has no 'hack-for-hire'/'credential-phishing' enum; that character is carried by initial_vector + doctrine link + prose)
+  - intrusion   # successful email-account compromises
+  - data-theft  # exfiltration of targeted inboxes
+initial_vector: phishing  # Citizen Lab: mass "credential phishing" via shortened-URL lures — the hack-for-hire delivery mechanism
 outcome_summary: |
-  Citizen Lab and Reuters published joint investigations
-  identifying BellTroX InfoTech Services of Delhi as the
-  operator of "Dark Basin," a hack-for-hire operation that
-  targeted approximately 10,000 email accounts across thousands
-  of individuals over seven years on behalf of commercial
-  clients. Citizen Lab's report named US litigation finance
-  firms, environmental advocacy organizations (including those
-  involved in the ExxonMobil climate-change litigation), and
-  short-sellers among the documented client equities. BellTroX
-  principal Sumit Gupta had been previously indicted in a US
-  federal case (2015 Aviram Azari adjunct) but operations
-  continued.
+  Citizen Lab and Reuters published companion investigations (both
+  2020-06-09) identifying BellTroX InfoTech Services of Delhi / New
+  Delhi as the operator of "Dark Basin," a commercial hack-for-hire
+  operation run on behalf of unidentified clients. Citizen Lab linked
+  Dark Basin to BellTroX "with high confidence" and documented
+  targeting of "thousands of individuals and hundreds of institutions
+  on six continents" — advocacy groups and journalists, elected and
+  senior government officials, hedge funds, short-sellers, and
+  multiple industries — enumerating 27,591 credential-phishing URLs.
+  Reuters framed the same spree as an attempt to "spy on more than
+  10,000 email accounts over a period of seven years," naming among
+  the TARGETS government officials in Europe, gambling tycoons in the
+  Bahamas, and US investors including private-equity firm KKR and
+  short-seller Muddy Waters; Citizen Lab separately documented
+  targeting of the #ExxonKnew climate-litigation advocacy campaign.
+  Both outlets stressed that the CLIENTS who commissioned the hacking
+  were NOT identified ("Reuters does not know the identity of
+  BellTroX's clients"; owner Sumit Gupta declined to name them and
+  denied wrongdoing). Citizen Lab noted BellTroX director Sumit Gupta
+  had been indicted in California in 2015 for a similar, separate
+  hack-for-hire scheme, yet operations continued.
 false_flag_risk: none
 operators_named:
   - gupta-sumit  # BellTroX principal, Citizen Lab 2020 + prior DOJ 2015 indictment
 summary: |
-  The first comprehensive public exposure of an Indian-based
-  hack-for-hire operation. Foundational for the AUSPEX
-  contractor-hack-for-hire doctrine entry; established the
-  pattern that subsequent Appin and CyberRoot disclosures
-  followed. The Aviram Azari conviction (2022) was a direct
-  downstream effect — Azari was the Israeli intermediary who
-  contracted BellTroX on behalf of US-litigation clients.
+  The first comprehensive public exposure of an Indian commercial
+  hack-for-hire operation at scale. Foundational for the AUSPEX
+  in/contractor-hack-for-hire doctrine entry and a template the later
+  Appin (Reuters / SentinelOne, 2023) disclosure followed. Modeled as
+  a mercenary / commercial actor, NOT a nation-state operation:
+  BellTroX is an India-based firm selling hacking services to paying
+  clients; the actor sits at in/belltrox with primary_service_id null
+  (no attested state-service parent — host-nation modeling of the
+  Indian contractor ecosystem, mirroring in/appin-security), and
+  Citizen Lab / Reuters frame the tasking as "commercial espionage on
+  behalf of their clients," not state collection. Directionality:
+  India-based attacker, globally distributed victims, clients
+  unidentified. NB — the "2015 indictment" of principal Sumit Gupta
+  was the Northern-District-of-California ViSalus hack-for-hire case
+  (see event 2015-12/sumit-gupta-belltrox-indictment); it is NOT the
+  separate SDNY Aviram Azari matter. Azari is unmentioned in either
+  2020 source and the Azari conviction (2022) post-dates them — a 2020
+  report cannot cite it — so the prior claim that "Azari contracted
+  BellTroX" (stripped) was neither sourced here nor established by the
+  DOJ indictment, which named Azari + "a group located in India," not
+  BellTroX.
 attributions:
   - actor_id: in/belltrox
-    attributing_org: Citizen Lab (John Scott-Railton et al.)
-    attributing_org_confidence: high
+    attributing_org: Citizen Lab (Scott-Railton, Hulcoop, Abdul Razzak, Marczak, Anstis, Deibert)
+    attributing_org_confidence: high  # verbatim: "With high confidence, we link Dark Basin to BellTroX InfoTech Services"
+    attribution_level: named-actor    # names a specific commercial firm (BellTroX / Sumit Gupta); NOT a nation/state-unit attribution
     auspex_assessment: concur
     attribution_date: 2020-06-09
     attribution_source_id: citizenlab/2020-06-09_dark-basin
   - actor_id: in/belltrox
-    attributing_org: Reuters (Raphael Satter, Christopher Bing)
-    attributing_org_confidence: high
+    attributing_org: Reuters (Raphael Satter, Christopher Bing, Jack Stubbs)
+    attributing_org_confidence: high  # Reuters: "three former employees, outside researchers, and a trail of online evidence" + Citizen Lab's high-confidence link
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-06-09
     attribution_source_id: reuters/2020-06-09_belltrox-hack-for-hire
@@ -50,20 +76,115 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Citizen Lab and Reuters directly characterize BellTroX as
-      a commercial hack-for-hire operation with documented
-      US-litigation, advocacy-organization, and short-seller
-      client relationships.
+      Citizen Lab (tier-1 academic attributor) explicitly states the
+      goal-level strategic purpose this pillar encodes: BellTroX /
+      Dark Basin conducted commercial espionage for paying clients
+      against their opponents in litigation, financial disputes, and
+      advocacy (short-sellers, hedge funds, #ExxonKnew climate-
+      litigation groups). attested per the 2026-06-19 reframe = an
+      authoritative source corroborates the PURPOSE at goal level
+      (not the actor's confession, not doctrine-slug naming). NB the
+      specific CLIENTS were NOT identified by either source — the
+      commercial-for-hire purpose is what is attested, not a named
+      client roster (prior reasoning wrongly asserted "documented
+      client relationships"; those were targets, and clients are
+      explicitly unknown).
     attesting_source_id: citizenlab/2020-06-09_dark-basin
+    inference_basis:
+      source_id: citizenlab/2020-06-09_dark-basin
+      source_quote: "Over the course of our multi-year investigation, we found that Dark Basin likely conducted commercial espionage on behalf of their clients against opponents involved in high profile public events, criminal cases, financial transactions, news stories, and advocacy."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/dark-basin-targets-various
-    country: null
+  - target_id: orgs/dark-basin-targets-various  # FK unresolved — part of the corpus-wide deferred targets/ registry gap (validator: informational); a global victim aggregate, not a single org
+    country: null  # victims on six continents (govt officials in Europe, investors in the US, tycoons in the Bahamas, advocacy/NGO/press worldwide)
     role: primary
     outcome: |
-      Citizen Lab documented ~10,000 email accounts targeted
-      across thousands of individuals on multiple continents.
+      Citizen Lab documented "thousands of individuals and hundreds
+      of institutions on six continents" (27,591 enumerated
+      credential-phishing URLs); Reuters described attempts to "spy on
+      more than 10,000 email accounts over a period of seven years."
+      Named targets include advocacy groups, journalists, government
+      officials, hedge funds, short-sellers, KKR, and Muddy Waters.
 sources:
   - citizenlab/2020-06-09_dark-basin
   - reuters/2020-06-09_belltrox-hack-for-hire
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit vs the two cited raws. SNAPSHOTS: Citizen Lab live
+    curl HTTP 200, full report -> raw/citizenlab__2020-06-09_dark-basin.html
+    (223,206 B, sha256 86d192a05c1665bfdf790a916a7b844305714ee598297312aef8e13e90b1c37b).
+    Reuters live HTTP 401 (bot-walled); Wayback capture (archive_url)
+    carries the full genuine article -> raw/reuters__2020-06-09_belltrox-hack-for-hire.html
+    (382,340 B, sha256 1e0bdc678e2a03aa471adaae6e121596a01fb9e66de0533aa790df9ee9d87d95).
+    level=full: every load-bearing claim is carried by a snapshotted
+    source (Reuters via Wayback, not live).
+    [a] FACTS — three corrections. (1) SCALE MIS-ATTRIBUTED: event said
+    "Citizen Lab documented ~10,000 email accounts." The "more than
+    10,000 email accounts over a period of seven years" figure is
+    REUTERS' lead, not Citizen Lab's. Citizen Lab's own scale is
+    "thousands of individuals and hundreds of institutions on six
+    continents" and enumeration "uncovered 27,591 different long URLs,
+    each of which led to a Dark Basin credential phishing website"
+    (~28,000 URLs). Rewrote to attribute each figure to its actual
+    source; neither "10,000" nor "seven years" appears anywhere in the
+    Citizen Lab report (grep=0). (2) TARGET/CLIENT CONFLATION: event
+    said Citizen Lab "named US litigation finance firms … short-sellers
+    among the documented client equities." False — those were TARGETS,
+    and both sources say clients are UNKNOWN: Reuters "Reuters does not
+    know the identity of BellTroX's clients"; owner Sumit Gupta
+    "declined to disclose who had hired him and denied any wrongdoing."
+    Reframed as targets + explicit clients-unidentified. (3) 2015-
+    INDICTMENT ERROR: event said Gupta was indicted "(2015 Aviram Azari
+    adjunct)." Citizen Lab verbatim: "BellTroX's director, Sumit Gupta,
+    was indicted in California in 2015 for his role in a similar
+    hack-for-hire scheme" — the N.D. Cal ViSalus case (sibling event
+    2015-12/sumit-gupta-belltrox-indictment), NOT the SDNY Azari matter.
+    STRIPPED the anachronistic/​unsourced summary claim that "Azari …
+    contracted BellTroX" (2020 sources cannot cite a 2022 conviction;
+    "Azari" appears 0x in BOTH raws; actor record notes the DOJ
+    indictment named Azari + "a group located in India," not BellTroX).
+    Kept #ExxonKnew / short-seller (Muddy Waters) / KKR / Bahamas /
+    European-officials targets — all verbatim-confirmed.
+    [b] ATTRIBUTION — in/belltrox by both outlets; confidence high is
+    correct (CL verbatim "With high confidence, we link Dark Basin to
+    BellTroX InfoTech Services"; Reuters on ex-employees + researchers +
+    online evidence). auspex_assessment concur retained. NOT a
+    nation-state op — commercial mercenary; no over-attestation.
+    Expanded CL author list; added Jack Stubbs to Reuters byline (per
+    source record). Actor id verified: in/belltrox is the DELIBERATE
+    model (host-nation India, primary_service_id null = no state organ,
+    mirrors in/appin-security) — NOT moved to criminal/ (would orphan
+    the in/contractor-hack-for-hire doctrine); "criminal/belltrox / in/
+    unscoped" hypothesis rejected on that basis.
+    [c] DATES — start 2013-01-01 kept (belltrox[.]org registered
+    2013-07-27; "seven years" to 2020). disclosure 2020-06-09 confirmed
+    (CL "Date Published June 9, 2020"; Reuters "released … on Tuesday"
+    = 2020-06-09). end 2020-06-09 = active-until-exposure proxy
+    (documented in comment; no source dates a distinct cessation) —
+    de-conflated from disclosure via comment; matches actor active_until.
+    Both source published_on 2020-06-09 verified against raw.
+    [d] DOCTRINE — in/contractor-hack-for-hire /commercial-litigation,
+    confidence attested KEPT (defensible under 2026-06-19 reframe: CL
+    states the goal-level purpose). Added missing inference_basis.
+    source_quote (verbatim "commercial espionage on behalf of their
+    clients …"). Rewrote reasoning to drop the false "documented client
+    relationships" and flag clients-unknown. Attacker's-own-doctrine =
+    default attacker-rationale perspective (omitted, matches siblings).
+    No political-espionage pillar added — CL frames all targeting as
+    commercial-for-client, unlike the Appin sibling.
+    [e] ATTRIBUTION_LEVEL — was ABSENT; added named-actor to both
+    attributions (a named commercial firm; not nation/named-unit).
+    [f] ACTOR_ID — in/belltrox resolves (atlas/actors/in/belltrox.yaml).
+    operators_named gupta-sumit kept as free-string slug (not an FK;
+    consistent w/ sibling). incident_type: task-suggested "hack-for-hire
+    /credential-phishing" are NOT schema enums; encoded the character as
+    espionage (added; CL "commercial espionage"/Reuters "spied") +
+    kept intrusion/data-theft + initial_vector phishing + doctrine link.
+    FLAGGED (out of edit scope, not changed): target FK
+    orgs/dark-basin-targets-various is unregistered (corpus-wide targets/
+    gap, validator informational). No make/commit/git run.

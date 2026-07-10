@@ -1,56 +1,216 @@
 id: 2019-06/iran-linked-wiper-us-dhs
-name: Iran-linked wiper campaigns during US-Iran drone-shootdown tensions
-start_date: 2019-06-20
+name: CISA (Krebs) warning of Iranian destructive-wiper threat to US industry and government
+start_date: 2019-06-22  # documentary artifact = the warning itself (statement date), not a breach onset
 disclosure_date: 2019-06-22  # CISA Director Krebs statement
-end_date: 2019-12-31
+end_date: null  # point-in-time warning; no bounded campaign
 incident_type:
-  - destructive
-  - wiper
-initial_vector: unknown
+  - documentary  # CISA public threat-warning statement (not a documented breach)
+  - wiper  # subject of the warning: Iranian destructive "wiper" attacks
+initial_vector: unknown  # documentary warning — no single intrusion; warned enabling tactics were spear-phishing, password-spraying, credential-stuffing
 outcome_summary: |
-  CISA acknowledged Iranian-linked wiper campaigns against US
-  government and industry following Iran's downing of a US
-  RQ-4A surveillance drone (June 20, 2019). ZeroCleare /
-  Dustman wiper variants observed. Limited public outcome.
+  On 2019-06-22, amid acute US-Iran tension following the June 20
+  RQ-4A drone shootdown and Gulf tanker incidents, CISA Director
+  Christopher C. Krebs issued a public statement warning of "a
+  recent rise in malicious cyber activity directed at United States
+  industries and government agencies by Iranian regime actors and
+  proxies," which were "increasingly using destructive 'wiper'
+  attacks." This is a general WARNING, not a report of a specific
+  confirmed breach: no victim, malware family, or IRGC unit is named.
+  No public destructive-wiper incident against a US target was
+  attributed to this window; the contemporaneous Iranian wiper
+  activity that was technically documented (IBM X-Force's ZeroCleare)
+  struck the MIDDLE EAST energy sector, not the United States.
 false_flag_risk: none
 summary: |
-  CISA Director Chris Krebs public statement; IBM X-Force
-  ZeroCleare report. Confidence in attribution and motive
-  plausible per dossier. IBM X-Force documents ZeroCleare as an
-  Iranian wiper that abuses a vulnerable signed driver
-  (RawDisk.sys / EldoS RawDisk) via a bring-your-own-vulnerable-
-  driver loader to obtain raw disk access, then overwrites the
-  MBR and partition tables on Windows hosts; the related Dustman
-  variant (deployed at Bahrain's Bapco in December 2019) shares
-  the same driver-abuse primitive. Initial access in these
-  campaigns leveraged spear-phishing and exploitation of edge
-  appliances, with valid credentials and lateral movement on
-  Active Directory before the wiper detonation. The wave is
-  associated with APT34 / OilRig and Static Kitten tooling.
+  CISA Director Christopher C. Krebs's 2019-06-22 statement, "CISA
+  Statement on Iranian Cybersecurity Threats." Krebs said CISA "is
+  aware of a recent rise in malicious cyber activity directed at
+  United States industries and government agencies by Iranian regime
+  actors and proxies" and warned those actors "are increasingly
+  using destructive 'wiper' attacks, looking to do much more than
+  just steal data and money." He noted the activity is "often enabled
+  through common tactics like spear phishing, password spraying, and
+  credential stuffing" and urged multi-factor authentication and
+  prompt incident response. The statement was issued during acute
+  US-Iran tension (June 20 RQ-4A drone shootdown; Gulf tanker
+  incidents) but does not itself cite the drone as its trigger,
+  attribute a specific IRGC unit, or name any malware, victim, or
+  intrusion — it attributes the threat only to nation-level "Iranian
+  regime actors and proxies."
+
+  Context (NOT part of the CISA statement, and NOT a US incident):
+  the destructive-wiper threat CISA warned of is exemplified by the
+  ZeroCleare wiper that IBM X-Force IRIS documented in December 2019
+  targeting the energy sector in the MIDDLE EAST. IBM hedged its
+  attribution — "we suspect Iran-based nation-state adversaries" and
+  assessed the ITG13 group (aka APT34/OilRig) plus "at least one
+  other group, likely based out of Iran" collaborated on the
+  destructive portion. ZeroCleare overwrites the master boot record
+  and disk partitions on Windows using EldoS RawDisk (a legitimate
+  toolkit, not a vulnerable one) and, on 64-bit hosts, abuses a
+  separate vulnerable signed driver to bypass the Windows HAL, in the
+  Shamoon lineage. Neither cited source documents a ZeroCleare/Dustman
+  deployment against a US target; the related Dustman variant (Bahrain
+  Bapco, Dec 2019) is a separate Middle East event and is not named
+  in the ZeroCleare report.
 attributions:
-  - actor_id: null
-    service_id: ir/irgc
-    attributing_org: US CISA (Director Krebs)
-    attributing_org_confidence: moderate
+  - actor_id: null  # statement names no actor; documentary warning
+    service_id: null  # statement says "Iranian regime actors and proxies" (nation level) — NO IRGC unit; prior ir/irgc pin removed as over-attribution
+    attributing_org: US CISA (Director Christopher C. Krebs)
+    attributing_org_confidence: moderate  # authoritative but general nation-level warning; no technical specifics or named actor
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2019-06-22
     attribution_source_id: cisa/2019-06-22_krebs-iran-wiper-statement
+    notes: |
+      CISA attributes the warned threat only to "Iranian regime actors
+      and proxies" (nation level). It names no IRGC organ, no threat
+      group, and no malware. The earlier record's ir/irgc service pin
+      and its ZeroCleare/Dustman/APT34/OilRig/Static-Kitten detail were
+      over-attribution imported from separate Middle East reporting and
+      have been removed from the attribution. attribution_level=nation;
+      actor_id and service_id null.
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
-    pillar_id: null
+    perspective: attacker-rationale
+    pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
-    confidence: plausible
+    confidence: strongly_inferred
     reasoning: |
-      Wiper deployment coincident with kinetic-tension period
-      (drone shootdown); pattern fits asymmetric retaliation.
-    attesting_source_id: null
+      The CISA warning describes Iran escalating to destructive
+      "wiper" attacks — explicitly "much more than just steal data and
+      money" — against US civilian industry and government during a
+      period of acute US-Iran military tension (drone shootdown, tanker
+      incidents). Destructive, coercive intent beyond espionage/theft,
+      aimed at an adversary's civilian/CII target set and timed to
+      conventional pressure, is the signature of Iran's asymmetric-
+      warfare doctrine (low-cost, deniable, destructive harassment of a
+      militarily superior adversary). No source names or articulates
+      the doctrine's strategic rationale, so the link is inferred, not
+      attested.
+    attesting_source_id: cisa/2019-06-22_krebs-iran-wiper-statement
+    inference_basis:
+      source_id: cisa/2019-06-22_krebs-iran-wiper-statement
+      signals:
+        - "CISA: Iranian actors 'increasingly using destructive wiper attacks, looking to do much more than just steal data and money' — destructive-beyond-theft/coercive intent"
+        - "Warning issued 2019-06-22 amid acute US-Iran kinetic tension (June 20 RQ-4A drone shootdown; Gulf tanker incidents) — destructive cyber posture aligned with conventional pressure"
+        - "Threat directed at 'United States industries and government agencies' — adversary civilian/CII target set matching the doctrine's civilian-CII-coercion pillar"
+      ruled_out: "espionage/theft-only reading — CISA explicitly contrasts the activity with data/money theft ('much more than just steal data and money'), foregrounding destructive wiper intent"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
+  # US = the WARNED / at-risk target set named by CISA (documentary warning), not confirmed-breached victims
   - target_id: sectors/government/civilian
     country: us
-    role: primary
+    role: primary  # "government agencies" — warned target
+  - target_id: sectors/critical-infrastructure
+    country: us
+    role: primary  # "United States industries" — warned target
 sources:
   - cisa/2019-06-22_krebs-iran-wiper-statement
   - ibm-xforce/2019-12_zerocleare
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the two cited sources. Path taken: RE-SOURCE + REFRAME.
+    The primary source was a PHANTOM (url:null, canonical URL never
+    located) and the event conflated a general CISA WARNING with a
+    confirmed US destructive-wiper campaign. Both sources located,
+    snapshotted, and hashed this pass; event reframed to the
+    documentary warning it actually is.
+
+    STEP 0 triage: cisa/2019-06-22_krebs-iran-wiper-statement had
+    url:null (phantom). Canonical page RESOLVED via search — real CISA
+    page cisa.gov/news-events/news/cisa-statement-iranian-cybersecurity-
+    threats (HTTP 200; "Archived Content" banner; "Released June 22,
+    2019 / Revised February 05, 2021"). GENUINE, not fabricated.
+    Snapshot raw/cisa__2019-06-22_krebs-iran-wiper-statement.html,
+    55,564 bytes, content_sha256 b5754c41df7872c0184808d54f78319d07f281
+    a2ac1b27c939d129465afe47cf. IBM source's url was a generic
+    ibm.com/security/xforce landing; real (now link-rotted)
+    securityintelligence.com article snapshotted from its Wayback
+    capture: raw/ibm-xforce__2019-12_zerocleare.html, 169,789 bytes,
+    content_sha256 079c6fad116b4247bc4d57f79ea163e9850c1cfccee8924087d5
+    a3439617f850 (datePublished 2019-12-04, Limor Kessem).
+
+    [a] FACTS — major corrections. The CISA statement is a WARNING, not
+    a breach report: "In response to reports of an increase in
+    cybersecurity threats … Director Christopher C. Krebs issued the
+    following statement: 'CISA is aware of a recent rise in malicious
+    cyber activity directed at United States industries and government
+    agencies by Iranian regime actors and proxies. … Iranian regime
+    actors and proxies are increasingly using destructive "wiper"
+    attacks, looking to do much more than just steal data and money.
+    These efforts are often enabled through common tactics like spear
+    phishing, password spraying, and credential stuffing.'" STRIPPED as
+    not carried by either cited source (fabrication / cross-event
+    conflation / anachronism): (1) "ZeroCleare / Dustman wiper variants
+    observed [against the US]" — ZeroCleare struck the MIDDLE EAST energy
+    sector per IBM's own headline ("Targets Energy Sector in the Middle
+    East"); neither source documents a US victim. (2) "RawDisk.sys …
+    bring-your-own-vulnerable-driver loader" — IBM says EldoS RawDisk is
+    a LEGITIMATE toolkit ("not due to a flaw or vulnerability in that
+    software"); the vulnerable signed driver abused on 64-bit hosts is a
+    SEPARATE component — the two were conflated. (3) Dustman/Bapco linkage
+    — the Dec-2019 ZeroCleare report does not name Dustman; Bapco is a
+    separate Jan-2020 Middle East event. (4) "exploitation of edge
+    appliances … lateral movement on Active Directory" — not in either
+    source (only spear-phishing/password-spraying/credential-stuffing are,
+    as GENERAL warned tactics). (5) "APT34/OilRig and Static Kitten
+    tooling" as US attribution — APT34/OilRig is IBM's HEDGED regional
+    ZeroCleare attribution; Static Kitten appears in neither source.
+    name, summary, and outcome_summary fully rewritten; ZeroCleare kept
+    only as explicitly-labeled MIDDLE EAST context for the wiper family.
+
+    [b] ATTRIBUTION — de-attributed. Was service_id ir/irgc / concur.
+    The statement pins only nation-level "Iranian regime actors and
+    proxies" — no IRGC organ, group, or malware. service_id ir/irgc → null
+    (over-attribution removed); attribution_level=nation added;
+    attributing_org_confidence moderate and auspex_assessment concur
+    retained (authoritative but general nation-level warning). IBM's
+    ZeroCleare attribution (separate, regional) is itself hedged — "we
+    suspect Iran-based nation-state adversaries," ITG13/APT34/OilRig "and
+    at least one other group, likely based out of Iran" — and is NOT used
+    to attribute this US warning.
+
+    [c] DATES — start_date 2019-06-20 (drone shootdown) → 2019-06-22 (the
+    warning is the documentary artifact; statement date). end_date
+    2019-12-31 (fabricated campaign bound) → null (point-in-time warning).
+    disclosure_date 2019-06-22 ✓ (source "Released June 22, 2019"). IBM
+    source published_on 2019-12-04 confirmed from raw datePublished.
+
+    [d] DOCTRINE_LINKS — ir/asymmetric-warfare kept, upgraded plausible →
+    strongly_inferred (per event directive; NOT attested — no source names
+    the doctrine's strategic rationale). Added perspective: attacker-
+    rationale (Iran's own doctrine on Iranian activity), pillar
+    ir/asymmetric-warfare/civilian-cii-coercion (destructive wiper vs US
+    civilian industry/government), inference_basis {source_id, signals[],
+    ruled_out} grounded in the CISA "destructive wiper … much more than
+    steal data and money" quote + kinetic-tension timing + US-CII target
+    set. attesting_source_id set to the CISA statement as primary
+    SUPPORTING source (schema-permitted on strongly_inferred).
+
+    [e] ATTRIBUTION_LEVEL — set to nation (was missing). Source names
+    "Iranian regime actors and proxies" (nation; no unit/group).
+
+    [f] ACTOR_ID — null (correct: documentary warning names no actor).
+    incident_type destructive/wiper → documentary + wiper (the artifact is
+    a warning; wiper is its subject). targets: kept sectors/government/
+    civilian, added sectors/critical-infrastructure ("United States
+    industries"), both US, role primary but annotated as the WARNED/at-
+    risk target set (directionality: US = warned target, not confirmed
+    victim).
+
+    FLAGS (orchestrator / Kara — not edited here): (1) A distinct Middle
+    East ZeroCleare/energy-sector event (Dec 2019) and the Dustman/Bapco
+    event (Jan 2020, source ibm-xforce/2020-01_dustman-bapco exists) may
+    warrant their own event records if not already present — the material
+    stripped from this US-warning event belongs there. (2) doctrine
+    ir/asymmetric-warfare and service ir/irgc unchanged (not this event's
+    files). (3) level=full: every load-bearing claim (the CISA warning
+    text) is carried by the snapshotted CISA page; ZeroCleare context is
+    carried by the snapshotted IBM page.

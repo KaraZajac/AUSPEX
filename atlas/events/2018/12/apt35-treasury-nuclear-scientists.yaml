@@ -1,67 +1,279 @@
 id: 2018-12/apt35-treasury-nuclear-scientists
-name: APT35 phishing of US Treasury, nuclear scientists, JCPOA critics
-start_date: 2018-10-01
-disclosure_date: 2018-12-13  # CertFA report
-end_date: 2018-12-31
+name: APT35 / Charming Kitten 2FA-phishing of US Treasury, nuclear-deal figures and nuclear officials
+start_date: 2018-09-01   # op onset — CertFA dates the domain infrastructure "September to November 2018"
+disclosure_date: 2018-12-13  # CertFA report + AP wire (a Thursday)
+end_date: null  # no sourced end; CertFA notes domains still increasing at publication
 incident_type:
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
-  Account-takeover spearphish; 2FA-bypass via reverse-proxy
-  phishing kits. Credential and email theft from US Treasury
-  officials, US / Israeli nuclear scientists, Iranian civil
-  society figures, and JCPOA critics.
+  Real-time credential-and-2FA phishing of Gmail and Yahoo accounts:
+  attacker pages validated the victim's password against the real
+  provider on the fly and, where two-step verification was enabled,
+  immediately prompted for and captured the live SMS / authenticator /
+  one-tap code — defeating app- and SMS-based MFA and yielding covert
+  mailbox access (operators often left the password unchanged to keep
+  reading mail in real time). Per an AP analysis of a 77-address target
+  list recovered from an exposed Charming Kitten server, victims
+  included at least 13 US Treasury officials (among them a FinCEN
+  director and OFAC's Iran-licensing chief), US and foreign figures
+  tied to the 2015 Iran nuclear deal, foreign nuclear officials
+  (Pakistan, Jordan's Ramtha reactor, Syria's Atomic Energy
+  Commission), a US nuclear-weapons-oversight official, US defense
+  contractors (Honeywell, SAIC), D.C. think-tank staff, and Iranian
+  journalists and civil-society figures. Compromise/success rate on
+  individual accounts unknown.
 false_flag_risk: none
 summary: |
-  Documented by CertFA (December 2018) and ClearSky. APT35 /
-  Charming Kitten ran a Gmail / Yahoo Mail account-takeover
-  campaign with spear-phishing lures (themed around think-tank
-  invitations, conference registrations, and Google Drive
-  shares) leading to a custom reverse-proxy phishing kit that
-  captured 2FA codes in real time — one of the earliest publicly
-  documented MFA-bypass kits in nation-state cyber. Once inside
-  the mailbox, operators set up forwarding rules, harvested
-  contacts for further pivots, and dropped follow-on PowerShell-
-  based implants (later tied to the POWERSTAR / CharmPower
-  malware families) on devices belonging to targets of interest.
-  Aligned with the November 2018 reimposition of US sanctions on
-  Iran following Trump-administration JCPOA withdrawal.
+  Documented by CertFA in "The Return of The Charming Kitten"
+  (13 December 2018) and, the same day, exposed in detail by an
+  Associated Press investigation (Raphael Satter). APT35 / Charming
+  Kitten ran a Gmail and Yahoo Mail credential-phishing campaign: fake
+  "unauthorised access" security alerts and fake Google Drive file-
+  shares (staged on sites.google.com so the browser showed a trusted
+  google.com URL) lured targets to attacker-run phishing pages. Those
+  pages checked the entered username and password against the real
+  provider in real time and, if two-step verification was on,
+  immediately requested and relayed the SMS, authenticator-app, or
+  one-tap 2FA code — an early publicly documented defeat of app/SMS
+  multi-factor auth (CertFA's headline recommendation was to move
+  high-risk users to hardware security keys such as YubiKey). Where
+  operators did not reset the password, they kept covert real-time
+  access to the mailbox. CertFA found more than 20 domains used
+  September-November 2018 and recovered real Iranian IP addresses
+  (89.198.179[.]103, 31.2.213[.]18) exposed during the preparation
+  phase. The campaign launched weeks before the 4 November 2018 US
+  reimposition of sanctions following the Trump administration's JCPOA
+  withdrawal; AP's analysis of a leaked 77-address target list showed a
+  roster heavy with sanctions enforcers (US Treasury / FinCEN / OFAC),
+  nuclear-deal defenders, detractors and enforcers, foreign nuclear
+  officials (Pakistan, Jordan, Syria), US defense contractors and D.C.
+  think-tank staff, alongside Iranian journalists and civil-society
+  figures. Certfa tied the operators to the Iranian government (aided
+  by operational blunders exposing Iran-based activity) and, with a
+  hedge, to "close ties with the IRGC"; Secureworks' Allison Wikoff
+  independently called a government-backed origin "fairly clear-cut."
+  No malware or implant was reported in these sources — as documented,
+  the operation was credential phishing and mailbox access, not implant
+  deployment.
 attributions:
   - actor_id: ir/irgc/apt35
     attributing_org: CertFA
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-12-13
     attribution_source_id: certfa/2018-12_charming-kitten
+    notes: |
+      CertFA firmly attributes the campaign to Iranian-government-backed
+      "Charming Kitten" (assessed to have "returned") on the basis of
+      domain, method and target overlap with prior Charming Kitten
+      activity plus operational blunders that exposed real Iranian IPs
+      (89.198.179[.]103, 31.2.213[.]18). It names the IRGC only with a
+      hedge: the infrastructure is run by "a group of hackers who are
+      supported by the Iranian government, and that we believe have
+      close ties with the Islamic Revolutionary Guard Corps (IRGC)."
+      attribution_level = named-actor: CertFA names the actor (Charming
+      Kitten / APT35); the IRGC-organization tie is hedged and the IRGC
+      has no public vendor-to-unit numbering, so the firm IRGC placement
+      for the ir/irgc/apt35 node rests on Microsoft (Mint Sandstorm CII)
+      with CertFA as hedged corroboration.
   - actor_id: ir/irgc/apt35
-    attributing_org: ClearSky
+    attributing_org: Secureworks (Allison Wikoff, via AP)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-12-13
-    attribution_source_id: clearsky/2018-12_charming-kitten
+    attribution_source_id: apnews/2018-12-13_iran-hackers-hunt-nuke-workers
+    notes: |
+      Carried by the AP report: "Allison Wikoff, a researcher with
+      Atlanta-based Secureworks, recognized some of the digital
+      infrastructure in Certfa's report and said the hackers' past
+      operations left little doubt they were government-backed. 'It's
+      fairly clear-cut,' she said." Secureworks corroborates a
+      government-backed Charming Kitten at the NATION level (Iran) and
+      does NOT name the IRGC. This replaces a prior phantom ClearSky
+      citation whose url resolved to ClearSky's Dec-2017 report, not
+      this Dec-2018 campaign (see clearsky/2018-12_charming-kitten
+      RETIRE note). AP's own analysis likewise concluded "Charming
+      Kitten is working in close alignment with the Islamic Republic's
+      interests."
 doctrine_links:
   - doctrine_id: ir/constitutional-irgc-role
-    pillar_id: ir/constitutional-irgc-role/regime-preservation
+    pillar_id: null
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      Intelligence on JCPOA pressure architecture — US Treasury
-      officials, nuclear scientists, sanctions critics — aligns
-      with IRGC counter-foreign-threat tasking.
+      The campaign expresses the IRGC's constitutional counter-threat
+      and intelligence role. Its dominant thrust is foreign counter-
+      sanctions and nuclear-file intelligence — US Treasury / OFAC /
+      FinCEN sanctions enforcers, defenders/detractors/enforcers of the
+      2015 nuclear deal, foreign nuclear officials (Pakistan, Jordan,
+      Syria) and US defense contractors — collected in the weeks around
+      the 4 November 2018 US sanctions reimposition. It also hit Iranian
+      journalists and civil-society figures, which is the doctrine's
+      regime-preservation counter-dissident tasking (its cyber_relevance
+      explicitly cites "credential-phishing journalists who criticize
+      the Supreme Leader"). Linked at doctrine level (pillar_id null)
+      because the dominant foreign-intelligence thrust is not captured
+      by any single named pillar — regime-preservation covers only the
+      Iranian-civil-society slice.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "CertFA (raw): 'This campaign tries to collect information by infiltrating the accounts of non-Iranian political figures and authorities who work on economic and military sanctions against Iran,' and targets are picked 'according to policies and international interests for the Iranian government.'"
+        - "AP (raw): Frederick Kagan (AEI scholar, himself a target) — 'Presumably, some of this is about figuring out what is going on with sanctions'; AP's own analysis — 'Charming Kitten is working in close alignment with the Islamic Republic's interests.'"
+        - "Timing anchors the goal: CertFA notes the campaign 'launched weeks before 4 November 2018 which is when the U.S. imposed new sanctions on Iran,' sequencing collection to the sanctions-reimposition pressure point."
+      ruled_out: "attested — the sources state the espionage / sanctions-intelligence PRIORITY but do not state the constitutional doctrine's terminal goal ('safeguard the Revolution and its achievements') in substance, so the link stays strongly_inferred with attesting_source_id null. ir/forward-defense was considered and set aside: its pillars center on critical-infrastructure, proxy/partner projection and kinetic-adjacent 'mosaic' capability, not email-credential espionage for strategic intelligence, so the IRGC constitutional counter-threat/intelligence role is the better-supported umbrella."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government/civilian
     country: us
     role: primary
-  - target_id: sectors/academic/research-lab
+    outcome: |
+      At least 13 US Treasury officials' personal emails targeted,
+      including a FinCEN director and OFAC's Iran-licensing chief; also
+      Iran-nuclear-deal officials (e.g., NSC's Andrew Grotto, State's
+      Jarrett Blanc) and US nuclear-weapons-oversight official Asst
+      SecDef Guy Roberts.
+  - target_id: sectors/energy/nuclear
+    role: primary
+    outcome: |
+      Foreign nuclear officials: a scientist on a civilian nuclear
+      project for Pakistan's Ministry of Defense, a senior operator at
+      the Ramtha Research and Training Reactor (Jordan), and a
+      high-ranking researcher at the Atomic Energy Commission of Syria.
+  - target_id: sectors/civil-society/think-tank
     country: us
     role: primary
-  - target_id: sectors/civil-society/think-tank
-    role: primary
+    outcome: |
+      D.C. think-tank staff working on Iran policy (e.g., AEI's
+      Frederick Kagan).
+  - target_id: sectors/defense/contractor
+    country: us
+    role: primary  # was invalid "secondary"; deliberate target
+    outcome: |
+      US defense contractors — a senior "breakthrough technology"
+      director at Honeywell's aerospace arm and a VP at SAIC (personal
+      accounts; both firms reported no corporate-network compromise).
+  - target_id: sectors/media/journalism
+    country: ir
+    role: primary  # was invalid "secondary"; deliberate target
+    outcome: |
+      Iranian journalists / media workers and civil-society figures
+      (incl. an agronomist and a Department of Environment official),
+      consistent with the doctrine's counter-dissident tasking.
 sources:
   - certfa/2018-12_charming-kitten
-  - clearsky/2018-12_charming-kitten
+  - apnews/2018-12-13_iran-hackers-hunt-nuke-workers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the cited sources. BOTH load-bearing sources snapshotted
+    + hashed: CertFA raw sha256 8e50b737…c56b3e (39,044 B, hash
+    re-verified this pass); AP/WHYY raw sha256 6f2138e2…731f89
+    (116,694 B, captured this pass). RE-SOURCE path (badrabbit model):
+    event is REAL, but its ClearSky citation was a wrong-source and the
+    Treasury/nuclear specifics were carried by neither cited source.
+
+    [a] FACTS — several corrections. (1) STRIPPED a fabricated/
+    anachronistic sentence: the prior summary said operators "dropped
+    follow-on PowerShell-based implants (later tied to the POWERSTAR /
+    CharmPower malware families)." Neither source mentions ANY malware;
+    POWERSTAR/CharmPower are 2021-2023 Volexity/Check Point attributions
+    — impossible for a Dec-2018 report to cite. As documented this was
+    credential phishing + mailbox access, no implant. (2) FIXED false
+    victim geography: prior text said "US / Israeli nuclear scientists."
+    Per AP the nuclear targets were FOREIGN — "a scientist working on a
+    civilian nuclear project for the Pakistan's Ministry of Defense, a
+    senior operator at the Research and Training Reactor in the Jordanian
+    city of Ramtha, and a high-ranking researcher at the Atomic Energy
+    Commission of Syria" — plus US oversight official Guy Roberts. No
+    Israeli nuclear scientist appears. (3) STRIPPED unsourced tradecraft
+    ("forwarding rules, harvested contacts") — not in either raw; CertFA
+    instead says operators "did not change the password… monitor a
+    victim's communications via their email in real time." (4) The
+    Treasury/nuclear/think-tank/defense-contractor roster is carried by
+    AP, not CertFA: AP "targeted at least 13 U.S. Treasury employees'
+    personal emails, including one belonging to a director at the
+    Financial Crimes Enforcement Network… and one used by the Iran
+    licensing chief at the Office of Foreign Asset Control." VERIFIED-
+    GOOD against CertFA raw: Gmail/Yahoo real-time 2FA capture ("once
+    their target enters their username and password, attackers check
+    those credentials on-the-fly and if that information was given
+    correctly, they then ask for 2-step verification code"); fake
+    Google-Drive / sites.google.com + fake security-alert lures; ">20
+    domains … (September to November 2018)"; real Iranian IPs
+    "89.198.179[.]103 and 31.2.213[.]18 … from Iran"; sanctions timing
+    "weeks before 4 November 2018." The prior "reverse-proxy phishing
+    kit" phrasing softened to CertFA's actual description (real-time
+    credential+2FA relay); the "earliest MFA-bypass" note kept only as
+    tied to CertFA's own YubiKey recommendation.
+
+    [b] ATTRIBUTION — ClearSky attribution REMOVED (phantom). The cited
+    clearsky/2018-12_charming-kitten url resolves to ClearSky's DEC-2017
+    report ("…Human Rights Activists, Academic Researchers and Media
+    Outlets," 2016-2017 activity + DownPaper), not a Dec-2018 campaign;
+    no distinct ClearSky "Return of the Charming Kitten" report exists
+    (that title is CertFA's), and the genuine 2017 report is already the
+    corpus's clearsky/charming-kitten-overview. Replaced with the REAL
+    Dec-2018 corroborator Secureworks (Allison Wikoff, via AP: "little
+    doubt they were government-backed … 'It's fairly clear-cut'").
+    CertFA kept: names the IRGC only with a hedge ("we believe have
+    close ties with the Islamic Revolutionary Guard Corps (IRGC)") —
+    firm on Iranian-state/Charming-Kitten, hedged on IRGC, so
+    attribution_level named-actor and the firm IRGC placement is left to
+    Microsoft on the actor node. AP/Secureworks are NATION-level
+    (Iran/government-backed), do not name IRGC. actor_id ir/irgc/apt35
+    KEPT — a verified vendor disclosure of the APT35 op (Iran = attacker;
+    US/foreign victims, incl. Treasury as a VICTIM not the actor), NOT a
+    Treasury/OFAC counter-action. Per corpus split APT35 = ir/irgc
+    (APT42 = ir/irgc-io is a separate node, not used here).
+
+    [c] DATES — start_date 2018-10-01 → 2018-09-01 (op onset): CertFA
+    dates the domain infrastructure "(September to November 2018)"; the
+    "early October 2018" MD0ugh reveal is a public-disclosure marker,
+    not onset. disclosure_date 2018-12-13 CONFIRMED (CertFA report + AP
+    wire; AP "In a report published Thursday," Thursday = Dec 13 2018;
+    CBS reprint "December 13, 2018 / 9:01 AM EST"). end_date 2018-12-31
+    → null: unsourced/arbitrary; CertFA says domains had "increased at
+    the time of writing" (Dec 13) — campaign still active at disclosure,
+    no sourced termination.
+
+    [d] DOCTRINE_LINKS — ir/constitutional-irgc-role KEPT but pillar
+    regime-preservation → null (dominant thrust is foreign counter-
+    sanctions/nuclear intelligence, not the counter-dissident pillar,
+    which fits only the Iranian-civil-society slice). Added perspective:
+    attacker-rationale (Iran's own doctrine driving Iran's attack — the
+    correct default; not a defender/victim response). Kept confidence
+    strongly_inferred and added inference_basis {signals[], ruled_out}:
+    sources state the sanctions-intelligence PRIORITY but not the
+    constitutional terminal goal ("safeguard the Revolution"), so NOT
+    attested; attesting_source_id null. ir/forward-defense weighed and
+    ruled out (its pillars are critical-infrastructure / proxy-projection
+    / mosaic, not email espionage).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both attributions; added
+    named-actor to each (both name the actor Charming Kitten / APT35;
+    CertFA's IRGC-org tie hedged, AP/Secureworks nation-level).
+
+    [f] ACTOR_ID — ir/irgc/apt35 resolves to atlas/actors/ir/apt35.yaml
+    (id field ir/irgc/apt35). Correct; not a counter-action, so a real
+    actor_id not null.
+
+    SOURCE ACTIONS: created apnews/2018-12-13_iran-hackers-hunt-nuke-
+    workers (snapshot + hash); flagged clearsky/2018-12_charming-kitten
+    RETIRE (orphaned wrong-source, cited nowhere else, NOT deleted);
+    fixed CertFA source title (recorded subtitle "Phishing of US
+    Officials, Nuclear Scientists, JCPOA Critics" was not CertFA's — the
+    real subtitle is "A review of the latest wave of organized phishing
+    attacks by Iranian state-backed hackers") and noted CertFA does not
+    carry the Treasury/nuclear roster. FLAG (no edit): actor/doctrine
+    files untouched — apt35 node + constitutional-irgc-role / forward-
+    defense doctrines were only referenced.

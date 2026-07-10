@@ -1,69 +1,214 @@
 id: 2016-10/lazarus-polish-banks
 name: Lazarus watering-hole campaign against Polish & global banks
-start_date: 2016-10-01
-disclosure_date: 2017-02-12
-end_date: 2017-02-28
+start_date: 2016-10-07  # earliest evidenced KNF (knf.gov.pl) code modification — BAE: "from at least 2016-10-07"
+disclosure_date: 2017-02-12  # Symantec + BAE Systems simultaneous disclosure (badcyber.com first flagged the Polish incident 2017-02-03)
+end_date: 2017-01-31  # watering-hole code active "to late January" 2017 per BAE, then discovered/removed
 incident_type:
   - intrusion
-  - financial-theft
-  - supply-chain
-initial_vector: supply-chain  # KNF website watering hole
+  - pre-positioning  # watering-hole recon/pre-positioning; NO valid "watering-hole" enum value, and "financial-theft" refuted (no funds stolen)
+initial_vector: n-day  # KNF watering hole delivered Silverlight (CVE-2016-0034 / MS16-006, patched Jan 2016) + Flash exploits — n-day at time of use, Oct 2016
 outcome_summary: |
-  DPRK-attributed actors compromised the Polish Financial
-  Supervision Authority (KNF) website to host a watering-hole
-  exploit kit (custom JavaScript fingerprinting + Silverlight
-  and Flash exploits) targeting financial-institution visitors.
-  Symantec and BAE Systems reported 104 organizations across 31
-  countries hit — including banks in Poland, Mexico, Uruguay,
-  Costa Rica, the Philippines, and Brazil. The operation was the
-  first publicly observed Lazarus shift from direct
-  payment-system fraud (Bangladesh Bank, Tien Phong) to
-  watering-hole-enabled mass financial-institution targeting.
+  DPRK-attributed Lazarus actors compromised the website of the
+  Polish Financial Supervision Authority (KNF, knf.gov.pl) — and,
+  per BAE, Mexico's CNBV banking regulator and a state-owned
+  Uruguayan bank (BROU) — to run watering-hole attacks against
+  financial-institution visitors. Custom JavaScript fingerprinted
+  visitors to filter targets of interest before delivering
+  Silverlight (CVE-2016-0034) and Flash exploits and the
+  Downloader.Ratankba / Backdoor.Destover payloads. Symantec
+  reported the watering holes attempted to infect more than 100
+  organizations across 31 countries; BAE's targeted-bank tally was
+  concentrated in Poland, the United States, Mexico, the United
+  Kingdom, Chile and Brazil. Per the 2018 DOJ Park Jin Hyok
+  complaint, the intrusion was likely discovered before any funds
+  were stolen.
 false_flag_risk: none
-campaign_id: apt38-swift-bank-heists
+campaign_id: null  # RE-SCOPED (see qc / FLAG): distinct Lazarus watering-hole pre-positioning op — NOT the apt38-swift-bank-heists SWIFT-theft series (no SWIFT fraud, no funds moved, attributed to the Lazarus umbrella, not specifically APT38)
 operators_named:
-  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Sep 2018 complaint references this campaign
+  - park-jin-hyok  # DPRK RGB / Lab 110 "Lazarus Group" programmer; the DOJ Sep 2018 complaint references the KNF watering-hole campaign (bot-walled primary; mirror-corroborated)
 summary: |
-  The Polish-banks campaign extends APT38's SWIFT-era operational
-  playbook to broad-spectrum financial-sector pre-positioning
-  via supervisory-authority compromise. Symantec's February 2017
-  disclosure named Lazarus on the basis of shared loader code
-  (RATANKBAPOS, Destover-family) and infrastructure overlap with
-  Sony Pictures (2014) and Bangladesh Bank (2016).
+  A Lazarus watering-hole operation extending the cluster's
+  financial-sector pre-positioning to broad-spectrum targeting via
+  compromise of bank-supervisory authorities. Symantec's 12 February
+  2017 disclosure named Lazarus on the basis of shared loader code
+  (Downloader.Ratankba, Backdoor.Destover) matching the group's known
+  toolkit, plus infrastructure overlap with Sony Pictures (2014) and
+  Bangladesh Bank (2016). BAE Systems co-reported the same day but
+  cautioned that "the technical/forensic evidence to link the Lazarus
+  group actors ... to the watering-hole activity is unclear." The
+  campaign long predates the APT38 (Mandiant, Oct 2018) and BlueNoroff
+  (Kaspersky, Apr 2017) sub-cluster labels, so AUSPEX attributes it to
+  the Lazarus umbrella actor as the disclosing sources did.
 attributions:
-  - actor_id: kp/rgb/apt38
-    attributing_org: Symantec + BAE Systems
+  - actor_id: kp/rgb/lazarus
+    attributing_org: Symantec Security Response
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2017-02-12
     attribution_source_id: symantec/2017-02-12_lazarus-banks
     notes: |
-      Both Symantec and BAE Systems concurrent reporting tied
-      the watering-hole loader code and infrastructure to the
-      Lazarus / APT38 cluster.
+      Symantec named Lazarus on shared loader code (Downloader.Ratankba,
+      Backdoor.Destover) and infrastructure overlap with prior Lazarus
+      operations (Sony 2014, Bangladesh Bank 2016).
+  - actor_id: kp/rgb/lazarus
+    attributing_org: BAE Systems
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2017-02-12
+    attribution_source_id: baesystems/2017-02-12_lazarus-watering-hole-attacks
+    notes: |
+      BAE tied known Lazarus implants found on victim bank networks to
+      the campaign but explicitly hedged the watering-hole link: "the
+      technical/forensic evidence to link the Lazarus group actors ...
+      to the watering-hole activity is unclear." Hence moderate /
+      concur-with-caveat rather than high.
+  - actor_id: kp/rgb/lazarus
+    attributing_org: US DOJ / FBI
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2018-09-06
+    attribution_source_id: doj/2018-09-06_park-jin-hyok-complaint
+    notes: |
+      The Park Jin Hyok criminal complaint attributed the KNF
+      watering-hole campaign to the DPRK "Lazarus Group" and states the
+      intrusion was likely discovered before funds were stolen. Primary
+      is Akamai bot-walled (un-snapshottable); Polish-campaign coverage
+      mirror-corroborated by C4ISRNET / Seattle Times / National
+      Security Archive summaries of the complaint.
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Mass financial-sector targeting extends the SWIFT-era
-      Byungjin sanctions-evasion-revenue pillar from a per-bank
-      to a sector-wide operational footing. The DOJ Park Jin
-      Hyok complaint (2018) covers the operational set including
-      this campaign.
-    attesting_source_id: doj/2018-09-06_park-jin-hyok-complaint
+      Byungjin-window (2013–2018) hard-currency pre-positioning: a
+      Lazarus watering-hole operation against the global banking sector,
+      matching the cluster's sanctions-evasion revenue mission.
+      strongly_inferred, NOT attested — no cited source states the
+      terminal weapons-program-financing purpose of THIS operation; the
+      DOJ complaint records that the intrusion was discovered before any
+      funds were taken, and the Symantec/BAE reports speak to tooling and
+      targeting, not strategic intent. (The kp/8th-congress-defense-plan
+      revenue pillar is era-inapplicable: that doctrine issued
+      2021-01-09, ~4 years after this 2016 operation; era siblings —
+      Bangladesh Bank, Banco del Austro, Tien Phong — all anchor to the
+      Byungjin pillar.)
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Lazarus is a financially-motivated DPRK cluster whose mission is hard-currency generation under sanctions (Symantec, BAE; later Treasury/DOJ)."
+        - "The operation targets the global banking sector via financial-regulator watering holes inside the Byungjin window — the cluster's signature revenue pre-positioning tradecraft."
+      ruled_out: |
+        Pure-criminal (non-state) financial crime is ruled out by the
+        DPRK-state attribution; an espionage/sabotage-only reading is
+        ruled out by the exclusively financial-sector targeting and the
+        Downloader.Ratankba financial-reconnaissance payload.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/polish-kn-financial-supervision
+  - target_id: orgs/knf-poland-financial-supervision  # normalized 2026-07-10 from malformed orgs/polish-kn-financial-supervision (typo; referenced nowhere else)
     country: pl
     role: staging
     outcome: |
-      KNF website used as watering-hole staging point.
+      KNF website (knf.gov.pl) code modified from ~2016-10-07 to serve
+      the watering-hole exploit chain to visiting financial institutions.
+  - target_id: orgs/cnbv-mexico
+    country: mx
+    role: staging
+    outcome: |
+      Mexico's CNBV banking-regulator site used as a second watering
+      hole (per BAE Systems).
   - target_id: sectors/finance/banking
     country: pl
     role: primary
+    outcome: |
+      Financial-institution visitors profiled/targeted worldwide (most
+      concentrated in Poland, then the US, Mexico, UK, Chile, Brazil);
+      no confirmed theft.
 sources:
   - symantec/2017-02-12_lazarus-banks
+  - baesystems/2017-02-12_lazarus-watering-hole-attacks
   - doj/2018-09-06_park-jin-hyok-complaint
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW cited sources. Snapshots (PRESERVE tier):
+    Symantec sha b7e61f7cf5964eae4b7e0beffce4b7b5113dd6728c7a99d51d7c0074288abed9
+    (Wayback 2020-02-24 capture of symantec.com/connect); BAE Systems sha
+    f116d40e017e435efeed2c7f927aa1d801cf9e2ddf42da5c789723fc95ffc949 (live
+    baesystemsai.blogspot.com). level=partial: the DOJ Park Jin Hyok
+    complaint is Akamai bot-walled (un-snapshottable) and uniquely carries
+    the operator naming + "discovered before theft"; those facts are
+    mirror-corroborated, but per protocol a bot-walled load-bearing source
+    caps this at partial. NB the Symantec snapshot is the Angular-SPA shell:
+    the article body is JS-rendered and not in the raw, so Symantec's
+    load-bearing claims here rest on the captured page metadata (og:/meta
+    description + content_item_tags), with the article-body detail
+    corroborated by the full-text BAE snapshot + secondaries.
+
+    [a] FACTS — corrected. FABRICATION stripped: the summary said Lazarus
+    loader "RATANKBAPOS" — the raw names "Downloader.Ratankba" (+
+    "Backdoor.Destover"), confirmed verbatim in the Symantec snapshot's
+    meta content_item_tags ("...Backdoor.Destover, banks,
+    Downloader.Ratankba, financial, Lazarus"). FABRICATED country list
+    fixed: outcome_summary claimed victims in "Poland, Mexico, Uruguay,
+    Costa Rica, the Philippines, and Brazil" — Costa Rica and the
+    Philippines appear in NEITHER Symantec nor BAE; Uruguay was a
+    watering-hole HOST (BROU), not a victim-bank country. Corrected to the
+    snapshotted BAE targeted-bank concentration (Poland, US, Mexico, UK,
+    Chile, Brazil) — SecurityWeek's Symantec précis lists Poland, US,
+    Mexico, Brazil, Chile, Denmark, Venezuela, Colombia, UK, Peru, India.
+    "104 organizations across 31 countries" softened to "more than 100
+    organizations across 31 countries" — the only figure in the Symantec
+    snapshot is the og:description "more than 100 organizations in 31
+    different countries" (the precise 104 is in the un-captured SPA body).
+    Added the three watering-hole host sites (KNF/knf.gov.pl, CNBV Mexico,
+    BROU Uruguay), the Silverlight CVE-2016-0034, and the DOJ "discovered
+    before funds stolen" fact.
+    [b] ATTRIBUTION — corrected. actor_id kp/rgb/apt38 -> kp/rgb/lazarus:
+    Symantec, BAE and the DOJ complaint all name "Lazarus Group"; the APT38
+    (Mandiant, Oct 2018) and BlueNoroff (Kaspersky, Apr 2017) sub-labels
+    postdate this Feb-2017 disclosure, so attributing to a sub-cluster is
+    anachronistic over-attestation. Split the single "Symantec + BAE"
+    high-confidence entry into three: Symantec (high / concur), BAE
+    (moderate / concur-with-caveat — BAE hedged: "the technical/forensic
+    evidence to link the Lazarus group actors ... to the watering-hole
+    activity is unclear"), and DOJ 2018 (high / concur). Added
+    attribution_level: named-actor to each (was absent).
+    [c] DATES — corrected. start 2016-10-01 -> 2016-10-07 (BAE: "from at
+    least 2016-10-07"); end 2017-02-28 -> 2017-01-31 (BAE: code active "to
+    late January" 2017). disclosure 2017-02-12 verified against the
+    Symantec snapshot published_on and BAE's same-day post.
+    [d] DOCTRINE — corrected. kp/byungjin/sanctions-evasion-revenue kept
+    (era-correct; matches the Bangladesh/Banco-del-Austro/Tien-Phong
+    siblings — the 8th-Congress plan is 2021, anachronistic here), but
+    confidence attested -> strongly_inferred and attesting_source_id
+    (DOJ) -> null: no cited source states the terminal WMD/missile-
+    financing goal of this op, and the DOJ complaint records no funds were
+    taken. Added inference_basis {signals[], ruled_out}. perspective omitted
+    (default attacker-rationale, per era siblings).
+    [e] ATTRIBUTION_LEVEL — added named-actor on all three attributions
+    (sources name the Lazarus Group; the DOJ individual/unit detail is
+    carried in operators_named).
+    [f] ACTOR_ID — kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml,
+    id: kp/rgb/lazarus). operators_named park-jin-hyok resolves; the DOJ-
+    references-this-campaign claim VERIFIED (C4ISRNET/Seattle Times:
+    complaint describes the KNF watering hole). Malformed target
+    orgs/polish-kn-financial-supervision normalized to
+    orgs/knf-poland-financial-supervision (referenced nowhere else; org-
+    target files are optional in this corpus — cf. orgs/feib-taiwan). Added
+    orgs/cnbv-mexico staging target.
+    FLAGS (out-of-scope files, not edited): (1) campaign_id set to null
+    here; if a Lazarus watering-hole/financial-recon campaign grouping is
+    desired it should be created deliberately — this op does not belong in
+    apt38-swift-bank-heists. (2) doj/2018-09-06_park-jin-hyok-complaint is a
+    shared source; its bot-wall is already documented in its record —
+    left unchanged. (3) orgs/knf-poland-financial-supervision and
+    orgs/cnbv-mexico have no target definition files (corpus-normal for org
+    targets); create if a registry pass wants them.

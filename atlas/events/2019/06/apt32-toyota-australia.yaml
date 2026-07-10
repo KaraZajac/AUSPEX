@@ -1,56 +1,196 @@
-id: 2019-06/apt32-toyota-australia
-name: APT32 intrusions of Toyota Australia and Toyota Japan
-start_date: 2019-02-01
-disclosure_date: 2019-03-21
-end_date: 2019-06-30
+id: 2019-06/apt32-toyota-australia  # FLAG (orchestrator): incident is Feb-2019 — id-prefix/refile candidate -> 2019-02/apt32-toyota-australia (id is an FK; not moved here)
+name: APT32 (OceanLotus) intrusion of Toyota Australia
+start_date: 2019-02-20  # onset: ZDNet (2019-02-21, Melbourne) reports "the attack began yesterday" (3AW) -> ~2019-02-20
+disclosure_date: 2019-02-21  # Toyota Australia / ZDNet confirmation. Prior 2019-03-21 was the Toyota JAPAN/Tokyo dealership date (Forbes) mis-carried into this AU event
+end_date: null  # AU IT disruption; systems being restored as of 2019-02-21, precise end not established. Prior 2019-06-30 reflected the whole Toyota series (out of scope for this AU-scoped record)
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: unknown
+  - disruption  # data-theft removed: Toyota AU said "no private employee or customer data has been accessed"; the 3.1M-record theft was Toyota JAPAN (sibling event)
+initial_vector: unknown  # Toyota AU gave "no further details about the origin of the attack"; the sibling's "phishing" is not carried for the AU node
 outcome_summary: |
-  Toyota Australia disclosed a cyber attack in February 2019;
-  Toyota Tokyo and the Toyota subsidiary in Vietnam (Toyota
-  Vietnam) followed with disclosures in March 2019. Subsequent
-  vendor reporting (FireEye / Mandiant) attributed the Toyota
-  Australia intrusion to APT32. The campaign is part of a broader
-  pattern of Vietnamese-aligned automotive-OEM targeting in
-  2018–2019, contemporaneous with the BMW / Hyundai / Daimler
-  reporting.
+  Toyota Australia disclosed an "attempted cyber attack" on 21 February
+  2019 that disrupted its IT systems and, per local reporting (radio
+  3AW), its ability to process incoming vehicles. Toyota stated it
+  believed "no private employee or customer data has been accessed" and
+  that it had "no further details about the origin of the attack" — the
+  company did not attribute. The attack was later publicly linked, by
+  journalists and "some security analysts at least" (ZDNet; Forbes /
+  Davey Winder), to Vietnam's APT32 / OceanLotus; the Risky Business
+  podcast suggested Toyota Australia may have been used as a stepping
+  stone toward Toyota's more-secure Japan network, which disclosed a
+  separate breach (~3.1M customer records) weeks later — tracked as the
+  distinct sibling event 2019-02/apt32-toyota-tokyo. No FireEye/Mandiant
+  report attributes the Toyota Australia intrusion. The incident sits
+  within the broader 2018–2019 Vietnamese-linked automotive-OEM
+  targeting pattern (contemporaneous BMW / Hyundai reporting).
 false_flag_risk: none
 summary: |
-  One of the better-evidenced data points for the automotive-IP
-  pillar. Toyota's three regional disclosures within the same
-  six-week window are consistent with a coordinated campaign
-  rather than independent intrusions, and the Vietnamese subsidiary
-  appearing in the affected list is unusual — APT32 ordinarily
-  avoids on-shore Vietnamese victims and may have lateral-moved
-  through Toyota Vietnam infrastructure to other Toyota regional
-  networks.
+  A modestly-evidenced node in the automotive-IP pillar. The APT32
+  attribution of the Toyota Australia (Feb 2019) attack is journalistic /
+  analyst public-linking, never confirmed by Toyota — which disclosed only
+  an "attempted" attack with no data confirmed accessed and no origin
+  given — so this record carries low attribution confidence. Toyota
+  Australia is a national sales / distribution company rather than an
+  R&D / IP centre, and the one sourced operational theory (Risky Business)
+  casts it as a possible stepping stone toward the Japan HQ network rather
+  than an IP target in its own right. Read as campaign-membership evidence
+  (Vietnamese-linked automotive targeting in the VinFast era, alongside
+  BMW / Hyundai) more than as a standalone IP-collection intrusion.
 attributions:
   - actor_id: vn/unscoped/apt32
-    attributing_org: FireEye / Mandiant (industry sourcing)
-    attributing_org_confidence: moderate
+    attributing_org: journalistic / analyst public-linking (ZDNet; Forbes, Davey Winder; Risky Business)
+    attributing_org_confidence: low
+    attribution_level: named-actor  # sources name the group (APT32 / OceanLotus); no unit named, and it is inference not forensic attribution
     auspex_assessment: concur-with-caveat
-    attribution_date: 2019-03-29
-    attribution_source_id: zdnet/2019-03-29_toyota-australia-apt32
+    attribution_date: 2019-03-30  # earliest clear contemporaneous public-linking (Forbes); the Dec-2019 ZDNet piece is a retrospective confirmation
+    attribution_source_id: forbes/2019-03-30_toyota-lexus-dealerships-hacked
+    notes: |
+      Attribution is journalistic / analyst public-linking, NOT a
+      named-vendor technical attribution and NOT confirmed by Toyota
+      (which gave "no further details about the origin"). Confidence low:
+      Forbes frames it as attributed "by some security analysts at least,"
+      and the Dec-2019 ZDNet BMW/Hyundai piece says the group "has been
+      publicly linked to an attack on Toyota Australia." The
+      previously-cited zdnet/2019-03-29 record carries NO attribution (it
+      is the 2019-02-21 Chris Duckett attempted-attack confirmation), and
+      its "FireEye / Mandiant (industry sourcing)" attributing_org was
+      fabricated — no such report exists. Re-pointed to forbes/2019-03-30
+      (verbatim carrier).
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: vn/industrial-upgrading-cyber-collection/automotive
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # downgraded from strongly_inferred: low-confidence attribution + AU is a sales/distribution arm, not an IP target
+    perspective: attacker-rationale  # Vietnam's own doctrine on a Vietnam-attributed attack (default)
     reasoning: |
-      Direct automotive-OEM targeting in the VinFast launch
-      window; pattern-consistent with the contemporaneous BMW
-      and Hyundai intrusions.
+      IF APT32-attributed, direct targeting of an automotive OEM's
+      regional network in the VinFast launch window is pattern-consistent
+      with the vn/industrial-upgrading automotive pillar and the
+      contemporaneous BMW / Hyundai intrusions. Confidence is only
+      plausible, not higher, because (i) the actor attribution itself is
+      low-confidence public-linking, and (ii) Toyota Australia is a
+      sales / distribution subsidiary — the sole sourced operational theory
+      frames it as a stepping stone toward the Japan HQ, not as an
+      automotive-IP target in its own right.
+    attesting_source_id: null  # no source states the doctrine's terminal goal for THIS victim; the VinFast/IP-theft rationale is "experts have speculated"
+    inference_basis:
+      signals:
+        - "Victim is an automotive OEM's national arm, hit inside the 2018–2019 Vietnamese-linked automotive-targeting wave (BMW, Hyundai, Toyota Japan/Vietnam) during the VinFast indigenisation push."
+        - "Public-linking to APT32 / OceanLotus, a Vietnam-aligned group with a documented post-2017 pivot to the automotive industry (ZDNet, Forbes)."
+      alternatives:
+        - "Opportunistic / criminal intrusion misattributed after the fact: Toyota named no actor, the attack was 'attempted' with no data confirmed accessed, and the APT32 link is analyst inference, not forensic attribution."
+        - "Access-vector rather than IP-collection target: the sole sourced theory (Risky Business) casts Toyota Australia as a stepping stone toward the more-secure Japan network — i.e. the AU node is staging, and the automotive-IP objective (if any) sits at the OEM HQ, not the Australian sales arm."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/toyota-australia
+  - target_id: orgs/toyota-australia  # FLAG: FK dangling — no atlas/targets/orgs/toyota-*.yaml exists (orchestrator to create orgs/toyota-australia)
     role: primary
-  - target_id: orgs/toyota-japan
-    role: primary
-  - target_id: orgs/toyota-vietnam
-    role: staging
+    country: au
 sources:
-  - zdnet/2019-03-29_toyota-australia-apt32
-  - toyota/2019-03-29_unauthorised-access-disclosure
+  - zdnet/2019-03-29_toyota-australia-apt32  # FACT carrier (attempted-attack confirmation); carries NO attribution
+  - toyota/2019-03-29_unauthorised-access-disclosure  # primary, un-snapshottable / link-rotted; mirror-carried by the ZDNet snapshot
+  - forbes/2019-03-30_toyota-lexus-dealerships-hacked  # attribution (APT32 public-linking) + stepping-stone theory
+  - zdnet/2019-12-06_bmw-hyundai-vietnamese-hackers  # retrospective public-linking ("publicly linked to an attack on Toyota Australia") + campaign membership
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs RAW (phantom/wrong-source remediation + full 6-point).
+    DIRECTIONALITY confirmed and preserved: ATTACKER = Vietnam (APT32 /
+    OceanLotus), VICTIM = Toyota Australia — not inverted. Per-event vn
+    doctrine applied.
+
+    STEP-0 TRIAGE + SOURCES snapshotted (PRESERVE tier):
+    • zdnet/2019-03-29_toyota-australia-apt32 — live HTTP 200; snapshot
+      zdnet__2019-03-29_toyota-australia-apt32.html, sha256
+      79de5984…822135c2, 671,136 bytes. WRONG-SOURCE for attribution: the
+      article is the 2019-02-21 Chris Duckett "attempted cyber attack"
+      confirmation and contains ZERO mention of APT32 / OceanLotus /
+      Vietnam. Corrected its record: published_on 2019-03-29 -> 2019-02-21
+      (JSON-LD datePublished 2019-02-21T01:56Z), byline Catalin Cimpanu ->
+      Chris Duckett. KEPT in sources[] as the attempted-attack FACT carrier.
+    • forbes/2019-03-30_toyota-lexus-dealerships-hacked — NEW source created
+      + snapshotted this audit (badrabbit/re-source model). sha256
+      bbe17479…b053c42d, 1,298,101 bytes. Real carrier of the APT32
+      public-linking + stepping-stone theory + the Japan 3.1M / "March 21"
+      facts. Now the attribution_source_id.
+    • zdnet/2019-12-06_bmw-hyundai-vietnamese-hackers — already in corpus +
+      snapshotted (sha256 8d0d99ea…5c4eec1e); added to sources[] for the
+      retrospective public-linking ("the group has been publicly linked to
+      an attack on Toyota Australia").
+    • toyota/2019-03-29_unauthorised-access-disclosure — UN-SNAPSHOTTABLE
+      (live 404; Wayback 2026-only 301/403). Statement content
+      mirror-corroborated verbatim inside the ZDNet snapshot, so it does
+      NOT force partial.
+
+    [a] FACTS — corrected. (i) FABRICATION STRIPPED: outcome_summary claimed
+    "Subsequent vendor reporting (FireEye / Mandiant) attributed the Toyota
+    Australia intrusion to APT32" — no such report exists; the attribution
+    is journalistic/analyst public-linking. Removed. (ii) CONFLATION with
+    the sibling removed: name "…Toyota Australia and Toyota Japan" ->
+    AU-only; the "three regional disclosures / coordinated campaign" umbrella
+    framing and the unsourced "lateral-moved through Toyota Vietnam
+    infrastructure" speculation were dropped. (iii) data-theft -> disruption:
+    Toyota AU said "no private employee or customer data has been accessed"
+    (verbatim, ZDNet snapshot); the 3.1M-record theft was Toyota JAPAN. Added
+    source-carried detail (3AW disruption; stepping-stone-to-Japan theory).
+
+    [b] ATTRIBUTION — attributing_org "FireEye / Mandiant (industry sourcing)"
+    (fabricated) -> "journalistic / analyst public-linking"; confidence
+    moderate -> low (Forbes: "by some security analysts at least"; Toyota
+    declined to attribute). auspex concur-with-caveat kept. attribution_date
+    2019-03-29 -> 2019-03-30 (Forbes). attribution_source_id repointed off the
+    mis-slugged ZDNet record to forbes/2019-03-30 (real carrier). Downgraded
+    over-attestation.
+
+    [c] DATES — start_date 2019-02-01 (unsourced) -> 2019-02-20 (3AW "the
+    attack began yesterday" of the 2019-02-21 Melbourne article).
+    disclosure_date 2019-03-21 -> 2019-02-21 — the prior value was the Toyota
+    JAPAN/Tokyo dealership date ("'unauthorized access on the network' of …
+    dealerships in the Tokyo area of Japan on March 21," Forbes), a
+    cross-victim date error. end_date 2019-06-30 (whole-series framing) ->
+    null (AU recovery end not established). Source published_on dates verified
+    (ZDNet 2019-02-21 per JSON-LD; Forbes 2019-03-30).
+
+    [d] DOCTRINE — vn/industrial-upgrading-cyber-collection / automotive
+    (both FKs resolve). confidence strongly_inferred -> plausible (chained
+    from low-confidence attribution + AU = sales/distribution arm, a possible
+    stepping stone not an IP target). Added perspective: attacker-rationale
+    (Vietnam doctrine on a Vietnam-attributed attack) and inference_basis
+    (signals[] + alternatives[]: opportunistic-misattribution and
+    access-vector-not-IP-target both survive). attesting_source_id null — the
+    IP-theft/VinFast rationale is source-hedged ("experts have speculated"),
+    not an attested terminal goal for this victim.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (sources name APT32 /
+    OceanLotus; no unit; inference not forensic).
+
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves to atlas/actors/vn/apt32.yaml
+    (id vn/unscoped/apt32). Kept. APT32 fabrication/duplicate history checked:
+    the Toyota-Australia claim IS source-carried, but only as low-confidence
+    public-linking (Forbes 2019-03-30; ZDNet 2019-12-06) — NOT a firm
+    named-vendor attribution, and NOT via the originally-cited source.
+
+    TARGETS — pruned to orgs/toyota-australia (primary, country au). Removed
+    orgs/toyota-japan (that is the sibling 2019-02/apt32-toyota-tokyo's
+    subject — cross-link, do not double-count) and orgs/toyota-vietnam (the
+    "staging" role encoded unsourced lateral-movement speculation; Toyota
+    Vietnam disclosed its OWN breach ~June 2019 — a separate victim).
+
+    FLAGS for orchestrator/Kara:
+    (1) REFILE/RENAME: incident is Feb-2019 but the id/path is 2019-06 —
+        recommend 2019-02/apt32-toyota-australia (FK; not moved here).
+    (2) SIBLING CROSS-LINK: 2019-02/apt32-toyota-tokyo is the distinct Tokyo
+        HQ / 3.1M-record event; keep the two un-conflated (this = AU only).
+    (3) DANGLING TARGET FK: no atlas/targets/orgs/toyota-*.yaml exists (also
+        affects the sibling's orgs/toyota-tokyo) — create orgs/toyota-australia.
+    (4) SOURCE id-rename candidate: zdnet/2019-03-29_toyota-australia-apt32 ->
+        zdnet/2019-02-21_toyota-australia-attempted-attack (misleading slug/date).
+    (5) NEW-EVENT candidate: Toyota Vietnam ~June-2019 breach is currently
+        unrepresented as its own event.
+
+    RESIDUAL UNCERTAINTIES: exact onset (only "began yesterday" is sourced);
+    whether APT32 was truly responsible (analyst inference, Toyota never
+    confirmed); whether AU was an IP target or merely an access vector to Japan.

@@ -1,6 +1,6 @@
 id: 2018-06/sea-turtle-cyprus-foreign-ministry
-name: Sea Turtle DNS-hijacking of Cyprus foreign ministry and .net.cy ccTLD operator
-start_date: 2017-01-01
+name: Sea Turtle DNS-hijacking of Cypriot government e-mail services (2017–2019 campaign)
+start_date: 2018-12-01
 disclosure_date: 2019-04-17
 end_date: 2019-02-01
 incident_type:
@@ -8,58 +8,213 @@ incident_type:
   - data-theft
 initial_vector: valid-creds
 outcome_summary: |
-  Sea Turtle / MARBLED DUST compromised the .net.cy ccTLD operator
-  and used DNS-record manipulation at the registrar and ccTLD
-  level to redirect Cyprus government and ministry-of-foreign-
-  affairs traffic to attacker-controlled infrastructure for
-  credential capture. The campaign began in 2017 and continued
-  into early 2019, when Cisco Talos and ICANN's public statement
-  on DNS-hijacking forced operational disclosure. The Cyprus
-  case is the most-documented single Sea Turtle ccTLD compromise.
+  As part of the 2017–Q1-2019 Sea Turtle DNS-hijacking campaign
+  documented by Cisco Talos, Cypriot government e-mail services
+  were compromised through DNS-record manipulation that redirected
+  victim traffic to attacker-controlled infrastructure (including
+  imposter e-mail portals) for credential capture. Talos's April
+  17, 2019 report lists Cyprus among the campaign's compromised
+  victim countries, with Cyprus-linked operational indicators dated
+  December 2018 and February 2019; Reuters (January 27, 2020)
+  reported that "Cypriot ... government email services" were among
+  "at least 30 organizations" targeted, with the Cyprus attacks
+  occurring "in late 2018 or early 2019." Talos assessed the
+  campaign "with high confidence" to "an advanced, state-sponsored
+  actor" (no nation named at that source); three Western officials
+  cited by Reuters assessed the activity as bearing "the hallmarks
+  of a state-backed cyber espionage operation conducted to advance
+  Turkish interests." No cited source states that the Cyprus (.cy /
+  .net.cy) ccTLD registry or operator itself was compromised, nor
+  names a Cyprus ministry of foreign affairs specifically; the
+  registries/registrars Talos names as compromised are Amnic (.am)
+  and NetNod (Sweden).
 false_flag_risk: none
 summary: |
-  Marquee Sea Turtle operation in the 2017-2019 pre-disclosure
-  campaign. Cyprus' geopolitical position — EU member with
-  ongoing Turkish-Cypriot territorial dispute, central
-  Mediterranean energy-equity overlap — placed the foreign-
-  ministry victim set squarely within Mavi Vatan-aligned
-  collection requirements. The DNS-hijacking tradecraft remains
-  the operationally distinctive Sea Turtle signature.
+  Cyprus operation within the 2017–2019 Sea Turtle campaign,
+  targeting Cypriot government e-mail. Cyprus' position — an EU and
+  eurozone member central to the Eastern-Mediterranean energy and
+  maritime-boundary dispute with Turkey and to EU diplomacy on the
+  Cyprus Question — makes Cypriot government collection a strong
+  fit for Turkey-aligned strategic requirements (see doctrine_links;
+  inferred from victim geopolitics, not stated by the cited sources,
+  which articulate no purpose). The registrar/DNS-level
+  hijack-for-credential-capture tradecraft is the operationally
+  distinctive Sea Turtle signature.
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Cisco Talos
     attributing_org_confidence: high
+    attribution_level: activity-cluster
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: talos/2019-04-17_sea-turtle-dns-hijacking
+    notes: |
+      Talos (2019-04-17) attributes the campaign "with high confidence" to "an advanced,
+      state-sponsored actor" and names NO nation as the perpetrator — "Turkey" appears in the
+      report only as one entry in the victim IP/country table (with Cyprus, alongside Sweden,
+      Syria, Armenia, US, etc.), not as the sponsor. Hence attribution_level activity-cluster
+      (Talos's named "Sea Turtle" cluster; state-sponsored; nation un-named at this source).
+      The Turkey nexus carried by actor_id tr/unscoped/sea-turtle rests on later reporting —
+      Reuters (2020-01-27): the activity "bears the hallmarks of a state-backed cyber espionage
+      operation conducted to advance Turkish interests" per three Western officials (hedged,
+      alignment-level, not a firm Turkish-government/service attribution); Hunt & Hackett
+      (2024): "Turkey based" — not on this 2019 Talos source. No cited source names a specific
+      Turkish service, so the actor remains tr/unscoped (demoted from tr/mit on 2026-06-25).
 doctrine_links:
   - doctrine_id: tr/mavi-vatan
     pillar_id: tr/mavi-vatan/eastern-med-energy
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cyprus is a central Mavi Vatan-pillar target given its
-      role in Eastern Mediterranean energy disputes and EU
-      diplomacy on the Cypriot question.
+      Cyprus is the central flashpoint of the Eastern-Mediterranean
+      energy and maritime-boundary dispute that Mavi Vatan asserts;
+      Turkish drillship activity in waters claimed within the
+      Republic of Cyprus' EEZ was contemporaneous with this
+      2018–2019 collection. A Turkey-aligned actor collecting
+      Cypriot government communications strongly fits the
+      eastern-med-energy pillar. Inferred, not attested: the cited
+      sources (Talos, Reuters) state no purpose, and the identified
+      Cyprus victim is general government e-mail rather than an
+      energy-sector target, so the energy-pillar tasking is inferred
+      from victim geopolitics, not a source-stated goal.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Cyprus is the primary object of the Turkey–Cyprus EEZ / hydrocarbon-drilling dispute that Mavi Vatan codifies; Turkish drillship activity in Cypriot-claimed waters was contemporaneous with the 2018–2019 collection."
+        - "Reuters (2020-01-27): three Western officials assessed the campaign as 'conducted to advance Turkish interests,' based partly on victims being governments 'geopolitically significant to Turkey' — Cyprus foremost among them."
+      ruled_out: "Financially-motivated / non-state crime: inconsistent with credential-capture collection against government e-mail and with Talos's high-confidence 'advanced, state-sponsored actor' assessment.; Opportunistic infrastructure collateral: unlike the Amnic/.am secondary-registrar case, Cyprus is a deliberately-selected PRIMARY government victim (Reuters), not a registrar swept up as campaign infrastructure."
   - doctrine_id: tr/mavi-vatan
     pillar_id: tr/mavi-vatan/regional-influence
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cyprus foreign-ministry collection serves the regional-
-      influence pillar's collection requirements on EU and
-      neighboring-state diplomatic positioning.
+      Collection of Cypriot government e-mail directly serves the
+      regional-influence pillar's requirements on EU, eurozone and
+      neighboring-state diplomatic positioning — Cyprus being an EU
+      member with a standing territorial/constitutional dispute (the
+      Cyprus Question) with Turkey. Inferred, not attested: the cited
+      sources state no purpose; the Turkey nexus itself rests on
+      Reuters' hedged "Turkish interests" assessment and the actor's
+      later-sourced Turkey attribution, not on the 2019 Talos report.
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Cypriot government e-mail is a diplomatic / foreign-policy collection target; the Cyprus Question (partition, EU-accession leverage, reunification talks) is a standing Turkish regional-influence interest."
+        - "Reuters (2020-01-27): campaign victims were 'government ministries, embassies and security services' of states 'geopolitically significant to Turkey' — a regional-influence collection profile."
+      ruled_out: "Non-state / hacktivist targeting: inconsistent with the sustained DNS-registrar tradecraft and Talos's state-sponsored assessment."
 targets:
-  - target_id: orgs/cyprus-foreign-ministry
+  - target_id: orgs/cypriot-ministries
     country: cy
     role: primary
-  - target_id: orgs/net-cy-cctld-operator
-    country: cy
-    role: staging
 sources:
   - talos/2019-04-17_sea-turtle-dns-hijacking
+  - reuters/2020-01-27_hackers-turkey-interests-dns-hijacking
   - icann/2019-02-22_dns-hijacking-public-statement
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Phantom-remediation triage -> RE-SOURCE + CORRECT-IN-PLACE. The two originally-cited sources
+    are both REAL (not phantom/wrong-topic) and already on disk with hashes re-verified this pass:
+    talos/2019-04-17_sea-turtle-dns-hijacking (sha256 eae3a9043814c97a218e3cbd3ac61289bf260ce7fcfda79ab208a7d8b060af0f,
+    199,058 B) and icann/2019-02-22_dns-hijacking-public-statement (sha256
+    2b34f65728a41432298931cdc043e610da5e5f61b8e4693e0ebbf3d76cf22930, 277,433 B). But the event
+    over-specified two facts the cited sources do NOT carry, so a genuine secondary source was
+    added: reuters/2020-01-27_hackers-turkey-interests-dns-hijacking (Reuters exclusive; reuters.com
+    canonical URL is BOT-WALLED at HTTP 401, so raw_snapshot/hash capture the verbatim Reuters wire
+    as syndicated by Arab News, sha256 aaab0f00af708789c6d9b2cbfb6d39cb2ca53f3a79ea535e35280eca52893d81,
+    99,867 B). NB: this Sea Turtle actor was recently (2026-06-25 / 2026-07-05) cleaned of a
+    FABRICATED msft/marbled-dust phantom source; this event's sources are confirmed real (Talos 2019
+    hash-verified; ICANN 2019 hash-verified; Reuters 2020 hash-pinned via mirror) — no marbled-dust
+    phantom present here.
+
+    [a] FACTS — two FABRICATED / over-specified claims stripped:
+      (1) ".net.cy ccTLD operator" compromise (in old name, outcome_summary, and target
+      orgs/net-cy-cctld-operator role:staging): UNSUPPORTED by any source. Talos names the
+      compromised registry as Amnic/.am and the compromised registrar/registry victims as NetNod
+      (Sweden) + "One registry" — grep of the Talos raw for "net.cy"/"nic.cy" = ZERO hits; Cyprus
+      appears ONLY in the victim IP/country table ("193.37.213.61 December 2018 Cyprus";
+      "108.61.123.149 February 2019 Cyprus"; "178.62.218.244 December - January 2018-2019 UAE,
+      Cyprus"). Reuters describes Cyprus GOVERNMENT E-MAIL being DNS-hijacked but does not identify
+      the compromised intermediary as the .cy/.net.cy registry. Web verification: the .cy registry
+      (University of Cyprus / nic.cy) is NOT confirmed compromised in any Sea Turtle reporting.
+      (Also ".net.cy" is a second-level domain under the .cy ccTLD, not a ccTLD itself.) REMOVED the
+      claim and the orgs/net-cy-cctld-operator staging target.
+      (2) "Cyprus ministry of foreign affairs" as a discrete victim: over-specified. Talos names
+      "ministries of foreign affairs" only as a generic PRIMARY-victim CATEGORY; Reuters names
+      "Cypriot ... government email services" and "government ministries, embassies and security
+      services" generically — neither names a Cyprus MFA. RE-POINTED the primary target from the
+      file-less, over-specified orgs/cyprus-foreign-ministry to the real orgs/cypriot-ministries
+      ("Cypriot government ministries"), which two peer Sea Turtle events already cite.
+      Also removed the anachronistic "MARBLED DUST" co-label from the outcome_summary (a Microsoft
+      alias assigned post-April-2023, not usable to name a 2019 Talos-sourced op), the false "most-
+      documented single Sea Turtle ccTLD compromise" claim (it was not a ccTLD compromise at all),
+      and the overstated "ICANN's public statement ... forced operational disclosure" (the ICANN
+      statement names no actor/nation/victim — see [context] below). Retained + source-anchored:
+      DNS-record manipulation -> attacker-controlled infra / imposter e-mail portals -> credential
+      capture (Talos + Reuters); campaign 2017–Q1 2019 (Talos: "likely began as early as January
+      2017 and has continued through the first quarter of 2019").
+
+    [b] ATTRIBUTION — no over-attestation. Talos: "We assess with high confidence that this activity
+    is being carried out by an advanced, state-sponsored actor" — names NO nation (Turkey only in
+    the victim table). Kept attributing_org Cisco Talos / confidence high / concur. Added
+    attribution_level activity-cluster (was MISSING) — harmonized with audited peers
+    sea-turtle-armenia-am-cctld-near-miss and sea-turtle-uae-saudi-lebanon-government. Added an
+    attribution note recording that the Turkey nexus rests on LATER, hedged reporting (Reuters
+    2020: "advance Turkish interests," per Western officials; Hunt & Hackett 2024: "Turkey based"),
+    not on the 2019 Talos source, and that no cited source names a Turkish service (actor correctly
+    tr/unscoped, demoted from tr/mit 2026-06-25).
+
+    [c] DATES — start_date 2017-01-01 CONFLATED the campaign onset with the Cyprus operation and was
+    corrected to 2018-12-01, the earliest Cyprus-linked operational indicator in Talos's victim
+    table (December 2018), matching the peer methodology (armenia -> 2018-03-01 from its "March 2018"
+    table entry; netnod -> 2018-12-14). end_date 2019-02-01 CONFIRMED (Talos: "February 2019 Cyprus";
+    Reuters: Cyprus attacks "in late 2018 or early 2019"). disclosure_date 2019-04-17 CONFIRMED
+    (Talos publication; source published_on matches the byline). The id slug "2018-06" is an
+    immutable import artifact matching no source date and is left as-is — the 2018/06 path is the
+    established campaign-bucket for the pre-disclosure Sea Turtle events (peers armenia [start
+    2018-03] and uae-saudi-lebanon [start 2017-01] sit in the same bucket with divergent starts).
+
+    [d] DOCTRINE_LINKS — both tr/mavi-vatan links kept at strongly_inferred (NOT attested: no cited
+    source states a Mavi Vatan terminal goal; attesting_source_id null), harmonized with the direct
+    sibling sea-turtle-ics-forth (Greece, also two strongly_inferred Mavi Vatan links for an
+    EU-government Eastern-Med victim). Added inference_basis {signals[], ruled_out[]} to each
+    (protocol [d] spec; the reasoning-only form was below spec). Honest caveats recorded: the Cyprus
+    victim is GENERAL government e-mail (not an energy-sector target), so the eastern-med-energy
+    pillar is inferred from victim geopolitics; the Turkey nexus itself is hedged (Reuters "Turkish
+    interests"). perspective omitted = attacker-rationale (default: Turkey's own doctrine on Turkey's
+    op). Colon-space list items quoted per rule.
+
+    [e] ATTRIBUTION_LEVEL — set to activity-cluster (see [b]); was absent.
+
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves (atlas/actors/tr/sea-turtle.yaml, internal id
+    tr/unscoped/sea-turtle; audited + demoted from tr/mit 2026-06-25, in good shape). No actor edit
+    made.
+
+    [context] ICANN 2019-02-22 retained as a contextual source only: it is a generic call for full
+    DNSSEC deployment in response to DNS-hijacking abuse and names NO actor, NO nation, NO Cyprus and
+    NO MFA (raw grep for "sea turtle"/"turkey"/"cyprus"/"foreign affairs" = ZERO) — it corroborates
+    only that DNS-hijacking abuse was publicly flagged in Feb 2019; it carries none of this event's
+    load-bearing claims.
+
+    Snapshot / level: all load-bearing claims are carried by snapshotted, hash-verified sources —
+    Talos (reachable, hash-matched) for the campaign, DNS-hijack method, state-sponsored
+    attribution, dates, and Cyprus-as-compromised-victim; Reuters-via-Arab-News (hash-pinned mirror;
+    reuters.com canonical URL bot-walled) for the "Cypriot government e-mail" specificity and the
+    Turkish-interest assessment. Hence level: full.
+
+    FLAGS for orchestrator (no cross-file edits made per protocol):
+      - orgs/net-cy-cctld-operator: now ORPHANED (this event was its only referent) and rested on an
+        UNSUPPORTED claim (no Sea Turtle source documents a Cyprus ccTLD-registry compromise) — RETIRE
+        candidate. (No org file exists; it was a file-less FK.)
+      - orgs/cyprus-foreign-ministry: now ORPHANED (this event was its only referent); over-specified
+        (no source names a Cyprus MFA) — RETIRE candidate. Re-pointed here to orgs/cypriot-ministries.
+      - Sibling harmonization: sea-turtle-ics-forth (Greece) uses two strongly_inferred Mavi Vatan
+        links WITHOUT inference_basis and cites no snapshot hashes in a qc block — a future pass could
+        bring it up to the same inference_basis + snapshot spec applied here.

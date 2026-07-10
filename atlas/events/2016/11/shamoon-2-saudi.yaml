@@ -1,57 +1,249 @@
 id: 2016-11/shamoon-2-saudi
-name: Shamoon 2 wave against Saudi ministries
+name: Shamoon 2 (Disttrack) wiper waves against Saudi organizations
 start_date: 2016-11-17
-disclosure_date: 2016-12-01
-end_date: 2017-01-31
+disclosure_date: 2016-11-30  # AUDIT 2026-07-10: was 2016-12-01; Palo Alto Unit 42 first-disclosure post is dated 2016-11-30 (article:published_time 2016-11-30T15:20:21Z).
+end_date: 2017-01-23  # AUDIT 2026-07-10: was 2017-01-31 (unsourced); last source-dated wave is Symantec's "the January 23 attacks" (23 Jan 2017).
 incident_type:
   - destructive
   - wiper
-initial_vector: unknown
+initial_vector: phishing  # AUDIT 2026-07-10: was unknown; Symantec documents Timberworm spear-phishing (Word/Excel macro docs + malicious links -> PowerShell); Palo Alto notes "successful phishing attacks prior to the attack."
 outcome_summary: |
-  Tens of thousands of endpoints wiped across Saudi government
-  ministries and private-sector targets by a Shamoon disk-
-  wiper variant. The variant's MBR image was the photograph of
-  drowned Syrian child Aylan Kurdi.
+  A Shamoon-2 variant of the Disttrack disk-wiper struck selected
+  organizations in Saudi Arabia across multiple waves (activation
+  timestamp 2016/11/17; a further wave on 23 January 2017). Using
+  the same commercial EldoS RawDisk driver (and the identical
+  temporary license key) as the 2012 Shamoon, the wiper overwrote
+  files, partition tables and the Master Boot Record — rendering
+  infected machines unbootable — and self-propagated across
+  networks with pre-stolen administrator credentials. In the
+  samples analysed the wiper overwrote files with a JPEG of the
+  drowned Syrian child Alan Kurdi (the 2012 variant had used a
+  burning US-flag image). The cited vendor sources characterise
+  the victimology only as "selected"/"high value" organisations in
+  Saudi Arabia (Greenbug's broader targeting spanned the aviation,
+  energy, government, investment and education sectors); NEITHER
+  gives a Shamoon-2 endpoint-destruction count — the widely quoted
+  ~30,000-workstation figure belongs to the 2012 Saudi Aramco
+  attack, not to this 2016/17 campaign.
 false_flag_risk: none
 campaign_id: apt33-shamoon-iran-oil
 summary: |
-  Multi-vendor attribution to APT33-linked Iranian operators
-  (Palo Alto Unit 42, Symantec). No US indictment specific to
+  Second-generation Shamoon/Disttrack destructive campaign against
+  Saudi targets, technically continuous with the 2012 Aramco/RasGas
+  wiper (same RawDisk driver + license key). IMPORTANT ATTRIBUTION
+  CAVEAT (2026-07-10 audit): the two cited vendor sources do NOT
+  attribute this to APT33 or firmly to Iran. Palo Alto Unit 42
+  (2016-11-30) attributes only to "threat actors likely associated
+  with the Shamoon attack campaign" (i.e. the 2012 lineage) and
+  makes a single "completely speculative" pointer to Iran (a builder
+  parameter "shinu" that "could be a reference to ... a village name
+  in northwestern Iran"). Symantec (2017-02-27) attributes to its
+  own actor clusters "Timberworm" and "Greenbug" cooperating
+  "possibly at the direction of a single entity," names no nation,
+  and warns the attackers' living-off-the-land tooling "may also
+  serve to thwart attribution to specific actors." The APT33 /
+  Iranian-service assignment used here is a later corpus-consensus /
+  campaign-lineage bucket (kept for continuity with the sister
+  shamoon-saudi-aramco and rasgas-shamoon events), not a claim
+  carried by either cited source. No US indictment is specific to
   Shamoon 2.
 attributions:
   - actor_id: ir/irgc/apt33
-    attributing_org: Palo Alto Unit 42 / Symantec
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2016-12-01
+    attributing_org: Cited sources reach only an activity cluster — Palo Alto "threat actors likely associated with the Shamoon attack campaign"; Symantec "Timberworm" + "Greenbug." Neither names APT33 or Iran (Palo Alto's Iran pointer is "completely speculative"). APT33/Iran is a later corpus-lineage attribution.
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2016-11-30  # date of the cited Palo Alto activity-cluster attribution; the named-actor APT33 label is retrospective/corpus-level
     attribution_source_id: paloalto/2016-12_shamoon-2
+    notes: |
+      Actor kept ir/irgc/apt33 for corpus campaign continuity with
+      the sister 2012 Shamoon events, but attributing_org_confidence
+      is LOW and attribution_level is activity-cluster because NEITHER
+      cited source (Palo Alto 2016-11-30, Symantec 2017-02-27) names
+      APT33 or asserts Iran. The best the cited raw supports is
+      "Shamoon-campaign-linked operators" (Palo Alto) = "Timberworm" +
+      "Greenbug" (Symantec), with Iran only "completely speculative"
+      (Palo Alto's "shinu"/village-name aside) and NO nation named by
+      Symantec. FLAG for orchestrator: raising this to named-actor
+      (APT33) / nation (Iran) confidence requires RE-SOURCING with a
+      report that actually names APT33 for Shamoon 2 (e.g. FireEye
+      2017 or a later Unit42/Symantec APT33-Shamoon linkage); such a
+      source is not currently cited by this event.
 doctrine_links:
-  - doctrine_id: ir/forward-defense
-    pillar_id: null
+  - doctrine_id: ir/asymmetric-warfare
+    pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Anti-Saudi Gulf-rival projection consistent with Forward
-      Defense.
+      A purpose-built destructive disk-wiper deployed against an
+      adversary's civilian/government organisations — with no theft,
+      ransom or espionage payload — is the canonical expression of
+      Iran's asymmetric-warfare doctrine of low-cost, deniable harm
+      to an adversary judged guilty of harm to Iran. Technically the
+      same Shamoon/Disttrack template (identical RawDisk driver and
+      temporary license key) as the 2012 Aramco/RasGas pair the sister
+      events map to this doctrine. NOT attested: no cited source states
+      any strategic goal, so this is AUSPEX's triangulated inference.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "Payload is pure destruction: Palo Alto — the wiper overwrites 'files and storage partitions in an attempt to destroy data and render the system unusable'; no theft/ransom/collection component."
+        - "Technical + target continuity with the 2012 Iranian Shamoon campaign: 'the exact same RawDisk device driver ... down to the same, temporary license key,' again striking Saudi organisations."
+        - "Deniable delivery with no persona claim and living-off-the-land tooling that Symantec notes 'may also serve to thwart attribution' — the low-cost, hard-to-retaliate calculus the doctrine encodes."
+      ruled_out: "Espionage or financial motive — the Disttrack payload is a disk wiper with no exfiltration, encryption-for-ransom, or intelligence-collection objective evidenced by either cited source."
     contested: false
     analyst: claude
-  - doctrine_id: ir/cyber-deniable-retaliation
-    pillar_id: null
+  - doctrine_id: ir/forward-defense
+    pillar_id: ir/forward-defense/proxy-projection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Shamoon variant deployed without persona claim but
-      conforms to deniable-destructive pattern.
+      Destructive cyber against a US-aligned Gulf rival (Saudi Arabia)
+      can be read as projecting Iranian coercive reach into an
+      adversary's territory at near-zero physical risk — the forward-
+      defense proxy-projection logic. Kept only "plausible": Forward
+      Defense is primarily an Israel/US-facing posture, Saudi is a
+      secondary proxy target, and — decisively for grading — the two
+      cited sources do not establish Iranian authorship at all (Iran
+      is "completely speculative" in Palo Alto; unnamed in Symantec),
+      so the Iranian-doctrine reading rests on corpus consensus, not
+      on this event's raw.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      alternatives:
+        - "Forward-defense proxy projection: silent destructive cyber into a US-aligned Gulf monarchy projects Iranian reach extraterritorially against the Saudi rival."
+        - "The simpler asymmetric-retaliation reading above (civilian-CII coercion) with no distinct power-projection intent — the anti-Saudi target set may be pure asymmetric harassment rather than deliberate proxy projection."
+        - "Attribution-contingent: because the cited sources do not establish Iran, any Iranian-doctrine reading is contingent on the corpus-level APT33/Shamoon-lineage assignment rather than event-specific evidence."
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/government
     country: sa
     role: primary
+    outcome: |
+      Selected Saudi government-sector and other "high value"
+      organisations had endpoints wiped (files, partition tables and
+      MBR overwritten, systems left unbootable). No public
+      endpoint-destruction count was given for the Shamoon-2 waves by
+      the cited sources.
 sources:
   - paloalto/2016-12_shamoon-2
   - symantec/2016-11_shamoon-2
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the two cited RAW sources; both fetched HTTP 200, are
+    on-topic (not phantom), snapshotted and hashed -> level=full (every
+    load-bearing claim is carried by a snapshotted source; the only
+    downgrades are honest confidence reductions, not unverifiable
+    claims).
+
+    SOURCES / SNAPSHOTS:
+    - paloalto/2016-12_shamoon-2 ("Shamoon 2: Return of the Disttrack
+      Wiper," Unit 42): raw atlas/sources/raw/paloalto__2016-12_shamoon-2.html,
+      sha256 5124811a47cc57afa96830d0f71a3245ca48fde19ca807f0e0ef6756c9a169ae,
+      252,008 bytes, HTTP 200. published_on CORRECTED 2016-12-01 ->
+      2016-11-30 (article:published_time 2016-11-30T15:20:21Z; datePublished
+      2016-11-30). (Source-id slug still reads "2016-12"; cosmetic, left for
+      orchestrator FK handling.)
+    - symantec/2016-11_shamoon-2 ("Shamoon: Multi-staged destructive
+      attacks limited to specific targets"): raw
+      atlas/sources/raw/symantec__2016-11_shamoon-2.html, sha256
+      2fd89c395a9e083264e39cd2cfb8a2274828adf2896d6b62157e9bf5d4b21754,
+      121,394 bytes, HTTP 200. published_on CORRECTED 2016-11-30 ->
+      2017-02-27 (ANACHRONISM: the body discusses "the third wave ... in
+      January 2017," "the January 23 attacks," and the "February 15"
+      IBM/Palo Alto Magic Hound posts, so it cannot be a Nov-2016 post;
+      Broadcom byline reads "Feb 27, 2017"). Source-id slug still reads
+      "2016-11"; cosmetic, left for orchestrator.
+
+    [a] FACTS — corrected. KEY FIX (2012 conflation, exactly as flagged):
+    the prior "Tens of thousands of endpoints wiped" is UNSOURCED and was
+    STRIPPED. It is a conflation with the 2012 Aramco attack — Palo Alto
+    verbatim attributes the ~30k to 2012, not 2016: "The attack four years
+    ago resulted in 30,000 or more systems being damaged." For the 2016/17
+    waves the cited sources give NO count: Palo Alto — "threat actors ...
+    used their Disttrack malware to target at least one organization in
+    Saudi Arabia"; Symantec — "only selected targets in Saudi Arabia,"
+    "high value organizations." Wiper mechanics verified: Palo Alto — RawDisk
+    (EldoS) kernel driver "the exact same driver as used in the Shamoon
+    attack in 2012," writing to "the master boot record (MBR) and partition
+    tables"; config "F" "overwrite files with an image ... a picture of a
+    Syrian boy named Alan Kurdi, whose drowning on September 2, 2015 ...
+    The previous Shamoon attack in 2012 used an image of a burning American
+    flag." Precision fix: the Kurdi image overwrites FILES/partition tables
+    (not only "the MBR image," as prior prose implied); source spells it
+    "Alan Kurdi" (kept, prior "Aylan" is the alternate transliteration).
+    Self-propagation via stolen admin credentials verified (Palo Alto).
+    Name softened "wave against Saudi ministries" -> "wiper waves against
+    Saudi organizations": neither source says "ministries" (only "government"
+    appears as one of Greenbug's broad target sectors, Symantec); plural
+    "waves" reflects the documented Nov-2016 + 23-Jan-2017 events.
+
+    [b] ATTRIBUTION — over-attestation FIXED (the central defect). Prior
+    block claimed "Multi-vendor attribution to APT33-linked Iranian
+    operators (Palo Alto Unit 42, Symantec)" at high/concur — FALSE against
+    the raw. NEITHER cited source names APT33 or Iran: Palo Alto attributes
+    only to "threat actors likely associated with the Shamoon attack
+    campaign" (the 2012 lineage) and its sole Iran pointer is explicitly
+    "completely speculative" ("the word 'shinu' ... could be a reference to
+    ... a village name in northwestern Iran"); Symantec attributes to its
+    own clusters "Timberworm" and "Greenbug" "possibly at the direction of a
+    single entity," names no nation, and cautions the tooling "may also
+    serve to thwart attribution to specific actors." Corrections:
+    attributing_org reworded to state the cited sources reach only an
+    activity cluster; attributing_org_confidence high -> LOW;
+    auspex_assessment concur -> concur-with-caveat; attribution_level ADDED
+    as activity-cluster (per [e]); attribution_date 2016-12-01 -> 2016-11-30
+    (corrected Palo Alto date). actor_id ir/irgc/apt33 KEPT for corpus
+    campaign continuity (matching the sister Shamoon events), with a note
+    that named-actor/nation confidence needs a re-sourced APT33-naming report.
+
+    [c] DATES — start_date 2016-11-17 ✓ (Palo Alto hardcoded wiper-activation
+    timestamp "2016/11/17 20:45"). disclosure_date 2016-12-01 -> 2016-11-30
+    (Palo Alto actual publish date). end_date 2017-01-31 -> 2017-01-23 (last
+    source-dated wave, Symantec "the January 23 attacks"; the prior 01-31 was
+    unsourced). Both source published_on values corrected (see SOURCES): the
+    Symantec 2016-11-30 was a hard anachronism (post is Feb-2017).
+
+    [d] DOCTRINE_LINKS — reworked. REMOVED ir/cyber-deniable-retaliation: it
+    is anachronistic and mechanism-mismatched — that doctrine is defined as
+    persona-laundering via Telegram/X "claim-and-leak" channels "formalized
+    in pattern from 2020 onward" (attestations all 2021-2024), whereas
+    Shamoon 2 (2016) carried NO persona claim; the prior reasoning ("deployed
+    without persona claim but conforms to deniable-destructive pattern") was
+    self-contradictory against the doctrine's own mechanism. REPLACED with
+    ir/asymmetric-warfare/civilian-cii-coercion (strongly_inferred) — the
+    doctrine the sister Shamoon events use for the destructive-wiper-on-Gulf-
+    adversary pattern; added inference_basis.signals + ruled_out. KEPT
+    ir/forward-defense but moved to pillar proxy-projection and DOWNGRADED
+    strongly_inferred -> plausible (Forward Defense is chiefly Israel/US-
+    facing; Saudi is a proxy target; and the cited sources don't establish
+    Iran), added inference_basis.alternatives. Both remain NOT attested
+    (attesting_source_id null) — no cited source states any strategic goal.
+
+    [e] ATTRIBUTION_LEVEL — ADDED: activity-cluster (was absent). The cited
+    raw supports only "Shamoon-campaign-linked" / "Timberworm" / "Greenbug"
+    clusters; it does NOT reach the named-actor "APT33" (unnamed in both) nor
+    nation (Iran only "completely speculative"). named-actor would require a
+    re-sourced APT33-naming report.
+
+    [f] ACTOR_ID — ir/irgc/apt33 RESOLVES (atlas/actors/ir/apt33.yaml, id
+    ir/irgc/apt33). NOTE for orchestrator: that actor was re-homed
+    ir/unscoped -> ir/irgc on 2026-07-02 on MSTIC's 2024-08 victimology
+    ASSESSMENT of a MODERN APT33 op; pinning a 2016 Shamoon-lineage attack —
+    which neither cited source ties to APT33 at all — to the IRGC-scoped,
+    APT33-named bucket is an over-specification carried for campaign
+    continuity, and the whole apt33-shamoon-iran-oil campaign attribution
+    merits a campaign-level review.
+
+    RESIDUAL: (1) Iran/APT33 authorship is corpus/consensus, not carried by
+    this event's two cited 2016/17 vendor posts — re-source flagged in [b]/[e].
+    (2) Source-id slugs (paloalto "2016-12", symantec "2016-11") do not match
+    corrected publish dates; cosmetic, left for orchestrator FK handling.
+    (3) campaign_id apt33-shamoon-iran-oil has no campaign record (no
+    atlas/campaigns dir exists); it is a free-form grouping shared with the
+    two sister Shamoon events — left as-is.

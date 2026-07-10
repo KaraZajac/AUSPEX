@@ -1,66 +1,205 @@
 id: 2019-02/apt32-toyota-tokyo
-name: APT32 intrusion at Toyota Motor Corporation (Tokyo HQ)
-start_date: 2019-02-01
+name: APT32 / OceanLotus intrusion at Toyota Japan (Tokyo-area sales subsidiaries)
+start_date: 2019-02-01  # series/campaign onset: the late-Feb Toyota Australia intrusion, from which ZDNet reports APT32 is theorized to have pivoted toward "Toyota's more secure central network in Japan"; the Japan-node intrusion's own onset is unattested (disclosure 2019-03-29)
 disclosure_date: 2019-03-29
-end_date: 2019-03-29
+end_date: 2019-03-29  # activity known through the 2019-03-29 disclosure; no end/eviction date stated
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: phishing
+  # data-theft REMOVED 2026-07-10 audit: ZDNet(2019-03-29) — Toyota said "there's an ongoing investigation to find out if hackers exfiltrated any of the data they had access to"; unauthorized ACCESS confirmed, EXFILTRATION unconfirmed
+initial_vector: unknown  # was 'phishing' — no cited source states an initial vector for the Toyota Japan node; APT32 spear-phishing is a general TTP, not attested here
 outcome_summary: |
-  Toyota Motor Corporation disclosed an intrusion at its Tokyo
-  headquarters network in late March 2019, following on from a
-  February 2019 incident at Toyota Australia and pre-dating the
-  June 2019 Toyota Vietnam / Thailand subsidiary intrusions. Up
-  to 3.1 million customer records were potentially exposed. The
-  Tokyo intrusion was the most significant in the rolling 2019
-  Toyota series. Public attribution to APT32 / OceanLotus came
-  from subsequent vendor reporting tying the Toyota series to
-  the same OceanLotus tradecraft cluster targeting Hyundai,
-  BMW, and Daimler during the same period.
+  Toyota Motor Corporation's main offices in Japan disclosed on
+  29 March 2019 that hackers had breached the IT systems of
+  several Tokyo-area sales subsidiaries (Toyota Tokyo Sales
+  Holdings, Tokyo Tokyo Motor, Tokyo Toyopet, Toyota Tokyo
+  Corolla and others), accessing servers that stored sales
+  information on up to 3.1 million Toyota and Lexus customers.
+  Toyota said an investigation into whether the data was
+  exfiltrated was ongoing and that customer financial details
+  were not stored on the affected servers. This was Toyota's
+  second disclosure in five weeks, following the late-February
+  2019 Toyota Australia intrusion; Toyota Vietnam and Toyota
+  Thailand announced incidents on the same day (29 March 2019).
+  Toyota named no attacker. Public linkage to APT32 / OceanLotus
+  is hedged vendor/industry reporting (ZDNet): the more
+  disruptive Australia intrusion was attributed to APT32 and the
+  Japan systems theorized as the pivot objective; the same
+  OceanLotus cluster was later tied to the BMW and Hyundai
+  intrusions (December 2019).
 false_flag_risk: none
 summary: |
-  Central pivot of the 2019 OceanLotus automotive campaign — the
-  largest single victim by exposure volume in the series. The
-  campaign sits at the heart of AUSPEX's case that VinFast-era
-  Vietnamese industrial policy is operationalized through APT32
-  automotive IP and supplier-relationship collection. APT32
-  deployed KerrDown loader chains and Cobalt Strike for
-  persistence, with Denis and Roland backdoor variants observed
-  in adjacent campaign-cluster intrusions.
+  The largest disclosed exposure in the 2019 Toyota series: up to
+  3.1 million customer records on Tokyo-area sales-subsidiary
+  servers were accessed, though Toyota's investigation left
+  exfiltration unconfirmed. AUSPEX files the Toyota cluster under
+  the automotive-collection thesis — that VinFast-era Vietnamese
+  industrial policy motivates APT32's sustained auto-OEM targeting
+  (Toyota, BMW, Hyundai) — while flagging the tension that this
+  particular node exposed customer PII rather than design IP or
+  supplier data; the strategic-IP rationale is expert speculation
+  reported by ZDNet (Dec 2019), not an attested objective. No
+  campaign tooling was disclosed for the Tokyo intrusion itself
+  (the KerrDown / Denis / Roland loaders and Cobalt Strike are
+  general APT32 tradecraft, not evidenced at this victim).
 attributions:
   - actor_id: vn/unscoped/apt32
     attributing_org: vendor-consensus (multiple)
     attributing_org_confidence: moderate
+    attribution_level: named-actor  # ZDNet names APT32/OceanLotus at Vietnam nation-alignment ("a Vietnamese cyber-espionage unit"); no specific service asserted — consistent with actor vn/unscoped/apt32
     auspex_assessment: concur-with-caveat
-    attribution_date: 2019-04-01
-    attribution_source_id: zdnet/2019-04-01_toyota-tokyo-breach
+    attribution_date: 2019-03-29  # corrected from 2019-04-01; the APT32 linkage was reported in the 2019-03-29 ZDNet article
+    attribution_source_id: zdnet/2019-04-01_toyota-tokyo-breach  # NB source slug says 04-01 but the article is dated 2019-03-29 — see the source-record RENAME flag
     notes: |
-      Attribution to APT32 is vendor-consensus / industry reporting
-      rather than a single named primary source — Toyota itself
-      did not publicly attribute. The cluster attribution rests
-      on tradecraft overlap with the contemporaneous BMW and
-      Hyundai intrusions.
+      Attribution to APT32 is hedged vendor/industry reporting, not
+      a first-party attribution — Toyota named no attacker. ZDNet
+      (2019-03-29) attributed the more disruptive Toyota Australia
+      intrusion to "APT32 (OceanLotus), a Vietnamese cyber-espionage
+      unit" ("attributed by some industry experts"; the section is
+      headed "APT32?") and theorized the Japan systems as the pivot
+      objective ("might have targeted Toyota's Australia branch as a
+      way to get into Toyota's more secure central network in
+      Japan") — so the Japan-node attribution is cluster/pivot
+      inference rather than a direct assertion. The same OceanLotus
+      cluster was later tied to the BMW and Hyundai intrusions
+      (ZDNet, 2019-12-06). No named Vietnamese service is asserted.
 doctrine_links:
   - doctrine_id: vn/industrial-upgrading-cyber-collection
     pillar_id: vn/industrial-upgrading-cyber-collection/automotive
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale  # Vietnam (APT32) is the attacker; this is its own inferred collection doctrine applied to an operation it conducted
     reasoning: |
-      Toyota Tokyo intrusion is the central node of a 2019
-      automotive-OEM targeting wave. Victim selection (Toyota,
-      Hyundai, BMW, Daimler) maps cleanly onto VinFast-era
-      Vietnamese automotive-indigenization priorities under
-      Resolution 23-NQ/TW.
+      The Tokyo node sits within a 2019 automotive-OEM targeting
+      wave (Toyota Australia / Japan / Vietnam / Thailand, then BMW
+      and Hyundai) attributed to APT32. Victim selection maps onto
+      VinFast-era Vietnamese automotive-indigenization priorities
+      (Resolution 23-NQ/TW, 2018). Held at strongly_inferred, not
+      attested: the auto-IP-for-VinFast rationale is expert
+      speculation reported by ZDNet, not an attested Vietnamese
+      objective, and this node exposed customer PII rather than
+      design IP.
+    inference_basis:
+      signals:
+        - "APT32 targeting clusters cleanly on foreign auto OEMs across 2019 (Toyota AU/JP/VN/TH, then BMW and Hyundai) — a coherent sectoral pattern rather than opportunistic victims"
+        - "ZDNet (2019-12-06) reports the expert thesis that Vietnam is 'stealing intellectual property' for its 'fledgling automotive startup VinFast' (founded 2017, launching cars in 2019) — the industrial-upgrading motive in substance"
+        - "APT32/OceanLotus is an assessed Vietnamese state-aligned espionage actor with a documented automotive focus (ZDNet: 'a known focus on the automotive industry')"
+      ruled_out: |
+        Financially-motivated cybercrime is a weaker fit: no ransom,
+        fraud, or monetization of the 3.1M customer records surfaced,
+        Toyota said financial details were not on the affected
+        servers, and the actor is a state-aligned espionage group
+        with a sustained auto-OEM pattern. Caveat: the customer-PII
+        (not design-IP) nature of this specific node argues against a
+        pure IP-collection reading — hence strongly_inferred, not
+        attested.
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/toyota-tokyo
+  - target_id: orgs/toyota-tokyo  # FLAG: no backing target file exists (atlas/targets/orgs/toyota-*.yaml absent); sibling event 2019-06/apt32-toyota-australia refers to the same entity as orgs/toyota-japan — orchestrator to create/reconcile
     country: jp
     role: primary
     outcome: |
-      Up to 3.1 million customer records potentially exposed.
-      Toyota disclosed within days but did not name an actor.
+      Servers storing sales information on up to 3.1 million
+      Toyota / Lexus customers were accessed; exfiltration was
+      left unconfirmed by Toyota's investigation and financial
+      details were not on the affected servers. Toyota disclosed
+      publicly on 29 March 2019 but named no actor.
 sources:
   - zdnet/2019-04-01_toyota-tokyo-breach
   - toyota/2019-03-29_data-breach-notice
+  - zdnet/2019-12-06_bmw-hyundai-vietnamese-hackers  # ADDED 2026-07-10: carries the OceanLotus auto-OEM cluster attribution + the VinFast/IP-theft thesis + "Toyota Japan and Toyota Vietnam disclosed similar breaches" (already snapshotted in-repo, sha256 8d0d99ea…)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Event is REAL (normal audit path,
+    not phantom/unsupportable). Primary carrier: ZDNet
+    "Toyota announces second security breach in the last five
+    weeks" — snapshotted zdnet__2019-04-01_toyota-tokyo-breach.html
+    sha256 e1eab4977568a758ef6acb0e0d21f7e11472ed5798bfe8c9e5286900f4fe8c5f
+    (live 200 + archive 200). Corroborant added: ZDNet 2019-12-06
+    BMW/Hyundai (in-repo snapshot sha256
+    8d0d99ea64cd19eefccc6ecc59895e7521461ea0b0f96517df37f5ed5c4eec1e).
+    [a] FACTS — corrected several defects:
+      • "Tokyo HQ / headquarters network" OVERSTATED → the breach hit
+        "several sales subsidiaries" (raw: "Toyota Tokyo Sales
+        Holdings, Tokyo Tokyo Motor, Tokyo Toyopet, Toyota Tokyo
+        Corolla, Nets Toyota Tokyo, Lexus Koishikawa Sales, Jamil
+        Shoji (Lexus Nerima), and Toyota West Tokyo Corolla"),
+        "announced by the company's main offices in Japan". The
+        "central network in Japan" was only the suspected pivot
+        OBJECTIVE, not the confirmed breach. Name + summaries
+        reframed to "Tokyo-area sales subsidiaries".
+      • 3.1M ✓ CARRIED (raw: "servers that hackers accessed stored
+        sales information on up to 3.1 million customers"; "might
+        have stolen details of 3.1 million Toyota and Lexus car
+        owners"). Kept as "potentially exposed / accessed".
+      • data-theft REMOVED from incident_type — raw: "there's an
+        ongoing investigation to find out if hackers exfiltrated any
+        of the data they had access to" + "financial details were
+        not stored on the hacked servers"; access confirmed,
+        exfiltration NOT. (Repo precedent for this removal.)
+      • "June 2019 Toyota Vietnam / Thailand" DATE FABRICATION →
+        raw: "On the same day that Toyota Japan announced its data
+        breach, Toyota Vietnam and Toyota Thailand also announced
+        cyber-security incidents" (i.e. 2019-03-29, NOT June).
+        Corrected to same-day. (Thailand IS source-carried.)
+      • "Daimler" STRIPPED — absent from both cited ZDNet articles
+        (the Dec-2019 report covers only BMW + Hyundai). Now "BMW
+        and Hyundai".
+      • KerrDown / Cobalt Strike / Denis / Roland tooling sentence —
+        NOT carried by any cited source for this victim; recast as
+        general APT32 tradecraft explicitly "not evidenced at this
+        victim".
+    [b] ATTRIBUTION — well-calibrated, kept moderate / concur-with-
+        caveat. Raw attributes to "APT32 (OceanLotus), a Vietnamese
+        cyber-espionage unit" but hedged ("some industry experts";
+        section headed "APT32?") and attached primarily to the
+        AUSTRALIA node, with the Japan node linked via the pivot
+        theory ("get into Toyota's more secure central network in
+        Japan"). No named Vietnamese service asserted — consistent
+        with actor vn/unscoped/apt32. attribution_date corrected
+        2019-04-01 → 2019-03-29.
+    [c] DATES — disclosure_date 2019-03-29 ✓ (raw datePublished
+        2019-03-29T12:37Z, byline "March 29, 2019 at 5:37 a.m. PT",
+        "today's breach"). start_date 2019-02-01 is UNSOURCED for
+        the Japan node (no onset given); KEPT as the late-Feb
+        series onset (Australia entry → pivot) with an explicit
+        inference note; ID/path 2019-02 preserved. Source record
+        published_on corrected 2019-04-01 → 2019-03-29 (dateModified
+        2019-04-02); the source SLUG remains 04-01 → flagged RENAME
+        candidate (only this event references it).
+    [d] DOCTRINE_LINKS — vn/industrial-upgrading-cyber-collection
+        /automotive held at strongly_inferred (NOT attested: the
+        VinFast/IP rationale is reported expert "speculation", not
+        an attested Vietnamese objective; doctrine record itself
+        caps event links at strongly_inferred/plausible). Added
+        perspective: attacker-rationale (Vietnam = attacker) +
+        inference_basis {signals[], ruled_out}.
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor (APT32
+        named; Vietnam nation-alignment; no service).
+    [f] ACTOR_ID — vn/unscoped/apt32 resolves to
+        atlas/actors/vn/apt32.yaml (id vn/unscoped/apt32) ✓;
+        intrusion (not a counter-action) so actor_id correctly
+        non-null.
+    SNAPSHOT: zdnet source snapshotted + hashed (PRESERVE tier,
+    secondary). toyota/2019-03-29_data-breach-notice is url:null /
+    link-rotted (confirmed absent from wayback) → UN-SNAPSHOTTABLE;
+    its facts (3.1M, Tokyo sales subsidiaries, no first-party
+    attribution) are mirror-corroborated verbatim by the snapshotted
+    ZDNet article, so event level = full despite the primary being
+    un-snapshotted.
+    FLAGS (out of remit — orchestrator): (1) OVERLAP/DE-DUP with
+    sibling 2019-06/apt32-toyota-australia, which bundles Toyota
+    Japan as a PRIMARY target ("APT32 intrusions of Toyota Australia
+    and Toyota Japan") and mis-dates the series to June — that event
+    should be re-scoped to Australia-only now that this event
+    canonically owns the Toyota-Japan/Tokyo node (per task: keep the
+    two DISTINCT; Australia = late-Feb, Tokyo/Japan = 29 Mar — NB the
+    task's parenthetical "Tokyo Feb vs Australia June" is inverted vs
+    the raw). (2) Missing target files: orgs/toyota-tokyo (+ orgs/
+    toyota-japan, -australia, -vietnam) have no backing atlas/targets
+    record. (3) RENAME the zdnet source slug 2019-04-01 → 2019-03-29.

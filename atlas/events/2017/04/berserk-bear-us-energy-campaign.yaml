@@ -1,59 +1,94 @@
 id: 2017-04/berserk-bear-us-energy-campaign
 name: Berserk Bear / Dragonfly 2.0 US energy-sector campaign
-start_date: 2017-04-01  # campaign visible from 2017; longer campaign 2012–17 per indictment
-disclosure_date: 2018-03-15
+start_date: 2017-04-01  # 2017 intensification (Wolf Creek May-2017 spearphishing); TA18-074A dates this phase-2 campaign "since at least March 2016"; indictment conspiracy 2012–2017
+disclosure_date: 2018-03-15  # US-CERT TA18-074A
 end_date: 2018-12-31
 incident_type:
   - intrusion
+  - espionage
   - pre-positioning
-initial_vector: supply-chain
+initial_vector: phishing  # spear-phishing (SMB credential-harvest Word docs); watering-hole co-primary (TA18-074A). Phase-1 Havex supply-chain = the 2014 dragonfly-energetic-bear event.
 outcome_summary: |
-  Watering-hole compromise of ICS-vendor websites, spearphishing,
-  trojaned ICS software updates, and Cisco router exploitation
-  achieving pre-positioning access in US/UK/EU electric utilities,
-  oil & gas, nuclear (Wolf Creek Nuclear Operating Corp), and
-  petroleum environments. No observed disruptive action.
+  Spear-phishing (malicious Word documents that harvested SMB
+  credential hashes) and watering-hole compromises of ICS / process-
+  control trade-publication and vendor websites gave the FSB Center 16
+  actors persistent, pre-positioned access to US and international
+  energy-sector networks — electric utilities, oil & gas, and nuclear,
+  including the Wolf Creek Nuclear Operating Corporation. No disruptive
+  action was observed; the DOJ charged that the access enabled "the
+  Russian government to disrupt and damage such systems, if it wished."
 false_flag_risk: none
 operators_named:
   - akulov-pavel  # FSB Center 16 / Berserk Bear, DOJ Mar 2022
   - gavrilov-mikhail  # FSB Center 16 / Berserk Bear, DOJ Mar 2022
   - tyukov-marat  # FSB Center 16 / Berserk Bear, DOJ Mar 2022
 summary: |
-  CISA TA18-074A (Mar 2018) was the first US Government attribution
-  of the Russian energy-sector campaign. DOJ Mar 2022 indictment of
-  FSB Center 16 officers Pavel Akulov, Mikhail Gavrilov, and Marat
-  Tyukov for the 2012–17 campaign formalizes the attribution.
-  Tradecraft documented across TA18-074A and Symantec/Dragonfly
-  reporting: spear-phishing carrying weaponized Word documents that
-  triggered SMB credential harvesting against attacker-controlled
-  servers, watering-hole compromises of trade-publication and ICS-
-  vendor websites (template-injection of staged servers), trojanized
-  ICS engineering-software installers on vendor download pages, and
-  Cisco router exploitation via SMI / SNMP for transit access.
-  Post-exploitation used valid credentials (harvested from the SMB
-  template attacks and credential dumping), PowerShell, Mimikatz,
-  scheduled tasks, and the Karagany / Heriplor / GoodOR backdoors,
-  along with web shells planted on victim Exchange / IIS servers
-  for persistence.
+  US-CERT / DHS-FBI Technical Alert TA18-074A (15 Mar 2018) was the
+  first US Government attribution of the Russian energy-sector
+  intrusion campaign (Dragonfly 2.0 / Berserk Bear). The 24 Mar 2022
+  DOJ indictment (D. Kansas) of FSB "Center 16" (Military Unit 71330)
+  officers Pavel Akulov, Mikhail Gavrilov, and Marat Tyukov formalized
+  the attribution for the 2012–2017 campaign and named the Wolf Creek
+  Nuclear Operating Corporation intrusion (May 2017 spearphishing)
+  explicitly as "part of Dragonfly 2.0." Tradecraft documented in
+  TA18-074A: a two-tier model of "staging targets" (trusted third
+  parties) pivoting to "intended targets"; spear-phishing whose
+  malicious Microsoft Word/.docx attachments retrieved a remote file
+  over SMB (file://) to harvest credential hashes; watering-hole
+  compromises of process-control / ICS trade-publication and
+  informational websites, altered (JavaScript / PHP) to force the same
+  SMB credential-harvesting request; and post-exploitation using valid
+  credentials, PowerShell, scheduled tasks, web shells on victims'
+  public email / web servers, open-source credential tools (Hydra,
+  SecretsDump, CrackMapExec), and collection of ICS / SCADA design
+  documents. The indictment's 2012–2017 conspiracy also charges the
+  earlier Havex supply-chain phase, modeled separately as the 2014
+  Dragonfly / Energetic Bear event.
 attributions:
   - actor_id: ru/fsb/center-16/berserk-bear
-    attributing_org: US Department of Justice / CISA
+    attributing_org: US DHS / FBI (NCCIC / US-CERT, TA18-074A)
     attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur
+    attribution_date: 2018-03-15
+    attribution_source_id: cisa/2018-03-15_ta18-074a-russian-energy-sector
+    notes: |
+      First US Government attribution: TA18-074A flatly names "Russian
+      government cyber actors" targeting the energy / nuclear / critical-
+      infrastructure sectors, but at nation level (no unit or officers
+      named) — hence attribution_level: nation.
+  - actor_id: ru/fsb/center-16/berserk-bear
+    attributing_org: US DOJ (D. Kan. indictment) + CISA/FBI/DOE (AA22-083A)
+    attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-03-24
-    attribution_source_id: doj/2022-03-24_berserk-bear-triton-indictment
+    attribution_source_id: doj/2022-03-24_akulov-gavrilov-tyukov-indictment
+    notes: |
+      The unsealed indictment identifies FSB "Center 16" / Military Unit
+      71330 and three named officers (Akulov, Gavrilov, Tyukov) — a
+      specific unit + named individuals = named-unit. The state-
+      sponsored-Russian / FSB attribution is independently reproduced by
+      the co-published, snapshotted CISA/FBI/DOE advisory AA22-083A.
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/oil-gas-pre-positioning
     program_id: null
     confidence: attested
     reasoning: |
-      DOJ indictment names the objective as "establishing access
-      to industrial control systems" of energy-sector targets —
-      pre-positioning for coercive leverage. Gold-standard
-      attestation for the energy-weaponization pre-positioning
-      pillar.
-    attesting_source_id: doj/2022-03-24_berserk-bear-triton-indictment
+      The DOJ indictment's formal OBJECT OF THE CONSPIRACY (¶17) states
+      the terminal goal in substance: persistent covert access to US
+      energy-sector systems (including power generation and the Wolf
+      Creek nuclear plant) "thereby enabling the Russian government to
+      disrupt and damage such systems, if it wished." That is exactly
+      the energy-weaponization / oil-gas-nuclear pre-positioning purpose
+      the pillar encodes — access as latent coercive leverage — and the
+      pillar names Berserk Bear / FSB Center 16 / Wolf Creek / watering-
+      hole by name. No disruptive action was executed, which is
+      consistent with pre-positioning rather than counter to it.
+    attesting_source_id: doj/2022-03-24_akulov-gavrilov-tyukov-indictment
+    inference_basis:
+      source_quote: "The object of the conspiracy was to establish and maintain surreptitious, unauthorized access to networks, computers, and devices of companies and other entities in the energy sector, including power generation facilities, in the United States and elsewhere, thereby enabling the Russian government to disrupt and damage such systems, if it wished."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -62,10 +97,24 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Long-dwell pre-positioning in adversary critical
-      infrastructure aligns with the 2014 Military Doctrine's
-      non-contact warfare emphasis.
+      Sustained, sub-threshold FSB intrusion into US critical-
+      infrastructure networks (an explicit target sector of this pillar)
+      is a textbook non-contact / gray-zone operation. The label is
+      strongly_inferred, not attested: no cited source names a non-
+      contact-warfare purpose — it is an analytic overlay that co-exists
+      with (rather than competes against) the primary energy-
+      weaponization reading, at a different level of abstraction (mode of
+      warfare vs strategic effect). Unlike the 2011-2014 Havex phase
+      (dragonfly-energetic-bear, tagged plausible because it predates the
+      doctrine), this 2016-2018 phase POSTDATES the 25 Dec 2014 Military
+      Doctrine, so the op-follows-doctrine temporal objection is removed.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Persistent, covert, sub-threshold FSB intrusion into US critical-infrastructure (energy) networks, 2016-2018 (TA18-074A; DOJ indictment) — the gray-zone operating pattern the non-contact pillar encodes"
+        - "critical-infrastructure is an explicit target_sector of the non-contact-warfare pillar"
+        - "campaign postdates the 25 Dec 2014 Military Doctrine, so the op-follows-doctrine temporal fit holds (unlike the 2011-2014 Havex phase)"
+      ruled_out: "A one-off criminal / opportunistic intrusion — rejected: the indictment charges an FSB state unit (Center 16) running a multi-year, target-selected campaign against national critical infrastructure, which is the sub-threshold state operation the non-contact rubric describes."
     contested: false
     analyst: claude
 targets:
@@ -76,4 +125,142 @@ targets:
     role: primary
 sources:
   - cisa/2018-03-15_ta18-074a-russian-energy-sector
-  - doj/2022-03-24_berserk-bear-triton-indictment
+  - doj/2022-03-24_akulov-gavrilov-tyukov-indictment
+  - cisa/2022-03-24_aa22-083a-energy-sector
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the RAW primary sources (not the event prose). Path:
+    NORMAL AUDIT — event is REAL and well-documented; the cited primaries
+    are genuine. Two snapshots taken + one snapshotted corroborator
+    added; substantial cross-phase / cross-source de-conflation applied.
+
+    SNAPSHOTS:
+      * TA18-074A: cited us-cert.cisa.gov URL 302-redirects to the live
+        www.cisa.gov advisory; captured HTML, 109,839 bytes, sha256
+        8c1ec056…d7b2f66a (full advisory + IOCs + Snort rules, no JS
+        stub). Added raw_snapshot + content_sha256 to the source record.
+      * DOJ indictment: the bot-walled /opa/pr/ press release
+        (doj/2022-03-24_berserk-bear-triton-indictment) is un-
+        snapshottable (Akamai bm-verify stub, confirmed again here), but
+        the ACTUAL Kansas charging-document PDF is served statically at
+        justice.gov/d9/press-releases/attachments/2022/03/24/
+        ks_akulov_gavrilov_tyukov_0.pdf (HTTP 200, NOT walled). Captured
+        PDF, 4,850,994 bytes, sha256 9f3e12e0…9853c115 — NEW source
+        record doj/2022-03-24_akulov-gavrilov-tyukov-indictment created +
+        snapshotted, and cited here in place of the bot-walled press
+        release. This is the primary the prior sibling audit could not
+        obtain.
+      * AA22-083A: already snapshotted (122,852 bytes, sha256 d9ba7a0c…
+        cda81c25) — added to sources[] as the reachable CISA/FBI/DOE
+        corroborator of the FSB attribution.
+
+    [a] FACTS — de-conflated against TA18-074A + indictment (STRIPPED
+      claims carried by NEITHER cited source):
+      * REMOVED "trojaned ICS software updates" / "trojanized ICS
+        engineering-software installers on vendor download pages":
+        0 occurrences of "trojan" in TA18-074A — that is the 2013-2014
+        Havex supply-chain phase (Symantec 2014 / AA22-083A), already
+        modeled as event 2014-06/dragonfly-energetic-bear. This phase-2
+        (2016-2018) campaign is spear-phishing + watering-hole per TA18.
+      * REMOVED "Cisco router exploitation via SMI / SNMP": 0 "Cisco" /
+        "SNMP" in TA18-074A — that is TA18-106A (Apr 2018) / the 2025
+        "Static Tundra" CVE-2018-0171 disclosure, a different source and
+        a separate event, anachronistic here.
+      * REMOVED the malware names "Karagany / Heriplor / GoodOR": 0
+        occurrences in TA18-074A (they are Symantec Dragonfly-2.0
+        detection names, not cited here).
+      * REPLACED "Mimikatz" (0 in TA18) with the tools TA18 actually
+        names: "Hydra, SecretsDump, and CrackMapExec."
+      * KEPT + snapshot-verified: two-tier staging→intended-target model
+        (TA18 ¶ "This campaign comprises two distinct categories of
+        victims"); spear-phishing Word/.docx over SMB (file://<IP>/
+        Normal.dotm) for credential-hash harvesting; watering holes
+        ("Approximately half of the known watering holes are trade
+        publications and informational websites related to process
+        control, ICS"); PowerShell, "Scheduled Task", web shells on
+        "publicly accessible email and web servers"; ICS/SCADA doc
+        collection.
+      * Wolf Creek RE-SOURCED (not stripped): absent from TA18-074A and
+        AA22-083A, but the newly snapshotted indictment names it 24×
+        ("Wolf Creek's computer network (part of Dragonfly 2.0)"; "the
+        May 5, 2017 spearphishing emails to Wolf Creek") — so the marquee
+        nuclear victim is now snapshot-backed.
+      * "US/UK/EU" softened to "US and international" (indictment: "United
+        States and elsewhere"; AA22-083A: "international and U.S. Energy
+        Sector"); TA18-074A is US-focused.
+      * initial_vector supply-chain → phishing (phase-2 vector is spear-
+        phishing + watering-hole; supply-chain is the 2014 phase).
+        incident_type +espionage (TA18: reconnaissance + ICS-data
+        collection).
+
+    [b] ATTRIBUTION — split into two rows + levels added (were missing):
+      * Row 1 (NEW): TA18-074A (2018-03-15), nation level — "Russian
+        government cyber actors," first USG attribution, no unit named.
+      * Row 2: DOJ 2022 indictment, named-unit — FSB "Center 16" /
+        Military Unit 71330 + officers Akulov/Gavrilov/Tyukov (verbatim
+        in the snapshotted PDF). attribution_source_id repointed from the
+        bot-walled press release to the snapshotted indictment PDF.
+        attributing_org refined to DOJ + CISA/FBI/DOE (AA22-083A).
+        Confidence high / concur retained. (Prompt directive satisfied:
+        named-unit because the DOJ indictment is cited.)
+
+    [c] DATES — verified: disclosure 2018-03-15 = TA18-074A published_on
+      (confirmed on the snapshot). start 2017-04-01 kept as the 2017
+      intensification anchor (Wolf Creek May-2017 spearphishing) with a
+      corrected comment noting TA18's "since at least March 2016" onset
+      and the indictment's 2012–2017 conspiracy span (folder/id fix the
+      year). end 2018-12-31 = bound. Source published_on dates confirmed
+      (TA18 2018-03-15; indictment unsealed 2022-03-24; AA22-083A
+      2022-03-24).
+
+    [d] DOCTRINE_LINKS:
+      * Link 1 energy-weaponization/oil-gas-pre-positioning: KEPT
+        confidence=attested and PROMOTED it onto solid ground — the
+        prior reasoning mis-quoted ("establishing access to industrial
+        control systems"); replaced with the indictment's actual OBJECT
+        OF THE CONSPIRACY (¶17), which states the terminal goal in
+        substance — access to energy systems "thereby enabling the
+        Russian government to disrupt and damage such systems, if it
+        wished." Added inference_basis.source_quote (verbatim) +
+        repointed attesting_source_id to the snapshotted indictment.
+        Passes the protocol's "source states the terminal GOAL in
+        substance" test; the pillar itself names Berserk Bear / FSB
+        Center 16 / Wolf Creek / watering-hole.
+      * Link 2 military-doctrine-2014/non-contact-warfare: KEPT
+        strongly_inferred but ADDED the missing inference_basis
+        {signals[], ruled_out}. Sound here (unlike the plausible sibling)
+        because this phase POSTDATES the 25 Dec 2014 doctrine; framed as
+        a co-existing overlay, not a competitor to the primary link.
+      * Both links are Russian doctrine on a Russian op → attacker-
+        rationale (default); no perspective tag (matches sibling).
+
+    [e] ATTRIBUTION_LEVEL — added on both rows: nation (TA18 2018) and
+      named-unit (DOJ 2022).
+
+    [f] ACTOR_ID — ru/fsb/center-16/berserk-bear RESOLVES to
+      atlas/actors/ru/berserk-bear.yaml (internal id matches; same actor
+      as the dragonfly-energetic-bear + FSB-Center-16 events). Actor
+      record well-formed (status indicted; default_doctrine_alignment_ids
+      = oil-gas-pre-positioning + non-contact-warfare, consistent with
+      this event's links). NO actor edit made.
+
+    FLAGS for orchestrator (out of audit scope — not edited):
+      * TARGET orgs/wolf-creek-nuclear has NO backing file under
+        atlas/targets/ (atlas/targets/orgs/ lacks it; sectors/energy
+        likewise has no file — target_ids appear registry/convention-
+        driven). Wolf Creek is now snapshot-sourced; a backing target
+        file could be created.
+      * SIBLING event 2014-06/dragonfly-energetic-bear tags the SAME
+        oil-gas-pre-positioning pillar strongly_inferred (its auditor
+        could not snapshot the DOJ). The indictment PDF (now snapshotted)
+        carries the OBJECT-OF-CONSPIRACY "disrupt and damage … if it
+        wished" language covering the whole 2012-2017 conspiracy — that
+        sibling could be revisited for a possible attested upgrade.
+      * The bot-walled press-release record
+        doj/2022-03-24_berserk-bear-triton-indictment is left intact
+        (still cited by the dragonfly + triton-petro-rabigh events; the
+        latter needs the separate Gladkikh/Triton indictment PDF).

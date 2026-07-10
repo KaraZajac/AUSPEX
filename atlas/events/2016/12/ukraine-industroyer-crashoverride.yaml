@@ -4,19 +4,21 @@ start_date: 2016-12-17
 disclosure_date: 2017-06-12
 end_date: 2016-12-17
 incident_type:
-  - intrusion
   - destructive
-  - disruption
-initial_vector: unknown
+  - cyber-physical
+initial_vector: unknown  # ESET + Dragos both stated the initial vector into Ukrenergo was unknown (Wired 2017-06-12)
 outcome_summary: |
   Industroyer / CrashOverride deployed against Ukrenergo's
-  Pivnichna transmission substation north of Kyiv. ~1 hour
-  blackout for parts of the city. First ICS-purpose-built malware
-  since Stuxnet, with modular implementation of IEC 60870-5-101,
-  IEC 60870-5-104, OPC DA, and IEC 61850 substation-automation
-  protocols.
+  Pivnichna ("North") 330 kV transmission substation outside
+  Kyiv, cutting roughly a fifth of the capital's power
+  consumption for just over an hour on 17 December 2016. The
+  first ICS-purpose-built malware since Stuxnet (the second-ever
+  known code purpose-built to disrupt physical grid systems),
+  with modular implementation of the IEC 60870-5-101,
+  IEC 60870-5-104, IEC 61850, and OPC DA control protocols.
 quantified_impact:
   outage_hours: 1
+  share_of_capital_power: "~1/5 (a fifth of Kyiv's consumption at that hour)"
 false_flag_risk: none
 campaign_id: sandworm-ukraine-grid-wave
 operators_named:
@@ -27,40 +29,70 @@ operators_named:
   - ochichenko-artem  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
   - pliskin-petr  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
 summary: |
-  ESET (Jun 2017) and Dragos (Jun 2017) provided foundational
-  technical analyses. DOJ Oct 2020 Sandworm indictment formally
-  attributes the operation to GRU Unit 74455. Industroyer /
-  CrashOverride is a modular ICS attack framework comprising a
-  main backdoor, a launcher, a data-wiper component, and four
-  protocol-specific payloads implementing IEC 60870-5-101 (serial),
-  IEC 60870-5-104 (TCP/IP), IEC 61850 (substation automation), and
-  OPC DA — allowing the operator to send open-breaker commands
-  directly to substation RTUs without intermediate ICS-vendor
-  tooling. A Siemens SIPROTEC denial-of-service module attempted
-  to disable protective-relay self-recovery; the wiper component
-  destroyed the Windows engineering workstations after the
-  open-breaker payloads ran. Initial access and lateral movement
-  used valid credentials and standard Windows administrative
-  tooling, with persistence on engineering workstations consistent
-  with prior Sandworm BlackEnergy3 tradecraft.
+  ESET (WeLiveSecurity, 12 Jun 2017, as "Industroyer") and Dragos
+  (12 Jun 2017, as "Crash Override") published the foundational
+  technical analyses of the malware. The DOJ Oct 2020 Sandworm
+  indictment later attributed the December 2015–December 2016
+  Ukraine grid attacks — naming Industroyer among the malware
+  families used — to GRU Unit 74455. Industroyer / CrashOverride is
+  a modular ICS attack framework built around a main backdoor and
+  four protocol-specific payload modules implementing IEC 60870-5-101
+  (serial), IEC 60870-5-104 (TCP/IP), IEC 61850 (substation
+  automation), and OPC DA, letting the operator gain direct control
+  of substation switches and circuit breakers by speaking the grid's
+  own protocols rather than through ICS-vendor tooling. Supporting
+  modules include a data-wiper that erases Registry keys and
+  overwrites files to render the host unbootable, a second backdoor
+  masquerading as Notepad, a custom port scanner, and a
+  denial-of-service module exploiting CVE-2015-5374 to render Siemens
+  SIPROTEC protective relays unresponsive. The 2016 operation was
+  fully automated with an activation timestamp set for 17 December
+  2016; neither ESET nor Dragos could determine how the malware
+  initially infected Ukrenergo (initial vector unknown). ESET found
+  no apparent code similarity to the 2015 BlackEnergy toolset beyond
+  the shared Ukrainian-grid targeting.
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: US Department of Justice / ESET / Dragos
+    attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2020-10-15
     attribution_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
+    notes: |
+      Named-unit attribution (GRU Unit 74455 / Sandworm) rests on the US
+      DOJ Oct-2020 indictment, which charges the six officers and the
+      "December 2015 through December 2016 destructive malware attacks
+      against Ukraine's electric power grid … using malware known as
+      BlackEnergy, Industroyer, and KillDisk" — naming Industroyer
+      explicitly. The 2017 technical-analysis chain was less specific on
+      attribution: ESET (Jun 2017) declined to attribute ("it's difficult
+      to attribute attacks to malware without performing an onsite
+      incident response"); Dragos (Jun 2017), per Wired, "believes with
+      'high confidence' that the Crash Override attack was the work of
+      Sandworm" — actor-level (its ELECTRUM cluster), not the GRU unit.
+      Only the DOJ named the unit, so attributing_org is US DOJ (not
+      ESET/Dragos, who did the tradecraft analysis but not the unit
+      attribution). attribution_date is the indictment-return date
+      (2020-10-15); the DOJ press release itself published 2020-10-19.
 doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/grid-attack
     program_id: null
     confidence: attested
     reasoning: |
-      DOJ Oct 2020 indictment names the operation as part of the
-      destabilization-of-Ukraine campaign. Industroyer is the
-      protocol-aware extension of the 2015 BlackEnergy3 pattern
-      into the transmission layer.
+      The DOJ Oct 2020 indictment attests the strategic purpose in
+      substance: it charges "destructive malware attacks against
+      Ukraine's electric power grid … using malware known as
+      BlackEnergy, Industroyer, and KillDisk" — naming Industroyer
+      (this event's malware) — framed as intended to destabilize
+      Ukraine. Industroyer is the protocol-aware extension of the
+      2015 BlackEnergy grid-attack pattern into the transmission
+      layer (first grid-specific ICS-protocol malware).
     attesting_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
+    inference_basis:
+      source_quote: "Ukrainian Government & Critical Infrastructure: December 2015 through December 2016 destructive malware attacks against Ukraine's electric power grid, Ministry of Finance, and State Treasury Service, using malware known as BlackEnergy, Industroyer, and KillDisk … [the intrusions were] intended to support Russian government efforts to undermine, retaliate against, or otherwise destabilize: (1) Ukraine."
+      source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
     counter_explanation: null
     contested: false
     analyst: claude
@@ -69,8 +101,16 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Continuous Ukraine destabilization framing per DOJ Oct 2020.
+      The DOJ Oct 2020 indictment states the strategic purpose in
+      substance: the GRU intrusions — including the December 2015–2016
+      grid attacks that used Industroyer — were "intended to support
+      Russian government efforts to … destabilize … Ukraine." Gold-
+      standard attestation for the Ukraine-theater Russkiy Mir pillar.
     attesting_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
+    inference_basis:
+      source_quote: "These GRU hackers and their co-conspirators engaged in computer intrusions and attacks intended to support Russian government efforts to undermine, retaliate against, or otherwise destabilize: (1) Ukraine … Ukrainian Government & Critical Infrastructure: December 2015 through December 2016 destructive malware attacks against Ukraine's electric power grid, Ministry of Finance, and State Treasury Service, using malware known as BlackEnergy, Industroyer, and KillDisk."
+      source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -78,4 +118,93 @@ targets:
     role: primary
 sources:
   - eset/2017-06_industroyer-win32
+  - wired/2017-06-12_crash-override-malware
+  - wikipedia/2016-kyiv-cyberattack
   - doj/2020-10-15_sandworm-six-gru-officers-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    [a] FACTS — corrected against RAW. The two originally-cited sources
+    (ESET blog + DOJ PR) did NOT carry the victim identity or the outage
+    geography, so two snapshotted corroborators were added (badrabbit
+    re-source). ESET WeLiveSecurity (sha256 d4e0c621…715b7720, 76,672 B)
+    verbatim: "Biggest threat to industrial control systems since Stuxnet";
+    "The 2016 attack on Ukraine's power grid that deprived part of its
+    capital, Kiev, of power for an hour"; "The recent power outage occurred
+    on December 17th, 2016"; "four payload components … IEC 60870-5-101,
+    IEC 60870-5-104, IEC 61850, and OLE for Process Control Data Access
+    (OPC DA)"; wiper "erase system-crucial Registry keys and overwrite files
+    to make the system unbootable"; "an additional backdoor - masquerading
+    as the Notepad application"; "a port scanner that maps the network";
+    "a Denial-of-Service tool that exploits the CVE-2015-5374 vulnerability
+    in Siemens SIPROTEC devices and can render targeted devices
+    unresponsive"; "activation timestamp for December 17th, 2016." ESET
+    calls it "an electricity distribution substation" and does NOT name
+    Ukrenergo/Pivnichna. Wired/Greenberg (sha256 657e6fc3…a2f578f3,
+    1,412,749 B) carries what ESET omits: "hackers struck an electric
+    transmission station north of the city of Kiev, blacking out a portion
+    of the Ukrainian capital equivalent to a fifth of its total power
+    capacity"; "the Ukrainian electric utility Ukrenergo"; the malware
+    "alternately named 'Industroyer' or 'Crash Override,'" "the second-ever
+    known case of malicious code purpose-built to disrupt physical systems";
+    "four 'payload' modules"; and — decisively for initial_vector —
+    "Neither of the two security companies knows how the malware initially
+    infected Ukrenergo." Wikipedia 2016-Kyiv (sha256 105e8627…45b3653f,
+    88,933 B) is the sole carrier of the substation NAME: "The attack
+    affected the 330 kilowatt [sic; kV] electrical substation 'North' at
+    Pivnichna, outside the capital," "just over an hour," "Ukrenergo said …
+    the attack had cut one fifth of the city's power consumption."
+    STRIPPED as unsourced/AI-embellished (not in any cited raw): the
+    "launcher" component (ESET's own enumeration has backdoor + four
+    payloads + wiper + Notepad backdoor + port scanner + DoS, no
+    "launcher"); "send open-breaker commands directly to substation RTUs"
+    (reworded to ESET's "direct control of switches and circuit breakers …
+    speaking the grid's own protocols"); "attempted to disable
+    protective-relay self-recovery" (→ ESET's "render … unresponsive");
+    "destroyed the Windows engineering workstations after the open-breaker
+    payloads ran" (→ ESET's "make the system unbootable"); and the entire
+    "Initial access and lateral movement used valid credentials … BlackEnergy3
+    tradecraft" sentence — AFFIRMATIVELY refuted by Wired (vector unknown)
+    and inconsistent with initial_vector: unknown. No fabricated CVEs
+    (CVE-2015-5374 is ESET-verbatim); no anachronism.
+    [b] ATTRIBUTION — attributing_org corrected "US DOJ / ESET / Dragos" →
+    "US DOJ". Only the DOJ named the GRU unit; ESET explicitly declined to
+    attribute ("difficult to attribute … without … onsite incident
+    response") and Dragos reached actor-level only ("'high confidence' that
+    the Crash Override attack was the work of Sandworm," per Wired). Added
+    attribution_level: named-unit (74455). auspex_assessment=concur,
+    org_confidence high — matches the indictment's firmness; not over-attested.
+    Six operators_named = the six charged officers.
+    [c] DATES — start_date/end_date 2016-12-17 = ESET "December 17th, 2016,
+    the day of the power outage" + Wikipedia "17 December 2016."
+    disclosure_date 2017-06-12 = ESET + Wired bylines ("12 Jun 2017").
+    attribution_date 2020-10-15 = grand-jury return; DOJ PR published
+    2020-10-19 (source published_on already corrected in the DOJ record).
+    [d] DOCTRINE_LINKS — both attested, perspective attacker-rationale
+    (Russia's own doctrine on Russia's own attack; default). Added the
+    protocol-required inference_basis.source_quote (verbatim DOJ) to each,
+    which had been missing. ru/energy-weaponization/grid-attack + ru/russkiy-mir/
+    ukraine-theater are BOTH carried in substance: DOJ names "Industroyer"
+    specifically within "destructive malware attacks against Ukraine's
+    electric power grid … intended to … destabilize … Ukraine" — strategic-
+    purpose attestation, not slug-naming. Both HOLD.
+    [e] ATTRIBUTION_LEVEL — named-unit (74455), source-supported (added).
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves (atlas/actors/ru/sandworm.yaml,
+    id line 1); both doctrine pillars (ru/energy-weaponization, ru/russkiy-mir)
+    and targets/orgs/ukrenergo resolve. incident_type set to
+    [destructive, cyber-physical] per the cyber-physical family (Stuxnet,
+    Industroyer2) — the wiper (destructive) + breaker-opening grid effect.
+    LEVEL=partial: SOLE reason is the DOJ Akamai bot-wall (unchanged from the
+    sibling 2015 audit) — the indictment (named-unit attribution + doctrine
+    attestation) could not be snapshotted, only mirror-corroborated via the
+    GlobalSecurity full-text mirror intell-201019-doj01. The other three
+    sources (ESET, Wired, Wikipedia) are all snapshotted + hashed and carry
+    every other load-bearing claim. FLAG (out of event scope, for
+    orchestrator): (1) no direct Dragos CRASHOVERRIDE source — the Jun-2017
+    Dragos report URLs 404 (moved/gated); its analysis + high-confidence
+    Sandworm link are carried via the Wired secondary. (2) atlas/sources/
+    wikipedia/2016-kyiv-cyberattack.yaml + atlas/sources/wired/2017-06-12_
+    crash-override-malware.yaml are NEW records created this session.

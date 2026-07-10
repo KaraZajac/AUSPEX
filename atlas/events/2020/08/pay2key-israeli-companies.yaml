@@ -1,58 +1,99 @@
 id: 2020-08/pay2key-israeli-companies
 name: First Pay2Key wave against Israeli companies
-start_date: 2020-08-01
-disclosure_date: 2020-11-06  # Check Point / ClearSky reports
-end_date: 2021-03-31
+start_date: 2020-10-01  # ClearSky timeline: ransomware compiled + first confirmed victim Oct 2020
+disclosure_date: 2020-11-06  # Check Point's initial Pay2Key alert ("Last weekend we issued a ransomware alert")
+end_date: 2020-12-31  # last sourced wave: ClearSky's Dec-2020 second / supply-chain wave
 incident_type:
   - ransomware
+  - extortion
+  - leak
+  - supply-chain
   - influence-operation
-initial_vector: n-day  # VPN / edge-device exploitation
+initial_vector: n-day  # known edge-device / VPN vulnerabilities (Pulse Secure, Fortinet)
 outcome_summary: |
-  Israeli logistics, insurance, and retail companies hit by
-  Pay2Key ransomware with leak-site amplification. Limited
-  ransoms paid; data leaks served the coercive / influence
-  function more than the revenue function.
+  Dozens of Israeli companies — across the industrial, insurance,
+  and logistics sectors — hit by Pay2Key ransomware with leak-site
+  (Onion / Telegram / Twitter) amplification. Some victims paid; at
+  least three non-paying victims had corporate data leaked, and in
+  several cases the operators did not return decryption keys even
+  after payment. The public data-leak / threat channel served the
+  coercive, panic-inducing function more than a revenue function.
 false_flag_risk: none
 summary: |
-  Attributed to Fox Kitten / Pioneer Kitten by ClearSky and Check
-  Point. Pay2Key represents the IRGC-affiliated destructive-leak
-  persona pattern in ransomware form. ClearSky's Fox Kitten
-  reporting documents the underlying intrusion tradecraft: mass
-  exploitation of Pulse Secure (CVE-2019-11510), Fortinet
-  FortiOS (CVE-2018-13379), Citrix ADC (CVE-2019-19781), and
-  Microsoft Exchange / RDP for initial access, web shells planted
-  on internet-facing servers, lateral movement using valid
-  credentials, and persistence via PowerShell and scheduled tasks.
-  The Pay2Key encryptor itself is a relatively unsophisticated
-  C++ binary deployed manually after the operators have already
-  exfiltrated victim data to a leak server — the actual coercion
-  is the public-data-dump channel rather than the encryption.
-  Sibling operations against Israeli targets in this cluster
-  include the Black Shadow Shirbit leak (Dec 2020) and the later
-  Moses Staff PyDCrypt campaign.
+  Late-2020 ransomware campaign that Check Point named and ClearSky
+  attributed to Fox Kitten / Pioneer Kitten. Check Point's "Pay2Key
+  — The Plot Thickens" report (2020-11-12) traced the ransom Bitcoin
+  through an intermediate wallet to the Iranian exchange Excoino,
+  concluding this "wave of attacks is indeed executed by an Iranian
+  based threat actor" — a nation-level ("Iranian") attribution that
+  names no group. ClearSky's Pay2Kitten report (2020-12-17) supplied
+  the named-actor bridge, estimating "with medium to high confidence
+  that Pay2Key is a new operation conducted by Fox Kitten" on the
+  basis of tool- and infrastructure-overlap with the Fox Kitten
+  intrusion set. Initial access reused the same known edge-device
+  vulnerabilities documented in ClearSky's Fox Kitten reporting
+  (Pulse Secure CVE-2019-11510, Fortinet FortiOS CVE-2018-13379),
+  followed by reverse-proxy backdoors (FRPC / Go Proxy), lateral
+  movement, and manual deployment of a relatively unsophisticated
+  C++ encryptor after victim data had already been exfiltrated to a
+  leak server. The coercion channel is the public data dump, not the
+  encryption: ClearSky assessed "with a medium level of confidence"
+  that the campaign "is aimed to create panic in Israel ... only a
+  propaganda campaign to cause fear and to divert attention from Fox
+  Kitten. That would explain the decision to leak the data instead
+  of just demanding ransom." Both vendors frame it as part of the
+  ongoing Israel–Iran cyber confrontation. A November supply-chain
+  compromise of the logistics-software provider Amital cascaded to
+  further Israeli logistics firms.
 attributions:
   - actor_id: ir/unscoped/pioneer-kitten
     attributing_org: ClearSky
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-11-06
-    attribution_source_id: clearsky/2020-02_fox-kitten
-  - actor_id: ir/unscoped/pioneer-kitten
-    attributing_org: Check Point
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2020-12-17
+    attribution_source_id: clearsky/2020-12_pay2kitten
+    notes: |
+      ClearSky's Pay2Kitten report names the operator: "medium to
+      high" / "medium-high" confidence that Pay2Key is "a new
+      operation conducted by Fox Kitten" (an APT33 + APT34
+      collaboration), on tool/infrastructure overlap. Named-actor,
+      not service-level — no IRGC named (hence actor stays
+      ir/unscoped). Confidence recorded moderate to reflect the
+      vendor's explicit "medium-high" hedge.
+  - actor_id: ir/unscoped/pioneer-kitten
+    attributing_org: Check Point
+    attributing_org_confidence: moderate
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-11-12
     attribution_source_id: checkpoint/2020-12_pay2key
+    notes: |
+      Check Point reached only NATION level: it traced the ransom
+      Bitcoin to the Iranian exchange Excoino and concluded the wave
+      "is indeed executed by an Iranian based threat actor" (wallet
+      owners "most probably" Iranian) — it names no group. Caveat:
+      the Fox Kitten named-actor bridge is ClearSky's, not Check
+      Point's. attribution_date corrected to the report's true
+      publication 2020-11-12 (was 2020-12-17).
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Pay2Key persona used to launder anti-Israel coercion as
-      ransomware crime.
-    attesting_source_id: null
-    counter_explanation: null
+      The "Pay2Key" ransomware-crime persona is a laundering shell:
+      ClearSky, an authoritative attributing org, assesses the
+      operation is "only a propaganda campaign to cause fear and to
+      divert attention from Fox Kitten," and that leaking data rather
+      than monetising it is what that deniable-coercion purpose
+      predicts. That states the strategic purpose of the
+      persona-laundering pillar in substance.
+    attesting_source_id: clearsky/2020-12_pay2kitten
+    perspective: attacker-rationale
+    inference_basis:
+      source_id: clearsky/2020-12_pay2kitten
+      source_quote: "this operation is only a propaganda campaign to cause fear and to divert attention from Fox Kitten. That would explain the decision to leak the data instead of just demanding ransom."
     contested: false
     analyst: claude
   - doctrine_id: ir/forward-defense
@@ -60,18 +101,120 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Israeli targets consistent with Forward Defense.
+      Striking Israeli industry through a deniable persona in the
+      Israel–Iran cyber confrontation is the cyber expression of
+      forward defense, but the cited sources characterise the WHO and
+      the panic-purpose, not the forward-defense terminal rationale
+      (fighting at range so conflict stays off Iranian soil) — so the
+      linkage is inferred, not attested.
     attesting_source_id: null
-    counter_explanation: null
+    perspective: attacker-rationale
+    inference_basis:
+      signals:
+        - "ClearSky frames the campaign as 'part of the ongoing cyber confrontation between Israel and Iran'"
+        - "Iran-attributed operator striking Israeli civilian industry through a deniable ransomware persona"
+      ruled_out: "pure financial cybercrime — ruled out by the leak-over-ransom behaviour and ClearSky's medium-confidence 'propaganda campaign to create panic' assessment"
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/transport/logistics
     country: il
     role: primary
-  - target_id: sectors/finance/banking
+  - target_id: sectors/finance  # ClearSky "insurance companies" (no insurance-specific sector id)
+    country: il
+    role: primary
+  - target_id: sectors/manufacturing  # ClearSky "industrial companies"
+    country: il
+    role: primary
+  - target_id: sectors/legal  # Check Point: named law-firm double-extortion victim
     country: il
     role: primary
 sources:
-  - clearsky/2020-02_fox-kitten
   - checkpoint/2020-12_pay2key
+  - clearsky/2020-12_pay2kitten
+  - clearsky/2020-02_fox-kitten  # Fox Kitten tradecraft / actor background only (predates Pay2Key)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    RE-SOURCE (PHANTOM-REMEDIATION, wrong-source path) + full 6-point audit vs raw, snapshotted sources.
+    The event is real and well-documented; its ClearSky citation was the WRONG report.
+
+    [a] FACTS — now all source-carried.
+      • outcome_summary sectors fixed "logistics, insurance, and RETAIL" -> "industrial, insurance, and
+        logistics" per ClearSky Pay2Kitten p.3: "During October and November, we observed a wave of
+        cyber-attacks on industrial and insurance companies. In November we observed a new wave of
+        attacks on logistics companies." ("retail" appears nowhere in either cited source.)
+      • summary tradecraft embellishments STRUCK: (i) "Citrix ADC (CVE-2019-19781) ... for initial
+        access" — the Fox Kitten PDF lists Pulse/Fortinet/Palo-Alto as exploited and only "assess[es]
+        with high probability that vulnerabilities in Citrix will be used" (no CVE number, not confirmed);
+        (ii) "Microsoft Exchange ... for initial access" — absent from the Fox Kitten PDF (only "Microsoft
+        accessibility tools" + ProcDump); Exchange/ProxyLogon mass-exploitation is a 2021 anachronism.
+        Kept Pulse CVE-2019-11510 + Fortinet FortiOS CVE-2018-13379 (both verbatim in Fox Kitten PDF pp.
+        9-10; Pay2Kitten says the Pay2Key entry vector reuses "well-known vulnerabilities covered in our
+        Fox Kitten reports").
+      • STRUCK the unsourced sibling-op sentence ("Black Shadow Shirbit leak ... later Moses Staff PyDCrypt
+        campaign") — neither is in either cited source, and Moses Staff/PyDCrypt (2021) postdates the Dec-
+        2020 sources (anachronism). Amital logistics supply-chain (ClearSky p.3) added instead (sourced).
+      • Carried facts: "dozens of Israeli companies" (Pay2Kitten p.1); double-extortion + Onion leak site,
+        three non-paying Israeli victims leaked, "at least four" paid, law-firm + game-dev victims (Check
+        Point); leak via Telegram/Twitter + "in several cases di[d] not hand over decryption keys after
+        payment" (Pay2Kitten pp.3,8); Excoino/Iran Bitcoin trace (Check Point). C++/unsophisticated
+        encryptor consistent with both.
+
+    [b] ATTRIBUTION — the crux. Event previously read "Attributed to Fox Kitten / Pioneer Kitten by
+        ClearSky and Check Point," citing clearsky/2020-02_fox-kitten. That Feb-2020 "Fox Kitten Campaign"
+        espionage report PREDATES Pay2Key by 9 months (0 "Pay2Key" hits) and cannot attribute it —
+        wrong-source. Re-pointed the ClearSky attribution to the genuine ClearSky *Pay2Kitten* report
+        (2020-12-17): "We estimate with medium to high confidence that Pay2Key is a new operation
+        conducted by Fox Kitten" (p.1) / "medium-high level of confidence" (p.4) -> confidence high->
+        moderate, level named-actor. Check Point reached only NATION level ("an Iranian based threat
+        actor"; names no group) -> confidence high->moderate, level nation, assessment concur->
+        concur-with-caveat. Neither source names the IRGC -> actor id stays ir/unscoped/pioneer-kitten.
+
+    [c] DATES. start 2020-08-01 -> 2020-10-01 (Pay2Kitten timeline p.3: ransomware compiled + first
+        confirmed victim Oct 2020; 2020-08 conflated the Fox Kitten espionage wave). end 2021-03-31 ->
+        2020-12-31 (2021-03-31 was unsourced; last sourced activity is ClearSky's Dec-2020 second/supply-
+        chain wave). disclosure 2020-11-06 kept — corroborated by Check Point's "Last weekend we issued a
+        ransomware alert" (the initial disclosure; the cited Plot-Thickens follow-up is 2020-11-12).
+        Source-record date fix: checkpoint/2020-12_pay2key published_on 2020-12-17 -> 2020-11-12 (article
+        body "November 12, 2020" + HTML article:published_time 2020-11-12; the 2020-12-17 value was in fact
+        the Pay2Kitten date — cross-contamination).
+
+    [d] DOCTRINE. ir/cyber-deniable-retaliation/persona-laundering strongly_inferred -> attested: ClearSky
+        states the strategic purpose (persona used "to divert attention from Fox Kitten"; leak-over-ransom
+        = deniable coercion) — source_quote + attesting_source_id added (perspective attacker-rationale).
+        ir/forward-defense kept strongly_inferred with inference_basis signals/ruled_out (sources give the
+        WHO + panic-purpose, not the forward-defense rationale; perspective attacker-rationale).
+
+    [e] ATTRIBUTION_LEVEL added: ClearSky named-actor; Check Point nation.
+
+    [f] ACTOR_ID ir/unscoped/pioneer-kitten confirmed as a resolvable atlas actor id (canonical_name
+        "Pioneer Kitten / Fox Kitten"; alias "Pay2Key operator"). Correct.
+
+    incident_type [ransomware, influence-operation] -> [ransomware, extortion, leak, supply-chain,
+    influence-operation]: extortion (double-extortion, Check Point), leak (leak sites, both), supply-chain
+    (Amital, Pay2Kitten "supply chain attacks"), influence-operation (ClearSky "propaganda campaign to
+    create panic"). targets: dropped unsupported sectors/finance/banking; set logistics + finance
+    (insurance) + manufacturing (industrial) + legal (law firm) per the sources.
+
+    SNAPSHOTS (sha256, all present + hashed):
+      • checkpoint/2020-12_pay2key = 18c4299b91e6f410081dd5e82b078c459ecf195748a4166ae65bdf8707d34631
+        (181,542 B HTML; live URL HTTP-200 matches byte-for-byte)
+      • clearsky/2020-12_pay2kitten = 8d452e4e945f3ea8f03d21d9dd654faefcb1ac15400834db15fd7a7f1eabadde
+        (1,500,786 B PDF, 28pp; fetched direct from clearskysec.com/wp-content/.../Pay2Kitten.pdf — the
+        /pay2kitten/ landing page is Incapsula-walled) — NEW record created this audit
+      • clearsky/2020-02_fox-kitten = db314d631d772e5aacf57b95b4087c144d1ad65db0727d9db440286e6bb71225
+        (2,500,830 B PDF, 38pp; retained for Fox Kitten tradecraft/actor background only)
+    level=full: every load-bearing claim is carried by a snapshotted source.
+
+    FLAGS (out of this audit's edit scope — for orchestrator):
+      1. atlas/actors/ir/pioneer-kitten.yaml carries a "Pay2Key operator" alias assigned by "ClearSky /
+         Check Point" but its sources[] did not include a report making that linkage; the genuine one,
+         clearsky/2020-12_pay2kitten (created here), should be ADDED to that actor's sources[].
+      2. checkpoint/2020-12_pay2key record-id slug is date-inaccurate ("2020-12" vs true pub 2020-11-12) —
+         left unrenamed to avoid FK breakage; published_on field is authoritative.
+      3. clearsky/2020-02_fox-kitten is NOT orphaned (still cited by the actor record + this event for
+         tradecraft) — not a retire candidate.

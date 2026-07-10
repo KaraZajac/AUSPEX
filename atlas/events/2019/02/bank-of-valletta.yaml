@@ -1,65 +1,208 @@
 id: 2019-02/bank-of-valletta
-name: Bank of Valletta (Malta) SWIFT theft
-start_date: 2019-02-13
-disclosure_date: 2019-02-13
-end_date: 2019-02-14
+name: Bank of Valletta (Malta) EUR13M cyber-heist
+start_date: 2019-02-13  # fraudulent-transfer execution day; EmpireMonkey phishing pre-positioning ran Oct 2018+ (HSBC Malta warned 2018-11-05)
+disclosure_date: 2019-02-13  # BOV / Times of Malta announced same day
+end_date: 2019-02-14  # core operational shutdown 13 Feb -> services resumed 14 Feb (SEPA fully restored 15 Feb)
 incident_type:
+  - intrusion
   - financial-theft
-initial_vector: phishing
+initial_vector: phishing  # spear-phishing impersonating the French regulator AMF (Autorite des marches financiers); weaponized .doc -> PowerShell Empire
 outcome_summary: |
-  SWIFT-style fraudulent transfers totaling €13M routed to
-  accounts in the UK, US, Czech Republic, and Hong Kong. Bank
-  detected the activity within hours and shut down all systems
-  for approximately one day; transfers were reversed.
+  On 13 Feb 2019 intruders inside Bank of Valletta's network
+  initiated fraudulent international transfers of ~EUR13M (~$14.7M)
+  to accounts in the UK, US, Czech Republic and Hong Kong. BOV
+  detected the activity within hours and took its ENTIRE operation
+  offline — branches, ATMs, card/point-of-sale, website, email and
+  messaging — for roughly a day (services resumed 14 Feb; SEPA
+  restored 15 Feb). Authorities traced, froze and partially
+  reversed the transfers; recovery was PARTIAL (Maltese reporting:
+  >EUR3M recovered outright, the bulk of the remainder frozen in
+  destination jurisdictions), NOT the full reversal an early
+  Prime-Minister statement implied.
 quantified_impact:
-  usd_attempted: 14600000  # €13M ≈ $14.6M
-  usd_recovered: 14600000  # transfers reversed
+  usd_attempted: 14700000  # EUR13M ~= $14.7M "intended loss" (manageengine; Abbas admission via theshiftnews)
+  # recovery PARTIAL and not precisely disclosed in snapshotted sources; described qualitatively in outcome_summary (no full-reversal figure asserted)
 false_flag_risk: none
 campaign_id: apt38-swift-bank-heists
 summary: |
-  Late-era APT38 SWIFT operation. Notable for the speed of bank
-  detection and reversal — a tradecraft response curve that
-  contributed to APT38's migration to direct crypto-exchange
-  theft over the following years. Mandiant's tracking links the
-  intrusion to the same APT38 / BeagleBoyz playbook: spear-
-  phishing of bank employees with weaponized Office documents,
-  valid-credentials lateral movement to the SWIFT Alliance
-  Access environment, DYEPACK-style manipulation of SWIFT
-  messages to suppress confirmation receipts during the transfer
-  window, and FALLCHILL / NESTEGG / Hermes-lineage tooling for
-  command-and-control and post-operation cleanup. The transfers
-  to UK, US, Czech, and Hong Kong accounts were caught by
-  receiver-side fraud screening before money mules could cash
-  out.
+  Malta's largest bank lost control of its network on 13 Feb 2019
+  after a spear-phishing campaign that impersonated the French
+  markets regulator AMF (Autorite des marches financiers) using
+  lookalike domains (amf-fr[.]org) and weaponized Office documents
+  that loaded PowerShell Empire. The intruders pushed ~EUR13M in
+  fraudulent transfers to UK / US / Czech / Hong-Kong accounts
+  before BOV detected the fraud and took every service offline for
+  ~a day.
+
+  ATTRIBUTION IS CONTESTED / EVOLVED. Contemporaneously (2019),
+  Deloitte CTI tracked the operation as "EmpireMonkey" and assessed
+  it as an independent, financially-motivated CYBERCRIMINAL cluster
+  with FIN7 overlap (Cobalt-Gang-adjacent infrastructure in other
+  reporting) and NO North Korea link. The DPRK attribution came
+  LATER and via the money trail: the US DOJ, prosecuting the
+  laundering network, described the BOV heist as a "North
+  Korean-perpetrated cyber-enabled heist from a Maltese bank in
+  February 2019," whose proceeds Ghaleb Alaumary and Ramon
+  "Hushpuppi" Abbas conspired to launder (Alaumary pleaded guilty;
+  Abbas admitted an intended loss of ~$14.7M). AUSPEX places the
+  event in the APT38 / BeagleBoyz DPRK bank-heist cluster on that
+  DOJ primary, but flags the unresolved tension with the
+  contemporaneous EmpireMonkey criminal-campaign assessment; the
+  two are best reconciled by treating EmpireMonkey as the attack /
+  tooling label whose cash-out DOJ traced to DPRK actors. NOTE: the
+  prior version of this record asserted specific APT38 SWIFT-
+  Alliance-Access tradecraft (DYEPACK / FALLCHILL / NESTEGG /
+  Hermes-lineage) for BOV; none of that is carried by any Valletta
+  source and it has been removed as unsupported.
 attributions:
   - actor_id: kp/rgb/apt38
-    attributing_org: Mandiant
+    attributing_org: US Department of Justice
     attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2019-02-15  # contemporaneous Mandiant tracking
-    attribution_source_id: mandiant/2018-10-03_apt38-report
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2021-02-17  # DOJ three-hackers indictment / Alaumary case (replaces the phantom 2019 Mandiant date)
+    attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
+    notes: |
+      DPRK attribution rests on the US DOJ, which — prosecuting the
+      laundering network — stated the Feb 2019 Maltese-bank heist was
+      "North Korean-perpetrated" and obtained a guilty plea from
+      money-launderer Ghaleb Alaumary (co-conspirator R. "Hushpuppi"
+      Abbas admitted ~$14.7M intended loss; laundering routed through
+      Romania / Bulgaria accounts). NB the BOV-SPECIFIC DOJ language
+      is nation-level ("North Korean"); the named-actor (APT38)
+      refinement is AUSPEX cluster placement, supported by the same
+      DOJ indictment naming "Lazarus Group and Advanced Persistent
+      Threat 38 (APT38)" as RGB units and by CISA AA20-239A listing
+      Malta among BeagleBoyz-targeted nations (2015-2020). Assessment
+      is CONCUR-WITH-CAVEAT because a well-documented COMPETING
+      attribution exists: Deloitte CTI (Sep 2019) tracked the attack
+      cluster as "EmpireMonkey," an independent financially-motivated
+      cybercriminal group (FIN7 overlap per Kaspersky; Cobalt-adjacent
+      infra elsewhere), with no DPRK link. The prior record cited
+      Mandiant's Oct-2018 APT38 report as the attributor — an
+      ANACHRONISM (predates the Feb-2019 event and does not mention
+      Valletta); removed. FLAG (not actioned here, cross-entity): no
+      criminal/empiremonkey actor exists — an EmpireMonkey actor or
+      alias may be warranted to carry the criminal-attribution layer.
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      Continuation of the APT38 SWIFT campaign documented by CISA
-      AA20-239A, which names the WMD-financing goal at campaign
-      level but not for this specific transfer. Event-specific
-      doctrine linkage is therefore inferred.
+      CONTINGENT on the DPRK attribution (concur-with-caveat above).
+      If DPRK-perpetrated, the heist fits the APT38 / BeagleBoyz
+      revenue-generation pattern the US government ties to North
+      Korea's sanctions-evaded funding of its prohibited weapons
+      programs. CISA AA20-239A names that goal at CAMPAIGN level, not
+      for the Valletta transfer specifically; and the competing
+      EmpireMonkey criminal framing would place proceeds outside any
+      state doctrine. Event-specific doctrine linkage is therefore
+      inferred, not attested.
     attesting_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
     inference_basis:
       source_id: cisa/2020-08-26_aa20-239a-beagleboyz
       signals:
-        - "AA20-239A names the WMD goal at campaign level: 'North Korea can use these funds for its UN-prohibited nuclear weapons and ballistic missile programs'"
-      ruled_out: "event-specific attestation — AA20-239A does not name the Bank of Valletta operation"
-    contested: false
+        - "AA20-239A names the WMD-financing goal at campaign level: 'North Korea can use these funds for its UN-prohibited nuclear weapons and ballistic missile programs'"
+        - "AA20-239A lists Malta among the nations targeted by the BeagleBoyz (= APT38) from 2015 through 2020"
+      ruled_out: "event-specific attestation (AA20-239A does not name the Bank of Valletta operation); linkage is void entirely if the competing EmpireMonkey criminal attribution is correct rather than DPRK"
+    contested: true
     analyst: claude
 targets:
   - target_id: orgs/bank-of-valletta
     role: primary
-    outcome: €13M routed; full reversal achieved via swift bank shutdown.
+    outcome: ~EUR13M fraudulently transferred to UK/US/Czech/HK accounts; same-day detection + full operational shutdown enabled tracing, freezing and partial reversal (recovery partial, not complete).
 sources:
-  - mandiant/2018-10-03_apt38-report
+  - doj/2021-02-17_lazarus-three-officers-indictment
+  - deloitte/2019-09-20_empiremonkey-crestcon
+  - hackercombat/2019-02_bank-of-valletta-13m-stolen
+  - manageengine/2019_bank-of-valletta-15m-heist
+  - theshiftnews/2022-11-08_bov-cyberheist-alaumary-jailed
   - cisa/2020-08-26_aa20-239a-beagleboyz
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Full 6-point re-audit vs RAW (Opus 4.8, max). PATH: RE-SOURCE
+    (badrabbit model) — event is REAL, but was cited to an ANACHRONISTIC
+    wrong source and carried a fabricated tradecraft narrative. Re-pointed
+    to 4 new snapshotted sources plus 2 existing govt primaries.
+
+    [a] FACTS — CORRECTED. EUR13M (~$14.7M) fraudulently transferred to
+    UK/US/Czech/HK accounts, 13 Feb 2019; bank-wide shutdown ~1 day.
+    Carriers: manageengine (sha d878956...) verbatim "The hackers had
+    attempted to transfer EUR13 million to different bank accounts in the
+    UK, US, Czech Republic, and Hong Kong" and "EUR13 million ($14.7
+    million)"; hackercombat (sha a02e45a...) "moved EUR13 million into
+    foreign accounts", "Bank of Valletta shut down all its operations on
+    Wednesday morning ... back online on Thursday morning". STRIPPED as
+    fabricated (0 hits in any Valletta source): DYEPACK / FALLCHILL /
+    NESTEGG / Hermes-lineage / "SWIFT Alliance Access" manipulation —
+    generic APT38 tradecraft copy-pasted, not carried for BOV. STRIPPED
+    the false "full reversal" and usd_recovered:14600000 — recovery was
+    PARTIAL (PM said transfers "being reversed"; manageengine frames it an
+    "attempt"; theshiftnews: Abbas admitted "intended loss ... ~$14.7M").
+    Real initial vector = AMF-regulator spear-phishing (Deloitte sha
+    9dbc9e6...): amf-fr[.]org lookalike + weaponized .doc -> PowerShell
+    Empire. Renamed "...SWIFT theft" -> "...EUR13M cyber-heist" (SWIFT-
+    terminal-compromise mechanism is unsupported for this event).
+
+    [b] ATTRIBUTION — REBUILT. Was: Mandiant / high / concur, cited to
+    mandiant 2018-10-03 (ANACHRONISM: pre-dates the event; 0 Valletta
+    hits). Now: US DOJ / high / CONCUR-WITH-CAVEAT / named-actor, cited to
+    DOJ 2021-02-17 (sha 4e3209c4...) verbatim "conspired ... to launder
+    funds from a North Korean-perpetrated cyber-enabled heist from a
+    Maltese bank in February 2019"; corroborated theshiftnews (sha
+    9da1738...). CAVEAT = competing CONTEMPORANEOUS criminal attribution:
+    Deloitte CTI (Sep 2019, sha 9dbc9e6...) tracked it as "EmpireMonkey
+    ... Relatively skilled cybercriminal group, financially motivated ...
+    Some overlaps with FIN7 group", with NO DPRK link. BOV-specific DOJ
+    language is nation-level; the APT38 named-actor label is cluster
+    placement (same indictment names "Lazarus Group and ... APT38"; CISA
+    AA20-239A sha 6dfc26c... lists Malta among BeagleBoyz nations).
+    Removed Mandiant from sources[] — still cited by sibling SWIFT events,
+    so NOT orphaned (no retire flag).
+
+    [c] DATES — start 2019-02-13 (transfer-execution day; EmpireMonkey
+    phishing pre-positioning ran Oct 2018+), disclosure 2019-02-13
+    (same-day BOV/Times of Malta), end 2019-02-14 (services resumed; SEPA
+    15 Feb) — snapshot-supported (hackercombat). Fixed the fabricated
+    attribution_date 2019-02-15 "contemporaneous Mandiant tracking" ->
+    2021-02-17 (DOJ). New-source published_on verified vs raw bylines:
+    hackercombat 2019-02-25, theshiftnews 2022-11-08, Deloitte CRESTCon
+    2019-09-20; manageengine undated evergreen (published_on:null).
+
+    [d] DOCTRINE — kp/byungjin/sanctions-evasion-revenue kept
+    strongly_inferred, perspective attacker-rationale, contested:true (was
+    false). CONTINGENT on the DPRK attribution; AA20-239A carries the
+    WMD-financing goal only at CAMPAIGN level (quoted in inference_basis),
+    not the Valletta transfer; ruled_out notes the linkage is void if the
+    EmpireMonkey criminal attribution is correct rather than DPRK.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (kp/rgb/apt38 cluster), with
+    the honest caveat recorded that BOV-specific govt support is only
+    nation-level ("North Korean").
+
+    [f] ACTOR_ID — kp/rgb/apt38 RESOLVES (the id field inside
+    atlas/actors/kp/apt38.yaml is "kp/rgb/apt38"; filepath differs). Actor
+    file already lists "Malta (Bank of Valletta 2019)" — consistent, though
+    that line itself carries the same DPRK-only framing.
+
+    LEVEL=PARTIAL: the precise recovery split (">EUR3M recovered, bulk
+    frozen") could not be captured in-snapshot — the two best carriers
+    (fintechfutures, maltatoday) are bot-walled (HTTP 403); that figure is
+    mirror-corroborated only and is framed in-record as external "Maltese
+    reporting". manageengine carrier is also undated. Every OTHER
+    load-bearing claim is carried by a snapshotted source.
+
+    CROSS-ENTITY FLAGS (not actioned — outside event+sources edit scope):
+    (1) target orgs/bank-of-valletta has NO target record (dangling FK;
+    sibling orgs/bangladesh-bank exists). (2) No criminal/empiremonkey
+    actor — an EmpireMonkey actor/alias may be warranted to carry the
+    criminal-attribution layer. (3) Consider whether campaign_id
+    apt38-swift-bank-heists over-asserts the DPRK framing given the
+    concur-with-caveat; and the actor-file "Bank of Valletta 2019" line
+    could note the EmpireMonkey competing attribution.

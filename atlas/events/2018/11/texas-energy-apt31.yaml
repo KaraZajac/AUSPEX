@@ -1,60 +1,92 @@
 id: 2018-11/texas-energy-apt31
 name: Texas energy-company compromise (APT31)
-start_date: 2018-01-01
-disclosure_date: 2024-03-25  # DOJ indictment + OFAC sanctions
-end_date: 2018-12-31
+start_date: 2018-01-01  # year-granularity: Treasury says only "In 2018"; month unknown (path "/11/" is unsourced)
+disclosure_date: 2024-03-25  # DOJ indictment + OFAC/Treasury sanctions
+end_date: 2018-12-31  # year-bracket only; no explicit end/duration stated in sources
 incident_type:
-  - intrusion
-  - data-theft
-initial_vector: phishing
+  - intrusion  # Treasury states only "gaining unauthorized access"; data-theft from THIS victim not separately stated (removed 2026-07-10)
+initial_vector: unknown  # vector for the energy compromise is not stated in either source (was: phishing — unsupported)
 outcome_summary: |
-  Unnamed Texas-based energy company compromised by APT31 / MSS
-  Hubei SSD via Wuhan XRZ. Specific intrusion cited in the March
-  2024 DOJ indictment and the OFAC SDN press release as evidence
-  of PRC critical-infrastructure targeting predating the Volt
-  Typhoon era.
+  Unnamed Texas-based energy company accessed by APT31 / MSS Hubei
+  State Security Department via its Wuhan XRZ front company. Per the
+  25 March 2024 OFAC/Treasury release (jy2205): "In 2018, employees
+  of Wuhan XRZ conducted an APT 31 malicious cyber operation on a
+  Texas-based energy company, gaining unauthorized access." The
+  companion DOJ indictment (24-CR-43) corroborates the victim —
+  "an energy company based in Texas" in its enumerated APT31 victim
+  list (undated, grouped under manufacturing/trade). Both frame it
+  as PRC critical-infrastructure / energy-sector targeting; neither
+  source states the intrusion vector, tooling, or what (if anything)
+  was exfiltrated.
 false_flag_risk: none
-operators_named:
-  - zhao-guangzong  # APT31 / Wuhan XRZ, DOJ + OFAC Mar 2024
-  - ni-gaobin  # APT31 / Wuhan XRZ, DOJ + OFAC Mar 2024
+operators_named: []  # Sources attribute this op to unnamed "employees of Wuhan XRZ" (Treasury jy2205); no individual is named for the energy compromise. OFAC-sanctioned officers Zhao Guangzong & Ni Gaobin appear in the companion action but are not tied to THIS victim — the full 7-defendant roster lives on 2024-03/apt31-wuhan-xrz-indictment.
 summary: |
-  Disclosed publicly only via the March 2024 DOJ indictment and
-  Treasury press release. The indictment describes APT31 / Wuhan
-  XRZ tradecraft: spear-phishing of US energy-company employees
-  with tracking-pixel "reconnaissance" emails (used to enumerate
-  IP addresses and device fingerprints prior to the exploitation
-  email), follow-on weaponized links that downloaded the RAWDOOR
-  remote-access trojan and Trochilus / 9002 RAT variants from the
-  broader Hurricane Panda / ZIRCONIUM toolset, the use of Cobalt
-  Strike beacons, credential dumping with Mimikatz, web shells on
-  internet-facing servers, and lateral movement on valid
-  credentials. Significance: documents that APT31 conducted CII-
-  energy collection well before the post-2021 pre-positioning
-  wave, establishing continuity of intent.
+  Disclosed publicly via the coordinated 25 March 2024 DOJ
+  indictment and OFAC/Treasury sanctions action against Wuhan XRZ.
+  The load-bearing, dated claim is Treasury's: APT31 / Wuhan XRZ
+  gained "unauthorized access" to a Texas-based energy company in
+  2018. Treasury groups it with a California managed-service
+  provider as part of APT31's targeting of "America's most vital
+  critical infrastructure sectors, including the Defense Industrial
+  Base, information technology, and energy sectors." The DOJ
+  indictment corroborates the victim (an unnamed Texas energy
+  company in its enumerated victim list) but attaches no date and
+  no victim-specific tradecraft.
+  CAUTION (audit 2026-07-10): the sources describe only
+  "unauthorized access" — no intrusion vector, malware, or
+  exfiltration is attributed to this energy compromise in either
+  source. Prior prose asserting spear-phishing / tracking-pixel
+  reconnaissance / RAWDOOR / Trochilus / 9002 RAT / Cobalt Strike /
+  Mimikatz / web shells / lateral movement against this victim was
+  UNSUPPORTED and has been stripped: those are general APT31 TTPs
+  the indictment ties to *other* victims (RAWDOOR -> a 5G telecom +
+  aerospace/DoD-support firms, 2015-17; Trochilus -> the "American
+  Steel Company", Mar-May 2018; the "Welcome to Chrome" web shell ->
+  a Long Island defense contractor, 2016; the 10,000+ tracking-link
+  emails -> US government officials/politicians, Jun-Sep 2018), and
+  "9002 RAT", "Hurricane Panda" and "Mimikatz" appear nowhere in
+  either source.
 attributions:
   - actor_id: cn/mss/apt31
-    attributing_org: US DOJ + US Treasury OFAC
+    attributing_org: US Treasury OFAC + US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2024-03-25
-    attribution_source_id: doj/2024-03-25_apt31-indictment
+    attribution_source_id: treasury/2024-03-25_apt31-wuhan-xrz
+    notes: |
+      Treasury (jy2205) makes the specific dated claim: "In 2018,
+      employees of Wuhan XRZ conducted an APT 31 malicious cyber
+      operation on a Texas-based energy company, gaining unauthorized
+      access." The DOJ indictment (24-CR-43) corroborates by listing
+      "an energy company based in Texas" among APT31's US victims.
+      named-unit: both sources name the Hubei State Security
+      Department and its Wuhan XRZ front company (MSS-parented).
+      Sources are unhedged declarative attributions -> concur / high.
 doctrine_links:
   - doctrine_id: cn/mic2025
     pillar_id: cn/mic2025/power-equipment
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      The Treasury release frames the operation as APT31 targeting
-      US critical infrastructure including the energy sector — a
-      CII-targeting statement, not an industrial-policy attestation;
-      it does not name MIC2025 or the power-equipment pillar, so the
-      linkage is inferred.
-    attesting_source_id: treasury/2024-03-25_apt31-wuhan-xrz
+      Sector overlap only: the victim is an energy company and the
+      MIC2025 power-equipment pillar targets energy/electric-power
+      and nuclear. But both sources frame the intrusion as
+      critical-infrastructure access/collection, not theft of
+      power-equipment industrial IP, and neither names MIC2025 or the
+      power-equipment pillar. "Texas energy" more plausibly denotes
+      oil & gas than electric-power manufacturing, and no
+      exfiltration is described — so an industrial-policy purpose is
+      unproven. Downgraded strongly_inferred -> plausible (audit
+      2026-07-10) to remove the internal contradiction whereby the
+      pillar was asserted while the inference_basis ruled it out.
+    attesting_source_id: null
     inference_basis:
       source_id: treasury/2024-03-25_apt31-wuhan-xrz
       signals:
-        - "Treasury frames APT31's intrusion as targeting US critical infrastructure incl. the energy sector (CII target set)"
-      ruled_out: "Made-in-China-2025 / power-equipment pillar — not named; this is a CII-targeting statement, not an industrial-policy doctrine attestation"
+        - "Treasury lists the Texas energy company under APT31's targeting of 'America's most vital critical infrastructure sectors, including ... energy sectors' — victim sector overlaps the power-equipment pillar"
+      ruled_out: "MIC2025 / power-equipment industrial-policy purpose — neither source names MIC2025 or the pillar; only 'unauthorized access' is stated (no power-equipment IP theft), and 'Texas energy' more likely denotes oil & gas than electric-power manufacturing. Retained at plausible on sector overlap alone."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -62,19 +94,119 @@ doctrine_links:
     pillar_id: cn/intelligentized-warfare/pre-positioning
     program_id: null
     confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Early-energy-sector intrusion is consistent with
-      pre-positioning posture; Treasury framing does not name
-      Taiwan-contingency intent for this specific 2018 event.
+      Treasury frames the compromise as PRC critical-infrastructure
+      targeting (energy sector), which is the pre-positioning
+      pillar's domain. But the pillar specifically means holding
+      access for future disruption in a Taiwan/peer-conflict
+      contingency, and the sources evidence only espionage-style
+      "unauthorized access" (the DOJ places the victim among
+      economic-espionage targets). Characterizing a 2018 access as a
+      "pre-positioning precursor" also imports the post-2021
+      Volt-Typhoon frame, which neither source uses (no "Volt" in
+      either) — so this is a hedged inference, not an attested goal.
     attesting_source_id: null
+    inference_basis:
+      source_id: treasury/2024-03-25_apt31-wuhan-xrz
+      signals:
+        - "Treasury: APT31 targeted 'America's most vital critical infrastructure sectors, including ... energy sectors'; a Texas energy company was accessed in 2018 — CII-access consistent with the pre-positioning pillar's domain"
+      ruled_out: "Disruptive pre-positioning intent (Taiwan/peer-conflict OT hold) — not evidenced; sources show only espionage-style access and the DOJ groups the victim with economic-espionage targets. 'Pre-positioning' is a post-2021 Volt-Typhoon construct absent from both sources; applied to a 2018 espionage access it is retrospective. Retained at plausible."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/texas-energy-co-2018-unnamed
+  - target_id: orgs/texas-energy-co-2018-unnamed  # NOTE: target file missing (pre-existing pattern; cf. orgs/unnamed-asian-conglomerate) — flag for creation, out of audit edit-scope
     role: primary
-  - target_id: sectors/energy/electric-power
+  - target_id: sectors/energy  # broadened from sectors/energy/electric-power: sources say only "energy company" / "energy sectors"; Texas energy connotes oil-gas; electric-power was unsupported specificity
     role: primary
 sources:
   - doj/2024-03-25_apt31-indictment
   - treasury/2024-03-25_apt31-wuhan-xrz
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW snapshots (both cited sources
+    snapshotted + sha256-verified before use). This is a REAL event
+    (badrabbit-path NOT taken): the core claim is carried by a
+    primary source, but the event carried heavy AI-embellishment that
+    has been stripped.
+    Snapshots verified:
+      - doj/2024-03-25_apt31-indictment -> raw/doj__2024-03-25_apt31-indictment.pdf
+        sha256 bdc75e3bff39587863f0297b1a08011d80a10197700753a3048947fce2d0c64d (EDNY 24-CR-43, 27pp)
+      - treasury/2024-03-25_apt31-wuhan-xrz -> raw/treasury__2024-03-25_apt31-wuhan-xrz.html
+        sha256 55a993390c3165c3bd9f4b0bbeb9c29ac4a2f7620824e838cdc0667d7fe38aba (OFAC jy2205)
+    [a] FACTS: The load-bearing dated claim IS sourced — Treasury:
+    "In 2018, employees of Wuhan XRZ conducted an APT 31 malicious
+    cyber operation on a Texas-based energy company, gaining
+    unauthorized access." and "APT 31 actors gained unauthorized
+    access to a Texas-based energy company, as well as a
+    California-based managed service provider." DOJ corroborates the
+    victim: "...an engineering company based in California; and an
+    energy company based in Texas;" (para 25, undated victim list,
+    scope "Between at least 2010 and November 2023"). STRIPPED as
+    unsupported for this victim: the entire tradecraft narrative
+    (spear-phishing of energy-company employees, tracking-pixel
+    "reconnaissance" emails, RAWDOOR, Trochilus, Cobalt Strike, web
+    shells, lateral movement) — neither source attaches ANY vector or
+    tooling to the energy compromise (both say only "unauthorized
+    access"). Those TTPs exist in the indictment but are tied to
+    OTHER victims (RAWDOOR 2015-17 -> a 5G telecom + Alabama
+    aerospace + Maryland DoD-support firm; Trochilus Mar-May 2018 ->
+    the "American Steel Company"; "Welcome to Chrome" web shell 2016
+    -> the Long Island defense contractor; 10,000+ tracking-link
+    emails Jun-Sep 2018 -> US govt officials/politicians). FABRICATED
+    (0 hits in either source): "9002 RAT", "Hurricane Panda" toolset,
+    "Mimikatz". initial_vector phishing -> unknown. incident_type
+    data-theft removed (only "access" confirmed for this victim).
+    "predating the Volt Typhoon era" removed ("Volt" = 0 hits in
+    both sources; analyst overlay).
+    [b] ATTRIBUTION: cn/mss/apt31 CONCUR/high SUPPORTED. Both sources
+    name APT31 = Wuhan XRZ = Hubei SSD (MSS-parented). attribution_
+    source_id moved doj -> treasury (Treasury is the source that
+    makes the specific, dated attribution of THIS operation; DOJ only
+    lists the victim). Sources unhedged -> no downgrade warranted.
+    [c] DATES: start 2018 now SOURCED to Treasury "In 2018"
+    (year-granular; month unknown — the "/11/" path segment is
+    unsourced, flagged, id left unchanged). disclosure 2024-03-25
+    correct (indictment + OFAC same day). end 2018-12-31 is a
+    year-bracket only (no duration in sources). Both source
+    published_on = 2024-03-25 verified against release datelines.
+    [d] DOCTRINE_LINKS: cn/mic2025/power-equipment downgraded
+    strongly_inferred -> plausible (sector overlap only; industrial-
+    policy purpose not evidenced; the pillar had been asserted while
+    its own ruled_out negated it). cn/intelligentized-warfare/
+    pre-positioning kept plausible but given the required
+    inference_basis it lacked, with an explicit anachronism flag
+    (pre-positioning is a post-2021 frame). Both perspective:
+    attacker-rationale (CN doctrine on a CN op). Neither reaches
+    attested — no source states a doctrinal terminal goal.
+    [e] ATTRIBUTION_LEVEL: added named-unit (Hubei SSD / Wuhan XRZ
+    named as the operating unit/front; MSS named as parent).
+    [f] ACTOR_ID: cn/mss/apt31 resolves to atlas/actors/cn/apt31.yaml
+    (id: cn/mss/apt31). Not a counter-action -> actor_id retained.
+    FLAGS for orchestrator (out of audit edit-scope):
+      - Target file orgs/texas-energy-co-2018-unnamed does not exist
+        (pre-existing pattern; orgs/unnamed-asian-conglomerate is
+        also missing) — needs creation for FK integrity.
+      - operators_named ids zhao-guangzong / ni-gaobin have NO actor/
+        person files anywhere in atlas (referenced only in this event
+        + 2024-03/apt31-wuhan-xrz-indictment) — broken references in
+        both events; the indictment names all 7 individuals, so
+        person records SHOULD exist.
+      - OVER-ATTESTATION in sibling event 2024-03/apt31-wuhan-xrz-
+        indictment: its cn/mic2025/power-equipment doctrine_link is
+        confidence=attested with reasoning "the indictment
+        specifically cites the 2018 Texas energy-company compromise
+        ... precursor ... against the MIC2025 power-equipment
+        pillar" — but neither source names MIC2025/power-equipment
+        and the energy op is not framed as industrial-policy IP
+        theft. Should be downgraded there too (kept in sync with this
+        event's plausible).
+      - Relationship (not a duplicate): this event = the 2018
+        operation; 2024-03/apt31-wuhan-xrz-indictment = the 2024
+        documentary/enforcement action that disclosed it. Legit
+        distinct events.
