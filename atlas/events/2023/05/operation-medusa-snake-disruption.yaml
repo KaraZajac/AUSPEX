@@ -4,37 +4,44 @@ start_date: 2023-05-09
 disclosure_date: 2023-05-09
 end_date: 2023-05-09
 incident_type:
+  - law-enforcement  # court-authorized FBI/DOJ counter-action (search warrant, EDNY) — meta type
   - disruption
 initial_vector: unknown  # this is the disruption operation, not the original intrusion
 outcome_summary: |
   US DOJ + FBI court-authorized remote disable of the FSB Center
-  16 "Snake" / Uroburos peer-to-peer C2 network using the bespoke
-  PERSEUS tool. DOJ attributed Snake explicitly to "a unit within
-  Center 16 of the FSB" — described as the most-sophisticated FSB
-  espionage tool — and characterized the network as long-dwell
-  collection infrastructure against NATO governments, journalists,
-  defense industrial base in 50+ countries. The MEDUSA disruption
-  itself is the disclosure event; the underlying Snake collection
-  campaign dates back to 2004.
+  16 "Snake" / Uroburos peer-to-peer C2 network using the bespoke,
+  FBI-created PERSEUS tool, which issued commands that caused Snake
+  to "overwrite its own vital components" and disable itself without
+  affecting the host. DOJ attributed Snake explicitly to "a unit
+  within Center 16 of the FSB" (referred to in court documents as
+  "Turla") — described as the most-sophisticated FSB espionage tool
+  — and characterized the network as long-dwell collection
+  infrastructure against NATO member governments, journalists, and
+  other targets of interest in at least 50 countries. The MEDUSA
+  disruption itself is the disclosure event; the underlying Snake
+  collection campaign dates back to 2003-04 (developed as Uroburos).
 false_flag_risk: none
 summary: |
   Operationally significant as a US-government technical hunt-and-
   destroy operation against a peer-state APT tool at scale, mirroring
   the later KV-Botnet (Volt Typhoon) disruption pattern. Companion
   CISA AA23-129A advisory published the same day. Snake was the
-  long-running Turla codebase tied to Russian SVR/FSB historical
-  collection against MFAs and embassies; the DOJ statement was
-  unusually explicit about which FSB sub-unit ran it.
+  long-running Turla codebase tied to Russian FSB (Center 16)
+  historical collection against foreign ministries and diplomatic
+  targets; the DOJ statement was unusually explicit about which FSB
+  sub-unit ran it.
 attributions:
   - actor_id: null  # was ru/fsb/center-16/turla — counter-op (state action), actor nulled per AUDIT-2026-05-29
     attributing_org: US Department of Justice / FBI
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ names "a unit within Center 16 of the FSB" ("Turla")
     auspex_assessment: concur
     attribution_date: 2023-05-09
     attribution_source_id: doj/2023-05-09_operation-medusa-snake-disruption
   - actor_id: null  # was ru/fsb/center-16/turla — counter-op (state action), actor nulled per AUDIT-2026-05-29
     attributing_org: US CISA + NSA + FBI (joint advisory AA23-129A)
     attributing_org_confidence: high
+    attribution_level: named-unit  # CISA: "a known unit within Center 16 of the FSB" (Turla toolset)
     auspex_assessment: concur
     attribution_date: 2023-05-09
     attribution_source_id: cisa/2023-05-09_aa23-129a-snake-malware
@@ -42,30 +49,79 @@ doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # DOWNGRADED from attested (AUDIT 2026-07-10): sources establish the FSB collection mission but never reference Russian doctrine
+    perspective: attacker-rationale  # the DISRUPTED subject's (FSB/Turla) doctrine, not the US actor's rationale
     reasoning: |
-      Snake was the operational instantiation of FSB strategic
-      foreign-intelligence collection. The DOJ statement explicitly
-      named Center 16 of the FSB as operator and described the
-      breadth of MFA/embassy/think-tank targeting — the 2016 doctrine
-      premise made concrete.
-    attesting_source_id: doj/2023-05-09_operation-medusa-snake-disruption
-    counter_explanation: null
+      Snake was long-dwell FSB strategic foreign-intelligence
+      collection infrastructure — the cited sources establish that
+      purpose ("most sophisticated cyber espionage tool ... for
+      long-term intelligence collection on sensitive targets";
+      "nearly 20 years ... steal sensitive documents ... in at least
+      50 countries"). Reading that as an instantiation of the 2016
+      doctrine's treatment of the information sphere as a strategic
+      domain is an AUSPEX analytical overlay: neither the DOJ release
+      nor the CISA advisory references Russian doctrine.
+    attesting_source_id: null
+    inference_basis:
+      source_id: cisa/2023-05-09_aa23-129a-snake-malware
+      signals:
+        - "CISA: 'the most sophisticated cyber espionage tool designed and used by Center 16 of Russia's Federal Security Service (FSB) for long-term intelligence collection on sensitive targets'"
+        - "DOJ: 'For nearly 20 years, this unit ... has used versions of the Snake malware to steal sensitive documents ... in at least 50 countries'"
+      ruled_out: "explicit attestation of the info-security-2016 doctrine or its terminal goal — the sources describe the FSB collection mission, never the doctrine"
+    counter_explanation: |
+      The 'information-sphere-as-domain' pillar is oriented toward
+      information-confrontation / info-psychological contestation
+      (journalism, NGOs, social platforms); Snake is a technical CNE
+      espionage implant for document theft against governments and
+      diplomats, so the pillar fit is partial. Could equally be
+      framed as undifferentiated FSB strategic collection.
     contested: false
     analyst: claude
   - doctrine_id: ru/fpc-2023
     pillar_id: ru/fpc-2023/anti-anglo-saxon
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale  # subject's (Russian) doctrine on the disrupted campaign, not the US actor's
     reasoning: |
       Heavy targeting of NATO MFAs, US/UK/EU policy intellectuals,
       and Atlantic-alliance institutions aligns with the
       anti-Anglo-Saxon pillar of the 2023 Foreign Policy Concept.
     attesting_source_id: null
+    inference_basis:
+      source_id: doj/2023-05-09_operation-medusa-snake-disruption
+      signals:
+        - "DOJ: Snake used to steal documents from 'North Atlantic Treaty Organization (NATO) member governments, journalists, and other targets of interest to the Russian Federation'"
+      ruled_out: "any doctrine attestation — the FPC-2023 anti-Anglo-Saxon framing is post-hoc AUSPEX overlay, not stated by the sources"
     counter_explanation: |
       Could equally be framed as undifferentiated FSB strategic
       collection; the FPC-2023 explicit framing is post-hoc
       AUSPEX overlay.
+    contested: false
+    analyst: claude
+  - doctrine_id: us/ncs-2023
+    pillar_id: us/ncs-2023/disrupt-dismantle
+    program_id: null
+    confidence: strongly_inferred
+    perspective: defender-response  # US actor's OWN disrupt-and-dismantle doctrine on a US counter-action (null actor), not the disrupted actor's rationale
+    reasoning: |
+      Operation MEDUSA is a court-authorized FBI technical disruption
+      of a peer-state APT tool — the archetypal expression of NCS-2023
+      Pillar 2 ("Disrupt and dismantle threat actors"). The doctrine's
+      own cyber_relevance names this post-2023 US 'disrupt-and-dismantle
+      tempo' (KV-Botnet, LockBit Cronos, OFAC sanctions); MEDUSA (May
+      2023) is an early instance of the same pattern.
+    attesting_source_id: null
+    inference_basis:
+      source_id: doj/2023-05-09_operation-medusa-snake-disruption
+      signals:
+        - "DOJ: 'Through Operation MEDUSA, the FBI ... Neutralized the FSB's Premier Cyberespionage Malware Implant' via a court-authorized remote-disable operation"
+        - "AG Garland: 'We will continue to strengthen our collective defenses against the Russian regime's destabilizing efforts to undermine the security of the United States and our allies'"
+      ruled_out: "explicit citation of NCS-2023 — the DOJ release does not name the strategy"
+    counter_explanation: |
+      NCS-2023 was issued 2023-03-02, only two months before MEDUSA,
+      and the strategy does not name this operation; the Pillar 2
+      framing is an AUSPEX overlay on a self-evidently disrupt-and-
+      dismantle counter-action.
     contested: false
     analyst: claude
 targets:
@@ -76,7 +132,98 @@ targets:
   - target_id: sectors/civil-society/think-tank
     role: primary
   - target_id: sectors/media/journalism
-    role: collateral
+    role: primary  # AUDIT 2026-07-10: both sources name journalists as direct high-priority targets, not collateral
 sources:
   - doj/2023-05-09_operation-medusa-snake-disruption
   - cisa/2023-05-09_aa23-129a-snake-malware
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Both cited sources snapshotted + hashed.
+    US-as-ACTOR counter-action: actor_id null (subject FSB Center 16 /
+    Turla named in prose); incident_type [law-enforcement, disruption].
+
+    SNAPSHOTS:
+    - doj/2023-05-09_operation-medusa-snake-disruption — justice.gov is
+      Akamai bot-walled on direct curl AND WebFetch (interstitial /
+      403). Snapshotted the PRIMARY via Wayback id_ capture
+      (20250206023532) of the canonical OPA slug; raw =
+      doj__2023-05-09_operation-medusa-snake-disruption.html,
+      sha256 e2b2f42c309e43777b963653c4bbed5c67a099d247b92df444765bf77887028f.
+      URL corrected: event-cited slug was truncated (…snake-malware-network);
+      canonical live OPA slug is …snake-malware-network-controlled (verified
+      live HTTP 200 + Google canonical + only-archived form). Fixed url +
+      archive_url in the source record.
+    - cisa/2023-05-09_aa23-129a-snake-malware — snapshotted cleanly (live
+      200, 173 KB), raw = cisa__2023-05-09_aa23-129a-snake-malware.html,
+      sha256 fde9d1acfbc3cb2706d73261781c1969d380b2ef7661f984e2f6dea527b72922.
+
+    [a] FACTS — verified verbatim:
+      - PERSEUS self-destruct CONFIRMED (DOJ): "an FBI-created tool named
+        PERSEUS, which issued commands that caused the Snake malware to
+        overwrite its own vital components" / "causes the Snake implant to
+        disable itself without affecting the host computer or legitimate
+        applications." Rewrote outcome_summary to carry this verbatim.
+      - Snake/Turla = FSB attribution CONFIRMED (DOJ): "attributes to a
+        unit within Center 16 of the Federal Security Service of the Russian
+        Federation (FSB)"; "referred to in court documents as 'Turla'".
+        CISA: "We attribute Snake operations to a known unit within Center
+        16 of the FSB. This unit more broadly operates ... the Turla toolset".
+      - 50-country scope CONFIRMED: DOJ "at least 50 countries"; CISA "over
+        50 countries across North America, South America, Europe, Africa,
+        Asia, and Australia, to include the United States and Russia itself".
+      - "~20 years old" CONFIRMED: CISA "almost 20 years"; DOJ "nearly 20
+        years"; developed as "Uroburos" late 2003 / early 2004 → corrected
+        "dates back to 2004" to "2003-04 (developed as Uroburos)".
+      - MEDUSA + court authorization CONFIRMED (DOJ): "Through Operation
+        MEDUSA ..."; "search warrant issued by U.S. Magistrate Judge Cheryl
+        L. Pollak for the Eastern District of New York".
+      - STRIPPED FABRICATED DETAIL: "defense industrial base" (outcome_summary)
+        appears in NEITHER raw — DOJ says "NATO member governments,
+        journalists, and other targets of interest to the Russian
+        Federation"; replaced with sourced language.
+      - CORRECTED ATTRIBUTION ERROR: summary said Snake tied to "Russian
+        SVR/FSB" — "SVR" is in NEITHER raw and is wrong (Snake/Turla is FSB
+        Center 16). Changed to "Russian FSB (Center 16)". "MFAs and embassies"
+        softened to "foreign ministries and diplomatic targets" (CISA:
+        "diplomatic communications" / "sensitive international relations
+        documents ... from a victim in a NATO country").
+    [b] ATTRIBUTION — both entries actor_id null (counter-op); attributing
+        orgs (DOJ/FBI; CISA+NSA+FBI AA23-129A), confidence high, concur —
+        all match the sources' explicit high-confidence FSB attribution.
+    [c] DATES — start/disclosure/end 2023-05-09 correct (single-day
+        announcement of the executed disruption). Both sources published_on
+        2023-05-09 confirmed (DOJ "May 09, 2023"; CISA "Last Revised May 09,
+        2023 Alert Code AA23-129A"). Companion-advisory-same-day claim ✓.
+    [d] DOCTRINE_LINKS:
+      - ru/info-security-2016/information-sphere-as-domain: DOWNGRADED
+        attested → strongly_inferred (over-attestation: the DOJ attesting
+        source never references Russian doctrine; pillar is info-confrontation-
+        oriented, a partial fit for CNE espionage). attesting_source_id →
+        null; added inference_basis + counter_explanation; perspective:
+        attacker-rationale (disrupted subject's doctrine).
+      - ru/fpc-2023/anti-anglo-saxon: kept strongly_inferred; added
+        perspective: attacker-rationale + inference_basis.
+      - us/ncs-2023/disrupt-dismantle: ADDED (strongly_inferred, perspective:
+        defender-response) — MEDUSA is the archetypal NCS-2023 Pillar 2
+        court-authorized disrupt-and-dismantle; doctrine's own cyber_relevance
+        claims this tempo. Not attested (DOJ does not cite the strategy).
+    [e] ATTRIBUTION_LEVEL — added named-unit to both entries (sources name
+        FSB Center 16 / the "Turla" unit, not merely the nation).
+    [f] ACTOR_ID — null on both (counter-action); subject named in prose;
+        incident_type gains meta type law-enforcement.
+
+    TARGETS: journalism collateral → primary (both sources name journalists
+    as direct high-priority targets). foreign-ministry primary rests on CISA
+    "diplomatic communications / international relations documents";
+    defense-ministry primary rests on the DOJ "NATO member governments"
+    umbrella (no explicit defense-ministry mention — transparent inference);
+    think-tank maps to CISA "research facilities" / "targets of interest".
+
+    FLAG (out-of-scope, not edited): cisa/2023-05-09_aa23-129a-snake.yaml is
+    an orphaned DUPLICATE of the cited cisa/...-snake-malware source (same
+    AA23-129A advisory, same URL) — cited by NO event. RETIRE/MERGE candidate
+    into cisa/2023-05-09_aa23-129a-snake-malware.

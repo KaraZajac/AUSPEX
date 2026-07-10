@@ -1,21 +1,29 @@
 id: 2023-01/hive-takedown
 name: FBI / Europol Hive ransomware takedown
-start_date: 2022-07-01  # FBI covert access began
+start_date: 2022-07-01  # month-anchor; DOJ: "Since late July 2022" FBI covert access began (exact day not stated)
 disclosure_date: 2023-01-26
 end_date: 2023-01-26
 incident_type:
+  - law-enforcement  # counter-op meta type (FBI/DOJ takedown) — keys the counter-op detector; actor_id null
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  FBI Tampa Field Office obtained covert network access to Hive
-  infrastructure July 2022 and operated as an undeclared
-  participant for approximately seven months, distributing
-  decryption keys to ~336 active and ~1,000 prior victims worth
-  an estimated USD 130M in averted ransom payments. Coordinated
-  takedown announced Jan 26 2023 with Europol, German Federal
-  Police (BKA), and Dutch National High Tech Crime Unit
-  participation; servers in Los Angeles and the Netherlands
-  seized.
+  FBI Tampa Field Office (Orlando Resident Agency) obtained covert
+  network access to Hive infrastructure in late July 2022 and ran a
+  months-long disruption campaign (~6 months, to the Jan 26 2023
+  seizure), providing over 300 decryption keys to victims under
+  active attack and over 1,000 additional keys to prior victims —
+  averting more than USD 130M in ransom payments per DOJ. Coordinated
+  takedown announced Jan 26 2023 with Europol, the German Federal
+  Criminal Police (BKA) + Reutlingen Police HQ-CID Esslingen, and the
+  Netherlands National High Tech Crime Unit; the FBI seized the
+  servers and websites Hive used to communicate with its members.
+quantified_impact:
+  usd_ransom_averted: 130000000  # DOJ subhead "Thwarting Over $130 Million in Ransom Demands"; DAG Monaco "averting more than $130 million dollars in ransomware payments"; Europol "prevented the payment of more than USD 130 million"
+  usd_extorted: 100000000  # DOJ "Since June 2021, the Hive ransomware group has… received over $100 million in ransom payments"; Europol "almost EUR 100 million"
+  affected_orgs: 1500  # DOJ/Europol "more than 1,500 victims in over 80 countries"
+  decryption_keys_active: 300  # DOJ "over 300 decryption keys to Hive victims who were under attack" (i.e., >300)
+  decryption_keys_prior: 1000  # DOJ "over 1,000 additional decryption keys to previous Hive victims" (i.e., >1,000)
 false_flag_risk: none
 summary: |
   Pioneering "long-running covert server access → coordinated
@@ -25,17 +33,21 @@ summary: |
   AUSPEX corpus and is foundational to the FBI's subsequent
   ransomware-disruption doctrine.
 attributions:
-  - actor_id: null  # was ru/proxies/hive — counter-op (state action), actor nulled per AUDIT-2026-05-29
+  - actor_id: null  # counter-op (FBI/DOJ LE takedown) → actor nulled per the counter-action rule (AUDIT-2026-05-29). Subject is criminal/hive (stateless RaaS; re-homed ru/proxies/hive → ru/unscoped/hive → criminal/hive), named in prose — NOT a state action.
     attributing_org: DOJ + FBI + Europol
     attributing_org_confidence: high
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-01-26
+    attribution_level: named-actor  # DOJ names the "Hive ransomware group" (a named RaaS group); no individual operators indicted in this Jan-2023 release
     attribution_source_id: doj/2023-01-26_hive-takedown
     notes: |
-      Multilateral operation led by FBI Tampa with Europol / BKA /
-      Dutch participation; CNMF actor mapping is a placeholder
-      pending US-actor taxonomy expansion to include FBI Cyber
-      Division.
+      Multilateral LE operation led by FBI Tampa Field Office (Orlando
+      Resident Agency) with Europol, German (BKA + Reutlingen Police
+      HQ-CID Esslingen), and Netherlands (NHTCU) participation. No
+      US-actor id is asserted for the acting body — the FBI sits in
+      attributing_org, not as a tracked AUSPEX actor. (The prior note's
+      "CNMF" mapping was erroneous: this was an FBI Tampa criminal
+      investigation, not a Cyber National Mission Force operation.)
 doctrine_links:
   - doctrine_id: us/ncs-2023
     perspective: defender-response
@@ -43,9 +55,16 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Canonical Disrupt-and-Dismantle pillar operation; officially
-      framed as such in DOJ press release and Deputy AG Monaco
-      remarks. AG Garland states the dismantle purpose in substance.
+      attested = corroboration of the pillar's strategic purpose
+      (disrupt + dismantle threat actors) in substance, not
+      doctrine-slug naming. The DOJ release supplies that purpose
+      directly: AG Garland — the DOJ "dismantled an international
+      ransomware network"; the release headlines a "months-long
+      disruption campaign," and DAG Monaco / Dir. Wray frame the
+      action as disruption. NB the NCS-2023 strategy was issued
+      2023-03-02, ~5 weeks AFTER this Jan-26 operation — the link is
+      retrospective: the op exemplifies (and predates) the codified
+      Pillar 2; the DOJ release does not cite the strategy by name.
     attesting_source_id: doj/2023-01-26_hive-takedown
     inference_basis:
       source_quote: "Last night, the Justice Department dismantled an international ransomware network responsible for extorting and attempting to extort hundreds of millions of dollars from victims in the United States and around the world."
@@ -56,3 +75,65 @@ targets: []
 sources:
   - doj/2023-01-26_hive-takedown
   - europol/2023-01-26_hive-disruption
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Sources snapshotted + hashed:
+    doj/2023-01-26_hive-takedown sha256 709208e52b647eb2b2db89b1a23fb2f094d5803fa82daf3afab7ba30d000cb58
+    (RE-CAPTURED — see SNAPSHOT); europol/2023-01-26_hive-disruption sha256
+    c177ce1de1aa627b81f5bde63ab52d14a173ea1819ef8e554a5e19040ea99e7a (verified, unchanged).
+
+    SNAPSHOT: the DOJ raw_snapshot was a MIS-CAPTURE — it held the Nov-2021 Kaseya/REvil DOJ
+    article (<title> "Ukrainian Arrested and Charged with Ransomware Attack on Kaseya"; body
+    Vasinskyi/Sodinokibi/REvil; the 157 "Hive" hits were sidebar/related-links noise), not this
+    Hive release. Re-captured the correct release from the record's archive_url (Wayback
+    20250206084853); the direct justice.gov URL returns only a 2.4 KB JS-challenge shell with an
+    empty <title> to curl. New raw <title> "U.S. Department of Justice Disrupts Hive Ransomware
+    Variant"; content_sha256 b93a74ca…→709208e5…. Wayback toolbar retained per the qakbot
+    doj/2023-08-29 __archive precedent. Europol page is a JS-app shell; its load-bearing figures
+    live verbatim in the embedded window.SERVER_DATA JSON (verified). level=full: every
+    load-bearing claim is now carried by a snapshotted+hashed source.
+
+    [a] FACTS — corrected three unsupported claims:
+      • "approximately seven months" → "months-long … (~6 months)". Raw (DOJ): "months-long
+        disruption campaign" + "Since late July 2022, the FBI has penetrated Hive's computer
+        networks" → late Jul 2022 to 26 Jan 2023 ≈ 6 months. Neither cited source states "seven
+        months."
+      • "~336 active … victims" → "over 300". Raw (DOJ): "over 300 decryption keys to Hive victims
+        who were under attack." The "336" was spurious — it appears in the corpus only as the
+        Europol CMS crime-area id {"id":336,"title":"Cyber-attacks"}, not a victim count.
+      • "servers in Los Angeles and the Netherlands seized" → "the FBI seized the servers and
+        websites Hive used…". "Los Angeles" is in NEITHER cited source; the only California token is
+        the "U.S. Attorney's Office for the Central District of California" assistance credit. DOJ:
+        "seized control of the servers and websites that Hive uses to communicate with its members."
+      Carried verbatim (kept): "$130 million" averted (DOJ subhead "Thwarting Over $130 Million in
+      Ransom Demands"; Monaco "averting more than $130 million dollars"; Europol "more than USD 130
+      million"); "over 1,000 additional decryption keys to previous Hive victims"; "more than 1,500
+      victims in over 80 countries"; "received over $100 million in ransom payments." Added
+      quantified_impact (all five keys sourced to the above).
+    [b] ATTRIBUTION — attributing_org "DOJ + FBI + Europol" ✓, confidence high ✓, concur-with-caveat
+      retained. No over-attestation: DOJ/Europol frame Hive purely as criminal RaaS / double-extortion
+      and assert NO state nexus (consistent with the criminal/hive stateless re-home).
+    [c] DATES — start = late July 2022 (DOJ), month-anchored 2022-07-01 with note (exact day not
+      stated); disclosure = end = 2023-01-26 (both releases published that day). Both sources'
+      published_on 2023-01-26 confirmed.
+    [d] DOCTRINE_LINKS — us/ncs-2023 / pillar us/ncs-2023/disrupt-dismantle, perspective
+      defender-response (US defender doctrine on a US counter-action) ✓. confidence=attested UPHELD:
+      the DOJ states the disrupt+dismantle strategic purpose in substance — Garland source_quote
+      ("…dismantled an international ransomware network…") is VERBATIM in the re-captured raw
+      (sha 709208e5), plus "months-long disruption campaign" and Monaco/Wray disruption framing.
+      Reasoning softened to remove the "officially framed as [an NCS-2023 pillar op]" overclaim and
+      to note the anachronism: NCS-2023 was issued 2023-03-02, ~5 weeks AFTER this Jan-26 op, so the
+      link is retrospective (the op exemplifies + predates the codified Pillar 2; the release does
+      not cite the strategy). Per the attested-reframe, attested = strategic-purpose corroboration,
+      which holds.
+    [e] ATTRIBUTION_LEVEL — added named-actor (DOJ names the "Hive ransomware group," a named RaaS
+      group; no individual operators indicted in this Jan-2023 release → not named-unit).
+    [f] ACTOR_ID — null (counter-op / LE takedown), subject criminal/hive named in prose; incident_type
+      set to [law-enforcement, disruption] (added the law-enforcement meta type that keys the
+      counter-op detector). Fixed the stale inline comment ("state action" / re-home chain to
+      criminal/hive) and removed the erroneous "CNMF" mapping note (this was an FBI Tampa criminal
+      investigation, not a Cyber National Mission Force operation).

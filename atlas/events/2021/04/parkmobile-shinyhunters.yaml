@@ -1,45 +1,184 @@
 id: 2021-04/parkmobile-shinyhunters
 name: ParkMobile 21M user-record leak
-start_date: 2021-03-01
-disclosure_date: 2021-04-06
-end_date: 2021-04-30
+start_date: 2021-03-01  # "March 2021" breach (notification 26 Mar 2021); first-of-month approximation
+disclosure_date: 2021-04-12  # Krebs report of the forum sale (was 2021-04-06 — wrong; byline "Monday 12th of April 2021")
+end_date: 2021-04-30  # full DB released free on a hacking forum (BleepingComputer, 30 Apr 2021)
 incident_type:
   - data-theft
-initial_vector: n-day  # Apache Struts third-party dependency per ParkMobile attribution
+  - leak
+initial_vector: unknown  # ParkMobile: "a vulnerability in a third-party software that we use"; no component/CVE in cited sources (prior "n-day / Apache Struts" unsourced — stripped)
 outcome_summary: |
-  Krebs on Security reported on April 6 2021 that approximately
-  21 million ParkMobile user records had been posted for sale
-  on a Russian-language cybercrime forum (Exploit). Exposed
-  fields included email addresses, mobile phone numbers,
-  license plate numbers, vehicle data, and bcrypt-hashed
-  passwords. ParkMobile attributed the intrusion to a
-  vulnerability in third-party software (later reported as an
-  Apache Struts framework component). The forum posting and
-  re-postings were attributed to the ShinyHunters cluster
-  during the 2020-2021 RaidForums-era data-broker activity.
+  Krebs on Security reported on April 12 2021 that account
+  information for approximately 21 million ParkMobile customers
+  was being sold on a Russian-language cybercrime forum (the
+  forum is not named in the reporting); the sale thread was
+  surfaced by threat-intelligence firm Gemini Advisory, and the
+  seller's starting price was USD 125,000. Exposed fields (per
+  the leaked 4.5 GB file) included names, email addresses,
+  mobile phone numbers, user names, license plate numbers,
+  vehicle information, mailing addresses, and bcrypt-hashed
+  passwords; ParkMobile stated that payment-card data, Social
+  Security numbers and driver's-license numbers were not
+  affected. ParkMobile attributed the intrusion to "a
+  vulnerability in a third-party software that we use" (no
+  specific component named in the cited reporting). Around
+  April 29-30 2021 the full database (21,887,299 records) was
+  released for free on a hacking forum (BleepingComputer, 30
+  Apr 2021) after the paid sale failed to attract buyers. No
+  cited source names the seller; the ShinyHunters association is
+  an AUSPEX cluster inference, not a sourced attribution (see
+  attribution notes).
 quantified_impact:
-  individuals_affected: 21000000
+  individuals_affected: 21000000  # headline "21 million"; precise leaked-file count 21,887,299 (BleepingComputer)
+  asking_price_usd: 125000  # Krebs: "insanely high starting price ($125,000)"
 false_flag_risk: suspected
 summary: |
-  Continuation event for the 2020-2021 ShinyHunters data-broker
-  pattern documented in the 2024 Raoult sentencing. Notable
-  for the license-plate + mobile-number combination, which is
-  high-utility for downstream physical-surveillance-correlation
-  use cases. Cluster boundary remains fuzzy: the initial leak
-  appeared on a Russian-language forum rather than RaidForums,
-  and the ShinyHunters attribution rests on cluster-identification
-  via subsequent re-postings.
+  ParkMobile (US paid-parking app) breach disclosed via a
+  cybercrime-forum sale in April 2021 and a free forum release
+  ~2 weeks later. Modeled here as a possible ShinyHunters-cluster
+  data-broker sibling (cf. Wishbone, the May-2020 wave), but the
+  ShinyHunters association is UNCORROBORATED: neither Krebs (the
+  primary reporter) nor BleepingComputer names the seller, the
+  2024 DoJ ShinyHunters sentencing does not list ParkMobile among
+  its 60+ companies, and ParkMobile is absent from public
+  ShinyHunters victim compilations. Attribution therefore demoted
+  to contested / low / activity-cluster with false_flag_risk
+  suspected. Notable for the license-plate + mobile-number
+  combination, high-utility for downstream physical-surveillance-
+  correlation use cases.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Krebs on Security + journalism consensus
-    attributing_org_confidence: moderate
-    auspex_assessment: concur-with-caveat
-    attribution_date: 2021-04-06
-    attribution_source_id: krebs/2021-04-06_parkmobile-21m-users
+    attributing_org: 'No source names the seller (Krebs / Gemini Advisory: unnamed forum seller); ShinyHunters is an AUSPEX cluster inference'
+    attributing_org_confidence: low
+    attribution_level: activity-cluster
+    auspex_assessment: contested
+    attribution_date: 2021-04-12
+    attribution_source_id: null
+    notes: |
+      No cited source attributes the ParkMobile breach/sale to
+      ShinyHunters. Krebs on Security (12 Apr 2021, the primary
+      report) says only "Someone is selling account information for
+      21 million customers of ParkMobile" on a Russian-language crime
+      forum, surfaced by threat-intel firm Gemini Advisory — no actor
+      named (grep of the raw: 0 "ShinyHunters" hits). BleepingComputer
+      (30 Apr 2021) attributes the free re-release to generic "threat
+      actors" — no actor named (0 hits). The 2024 DoJ ShinyHunters
+      sentencing establishes the crew posted data from 60+ companies
+      (Apr 2020 - Jul 2021) but does NOT name ParkMobile. ParkMobile is
+      also absent from public ShinyHunters victim compilations (e.g.
+      Wikipedia's 2021 list names Pixlr, Nitro PDF, Bonobos, AT&T,
+      Aditya Birla — not ParkMobile). actor_id criminal/shinyhunters is
+      retained only as an explicit cluster HYPOTHESIS (the corpus models
+      this as a 2020-2021 data-broker sibling), NOT a sourced attribution
+      — hence confidence low, auspex_assessment contested,
+      attribution_level activity-cluster, attribution_source_id null,
+      false_flag_risk suspected. A reviewer could alternatively set
+      actor_id null (cf. 2009-12/iran-cyber-army-twitter) and/or rename
+      the event off the "-shinyhunters" slug.
 doctrine_links: []
 targets:
   - target_id: orgs/parkmobile
     role: primary
 sources:
   - krebs/2021-04-06_parkmobile-21m-users
+  - bleepingcomputer/2021-04-30_parkmobile-data-free-scammers
   - doj/2024-01-09_raoult-shinyhunters-sentencing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8, effort max) vs RAW snapshots.
+    Sources snapshotted: krebs__2021-04-06_parkmobile-21m-users.html
+    sha256 9f15f449..0f17296b (90,613 B, live-fetched 2026-07-10);
+    bleepingcomputer__2021-04-30_parkmobile-data-free-scammers.html
+    sha256 8e62b2e8..caffa0bb (93,017 B, NEW source, live-fetched
+    2026-07-10); doj__2024-01-09_raoult-shinyhunters-sentencing.html
+    sha256 eb577ef4..757c3cb9 (unchanged, actor-context only).
+
+    [a] FACTS -- CORRECTED (two fabrications stripped). (1) "(Exploit)"
+    forum name removed: Krebs says only "a Russian-language crime forum"
+    and BleepingComputer "a popular hacking forum" -- neither names the
+    forum (grep: 0 raidforums/exploit hits in either raw). (2) "Apache
+    Struts" removed: NO cited source (Krebs/BC) nor HIBP/Wikipedia/
+    settlement coverage names Struts (grep: 0 "struts" hits) -- ParkMobile
+    said only "a cybersecurity incident linked to a vulnerability in a
+    third-party software that we use." 21M CONFIRMED, no embellishment:
+    Krebs "account information for 21 million customers of ParkMobile"
+    (3x "21 million"); precise leaked-file count 21,887,299 (BC "4.5 GB
+    CSV text file containing the account information for 21,887,299
+    ParkMobile customers"); HIBP 20.9M -- consistent. Added asking_price
+    USD 125,000 (Krebs "insanely high starting price ($125,000)") and the
+    free-leak follow-on (BC, 30 Apr 2021). bcrypt CONFIRMED (Krebs, 5x;
+    "bcrypt hashed and salted passwords were obtained"). Field list
+    aligned to the authoritative leaked-file set (BC): names, initials,
+    mobile numbers, email addresses, user names, bcrypt passwords, mailing
+    address, license plates, vehicle information; vague "vehicle data" ->
+    "vehicle information / vehicle nicknames" (ParkMobile: "vehicle
+    nickname"). NB DOB: Krebs's lead sentence lists "dates of birth" but
+    ParkMobile's own clarification and BC's leaked-file field list both
+    OMIT DOB -- dropped from prose (single-source, uncorroborated by the
+    actual file). ParkMobile stated card data / SSN / driver's-license
+    numbers were NOT affected (Krebs) -- added.
+
+    [b] ATTRIBUTION -- DOWNGRADED (over-attestation, wrong-source). Prior:
+    "Krebs on Security + journalism consensus", moderate, concur-with-
+    caveat, attribution_source_id=krebs. Krebs NEVER names ShinyHunters
+    (0 hits) -- the seller is anonymous ("Someone is selling..."), surfaced
+    by Gemini Advisory; BC attributes only to generic "threat actors" (0
+    hits); the 2024 DoJ sentencing (60+ companies) does NOT name ParkMobile
+    (grep of DoJ raw: 0 "parkmobile" hits); ParkMobile is absent from
+    Wikipedia's ShinyHunters 2021 victim list (Pixlr/Nitro/Bonobos/AT&T/
+    Aditya Birla). So NO source supports the ShinyHunters label. Demoted to
+    attributing_org_confidence low, auspex_assessment contested,
+    attribution_level activity-cluster (added), attribution_source_id null,
+    attributing_org rewritten to state the seller is unnamed + ShinyHunters
+    is an AUSPEX cluster inference; added a notes subblock (cf. 2009-12/
+    iran-cyber-army-twitter template). actor_id criminal/shinyhunters
+    retained as an explicit cluster hypothesis per the corpus's data-broker
+    sibling modeling (task framing), NOT as sourced fact. false_flag_risk
+    suspected retained. This directly answers the task's "broker listing vs
+    confirmed" question: it is an ANONYMOUS broker listing, not a confirmed
+    ShinyHunters attribution and not a self-claim.
+
+    [c] DATES -- CORRECTED. disclosure_date 2021-04-06 -> 2021-04-12: the
+    Krebs article byline/footer is "This entry was posted on Monday 12th of
+    April 2021 06:18 PM" (12 Apr 2021 was a Monday); "April 6" appears
+    nowhere in the raw. Source published_on likewise 2021-04-06 -> 2021-04-12
+    (id-slug retains ..._2021-04-06 to avoid FK churn -- cf. the wishbone /
+    may-wave audits). attribution_date 2021-04-06 -> 2021-04-12. start_date
+    2021-03-01 = "March 2021" breach (ParkMobile notification 26 Mar 2021),
+    kept as a first-of-month approximation. end_date 2021-04-30 = BC free-
+    release date (confirmed: "released for free... yesterday", article dated
+    30 Apr 2021). BC published_on 2021-04-30 verified (visible byline).
+
+    [d] DOCTRINE_LINKS -- none. Financially-motivated criminal data-broker /
+    leak activity, no strategic doctrine; [] retained (per-event doctrine
+    none, criminal).
+
+    [e] ATTRIBUTION_LEVEL -- added activity-cluster (was absent). No source
+    names the actor; the ShinyHunters tie is a fuzzy cluster association,
+    weaker than the sibling Wishbone/May-wave events (named-actor, which
+    have verified self-claims) -- ParkMobile has neither self-claim nor
+    journalism naming.
+
+    [f] ACTOR_ID + TYPES. criminal/shinyhunters resolves to atlas actor id
+    criminal/shinyhunters (verified) -- retained as contested cluster
+    hypothesis (see [b]). incident_type [data-theft] -> [data-theft, leak]
+    (BC confirms the free full-database release). initial_vector n-day ->
+    unknown (the third-party-software vuln's known/novel status is unstated;
+    Struts/n-day was unsourced). Directionality: ParkMobile (orgs/parkmobile)
+    is the VICTIM, role primary -- retained.
+
+    FLAGS (not editable here): (1) event filename/id 2021-04/parkmobile-
+    shinyhunters -- the "-shinyhunters" suffix overstates a now-contested
+    attribution; FK-safe to rename (id referenced nowhere else) but left for
+    orchestrator (e.g. parkmobile-21m-leak). (2) actors/criminal/shinyhunters.
+    yaml ttp_summary lists "ParkMobile (21M, 2021)" as a ShinyHunters victim
+    -- now UNCORROBORATED; recommend review/removal. (3) targets/orgs/
+    parkmobile.yaml has sources: [] and its summary repeats the (now contested)
+    "ShinyHunters-cluster attribution" + a "third-party software" line --
+    could carry krebs + bleepingcomputer and soften the ShinyHunters claim.
+    (4) krebs source id-slug embeds the wrong date (2021-04-06); kept for
+    FK-stability, cosmetic only.

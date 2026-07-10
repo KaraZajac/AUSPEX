@@ -8,53 +8,228 @@ incident_type:
   - wiper
 initial_vector: unknown
 outcome_summary: |
-  IsaacWiper deployed against a Ukrainian government network on
-  invasion D-day; CaddyWiper deployed in mid-March 2022 against
-  Ukrainian banks and government. Data destruction at scale;
-  part of the densest concentration of destructive nation-state
-  operations on record.
+  IsaacWiper hit a Ukrainian governmental network on invasion
+  D-day (24 Feb 2022); CaddyWiper was detected on 14 March 2022
+  against a Ukrainian bank. Two distinct, code-unrelated wipers in
+  the invasion-coincident destructive wave against Ukraine — among
+  the densest concentration of destructive nation-state operations
+  on record.
 false_flag_risk: none
 campaign_id: hermetic-wave-feb-2022
 summary: |
-  ESET and CERT-UA attributed both wipers to Sandworm on the basis
-  of tooling and tradecraft. IsaacWiper overwrites disk contents
-  with pseudo-random data and zeros the MBR; CaddyWiper enumerates
-  files and overwrites their content with null bytes, then destroys
-  partition information using DeviceIoControl, while preserving
-  the Domain Controller distinguished name to keep the wiper
-  propagating laterally before the domain itself dies. Lateral
-  movement to victim hosts used valid credentials and Active
-  Directory-based deployment (Group Policy / scheduled tasks)
-  consistent with prior Sandworm Ukraine operations, and CERT-UA
-  observed CaddyWiper paired with the ArguePatch loader and the
-  ORCSHRED / SOLOSHRED Linux variants. The wiper wave continued
-  through 2022 with DoubleZero, AcidPour, and SwiftSlicer.
+  Two distinct wipers in the invasion-coincident destructive wave
+  against Ukraine. On 24 February 2022 — the day of the invasion —
+  ESET detected IsaacWiper against a Ukrainian governmental network;
+  it wipes the first 0x10000 bytes of each disk (the region holding
+  the master boot record) and then recursively wipes every file,
+  using random data from a Mersenne Twister PRNG. ESET recorded that
+  IsaacWiper "has no code similarity with HermeticWiper and is way
+  less sophisticated," and at disclosure could not attribute it. On
+  14 March 2022 ESET detected CaddyWiper against a Ukrainian bank;
+  it later recurred loaded by the ArguePatch loader, and in the
+  8 April 2022 Industroyer2 incident appeared alongside the ORCSHRED,
+  SOLOSHRED and AWFULSHRED wipers for non-Windows platforms (per the
+  CERT-UA notification). ESET's February 2023 retrospective
+  attributed the majority of the 2022 Ukraine wiper wave to Sandworm
+  "with varying degrees of confidence," noting that Sandworm
+  generally deployed its wipers through Active Directory Group Policy
+  (the POWERGAP script). The broader 2022–2023 wiper wave also
+  included DoubleZero, AcidRain (against Viasat KA-SAT modems) and
+  SwiftSlicer.
 attributions:
   - actor_id: ru/gru/74455/sandworm
-    attributing_org: ESET  # fixed 2026-07-01: the ESET 2022-02-24 report EXPLICITLY disclaims attribution ("not yet able to attribute"); the Sandworm attribution comes from ESET's Feb-2023 retrospective ("attribute the majority of these attacks to Sandworm, with varying degrees of confidence") — same fix as the sibling hermeticwiper event
+    attributing_org: ESET
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-02-24
     attribution_source_id: eset/2023-02-24_year-of-wiper-attacks-ukraine
+    notes: |
+      Attribution LATENCY + HEDGE. ESET's initial IsaacWiper report
+      (01 Mar 2022, the eset/2022-02-24_… source) explicitly states
+      "ESET Research has not yet been able to attribute these attacks
+      to a known threat actor," and records that IsaacWiper "has no
+      code similarity with HermeticWiper … we haven't found any
+      strong connection yet" — IsaacWiper was ESET's LEAST-confident
+      attribution and was unattributed at disclosure. The Sandworm
+      attribution comes only from ESET's 24 Feb 2023 retrospective,
+      which "attribute[s] the majority of these attacks to Sandworm,
+      with varying degrees of confidence" (hence moderate /
+      concur-with-caveat, not high). ESET names the group "Sandworm"
+      (= GRU Unit 74455) but does not spell out the unit in-text, so
+      attribution_level is named-actor. Neither cited source carries
+      a CERT-UA attribution of these two wipers to Sandworm.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-07-01 from attested: the cited ESET reporting attributes the actor (Sandworm) but does not state the russkiy-mir strategic goal in substance (same basis as the sibling hermeticwiper event); this is a targeted follow-up fix pending full census audit
+    confidence: strongly_inferred
     reasoning: |
-      Continuous invasion-support destructive operations against
-      Ukrainian government and banks — a strong inference of the
+      Invasion-coincident destructive operations against a Ukrainian
+      governmental network (IsaacWiper, invasion day) and a Ukrainian
+      bank (CaddyWiper, mid-March) — a strong inference of the
       russkiy-mir Ukraine-theater goal, but the cited ESET reporting
-      attributes the actor without articulating that strategic end.
+      documents the wipers and (in its 2023 retrospective) the
+      Sandworm actor without articulating that strategic end.
     attesting_source_id: null
+    inference_basis:
+      source_id: eset/2023-02-24_year-of-wiper-attacks-ukraine
+      signals:
+        - "ESET dates IsaacWiper to 24 Feb 2022 (invasion day) against a Ukrainian governmental network and CaddyWiper to 14 March 2022 against a Ukrainian bank — destructive operations confined to the Ukraine theatre in lockstep with the invasion"
+        - "ESET attributes the majority of the 2022 Ukraine wiper wave to Sandworm (GRU) with varying confidence — nation-state destructive tooling, not financially-motivated crime"
+      ruled_out: "the Russkiy Mir doctrine slug is not named by ESET and neither cited source states the strategic purpose; hence strongly_inferred, not attested"
+    counter_explanation: null
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/military-doctrine-2014
+    pillar_id: ru/military-doctrine-2014/non-contact-warfare
+    program_id: null
+    confidence: strongly_inferred
+    reasoning: |
+      IsaacWiper was deployed on 24 February 2022, the day the
+      kinetic invasion opened, with CaddyWiper following in mid-March
+      — destructive cyber effects sequenced with military action, the
+      textbook non-contact-warfare integration named in the 2014
+      Military Doctrine. AUSPEX inference — neither cited ESET source
+      discusses Russian military doctrine.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "IsaacWiper deployment timed to invasion day (24 Feb 2022); CaddyWiper follows on 14 March 2022 — destructive cyber effects sequenced with the kinetic campaign"
+        - "Nation-state destructive-only payloads against Ukrainian government and financial targets, later attributed to Sandworm (GRU) — not criminal or hacktivist activity"
+      ruled_out: "a purely criminal / hacktivist reading is rejected given the destructive-only payloads, invasion synchronization, and the later Sandworm (GRU) attribution; the ru/russkiy-mir territorial reading is captured as the separate link above"
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/ukraine-government
     role: primary
-  - target_id: orgs/ukraine-banking-sector
+  - target_id: sectors/finance/banking
+    country: ua
     role: primary
 sources:
   - eset/2022-02-24_hermeticwiper-isaacwiper
   - eset/2023-02-24_year-of-wiper-attacks-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against two ESET WeLiveSecurity sources, both already
+    raw-snapshotted + hashed (PRESERVE tier; snapshot keys re-verified
+    this pass, hashes match byte-for-byte).
+    S1 = eset/2022-02-24_hermeticwiper-isaacwiper "IsaacWiper and
+    HermeticWizard: New wiper and worm targeting Ukraine" (published
+    01 Mar 2022), sha256 9e7dbcbe…ec645a1, 103985 bytes.
+    S2 = eset/2023-02-24_year-of-wiper-attacks-ukraine "A year of
+    wiper attacks in Ukraine" (24 Feb 2023), sha256 30221f95…6579ab57,
+    90658 bytes.
+
+    [a] FACTS — the two distinct wipers verified separately.
+    IsaacWiper (S1): "On February 24th, 2022, a second destructive
+    attack against a Ukrainian governmental network started, using a
+    wiper we have named IsaacWiper" → governmental network, invasion
+    day. Mechanism corrected to S1's exact wording: "wipes the first
+    0x10000 bytes of each disk using the Mersenne Twister pseudorandom
+    generator … then … recursively wipes every file of each disk with
+    random bytes also generated by the Mersenne Twister PRNG." STRIPPED
+    the prior "zeros the MBR" (IsaacWiper overwrites the first 0x10000
+    bytes — which include the MBR — with pseudo-random data; it does
+    not zero the MBR). CaddyWiper (S2): "On March 14th, 2022, ESET
+    researchers detected an attack using CaddyWiper, which targeted a
+    Ukrainian bank" → 14 Mar 2022, a bank. STRIPPED the uncited
+    CaddyWiper mechanism block ("overwrites content with null bytes …
+    destroys partition information using DeviceIoControl … preserving
+    the Domain Controller distinguished name") — neither cited source
+    carries it (S1 predates CaddyWiper's 14 Mar discovery; S2 gives
+    only the one-sentence detection). Kept only S2-carried CaddyWiper
+    facts: ArguePatch loader ("loaded by the ArguePatch loader"),
+    and the 8 Apr 2022 Industroyer2 incident where CaddyWiper appeared
+    with "wipers for non-Windows platforms: ORCSHRED, SOLOSHRED, and
+    AWFULSHRED" (S2, "see the notification by CERT-UA"). Corrected
+    "Linux variants" → "wipers for non-Windows platforms" (S2's term)
+    and added AWFULSHRED (S2 lists all three). Deployment: kept the
+    S2-generalized "Sandworm used Active Directory Group Policy
+    (T1484.001) … the POWERGAP script"; STRIPPED "scheduled tasks"
+    (in NEITHER source) and dropped the IsaacWiper-specific "valid
+    credentials" claim (S1's Valid-Accounts/GPO/Impacket detail is in
+    its HermeticWiper section, not IsaacWiper). ANACHRONISM FIXED:
+    "AcidPour" → "AcidRain" — S2 names AcidRain ("the AcidRain wiper
+    campaign targeted Viasat KA-SAT modems"); AcidPour is a 2024
+    successor that a Feb-2023 source cannot mention. DoubleZero
+    (S2, 17 Mar 2022) ✓ and SwiftSlicer (S2, 25 Jan 2023) ✓ kept;
+    framed as the "2022–2023 wiper wave" since SwiftSlicer is 2023.
+
+    [b] ATTRIBUTION — over-attestation removed. Prior summary said
+    "ESET and CERT-UA attributed both wipers to Sandworm on the basis
+    of tooling and tradecraft" — NOT carried: (i) S1 explicitly
+    disclaims ("ESET Research has not yet been able to attribute these
+    attacks to a known threat actor"); (ii) S2 attributes only "the
+    majority of these attacks to Sandworm, with varying degrees of
+    confidence" (not cleanly "both wipers", no "tooling and tradecraft"
+    basis stated); (iii) no CERT-UA attribution of these two wipers to
+    Sandworm appears in either cited source. IsaacWiper hedge is
+    load-bearing: S1 says IsaacWiper "has no code similarity with
+    HermeticWiper … we haven't found any strong connection yet" — the
+    weakest link in the wave. Kept actor ru/gru/74455/sandworm but the
+    block already carried the correct calibration (ESET / moderate /
+    concur-with-caveat / dated 2023-02-24 / sourced to S2, from the
+    2026-07-01 pass); converted the stale inline comment to a proper
+    notes field and ADDED attribution_level.
+
+    [c] DATES — start_date 2022-02-24 ✓ (IsaacWiper onset, S1/S2).
+    disclosure_date 2022-03-01 ✓ (S1 published_on). end_date
+    2022-03-31 kept as the scoping boundary for the Feb–Mar wave;
+    CaddyWiper's Apr recurrences belong to the separate Industroyer2
+    event (2022-04/industroyer2-ukrenergo-attempt) and are cited here
+    only as context, not claimed. S1 published_on 2022-03-01 ✓
+    (URL /2022/03/01/, title matches; the id slug's "2022-02-24" is
+    the stable id, PRESERVED). S2 published_on 2023-02-24 ✓.
+
+    [d] DOCTRINE_LINKS — russkiy-mir/ukraine-theater kept
+    strongly_inferred (correct — the pillar goal "Ukraine as
+    continuous priority theater / protect compatriots" is strategic
+    doctrine that the ESET technical reports never state); ADDED the
+    missing inference_basis {source_id, signals, ruled_out}. ADDED a
+    second link ru/military-doctrine-2014/non-contact-warfare
+    (strongly_inferred, AUSPEX inference) — IsaacWiper's invasion-day
+    timing is textbook cyber-kinetic synchronization; mirrors the
+    sibling hermeticwiper event's dual-doctrine treatment for this
+    same campaign. Both are Russian (attacker) doctrines on a Russian
+    attack → attacker-rationale (default, omitted, matching sibling
+    schema). Neither is attested (no cited source states the terminal
+    goal), so attesting_source_id null on both.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (S2 names the
+    group "Sandworm"; it does not spell out "GRU Unit 74455" in-text,
+    so not named-unit). Matches the sibling hermeticwiper event.
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to
+    atlas/actors/ru/sandworm.yaml (internal id matches). No actor-file
+    edit. FLAG (not a defect): the actor record's tooling list already
+    names "CaddyWiper, IsaacWiper" (line 72) as Sandworm tooling —
+    firmer than ESET's hedge, but consistent with the corpus's later
+    Mandiant APT44-based actor model; left to the actor-file owner.
+
+    DEFECT FIXED beyond [a]-[f]: target orgs/ukraine-banking-sector
+    was a DANGLING FK (no atlas/targets/orgs/ukraine-banking-sector
+    registry file; cited by this event only, orphaning nothing).
+    Repointed to sectors/finance/banking + country: ua — the corpus
+    convention for a Ukrainian bank victim (sector targets are a
+    fileless controlled vocabulary used by 12+ events; cf.
+    lazarus-polish-banks using sectors/finance/banking + country: pl).
+    orgs/ukraine-government (IsaacWiper's governmental network) is a
+    real shared target (used by 6 events) — kept.
+
+    CONFLATION GUARDS held: HermeticWiper (2022-02/hermeticwiper,
+    23 Feb) and WhisperGate (2022-01/whispergate, attributed to Cadet
+    Blizzard/DEV-0586, NOT Sandworm) are separate events; this event's
+    facts are confined to IsaacWiper + CaddyWiper. Industroyer2 named
+    only as the incident where CaddyWiper recurred (context, not scope).
+
+    RESIDUAL UNCERTAINTY: IsaacWiper's Sandworm attribution is ESET's
+    weakest in the wave ("no strong connection yet" to HermeticWiper);
+    the single actor block bundles both wipers under S2's hedged
+    "majority … varying degrees of confidence," which is the honest
+    ceiling the cited sources support.

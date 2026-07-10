@@ -5,16 +5,19 @@ disclosure_date: 2018-02-12
 end_date: 2018-02-09
 incident_type:
   - destructive
-  - disruption
+  - wiper
 initial_vector: unknown
 outcome_summary: |
-  Destructive malware deployed during the PyeongChang Winter
-  Olympics opening ceremony. Disrupted Wi-Fi, the ticketing
-  application, and RFID gates. Deliberately seeded with Lazarus/
-  Chinese false-flag artifacts; widely cited as the first
-  nation-state operation in which false-flag tradecraft was
-  publicly dissected.
-false_flag_risk: confirmed
+  Destructive-only wiper deployed against the IT systems supporting
+  the 2018 PyeongChang Winter Olympics, detonating hours before the
+  Feb 9 opening ceremony. Degraded the opening-ceremony Wi-Fi and the
+  ticketing system (attendees could not print tickets) and, per the
+  DOJ, "disrupted thousands of computers used to support the 2018
+  PyeongChang Winter Olympics." Deliberately seeded with planted
+  Lazarus/DPRK and Chinese false-flag artifacts; the canonical worked
+  example of nation-state false-flag tradecraft being publicly
+  dissected.
+false_flag_risk: confirmed  # planted DPRK/Lazarus (forged Rich header) + generic Chinese-hacker artifacts to misdirect attribution; assessed actor is ru/gru/74455/sandworm (UK FCDO + US DOJ, Oct 2020). Planted DPRK actor = kp/rgb/lazarus; no specific China actor named (FCDO says "Chinese hackers" generically).
 operators_named:
   - andrienko-yuriy  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
   - detistov-sergey  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
@@ -23,31 +26,45 @@ operators_named:
   - ochichenko-artem  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
   - pliskin-petr  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
 summary: |
-  UK NCSC and DOJ Oct 2020 attribution confirmed GRU Unit 74455
-  responsibility. UK FCDO press release directly cited retaliation
-  for Russia's IOC flag ban following the McLaren-Report doping
-  consequences — a well-documented regime-prestige framing (the
-  fuller FCDO text is pending QC re-verification; see the link note).
-  Olympic Destroyer is a modular self-propagating wiper that
-  performs credential dumping via embedded Mimikatz-equivalent and
-  browser-credential modules, then spreads laterally with the
-  harvested valid credentials via PsExec and WMI to wipe Volume
-  Shadow Copies, clear Windows event logs, delete backup catalogs,
-  and disable services on each host. Kaspersky's GReAT
-  documented attribution-misdirection artifacts deliberately
-  seeded to point at Lazarus (a forged Rich header matching
-  Bluenoroff samples) — the operation became the canonical
-  worked example of false-flag tradecraft in nation-state cyber.
+  UK NCSC/FCDO and the US DOJ (both Oct 2020) attribute Olympic
+  Destroyer to the GRU's Main Centre for Special Technologies
+  (GTsST / Unit 74455 / Sandworm). The DOJ indictment states the
+  motive at the goal level: the intrusions were "intended to support
+  Russian government efforts to undermine, retaliate against, or
+  otherwise destabilize ... the 2018 PyeongChang Winter Olympic Games
+  after Russian athletes were banned from participating under their
+  nation's flag, as a consequence of Russian government-sponsored
+  doping effort." (The FCDO release itself frames the op only as
+  "cynical and reckless" sabotage and does NOT use flag-ban/doping
+  language — that regime-prestige attestation is the DOJ's, not the
+  FCDO's; a prior draft mis-attributed it to the FCDO.)
+
+  Per Cisco Talos, Olympic Destroyer is a self-propagating,
+  destructive-only wiper ("no exfiltration of data"): it harvests
+  credentials via a browser-credential stealer plus a system stealer
+  that pulls LSASS secrets "with a technique similar to that used by
+  Mimikatz," then spreads via PsExec and WMI using the stolen
+  credentials to delete Volume Shadow Copies (vssadmin), delete the
+  backup catalog (wbadmin), clear Windows event logs (wevtutil),
+  disable the recovery console (bcdedit), and disable all services on
+  each host. Kaspersky's GReAT showed the sample's Rich header had
+  been "forged to perfectly match the fingerprint used by Lazarus" — a
+  deliberately planted DPRK false flag (100% match to known Lazarus
+  components) — and the FCDO confirmed the GRU "attempted to disguise
+  itself as North Korean and Chinese hackers"; the operation became
+  the canonical worked example of nation-state false-flag tradecraft.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: UK NCSC / UK FCDO
     attributing_org_confidence: high
+    attribution_level: named-unit  # FCDO names "the GRU's Main Centre for Special Technologies, GTsST also known by its field post number 74455 ... Sandworm"
     auspex_assessment: concur
     attribution_date: 2020-10-19
     attribution_source_id: ukgov/2020-10-19_olympic-destroyer-attribution
   - actor_id: ru/gru/74455/sandworm
     attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ indictment charges six officers of "Unit 74455 of the Russian Main Intelligence Directorate (GRU)"
     auspex_assessment: concur
     attribution_date: 2020-10-15
     attribution_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
@@ -55,20 +72,30 @@ doctrine_links:
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/info-psychological-defense
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
+    perspective: attacker-rationale
     reasoning: |
-      The GRU retaliation-for-IOC-flag-ban framing is widely
-      documented and is the substance of the UK FCDO attribution;
-      the QC pre-pass fetched a UK excerpt framing the op as 'cynical
-      and reckless' sabotage without the flag-ban/McLaren/retaliation
-      language, so as verified the linkage is inferred — restore to
-      attested once the fuller FCDO statement is confirmed.
-    attesting_source_id: ukgov/2020-10-19_olympic-destroyer-attribution
+      The DOJ Oct-2020 indictment states the strategic purpose at the
+      goal level: the GRU attack on the PyeongChang Games was
+      retaliation "after Russian athletes were banned from participating
+      under their nation's flag, as a consequence of Russian government-
+      sponsored doping effort." Russia framed the WADA/IOC doping
+      sanctions and flag ban as a Western political campaign to humiliate
+      the nation and undermine its patriotic prestige; a destructive
+      cyber reprisal against the Games is exactly the "proportionate
+      response to perceived Western information confrontation" that the
+      2016 Information Security Doctrine bureaucratically licenses, and
+      maps to the info-psychological-defense pillar's "patriotic
+      traditions / historical foundations" clause. (Ruled out:
+      ru/russkiy-mir — that doctrine is explicitly scoped to the
+      post-Soviet near abroad; South Korea / the IOC fall outside it, so
+      Sandworm's default Russkiy-Mir alignment does NOT drive this event.)
+      The attesting quote is the DOJ's, not the FCDO's — the FCDO release
+      only calls the op "cynical and reckless."
+    attesting_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
     inference_basis:
-      source_id: ukgov/2020-10-19_olympic-destroyer-attribution
-      signals:
-        - "UK FCDO + DOJ attribute Olympic Destroyer to GRU 74455; the retaliation-for-doping-ban framing is widely documented but not in the fetched UK excerpt (which says 'cynical and reckless')"
-      ruled_out: "the IOC-flag-ban retaliation goal in the fetched source text — pending re-verification of the fuller FCDO statement"
+      source_quote: "These GRU hackers and their co-conspirators engaged in computer intrusions and attacks intended to support Russian government efforts to undermine, retaliate against, or otherwise destabilize: ... (5) the 2018 PyeongChang Winter Olympic Games after Russian athletes were banned from participating under their nation's flag, as a consequence of Russian government-sponsored doping effort."
+      source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
     counter_explanation: null
     contested: false
     analyst: claude
@@ -78,3 +105,85 @@ targets:
 sources:
   - ukgov/2020-10-19_olympic-destroyer-attribution
   - doj/2020-10-15_sandworm-six-gru-officers-indictment
+  - blogtalosintelligence/2018-02-12_olympic-destroyer
+  - securelist/2018-03-08_olympicdestroyer-trick-the-industry
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. The canonical false-flag case (Feb-2018 PyeongChang).
+    Two cited sources RE-SOURCED with two technical/analysis primaries added (badrabbit
+    model): the pre-audit event cited only the UK FCDO attribution + DOJ indictment,
+    neither of which carries the wiper mechanism or the forged-fingerprint deception.
+    All four sources now snapshotted (PRESERVE tier; only snapshot keys added):
+      • ukgov/2020-10-19_olympic-destroyer-attribution — content_sha256 71ed3fb6…2b3229bb,
+        87389 bytes (SNAPSHOT NEWLY CAPTURED this audit; live HTTP 200).
+      • doj/2020-10-15_sandworm-six-gru-officers-indictment — content_sha256 89d5d4f9…620f02eb
+        (Wayback capture; live justice.gov Akamai-bot-walled).
+      • blogtalosintelligence/2018-02-12_olympic-destroyer — content_sha256 f059dd0b…47721551,
+        74529 bytes (NEW; the destructive-payload teardown).
+      • securelist/2018-03-08_olympicdestroyer-trick-the-industry — content_sha256 ef294d01…b7e6cc36,
+        272895 bytes (NEW; the false-flag teardown).
+
+    [a] FACTS — corrected two defects:
+      • outcome_summary: "RFID gates" REMOVED — that detail is in NONE of the four sources
+        (it is a WIRED detail). Talos carries the sourced disruption: "individuals could not
+        print their tickets. The opening ceremony reporting was degraded due to WiFi failing
+        for reporters on site." DOJ carries "disrupted thousands of computers used to support
+        the 2018 PyeongChang Winter Olympics." "First … publicly dissected" superlative
+        softened to "canonical worked example."
+      • summary: the claim "UK FCDO press release directly cited retaliation for Russia's IOC
+        flag ban following the McLaren-Report doping consequences" was FALSE — the full FCDO
+        page (10.5K chars of text) contains NO "flag"/"doping"/"ban"/"retaliation" language
+        (verified by grep of the snapshot); it says only "cynical and reckless." The
+        retaliation-for-doping-ban attestation is the DOJ's. Re-attributed; "McLaren-Report"
+        (uncited) dropped; the "pending QC re-verification" hedge removed (now resolved).
+      • Wiper mechanism now fully carried by Talos (verbatim): "only destructive functionality.
+        There does not appear to be any exfiltration of data"; "deleting shadow copies, event
+        logs and trying to use PsExec & WMI to further move through the environment";
+        "vssadmin.exe delete shadows /all /quiet"; "wbadmin.exe delete catalog -quiet";
+        "wevtutil.exe cl System"/"cl Security"; bcdedit disables the recovery console; "the
+        destroyer disables all the services on the system" (ChangeServiceConfigW → start
+        type 4); "System Credential Stealer … obtain credentials from LSASS with a technique
+        similar to that used by Mimikatz" + a browser stealer; propagation via ARP/WMI.
+        Securelist: "a network worm … credential stealer modules and a wiper."
+
+    [b] ATTRIBUTION — both entries kept high/concur (GTsST/Unit 74455/Sandworm). UKGOV entry
+      confirmed named-unit from the snapshot: "the GRU's Main Centre for Special Technologies,
+      GTsST also known by its field post number 74455 … Sandworm". DOJ entry named-unit:
+      "Unit 74455 of the Russian Main Intelligence Directorate (GRU)". No over-attestation.
+
+    [c] DATES — start 2018-02-09 (opening-ceremony detonation; DOJ: intrusions "December 2017
+      through February 2018 … culminated in the Feb. 9, 2018, destructive malware attack against
+      the opening ceremony"), disclosure 2018-02-12 (Talos public teardown; games officials
+      confirmed 2/11), end 2018-02-09 (single-day payload) — all kept, all sourced. Source
+      published_on: Talos 2018-02-12 and Securelist 2018-03-08 confirmed from snapshot metadata;
+      UKGOV 2020-10-19; DOJ attribution_date 2020-10-15 (indictment-return) vs PR published
+      2020-10-19.
+
+    [d] DOCTRINE — ru/info-security-2016 / info-psychological-defense UPGRADED
+      strongly_inferred → attested (added perspective: attacker-rationale). The DOJ states the
+      terminal goal in substance (verbatim quote in inference_basis: the attack was retaliation
+      "after Russian athletes were banned from participating under their nation's flag, as a
+      consequence of Russian government-sponsored doping effort"). Re-pointed attesting_source_id
+      from the FCDO (which does NOT carry the goal) to the DOJ. ru/russkiy-mir explicitly RULED
+      OUT (out of near-abroad geographic scope — target is South Korea / the IOC).
+
+    [e] ATTRIBUTION_LEVEL — added named-unit to BOTH attribution entries (was absent).
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml (id:
+      ru/gru/74455/sandworm); present on both attributions. No top-level actor_id in the event
+      schema (house convention: attributions[]). operators_named — the six DOJ officers
+      (Andrienko, Detistov, Frolov, Kovalev, Ochichenko, Pliskin) verified present in the DOJ raw.
+
+    FALSE-FLAG (confirmed) — planted actors captured: DPRK/Lazarus via a Rich header "forged to
+    perfectly match the fingerprint used by Lazarus" (Kaspersky, 100% match to known Lazarus
+    components; kp/rgb/lazarus) PLUS generic "Chinese hackers" artifacts (FCDO; no specific China
+    actor named). Assessed/true actor: ru/gru/74455/sandworm. Directionality: PyeongChang/IOC
+    orgs = victim, Russia/GRU = attacker.
+
+    NB (not edited — flagged): the DOJ source record's id slug + the event attribution_date retain
+    2020-10-15 (indictment-return date) while the DOJ PR itself published 2020-10-19; consistent
+    with the sibling Sandworm events (industroyer, notpetya).

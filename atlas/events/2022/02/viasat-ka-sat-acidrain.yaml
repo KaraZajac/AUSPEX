@@ -1,48 +1,61 @@
 id: 2022-02/viasat-ka-sat-acidrain
 name: Viasat KA-SAT / AcidRain (invasion-day satellite disruption)
 start_date: 2022-02-24
-disclosure_date: 2022-03-10
+disclosure_date: 2022-03-30
 end_date: 2022-02-24
 incident_type:
   - destructive
-  - disruption
   - wiper
-initial_vector: valid-creds
+initial_vector: valid-creds  # Viasat: attacker exploited a misconfiguration in a VPN appliance to reach the trusted KA-SAT management segment, then abused the legitimate modem-management channel (access-control weakness; no software CVE described)
 outcome_summary: |
-  AcidRain wiper pushed via Viasat's management network bricked
-  tens of thousands of consumer modems serving Ukrainian military
-  C2 and European broadband customers. Major spillover effects
-  including collateral wind-turbine outages in Germany. Degraded
-  Ukrainian military C2 in the opening hours of the invasion.
+  AcidRain wiper, pushed over Viasat's KA-SAT modem-management
+  channel, rendered several thousand satellite modems in Ukraine
+  and tens of thousands of fixed broadband modems across Europe
+  inoperable at the outset of Russia's 24 Feb 2022 invasion. The
+  disruption is widely assessed to have degraded Ukrainian
+  command-and-control connectivity as the invasion began (EU: the
+  strike thereby "facilitat[ed] the military aggression").
+  Notable spillover: ~5,800 Enercon wind turbines in Germany lost
+  remote monitoring/control.
 false_flag_risk: none
 campaign_id: hermetic-wave-feb-2022
 summary: |
-  EU Council, UK FCDO, US State, and Five Eyes partners issued a
-  coordinated joint attribution to Russia in May 2022, explicitly
-  naming the invasion-support objective. SentinelLabs technical
-  analysis (Mar 2022) traced AcidRain tooling to GRU/Sandworm by
-  linking shared development idioms with the prior VPNFilter
-  router implant. AcidRain is a MIPS ELF wiper for SurfBeam2 and
-  similar satellite modems that overwrites all writable flash and
-  storage paths (/dev/mtd*, /dev/mmcblk*, /dev/sd*) with bytes and
-  reboots, bricking the modem until physical replacement. Initial
-  access was via valid credentials abused at Viasat's KA-SAT
-  management plane (operated by Skylogic), pivoting from a
-  misconfigured VPN appliance and pushing the wiper over the
-  legitimate modem-management channel to tens of thousands of
-  consumer modems serving Ukrainian military C2 and European
-  broadband customers.
+  On 24 February 2022 a wiper later named AcidRain was pushed over
+  Viasat's KA-SAT modem-management network, bricking satellite
+  modems in Ukraine and across Europe at the hour of Russia's
+  invasion. AcidRain is a MIPS ELF wiper (against SurfBeam2-class
+  satellite modems): it iterates over device files (/dev/mtd*,
+  /dev/mmcblk*, /dev/sd* and virtual block devices), overwrites
+  each with up to 0x40000 bytes or erases /dev/mtd* via MEM*
+  IOCTLs, then reboots the device, rendering it inoperable (per
+  Viasat, not permanently — recoverable by factory reset or
+  replacement). Entry, per Viasat's incident overview, was a
+  misconfiguration in a VPN appliance that gave remote access to
+  the trusted KA-SAT management segment (administered by
+  Skylogic); the attacker moved laterally and issued "legitimate,
+  targeted management commands" against a large number of
+  residential modems simultaneously. SentinelLabs (31 Mar 2022)
+  assessed with MEDIUM confidence a developmental link between
+  AcidRain and a VPNFilter stage-3 ('dstr') plugin — shared MIPS
+  ELF / libc code and compiler artifacts — but explicitly could
+  not "definitively tie AcidRain to VPNFilter (or the larger
+  Sandworm threat cluster)." On 10 May 2022 the EU, with US, UK
+  and Five Eyes partners, formally attributed the operation to the
+  Russian Federation, noting it took place "one hour before" the
+  invasion "thus facilitating the military aggression."
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: EU Council / UK FCDO / US State (Five Eyes)
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: nation
+    auspex_assessment: concur-with-caveat  # AUDIT 2026-07-10: EU declaration attributes at nation level ("malicious cyber activity conducted by the Russian Federation"); it names no service/unit. The GRU-74455/Sandworm pin is AUSPEX's, resting on SentinelLabs' medium-confidence code link + the broader FVEY GRU attribution.
     attribution_date: 2022-05-10
     attribution_source_id: council-eu/2022-05-10_viasat-russia-attribution
   - actor_id: ru/gru/74455/sandworm
     attributing_org: SentinelLabs
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate
+    attribution_level: named-unit
+    auspex_assessment: concur-with-caveat  # AUDIT 2026-07-10: was high/concur (over-attested). S1 is explicit: "medium-confidence" developmental similarity to a VPNFilter plugin, and "we cannot definitively tie AcidRain to VPNFilter (or the larger Sandworm threat cluster)." The unit link is inferential, not asserted.
     attribution_date: 2022-03-31
     attribution_source_id: sentinelone/2022-03-31_acidrain-viasat
 doctrine_links:
@@ -50,11 +63,17 @@ doctrine_links:
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
     confidence: attested
+    perspective: attacker-rationale
     reasoning: |
-      EU/UK/US joint attribution explicitly names Russia and the
-      invasion-support objective. Coordinated cyber strike with
-      kinetic invasion is paradigmatic non-contact-warfare
-      integration.
+      Cyber wiper strike timed to the hour of the kinetic invasion
+      and, per the EU/FVEY attribution, launched to facilitate it —
+      paradigmatic non-contact / indirect warfare integrated with
+      conventional force.
+    inference_basis:
+      source_quote: |
+        The cyberattack took place one hour before Russia's
+        unprovoked and unjustified invasion of Ukraine on 24
+        February 2022 thus facilitating the military aggression.
     attesting_source_id: council-eu/2022-05-10_viasat-russia-attribution
     counter_explanation: null
     contested: false
@@ -62,22 +81,118 @@ doctrine_links:
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      European collateral (German wind farm outages, broadband
-      disruption across France/Italy/UK) reads as tolerated /
-      desired spillover signaling to NATO members supporting
-      Ukraine.
+      European spillover (tens of thousands of broadband modems,
+      ~5,800 German Enercon wind turbines) is consistent with
+      Russia's NATO-cohesion-degradation aim, but the cited sources
+      frame the European impact as indiscriminate collateral rather
+      than deliberate NATO signaling — hence plausible, not attested.
+    inference_basis:
+      signals:
+        - "SentinelLabs: 5,800 Enercon wind turbines in Germany rendered unable to communicate for remote monitoring/control"
+        - "EU: the cyberattack affected 'several EU Member States' and such attacks 'could spill over into other countries and cause systemic effects'"
+      alternatives:
+        - "Purely indiscriminate collateral of a Ukraine-focused strike, with no NATO-directed signaling intent (EU characterises the outages as 'indiscriminate')"
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/viasat-ka-sat
     role: staging
-  - target_id: orgs/ukraine-military-c2
+  - target_id: orgs/ukraine-government
     role: primary
   - target_id: orgs/enercon-german-wind-farms
     role: collateral
 sources:
   - council-eu/2022-05-10_viasat-russia-attribution
   - sentinelone/2022-03-31_acidrain-viasat
+  - viasat/2022-03-30_ka-sat-network-cyber-attack-overview
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    AUDIT 2026-07-10 (claude-opus-4.8 / effort max). 6-point audit vs
+    RAW cited sources; all three sources snapshotted + SHA-256 hashed.
+
+    Snapshots:
+      - sentinelone/2022-03-31_acidrain-viasat  (HTTP 200 live, 341 KB)
+        sha256 d4c60c27dcdd185533d5ce6a83115479017ac459d7a9bca6bea712e730c1722d
+      - council-eu/2022-05-10_viasat-russia-attribution  (live consilium
+        HTTP 403 Cloudflare; captured from Wayback 20220521101835, HTTP 200)
+        sha256 2b7128b164578fd0b5f821bf3d4e804d43cbcf3b38382be79c2d3acf41b726df
+      - viasat/2022-03-30_ka-sat-network-cyber-attack-overview  (HTTP 200
+        live, 217 KB) — ADDED this audit (badrabbit-model re-source; the
+        operator's own overview carries the modem-scale + intrusion vector)
+        sha256 b47e6e447432e01c15c13e7738d8415953ef9b8fa9766b15bdd5299049d979c1
+
+    [a] FACTS — corrected several over-claims:
+      * "tens of thousands of consumer modems" was carried by NEITHER
+        cited source. Viasat's overview carries the true scale, now cited:
+        "the cyber-attack did impact several thousand customers located in
+        Ukraine and tens of thousands of other fixed broadband customers
+        across Europe." Reworded outcome/summary to match.
+      * "bricking the modem until physical replacement" overstated
+        permanence. S1: after wiping "the device is rebooted ... rendered
+        inoperable"; Viasat: modems "not permanently unusable" (factory
+        reset or replacement). Softened accordingly.
+      * "serving Ukrainian military C2" / "Degraded Ukrainian military C2"
+        stated as fact; S1 carries it only as suspicion ("suspicions arose
+        that an attempt to take out Ukrainian military command-and-control
+        capabilities"). Reframed to "widely assessed to have degraded
+        Ukrainian command-and-control," anchored to the EU's "facilitating
+        the military aggression."
+      * Initial-access prose said "valid credentials abused"; sources say a
+        MISCONFIGURATION was exploited. Viasat: "exploiting a misconfiguration
+        in a VPN appliance to gain remote access to the trusted management
+        segment of the KA-SAT network"; then "legitimate, targeted management
+        commands on a large number of residential modems." Corrected.
+      * VERIFIED & kept: MIPS ELF wiper; /dev/mtd*, /dev/mmcblk*, /dev/sd*
+        + virtual block devices; 0x40000-byte overwrite / MEM* IOCTL erase
+        (all S1 verbatim); Skylogic administers KA-SAT (S1); SurfBeam2 modem
+        family (S1); ~5,800 Enercon wind turbines in Germany (S1 verbatim);
+        VPNFilter 'dstr' plugin code overlap (S1).
+    [b] ATTRIBUTION — over-attestation fixed. SentinelLabs entry was
+        high/concur; S1 is explicitly medium-confidence and "cannot
+        definitively tie AcidRain to ... the larger Sandworm threat cluster"
+        -> attributing_org_confidence: moderate, auspex_assessment:
+        concur-with-caveat, attribution_level: named-unit. EU entry: EU
+        attributes at NATION level ("Russian Federation"; no unit named) ->
+        attribution_level: nation, auspex_assessment: concur-with-caveat
+        (unit pin is AUSPEX/FVEY-consensus, finer than the EU statement).
+        actor_id ru/gru/74455/sandworm retained (consensus + MISP-galaxy).
+    [c] DATES — disclosure_date was 2022-03-10 (unsourced, tied to no cited
+        source). Reset to 2022-03-30 = Viasat's own incident overview, the
+        first authoritative public disclosure of the cyberattack and now a
+        cited source. start/end 2022-02-24 verified (EU: "one hour before"
+        the 24 Feb invasion; S1: "On Thursday, February 24th, 2022").
+        published_on verified: S1 byline "March 31, 2022"; EU declaration
+        dated 10 May 2022; Viasat overview 30 Mar 2022 (S1: "On Wednesday,
+        March 30th, 2022, Viasat finally released a statement").
+    [d] DOCTRINE — non-contact-warfare kept ATTESTED; added inference_basis.
+        source_quote (EU: "The cyberattack took place one hour before
+        Russia's ... invasion of Ukraine on 24 February 2022 thus
+        facilitating the military aggression") + attesting_source_id +
+        perspective: attacker-rationale. nato-degradation DOWNGRADED
+        strongly_inferred -> plausible (sources call the European impact
+        "indiscriminate", undercutting deliberate NATO-signaling); added
+        inference_basis {signals[], alternatives[]} + perspective.
+    [e] ATTRIBUTION_LEVEL — was missing; added per-attribution (nation for
+        EU, named-unit for SentinelLabs).
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml
+        (id: ru/gru/74455/sandworm). OK.
+
+    FLAGS for orchestrator (out of audit scope — target files):
+      * target orgs/ukraine-military-c2 did NOT resolve (no file). Re-pointed
+        the primary target to orgs/ukraine-government (exists; matches EU
+        "public authorities ... in Ukraine"). Suspected military-C2 objective
+        retained in prose (S1 suspicion).
+      * target orgs/enercon-german-wind-farms does NOT resolve (no file) —
+        kept (well-sourced collateral: S1 "5,800 Enercon wind turbines");
+        NEEDS-CREATION flag (org, Germany, sector energy/electric-power, ~5,800
+        wind turbines, collateral victim). Left dangling for FK propagation.
+      * campaign_id hermetic-wave-feb-2022 is a free-text grouping (4 events,
+        no campaigns/ dir in repo) — left as-is.

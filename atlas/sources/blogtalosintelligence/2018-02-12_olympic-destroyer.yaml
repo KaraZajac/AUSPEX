@@ -1,0 +1,56 @@
+id: blogtalosintelligence/2018-02-12_olympic-destroyer
+kind: vendor-research
+publisher: "Cisco Talos"
+title: "Olympic Destroyer Takes Aim At Winter Olympics"
+url: "https://blog.talosintelligence.com/olympic-destroyer/"
+archive_url: null
+published_on: 2018-02-12
+retrieved_on: 2026-07-10
+tier: primary
+raw_snapshot: blogtalosintelligence__2018-02-12_olympic-destroyer.html
+content_sha256: f059dd0b50bcdd1f57f0ee16dccc38b228ad46f8b22a138f3d9b101547721551
+notes: |
+  Cisco Talos' first-hand technical analysis of the Olympic Destroyer wiper
+  used against the 2018 PyeongChang Winter Olympics (Warren Mercer & Paul
+  Rascagneres, published 2018-02-12T13:16Z; updated 2/12 and 2/13). The
+  canonical destructive-payload teardown; makes NO nation/actor attribution
+  (explicitly the point — Talos declined to attribute).
+
+  Supporting quotes (verbatim from snapshot):
+  - "The samples identified, however, are not from adversaries looking for
+    information from the games but instead they are aimed to disrupt the games."
+  - "The samples analysed appear to perform only destructive functionality.
+    There does not appear to be any exfiltration of data."
+  - "The destructive nature of this malware aims to render the machine unusable
+    by deleting shadow copies, event logs and trying to use PsExec & WMI to
+    further move through the environment. This is something we have witnessed
+    previously with BadRabbit and Nyetya."
+  - "the malware first deletes all possible shadow copies on the system using
+    vssadmin: C:\\Windows\\system32\\cmd.exe /c c:\\Windows\\system32\\vssadmin.exe
+    delete shadows /all /quiet"
+  - "C:\\Windows\\system32\\cmd.exe /c wbadmin.exe delete catalog -quiet" (backup
+    catalog deletion) and bcdedit used "to ensure that the Windows recovery
+    console does not attempt to repair anything"
+  - "C:\\Windows\\system32\\cmd.exe /c wevtutil.exe cl System" / "wevtutil.exe cl
+    Security" (Windows event-log clearing)
+  - "Additionally, the destroyer disables all the services on the system: The
+    malware uses the ChangeServiceConfigW API to change the start type to 4 which
+    means: 'Disabled'"
+  - "System Credential Stealer ... The stealer attempts to obtain credentials
+    from LSASS with a technique similar to that used by Mimikatz." (plus a
+    separate dropped "Browser Credential Stealer")
+  - "The initial stage is responsible for propagation. The network discovery is
+    performed using two techniques: By checking the ARP table with the Windows
+    API GetIPNetTable; By WMI" (self-propagation with harvested credentials)
+  - "individuals could not print their tickets. The opening ceremony reporting
+    was degraded due to WiFi failing for reporters on site." (Games-operations
+    disruption; NO "RFID gates" language appears in this source)
+  - "We identified 44 individual accounts in the binary." (hard-coded stolen
+    PyeongChang credentials embedded for lateral movement)
+
+  AUDIT (2026-07-10, claude-opus-4.8/max): created during the Olympic Destroyer
+  event audit as the primary destructive-payload source (the pre-audit event
+  cited only the UK FCDO attribution + DOJ indictment, neither of which carries
+  the wiper mechanism). Fetched live (HTTP 200, 74,529 bytes); canonical URL and
+  datePublished 2018-02-12T13:16Z confirmed from snapshot metadata.
+  content_sha256 f059dd0b…47721551.

@@ -1,39 +1,179 @@
 id: 2022-03/raccoon-stealer-takedown
 name: Raccoon Stealer infrastructure dismantled; Sokolovsky detained
-start_date: 2022-03-15
-disclosure_date: 2022-10-25
-end_date: 2022-10-25
+start_date: 2022-03-20  # AUDIT 2026-07-10: was 2022-03-15 (unsourced). Krebs: Sokolovsky arrested in the Netherlands on Mar. 20, 2022 and the Raccoon infrastructure seized concurrently; DOJ says only "In March 2022".
+disclosure_date: 2022-10-25  # DOJ WDTX indictment unsealed / raccoon.ic3.gov announced
+end_date: 2022-10-25  # indictment-unsealing milestone (disclosure); the takedown ACTION itself was March 2022
 incident_type:
   - disruption
+  - law-enforcement
 initial_vector: unknown
 outcome_summary: |
-  FBI, Italian, and Dutch law enforcement dismantled the
-  command-and-control infrastructure of the Raccoon Stealer
-  malware-as-a-service in March 2022. The malware harvested
-  50M+ credentials from approximately 200K victim devices
-  and was a major supply for Genesis Market and the broader
-  infostealer-log resale ecosystem. Alleged developer
-  Mark Sokolovsky (Ukrainian national) was detained in
-  the Netherlands while fleeing the Russian invasion of
-  Ukraine, and extradited to the US in October 2022 to
-  face charges in the Western District of Texas.
+  In March 2022, concurrent with Mark Sokolovsky's arrest by Dutch
+  authorities, the FBI and law-enforcement partners in Italy and the
+  Netherlands dismantled the digital infrastructure supporting the
+  Raccoon Infostealer malware-as-a-service, taking its then-existing
+  version offline. Raccoon was leased to criminal customers for
+  approximately $200/month in cryptocurrency and used — via ruses such
+  as email phishing — to steal log-in credentials and financial data;
+  the FBI identified more than 50 million unique credentials and forms
+  of identification (including over four million email addresses) from
+  what it described as millions of potential victims worldwide, and
+  stood up raccoon.ic3.gov for victim notification. Stolen data was
+  used to commit financial crimes or resold on cybercrime forums.
+  Sokolovsky, a 26-year-old Ukrainian national, was detained in the
+  Netherlands in March 2022 after fleeing Ukraine following the Russian
+  invasion; a WDTX federal grand-jury indictment was unsealed on
+  Oct 25, 2022 while he was held pending extradition, and he was
+  extradited to the United States in February 2024 (initial court
+  appearance Feb 9, 2024).
 false_flag_risk: none
 summary: |
-  The Raccoon takedown was the precursor to the larger
-  Operation Magnus / RedLine action (Oct 2024) and the
-  Lumma disruption (May 2025) — the canonical infostealer-
-  enforcement template later refined into court-ordered
-  domain seizure plus operator-extradition. AUSPEX
-  classifies as criminal-baseline.
+  AUSPEX classifies this as criminal-baseline: a financially motivated
+  infostealer malware-as-a-service with no state nexus or doctrinal
+  targeting. Analytically, the FBI-led Raccoon takedown prefigures the
+  later US-involved infostealer-enforcement tempo — court-ordered
+  infrastructure seizure paired with operator indictment/extradition,
+  e.g. Operation Magnus / RedLine (Oct 2024) — but that template
+  lineage is AUSPEX framing, not a claim carried by the cited primaries.
 attributions:
-  - actor_id: null
-    attributing_org: FBI + Italian National Police + Dutch Police
+  - actor_id: null  # counter-action (LE takedown + indictment); subject = Raccoon Infostealer MaaS / Mark Sokolovsky, named in prose
+    attributing_org: FBI + law enforcement partners in Italy and the Netherlands
     attributing_org_confidence: high
+    attribution_level: named-actor  # Raccoon Infostealer / Sokolovsky named as the disrupted subject; no attacker-state attributed (counter-action)
     auspex_assessment: concur
     attribution_date: 2022-10-25
-    attribution_source_id: doj/2022-10-25_sokolovsky-raccoon-extradition
-doctrine_links: []
+    attribution_source_id: doj/2022-10-25_newly-unsealed-indictment-sokolovsky-raccoon
+    notes: |
+      Null-actor law-enforcement counter-action (directionality model):
+      the Raccoon Infostealer infrastructure and its alleged operator
+      (Sokolovsky) are the SUBJECT/target of the takedown, not an
+      AUSPEX-attributed threat actor, so actor_id is null. Lead: US FBI /
+      USAO-WDTX, with law-enforcement partners in Italy and the
+      Netherlands (Dutch authorities made the arrest). No criminal/raccoon
+      actor file exists or is needed under the null-actor model.
+doctrine_links:
+  - doctrine_id: us/ncs-2023
+    pillar_id: us/ncs-2023/disrupt-dismantle
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      Pre-NCS-2023 (March 2022): doctrinal framing applied
+      retroactively. This FBI-led dismantling of a criminal
+      malware-as-a-service prefigures the Pillar-2 "disrupt and
+      dismantle" tempo formally codified in the National Cybersecurity
+      Strategy (March 2023). The cited DOJ/Krebs primaries state no US
+      strategic-doctrine purpose, so the link stays plausible, not
+      attested. Consistent with the Emotet/Operation-Ladybird specimen
+      (Jan-2021 takedown, same retroactive-plausible treatment).
+    contested: false
+    analyst: claude
+    perspective: defender-response  # US NCS-2023 disrupt-dismantle framing on an FBI-led LE counter-action (null actor), not the attacker's doctrine
 targets: []
 sources:
-  - doj/2022-10-25_sokolovsky-raccoon-extradition
+  - doj/2022-10-25_newly-unsealed-indictment-sokolovsky-raccoon
+  - doj/2024-02-15_sokolovsky-raccoon-extradited
   - krebs/2022-10-25_raccoon-developer-fled-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against the RAW cited sources. STEP 0 triage = PHANTOM SOURCE
+    -> RE-SOURCE (badrabbit model). The originally cited DOJ source
+    (doj/2022-10-25_sokolovsky-raccoon-extradition, slug
+    `raccoon-stealer-developer-mark-sokolovsky-extradited`) is a PHANTOM:
+    the URL never existed on justice.gov (Internet Archive CDX returns
+    ZERO captures 2022-2025; the live URL only 200s because Akamai serves
+    a bot interstitial before any 404 check). It also conflated the
+    Oct-2022 indictment announcement with the Feb-2024 extradition. The
+    REAL primaries were located, snapshotted and wired in.
+
+    SNAPSHOTS (all three sources now snapshotted -> level full):
+    - doj/2022-10-25_newly-unsealed-indictment-sokolovsky-raccoon (NEW,
+      genuine Oct-25-2022 WDTX PR "Newly Unsealed Indictment Charges
+      Ukrainian National with International Cybercrime Operation").
+      Live justice.gov is Akamai bot-walled; snapshot is of the genuine
+      primary preserved by IA capture 20221025173847. sha256
+      f3a8962c…12146041, 45,475 bytes.
+    - doj/2024-02-15_sokolovsky-raccoon-extradited (NEW, genuine Feb-15-2024
+      WDTX PR "Ukrainian National Extradited to U.S. for Alleged
+      Cybercrimes"; IA capture 20240215223957). sha256 d26a9c3b…e9451997,
+      97,433 bytes. Pins the actual extradition to Feb 2024.
+    - krebs/2022-10-25_raccoon-developer-fled-ukraine (live 200, 80,638
+      bytes; sha256 e871345e…cfee7fb4). published_on date defect fixed in
+      the source record (2022-10-25 -> 2022-10-31 per schema.org
+      datePublished / "October 31, 2022" byline); id-slug date left as-is
+      to preserve the FK (orchestrator may rename).
+
+    [a] FACTS — corrected. KEPT (source-carried verbatim): the March-2022
+    FBI + Italy + Netherlands infrastructure dismantling — DOJ: "In March
+    2022, concurrent with Sokolovsky's arrest by Dutch authorities, the
+    FBI and law enforcement partners in Italy and the Netherlands
+    dismantled the digital infrastructure supporting the Raccoon
+    Infostealer, taking its then existing version offline"; the 50M figure
+    — DOJ: "While an exact number has yet to be verified, FBI agents have
+    identified more than 50 million unique credentials and forms of
+    identification ... from what appears to be millions of potential
+    victims ... over four million email addresses" (hedge preserved); the
+    MaaS ~$200/month lease, email-phishing ruse, raccoon.ic3.gov site
+    (DOJ); Sokolovsky "26, a Ukrainian national"; the fled-Ukraine-after-
+    Russian-invasion detention (Krebs). STRIPPED as UNSOURCED (present in
+    NONE of the three RAW sources): (1) "approximately 200K victim
+    devices" — the primaries say "millions of potential victims" /
+    "over four million email addresses", never 200,000; figure-fabrication,
+    removed. (2) "was a major supply for Genesis Market and the broader
+    infostealer-log resale ecosystem" — the string "Genesis" appears in
+    NONE of the sources; replaced with the source-carried "used to commit
+    financial crimes or resold on cybercrime forums" (DOJ) / "resold to
+    groups deploying ransomware" (Krebs). CORRECTED ANACHRONISM/FALSE
+    CLAIM: "extradited to the US in October 2022" -> he was only "being
+    held in the Netherlands pursuant to an extradition request" in Oct 2022
+    (Amsterdam court granted extradition Sept 13, 2022, appealed); ACTUAL
+    extradition Feb 2024 (initial appearance Feb 9, 2024) per the added
+    Feb-2024 DOJ primary. Summary forward-references (Operation Magnus/
+    RedLine; "operator-extradition template") trimmed and explicitly
+    flagged as AUSPEX framing, not source claims (Lumma ref dropped).
+
+    [b] ATTRIBUTION — null-actor counter-action retained. attributing_org
+    tightened "FBI + Italian National Police + Dutch Police" -> "FBI + law
+    enforcement partners in Italy and the Netherlands" (DOJ's own wording;
+    the specific "Italian National Police" agency name is not source-
+    carried). confidence high / concur retained (govt announcement, no
+    attribution ambiguity). No over-attestation (no state actor asserted).
+    attribution_source_id re-pointed to the real Oct-2022 DOJ PR.
+
+    [c] DATES — start_date 2022-03-15 (unsourced) -> 2022-03-20 (Krebs:
+    arrest + infrastructure seizure Mar. 20, 2022; DOJ says only "March
+    2022"). disclosure_date/end_date 2022-10-25 confirmed = DOJ PR date
+    ("Updated October 25, 2022"). Krebs published_on corrected to 10-31 in
+    its source record. Feb-2024 extradition now correctly represented and
+    sourced (was falsely "October 2022").
+
+    [d] DOCTRINE_LINKS — ADDED us/ncs-2023 / disrupt-dismantle, confidence
+    plausible, perspective defender-response. Honest retroactive framing:
+    the op predates NCS-2023 (Mar-2023) and the DOJ/Krebs primaries assert
+    no US strategic purpose, so NOT attested (no attesting_source/quote).
+    An FBI-led primary distinguishes this from the EU-led Genesis-Market
+    takedown ([]); it mirrors the Emotet/Operation-Ladybird plausible-
+    defender-response precedent exactly.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (Raccoon Infostealer /
+    Sokolovsky named as the disrupted subject; no attacker-state), matching
+    the Emotet null-actor-takedown convention.
+
+    [f] ACTOR_ID — null, correct (counter-action). incident_type
+    [disruption] -> [disruption, law-enforcement] (added the LE meta type).
+    Subject named in prose (Raccoon Infostealer MaaS + Mark Sokolovsky); no
+    criminal/raccoon actor file exists or is required under the null-actor
+    model. Phantom source removed from sources[]; now orphaned (cited by no
+    event) and annotated in-file as a RETIRE candidate (NOT deleted —
+    orchestrator handles FK/retire propagation). Two real DOJ FKs +
+    us/ncs-2023(/disrupt-dismantle) FKs confirmed present.
+
+    RESIDUAL: DOJ hedges the 50M count ("an exact number has yet to be
+    verified"); reflected by keeping the DOJ's own qualifier. Live DOJ URLs
+    are Akamai bot-walled, but the genuine primary content is snapshotted
+    via Internet Archive captures (archive_url set on both records), and
+    every load-bearing claim is additionally mirror-corroborated by the
+    live-snapshotted Krebs secondary -> level full.

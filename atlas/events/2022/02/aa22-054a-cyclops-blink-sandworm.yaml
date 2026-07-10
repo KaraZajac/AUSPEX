@@ -1,79 +1,114 @@
 id: 2022-02/aa22-054a-cyclops-blink-sandworm
-name: AA22-054A — joint US-UK attribution of Cyclops Blink botnet to Sandworm (GRU Unit 74455)
-start_date: 2019-06-01  # earliest documented Cyclops Blink activity per the advisory
-disclosure_date: 2022-02-23
-end_date: 2022-04-06  # US-led MEDUSA-style sinkholing of the botnet completed by 6 April 2022
+name: AA22-054A — joint US-UK advisory attributing the Cyclops Blink botnet to Sandworm (GRU Unit 74455 / GTsST)
+start_date: 2019-06-01  # advisory: Cyclops Blink "deployed since at least June 2019"
+disclosure_date: 2022-02-23  # AA22-054A + parallel NCSC statement both published 23 Feb 2022
+end_date: null  # botnet still active at disclosure; the April-2022 US court-authorized disruption is a SEPARATE event (not carried by these Feb-23 sources) — see qc FLAG
 incident_type:
-  - attribution-publication
-  - intrusion
-initial_vector: n-day
+  - documentary   # the joint CISA/FBI/NSA/NCSC technical advisory (AA22-054A) + parallel NCSC statement
+  - intrusion     # the Cyclops Blink botnet compromise of network appliances
+initial_vector: n-day  # advisory maps initial access to "External Remote Services" (T1133) — "exploiting an externally available service"; no CVE named. Only WatchGuard devices with remote management exposed to the internet were infected.
+false_flag_risk: none
 outcome_summary: |
   Joint CISA / FBI / NSA / NCSC-UK technical advisory AA22-054A
-  attributed the Cyclops Blink botnet — targeting WatchGuard
-  Firebox network-security appliances and ASUS consumer routers —
-  to "the Sandworm actor, which the UK Government previously
-  linked to the GRU." NCSC published a parallel statement the
-  same day. The botnet was sinkholed by US DOJ / FBI court
-  action in April 2022, one of the earliest documented hunt-
-  forward botnet disruptions of the Ukraine war period.
-false_flag_risk: none
+  ("New Sandworm Malware Cyclops Blink Replaces VPNFilter"),
+  published 23 February 2022, identified the Cyclops Blink botnet —
+  a modular malware framework the advisory states had been "deployed
+  since at least June 2019" and had "so far primarily" been deployed
+  to WatchGuard firewall devices — and reaffirmed the prior US-UK
+  attribution of the Sandworm actor to the GRU's Main Centre for
+  Special Technologies (GTsST, i.e. Unit 74455). A parallel NCSC
+  statement published the same day carried the same attribution. The
+  advisory framed Cyclops Blink as the replacement framework for
+  VPNFilter — the earlier Sandworm botnet exposed by Cisco Talos and
+  the US DOJ in May 2018. Trend Micro subsequently reported (17 March
+  2022) that Cyclops Blink also infected ASUS routers. The advisory's
+  primary content is malware detection and mitigation guidance plus
+  Sandworm TTPs.
 summary: |
-  Doctrinally one of the most consequential joint NCSC-CISA
-  attributions: published 23 February 2022, the day before the
-  Russian invasion of Ukraine. Frames the elevated-threat
-  posture for the invasion window and signals UK government
-  willingness to attribute GRU operations publicly at high
-  tempo into the wartime period.
+  AA22-054A is a joint UK-US technical malware advisory on the Cyclops
+  Blink botnet, co-authored by the NCSC (UK) and CISA, the FBI and NSA
+  (US) and published 23 February 2022 — the day before Russia's
+  invasion of Ukraine. The calendar proximity should NOT be read as a
+  wartime-tempo or elevated-posture signal: the NCSC's parallel
+  statement expressly cautioned that "this is a routine advisory and
+  not directly linked to the situation in Ukraine."
 
-  Operationally Cyclops Blink succeeded the earlier VPNFilter
-  Sandworm botnet (publicly attributed in May-June 2018). The
-  February 2022 advisory is the first time NCSC co-signed a US
-  technical advisory naming Sandworm specifically; the
-  predecessor public attribution of NotPetya (UK FCDO, February
-  2018) was via diplomatic statement rather than technical
-  document.
-
-  AUSPEX tags the doctrine primarily to NCS 2022 Pillar 5
-  (detect-disrupt-deter), reflecting the elevated wartime tempo,
-  and secondarily to NCS 2016 deter (the operational backbone
-  of the joint-attribution modality predates the strategy
-  transition).
+  The advisory reaffirms (rather than newly makes) the attribution: it
+  states that "the NCSC, CISA, and the FBI have previously attributed
+  the Sandworm actor to the ... GRU's Main Centre for Special
+  Technologies (GTsST)" and that "CISA, FBI, and NSA agree with this
+  attribution." It identifies Cyclops Blink as the successor framework
+  to VPNFilter (exposed 2018), reports the botnet as "so far primarily"
+  targeting WatchGuard firewall devices whose remote-management
+  interfaces were exposed to the internet, and supplies detection and
+  mitigation guidance.
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: CISA + FBI + NSA + NCSC-UK
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-02-23
     attribution_source_id: cisa/2022-02-23_aa22-054a-cyclops-blink
     notes: |
-      First NCSC-co-signed technical advisory naming Sandworm
-      specifically. NCSC parallel statement explicitly attributed
-      the botnet to "the Sandworm actor, which the UK Government
-      previously linked to the GRU."
+      AA22-054A reaffirms a prior attribution rather than making a new
+      one: "The NCSC, CISA, and the FBI have previously attributed the
+      Sandworm actor to the Russian General Staff Main Intelligence
+      Directorate's ... Main Centre for Special Technologies (GTsST),"
+      and "CISA, FBI, and NSA agree with this attribution." GTsST is
+      GRU Unit 74455 — attribution_level = named-unit (the advisory
+      names the unit by its GTsST designation, not the number 74455).
+      The parallel NCSC statement says "Sandworm, also known as Voodoo
+      Bear, has previously been attributed to Russia's GRU."
+      attributing_org_confidence high (four-agency joint advisory with
+      explicit agreement); auspex concur.
 doctrine_links:
   - doctrine_id: uk/ncs-2022
     perspective: defender-response
     pillar_id: uk/ncs-2022/detect-disrupt-deter
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Joint NCSC + CISA + FBI + NSA technical attribution of
-      Sandworm published 23 February 2022 — the day before the
-      Russian invasion. Canonical expression of the NCS 2022
-      Pillar 5 deter modality at elevated wartime tempo.
-    attesting_source_id: ncsc-uk/2022-02-23_cyclops-blink-sandworm
+      AA22-054A is a documented instance of the UK's joint
+      public-attribution modality: the NCSC co-authored a US technical
+      advisory naming Sandworm and reaffirming its attribution to the
+      GRU (GTsST), and published a parallel statement. The NCS 2022
+      Pillar 5 summary expressly houses "joint attribution
+      announcements," so the modality fits. Not attested: neither cited
+      source states a Pillar-5 detect/disrupt/deter terminal goal — the
+      NCSC frames the publication as a "routine advisory ... not
+      directly linked to the situation in Ukraine," i.e. defensive
+      rather than a deterrence signal.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "NCSC (UK) co-authored the advisory with CISA/FBI/NSA and issued a parallel statement naming Sandworm and reaffirming attribution to the GRU (GTsST) — the joint-attribution mechanism Pillar 5 describes."
+        - "The advisory publicly names a Russian state actor and its GRU unit, the calling-out function of the deter modality."
+      ruled_out: |
+        Attested is ruled out: no cited source states a detect/disrupt/deter goal — the NCSC
+        expressly calls it a routine advisory not linked to Ukraine. An NCF offensive-disruption
+        reading is also ruled out: this is a defensive advisory (detection + mitigation), not an
+        offensive operation; the April-2022 US takedown that would fit disruption is a separate event.
     contested: false
     analyst: claude
   - doctrine_id: uk/ncs-2016
     perspective: defender-response
     pillar_id: uk/ncs-2016/deter
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      Operational backbone of the joint-attribution modality
-      predates the December 2021 NCS 2022 transition; tagged
-      to NCS 2016 deter for doctrinal continuity.
-    attesting_source_id: cisa/2022-02-23_aa22-054a-cyclops-blink
+      Lineage tag only. The joint-attribution / hostile-actor
+      calling-out modality has continuity from NCS 2016's "deter"
+      outcome (whose canonical case is the NCSC's October-2018 GRU
+      calling-out). But NCS 2016 was superseded by NCS 2022 on
+      15 December 2021, so for a February-2022 event the operative
+      strategy is NCS 2022; this predecessor link is retained for
+      doctrinal continuity only and is weaker than the 2022 tag.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Drop the NCS-2016 link entirely: the event postdates the NCS-2022 transition, so the superseded strategy arguably should not be tagged (flagged for Kara)."
+        - "Retain as a continuity/lineage marker: the deter modality and joint-attribution apparatus predate the December-2021 strategy change."
     contested: false
     analyst: claude
 targets:
@@ -82,3 +117,96 @@ targets:
 sources:
   - cisa/2022-02-23_aa22-054a-cyclops-blink
   - ncsc-uk/2022-02-23_cyclops-blink-sandworm
+  - trendmicro/2022-03-17_cyclops-blink-asus-routers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs RAW (full 6-point + phantom triage). DIRECTIONALITY confirmed and preserved:
+    ATTACKER = Russia / Sandworm (GRU GTsST/Unit 74455); VICTIM = compromised network
+    appliances (sectors/ict/networking). Not inverted. The event models the joint advisory
+    (documentary) + the botnet it describes (intrusion).
+
+    SOURCES snapshotted (all live HTTP 200, all REAL — none phantom):
+    • cisa/2022-02-23_aa22-054a-cyclops-blink — sha256 f7cfec41…5ca67, 69,530 bytes. Live
+      cisa.gov URL 200; title "New Sandworm Malware Cyclops Blink Replaces VPNFilter | CISA."
+      Revisions section reads ONLY "February 23, 2022: Initial Version."
+    • ncsc-uk/2022-02-23_cyclops-blink-sandworm — sha256 40f461f6…eeccc, 134,972 bytes. Live
+      ncsc.gov.uk URL 200; article body server-rendered; "Publish date 23 February 2022."
+    • trendmicro/2022-03-17_cyclops-blink-asus-routers — sha256 ddad4de4…1fb69, 104,095 bytes.
+      NEW source created + snapshotted this audit (badrabbit/re-source model) to carry the ASUS
+      claim, which AA22-054A does NOT support (see [a]). Title "Cyclops Blink Sets Sights on
+      Asus Routers | Trend Micro (US)"; dated 2022-03-17.
+
+    [a] FACTS — multiple corrections:
+      (i) ASUS RE-SOURCED. The event asserted AA22-054A targeted "WatchGuard Firebox ... and
+      ASUS consumer routers." The cited CISA advisory (Initial Version, 23 Feb 2022) is
+      WatchGuard-ONLY — zero "ASUS": "The actor has so far primarily deployed Cyclops Blink to
+      WatchGuard devices." The ASUS footprint is a LATER Trend Micro finding (17 Mar 2022,
+      "targets ASUS routers ... list of more than 150 ... C&C servers"), not part of the
+      advisory. Reworded so ASUS is attributed to Trend Micro (new source), not to AA22-054A;
+      device claim corrected to "WatchGuard firewall devices" (the advisory says "WatchGuard
+      devices"/"WatchGuard firewall devices," never "Firebox").
+      (ii) APRIL-2022 DISRUPTION STRIPPED (conflation + unsourced + anachronism). Event claimed
+      "sinkholed by US DOJ/FBI court action in April 2022," "MEDUSA-style sinkholing ... completed
+      by 6 April 2022," "one of the earliest documented hunt-forward botnet disruptions." NONE of
+      this is in either Feb-23 source (CISA Revisions = Initial Version only). "MEDUSA-style" is
+      anachronistic/wrong — Operation MEDUSA was the FBI's MAY-2023 Snake/Turla takedown, not the
+      April-2022 Cyclops Blink op (which was a court-authorized removal, not a sinkhole). Per the
+      task NB the April-2022 disruption is a SEPARATE event → removed here; end_date → null. FLAG:
+      no separate Cyclops-Blink-disruption event exists in the corpus yet — orchestrator/Kara
+      should create the April-2022 (DOJ 6 Apr 2022) takedown as its own event.
+      (iii) WARTIME-POSTURE THESIS REFUTED. Event summary claimed the advisory "frames the
+      elevated-threat posture for the invasion window" / "high tempo into the wartime period." The
+      NCSC source affirmatively rebuts this: "N.B This is a routine advisory and not directly
+      linked to the situation in Ukraine." Stripped the elevated-tempo/pre-invasion framing from
+      summary, outcome_summary, doctrine reasoning, and both cited source records; kept only the
+      factual calendar note (published 23 Feb 2022, day before the invasion) with the NCSC caveat.
+      (iv) NCSC MISQUOTE FIXED. Event quoted NCSC as: "the Sandworm actor, which the UK Government
+      previously linked to the GRU." That phrasing appears in NEITHER source. Actual NCSC text:
+      "Sandworm, also known as Voodoo Bear, has previously been attributed to Russia's GRU." The
+      quoted wording is a paraphrase of the CISA line ("The Sandworm actor, which the United
+      Kingdom and the United States have previously attributed to the Russian GRU"). Replaced with
+      verbatim source text, correctly attributed.
+      (v) VPNFilter-successor VERIFIED: CISA + NCSC both say Cyclops Blink "appears to be a
+      replacement for the VPNFilter malware exposed in 2018"; CISA: DOJ/Cisco Talos exposed
+      VPNFilter in "May 2018." Tightened event's loose "May-June 2018" → "May 2018."
+      (vi) Stripped unsourced superlatives ("first time NCSC co-signed a US technical advisory
+      naming Sandworm"; the NotPetya/FCDO-2018 attribution-modality digression) — carried by
+      neither cited source. Removed internal doctrine-meta paragraph from summary.
+
+    [b] ATTRIBUTION — actor ru/gru/74455/sandworm KEPT and firm. Advisory attributes Sandworm to
+    "GRU's ... Main Centre for Special Technologies (GTsST)" = Unit 74455, and CISA/FBI/NSA "agree
+    with this attribution." attributing_org "CISA + FBI + NSA + NCSC-UK" correct (four co-authors).
+    attributing_org_confidence high (kept — four-agency joint, explicit agreement); auspex concur
+    (kept). Reframed notes to flag the advisory REAFFIRMS a prior attribution (not a fresh one).
+
+    [c] DATES — start_date 2019-06-01 SUPPORTED ("deployed since at least June 2019"). disclosure
+    2022-02-23 correct (CISA "February 23, 2022: Initial Version"; NCSC "Publish date 23 February
+    2022"). end_date 2022-04-06 REMOVED → null (April disruption is a separate, unsourced-here
+    event). Trend Micro published_on 2022-03-17 verified in-body.
+
+    [d] DOCTRINE — both links DOWNGRADED from attested.
+      • uk/ncs-2022/detect-disrupt-deter: attested → strongly_inferred. Neither source states a
+        detect/disrupt/deter GOAL (NCSC: "routine advisory ... not ... linked to ... Ukraine"),
+        so attestation fails; attesting_source_id → null. Pillar 5 kept because its summary
+        expressly lists "joint attribution announcements." perspective defender-response (UK
+        doctrine on the UK/US defensive publication). Added inference_basis {signals, ruled_out}.
+      • uk/ncs-2016/deter: attested → plausible. The event (Feb 2022) POSTDATES the NCS-2022
+        transition (15 Dec 2021), so NCS 2016 is superseded; retained only as a continuity/lineage
+        marker, attesting_source_id → null, inference_basis.alternatives added.
+      FLAG (doctrine file, not edited): uk/ncs-2022 has an internal tension — Pillar 5's summary
+      lists "joint attribution announcements," but its cyber_relevance note says "joint Five Eyes
+      attribution events tag to Pillar 4 (global leadership)." Kara may prefer Pillar 4 here.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-unit (advisory names GTsST = GRU Unit 74455).
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to atlas/actors/ru/sandworm.yaml (id field
+    ru/gru/74455/sandworm). Not edited. target sectors/ict/networking resolves (atlas/sectors/
+    sectors.yaml id ict/networking); models the compromised appliances = the victims.
+
+    RESIDUAL: initial_vector kept n-day — advisory maps initial access to T1133 External Remote
+    Services ("exploiting an externally available service") and infection required internet-exposed
+    remote management, but names no CVE, so n-day is an inference, not source-stated.

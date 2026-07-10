@@ -1,59 +1,252 @@
 id: 2019-07/mozilla-distrust-darkmatter-ca
-name: Mozilla refuses DarkMatter as trusted certificate authority in Firefox
-start_date: 2019-07-09
-disclosure_date: 2019-07-09
-end_date: 2019-07-09
+name: Mozilla denies DarkMatter root-CA inclusion and distrusts its existing intermediate certificates in Firefox
+start_date: 2019-07-09   # Module Owner (Wayne Thayer) decision + Mozilla Security Blog announcement
+disclosure_date: 2019-07-09   # "Distrusting New DarkMatter Certificates" blog post publication
+end_date: 2019-07-16   # Kathleen Wilson's concurrence finalising the Module Owner decision
 incident_type:
   - documentary
   - policy
 initial_vector: unknown
 outcome_summary: |
-  Mozilla Foundation publishes "Distrusting New DarkMatter
-  Certificates" — formally declining to include DarkMatter as
-  a trusted root certificate authority in Mozilla's CA program
-  for Firefox. The decision explicitly cites the Reuters Project
-  Raven reporting (January 2019) and the documented offensive-
-  cyber posture of DarkMatter as inconsistent with the trust
-  requirements for a public CA. Mozilla simultaneously announces
-  active distrust of new DarkMatter intermediate certificates
-  issued after the decision date.
+  Mozilla's CA Certificate Policy module (Module Owner Wayne
+  Thayer, concurred by Kathleen Wilson on 2019-07-16) took a
+  two-part browser-trust-governance action against the UAE firm
+  DarkMatter (DarkMatter LLC; CA business rebranded "DigitalTrust"):
+  (1) it DENIED DarkMatter's pending root-store inclusion request
+  — Bugzilla 1427262 (roots DarkMatter Root CA G3/G4 and UAE Global
+  Root CA G3/G4) was resolved WONTFIX / "[ca-denied]"; and (2) it
+  ACTIVELY DISTRUSTED DarkMatter's already-issued intermediate CAs
+  — Bugzilla 1564544 added three QuoVadis-chained DarkMatter
+  subordinate CAs ("DarkMatter Assured CA", "DarkMatter High
+  Assurance CA", "DarkMatter Secure CA") to Mozilla's OneCRL
+  revocation list. Mozilla's stated reasoning rested on its
+  "foremost responsibility ... to protect individuals who rely on
+  Mozilla products" and on "credible evidence from multiple sources
+  that DarkMatter participates in spying" — expressly citing the
+  Reuters January 2019 Project Raven reporting — concluding that
+  "continuing to place trust in DarkMatter is a significant risk to
+  our users." The action foreclosed DarkMatter/DigitalTrust's
+  public-CA business ambition. (Correction: the earlier framing that
+  Mozilla distrusted only "new intermediate certificates issued
+  after the decision date" was imprecise — Mozilla revoked trust in
+  the three EXISTING subordinate CAs via OneCRL.)
 false_flag_risk: none
 summary: |
-  Third-party-policy-decision-level confirmation of the Reuters
-  Project Raven reporting. Mozilla's distrust decision is
-  significant for the procurement-led-capability framing: it
-  documented that an internet-infrastructure governance body
-  treated DarkMatter as offensive-cyber-aligned at the
-  policy-decision threshold, predating the September 2021 DOJ
-  DPA at the federal-prosecutorial level. The decision also
-  effectively foreclosed DarkMatter's commercial CA business
-  ambition.
+  Browser-trust-governance counter-action, and a third-party
+  policy-decision-level corroboration of the Reuters Project Raven
+  reporting. This is a DEFENSIVE move by Mozilla (an internet-
+  infrastructure governance body) against DarkMatter — it is NOT a
+  cyber-attack and has no attacker actor: Mozilla is the acting
+  party and DarkMatter (ae/darkmatter, the Abu Dhabi state-aligned
+  vendor) is the SUBJECT of the decision. Analytically it documents
+  that a web-PKI trust authority treated DarkMatter as offensive-
+  cyber-aligned at the trust-decision threshold in July 2019 —
+  predating both the September 2021 DOJ deferred-prosecution
+  agreements (federal-prosecutorial level) and the August 2022 State
+  Department ITAR debarments (export-control level) against the
+  ex-NSA DarkMatter operators. Sibling of the DarkMatter / Karma /
+  Project-Raven cluster; the underlying Reuters (Jan 2019) and
+  Intercept (Jun 2019) reporting DarkMatter's spying is captured in
+  adjacent event entries. (NB: no browser-trust / web-PKI-governance
+  doctrine exists in the AUSPEX corpus to link Mozilla's own
+  defender-side posture to — flagged as a candidate; the only
+  linkable doctrine here is the UAE subject-side procurement-led
+  frame, below.)
 attributions:
-  - actor_id: ae/darkmatter/project-raven
-    attributing_org: Mozilla Foundation
+  - actor_id: null
+    attributing_org: Mozilla (CA Certificate Policy module — Wayne Thayer, concurred by Kathleen Wilson)
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2019-07-09
-    attribution_source_id: mozilla/2019-07-09_distrust-darkmatter
+    attribution_source_id: mozilla-bugzilla/1427262_add-darkmatter-root-certificates
     notes: |
-      Mozilla's distrust decision rests on the Reuters reporting
-      and broader open-source record of DarkMatter / Project
-      Raven offensive-cyber activity; cited as third-party
-      governance-body attestation.
+      Defensive browser-trust-governance counter-action — NOT an
+      attack — so actor_id is null (do NOT frame Mozilla as an
+      attacker). Mozilla is the acting internet-governance body; the
+      SUBJECT of the decision is DarkMatter (atlas actor id
+      ae/darkmatter — DarkMatter Group / DarkMatter LLC, Abu Dhabi),
+      operating its CA business as DigitalTrust. Mozilla's decision
+      (deny the pending root inclusion + distrust the existing
+      QuoVadis-chained subordinate CAs) is the authoritative Mozilla
+      primary record: Bugzilla 1427262 (root request → WONTFIX /
+      [ca-denied]) and Bugzilla 1564544 (three subordinate CAs →
+      OneCRL). The canonical Mozilla Security Blog announcement
+      (mozilla/2019-07-09_distrust-darkmatter) is link-rotted and
+      un-snapshottable, but the decision + reasoning are carried by
+      the snapshotted Bugzilla primaries and by the BleepingComputer
+      and The Register secondaries. auspex concur on the decision as
+      a governance-body corroboration of DarkMatter's offensive-cyber
+      alignment; no attacker/victim relationship is asserted in this
+      event.
 doctrine_links:
   - doctrine_id: ae/procurement-led-capability
     pillar_id: ae/procurement-led-capability/domestic-vendor-stack
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Mozilla's stated reasoning explicitly framed DarkMatter as
-      a UAE-aligned offensive-cyber-services vendor — directly
-      attesting the domestic-vendor-stack pillar at the
-      governance-decision level.
-    attesting_source_id: mozilla/2019-07-09_distrust-darkmatter
+      Mozilla's decision corroborates DarkMatter's offensive-cyber /
+      spying alignment at the internet-governance-body level — it
+      denied DarkMatter's root-CA inclusion and distrusted its
+      existing subordinate CAs expressly because of the Reuters
+      Project Raven reporting and "credible evidence from multiple
+      sources that DarkMatter participates in spying," supporting the
+      inference that DarkMatter is the UAE's domestic-vendor-stack
+      node. Held at strongly_inferred (downgraded from attested,
+      2026-07-10): Mozilla's stated frame is CA-trust-risk to users,
+      NOT the UAE procurement-led-capability doctrine's strategic
+      purpose (acquiring offensive capability via a domestic vendor
+      stack). Under the 2026-06-19 attested reframe the source
+      corroborates the subject's offensive alignment, not the
+      procurement architecture at the goal level, so the attested bar
+      is not met. The doctrine linked is the UAE (subject) doctrine —
+      attacker-rationale default, no perspective tag — carried here by
+      a third-party defender's counter-action.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "BleepingComputer (quoting Mozilla): 'Due to reporting by Reuters that indicated DarkMatter is allegedly tied to a United Arab Emirates sponsored hacking group called Project Raven, security researchers, the EFF, and many privacy professionals were concerned that they would use the power of a CA for state sponsored attacks.'"
+        - "The Register (quoting Mozilla's Selena Deckelmann): the decision followed 'credible evidence from multiple sources that DarkMatter participates in spying' — a web-PKI trust authority treating DarkMatter as offensive-cyber-aligned at the trust-decision threshold."
+        - "The distrust action targeted DarkMatter specifically as the UAE domestic CA/vendor entity — its three existing QuoVadis-chained subordinate CAs (DarkMatter Assured / High Assurance / Secure CA) added to OneCRL (Bugzilla 1564544) — consistent with DarkMatter's role as the UAE domestic-vendor-stack node."
+      ruled_out: "A purely technical / commercial CA-competence rejection — ruled out because Mozilla's stated reasoning rested on DarkMatter's spying links (Reuters Project Raven / 'credible evidence ... that DarkMatter participates in spying'), not on Baseline-Requirements or technical non-compliance; the documented misissuances were secondary to the trust concern."
     contested: false
     analyst: claude
 targets: []
 sources:
-  - mozilla/2019-07-09_distrust-darkmatter
-  - reuters/2019-01-30_project-raven
+  - mozilla/2019-07-09_distrust-darkmatter   # canonical Mozilla Security Blog decision post (link-rotted / un-snapshottable — no wayback)
+  - mozilla-bugzilla/1427262_add-darkmatter-root-certificates   # primary: root request → WONTFIX / [ca-denied]
+  - mozilla-bugzilla/1564544_darkmatter-quovadis-subcas-onecrl   # primary: distrust of 3 existing subordinate CAs via OneCRL
+  - bleepingcomputer/2019-07-09_mozilla-blocks-darkmatter-ca   # secondary: decision + reasoning + QuoVadis/DigitalTrust + Project Raven
+  - theregister/2019-07-10_mozilla-darkmatter-ban   # secondary: Thayer + Deckelmann reasoning quotes + Project Raven
+  - mail-archive-mozilla/2019-07-16_darkmatter-concerns-msg12186   # primary list: applicant appeal referencing the decision + Wilson concurrence 2019-07-16
+  - reuters/2019-01-30_project-raven   # the underlying reporting Mozilla cited (un-snapshottable; corroborating trigger)
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs the cited raws + re-sourcing of the
+    link-rotted primary. This is a DOCUMENTARY/POLICY counter-action
+    (Mozilla's defensive browser-trust-governance decision against
+    DarkMatter), not an attack — reframed accordingly per task.
+
+    STEP 0 / PHANTOM triage: the canonical primary
+    mozilla/2019-07-09_distrust-darkmatter (Mozilla Security Blog
+    "Distrusting New DarkMatter Certificates") is REAL but
+    link-rotted — the blog URL returns HTTP 404 (confirmed this pass,
+    41,963 B soft-404) and Wayback has NO snapshot (CDX + availability
+    API both empty; Wayback verified working here via an example.com
+    control that returned snapshots, so the "no archive" finding is
+    ground truth, not an environment artifact). RE-SOURCE path
+    ("badrabbit model"): the blog source is KEPT (canonical, correctly
+    url-nulled, still cited by 2 sibling records so not orphaned) and
+    FOUR snapshotted corroborators were created to carry the facts:
+    two Mozilla primaries (Bugzilla 1427262, 1564544) + two secondaries
+    (BleepingComputer, The Register), plus the Mozilla-list appeal
+    (mail-archive). No source is a phantom; nothing flagged for RETIRE.
+
+    [a] FACTS — one material correction. The event previously said
+    Mozilla "announces active distrust of NEW DarkMatter intermediate
+    certificates issued after the decision date." That is wrong:
+    Mozilla (i) DENIED the pending ROOT inclusion request — Bugzilla
+    1427262 RESOLVED WONTFIX, whiteboard "[ca-denied]" (Comment #96),
+    roots DarkMatter Root CA G3/G4 + UAE Global Root CA G3/G4 (raw
+    "WONTFIX" 78x, "ca-denied" 3x, "UAE Global Root" 23x); and (ii)
+    DISTRUSTED the three ALREADY-ISSUED QuoVadis-chained subordinate
+    CAs — Bugzilla 1564544 RESOLVED FIXED, adding "DarkMatter Assured
+    CA" / "DarkMatter High Assurance CA" / "DarkMatter Secure CA" to
+    OneCRL (raw "OneCRL" 15x, "DarkMatter Assured CA" 4x, opened by
+    Wayne Thayer). Added verified facts: the DigitalTrust rebrand of
+    the CA business, the QuoVadis cross-sign, Wayne Thayer as Module
+    Owner, Kathleen Wilson's 2019-07-16 concurrence, and the verbatim
+    reasoning — Thayer "our foremost responsibility is to protect
+    individuals who rely on Mozilla products" / "continuing to place
+    trust in DarkMatter is a significant risk to our users"
+    (bleepingcomputer + theregister raws, both "significant risk" 1x)
+    and Deckelmann's "credible evidence from multiple sources that
+    DarkMatter participates in spying" (theregister raw). The Reuters
+    Project Raven citation was already present and is CONFIRMED
+    verbatim ("Due to reporting by Reuters ... a ... hacking group
+    called Project Raven", bleepingcomputer raw). No fabricated
+    figures/CVEs/victims present.
+
+    [b] ATTRIBUTION — reframed to a defender counter-action per task:
+    actor_id null (Mozilla is not an attacker); attributing_org =
+    Mozilla CA Certificate Policy module (Thayer, concurred Wilson),
+    high, auspex concur; SUBJECT named in prose = ae/darkmatter
+    (DarkMatter Group / LLC). Previously the block attributed to
+    ae/darkmatter/project-raven with Mozilla as attributing_org — but
+    the Mozilla decision is about DarkMatter THE COMPANY (the CA
+    applicant), not the Project Raven program per se, and the task +
+    protocol [f] require actor_id null for a counter-action. Model:
+    the audited ncsc-stand-up null-actor institutional/policy pattern.
+    attribution_source_id re-pointed from the un-snapshottable blog to
+    the snapshotted Mozilla primary Bugzilla 1427262 (records the
+    denial), matching the ncsc-stand-up precedent of citing a
+    snapshotted primary. Directionality: Mozilla / browser ecosystem
+    (defender) acting AGAINST DarkMatter (subject) — no victim.
+
+    [c] DATES — start_date 2019-07-09 (Thayer decision + blog);
+    disclosure_date 2019-07-09 (blog publication, corroborated by
+    bleepingcomputer datePublished 2019-07-09 and theregister
+    2019-07-10); end_date corrected 2019-07-09 → 2019-07-16 (Kathleen
+    Wilson's concurrence finalising the Module Owner decision — mail-
+    archive message timestamp "Tue, 16 Jul 2019"). New source
+    published_on values verified in-raw (bleepingcomputer
+    2019-07-09T18:34-04:00 Lawrence Abrams; theregister
+    2019-07-10T01:33Z Thomas Claburn).
+
+    [d] DOCTRINE_LINKS — ae/procurement-led-capability /
+    domestic-vendor-stack DOWNGRADED attested → strongly_inferred
+    (over-attestation fix). Mozilla corroborates DarkMatter's
+    offensive-cyber/spying alignment (citing Project Raven) but does
+    NOT articulate the UAE procurement-led doctrine's strategic purpose
+    (capability acquisition via a domestic vendor stack) — its frame is
+    CA-trust-risk to users; under the 2026-06-19 attested reframe that
+    fails the attested bar. Added inference_basis {signals[] with
+    verbatim raw quotes, ruled_out}; attesting_source_id → null. Pillar
+    fit confirmed against the doctrine file (domestic-vendor-stack =
+    "DarkMatter, Beacon Red, EDGE Group affiliates"). Perspective: the
+    linked doctrine is the UAE (subject/attacker) doctrine →
+    attacker-rationale default → no perspective tag (consistent with
+    the DOJ-DPA and State-Dept-ITAR sibling counter-actions, which link
+    procurement-led without a perspective tag). NB: the task's
+    "browser-trust governance" per-event doctrine cannot be linked —
+    NO web-PKI / CA-trust-governance (defender-side) doctrine exists in
+    atlas/doctrines/** (all doctrines are nation-scoped). Flagged as a
+    candidate defender doctrine for the orchestrator; not created
+    (out of scope).
+
+    [e] ATTRIBUTION_LEVEL — deliberately omitted: with actor_id null
+    (defender counter-action) there is no structured actor to level
+    (matches the ncsc-stand-up null-actor precedent). Mozilla's
+    corroboration of DarkMatter is at the named-actor level (the
+    company) but is captured in prose, not as a structured attribution.
+
+    [f] ACTOR_ID — null (counter-action per protocol [f]); subject
+    ae/darkmatter named in prose; incident_type carries the meta types
+    [documentary, policy]. ae/darkmatter resolves to
+    atlas/services/ae/darkmatter.yaml (id ae/darkmatter). Dropped the
+    prior ae/darkmatter/project-raven structured attribution (the
+    program actor is still cited across the cluster, so no orphan).
+
+    SNAPSHOTS (all curl HTTP 200, genuine bodies, hashed 2026-07-10):
+    mozilla-bugzilla__1427262 sha256
+    e3e18b8f95717490a26c7b543c83a1e26743c9857314bf968faee0667bc71754
+    (489,761 B); mozilla-bugzilla__1564544 sha256
+    ea807fe9fe3fc0a6e0ba4b9a5cdce894d8afe4335573c55dca258af8afdc420c
+    (90,260 B); bleepingcomputer__2019-07-09 sha256
+    107dca168cb36f1c98a9148a523c6e1cf14af4fa0d40078c6c595f9346b14599
+    (91,444 B); theregister__2019-07-10 sha256
+    57f49a6a6aedd4db282f72893b01b9e0a1ba9d1b0d389ae62e2b36bba30e2389
+    (163,902 B); mail-archive-mozilla__2019-07-16 sha256
+    ce70a73cfe004aebb86a04f35b38eb0e679b12a5ad9bb57606379a1e9ae75fe0
+    (19,294 B). LEVEL = full: every load-bearing claim (denial;
+    distrust of the three existing subordinate CAs; the "significant
+    risk"/"protect individuals" reasoning; the Project Raven trigger;
+    DigitalTrust/QuoVadis; the 07-09 decision + 07-16 concurrence
+    dates) is carried by at least one snapshotted source. The two
+    un-snapshottable sources (link-rotted Mozilla blog; DataDome-walled
+    Reuters Project Raven) are corroborating context only, not the sole
+    carrier of any claim, so they do not reduce the level. No
+    make/commit/git run.

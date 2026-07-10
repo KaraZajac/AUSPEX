@@ -6,65 +6,240 @@ end_date: 2022-01-15
 incident_type:
   - destructive
   - wiper
-  - influence-operation
-initial_vector: unknown
+initial_vector: unknown  # not determined in the Jan-2022 first disclosure; group's later-established pattern is web-server exploitation (see summary)
 outcome_summary: |
-  MBR wiper masquerading as ransomware deployed against Ukrainian
-  government websites and IT systems in the run-up to the February
-  2022 invasion. Defacements of >70 Ukrainian government sites
-  accompanied by a "Free Civilian" hack-and-leak persona.
+  Two-stage MBR wiper masquerading as ransomware, deployed against
+  Ukrainian government and other victim organizations in the run-up
+  to the February 2022 invasion. The malware overwrites the Master
+  Boot Record and posts a fake ransom note while a second stage
+  corrupts files — a wiper disguised as ransomware. Accompanied by
+  defacements of Ukrainian organization websites and, later, a
+  "Free Civilian" hack-and-leak persona run by the same GRU cluster.
 false_flag_risk: suspected  # ransomware masquerade
+# FLAG (orchestrator): campaign_id "hermetic-wave-feb-2022" groups WhisperGate
+# with the Feb-2022 HermeticWiper/IsaacWiper/Viasat wave, but WhisperGate is a
+# Jan-2022 op by GRU Unit 29155 (Cadet Blizzard) — a DISTINCT unit from the
+# Feb-wave Sandworm/Unit-74455 wipers (AA24-249A: "separate from ... Unit 74455").
+# Grouping is chronological ("2022 invasion wiper wave"), not a shared operation;
+# consider a unit-neutral rename or splitting WhisperGate out.
 campaign_id: hermetic-wave-feb-2022
 summary: |
-  Microsoft MSTIC initial disclosure 15 January 2022; subsequent
-  June 2023 MSTIC attribution to Cadet Blizzard / DEV-0586 — a
-  GRU unit distinct from Sandworm. WhisperGate executes in two
+  Microsoft MSTIC first disclosed WhisperGate on 15 January 2022,
+  tracking the activity as the placeholder cluster DEV-0586; MSTIC's
+  June 2023 report graduated the cluster to Cadet Blizzard, a
+  GRU-sponsored group distinct from Sandworm, and the September 2024
+  joint Five-Eyes advisory AA24-249A named the unit as the GRU 161st
+  Specialist Training Center (Unit 29155) — the same unit named in the
+  parallel 26 June 2024 US DOJ indictment for destroying Ukrainian
+  government computer systems. WhisperGate executes in two
   stages: a first-stage MBR overwriter (stage1.exe) that posts a
   fake ransom note while irrecoverably corrupting the Master Boot
-  Record, and a second-stage Discord-hosted downloader
-  (stage2.exe) retrieving a file-corrupter that overwrites a
-  hard-coded extension list with fixed bytes — defeating the
-  ransom note pretext on inspection and confirming the operation
-  as a wiper masquerading as ransomware. Initial access into
-  Ukrainian government estates appears to have leveraged web-
-  shell access to Orion-Soft / OctoberCMS-vulnerable web servers
-  alongside abuse of valid credentials, with parallel defacements
-  of more than 70 government sites and a "Free Civilian" hack-
-  and-leak persona used to launder the GRU operation.
+  Record, and a second-stage Discord-hosted downloader (stage2.exe)
+  retrieving a file-corrupter that overwrites files matching a
+  hard-coded extension list — defeating the ransom-note pretext on
+  inspection and confirming the operation as a wiper masquerading as
+  ransomware. Consistent with the group's established tradecraft,
+  initial access is assessed to have leveraged exploitation of
+  vulnerable internet-facing web servers (e.g. Confluence, Exchange,
+  and open-source content-management platforms), abuse of valid
+  accounts, and commodity web shells; parallel defacements of
+  Ukrainian organization websites and a later "Free Civilian"
+  hack-and-leak persona are attributed to the same GRU cluster.
 attributions:
   - actor_id: ru/gru/cadet-blizzard
     attributing_org: Microsoft MSTIC
     attributing_org_confidence: high
+    attribution_level: named-actor  # GRU-sponsored Cadet Blizzard; the specific unit is not named here
     auspex_assessment: concur
     attribution_date: 2023-06-14
     attribution_source_id: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+    notes: |
+      MSTIC's June-2023 report attributes WhisperGate to Cadet
+      Blizzard, "a Russian GRU-sponsored threat group" that is
+      "separate from other known and more established GRU-affiliated
+      groups such as Forest Blizzard (STRONTIUM) and Seashell Blizzard
+      (IRIDIUM)" [Sandworm] — GRU affiliation at named-actor level,
+      without naming the specific unit. The Jan-2022 first disclosure
+      (mstic/2022-01-15, tracked as DEV-0586) asserts NO attribution
+      (zero "GRU" mentions in the rendered article).
+  - actor_id: ru/gru/cadet-blizzard
+    attributing_org: "US FBI/CISA/NSA + Cyber Command CNMF + partners (Netherlands MIVD, Czech VZ/BIS, Germany BfV, Estonia KAPO, Latvia VDD, Ukraine SBU/CERT-UA, Canada, UK NCSC, Australia, NZ) — advisory AA24-249A"
+    attributing_org_confidence: high
+    attribution_level: named-unit  # GRU 161st Specialist Training Center (Unit 29155)
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2024-09-05
+    attribution_source_id: cisa/2024-09-05_aa24-249a-gru-unit-29155
+    notes: |
+      The Sept-2024 joint advisory raises the attribution to
+      named-unit: "GRU Unit 29155 cyber actors began deploying the
+      destructive WhisperGate malware against multiple Ukrainian
+      victim organizations as early as January 13, 2022"; the unit is
+      the GRU "161st Specialist Training Center (Unit 29155)" and is
+      "separate from other known and more established GRU-affiliated
+      cyber groups, such as Unit 26165 and Unit 74455" [Sandworm].
+      Same unit named in the parallel 26 June 2024 US DOJ indictment
+      for destroying Ukrainian government computer systems — AA24-249A
+      itself cross-references "the recent U.S. Department of Justice
+      (DOJ) press releases for June 26, 2024, and September 5, 2024."
+      The DOJ page is Akamai bot-walled and was not snapshotted, so the
+      named-unit tier is anchored to the snapshotted AA24-249A (which
+      carries the Unit-29155 → WhisperGate tie directly).
+      concur-with-caveat: Cadet Blizzard = GRU is independently
+      corroborated (MSTIC, CrowdStrike Ember Bear), but the specific
+      unit-number (29155 / 161st STC) rests on US/Five-Eyes government
+      assertion, not independent private-sector technical proof.
 doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
     confidence: attested
     reasoning: |
-      Pre-kinetic shaping of the Ukrainian information environment
-      ahead of invasion. MSTIC attribution language frames the
-      operation as Russian state-sponsored pre-positioning.
-    attesting_source_id: mstic/2022-01-15_destructive-malware-ukrainian-organizations
+      Pre-invasion destructive shaping against Ukrainian government
+      organizations — Ukraine as the priority theater of Russian
+      state destructive operations. MSTIC states the strategic
+      purpose in substance (a GRU actor conducting destructive cyber
+      operations supporting broader military objectives in Ukraine).
+      Re-anchored off the Jan-2022 technical disclosure (which
+      asserts no attribution and no strategic framing) to the
+      June-2023 attribution report. perspective: attacker-rationale
+      (Russia's own doctrine on Russia's own attack; default).
+    attesting_source_id: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+    inference_basis:
+      source_quote: "the emergence of a novel GRU affiliated actor, particularly one which has conducted destructive cyber operations likely supporting broader military objectives in Ukraine, is a notable development in the Russian cyber threat landscape. A month before Russia invaded Ukraine, Cadet Blizzard foreshadowed future destructive activity when it created and deployed WhisperGate, a destructive capability that wipes Master Boot Records (MBRs), against Ukrainian government organizations."
+      source_id: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/ukraine-support-interdiction
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      The operation falls in the window between the December 2021
+      WhisperGate falls in the window between the December 2021 NATO
       ultimatum and the February 2022 invasion — pre-kinetic
-      shaping consistent with the ultimatum's coercive framing.
+      destructive shaping consistent with the ultimatum's coercive
+      framing (the doctrine's own cyber_relevance lists the 2022
+      wiper campaigns under this anchor). Downgraded from
+      strongly_inferred to plausible: no cited source states the
+      aid-interdiction GOAL for WhisperGate, and the operation hit
+      Ukrainian government estates rather than the Western aid
+      logistics/DIB that the ukraine-support-interdiction pillar
+      names — a contextual, not literal, pillar fit. The attested
+      doctrinal home is ru/russkiy-mir/ukraine-theater above.
+      perspective: attacker-rationale (default).
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Temporal: deployed 13 Jan 2022, inside the Dec-2021-ultimatum → Feb-2022-invasion coercion window"
+        - "Character: pre-kinetic destructive shaping against Ukrainian government ahead of the full-scale invasion (MSTIC: 'A month before Russia invaded Ukraine … WhisperGate … against Ukrainian government organizations')"
+        - "Doctrine text: ru/nato-ultimatum-2021 cyber_relevance explicitly lists 'the post-2022 wiper campaigns' as mapping to this anchor"
+      alternatives:
+        - "Primary/attested home is ru/russkiy-mir/ukraine-theater (Ukraine as continuous priority theater), which the sources carry in substance"
+        - "If a nato-ultimatum pillar is retained, ru/nato-ultimatum-2021/nato-degradation is arguably a closer fit than ukraine-support-interdiction, since WhisperGate targeted Ukrainian government IT, not Western aid logistics"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/ukraine-government
+    country: ua  # Ukraine victim; attacker ru/gru/cadet-blizzard (Unit 29155)
     role: primary
 sources:
   - mstic/2022-01-15_destructive-malware-ukrainian-organizations
   - mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+  - cisa/2024-09-05_aa24-249a-gru-unit-29155
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs three snapshotted primaries: MSTIC 2022-01-15 (sha256
+    26352922…2859a368), MSTIC 2023-06-14 (sha256 e6ed7314…37d3280c),
+    and CISA/Five-Eyes AA24-249A 2024-09-05 (sha256 88543e82…efabec0,
+    165,527 B) — the last CREATED this session to carry the named-unit
+    attribution + primary WhisperGate mechanics.
+    [a] FACTS — malware mechanics all carried. MSTIC 2022-01-15
+    ("overwrites the MBR"; "stage1.exe"/"stage2.exe"; "two-stage";
+    "Discord"; "file corrupter"; hardcoded extensions; "0xCC") and
+    AA24-249A verbatim: "The actors' use of WhisperGate involved the
+    deployment of the malware files, stage1.exe and stage2.exe.
+    WhisperGate has two stages that corrupts a system's master boot
+    record, displays a fake ransomware note, and encrypts files based
+    on certain file extensions … The actors used multiple Discord
+    accounts to store malware files." CORRECTIONS: (1) outcome_summary
+    ">70 Ukrainian government sites" — UNSUPPORTED by any snapshotted
+    source (MSTIC 2023-06-14 says "defacements of several Ukrainian
+    organization websites"; AA24-249A says "website defacements" with
+    NO count; the only "70" strings in the raws are cookie-expiry
+    boilerplate "01 Jan 1970") → dropped the number, now "defacements
+    of Ukrainian organization websites." (2) summary "Orion-Soft /
+    OctoberCMS-vulnerable web servers" — those product names appear in
+    NEITHER cited MSTIC source NOR AA24-249A (they are in the
+    un-snapshottable June-2024 DOJ Stigal indictment only) →
+    generalized to the MSTIC-supported wording: initial access via
+    exploitation of vulnerable internet-facing web servers (MSTIC
+    2023-06-14: "exploiting Confluence servers through … CVE-2021-26084,
+    Exchange servers through … CVE-2022-41040 and ProxyShell, and
+    likely commodity vulnerabilities in various open-source platforms
+    such as content management systems"; "commodity web shells"),
+    marked as the group's established pattern (initial_vector kept
+    "unknown" — the Jan-2022 disclosure did not determine it). "Free
+    Civilian" hack-and-leak + defacements RETAINED — carried by MSTIC
+    2023-06-14 ("the hack-and-leak forum known as 'Free Civilian'"; 6
+    "Free Civilian" / 4 "defacements" / 7 "hack-and-leak" mentions).
+    incident_type influence-operation → removed per scope ([destructive,
+    wiper]); the Free Civilian/defacement influence angle survives as
+    prose context (and is carried by the broader 2024-09 Unit-29155
+    event).
+    [b] ATTRIBUTION — split into two tiers. MSTIC 2023-06-14 =
+    named-actor (concur, high): "Cadet Blizzard is a Russian
+    GRU-sponsored threat group" … "separate from … Seashell Blizzard
+    (IRIDIUM)" [Sandworm] — GRU affiliation without a unit number
+    (0 "29155" in this source). AA24-249A = named-unit
+    (concur-with-caveat, high): "GRU Unit 29155 cyber actors began
+    deploying the destructive WhisperGate malware against multiple
+    Ukrainian victim organizations as early as January 13, 2022"; unit
+    = "161st Specialist Training Center (Unit 29155)", "separate from …
+    Unit 26165 and Unit 74455." NOT over-attested: caveat records that
+    the unit-number rests on US/Five-Eyes government assertion. The
+    Jan-2022 source (DEV-0586) is correctly NOT used as an attribution
+    anchor (zero GRU).
+    [c] DATES — start_date 2022-01-13 CONFIRMED by AA24-249A ("as early
+    as January 13, 2022"). disclosure_date 2022-01-15 = MSTIC first
+    blog byline. end_date 2022-01-15 retained (operational-window
+    close at first disclosure). Source published_on all match bylines:
+    MSTIC 2022-01-15, MSTIC 2023-06-14, AA24-249A "Release Date
+    September 05, 2024."
+    [d] DOCTRINE_LINKS — perspective attacker-rationale on both
+    (Russia's own doctrine on Russia's own attack; default, noted not
+    fielded per house style). ru/russkiy-mir/ukraine-theater kept
+    ATTESTED but attesting_source_id REPOINTED from mstic/2022-01-15
+    (which attests nothing — no attribution, no strategic framing) to
+    mstic/2023-06-14, and inference_basis.source_quote added (verbatim
+    "destructive cyber operations likely supporting broader military
+    objectives in Ukraine … WhisperGate … against Ukrainian government
+    organizations") — strategic-purpose corroboration, not slug-naming.
+    ru/nato-ultimatum-2021/ukraine-support-interdiction DOWNGRADED
+    strongly_inferred → PLAUSIBLE (no source states the aid-interdiction
+    goal for WhisperGate; the op hit Ukrainian government, not Western
+    aid logistics — a contextual pillar fit), inference_basis
+    {signals, alternatives} added, attesting_source_id null (correct).
+    [e] ATTRIBUTION_LEVEL — was MISSING on the sole attribution; added
+    named-actor (MSTIC) + named-unit (AA24-249A), each source-supported.
+    [f] ACTOR_ID — ru/gru/cadet-blizzard resolves
+    (atlas/actors/ru/cadet-blizzard.yaml, id ru/gru/cadet-blizzard;
+    NOT Sandworm/ru/gru/74455 — verified distinct). target
+    orgs/ukraine-government resolves (nation_state_id ua; added
+    country: ua for directionality). Doctrine + both pillars resolve.
+    LEVEL=full: every load-bearing claim is carried by a snapshotted
+    source. The named-unit tier and the DOJ-indictment reference are
+    both carried by the snapshotted AA24-249A (which cross-references
+    "the recent … DOJ press releases for June 26, 2024, and September
+    5, 2024"); the DOJ page itself is bot-walled but NOT load-bearing.
+    FLAGS (orchestrator, out of single-event scope): (1) campaign_id
+    "hermetic-wave-feb-2022" mis-groups this Jan-2022 / Unit-29155 op
+    with the Feb-2022 Sandworm/Unit-74455 wiper wave — see inline flag.
+    (2) Consider adding a DOJ Stigal indictment source (bot-walled;
+    would need a full-text mirror like the 2015 grid event's DOJ
+    handling) if the OctoberCMS/Orion-Soft initial-vector detail is
+    wanted back.

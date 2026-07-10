@@ -4,39 +4,56 @@ start_date: 2023-05-27
 disclosure_date: 2023-05-31
 end_date: 2023-12-31
 incident_type:
+  - intrusion
   - data-theft
+  - extortion
   - supply-chain
 initial_vector: 0-day
 outcome_summary: |
-  Cl0p exploited a zero-day SQL injection vulnerability (CVE-2023-
-  34362) in Progress Software's MOVEit Transfer managed-file-
-  transfer application over the May 27–31 Memorial Day weekend.
-  Mass-exploitation against ~2,700 organizations and an estimated
-  93+ million individuals' data exfiltrated. Notable victims:
-  US Department of Energy, Oregon DMV (~3.5M records), Louisiana
-  OMV (~6M records), British Airways, BBC, Boots, Aer Lingus,
-  Shell, Ernst & Young, PwC, Sony, the New York City Department
-  of Education. Unique extortion model: Cl0p set a June 14 2023
-  deadline for victims to contact them; published victim names
-  on a leak site rather than encrypting data.
+  Over the U.S. Memorial Day weekend, beginning 27 May 2023, Cl0p
+  (TA505) exploited a previously unknown SQL injection zero-day
+  (CVE-2023-34362) in Progress Software's MOVEit Transfer managed-
+  file-transfer (MFT) application, planting the LEMURLOOT web shell to
+  steal data from the underlying MOVEit databases; Progress disclosed
+  the flaw and shipped an emergency patch on 31 May 2023. Because MOVEit
+  is embedded in third-party service providers, the single vulnerability
+  cascaded to thousands of downstream organizations: the first public
+  wave (early June) hit UK payroll provider Zellis and, through it,
+  British Airways, Boots, the BBC and Aer Lingus. Emsisoft's running
+  tracker recorded 2,773 organizations and 95,788,491 individuals
+  affected as of 28 June 2024 — early-campaign tallies were far smaller
+  (~383 orgs / ~20M individuals by mid-July 2023) and grew for over a
+  year. Other named victims include the US Department of Energy, the
+  Oregon DMV/DOT (~3.5M records), the Louisiana OMV (~6M records), Shell
+  and Johns Hopkins University. Cl0p's extortion was data-theft rather
+  than encryption: victims were told to make contact before a 14 June
+  2023 deadline and negotiate a price for deletion, or be named and have
+  their data published on Cl0p's leak site.
 quantified_impact:
-  organizations_affected: 2700
-  individuals_affected: 93000000
+  organizations_affected: 2773
+  individuals_affected: 95788491
 false_flag_risk: none
 summary: |
-  Largest single mass-exploitation ransomware-extortion campaign
-  on public record. Triggered the June 16 2023 State Department
-  TOCRP USD 10M reward offer for Cl0p operator identification.
-  Catalyzed CISA's "Secure by Design" push against MFT vendors
-  and accelerated the EU NIS2 supply-chain provisions.
+  One of the largest single-vulnerability mass-exploitation data-theft
+  extortion campaigns on record (2,773 organizations by Emsisoft's June
+  2024 tally). On 16 June 2023 the US State Department's Rewards for
+  Justice program offered up to USD 10M for information linking the Cl0p
+  gang — or any actor targeting US critical infrastructure — to a foreign
+  government; the offer SOLICITS (rather than asserts) a state nexus,
+  consistent with AUSPEX's stateless criminal/clop placement. AUSPEX
+  treats MOVEit as the peak of Cl0p's managed-file-transfer zero-day
+  campaign line (Accellion 2020 -> GoAnywhere Q1 2023 -> MOVEit Q2 2023
+  -> Cleo Q4 2024).
 attributions:
   - actor_id: criminal/clop
     attributing_org: CISA + FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-06-07
     attribution_source_id: cisa/2023-06-07_aa23-158a-cl0p-moveit-advisory
-doctrine_links: []  # removed defunct ru/sanctions-response-2022/criminal-proxy-mobilization 2026-07-02 (propagated from cl0p-goanywhere audit): stateless criminal/clop, no sourced state nexus; full audit pending in census
+    notes: "Joint CISA/FBI advisory AA23-158A names 'CL0P Ransomware Gang, also known as TA505' as the exploiter of CVE-2023-34362 -> resolves to criminal/clop (TA505 is a listed alias). Level named-actor: a criminal cluster, not a nation-state unit. The advisory applies ZERO russia/state/proxy tokens to Cl0p; the RfJ 'foreign government' bounty is a solicited hypothesis, not a US finding -> auspex_assessment concur on the criminal attribution, no state nexus asserted."
+doctrine_links: []  # ru/sanctions-response-2022/criminal-proxy-mobilization stays DROPPED (re-assessed 2026-07-10): no cited source documents a Russia-state nexus for Cl0p — CISA=criminal-gang framing, RfJ=solicited (unproven) foreign-gov link, Register/Microsoft="Russian [-speaking] crew" not state-sponsored — and the doctrine's roster (Conti/Killnet/NoName/CARR) never names Cl0p/TA505/FIN11. Stateless profit-criminal, like DarkSide/REvil.
 targets:
   - target_id: orgs/progress-moveit
     role: primary
@@ -47,3 +64,125 @@ targets:
 sources:
   - cisa/2023-06-07_aa23-158a-cl0p-moveit-advisory
   - state/2023-06-16_rfj-clop-reward
+  - emsisoft/2023-07-18_moveit-breach-statistics
+  - bleepingcomputer/2023-06-17_rfj-10m-clop-bounty
+  - forbes/2023-06-16_moveit-oregon-louisiana-doe
+  - grahamcluley/2023-06-07_clop-moveit-june14-deadline
+  - theregister/2023-06-05_ba-bbc-boots-moveit-zellis
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit + badrabbit RE-SOURCE. The two cited sources
+    carried only a fraction of the record's load-bearing claims (CISA:
+    CVE/actor/onset/leak-site model; State RfJ: a GENERIC critical-
+    infrastructure bounty page that never names Cl0p). Scale, victims,
+    the June 14 deadline and the RfJ Cl0p reward were UNSOURCED. Added 5
+    reachable sources (all curl HTTP 200, snapshotted + hashed) and
+    stripped two anachronistic causal claims. All substantive load-bearing
+    claims are now carried by a snapshotted source -> level full (lone
+    carve-out under [c]).
+
+    [a] FACTS. CVE-2023-34362 SQLi zero-day in Progress MOVEit Transfer +
+    LEMURLOOT web shell + 27 May 2023 onset -> CISA/FBI AA23-158A (sha
+    78c6c1b0...fcd5374a, 124,840 B): "beginning on May 27, 2023, CL0P
+    Ransomware Gang, also known as TA505, began exploiting a previously
+    unknown SQL injection vulnerability (CVE-2023-34362) in Progress
+    Software's managed file transfer (MFT) solution known as MOVEit
+    Transfer. Internet-facing MOVEit Transfer web applications were
+    infected with a web shell named LEMURLOOT". "Memorial Day weekend"
+    corroborated by BleepingComputer (sha 74692406...e3bbbe46): "The
+    attacks started on May 27th, over the long U.S. Memorial Day holiday."
+    SCALE — corrected the count-embellishment: record asserted "~2,700
+    orgs / 93M individuals" undated. Emsisoft's running tracker (sha
+    f9fc2289...67ef0e60) states "current as of June 28th, 2024.
+    Organizations: 2,773 Individuals: 95,788,491"; set quantified_impact
+    to that dated figure and added the growth curve (the same tracker's
+    lineage and Register/SecurityWeek reporting show ~383 orgs/~20M by
+    mid-Jul 2023, ~988/~59M by late Aug, ~2,000+/60M+ by late Sep, 2,618/
+    77M by late Oct 2023) so the number is anchored to a source + date,
+    not embellished. VICTIMS re-sourced and trimmed to snapshot-backed
+    names: Oregon DOT ~3.5M + Louisiana OMV 6M from Emsisoft's top-orgs
+    table ("Louisiana Office of Motor Vehicles 6 million ... Oregon
+    Department of Transportation 3.5 million"); US Dept of Energy + Shell +
+    BBC + British Airways + Johns Hopkins from Forbes (sha 5f57f5d1...
+    7afe8a2adf): "entities from airlines to universities to the Department
+    of Energy" and "a string of attacks that have also hit the Shell oil
+    company, the BBC, British Airways, John Hopkins University"; Boots +
+    Aer Lingus + the Zellis payroll supply-chain vector from The Register
+    (sha dc65631d...6d565e4f): "payroll services provider Zellis ...
+    admitted its MOVEit installation had been exploited", "fellow Zellis
+    payroll users Boots and Aer Lingus". DROPPED the unsnapshotted names
+    "Ernst & Young, PwC, Sony, NYC Department of Education" (leak-site
+    claims not carried by any snapshotted source). Extortion model
+    (data-theft, victim-initiated contact, 14 June deadline) from Graham
+    Cluley (sha 7eedaf5f...de6c9928): title "Cl0p gang tells MOVEit hack
+    victims to contact it before June 14", "negotiations will begin to
+    determine a price for the deletion of the stolen data ... if contact
+    is not made before June 14" — plus CISA: "ransom notes threatened to
+    publish the stolen files on the CL0P data leak site if victims did not
+    pay." STRIPPED two anachronistic causal claims with no source and
+    reversed chronology: "Catalyzed CISA's Secure by Design push" (that
+    initiative launched Apr 2023, BEFORE MOVEit) and "accelerated the EU
+    NIS2 supply-chain provisions" (NIS2 entered into force 16 Jan 2023,
+    before MOVEit). Softened the absolute superlative "Largest single ...
+    on public record" to "one of the largest" (Emsisoft carries the 2,773
+    scale but no superlative). Added incident_type intrusion + extortion
+    (record had only data-theft, supply-chain).
+
+    [b] ATTRIBUTION. actor_id criminal/clop; attributing_org CISA + FBI;
+    confidence high; auspex_assessment concur — all upheld. AA23-158A is
+    unambiguous on the CRIMINAL attribution and carries no state nexus.
+    No over-attestation to correct (the record already avoided asserting a
+    nation/unit). attribution_date 2023-06-07 = the advisory date.
+
+    [c] DATES. start_date 2023-05-27 CONFIRMED (CISA + BleepingComputer,
+    above). disclosure_date 2023-05-31 = Progress's public advisory/patch
+    date -- MIRROR-CORROBORATED ONLY: Progress's KB is a JS-SPA (Salesforce
+    Aura) that renders no article prose to a fetcher (curl HTTP 200 but
+    body is a loading shell), so it is un-snapshottable; corroborated by
+    the KB's own permalink slug "MOVEit-Transfer-Critical-Vulnerability-
+    31May2023" and by multiple secondaries. This is the sole load-bearing
+    date not in a prose snapshot; every other claim is snapshot-carried,
+    so level kept full (flip to partial if the strict reading is
+    preferred). end_date 2023-12-31 is an editorial campaign-window bound
+    (active exploitation ended early June 2023; leak-site extortion and
+    disclosures tapered through H2 2023; Emsisoft's tally still grew into
+    2024) — not a discretely sourced date. Source published_on dates
+    verified against raw metadata: Emsisoft datePublished 2023-07-18
+    (figures as-of 2024-06-28); BleepingComputer 2023-06-17 (reports the
+    2023-06-16 RfJ tweet); Forbes 2023-06-16; Graham Cluley 2023-06-07;
+    The Register 2023-06-05.
+
+    [d] DOCTRINE_LINKS. [] retained and re-assessed against fresh sources
+    (task asked whether the ru/sanctions-response-2022 tie is warrantable).
+    It is NOT: CISA frames Cl0p purely as a criminal gang (zero state
+    tokens); the State RfJ bounty is a CONDITIONAL solicitation ("Do you
+    have info linking CL0P Ransomware Gang ... to a foreign government?")
+    — an open question, not a US finding; The Register's "Microsoft blames
+    Russian Clop ransomware crew" denotes a Russian-SPEAKING/Russia-based
+    cybercrime crew, not state sponsorship; and ru/sanctions-response-2022's
+    criminal-proxy-mobilization roster (Conti/TrickBot/Wizard Spider,
+    Killnet, NoName057(16), CARR) never names Cl0p/TA505/FIN11. Cl0p is a
+    stateless profit-criminal, on the DarkSide/REvil pattern -> no doctrine
+    applies. Consistent with the actor's current criminal/clop placement
+    and emptied default_doctrine_alignment_ids.
+
+    [e] ATTRIBUTION_LEVEL. Added named-actor to the attribution (CISA names
+    the Cl0p/TA505 criminal cluster; not a nation or a named military unit).
+
+    [f] ACTOR_ID. criminal/clop resolves to atlas/actors/criminal/clop.yaml
+    (stateless profit-criminal; TA505/FIN11 listed aliases). No actor edit.
+
+    FLAGS (not changed here per scope): (1) two dangling target FKs —
+    orgs/progress-moveit and orgs/oregon-dmv have no registry file under
+    atlas/targets/orgs/ (orgs/us-doe resolves); kept for parity with the
+    GoAnywhere sibling, which carries the same dangling orgs/progress-moveit.
+    (2) state/2023-06-16_rfj-clop-reward is a real US-gov page but as
+    captured is the GENERIC critical-infrastructure bounty landing page
+    that never names Cl0p; kept (it supports the $10M/foreign-gov bounty
+    authority) and augmented with the Cl0p-specific BleepingComputer
+    source — not retired, since it remains cited here and its own audit
+    note documents the genericness.

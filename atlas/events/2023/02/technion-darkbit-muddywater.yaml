@@ -2,73 +2,206 @@ id: 2023-02/technion-darkbit-muddywater
 name: DarkBit ransomware against Technion — MuddyWater / MOIS
 start_date: 2023-02-12
 disclosure_date: 2023-02-12
-end_date: 2023-03-31
+end_date: null
 incident_type:
   - ransomware
   - destructive
-  - data-theft
+  - influence-operation
 initial_vector: unknown
 outcome_summary: |
-  DarkBit Golang ransomware for Windows and ESXi deployed
-  against the Technion — Israel Institute of Technology.
-  Significant disruption; ransom not paid.
+  DarkBit Golang ransomware encrypted on-premises Windows systems
+  at the Technion — Israel Institute of Technology (".darkbit"
+  extension), forcing the university to postpone exams and shut
+  down its IT systems. An ideological ransom note demanded 80
+  bitcoin (~US$1.75M); there is no public indication the ransom
+  was paid.
 false_flag_risk: none
 summary: |
-  Attributed by Israel's INCD to MuddyWater / MERCURY in February
-  2023. Microsoft Threat Intelligence tracks the destructive sub-
-  cluster as DEV-1084. The DarkBit Golang ransomware was deployed
-  to both Windows endpoints and ESXi hypervisors at the Technion
-  with anti-Israel ideological extortion messaging — a destructive
-  operation laundered through a hacktivist persona in the same
-  MOIS pattern previously seen with Pay2Key, Moses Staff, and
-  Homeland Justice covers. Microsoft observed MERCURY / DEV-1084
-  collaboration across on-premises and cloud phases, with the
-  cloud-side destruction conducted via abuse of valid credentials
-  and mass deletion of Azure AD resources rather than file
-  encryption.
+  On 12 February 2023 a previously unknown "DarkBit" persona
+  claimed a ransomware attack on the Technion via a Tor (.onion)
+  site and Twitter / Telegram channels, leaving an ideological
+  note that railed against an "apartheid regime," "occupation,"
+  and tech-industry layoffs and demanded 80 bitcoin. On 7 March
+  2023 Israel's National Cyber Directorate (INCD) attributed the
+  attack to MuddyWater — an Iranian state actor that US Cyber
+  Command had linked to Iran's Ministry of Intelligence and
+  Security (MOIS). Microsoft Threat Intelligence (7 April 2023)
+  tracked the destructive activity as DEV-1084 working "in
+  partnership with MERCURY" (Microsoft's name for the MuddyWater
+  cluster, later renamed Mango Sandstorm), and assessed that the
+  actor "publicly adopted the DarkBit persona and presented itself
+  as a criminal actor interested in extortion, likely as an attempt
+  to obfuscate Iran's link to and strategic motivation for the
+  attack." Though masqueraded as ransomware, Microsoft found the
+  "unrecoverable actions show destruction and disruption were the
+  ultimate goals" — pairing on-premises file encryption with
+  en-masse deletion of the target's Azure cloud resources (server
+  farms, virtual machines, storage accounts, virtual networks).
+  Microsoft does not itself name the victim; the Technion
+  identification rests on INCD plus the shared DarkBit persona and
+  ".darkbit"/DARKBIT extension. This is MOIS destructive coercion
+  laundered through a hacktivist persona — the same persona-
+  laundering pattern attributed to Iranian services elsewhere (e.g.
+  MOIS's attested HomeLand Justice cover). Kept deliberately
+  distinct from the separately-attributed Moses Staff / Pay2Key /
+  Agrius clusters, which are not MuddyWater.
 attributions:
   - actor_id: ir/mois/muddywater
     attributing_org: Israel National Cyber Directorate
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-02-12
+    attribution_date: 2023-03-07
     attribution_source_id: incd/2023-02_technion-darkbit
+    notes: |
+      INCD publicly attributed the Technion/DarkBit attack to
+      MuddyWater on 2023-03-07. The gov.il advisory is JS-gated (raw
+      snapshot is a 2,554 B Angular shell), so the attribution is
+      anchored on the snapshotted The Record mirror, which quotes
+      INCD verbatim: "Israel's National Cyber Directorate on Tuesday
+      attributed the attack to a threat group tracked as MuddyWater,
+      which last year U.S. Cyber Command linked to the Iranian
+      Ministry of Intelligence and Security."
   - actor_id: ir/mois/muddywater
     attributing_org: Microsoft Threat Intelligence
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-04-07
     attribution_source_id: microsoft/2023-04_dev-1084-darkbit
+    notes: |
+      Microsoft attributes the destructive DarkBit operation to
+      DEV-1084, which "likely worked in partnership with MERCURY—an
+      Iran-based actor that the US Cyber Command has publicly linked
+      to Iran's Ministry of Intelligence and Security (MOIS)."
+      MERCURY (= Mango Sandstorm) is Microsoft's tracking name for
+      the MuddyWater cluster; the MOIS nexus is credited to US Cyber
+      Command (secondary), and the DEV-1084<->MERCURY partnership is
+      vendor-hedged ("likely"). Microsoft does not name the Technion.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: attested
     reasoning: |
-      DarkBit persona used to launder MOIS / MuddyWater
-      destructive operation against Israeli academic target —
-      INCD attribution attests the service link.
-    attesting_source_id: incd/2023-02_technion-darkbit
+      Microsoft states the strategic purpose directly: the actor
+      "publicly adopted the DarkBit persona and presented itself as a
+      criminal actor interested in extortion, likely as an attempt to
+      obfuscate Iran's link to and strategic motivation for the
+      attack." A state (MOIS / MuddyWater) destructive operation
+      laundered behind a hacktivist ransomware persona to preserve
+      deniability is exactly what the persona-laundering pillar
+      encodes.
+    attesting_source_id: microsoft/2023-04_dev-1084-darkbit
+    inference_basis:
+      source_quote: "DEV-1084 publicly adopted the DarkBit persona and presented itself as a criminal actor interested in extortion, likely as an attempt to obfuscate Iran's link to and strategic motivation for the attack."
+      source_id: microsoft/2023-04_dev-1084-darkbit
     counter_explanation: null
     contested: false
     analyst: claude
-  - doctrine_id: ir/forward-defense
-    pillar_id: null
+  - doctrine_id: ir/resistance-axis
+    pillar_id: ir/resistance-axis/anti-israel-coercion
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Israeli academic target consistent with Forward Defense
-      anti-Israel projection; INCD attribution attests Iran-
-      MOIS direction.
-    attesting_source_id: incd/2023-02_technion-darkbit
+      An Iranian MOIS-linked actor (MuddyWater) running a destructive
+      operation against an Israeli academic institution behind an
+      overtly anti-Israel ideological ransom note fits the coordinated
+      anti-Israel coercive-cyber pillar. Strongly inferred rather than
+      attested because the cited sources establish the anti-Israel
+      targeting and the MOIS nexus but do not state the Resistance-Axis
+      coordinated-coercion goal in substance for this single-actor
+      operation.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Attribution: INCD attributes the attack to MuddyWater, which US Cyber Command linked to Iran's MOIS (The Record, 2023-03-07)."
+        - "Target: the Technion — Israel Institute of Technology, an Israeli academic institution (BleepingComputer; The Record)."
+        - "Messaging: the ransom note is overtly anti-Israel — an 'apartheid regime,' 'occupation,' 'war crimes,' and a tech-layoffs grievance (The Record; BleepingComputer)."
+        - "Intent: Microsoft assesses 'destruction and disruption were the ultimate goals,' i.e. coercion/harm rather than financial extortion."
+      ruled_out: "Financially-motivated cybercrime — ruled out by Microsoft's finding that the ransomware guise masked destruction as the objective and that the DarkBit persona existed to obfuscate Iran's strategic motivation, plus the ideological (not payment-mechanics-focused) tenor of the note."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/technion
+    country: il
     role: primary
     outcome: |
-      Significant disruption; ransom not paid.
+      Exams postponed and IT systems shut down; on-premises Windows
+      systems encrypted (".darkbit"). 80 bitcoin (~US$1.75M) demanded;
+      no public indication of payment.
 sources:
   - incd/2023-02_technion-darkbit
   - microsoft/2023-04_dev-1084-darkbit
+  - therecord/2023-03-07_technion-darkbit-muddywater
+  - bleepingcomputer/2023-02-13_darkbit-technion
+  - k7computing/2023-04-21_muddywater-darkbit
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against snapshotted sources. REAL event; RE-SOURCE path taken
+    for the bot-walled primary. STEP 0: gov.il INCD advisory returns HTTP
+    200 but is a JS-gated 2,554 B Angular shell (sha dc72a345…) — body not
+    curl-verifiable; Microsoft raw is the full 330,094 B article
+    (sha 960c1c6c…). Added three snapshotted secondaries so every load-
+    bearing claim is carried: therecord/2023-03-07 (sha 59e6c114…, 80,105 B),
+    bleepingcomputer/2023-02-13 (sha 8dd1b520…, 97,713 B),
+    k7computing/2023-04-21 (sha ca95ada0…, 104,983 B).
+    [a] FACTS: Technion victim, 80 BTC (~US$1.75M) demand, exams-postponed /
+    IT-shutdown disruption, and anti-Israel ideological note ("apartheid
+    regime"/tech-layoffs) all now carried verbatim by The Record +
+    BleepingComputer. Golang carried by K7 ("This DarkBit ransomware sample
+    is written in GoLang"). Microsoft carries the destructive-masqueraded-
+    as-ransomware finding, the DARKBIT extension, and the Azure cloud
+    destruction. STRIPPED "and ESXi" from the deployment claim: no cited
+    source ties an ESXi encryptor to the Technion attack — K7's sample is
+    Windows-only (PrintBrm.exe/vssadmin.exe) and reporting states the
+    "esxi.darkbit" encryptor was a LATER capability. STRIPPED the bare
+    "ransom not paid" assertion → "no public indication of payment" (the
+    disruption is sourced; non-payment is not stated by a cited source).
+    [b] ATTRIBUTION: both attributions resolve to ir/mois/muddywater
+    (= MERCURY / Mango Sandstorm; DEV-1084 is the overlapping destructive
+    sub-cluster). INCD firm on MuddyWater (concur). Microsoft hedged on the
+    op ("DEV-1084 likely worked in partnership with MERCURY") and credits
+    the MOIS link to US Cyber Command (secondary) — documented in the
+    attribution notes; core Iranian-state/MERCURY read is solid, so concur
+    retained. Added attribution_level: named-actor to both (was missing).
+    Kept MuddyWater DISTINCT from Moses Staff / Pay2Key / Agrius (the
+    conflation template) — no source merges them; the prior summary's
+    "Pay2Key, Moses Staff … MOIS pattern" line was rewritten to the attested
+    HomeLand Justice example only.
+    [c] DATES: start/disclosure 2023-02-12 retained (attack + DarkBit claim,
+    per BleepingComputer 02-13 reporting midday-Sunday 02-12). CORRECTED INCD
+    attribution_date 2023-02-12 → 2023-03-07 (The Record: INCD "on Tuesday
+    [7 March] attributed the attack … to MuddyWater"; CyberScoop corroborates
+    the Tue 03-07 announcement). CORRECTED INCD source published_on
+    2023-02-15 → 2023-03-07. end_date 2023-03-31 was UNSOURCED → null. Source
+    published_on verified: Microsoft 2023-04-07 ✓, The Record 2023-03-07 ✓
+    (byline), BleepingComputer 2023-02-13 ✓ (byline), K7 2023-04-21 ✓
+    (article:published_time meta).
+    [d] DOCTRINE_LINKS: persona-laundering kept ATTESTED but re-pointed from
+    the un-verifiable INCD source to Microsoft, whose raw states the goal in
+    substance ("…adopted the DarkBit persona … to obfuscate Iran's link to
+    and strategic motivation for the attack"); added inference_basis.
+    source_quote + source_id. REPLACED the forward-defense link (was
+    attested on the un-verifiable INCD source; no source states the forward-
+    defense goal) with ir/resistance-axis/anti-israel-coercion at
+    strongly_inferred, with inference_basis.signals[] + ruled_out. Both links
+    are attacker-rationale (Iran's own doctrine on Iran's operation) — no
+    perspective tag needed. colon-space list items quoted.
+    [e] ATTRIBUTION_LEVEL: named-actor for both attributions (INCD names
+    MuddyWater; Microsoft names MERCURY/DEV-1084 — named actors, not a bare
+    nation and not a formal military-unit designation).
+    [f] ACTOR_ID: ir/mois/muddywater resolves to atlas/actors/ir/muddywater
+    .yaml (id: ir/mois/muddywater) — correct.
+    FLAGS for orchestrator: (1) target_id orgs/technion is a DANGLING FK — no
+    atlas/targets/orgs/technion.yaml exists; needs a target record created.
+    (2) New source directory atlas/sources/k7computing/ created (first K7
+    Labs record). (3) actor file note claims "MERCURY = … = MuddyWater per
+    Microsoft's own taxonomy note in this post" — the Microsoft post equates
+    MERCURY=Mango Sandstorm but does NOT say "MuddyWater" (that alias is
+    external/MISP); minor over-precision in the actor note, out of scope here.

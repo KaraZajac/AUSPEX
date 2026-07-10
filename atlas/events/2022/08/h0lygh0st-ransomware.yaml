@@ -5,33 +5,46 @@ disclosure_date: 2022-07-14
 end_date: null
 incident_type:
   - ransomware
+  - extortion  # double-extortion: MSTIC "threaten to publish victim data ... or send the data to the victims' customers"; CISA tags "Extortion"
 initial_vector: n-day
 outcome_summary: |
   Opportunistic ransomware campaign against small and medium
-  businesses globally. Demands typically 1.2–5 BTC. Modest
-  revenue; pattern of low-yield ransomware operations
-  distinguishing H0lyGh0st from the more targeted Maui
-  (Andariel) operations.
+  businesses in multiple countries; MSTIC assessed the victims
+  (manufacturing firms, banks, schools, event/meeting planners)
+  as targets of opportunity. Ransom demands typically 1.2–5 BTC,
+  often negotiated down to less than a third of the initial ask.
+  Low-yield: as of early July 2022 Microsoft's review of the
+  operators' wallet transactions found no successful ransom
+  payments extorted from victims.
 false_flag_risk: none
 summary: |
   Microsoft MSTIC introduced the DEV-0530 / H0lyGh0st cluster in
-  July 2022. Subsequently consolidated under CISA AA23-040A as one
-  of multiple DPRK ransomware operations. MSTIC documents two
-  generations of the H0lyGh0st encryptor — SiennaPurple (the
-  earlier BTLC_C.exe portable executable, unobfuscated) and
-  SiennaBlue (BTLC.exe, Go-based with .h0lyenc extension) — both
-  delivered after initial access via exploitation of vulnerable
-  internet-facing applications (notably CVE-2022-26352 DotCMS
-  arbitrary file upload), with PowerShell-based execution chains,
-  scheduled-task persistence, and the typical DPRK Tor-fronted
-  C2. The operators front the campaign with an ideological
-  hacktivist-style "robbing the rich" persona, providing
-  plausibly criminal cover for state-tasked revenue collection.
+  July 2022; CISA's February 2023 AA23-040A #StopRansomware DPRK
+  advisory subsequently grouped H0lyGh0st with Maui as DPRK
+  ransomware. MSTIC classified the H0lyGh0st ransomware under two
+  malware families — SiennaPurple (the earlier C++ portable
+  executable BTLC_C.exe, few-featured, using simple 0x30-subtract
+  string obfuscation) and SiennaBlue (a later Go-based family,
+  e.g. BTLC.exe, encrypting to the .h0lyenc extension). MSTIC
+  suspects initial access came from exploiting vulnerable
+  public-facing web applications — it flags CVE-2022-26352
+  (DotCMS) as a candidate and observed no 0-day use — with a
+  scheduled-task ("lockertask") persistence mechanism in the
+  latest variant, a clearnet HTTP C2, and an .onion site used for
+  victim interaction and data-leak threats. On that site the
+  operators claim to "close the gap between the rich and poor" and
+  cast the intrusions as raising victims' security awareness — an
+  ideological, hacktivist-style self-justification. MSTIC left the
+  motive explicitly open: state-sponsored revenue generation, or
+  individuals with PLUTONIUM (Andariel) ties "moonlighting for
+  personal gain," calling it "equally possible" the North Korean
+  government is not enabling the attacks.
 attributions:
   - actor_id: kp/unscoped/h0lygh0st
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org_confidence: moderate   # MSTIC's DEV-#### label is explicitly pre-high-confidence ("until we reach high confidence about the origin or identity of the actor"), and it hedges the state nexus: "equally possible that the North Korean government is not enabling or supporting these ransomware attacks" (moonlighting theory)
+    attribution_level: named-actor   # MSTIC names the DEV-0530/H0lyGh0st actor but no DPRK service/unit -> named-actor, not named-unit (the 101 "RGB" hits in the raw are CSS rgb() color codes)
+    auspex_assessment: concur-with-caveat   # concur with DPRK-origin (UTC+9 temporal analysis, PLUTONIUM infra/tool/comms overlap); caveat = MSTIC's own open state-sponsorship question
     attribution_date: 2022-07-14
     attribution_source_id: msft/2022-07-14_h0lygh0st-dev-0530
 doctrine_links:
@@ -50,14 +63,124 @@ doctrine_links:
       source_id: cisa/2023-02-09_aa23-040a-stopransomware-dprk
       signals:
         - "AA23-040A groups H0lyGh0st with DPRK ransomware whose proceeds support 'DPRK national-level priorities... including cyber operations' (generic regime-funding)"
+        - "MSTIC (2022) left motive open (state-sponsored vs. PLUTONIUM-tied 'moonlighting for personal gain'); the later joint US-ROK AA23-040A resolves toward a DPRK state-ransomware reading, which is what the revenue-aggregation link rests on"
       ruled_out: "WMD-financing / 8th-Congress defense plan by name — not named in AA23-040A"
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/retail
+  # MSTIC named victim categories ("targets of opportunity"): "primarily small-to-midsized
+  # businesses, including manufacturing organizations, banks, schools, and event and meeting
+  # planning companies." (Prior sectors/retail + sectors/ict/software were unsupported by
+  # either cited source; schools -> academic and event/meeting planning -> hospitality are
+  # nearest-taxonomy maps.)
+  - target_id: sectors/manufacturing
     role: primary
-  - target_id: sectors/ict/software
+  - target_id: sectors/finance/banking
+    role: primary
+  - target_id: sectors/academic
+    role: primary
+  - target_id: sectors/hospitality
     role: primary
 sources:
   - msft/2022-07-14_h0lygh0st-dev-0530
   - cisa/2023-02-09_aa23-040a-stopransomware-dprk
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs raw snapshots, both hashes re-verified this pass:
+    msft__2022-07-14_h0lygh0st-dev-0530.html sha256
+    b11e84646a033436f29878c0da8d4726e2c656e6961a2ffa49fab9a244b7c4d7;
+    cisa__2023-02-09_aa23-040a-stopransomware-dprk.html sha256
+    e56423c3085785f9a685a2150c7a2551c9a39a3227831a62558e6bc7b4f3ba97.
+
+    [a] FACTS — corrections applied:
+    - REMOVED "PowerShell-based execution chains" (unsupported / AI-embellishment):
+      the only "powershell" in the MSFT raw is the compile-time PDB path
+      "M:\ForOP\attack(utils)\attack tools\Backdoor\powershell\btlc_C\Release\btlc_C.pdb";
+      the observed execution uses cmd.exe + schtasks
+      ("cmd.exe /Q /c schtasks /create /tn lockertask ..."), not PowerShell.
+    - FIXED "SiennaPurple ... unobfuscated" (contradicted): MSFT says BTLC_C.exe
+      "uses a simple obfuscation method for strings where 0x30 is subtracted from
+      the hex value of each character" and "is written in C++". Rewrote to
+      "C++ ... few-featured, using simple 0x30-subtract string obfuscation".
+    - SOFTENED the CVE claim to MSTIC's own hedge: "MSTIC suspects that DEV-0530
+      might have exploited vulnerabilities such as CVE-2022-26352 (DotCMS remote
+      code execution vulnerability) ... To date, MSTIC has not observed DEV-0530
+      using any 0-day exploits." (Event had asserted exploitation flatly and
+      mislabeled the CVE "arbitrary file upload"; now "suspects ... candidate".)
+    - FIXED "typical DPRK Tor-fronted C2": the malware C2 is clearnet
+      (ServerBaseURL hxxp://193[.]56[.]29[.]123:8888); the .onion is the
+      victim-interaction/leak channel ("maintains an .onion site that the group
+      uses to interact with their victims").
+    - outcome_summary "Modest revenue" was contradicted: "As of early July 2022,
+      a review of the attackers' wallet transactions shows that they have not
+      successfully extorted ransom payments from their victims." Rewrote to
+      "no successful ransom payments ... found." Kept "1.2 to 5 Bitcoins" and the
+      negotiate-down-to-<1/3 detail (both verbatim-supported). Dropped the
+      Maui-"(Andariel)"/"more targeted" contrast — neither cited source attributes
+      Maui to Andariel (that rests on the uncited AA22-187A Maui advisory).
+    - incident_type: ADDED "extortion" — double-extortion is explicit ("As part of
+      their extortion tactics, they also threaten to publish victim data on social
+      media or send the data to the victims' customers if they refuse to pay";
+      CISA tags "Extortion").
+
+    [b] ATTRIBUTION — attributing_org_confidence high -> moderate; auspex_assessment
+    concur -> concur-with-caveat. MSTIC's DEV-#### label is explicitly
+    pre-high-confidence ("a temporary name given to an unknown, emerging, or a
+    developing cluster of threat activity ... until we reach high confidence about
+    the origin or identity of the actor"), and MSTIC hedges the state nexus: "it is
+    equally possible that the North Korean government is not enabling or supporting
+    these ransomware attacks. Individuals with ties to PLUTONIUM infrastructure and
+    tools could be moonlighting for personal gain." (Sibling DPRK events kept at
+    high were noted as stated "flatly / without hedging"; this one is not.) The
+    DPRK-origin itself is well-supported even under the moonlighting theory ("A
+    group of actors originating from North Korea"; UTC+9 temporal analysis;
+    PLUTONIUM infra/tool/comms overlap), so origin stays nation-nexus. actor_id
+    kp/unscoped/h0lygh0st confirmed — neither source names the RGB/Bureau 121/Unit
+    121/Lab 110 (the 101 "RGB" hits in the MSFT raw are CSS rgb()/rgba() codes).
+
+    [c] DATES — start_date 2021-06-01 OK ("developing and using ransomware in
+    attacks since June 2021"; BTLC_C.exe "first seen in June 2021").
+    disclosure_date 2022-07-14 OK (blog byline "July 14, 2022"). Source
+    published_on verified against bylines (MSFT 2022-07-14; CISA AA23-040A = 2023
+    day-040 = 2023-02-09).
+
+    [d] DOCTRINE — kp/8th-congress-defense-plan/revenue-aggregation kept
+    strongly_inferred (NOT attested): CISA raw has 0 occurrences of
+    WMD/"weapons of mass destruction"/missile/ballistic/nuclear/"Party Congress";
+    its only purpose language is proximate — "revenue from these cryptocurrency
+    operations supports DPRK national-level priorities and objectives, including
+    cyber operations targeting the United States and South Korea governments"
+    (verbatim). Added a signal noting MSTIC's 2022 moonlighting alternative is
+    resolved toward state-ransomware by the later joint US-ROK advisory (what the
+    link rests on). perspective left default (attacker-rationale — DPRK's own
+    doctrine on a DPRK op).
+
+    [e] ATTRIBUTION_LEVEL — ADDED named-actor: MSTIC names the specific actor
+    (DEV-0530 / H0lyGh0st) but no DPRK service/unit -> named-actor, not named-unit
+    (corpus-consistent with kp/unscoped/moonstone-sleet, kp/unscoped/ruby-sleet).
+    The sibling CISA event correctly carries the coarser `nation` (CISA names no
+    actor, only "DPRK state-sponsored").
+
+    [f] ACTOR_ID — kp/unscoped/h0lygh0st resolves to atlas/actors/kp/h0lygh0st.yaml
+    (id: kp/unscoped/h0lygh0st). Real operation (not a counter-action), real actor.
+
+    TARGETS — replaced sectors/retail + sectors/ict/software (neither named in
+    either source for H0lyGh0st victims) with MSTIC's named victim categories, all
+    "targets of opportunity": "primarily small-to-midsized businesses, including
+    manufacturing organizations, banks, schools, and event and meeting planning
+    companies" -> sectors/manufacturing, sectors/finance/banking, sectors/academic
+    (schools; nearest taxonomy sector), sectors/hospitality (event/meeting
+    planning; nearest taxonomy sector).
+
+    false_flag_risk kept none: the "close the gap between the rich and poor" /
+    security-awareness persona is self-legitimizing cover, not impersonation of
+    another actor; CISA's note that DPRK actors have "portrayed themselves as other
+    ransomware groups, such as ... REvil" is general to DPRK ransomware, not
+    attributed to H0lyGh0st.
+
+    Snapshots PRESERVE tier — no source url/tier changed; both raw_snapshot hashes
+    re-verified equal to the recorded content_sha256.

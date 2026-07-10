@@ -5,21 +5,33 @@ disclosure_date: 2022-04-18
 end_date: 2022-06-30
 incident_type:
   - ransomware
+  - extortion
   - disruption
-initial_vector: phishing
+initial_vector: unknown
 outcome_summary: |
-  Conti intrusion of the Costa Rican Ministry of Finance disclosed
-  Apr 18 2022; spread to 27 government bodies including the social-
-  security agency. Costa Rica declared a national state of emergency
-  on May 8 2022 (President Rodrigo Chaves on day three of his
-  administration) — the first national emergency declaration over
-  a ransomware attack on public record. Tax-collection systems
-  offline for weeks; estimated USD 30M / day economic impact at
-  peak. Conti demanded USD 10M then USD 20M ransom; Costa Rica
-  refused. Conti shut down its leak-site infrastructure May 19
-  2022, treated by some analysts as the operational end of Conti
-  branding. A follow-on Hive ransomware attack on CCSS (Costa
-  Rica's public-healthcare agency) occurred May 31 2022.
+  Conti probed Costa Rica's Ministry of Finance (Hacienda) during
+  the week of April 10 2022; by the early hours of April 18 files
+  were encrypted and two key systems — the digital tax service and
+  the customs-control IT system — were crippled (disclosure April
+  18). The intrusion spread across 27 government bodies through
+  early May (Finance/Hacienda, the Labor ministry MTSS, MICITT, the
+  national meteorological institute, RACSA, and the Cartago
+  electrical board Jasec among them), of which President Chaves said
+  nine were "very affected." Conti demanded USD 10M, then raised the
+  figure to USD 20M, and uploaded ~672 GB of stolen data when Costa
+  Rica refused to pay. On May 8 2022 — his first day in office —
+  incoming President Rodrigo Chaves declared a national state of
+  emergency over the attack, the first time a country has done so
+  in response to a cyberattack. Import/export trade was paralyzed;
+  local reports estimated losses of roughly USD 38M/day (ranges
+  cited up to USD 125M over 48h). US firm AdvIntel declared Conti's
+  operations "dead" on May 19 2022, reporting its leak-site admin
+  panel and negotiation site shut down and infrastructure being
+  reset — the group had begun dismantling its brand in early May. A
+  separate follow-on attack struck the Costa Rican Social Security
+  Fund (CCSS, public healthcare) on May 31 2022 using HIVE
+  ransomware, which is believed — though not confirmed — to share
+  ecosystem ties with Conti.
 quantified_impact:
   government_bodies_affected: 27
   national_emergency: true
@@ -28,44 +40,180 @@ quantified_impact:
 false_flag_risk: none
 campaign_id: conti-trickbot-fsb-cluster
 summary: |
-  Most consequential government-level ransomware incident on
-  public record. Notable strategic ambiguity: was Conti
-  performing exit-show theater (the leak site went down weeks
-  later) or executing a deliberate Latin-America-targeting
-  operation? The attack came two months into the Russia-Ukraine
-  war and after Costa Rica had publicly supported Ukraine. The
-  follow-on Hive attack on CCSS healthcare reinforces the
-  Russian-criminal-ecosystem reading.
+  Widely assessed as the most significant ransomware incident to
+  date (Emsisoft's Brett Callow: "quite unprecedented") and one of
+  the first times a criminal ransomware group explicitly held a
+  national government to ransom. The operation's strategic meaning
+  is genuinely contested: AdvIntel, Emsisoft and Check Point read
+  it as exit-scam "showboating" — cover for Conti dismantling its
+  brand (declared dead May 19) while personnel migrated to Black
+  Basta / Royal / Karakurt — rather than state-directed retaliation.
+  Conti's uncharacteristic political rhetoric (demanding the
+  government's overthrow, addressing "US terrorists (Biden and his
+  administration)") and near-simultaneous hits on Peru's finance
+  ministry fit an opportunistic/theatrical reading. The Russia nexus
+  (Conti's Feb 2022 pro-Kremlin pledge; ContiLeaks FSB-liaison
+  documentation) keeps a sanctions-response framing plausible, but
+  no cited source establishes Russian state tasking for THIS
+  operation. The follow-on Hive/CCSS attack is tied to Conti only by
+  "believed" ecosystem links, which the reporting itself flags as
+  uncertain.
 attributions:
   - actor_id: ru/proxies/conti
-    attributing_org: Costa Rica MICITT + Microsoft + Mandiant
+    attributing_org: Conti (self-claimed via "unc1756") + Costa Rican government + US Dept of State
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-04-18
-    attribution_source_id: micitt-cr/2022-04-18_conti-attribution
+    attribution_source_id: wired/2022-06-12_conti-costa-rica-new-ransomware-era
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
+    perspective: attacker-rationale
     pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
+    inference_basis:
+      signals:
+        - "Conti's 25 Feb 2022 leak-site 'Warning' pledged full support to the Russian government (self-attested proxy alignment; see 2022-02/conti-pledge-leaks, which carries this at attested)."
+        - "The operation falls inside the post-invasion window against a state aligned rhetorically with Ukraine and the West."
+        - "ContiLeaks (Feb-Mar 2022) and the US/UK Treasury/FCDO sanctions (Feb/Sep 2023) document a Conti / FSB Center-18 liaison and safe-haven — the substrate of the criminal-proxy-mobilization pillar."
+      alternatives:
+        - "Exit-scam / brand-cover 'showboating' — AdvIntel, Emsisoft and Check Point assessed the attack as a distraction while Conti wound down its brand (declared dead 19 May), not state-tasked retaliation (dominant sourced reading)."
+        - "Opportunistic criminal targeting of soft Latin-American government IT — Conti hit Peru's finance ministry and intelligence agency around the same time; the victim looks chosen for payability, not for aiding Ukraine."
+        - "No cited source establishes Russian state tasking or a sanctions-retaliation motive for this specific operation."
     reasoning: |
-      Timing (post-invasion, after Costa Rica's public Ukraine
-      support) and target (a state-aligned-against-Russia government)
-      align with the criminal-proxy mobilization pattern, though
-      no direct state-tasking attestation exists. Conti's own Feb
-      25 "Warning" pledging support to Russia is the closest
-      primary-source link.
-    contested: false
+      KEEP (Kara-approved for Conti events): Conti is a state-adjacent,
+      pledged proxy, so the sanctions-response posture is retained here
+      — unlike the stateless DarkSide/REvil cases where the tag was
+      dropped. Held at PLAUSIBLE (not strongly_inferred/attested)
+      because the dominant sourced reading of THIS operation is
+      criminal exit-scam theater and no cited source ties the Costa
+      Rica targeting to Russian state direction. The attested
+      criminal-proxy-mobilization attestation lives on the Feb 2022
+      pledge event (2022-02/conti-pledge-leaks), not on this operation.
+    contested: true
     analyst: claude
 targets:
   - target_id: orgs/costa-rica-government
     role: primary
+    outcome: |
+      27 government bodies breached by Conti (Apr-May 2022); Ministry
+      of Finance (Hacienda) tax and customs systems crippled, nine
+      bodies "very affected," national emergency declared, ~672 GB
+      exfiltrated. Ransom (USD 10M then 20M) refused.
   - target_id: orgs/costa-rica-ccss
     role: primary
     outcome: |
-      Hive ransomware against CCSS public-healthcare May 31 2022,
-      treated as a follow-on operation by Conti-ecosystem
-      personnel.
+      Separate follow-on attack on the Costa Rican Social Security
+      Fund (CCSS, public healthcare) on May 31 2022 — perpetrated by
+      HIVE ransomware, NOT Conti. Hive is believed (not confirmed) to
+      share ecosystem ties with Conti; the reporting explicitly
+      questions whether the two attacks are linked. CCSS declared an
+      "institutional emergency" June 3; ~759 of 1,500 servers and
+      thousands of appointments affected. (Candidate for its own
+      Hive-attributed event — see qc.)
 sources:
-  - micitt-cr/2022-04-18_conti-attribution
+  - wired/2022-06-12_conti-costa-rica-new-ransomware-era
+  - bbc/2022-05-18_costa-rica-at-war-conti
+  - bleepingcomputer/2022-05-09_costa-rica-national-emergency-conti
   - state/2022-05-06_rfj-conti-reward
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW (claude-opus-4.8/max, 2026-07-10).
+    Phantom-remediation path: RE-SOURCE (badrabbit model) — event is
+    REAL and well-documented; the prior primary citation
+    (micitt-cr/2022-04-18_conti-attribution) was a homepage-shell
+    (url = MICITT root; wayback exposes only nav/"inicio" shells, no
+    incident comunicado). Removed it from this event and re-sourced to
+    four snapshotted records; MICITT record annotated RETIRE-candidate
+    (now orphaned, NOT deleted).
+
+    [a] FACTS — corrected against raw:
+      * "day three of his administration" was WRONG. BBC: "The
+        declaration was made on the day Mr Chaves took office"; Wired:
+        "On May 8, Chaves started his four-year term as president and
+        immediately declared a 'national emergency'"; BleepingComputer:
+        "signed into law by Chaves on Sunday, May 8th." Fixed to "his
+        first day in office."
+      * "$30M/day" was unsourced. Wired (citing local reports): "losses
+        range from $38 million per day up to $125 million over 48
+        hours." Prose changed to ~USD 38M/day (range up to 125M/48h).
+      * "spread to 27 ... including the social-security agency"
+        conflated two separate attacks. The 27 bodies were Conti's
+        (mid-April-early May); the CCSS social-security/health fund was
+        hit SEPARATELY by HIVE on May 31 (Wired). De-conflated.
+      * "first national emergency ... over a ransomware attack" rephrased
+        to Wired's exact framing: "the first time a country has done so
+        in response to a cyberattack."
+      * Leak-site shutdown: refined to AdvIntel's May 19 declaration that
+        Conti's operations were "dead" (admin panel + negotiation site
+        down, infra reset; brand dismantling began early May) — Wired.
+      * 27 bodies (BBC/Wired), $10M->$20M demand (BBC/Wired), refusal to
+        pay, national emergency, tax/customs paralysis, ~672 GB exfil
+        (Wired 672 GB / BBC "more than 600 GB") — all carried by
+        snapshotted sources.
+    [b] ATTRIBUTION — was over-attested ("Costa Rica MICITT + Microsoft +
+        Mandiant"); Microsoft/Mandiant are not in any cited source.
+        Corrected to what IS sourced: Conti self-claim (unc1756 on its
+        own leak site, per Wired) + Costa Rican government + US Dept of
+        State (RfJ; BBC: "It blamed Conti for the cyber-attacks which
+        hit Costa Rica"). Russia nexus is stated at NATION level only
+        ("thought to be run from Russia") — no state tasking. Confidence
+        high (self-claim + govt + US) retained.
+    [c] DATES — disclosure 2022-04-18 confirmed (Wired encryption "early
+        hours of April 18"; BC "Since April 18th ... unavailable").
+        start_date 2022-04-12 kept as a within-window representative of
+        Wired's "started during the week of April 10" / "mid-April"
+        probing phase (source gives a week, not a day). end_date
+        2022-06-30 is an APPROXIMATE recovery-tail marker (CCSS still
+        restoring systems through June per Wired 2022-06-12); not
+        precisely sourced — flagged. Source bylines verified: Wired
+        2022-06-12 (Matt Burgess), BBC 2022-05-18, BC 2022-05-09
+        (Ax Sharma), RfJ 2022-05-06.
+    [d] DOCTRINE — ru/sanctions-response-2022/criminal-proxy-mobilization
+        KEPT (Kara-approved for Conti events). Downgraded
+        strongly_inferred -> PLAUSIBLE and restructured with
+        inference_basis {signals[], alternatives[]}; perspective
+        attacker-rationale (Russian attacker doctrine on a Russian-proxy
+        op); contested true. NOT attested: no cited source states the
+        sanctions-response terminal goal for THIS operation, and the
+        dominant sourced reading is exit-scam theater. (Contrast the
+        sibling 2022-02/conti-pledge-leaks, attested, where Conti's own
+        pledge IS the self-attestation.)
+    [e] ATTRIBUTION_LEVEL — added: named-actor (Conti; group-level
+        self-claim + govt/US attribution; no unit, not a nation-state
+        attribution).
+    [f] ACTOR_ID — ru/proxies/conti resolves to atlas/actors/ru/conti.yaml
+        (internal id: ru/proxies/conti); consistent with
+        2022-02/conti-pledge-leaks. No `criminal/conti` exists. Correct.
+
+    initial_vector: "phishing" -> "unknown" (Conti's typical vector is
+    phishing/TrickBot/BazarLoader, but no cited source establishes the
+    specific initial access for the Hacienda intrusion).
+
+    SNAPSHOTS (PRESERVE tier; sha256 in each source record):
+      wired__2022-06-12_conti-costa-rica-new-ransomware-era.html
+        9981..2155 (1389981 B, HTTP 200)
+      bbc__2022-05-18_costa-rica-at-war-conti.html
+        efcd..e0a2 (319550 B, HTTP 200)
+      bleepingcomputer__2022-05-09_costa-rica-national-emergency-conti.html
+        226c..769f (95967 B, HTTP 200)
+      state__2022-05-06_rfj-conti-reward.html
+        f15d..6df5 (128723 B, HTTP 200)
+    level=full: every load-bearing claim now carried by a snapshotted
+    source.
+
+    FLAGS for orchestrator (out of audit scope — not edited here):
+      * Target files orgs/costa-rica-government and orgs/costa-rica-ccss
+        do NOT exist in atlas/targets/orgs/ (dangling refs; referenced
+        only by this event). Need creation.
+      * micitt-cr/2022-04-18_conti-attribution is now orphaned ->
+        RETIRE candidate (annotated in the source record; not deleted).
+      * The May 31 Hive/CCSS attack is a DIFFERENT actor (Hive, not
+        Conti) and is a candidate to split into its own Hive-attributed
+        event; retained here as a bundled follow-on with an
+        attribution-accurate (hedged) target outcome.

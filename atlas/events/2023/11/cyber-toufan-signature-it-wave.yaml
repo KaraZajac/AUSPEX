@@ -4,84 +4,103 @@ start_date: 2023-11-16
 disclosure_date: 2023-11-18
 end_date: 2023-12-31
 incident_type:
+  - intrusion
   - destructive
   - wiper
   - data-theft
+  - leak
+  - supply-chain
   - influence-operation
-initial_vector: supply-chain  # via Signature-IT hosting provider
+initial_vector: supply-chain  # via Signature-IT hosting provider (Check Point assessment; persona disputed it explained all leaks)
 outcome_summary: |
-  On 16 November 2023 the Cyber Toufan persona launched a
-  destructive cyber operation against the Israeli hosting provider
-  Signature-IT and pivoted from that single compromise to
-  destructive operations against approximately 40-100 downstream
-  Israeli organizations. Victim list includes the Israel
-  Innovation Authority, Israel National Archive, Ministry of
-  Welfare and Social Security, Ministry of Health, Israel
-  Securities Authority, Toyota Israel, IKEA Israel, Homecenter
-  Israel, Israel Nature and Parks Authority, Radware, Max
-  Security, and multiple academic institutions. The persona
-  used the legitimate Linux "shred" utility for unrecoverable
-  file destruction; several victim organizations remained
-  offline for weeks. The Israel National Archive remained
-  degraded for approximately seven months.
+  Beginning in mid-to-late November 2023, the Cyber Toufan persona
+  ran a destructive "leak-a-day" campaign against Israeli
+  organizations, coupling Telegram data leaks with file-wiping.
+  Check Point assessed that the leaks appeared to stem largely from
+  a single compromise of the Israeli hosting provider Signature-IT;
+  Cyber Toufan publicly disputed that all of the leaks traced to
+  that one hack. Security researchers counted roughly 100 affected
+  Israeli organizations (Kevin Beaumont: data of ~59 orgs leaked on
+  the group's Telegram channel, with ~40 more likely compromised
+  via the hosting/MSP pivot; SecurityWeek reported "over 100").
+  Named victims include the Israel Innovation Authority, Israel
+  National Archive, Ministry of Welfare and Social Security,
+  Ministry of Health, Israel Securities Authority, Toyota Israel,
+  IKEA, Homecenter Israel, Israel Nature and Parks, Radware, Max
+  Security & Intelligence, and academic institutions (e.g. the
+  Academic College of Tel Aviv). The persona used the legitimate
+  Linux "shred" utility — wrapped in its own shell script — to
+  delete files "in an unrecoverable fashion"; Beaumont reported
+  several victims remained offline for weeks with backups erased,
+  and that about a third had not recovered. The group also emailed
+  victims' customers to spread propaganda and urge boycotts of
+  Israel-linked vendors.
 quantified_impact:
   affected_organizations_est: 100
-  national-archive_offline_months: 7
 false_flag_risk: suspected  # presents as pro-Palestinian
 summary: |
-  First-magnitude post-October-7 destructive operation against
-  Israeli civilian-government and commercial sectors. Doctrinally
-  important as the canonical post-October-7 example of the
-  hacktivist-persona-as-MOIS-front pattern (alongside Handala's
-  18 December 2023 launch); the Signature-IT supply-chain pivot
-  illustrates the operational planning that distinguishes Iranian
-  state-aligned operations from genuine hacktivism. Microsoft's
-  February 2024 framing of the post-October-7 Iranian cyber
-  posture as "reactive and chaotic" notwithstanding, Cyber
-  Toufan's specific tradecraft (Shred-based Linux wiper,
-  hosting-provider pivot, coordinated leak schedule) indicates
-  pre-positioned access and rehearsed playbook.
+  A first-magnitude post-October-7 destructive-and-leak operation
+  against Israeli civilian-government and commercial targets,
+  conducted by a persona that self-brands as "Palestinian state
+  cyber warriors" while multiple vendors assess an Iran nexus
+  (Check Point calls it "an Iranian threat actor"; the ICT and
+  SecurityWeek report indications "pointing towards Iran as the
+  likely supporter"; SOC Radar: "potentially state-sponsored"). No
+  cited source names a specific Iranian service, so the attribution
+  sits at the named-actor / nation level (ir/unscoped), and the
+  Iran direction is an assessment the persona itself disputes.
+  Doctrinally it is a canonical instance of the Iran-aligned
+  hacktivist-persona pattern: a deniable pro-Palestinian front
+  (persona-laundering) executing coordinated destructive coercion
+  against Israel, whose operational discipline — a hosting-provider
+  supply-chain pivot, a rehearsed Shred wiper, a scheduled leak
+  cadence, and pausing leaks during a ceasefire — exceeds typical
+  grassroots hacktivism.
 attributions:
   - actor_id: ir/unscoped/cyber-toufan
-    attributing_org: Vendor consensus (SecurityWeek, The Record, Microsoft)
+    attributing_org: Check Point (relayed via The Record and SecurityWeek); ICT; SOC Radar
     attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2024-02-06
-    attribution_source_id: microsoft/2024-02-06_iran-chaotic-start
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2023-12-29
+    attribution_source_id: therecord/2023-12_cyber-toufan-data-breaches
+    attribution_level: named-actor  # Iran at nation level + named persona (Cyber Toufan); NO service/unit in any cited source (0 hits MOIS/IRGC/Quds) -> ir/unscoped. Microsoft/2024-02-06 raw does NOT name Cyber Toufan, so attribution re-pointed off it to The Record.
 doctrine_links:
+  - doctrine_id: ir/resistance-axis
+    pillar_id: ir/resistance-axis/anti-israel-coercion
+    program_id: null
+    confidence: attested
+    reasoning: |
+      The persona states its own coercive anti-Israel purpose,
+      tying continued cyber targeting of Israel and its interests
+      directly to the post-October-7 ground war — the substance of
+      the anti-israel-coercion strategic goal, in the attacker's own
+      words.
+    attesting_source_id: therecord/2023-12_cyber-toufan-data-breaches
+    inference_basis:
+      source_quote: "As long as our brothers keep striking the occupying forces on the ground, we'll continue targeting them and their interests in the cyber domain, whether publicly or without a trace."
+      source_id: therecord/2023-12_cyber-toufan-data-breaches
+    perspective: attacker-rationale
+    contested: false
+    analyst: claude
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Iranian-aligned hacktivist persona conducting a destructive
-      coordinated operation against Israeli civil-government and
-      commercial sectors. Operational sophistication and target
-      selection point at state direction; the persona-laundering
-      pattern is the operational mode.
+      A pro-Palestinian hacktivist persona that multiple vendors
+      assess as Iran-directed, used as a deniable front for
+      coordinated destructive operations against Israel — the
+      persona-laundering operating mode. The Iran attribution is a
+      hedged, persona-disputed assessment, so this is inferred
+      rather than attested.
     attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ir/asymmetric-warfare
-    pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Coordinated destructive attack against Israeli civilian-
-      government archive, healthcare ministry, and commercial
-      infrastructure fits the asymmetric-warfare civilian-CII-
-      coercion pillar.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: ir/resistance-axis
-    pillar_id: ir/resistance-axis/anti-israel-coercion
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Post-October-7 destructive cyber operation against Israeli
-      civilian targets during the kinetic exchange opening.
-    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Persona self-brands as 'Palestinian state cyber warriors' (SecurityWeek) / pro-Palestinian resistance and declines to confirm its origins ('Cyber Toufan has not commented about its origins'; it dismisses vendor attribution) — the presentation expected of a deniable front."
+        - "Multiple vendors assess an Iran nexus: Check Point 'called Cyber Toufan an Iranian threat actor' and groups it with CyberAv3ngers among actors 'affiliated with Iran'; ~10 Iranian-backed groups are attacking Israel with Cyber Toufan 'the most notorious' (The Record); the ICT and SecurityWeek report indications 'pointing towards Iran as the likely supporter'; SOC Radar: 'potentially state-sponsored'."
+        - "State-tied operational discipline atypical of grassroots hacktivism: the group 'changes tactics depending on what's happening on the battlefield' and 'halted the leaks during a recent cease-fire' (Check Point via The Record), atop a rehearsed Shred wiper and a hosting-provider supply-chain pivot affecting ~100 organizations."
+      ruled_out: "Genuine independent Palestinian grassroots hacktivism (the persona's own self-claim): assessed less likely given the sophistication, ~100-org scale, Shred wiper tradecraft and ceasefire-synchronized tempo that multiple vendors read as state-directed — but the Iran direction remains a hedged, persona-disputed vendor ASSESSMENT, so the link is held at strongly_inferred, not attested."
+    perspective: attacker-rationale
     contested: false
     analyst: claude
 targets:
@@ -100,3 +119,76 @@ targets:
 sources:
   - securityweek/2023-12_cyber-toufan-100-orgs
   - therecord/2023-12_cyber-toufan-data-breaches
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Audited against the two cited sources' captured raw snapshots (hashes RE-VERIFIED, exact match):
+    SecurityWeek "Palestinian Hackers Hit 100 Israeli Organizations in Destructive Attacks" —
+    securityweek__2023-12_cyber-toufan-100-orgs.html, sha256 17225e47…1d66da4 (157,701 B); The Record
+    (Recorded Future News) "Pro-Palestinian operation claims dozens of data breaches against Israeli
+    firms" — therecord__2023-12_cyber-toufan-data-breaches.html, sha256 8c839c96…ef2be348 (84,038 B).
+    Both are REAL (canonical URLs, article bodies match the event). Microsoft "iran-chaotic-start"
+    (a2555b86…) was the event's former attribution_source, but its raw names NEITHER Cyber Toufan NOR
+    Signature-IT (0 hits) — dropped as an attribution basis (still cited by the MTAC-retrospective event,
+    so not orphaned).
+    [a] FACTS — corrected. Signature-IT supply-chain vector VERIFIED but re-hedged: The Record carries
+    Check Point that "the hackers' leaks appear to result from a major attack on an Israeli hosting company
+    named Signature-IT" AND "Cyber Toufan dismissed the claim that all the leaks are connected to the
+    Signature-IT hack" — an ASSESSMENT the persona disputed, not the flat "pivoted from that single
+    compromise" the event asserted. Scale VERIFIED: SecurityWeek "over 100 … organizations", Beaumont
+    "the group has leaked … the data of 59 organizations … likely compromised 40 more in an attack
+    targeting a managed service provider (MSP)"; The Record "dozens"/"60 sites". Rewrote the misleading
+    "40-100" as ~100 (~59 leaked + ~40 via pivot). Wiper VERIFIED: SecurityWeek — "Cyber Toufan uses
+    Shred, a legitimate tool, to 'delete files in an unrecoverable fashion' … runs Shred using their own
+    shell script". Weeks-offline VERIFIED: Beaumont "still offline weeks later … backups were erased",
+    "about a third … still haven't recovered". Victim list VERIFIED against SecurityWeek (Israel National
+    Archive, Innovation Authority, Homecenter, Nature and Parks, Academic College of Tel Aviv, Ministry of
+    Health, Ministry of Welfare and Social Security, Securities Authority, MAX Security & Intelligence,
+    Radware, Toyota) + The Record (IKEA, Toyota, SpaceX as foreign firms doing business with Israel).
+    STRIPPED as fabricated/unsourced: "The Israel National Archive remained degraded for approximately
+    seven months" + quantified_impact national-archive_offline_months: 7 — carried by NEITHER cited source
+    (both, dated Dec-2023/Jan-2024, could not report a ~7-month/mid-2024 outage; they say only victims were
+    "offline for several weeks"). Influence-ops VERIFIED: SecurityWeek "emailing the victim organizations'
+    clients, to spread propaganda"; The Record — customers asked "to boycott various vendors that operate
+    in Israel".
+    [b] ATTRIBUTION — corrected. attributing_org "Vendor consensus (SecurityWeek, The Record, Microsoft)"
+    -> "Check Point (relayed via The Record and SecurityWeek); ICT; SOC Radar" (the actual attributors;
+    Microsoft does not name this actor). auspex_assessment concur -> concur-with-caveat (Iran nexus is a
+    hedged, persona-disputed vendor assessment). attribution_source_id re-pointed microsoft -> therecord
+    (firmest cited attribution: Check Point "called Cyber Toufan an Iranian threat actor" / "affiliated with
+    Iran"). attribution_date 2024-02-06 -> 2023-12-29 (The Record). attributing_org_confidence moderate
+    RETAINED (Check Point firm; ICT/SecurityWeek "potential"/"likely supporter"; SOC Radar "potentially
+    state-sponsored"). ADDED attribution_level: named-actor — Iran at nation level + named persona, NO
+    service/unit in any cited source; consistent with the actor record's ir/unscoped placement (id
+    ir/unscoped/cyber-toufan RESOLVES, atlas/actors/ir/cyber-toufan.yaml).
+    [c] DATES — source published_on defects CORRECTED in the two source records: SecurityWeek 2023-12-15 ->
+    2024-01-03 (raw article:published_time/datePublished 2024-01-03T13:36:48Z; byline "January 3, 2024");
+    The Record 2023-12-04 -> 2023-12-29 (raw datePublished 2023-12-29T14:18:31Z; byline "December 29th,
+    2023"). Event start_date 2023-11-16 / disclosure_date 2023-11-18 KEPT (match the audited actor record
+    active_since 2023-11-16) but NOT carried by either cited event source — both phrase onset as "the end
+    of November" with leaks running "throughout the month" (Dec; "fulfilled its promise" ~Dec-29). This is
+    the sole load-bearing gap -> level: partial; recommend a Beaumont/DoublePulsar or Check Point (11-Dec
+    threat-intel report) primary add to pin the 16-Nov onset and reach full. end_date 2023-12-31 consistent.
+    [d] DOCTRINE — restructured to the two per-event pillars (dropped the redundant
+    ir/asymmetric-warfare/civilian-cii-coercion link — subsumed by anti-israel-coercion).
+    ir/resistance-axis/anti-israel-coercion UPGRADED strongly_inferred -> attested (attacker-rationale):
+    the persona states the coercive goal in substance — The Record, verbatim: "As long as our brothers keep
+    striking the occupying forces on the ground, we'll continue targeting them and their interests in the
+    cyber domain, whether publicly or without a trace" (attesting_source_id therecord/2023-12_...).
+    ir/cyber-deniable-retaliation/persona-laundering KEPT strongly_inferred (attacker-rationale) with
+    structured inference_basis{signals[], ruled_out} — the persona-laundering read DEPENDS on the hedged,
+    persona-disputed Iran attribution, so it is inferred, not attested. Added perspective: attacker-rationale
+    to both (Iranian attacker doctrine on an Iran-attributed op).
+    [e] ATTRIBUTION_LEVEL — added named-actor (see [b]).
+    [f] ACTOR_ID — ir/unscoped/cyber-toufan RESOLVES (atlas/actors/ir/cyber-toufan.yaml, id field
+    ir/unscoped/cyber-toufan; demoted from ir/mois on 2026-06-24 for want of a service-naming source).
+    incident_type expanded [destructive, wiper, data-theft, influence-operation] -> [intrusion, destructive,
+    wiper, data-theft, leak, supply-chain, influence-operation] (all canonical; leak/supply-chain/intrusion
+    now source-carried). targets[] unchanged (all four sector targets carried by the victim list).
+    FLAGS (not edited, per rules): (1) actor file atlas/actors/ir/cyber-toufan.yaml notes still cite The
+    Record as "2023-12-04" and carry the "40-100 downstream" phrasing — recommend harmonizing to 2023-12-29
+    / ~100. (2) Optional primary-source add (Beaumont / Check Point 11-Dec report) to pin the 16-Nov onset
+    and flip this event to level: full.

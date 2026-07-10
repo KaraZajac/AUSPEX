@@ -1,55 +1,179 @@
 id: 2023-08/qakbot-takedown
 name: Operation Duck Hunt — Qakbot botnet takedown
-start_date: 2023-08-25
+start_date: 2023-08-29  # was 2023-08-25 (unsourced onset); neither cited source dates an earlier operational start — DOJ release is 2023-08-29 and describes the takedown as active/ongoing as of that date
 disclosure_date: 2023-08-29
 end_date: 2023-08-29
 incident_type:
+  - law-enforcement  # counter-action meta-type: FBI/DOJ-led court-authorized takedown (Central District of California)
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  FBI-led international operation (France / Germany / Netherlands /
-  Romania / Latvia / UK partners) seized 52 servers across multiple
-  jurisdictions and obtained court authorization to push a
-  remediation tool to ~700,000 infected machines via Qakbot's own
-  C2 channel. The tool uninstalled Qakbot from victim systems and
-  reported counts back to FBI. USD 8.6M in cryptocurrency seized.
-  Operation conducted under the District of Central California.
+  FBI-led multinational operation (France / Germany / Netherlands /
+  Romania / Latvia / UK partners) to disrupt the Qakbot botnet and
+  take down its infrastructure. The FBI gained access to Qakbot
+  infrastructure, identified over 700,000 infected computers
+  worldwide (more than 200,000 in the United States) and — under
+  court authorization — redirected Qakbot traffic through
+  FBI-controlled servers that instructed infected machines to
+  download a law-enforcement uninstaller via the botnet's own C2,
+  untethering them from Qakbot and preventing further
+  Qakbot-delivered malware. USD 8.6M in cryptocurrency in illicit
+  profits was seized. The U.S. effort was run out of the Central
+  District of California; Europol / Eurojust coordinated the
+  European partners.
 false_flag_risk: none
 summary: |
   The "self-uninstall pushed through court-authorized access to
   the botnet's own C2" pattern — first used at scale against
   Emotet (Operation Ladybird Jan 2021), refined here against
-  Qakbot. Pikabot emerged within months with operationally
-  contiguous tradecraft; operator continuity is widely assessed.
+  Qakbot. Pikabot emerged within months with overlapping code and
+  infrastructure; operator continuity is assessed but not
+  vendor-consensus.
 attributions:
-  - actor_id: null  # was ru/proxies/qakbot — counter-op (state action), actor nulled per AUDIT-2026-05-29; actor since demoted to ru/unscoped/qakbot (2026-06-24, criminal/ candidate)
+  - actor_id: null  # counter-action (FBI/DOJ-led LE takedown); no perpetrator individual attributed. Subject = the Qakbot cybercriminal organization (actor criminal/qakbot, named in prose). Actor history: ru/proxies/qakbot -> demoted ru/unscoped/qakbot (2026-06-24) -> re-homed criminal/qakbot (2026-06-25, no documented state nexus; Emotet precedent)
     attributing_org: DOJ + FBI + Europol
     attributing_org_confidence: high
     auspex_assessment: concur-with-caveat
     attribution_date: 2023-08-29
     attribution_source_id: doj/2023-08-29_qakbot-duck-hunt
     notes: |
-      FBI-led multilateral operation; CNMF actor mapping placeholder.
+      FBI-led multilateral law-enforcement takedown (Operation Duck
+      Hunt): U.S. effort by FBI Los Angeles + USAO Central District of
+      California + DOJ CCIPS, in cooperation with Europol / Eurojust and
+      the French, German, Dutch, UK, Romanian and Latvian services. No
+      individual perpetrator was charged in this action; DOJ names the
+      subject only as "the Qakbot cybercriminal organization" (AUSPEX
+      actor criminal/qakbot). Counter-action -> actor_id null.
 doctrine_links:
   - doctrine_id: us/ncs-2023
     perspective: defender-response
     pillar_id: us/ncs-2023/disrupt-dismantle
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      DOJ/FBI botnet takedown using 'disrupting and dismantling'
-      language; the release does not name the National
-      Cybersecurity Strategy 2023 or its Disrupt-and-Dismantle
-      pillar, so the doctrine mapping is inferred from the action.
+      US-led DOJ/FBI botnet takedown (Operation Duck Hunt). In the
+      release itself FBI Director Wray states the Disrupt-and-Dismantle
+      pillar's strategic purpose in substance — a sustained, systematic
+      campaign of "disrupting and dismantling" cybercriminal
+      infrastructure. Attested = corroboration of that strategic purpose
+      (per the 2026-06-19 reframe), NOT doctrine-slug naming; the release
+      need not name NCS 2023 by title. Harmonized with the US-led sibling
+      takedowns Hive, KV-Botnet and LockBit Cronos, all attested on
+      comparable DOJ dismantle language (Operation Endgame stays
+      "plausible" only because it was EU-led with a competing EMPACT
+      reading — not applicable to this explicitly "U.S.-led" operation).
     attesting_source_id: doj/2023-08-29_qakbot-duck-hunt
     inference_basis:
+      source_quote: "we will continue to systematically target every part of cybercriminal organizations, their facilitators, and their money – including by disrupting and dismantling their ability to use illicit infrastructure to attack us."
       source_id: doj/2023-08-29_qakbot-duck-hunt
-      signals:
-        - "DOJ release uses 'disrupting and dismantling' verb phrasing for the botnet takedown (action type)"
-      ruled_out: "the National Cybersecurity Strategy 2023 / its Disrupt-and-Dismantle pillar — not named in the release"
     contested: false
     analyst: claude
 targets: []
 sources:
   - doj/2023-08-29_qakbot-duck-hunt
   - europol/2023-08-29_qakbot-takedown
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs the two cited primary sources, both snapshotted
+    and hash-verified this pass (PRESERVE tier, hashes unchanged):
+      - DOJ "Qakbot Malware Disrupted in International Cyber Takedown"
+        (Operation Duck Hunt), 2023-08-29 — raw_snapshot
+        doj__2023-08-29_qakbot-duck-hunt__archive.html, sha256
+        53750f8b241ca165d5a2d0d9298a8a4d41decdced4018edd08af4a35532fea89
+        (Wayback capture; live justice.gov WAF-blocks automated fetch).
+      - Europol "Qakbot Botnet Infrastructure Shattered…", raw_snapshot
+        europol__2023-08-29_qakbot-takedown.html, sha256
+        e600318a5d09b882c4108eedcc1397fb9f5fc46c59f792dd9a6ec2e36dd9d408
+        (JS SPA; body extracted from the embedded SERVER_DATA JSON).
+
+    [a] FACTS — corrected 3 unsourced/embellished claims, kept the sourced core:
+      • REMOVED "seized 52 servers across multiple jurisdictions": the phrase
+        "52 server(s)" is ABSENT from both raws (grep-confirmed). DOJ's only
+        server references are "servers controlled by the FBI" (the redirect
+        sinkhole, not a seizure count) and an unrelated Related-Content sidebar
+        ("39 domains and their associated servers", a different Pakistan case);
+        Europol says only that LE "detected servers infected with Qakbot in
+        almost 30 countries" (geographic spread of infected hosts, not a seizure
+        count). Replaced with the sourced claim "take down its infrastructure"
+        (DOJ) / "taken down the infrastructure of the Qakbot malware" (Europol).
+      • REMOVED "reported counts back to FBI": no "report"/"count" token in the
+        DOJ raw. DOJ's actual uninstaller description: "This uninstaller was
+        designed to untether the victim computer from the Qakbot botnet,
+        preventing further installation of malware through Qakbot." Rewrote to that.
+      • FIXED "District of Central California" -> "Central District of California"
+        (DOJ verbatim: "U.S. Attorney Martin Estrada for the Central District of
+        California").
+      • VERIFIED + retained: ~700,000 infected computers (DOJ "identify over
+        700,000 computers worldwide, including more than 200,000 in the United
+        States"; Europol "infected over 700 000 computers worldwide") — added the
+        sourced "200,000 in the United States"; court-authorized uninstaller
+        pushed via the botnet's own C2 (DOJ "redirect Qakbot botnet traffic to and
+        through servers controlled by the FBI, which in turn instructed infected
+        computers … to download a file created by law enforcement that would
+        uninstall the Qakbot malware"); USD 8.6M crypto seized (DOJ "seizure of
+        approximately $8.6 million in cryptocurrency"; Europol corroborates "nearly
+        EUR 8 million in cryptocurrencies"); 7-nation partnership FR/DE/NL/UK/RO/
+        LV/US (both raws, verbatim). No figure embellishment remains.
+      • summary Pikabot line softened to match the actor file (criminal/qakbot):
+        "overlapping code and infrastructure; operator continuity assessed but not
+        vendor-consensus" (actor file: "vendors disagree … whether to treat as the
+        same operator cluster"). The Emotet/Operation-Ladybird (Jan 2021) and
+        Pikabot lines are cross-event analytical synthesis (corpus event
+        2021-01/emotet-operation-ladybird + actor criminal/qakbot), NOT carried by
+        the two Qakbot LE sources — flagged, retained as hedged analysis.
+
+    [b] ATTRIBUTION — DOJ+FBI+Europol / high / concur-with-caveat retained (matches
+        the primary govt sources). Counter-action: no perpetrator attributed; DOJ
+        frames the subject only as "the Qakbot cybercriminal organization" —
+        corroborates the criminal/qakbot placement, no state nexus asserted (the
+        single "Russia" token on the DOJ page is an unrelated Blender.io sidebar
+        link). No over-attestation.
+
+    [c] DATES — start_date 2023-08-25 -> 2023-08-29: the Aug-25 onset is unsourced
+        (neither raw dates an operational start); DOJ is bylined "Tuesday, August
+        29, 2023" and describes the takedown as active/ongoing as of that date, so
+        start=disclosure=end=2023-08-29 is the sourced minimum. DOJ published_on
+        2023-08-29 verified against the raw byline. Europol source published_on
+        CORRECTED 2023-08-29 -> 2023-08-30 to match its own schema.org datePublished
+        "2023-08-30T08:00:08+00:00" (Europol posted the morning after the US
+        announcement); event disclosure_date stays 2023-08-29 (primary US
+        announcement = DOJ).
+
+    [d] DOCTRINE_LINKS — us/ncs-2023 / disrupt-dismantle, perspective
+        defender-response (US defender doctrine on a US counter-action). UPGRADED
+        confidence strongly_inferred -> attested: the release states the pillar's
+        terminal goal in substance (Wray verbatim: "we will continue to
+        systematically target every part of cybercriminal organizations … including
+        by disrupting and dismantling their ability to use illicit infrastructure to
+        attack us."; AAG Argentieri: "we will use all available tools to aggressively
+        dismantle the operations, infrastructure, and finances of these
+        cybercriminals."). Per the 2026-06-19 attested reframe (attestation =
+        corroboration of strategic purpose, NOT doctrine-slug naming), the prior
+        "NCS-2023 not named" rationale for strongly_inferred is superseded. This
+        harmonizes qakbot with its US-led sibling takedowns Hive / KV-Botnet /
+        LockBit-Cronos (all attested on the same DOJ dismantle language); Operation
+        Endgame stays "plausible" only because it was EU-led with a competing EMPACT
+        reading (Duck Hunt is explicitly "U.S.-led"). inference_basis restructured
+        signals/ruled_out -> source_quote/source_id to match the attested siblings.
+
+    [e] ATTRIBUTION_LEVEL — n/a as a perpetrator field for a null-actor
+        counter-action; the LE-actor side is fully named (FBI + DOJ CCIPS + USAO
+        CDCA + Europol/Eurojust + 6 partner services).
+
+    [f] ACTOR_ID — null (counter-action), correct. Subject named in prose as the
+        Qakbot cybercriminal organization = atlas actor criminal/qakbot (id verified
+        on disk). incident_type [disruption] -> [law-enforcement, disruption] (added
+        the LE meta-type per the counter-action rule; matches the Emotet/Ladybird +
+        Operation-Endgame precedents). Stale inline comment (referenced
+        ru/unscoped/qakbot) refreshed to the current criminal/qakbot id.
+
+    OUT-OF-SCOPE FLAGS (other files, not edited here except the event's own source):
+      • Europol source record (event's own source, in scope): published_on corrected
+        2023-08-29 -> 2023-08-30 (done).
+      • CROSS-EVENT (left as-is): hive-takedown already attested; trickbot-disruption
+        uses strongly_inferred on a CYBERCOM (pillar_id null) link — different
+        structure. No FK propagation required (actor already null here).

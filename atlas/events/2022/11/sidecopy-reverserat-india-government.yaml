@@ -1,61 +1,206 @@
+# RE-HOME FLAG (2026-07-10, claude-opus-4.8/max): the genuine campaign disclosed here is
+# ThreatMon's 2023-02-16 report, NOT an H2-2022 event. The id/path prefix "2022-11" is a phantom
+# artifact (it rested entirely on the retired phantom cyble/2023-05-09 source). Date fields corrected
+# to early/Feb 2023 below. ORCHESTRATOR: re-home id 2022-11/... -> 2023-02/... and move file to
+# atlas/events/2023/02/, FK-propagating. Not renamed here (FK-propagation is out of audit scope).
 id: 2022-11/sidecopy-reverserat-india-government
-name: SideCopy ReverseRAT campaign against Indian government documented by Cyble
-start_date: 2022-06-01
-disclosure_date: 2023-05-09
-end_date: 2022-12-31
+name: SideCopy updated-ReverseRAT spear-phishing campaign against Indian government entities
+start_date: 2023-01-01  # APPROX early-2023 onset — sources do not pin campaign start; disclosed 2023-02-16
+disclosure_date: 2023-02-16
+end_date: null
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  Cyble Research and Intelligence Labs documented a SideCopy
-  campaign through the second half of 2022 deploying the
-  ReverseRAT and ActionRAT implant families against Indian
-  government and defense-research targets. The campaign used
-  weaponized Office documents themed on Indian government
-  circulars and Ministry of Defence communications, with
-  ReverseRAT serving as the primary stage-two implant and
-  ActionRAT as the persistent backdoor. The 2023 Cyble
-  disclosure was retrospective on 2022 activity and consolidated
-  earlier Talos 2021 SideCopy infrastructure reporting with
-  fresh ReverseRAT variants observed through 2022.
-false_flag_risk: suspected
+  ThreatMon's Malware Research Team disclosed (16 Feb 2023) a SideCopy
+  spear-phishing campaign against Indian government entities. The lure was a
+  macro-enabled Word document, "Cyber Advisory 2023.docm", impersonating an
+  advisory from India's Ministry of Communications about "Android Threats and
+  Preventions" — its text lifted almost verbatim from a genuine July-2020
+  departmental alert. Enabling the macro executed malicious code delivering a
+  new/updated version of ReverseRAT with enhanced obfuscation and sleep calls
+  to evade detection. Once persistent, ReverseRAT enumerates the device,
+  collects data, encrypts it with RC4 and exfiltrates to its C2, and supports
+  screenshot capture and file download/upload. No second-stage implant beyond
+  ReverseRAT is documented for this campaign.
+false_flag_risk: none
 summary: |
-  Continuity event for SideCopy operations through 2022, the
-  cluster's first full operational year following the 2021 Talos
-  foundational disclosure. ReverseRAT and ActionRAT are
-  SideCopy-specific implant families distinguishing the cluster
-  from Transparent Tribe's Crimson RAT lineage. False-flag risk
-  flagged because SideCopy's deliberate SideWinder-tradecraft
-  mimicry persists in the lure-document mix.
+  ThreatMon-disclosed (Feb 2023) SideCopy operation against Indian government
+  entities using an updated ReverseRAT delivered via a Ministry-of-
+  Communications-themed maldoc. ReverseRAT was first documented (targeting
+  Indian government and energy targets) by Lumen Black Lotus Labs in 2021;
+  this is a newer, more obfuscated variant. The ThreatMon primary frames
+  SideCopy plainly as "a Pakistani threat group" and names no intelligence
+  service; the Transparent Tribe / APT36 overlap is asserted by the secondary
+  coverage (The Hacker News, Heimdal), not by the primary report — so the
+  actor is carried as pk/unscoped/sidecopy and the Pakistan nexus is
+  vendor-assessed (no government attribution). SideCopy's defining SideWinder-
+  TTP mimicry is background context here rather than an active false-flag
+  risk: ThreatMon and downstream outlets attribute the campaign to SideCopy
+  without hedging that identity.
 attributions:
   - actor_id: pk/unscoped/sidecopy
-    attributing_org: Cyble Research and Intelligence Labs
+    attributing_org: ThreatMon
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-05-09
-    attribution_source_id: cyble/2023-05-09_sidecopy-india-defense-targeting
+    attribution_date: 2023-02-16
+    attribution_source_id: threatmon/2023-02-16_sidecopy-reverserat-indian-government
+    notes: |
+      ThreatMon attributes the campaign to SideCopy without hedge (Executive
+      Summary: "SideCopy, a Pakistani threat group, targeted Indian Government
+      Entities"), echoed by The Hacker News ("ThreatMon attributed the
+      activity to a threat actor tracked as SideCopy") — hence high on the
+      actor call. The Pakistan NEXUS is a vendor assessment ("a Pakistani
+      threat group"); there is no government attribution and NO Pakistani
+      intelligence service named (no "ISI"), so the actor stays pk/unscoped
+      and the level is named-actor (group + nation, no unit). The Transparent
+      Tribe / APT36 overlap is carried only by the secondary coverage (THN:
+      "shares overlaps with another actor called Transparent Tribe"; Heimdal)
+      — the ThreatMon primary does not name Transparent Tribe/APT36 in-body.
 doctrine_links:
   - doctrine_id: pk/asymmetric-posture-india
     pillar_id: pk/asymmetric-posture-india/military-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Indian government and Ministry of Defence targeting with
-      defense-research victim overlap fits the military-collection
-      pillar precisely.
+      Pakistani-aligned SideCopy running espionage-tooled (ReverseRAT: device
+      enumeration, RC4-exfil, screenshots) collection against Indian
+      government entities sits squarely inside Pakistan's inferred asymmetric
+      cyber posture against India. The specific victim here, however, is
+      CIVILIAN government (the lure impersonates the Ministry of
+      Communications; targets are "Indian Government Entities" generally),
+      NOT defense/military — so the military-collection pillar is the nearest
+      available fit rather than an exact one, and confidence is held at
+      plausible (the doctrine's own bar for strongly_inferred is a target mix
+      that is "unambiguously Indian-military-focused", which a civilian-
+      government campaign does not meet). FLAG: no pillar cleanly encodes
+      general Indian civilian-government collection — a general-government
+      facet may be warranted (orchestrator/Kara).
     contested: false
     analyst: claude
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Actor is Pakistan-attributed (ThreatMon: 'a Pakistani threat group') and espionage-missioned (ReverseRAT enumerates the device, RC4-encrypts and exfiltrates data, captures screenshots)."
+        - "Victims are Indian government entities, targeted via a spoofed India Ministry of Communications advisory — a state-collection target set, not economic or financially motivated."
+        - "Activity sits within the sustained India-Pakistan cyber-tension cycle SideCopy has operated in since its 2019 post-Balakot emergence."
+      ruled_out: "kashmir-political pillar — no Kashmir/dissident angle (the theme is a generic Ministry-of-Communications cyber advisory); financial-crime — state-espionage tooling (ReverseRAT), no ransomware/theft-for-profit. Note the military-collection pillar is itself only an approximate fit (civilian-government victim), hence plausible not strongly_inferred."
 targets:
   - target_id: orgs/indian-government
     country: in
     role: primary
-  - target_id: orgs/indian-mod
-    country: in
-    role: primary
-  - target_id: orgs/indian-defense-research-various
-    country: in
-    role: collateral
 sources:
-  - cyble/2023-05-09_sidecopy-india-defense-targeting
+  - threatmon/2023-02-16_sidecopy-reverserat-indian-government
+  - thehackernews/2023-02-21_reverserat-sidecopy-indian-government
   - cisco-talos/2021-07-07_sidecopy-india-defense
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    PHANTOM RE-SOURCE + DATE CORRECTION (badrabbit model). The event's sole
+    prior attribution source, cyble/2023-05-09_sidecopy-india-defense-
+    targeting, is a confirmed phantom: its url (cyble.com/blog/) is Cyble's
+    generic blog INDEX. Re-verified the on-disk snapshot (sha256 5a959668…
+    f8b2a390, 864,195 bytes): 0x "SideCopy", 0x "ReverseRAT", 0x "ActionRAT",
+    0x "APT36". Real underlying event, phantom source -> RE-SOURCED onto the
+    genuine ThreatMon primary + THN corroboration, fetched and hashed
+    2026-07-10.
+
+    SOURCES CAPTURED (atlas/sources/raw/):
+    - threatmon/2023-02-16_sidecopy-reverserat-indian-government (PRIMARY,
+      13-page PDF "APT SideCopy Targeting Indian Government Entities"):
+      sha256 29e12d9e…f661f6ea, 1,061,757 bytes. Live urls (/storage/*.pdf
+      and the article page) now 404 — PRESERVED via archive.org (PDF captured
+      HTTP 200; article-form earliest Wayback capture 20230216204448 fixes
+      publication at on-or-before 2023-02-16).
+    - thehackernews/2023-02-21_reverserat-sidecopy-indian-government
+      (corroborating, live HTTP 200): sha256 3d2dd41e…f39fc57, 169,703 bytes,
+      dateline "Feb 21, 2023".
+    - cisco-talos/2021-07-07_sidecopy-india-defense KEPT as background/lineage
+      only (establishes ReverseRAT as SideCopy tooling; it is a 2021 report
+      and does NOT — cannot — document this 2023 campaign).
+
+    [a] FACTS. SideCopy vs Indian government entities ✓ (ThreatMon title +
+    Exec Summary; THN). Updated/new ReverseRAT with "enhanced obfuscation and
+    sleep calls", RC4-encrypted C2, device enumeration, screenshots, file
+    up/download ✓ (ThreatMon Exec Summary, verbatim). Lure "Cyber Advisory
+    2023.docm" impersonating India's Ministry of Communications advisory on
+    "Android Threats and Preventions", copied from a July-2020 alert ✓ (THN;
+    ThreatMon names the file). ReverseRAT first documented by Lumen Black
+    Lotus Labs 2021 ✓ (THN). CORRECTIONS/STRIPS: (1) STRIPPED "ActionRAT as
+    the persistent backdoor" — 0x "ActionRAT"/"Action RAT" in BOTH the
+    ThreatMon PDF and the THN snapshot (fabricated; ActionRAT belongs to the
+    separate Cyble/Team-Cymru DRDO facet, event 2023-05/sidecopy-allakore-
+    india-defense). (2) STRIPPED all "Ministry of Defence / defense-research /
+    DRDO" victimology — 0x "DRDO"/"Defence"/"Defense" in the primary; this
+    campaign hit CIVILIAN government (Ministry-of-Communications lure). (3)
+    STRIPPED the "continuity event ... consolidated Talos 2021 ... fresh
+    ReverseRAT variants observed through 2022" narrative and the H2-2022
+    framing — pure phantom-derived synthesis (see [c]). (4) STRIPPED
+    "documented by Cyble" from the name (it was ThreatMon). (5) incident_type
+    data-theft -> espionage (exfil is in service of state collection; task
+    directive [intrusion, espionage]).
+
+    [b] ATTRIBUTION. Was Cyble / high / (no level) via the phantom. Corrected
+    to ThreatMon / high / named-actor / 2023-02-16, source threatmon/
+    2023-02-16. high because ThreatMon states the SideCopy call unhedged
+    ("SideCopy, a Pakistani threat group, targeted Indian Government
+    Entities") and THN echoes it. Pakistan nexus HEDGED as vendor-assessed
+    (no government attribution, no ISI/service) -> pk/unscoped preserved,
+    named-actor level. TT/APT36 overlap is a SECONDARY-coverage claim (THN/
+    Heimdal), not in the ThreatMon primary — recorded in the attribution note.
+
+    [c] DATES. start 2022-06-01 -> 2023-01-01 (APPROX early 2023; sources do
+    not pin onset, only that the campaign was current at the Feb-2023
+    disclosure with a "Cyber Advisory 2023" lure). disclosure 2023-05-09
+    (phantom artifact — the same bogus date the sibling 2023-05 event carried)
+    -> 2023-02-16 (ThreatMon report; Wayback earliest capture 20230216204448;
+    THN corroboration 2023-02-21). end 2022-12-31 -> null (campaign not
+    documented as concluded). The "2022-11" id/path is a phantom artifact with
+    NO 2022 anchor in any genuine source — RE-HOME flagged at top of file.
+
+    [d] DOCTRINE_LINKS. pk/asymmetric-posture-india / military-collection kept
+    as the nearest pillar but DOWNGRADED strongly_inferred -> plausible: the
+    prior reasoning ("Ministry of Defence ... defense-research victim overlap
+    fits ... precisely") rested on the now-stripped fabricated victimology.
+    The genuine victim is civilian government (Ministry-of-Communications
+    theme), which does not meet the doctrine's own strongly_inferred bar
+    ("unambiguously Indian-military-focused"). Added inference_basis
+    {signals[], ruled_out}; attesting_source_id null (no source states the
+    strategic goal -> not attested). perspective omitted = attacker-rationale
+    (pk doctrine on pk actor attacking India; no cross-state mismatch).
+    Colon-space list items quoted. FLAGGED: a general-Indian-government-
+    collection pillar/facet is not cleanly encoded (orchestrator/Kara).
+
+    [e] ATTRIBUTION_LEVEL. Set named-actor (was missing) — group SideCopy +
+    nation Pakistan, no unit/service. See [b].
+
+    [f] ACTOR_ID. pk/unscoped/sidecopy resolves (atlas/actors/pk/sidecopy.yaml,
+    internal id pk/unscoped/sidecopy; demoted from pk/isi 2026-06-24 as no
+    cited source names the ISI). Consistent — neither the ThreatMon primary
+    nor THN names a Pakistani service. Directionality: Pakistan attacker,
+    India victim (the reverse of the DoNot India->? posture) — correct.
+
+    TARGETS. Reduced to orgs/indian-government (primary). STRIPPED
+    orgs/indian-mod (fabricated MoD victimology) and orgs/indian-defense-
+    research-various (fabricated, and itself a broken FK — no registry file).
+    NB orgs/indian-government is ALSO a broken FK (no atlas/targets/orgs/
+    indian-government.yaml) but is the semantically-correct id and is already
+    used by ~8 events — FLAG for registry-entry creation (orchestrator/Kara);
+    not re-pointed because it is the accurate target and the gap is systemic.
+
+    PHANTOM DISPOSITION. Removed cyble/2023-05-09_sidecopy-india-defense-
+    targeting from this event. It is NOT orphaned: event
+    2025/04/sidecopy-pre-pahalgam-tempo still actively cites it (sources[]).
+    FLAG: that event needs its own phantom-remediation (the phantom should be
+    retired only once no event cites it). Left the phantom record untouched.
+
+    RESIDUAL. Single-vendor primary (ThreatMon), corroborated by THN; no
+    government attribution -> nexus vendor-assessed. Primary preserved via
+    archive.org (live urls link-rotted). start_date is an explicit early-2023
+    estimate. Event is misfiled at 2022/11 pending orchestrator re-home to
+    2023/02.

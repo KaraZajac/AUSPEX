@@ -1,44 +1,49 @@
 id: 2023-06/atomic-wallet
 name: Atomic Wallet user-wallet theft
-start_date: 2023-06-02
+start_date: 2023-06-03
 disclosure_date: 2023-06-03
 end_date: 2023-06-03
 incident_type:
+  - intrusion
   - financial-theft
-initial_vector: supply-chain
+initial_vector: unknown  # AUDIT 2026-07-10: vector never publicly disclosed; was "supply-chain" (unsourced)
 outcome_summary: |
-  Undisclosed wallet-software compromise enabled mass private-key
-  exfiltration from Atomic Wallet end users. Initial estimate
-  $35M revised to approximately $100M by Elliptic on-chain
-  tracing. Funds laundered via Sinbad mixer — the same venue
-  used for Harmony Horizon proceeds.
+  Undisclosed wallet-software compromise enabled mass theft of
+  crypto from Atomic Wallet end users. Elliptic on-chain tracing
+  put losses at over $100M; OFAC placed the figure at $100M stolen
+  on 3 June 2023 from Atomic Wallet customers. A significant
+  portion was laundered through the Sinbad.io mixer — the same
+  venue OFAC found laundering the Harmony Horizon Bridge proceeds.
 quantified_impact:
   usd_stolen: 100000000
 false_flag_risk: none
 campaign_id: bridge-theft-chain
 summary: |
-  Mass end-user crypto theft via wallet-software compromise.
-  Elliptic's June 2023 on-chain tracing established the Lazarus
-  attribution by linking proceeds to wallet infrastructure
-  previously documented in the Ronin Bridge and Harmony Horizon
-  laundering chains; subsequent OFAC Sinbad mixer sanction
-  (29 Nov 2023) confirmed the laundering pattern as DPRK.
-  Operators are assessed to have compromised Atomic Wallet's
-  release build chain (TraderTraitor / Citrine Sleet supply-chain
-  pattern) and pushed a trojanized wallet update that exfiltrated
-  the local key material; subsequent on-chain mixing through
-  Sinbad and chain-hopping via THORChain are the same laundering
-  primitives used in the Harmony Horizon and Stake.com heists.
+  Mass end-user crypto theft from Atomic Wallet, a non-custodial
+  decentralized cryptocurrency wallet. On 3 June 2023 its users
+  lost over $100M. Elliptic attributed the theft to the Lazarus
+  Group (DPRK) on 6 June 2023 "after identifying multiple factors
+  indicating that the North Korean threat group was responsible,"
+  and separately observed on-chain overlap between the Atomic
+  Wallet and Stake.com (Lazarus) laundering flows. OFAC's
+  29 November 2023 designation of the Sinbad.io mixer confirmed the
+  DPRK laundering pattern: Sinbad laundered "a significant portion
+  of the $100 million" taken from Atomic Wallet customers — the
+  same mixer OFAC tied to the Horizon Bridge and Axie Infinity
+  heist proceeds. The specific intrusion vector was never publicly
+  disclosed.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: Elliptic
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-06-13
+    attribution_date: 2023-06-06  # AUDIT 2026-07-10: Elliptic states it "attributed this hack to Lazarus on June 6th 2023"; was 2023-06-13 (the running-doc revision date)
     attribution_source_id: elliptic/2023-06-13_atomic-wallet
   - actor_id: kp/rgb/lazarus
     attributing_org: US Treasury OFAC (via Sinbad mixer attribution)
     attributing_org_confidence: high
+    attribution_level: named-actor  # Sinbad release names "Lazarus Group ... of the DPRK" — group + nation, no service/unit
     auspex_assessment: concur
     attribution_date: 2023-11-29
     attribution_source_id: treasury/2023-11-29_sinbad-mixer-sanction
@@ -48,17 +53,112 @@ doctrine_links:
     program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
     confidence: attested
     reasoning: |
-      Treasury's November 2023 Sinbad mixer designation
-      explicitly names DPRK actors as users of the mixer for
-      Atomic Wallet proceeds, invoking the standard WMD-financing
-      attestation language.
+      OFAC's 29 Nov 2023 Sinbad designation names Atomic Wallet as
+      one of the Lazarus Group heists whose proceeds Sinbad
+      laundered ("a significant portion of the $100 million ...
+      stolen on June 3, 2023, from customers of Atomic Wallet"),
+      and states the terminal financing goal this pillar encodes:
+      the DPRK conducts "heists perpetrated by the Lazarus Group,
+      to generate revenue for its unlawful weapons of mass
+      destruction and ballistic missile programs." That goal-level
+      WMD/ballistic-missile attestation, made by the attributing
+      authority on this event's own cited source, is what the
+      schema requires for attested (verified against the raw OFAC
+      release, not inherited from any doctrine default).
     attesting_source_id: treasury/2023-11-29_sinbad-mixer-sanction
+    inference_basis:
+      source_quote: "the DPRK has resorted to using illicit tactics, such as heists perpetrated by the Lazarus Group, to generate revenue for its unlawful weapons of mass destruction and ballistic missile programs."
+      source_id: treasury/2023-11-29_sinbad-mixer-sanction
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/atomic-wallet
     role: primary
-    outcome: ~$100M extracted from end-user wallets via software compromise.
+    outcome: Over $100M in crypto stolen from end-user wallets on 3 June 2023 (intrusion vector undisclosed).
 sources:
   - elliptic/2023-06-13_atomic-wallet
   - treasury/2023-11-29_sinbad-mixer-sanction
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against both cited sources; raw snapshots re-verified on
+    disk this pass (PRESERVE tier — both already snapshotted 2026-07-02,
+    hashes unchanged, no re-snapshot).
+    SOURCES: [1] elliptic/2023-06-13_atomic-wallet (vendor-research,
+    secondary) sha256 32d5624e…4ca60214, 329,504 bytes — running/living
+    Elliptic post ("How the Lazarus Group is stepping up crypto hacks");
+    HTTP 200, real article. [2] treasury/2023-11-29_sinbad-mixer-sanction
+    (govt-primary) sha256 f57acb36…46b3db1a, 122,402 bytes — OFAC press
+    release jy1933, real.
+
+    [a] FACTS — RETAINED (source-carried): "over $100M" lost by Atomic
+    Wallet users on 3 Jun 2023 (Elliptic: "On June 3rd 2023, users of
+    Atomic Wallet – a non-custodial decentralized cryptocurrency wallet –
+    lost over $100 million"; also "identified as responsible for stealing
+    almost $240 million … from Atomic Wallet ($100 million)"); OFAC: "$100
+    million worth of virtual currency stolen on June 3, 2023, from
+    customers of Atomic Wallet." usd_stolen 100000000 ✓. Sinbad laundering
+    + Harmony/Axie shared-mixer: OFAC "Sinbad was also used to launder …
+    the Axie Infinity heist of approximately $620 million in March 2022,
+    and the Horizon Bridge heist of approximately $100 million in June
+    2022." Non-custodial/decentralized descriptor: Elliptic verbatim.
+    STRIPPED as unsourced embellishment (grep-confirmed 0 hits in BOTH
+    raws): the "$35M initial estimate → $100M revision" framing (the only
+    "35" strings in the Elliptic raw are CSS image dims width=35/height=35;
+    the $35M was Elliptic's original 6-Jun post, NOT in this snapshot);
+    "TraderTraitor / Citrine Sleet supply-chain pattern"; "trojanized
+    wallet update"/"release build chain"/"exfiltrated the local key
+    material" mechanism (Elliptic instead frames Lazarus methodology as
+    social engineering / "previously compromised private keys" generically,
+    not for this hack); "chain-hopping via THORChain" (THORChain: 0 hits);
+    and the claim Elliptic "established the Lazarus attribution by linking
+    proceeds to … Ronin Bridge and Harmony Horizon laundering chains" —
+    Elliptic says only "multiple factors" and separately notes overlap with
+    Stake.com, NOT Ronin/Harmony, as the on-chain basis.
+    [b] ATTRIBUTION — two rows, both retained, both high/concur, both
+    attribution_level: named-actor ADDED (was missing). Elliptic = named
+    group "Lazarus"/"the North Korean threat group" (no service/unit);
+    OFAC Sinbad release = "Lazarus Group … of the DPRK" (this 2023 release
+    does NOT name the RGB — grep-confirmed — so named-actor, not
+    named-service, for THIS source). Elliptic attribution_date CORRECTED
+    2023-06-13 → 2023-06-06: the article states "Elliptic attributed this
+    hack to Lazarus on June 6th 2023" (2023-06-13 was the running-doc
+    revision/published_on, retained as the citation snapshot). NB: the FBI
+    did NOT specifically attribute Atomic Wallet in either cited source —
+    the Elliptic FBI mentions are for CoinsPaid/Alphapo/Stake.com — so no
+    FBI attribution row was added.
+    [c] DATES — start_date CORRECTED 2023-06-02 → 2023-06-03 (June 2 was
+    unsourced; both sources say June 3). disclosure/end 2023-06-03 ✓.
+    Source published_on: Elliptic 2023-06-13 (running doc; see source-record
+    date caveat) and OFAC 2023-11-29 ✓.
+    [d] DOCTRINE_LINK — kp/8th-congress-defense-plan / revenue-aggregation /
+    crypto-bridge-theft KEPT attested. The doctrine file's own program
+    summary explicitly lists "Atomic Wallet" in crypto-bridge-theft, so the
+    program_id fits despite Atomic being a wallet not a bridge. attested is
+    correct: OFAC states the terminal WMD/ballistic-missile-financing goal
+    in substance AND names Atomic Wallet as a laundered Lazarus heist.
+    ADDED the schema-required inference_basis {source_quote, source_id}
+    (was missing) and rewrote reasoning to quote the goal language.
+    perspective absent = attacker-rationale (correct — DPRK's own doctrine
+    on a DPRK attack).
+    [e] ATTRIBUTION_LEVEL — named-actor on both rows (added; was absent).
+    [f] ACTOR_ID — kp/rgb/lazarus resolves to atlas/actors/kp/lazarus.yaml
+    (id field = kp/rgb/lazarus). Directionality correct: DPRK/Lazarus =
+    attacker, Atomic Wallet end-users = victims (target orgs/atomic-wallet
+    primary). incident_type set [intrusion, financial-theft]: the reviewer
+    asked for [intrusion, theft]; the corpus has NO bare "theft" token
+    (financial-theft ×44, incl. the sibling harmony-horizon-bridge), so
+    theft→financial-theft to stay canonical. initial_vector supply-chain →
+    unknown (vector never publicly disclosed; the outcome_summary itself
+    says "undisclosed"; unknown is the corpus plurality ×292).
+    FLAGS (out-of-scope, not edited): (1) orgs/atomic-wallet.yaml says
+    OFAC attributed "in August 2023 designations" — the relevant Sinbad
+    designation is 29 Nov 2023; and carries an unsourced "~5,500 user
+    wallets" figure (sources: []). (2) campaign bridge-theft-chain has no
+    definition file (event-only virtual campaign; corpus-wide pattern).
+    (3) source record elliptic/2023-06-13 uses a bare-filename raw_snapshot
+    while treasury/ uses a full path — cosmetic convention drift, left
+    unchanged (PRESERVE).

@@ -1,73 +1,288 @@
 id: 2022-02/ghostwriter-ukraine-targeting-invasion-eve
-name: Ghostwriter targeting of Ukrainian military personnel on the eve of Russian invasion
-start_date: 2022-02-01
-disclosure_date: 2022-02-25
-end_date: 2022-02-24
+name: Ghostwriter/UNC1151 spearphishing of Ukrainian military personnel on the eve of the Russian invasion
+start_date: 2022-02-15  # APPROXIMATE — no source pins the onset; CERT-UA (25 Feb), Meta (27 Feb) and Google TAG (7 Mar) describe the activity only as "recently"/"in the past few days"/"over the past week", i.e. the days-to-weeks preceding the 24 Feb invasion
+disclosure_date: 2022-02-25  # CERT-UA's first public warning (via BleepingComputer)
+end_date: 2022-03-08  # last cited disclosure of the same invasion-window campaign (Cluster25)
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  In the days preceding and surrounding the February 24, 2022
-  Russian full-scale invasion of Ukraine, Google's Threat
-  Analysis Group (TAG) and Meta (Facebook) documented Ghostwriter
-  / UNC1151 targeting Ukrainian military personnel and adjacent
-  civilian-relevant accounts (Polish-language webmail accounts
-  belonging to Ukrainians in Poland, Polish service personnel
-  associated with refugee-management roles). Both vendors named
-  Belarusian-aligned operations explicitly.
+  In the window bracketing the 24 February 2022 Russian full-scale
+  invasion, Ghostwriter/UNC1151 ran credential-spearphishing against
+  Ukrainian (and Polish) military and government targets. CERT-UA
+  warned on 25 February 2022 of "mass phishing emails ... targeting
+  private 'i.ua' and 'meta.ua' accounts of Ukrainian military
+  personnel and related individuals," compromised accounts then being
+  read over IMAP and used to phish the victims' contacts; it named
+  "the Minsk-based group 'UNC1151'" whose "members are officers of the
+  Ministry of Defence of the Republic of Belarus." Meta (27 February)
+  reported "increased targeting of people in Ukraine, including
+  Ukrainian military and public figures by Ghostwriter." Google TAG
+  (7 March) reported "Ghostwriter/UNC1151, a Belarusian threat actor,
+  has conducted credential phishing campaigns over the past week
+  against Polish and Ukrainian government and military organizations."
+  Cluster25/DuskRise (8 March) documented UNC1151/Ghostwriter adopting
+  MicroBackdoor implant variants in these Ukraine operations.
 false_flag_risk: none
 summary: |
-  Most operationally consequential Ghostwriter tempo elevation
-  on record — directly bracketing the Russian invasion. Demonstrates
-  Belarusian-aligned cyber operations integrated into the
-  Russian-led Ukraine theater, supporting the Union State cyber-
-  integration doctrinal pillar. Both Google TAG and Meta provided
-  rare same-week public attributions of Belarusian-state-aligned
-  operations.
+  Ghostwriter/UNC1151's most operationally consequential targeting of
+  Ukraine on record — a credential-theft-and-implant push directly
+  bracketing the Russian full-scale invasion, hitting the private
+  webmail of Ukrainian armed-forces personnel plus Ukrainian and Polish
+  government and military organisations. Belarusian-aligned cyber
+  operations integrated into the Russian-led Ukraine theatre, the
+  substance of the Union State cyber-integration pillar. Belarus is
+  named by CERT-UA (UNC1151 = officers of the Belarusian Ministry of
+  Defence), by Google TAG ("a Belarusian threat actor") and by
+  Cluster25 ("linked to the Belarusian government"); Meta named only
+  "Ghostwriter" and asserted no nation. NB the FancyBear/APT28 ukr.net
+  phishing described in the same Google TAG post is a SEPARATE Russian
+  (GRU) actor, not this event. The standing Ghostwriter Belarus-vs-
+  Russia nation contest (Germany/EU Council named Russia for the wider
+  Ghostwriter campaign) is flagged on the actor record; this event's
+  four sources uniformly name Belarus.
 attributions:
   - actor_id: by/unscoped/ghostwriter
-    attributing_org: Google TAG (Shane Huntley)
+    attributing_org: CERT-UA (State Service of Special Communications, via BleepingComputer)
     attributing_org_confidence: high
+    attribution_level: named-unit  # CERT-UA names a specific Belarusian service — the Ministry of Defence
     auspex_assessment: concur
     attribution_date: 2022-02-25
-    attribution_source_id: google-tag/2022-02-28_ukraine-cyber-activity
+    attribution_source_id: bleepingcomputer/2022-02-25_ukraine-belarusian-hackers-military-phishing
+    notes: |
+      The disclosure anchor and the strongest attribution. CERT-UA
+      (quoted verbatim by BleepingComputer): "The Minsk-based group
+      'UNC1151' is behind these activities. Its members are officers of
+      the Ministry of Defence of the Republic of Belarus." Because
+      CERT-UA names a SPECIFIC Belarusian service (the MoD),
+      attribution_level = named-unit. AUSPEX nonetheless keeps the
+      canonical actor by/unscoped/ghostwriter (no by/military service
+      adopted); this MoD naming is FLAGGED as a re-home signal on the
+      actor record (see qc). auspex_assessment = concur (Belarus nexus).
   - actor_id: by/unscoped/ghostwriter
-    attributing_org: Meta / Facebook
+    attributing_org: Meta / Facebook (Nathaniel Gleicher, David Agranovich)
     attributing_org_confidence: high
+    attribution_level: named-actor  # names "Ghostwriter" only — no nation, no unit
     auspex_assessment: concur
     attribution_date: 2022-02-27
     attribution_source_id: facebook/2022-02-27_ukraine-cyber-activity
+    notes: |
+      "In the past few days, we've seen increased targeting of people in
+      Ukraine, including Ukrainian military and public figures by
+      Ghostwriter, a threat actor that has been tracked for some time by
+      the security community." Meta names ONLY "Ghostwriter" — it does
+      NOT assert Belarus or UNC1151 (both 0× in the raw). So Meta is a
+      named-actor attribution, not a nation attribution; it does not
+      corroborate the Belarus nexus (Google TAG, CERT-UA and Cluster25
+      do). concur on the Ghostwriter attribution.
+  - actor_id: by/unscoped/ghostwriter
+    attributing_org: Google TAG (Shane Huntley)
+    attributing_org_confidence: high
+    attribution_level: named-actor  # names Ghostwriter/UNC1151 + nation Belarus, but no specific unit
+    auspex_assessment: concur
+    attribution_date: 2022-03-07
+    attribution_source_id: google-tag/2022-02-28_ukraine-cyber-activity
+    notes: |
+      "Ghostwriter/UNC1151, a Belarusian threat actor, has conducted
+      credential phishing campaigns over the past week against Polish
+      and Ukrainian government and military organizations." Names the
+      actor (Ghostwriter/UNC1151) and the nation (Belarus) but no
+      specific service -> named-actor. attribution_date corrected
+      2022-02-25 -> 2022-03-07 (the post's real dateline; the source's
+      id-slug still reads 2022-02-28 for FK stability). NB the same post
+      attributes the ukr.net phishing to FancyBear/APT28 (Russia GRU) —
+      a separate actor, not tagged to this event.
+  - actor_id: by/unscoped/ghostwriter
+    attributing_org: Cluster25 (DuskRise)
+    attributing_org_confidence: moderate  # hedged "believed to be linked"
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2022-03-08
+    attribution_source_id: cluster25/2022-03-08_ghostwriter-unc1151-microbackdoor-ukraine
+    notes: |
+      "the threat actor known as UNC1151 (aka GhostWriter), an adversary
+      believed to be linked to the Belarusian government." Hedged
+      ("believed") -> attributing_org_confidence moderate. Adds the
+      malware/backdoor dimension of this campaign — UNC1151/Ghostwriter
+      adopting MicroBackdoor implant variants in Ukraine operations
+      (the tradecraft the sibling 2021-11/mandiant-unc1151-microbackdoor-
+      tooling audit stripped as mis-attributed to Mandiant and flagged
+      to fold here). concur (Belarus nexus).
 doctrine_links:
   - doctrine_id: by/union-state-integration
     pillar_id: by/union-state-integration/ukraine-theater-support
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale  # Belarus's own doctrine on Belarusian operations
     reasoning: |
-      Ghostwriter tempo elevation against Ukrainian military
-      personnel during the invasion window operationalizes
-      the Union State cyber-integration doctrine in the most
-      direct way possible.
-    contested: false
+      Belarusian-attributed cyber operations directly targeting Ukrainian
+      armed-forces personnel and Ukrainian/Polish government and military
+      in the days bracketing the 24 Feb 2022 invasion operationalize the
+      Union State's Ukraine-theater-support pillar — Belarusian-aligned
+      activity in operational alignment with the Russian-led theater.
+      Strongly_inferred (not attested): no source states this doctrine's
+      terminal goal, and the doctrine record itself prescribes
+      strongly_inferred for Belarusian Ukraine-theater cyber tasking
+      (no public Belarusian attestation exists, but the Russian-aligned
+      theater context is unambiguous).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Google TAG: 'Ghostwriter/UNC1151, a Belarusian threat actor, has conducted credential phishing campaigns over the past week against Polish and Ukrainian government and military organizations'"
+        - "CERT-UA: UNC1151 members 'are officers of the Ministry of Defence of the Republic of Belarus', targeting private 'i.ua' and 'meta.ua' accounts of Ukrainian military personnel — a Belarusian state operator against Ukrainian military victims"
+        - "Timing: the campaign brackets the 24 Feb 2022 Russian full-scale invasion — Belarusian cyber activity inside the Ukraine theater, the substance of the pillar"
+        - "The by/union-state-integration doctrine record explicitly prescribes strongly_inferred for Belarusian Ukraine-theater cyber tasking"
+      alternatives:
+        - "The activity could be framed purely as Belarusian information-sphere defense (by/concept-info-security-2019) rather than Union-State theater support — but the direct Ukrainian-military targeting synchronized with the invasion favours theater support."
+    contested: false  # this event's four sources uniformly name Belarus; union-state is inherently a Belarus-Russia integration doctrine, so a Russia angle complements rather than competes
     analyst: claude
   - doctrine_id: by/concept-info-security-2019
     pillar_id: by/concept-info-security-2019/information-sphere-defense
     program_id: null
     confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Adjunct framing as information-sphere-defense aligns with
-      broader Lukashenko-government messaging on the conflict
-      but the operations themselves are best characterized
-      as Ukraine-theater support.
-    contested: false
+      The 2019 Concept's information-sphere-defense pillar fits
+      Ghostwriter's broader anti-NATO / pro-regime influence posture, but
+      THIS event's operations are espionage / credential-theft against
+      military and government accounts (plus a MicroBackdoor implant) —
+      not influence content — so information-sphere-defense is only a
+      secondary, plausible framing here; the direct military-targeting is
+      better read as Union-State theater support.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Union-State Ukraine-theater support (by/union-state-integration) is the stronger doctrinal fit for direct military-targeting in the invasion window."
+        - "Russian information confrontation: the standing Ghostwriter Belarus-vs-Russia nation contest (German FFO 2021-09-06 and EU Council 2021-09-24 named Russia/the GRU for the wider Ghostwriter campaign) means a Russian-doctrine reading survives at the nation level — though this event's four sources all name Belarus."
+    contested: true
     analyst: claude
 targets:
-  - target_id: orgs/ukrainian-military
+  - target_id: sectors/defense
     country: ua
-    role: primary
-  - target_id: orgs/ukrainian-refugees-in-poland
+    role: primary  # Ukrainian armed-forces / military personnel (CERT-UA, Meta, Google TAG)
+  - target_id: orgs/ukrainian-government
+    country: ua
+    role: primary  # Google TAG: "Ukrainian government ... organizations"
+  - target_id: orgs/polish-government
     country: pl
-    role: primary
+    role: primary  # Google TAG: "Polish ... government and military organizations" (Polish military also named)
 sources:
-  - google-tag/2022-02-28_ukraine-cyber-activity
+  - bleepingcomputer/2022-02-25_ukraine-belarusian-hackers-military-phishing
   - facebook/2022-02-27_ukraine-cyber-activity
+  - google-tag/2022-02-28_ukraine-cyber-activity
+  - cluster25/2022-03-08_ghostwriter-unc1151-microbackdoor-ukraine
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit + RE-SOURCE (badrabbit-style enrichment) of the
+    invasion-eve Ghostwriter/UNC1151 targeting of Ukrainian military
+    personnel, against four snapshotted sources. STEP-0 triage: both
+    originally-cited urls return HTTP 200 with matching bodies -> REAL
+    event, no phantom; corrected in place and enriched with the CERT-UA
+    warning + the Cluster25 MicroBackdoor report.
+
+    SNAPSHOTS (all captured + hashed this audit):
+      - bleepingcomputer/2022-02-25_...-military-phishing (CERT-UA mirror,
+        CREATED): sha256 c4c57b69…443d1e84, 90,822 B.
+      - facebook/2022-02-27_ukraine-cyber-activity: sha256 745eb1ad…
+        20456641, 481,398 B.
+      - google-tag/2022-02-28_ukraine-cyber-activity: sha256 3841801f…
+        7080139b, 367,910 B.
+      - cluster25/2022-03-08_...-microbackdoor-ukraine (CREATED): sha256
+        ef214f69…ddb8dca0, 210,247 B.
+
+    [a] FACTS — rebuilt to strict source support.
+      KEPT/VERBATIM-CARRIED: CERT-UA "Mass phishing emails have recently
+      been observed targeting private 'i.ua' and 'meta.ua' accounts of
+      Ukrainian military personnel and related individuals" + IMAP mailbox
+      access + address-book re-phishing + "officers of the Ministry of
+      Defence of the Republic of Belarus"; Meta "increased targeting of
+      people in Ukraine, including Ukrainian military and public figures by
+      Ghostwriter"; Google TAG "Ghostwriter/UNC1151, a Belarusian threat
+      actor, has conducted credential phishing campaigns over the past week
+      against Polish and Ukrainian government and military organizations";
+      Cluster25 UNC1151/GhostWriter adopting MicroBackdoor variants against
+      Ukraine.
+      STRIPPED (not carried by any cited source): (1) "Polish-language
+      webmail accounts belonging to Ukrainians in Poland, Polish service
+      personnel associated with refugee-management roles" — that
+      refugee-wave targeting is the LATER 30 Mar 2022 Google TAG post
+      ("Tracking cyber activity in Eastern Europe"), post-invasion and out
+      of this event's window; Poland/Polish/refugee = 0× in both the Meta
+      and the March-7 Google TAG raws. (2) "Both vendors named
+      Belarusian-aligned operations explicitly" / "Both Google TAG and Meta
+      provided ... attributions of Belarusian-state-aligned operations" —
+      FALSE: Meta names only "Ghostwriter" (Belarus 0×, UNC1151 0×). Only
+      Google TAG, CERT-UA and Cluster25 name Belarus. Corrected throughout.
+      incident_type [intrusion, data-theft] -> [intrusion, espionage]
+      (credential theft + IMAP mailbox collection + MicroBackdoor implant =
+      espionage tradecraft, not leak/data-theft).
+
+    [b] ATTRIBUTION — four attributions, graded to what each source states,
+      with attribution_level added to each: CERT-UA named-unit (Belarusian
+      MoD, high); Meta named-actor ("Ghostwriter", no nation, high);
+      Google TAG named-actor (Ghostwriter/UNC1151 + Belarus, high);
+      Cluster25 named-actor (hedged "believed", moderate). No
+      over-attestation: did NOT flatten to a single "Belarus" nor promote to
+      a named Belarusian unit on the actor. auspex_assessment concur on all
+      (Belarus nexus, canonical homing). Google TAG attribution_date
+      corrected 2022-02-25 -> 2022-03-07.
+
+    [c] DATES — disclosure_date 2022-02-25 now CORRECTLY anchored (was
+      previously unsupported by the two cited sources) to CERT-UA's first
+      public warning via the newly-added BleepingComputer mirror. start_date
+      2022-02-01 (unsourced) -> 2022-02-15 (APPROXIMATE; the sources describe
+      the activity only as "recently"/"past few days"/"past week" as of the
+      25 Feb–7 Mar disclosures — no exact onset is stated). end_date
+      2022-02-24 -> 2022-03-08 (the same invasion-window campaign was still
+      being disclosed through early March; Cluster25). SOURCE published_on
+      fixes: google-tag record 2022-02-28 -> 2022-03-07 (its real dateline;
+      there was no 28 Feb TAG post — slug kept for FK stability); Meta
+      2022-02-27 kept (visible byline; OG timestamp 2022-02-28T05:00Z UTC);
+      Cluster25 2022-03-08; BleepingComputer 2022-02-25.
+
+    [d] DOCTRINE_LINKS — two, both attacker-rationale, neither attested.
+      by/union-state-integration/ukraine-theater-support: strongly_inferred
+      (kept), rebuilt with inference_basis {signals[], alternatives[]},
+      attesting_source_id null, contested false (all four sources name
+      Belarus; union-state is inherently a Belarus-Russia integration
+      doctrine). by/concept-info-security-2019/information-sphere-defense:
+      plausible (kept), inference_basis {alternatives[]}, contested true —
+      honestly downgraded because THIS event is espionage not influence, and
+      the standing Belarus-vs-Russia nation contest survives. Neither source
+      states a doctrine's terminal goal, so the attested bar is unmet.
+
+    [e] ATTRIBUTION_LEVEL — added to all four attributions (named-unit for
+      CERT-UA's Belarusian-MoD naming; named-actor for the other three).
+
+    [f] ACTOR_ID — by/unscoped/ghostwriter resolves
+      (atlas/actors/by/ghostwriter.yaml); not edited. Directionality correct
+      (Belarus/Ghostwriter attacker -> Ukrainian military victim).
+      TARGETS — BOTH prior targets were DANGLING (no registry file):
+      orgs/ukrainian-military and orgs/ukrainian-refugees-in-poland. Replaced
+      with resolving, source-carried ids: sectors/defense (ua, Ukrainian
+      military), orgs/ukrainian-government (ua), orgs/polish-government (pl).
+      Dropped the refugee target entirely (unsourced for this window; see
+      [a]).
+
+    FLAGS for orchestrator/Kara (out of single-event remit):
+    (1) ACTOR RE-HOME SIGNAL: CERT-UA names UNC1151's members as "officers
+        of the Ministry of Defence of the Republic of Belarus" — a SPECIFIC
+        Belarusian service. The actor record by/unscoped/ghostwriter says
+        "Keep by/unscoped until a cited source names a specific Belarusian
+        service"; CERT-UA (Feb 2022) arguably now does (the Belarusian
+        military/MoD), consistent with Mandiant's moderate-confidence
+        Belarusian-military lean. Candidate to re-home by/unscoped ->
+        by/<military|mod> — NOT done here (actor-file change, out of scope).
+    (2) DUPLICATE SOURCE: google-tag/2022-05-03_threat-landscape-ukraine-
+        update points at the SAME url (update-threat-landscape-ukraine) as
+        the cited google-tag/2022-02-28 record, and its own snapshot carries
+        datePublished 2022-03-07 — both are the March-7 post. RETIRE/MERGE
+        candidate; if merged, this event should cite the surviving id.
+    (3) EVENT id-slug still says "...invasion-eve"; the corrected window
+        runs 15 Feb–8 Mar 2022 (brackets, not merely precedes, the
+        invasion). Slug kept for FK stability; re-slug optional.

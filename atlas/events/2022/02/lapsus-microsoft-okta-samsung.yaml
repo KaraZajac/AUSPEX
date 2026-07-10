@@ -1,40 +1,58 @@
 id: 2022-02/lapsus-microsoft-okta-samsung
-name: Lapsus$ NVIDIA, Samsung, Microsoft, Okta intrusion spree
-start_date: 2022-02-23
+name: Lapsus$ NVIDIA, Samsung, Microsoft, Okta intrusion & extortion spree
+start_date: 2022-01-16
 disclosure_date: 2022-02-25
-end_date: 2022-03-22
+end_date: 2022-03-24
 incident_type:
   - intrusion
   - data-theft
-initial_vector: valid-creds
+  - extortion
+initial_vector: valid-creds  # creds obtained via phone social-engineering, SIM-swap, MFA-fatigue & paid/recruited insiders (corpus has no social-engineering enum); Okta strand = third-party/BPO (Sitel) compromise
 outcome_summary: |
-  Lapsus$ public Telegram-channel-mediated intrusion spree
-  February–March 2022. NVIDIA (Feb 23 disclosed, 1TB exfiltrated
-  including signing certificates and DLSS source); Samsung
-  (Mar 4, 190GB Galaxy bootloader / TEEGRIS source); Vodafone
-  Portugal (Feb 7 service outage); Microsoft (Mar 20, Bing /
-  Cortana / Bing Maps source — Microsoft confirmed limited Azure
-  DevOps repo access via a single compromised employee account);
-  Okta (Mar 22, ~366 customer tenants potentially affected via
-  Sitel Group third-party support contractor compromise that
-  occurred Jan 21–22 2022).
-false_flag_risk: none
+  Early-2022 LAPSUS$ (Microsoft: DEV-0537) multi-victim intrusion,
+  data-theft and extortion spree, coordinated and publicized via the
+  group's Telegram channel. Earliest in-scope intrusion was the Okta
+  compromise: the actor controlled a Sitel (third-party customer-support
+  BPO) support engineer's machine over a Jan 16–21 2022 window — "25
+  consecutive minutes on January 21, 2022" of active control. Public
+  disclosures then cascaded Feb–Mar 2022: NVIDIA (LAPSUS$ claimed ~1 TB,
+  released ~150 GB, including two code-signing certificates later abused
+  to sign malware); a technology company's ~190 GB source-code leak
+  published via torrent (Samsung, per CSRB's cited reporting); Microsoft
+  (~37 GB of source code across 250+ projects leaked to LAPSUS$'s Telegram
+  — Microsoft confirmed "a single account had been compromised, granting
+  limited access" and "No customer code or data was involved"); and
+  Vodafone (investigated LAPSUS$ source-code-theft claims). Okta's final
+  assessment (Apr 19 2022) sharply narrowed the blast radius: the worst
+  case was 366 customer tenants potentially reachable by the Sitel
+  engineer's account (the figure Okta first shared Mar 22 2022), but the
+  actor actually accessed only TWO customer tenants (via the SuperUser
+  app) and could not reset MFA/passwords, impersonate, or authenticate to
+  Okta accounts.
+false_flag_risk: none  # LAPSUS$ loudly self-claimed each breach on its public Telegram channel
 summary: |
-  Canonical case for the Microsoft / Okta lessons-learned cycle:
-  third-party support-contractor compromise as identity-provider
-  blast-radius. Cyber Safety Review Board (CSRB) commissioned to
-  produce a public report (released Aug 10 2023). The Okta
-  incident specifically catalyzed industry adoption of session-
-  binding (DPoP), tightened help-desk MFA-reset procedures, and
-  CIS / NIST guidance on contractor identity-pivot risks.
+  Canonical case for the identity-provider / third-party-support blast-radius
+  lessons-learned cycle. The US Cyber Safety Review Board (CSRB) reviewed the
+  LAPSUS$ campaign and published its public report on Aug 10 2023, framing
+  LAPSUS$ as a loosely-organized, largely juvenile extortion crew that
+  "exploited systemic ecosystem weaknesses to infiltrate and extort
+  organizations" — social engineering, SIM-swap, MFA-fatigue, and
+  paid/recruited insiders — rather than advanced tooling. The Okta/Sitel
+  incident sharpened industry emphasis on phishing-resistant FIDO2 /
+  passwordless MFA, tightened help-desk identity verification for
+  credential/MFA resets, and NIST/CISA guidance on third-party /
+  business-process-outsourcer (BPO) identity-pivot (supply-chain) risk. The
+  City of London Police arrested seven individuals connected to LAPSUS$ on
+  Mar 24 2022.
 attributions:
   - actor_id: criminal/lapsus
-    attributing_org: Microsoft + Okta + CSRB
+    attributing_org: Microsoft (MSTIC) + Okta + CSRB
     attributing_org_confidence: high
+    attribution_level: named-actor  # LAPSUS$/DEV-0537 named group; self-claimed on Telegram, UK arrests/charges followed
     auspex_assessment: concur
     attribution_date: 2022-03-22
     attribution_source_id: msft/2022-03-22_dev-0537-lapsus
-doctrine_links: []
+doctrine_links: []  # criminal extortion crew; no state doctrine applies (CSRB: "not the work of a nation-state actor")
 targets:
   - target_id: orgs/nvidia
     role: primary
@@ -47,3 +65,82 @@ targets:
 sources:
   - msft/2022-03-22_dev-0537-lapsus
   - csrb/2023-08-10_lapsus-report
+  - okta/2022-04-19_concludes-jan-2022-investigation
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW snapshots. Sources (all snapshotted+hashed):
+    - MSTIC blog microsoft__2022-03-22_dev-0537-lapsus.html
+      sha256 254c8d019dd3bbb37207db8cce94647176e745e1b3f3f910ddc1c7779142ecfc
+    - CSRB PDF csrb__2023-08-10_lapsus-report.pdf
+      sha256 d6e6382699cc4268ded2008edf358bd2ee9c50442704dad8bc3fe2846de2f8fc
+    - Okta blog okta__2022-04-19_concludes-jan-2022-investigation.html
+      sha256 20e5f414c8e5cd4f8f7cb826adb159bed8ae6803a9f810a261e8312f4b3b5d29
+
+    [a] FACTS — several AI-embellished specifics STRIPPED (carried by NO cited
+    source): "Bing/Cortana/Bing Maps source" (MSTIC blog names none of these — 0
+    hits; product names are press coverage of the leaked torrent, not the sources),
+    "DLSS source" (0 hits in CSRB), "TEEGRIS source"/"Galaxy bootloader" (0 hits),
+    "Azure DevOps repo" (MSTIC says only generic "code repositories like GitLab and
+    GitHub"), and the "~366 customer tenants potentially affected" stated as the
+    outcome. Figures RETAINED are all source-carried: CSRB — "claimed to steal 1 TB
+    of data, releasing approximately 150 GB, from a technology company, including
+    proprietary information and two code-signing certificates that were later used to
+    sign files containing malware" (NVIDIA, fn161); "stole 190 GB of a technology
+    company's source code and made it available to download via torrent" (Samsung,
+    fn152); "stole approximately 37 GB of source code for over 250 projects from a
+    technology company ... made it available to download in an online torrent posted
+    on its Telegram channel" (Microsoft, fn149). MSTIC (Microsoft's self-breach):
+    "a single account had been compromised, granting limited access ... No customer
+    code or data was involved." Okta: "maximum potential impact ... was 366 Okta
+    customers whose tenants were accessed by any Sitel customer support engineer" =
+    "the maximum potential impact Okta initially shared on March 22, 2022"; actual =
+    "accessed two active customer tenants within the SuperUser application ... viewed
+    limited additional information in ... Slack and Jira" and could not reset
+    MFA/passwords, impersonate, or authenticate to Okta — so the 366→2 correction is
+    now stated correctly (was previously the reverse, treating 366 as fact). Vodafone
+    corrected: cited source only supports "investigated LAPSUS$ source-code-theft
+    claims" (CSRB fn159, SecurityWeek "Vodafone Investigating Source Code Theft
+    Claims") — the prior "Vodafone Portugal (Feb 7 service outage)" was a CONFLATION
+    of a separate, unattributed Feb-7-2022 Vodafone Portugal outage and pre-dated the
+    old start_date; removed. Extortion added to outcome+name (CSRB §1.3.2 "Extortion
+    and Ransoms"; "infiltrate and extort organizations"). TTPs confirmed by both:
+    MSTIC — "phone-based social engineering; SIM-swapping to facilitate account
+    takeover; ... paying employees, suppliers, or business partners ... for access to
+    credentials and multifactor authentication (MFA) approval," Redline stealer,
+    purchased creds/session tokens, MFA-fatigue ("simple-approval MFA prompts").
+
+    [b] ATTRIBUTION — high/concur upheld. LAPSUS$/DEV-0537 attributed by Microsoft
+    (MSTIC), Okta, and the CSRB; group self-claimed on Telegram; CSRB "The cyberattacks
+    were not the work of a nation-state actor ... perpetrated by a loosely organized
+    threat actor group known as Lapsus$." Not over-attested. attributing_org tidied to
+    "Microsoft (MSTIC) + Okta + CSRB".
+
+    [c] DATES — start_date moved 2022-02-23 → 2022-01-16 (was a disclosure-adjacent date,
+    not op onset): earliest in-scope intrusion is the Okta/Sitel compromise window
+    "January 16 and 21" (Okta). disclosure_date 2022-02-25 kept (NVIDIA, first public
+    disclosure of the spree). end_date 2022-03-22 → 2022-03-24: CSRB "On March 24, 2022,
+    the City of London Police released information about the arrest of seven individuals
+    in connection with Lapsus$" — operational end of the spree. All three source
+    published_on verified against bylines/metadata (MSTIC 2022-03-22; CSRB 2023-08-10;
+    Okta 2022-04-19).
+
+    [d] DOCTRINE_LINKS — empty, correct. Criminal extortion crew; CSRB explicitly rules
+    out a nation-state nexus. No attacker/defender/victim doctrine applies.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (LAPSUS$/DEV-0537 is a named group; core
+    members later arrested/charged in the UK, but the attribution here is group-level).
+
+    [f] ACTOR_ID — criminal/lapsus resolves to atlas/actors/criminal/lapsus.yaml
+    (id: criminal/lapsus; aliases include DEV-0537, Storm-0875, Strawberry Tempest).
+
+    FLAGS (cross-file, not edited here): target FK files orgs/nvidia and orgs/samsung
+    do NOT exist under atlas/targets/orgs/ (only microsoft.yaml, okta.yaml present) —
+    orchestrator should create them or the refs will dangle. New source record created:
+    okta/2022-04-19_concludes-jan-2022-investigation (Okta first-party disclosure) — it
+    carries the 366→2 correction; added to sources[]. msft source-record notes also
+    corrected (they had wrongly claimed the MSTIC blog "leaked Bing/Cortana/Bing Maps
+    source code").

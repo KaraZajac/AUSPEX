@@ -1,39 +1,150 @@
 id: 2022-07/911-proxy-collapse
-name: 911 residential-proxy network voluntary shutdown after Krebs disclosure
-start_date: 2022-07-28
-disclosure_date: 2022-07-28
-end_date: 2022-07-28
+name: 911 residential-proxy service shuts down after breach disclosure, days after Krebs deep-dive
+start_date: 2022-07-19  # Krebs deep-dive exposure — precipitating public trigger (Krebs' "July 19 story"; page byline shows 18 Jul; underlying breach was "early July")
+disclosure_date: 2022-07-28  # 911 posted its permanent-shutdown notice
+end_date: 2022-07-28  # 911 permanently ceased operations
 incident_type:
-  - disruption
-initial_vector: unknown
+  - disruption   # criminal residential-proxy (malware-botnet) infrastructure collapsed
+  - documentary  # journalism-documented (KrebsOnSecurity); NO law-enforcement action in 2022
+initial_vector: unknown  # 911: "Not sure how did the hacker get in"; intruders then abused the account top-up API
 outcome_summary: |
-  The 911 residential-proxy network — built from trojanized
-  free-VPN application installs across approximately 200K
-  compromised residential IP endpoints — abruptly disclosed
-  a security breach and shut down voluntarily on July 28
-  2022, ten days after Krebs on Security's deep-dive
-  investigation exposed the trojanized-VPN distribution
-  channel and the criminal-laundering use of the proxy
-  pool. The 911 brand was succeeded within months by 911
-  S5 (different operator), which scaled to ~19M endpoints
-  before the May 2024 DOJ takedown.
+  911[.]re — a residential-proxy service operating since ~2015
+  that sold daily access to hundreds of thousands of
+  malware-compromised consumer Windows PCs — abruptly shut down
+  on 28 July 2022. It built its proxy pool by covertly bundling
+  its SOCKS5 relay software with "free VPN" apps and with
+  pirated/"free" software pushed through its own pay-per-install
+  affiliate schemes (e.g. backdoored torrents), turning unwitting
+  users' machines into rentable exit nodes. Independent counts
+  put the pool at ~120,000 PCs (University of Sherbrooke) up to
+  nearly 200,000 nodes across 200+ countries, 42,000+ of them in
+  the United States (Spur.us / Riley Kilmer). The shutdown came
+  ten days after KrebsOnSecurity's 19 July deep-dive exposed the
+  covert distribution channel and the pool's abuse for payment-
+  card fraud, account-takeover, unauthorized "scam" wire
+  transfers, CEO-impersonation and China-based wire laundering.
+  911 said an early-July intrusion abused its account top-up API
+  and then overwrote its servers, data and backups, leaving the
+  service "unrecoverable." No law-enforcement action was
+  involved. WHOIS and UK Companies House records tied 911 to
+  Yunhe Wang of Beijing (Gold Click Ltd, registered 2016); 911
+  denied the linkage.
 false_flag_risk: none
 summary: |
-  The 911 collapse is a journalism-driven shutdown of a
-  cybercrime-services proxy network without law-enforcement
-  action — the closest analog in the corpus to a market-
-  pressure rather than enforcement-pressure shutdown of a
-  criminal-infrastructure provider. AUSPEX classifies as
-  criminal-baseline.
+  A criminal residential-proxy provider collapsing WITHOUT a
+  law-enforcement takedown — a self-disclosed destructive breach
+  (911's stated cause) landing ten days after investigative
+  journalism (Krebs) exposed the operation. AUSPEX classifies as
+  criminal-baseline: 911 was a financially-motivated
+  malware-botnet / proxy operation, not state-tasked (though
+  state actors are known opportunistic consumers of such
+  services). Directionality: 911's operators are the criminal
+  subject; the ~120K–200K proxy nodes were its victims —
+  malware-infected consumer/residential PCs whose owners were
+  largely unwitting. No atlas actor exists for the 911 / Yunhe
+  Wang operator, so actor_id is null and the subject is named in
+  prose (mirroring the sibling 2024-05/911-s5-botnet-takedown).
+  AUSPEX links this to the SAME operator: the Yunhe Wang
+  identified here (Gold Click Ltd) is the person US DOJ/FBI later
+  arrested and OFAC sanctioned over the "911 S5" residential-
+  proxy botnet in May 2024 — i.e. 911 and "911 S5" are one
+  continuous Wang-run operation, not (as previously stated on
+  this record) a different operator's successor.
 attributions:
-  - actor_id: null
+  - actor_id: null  # no atlas actor for the 911 / Yunhe Wang operator; subject named in prose (as in sibling 2024-05/911-s5-botnet-takedown)
     attributing_org: Krebs on Security (journalism)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2022-07-28
-    attribution_source_id: krebs/2022-07-28_911-proxy-implodes
+    attribution_date: 2022-07-19
+    attribution_source_id: krebs/2022-07-19_911-residential-proxy-deep-dive
+    notes: |
+      Krebs (drawing on University of Sherbrooke analysis and WHOIS
+      history) characterises 911 as a criminal malware-proxy service
+      and ties its domains to the email ustraffic@qq.com and to Yunhe
+      Wang of Beijing — UK Companies House lists Gold Click Limited
+      (registered 2016) to a 34-year-old Yunhe Wang. 911 told Krebs
+      the researchers were "wrong" and denied any link to the other
+      domains, so the operator identity rests on OSINT / registration
+      clustering rather than a confession; attribution_level:
+      named-actor reflects the named individual. The criminal-service
+      characterisation and the collapse itself are solidly reported
+      (concur); the personal identification is the OSINT-clustered
+      element. attribution_date/source set to the 19 Jul deep-dive,
+      which carries the operator identification (the 28 Jul "implodes"
+      piece carries the shutdown mechanism).
 doctrine_links: []
 targets: []
 sources:
   - krebs/2022-07-19_911-residential-proxy-deep-dive
   - krebs/2022-07-28_911-proxy-implodes
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs both cited KrebsOnSecurity articles (raw snapshots
+    captured + sha256; live fetch HTTP 200, on-topic, full body).
+    Deep-dive sha256 ef5c49b873a6d64a0459e58706a3e452c922602f261d19a30bd4ee15ee19ccb5;
+    "implodes" sha256 bb154fe5a3af001c2421b377fa102d280097bb3e0cd2ae0172208c0bbb0b75c3.
+    STEP-0 triage: both REAL + on-topic (titles match) — normal audit.
+    [a] FACTS: verified against raw. KEPT/CORROBORATED: operating
+    "since 2015" (implodes) / "past seven years" (deep-dive);
+    distribution via "free VPN" apps + pay-per-install affiliate
+    bundling with "free" utilities and pirated software / trojanized
+    torrents (deep-dive Kilmer: "The free VPN apps, and the other is
+    trojanized torrents. They'll re-upload Photoshop ... backdoored
+    with the 911 proxy"); node counts "roughly 120,000 PCs"
+    (Sherbrooke) and "nearly 200,000 proxy nodes ... more than 42,000"
+    US across "more than 200 countries" (Kilmer/Spur.us) — all present
+    verbatim. Collapse mechanism (implodes): "shutting down in the wake
+    of a data breach", "hacked in early July", intruders "abused an
+    application programming interface (API) that handles the topping up
+    of accounts", "overwrite critical 911[.]re servers, data and
+    backups", "the service unrecoverable", "permanently shut down 911
+    ... on July 28th"; "ten days after KrebsOnSecurity published"
+    (28-18=10). Criminal uses (deep-dive): "account takeover", "scam
+    wires", "Western Union", "CEO impersonation", charging a "credit
+    card"/emptying a "bank account". Operator ID (deep-dive): Yunhe
+    Wang of Beijing, ustraffic@qq.com, Gold Click Limited (Companies
+    House, registered 2016). STRIPPED (not carried by either cited
+    2022 source; anachronistic): "911 S5 (different operator)",
+    "~19M endpoints", "May 2024 DOJ takedown" — "911 S5"/"19 million"/
+    "CloudRouter" appear NOWHERE in either raw body (grep: 0 hits; the
+    lone "911 s5" is a reader COMMENT, not Krebs). CORRECTED FACT:
+    "different operator" is refuted by the deep-dive, which names the
+    SAME Yunhe Wang behind the original 911 that OFAC/DOJ later charged
+    over "911 S5" (2024-05/911-s5-botnet-takedown) — rewrote to "one
+    continuous Wang-run operation". Removed "credential-stuffing" and
+    "pandemic-era unemployment fraud" framing from prose (0 hits for
+    credential/stuffing/unemployment/CARES/PUA in the deep-dive raw —
+    those are 2024-source claims). [b] ATTRIBUTION: added
+    attribution_level: named-actor (Krebs names Yunhe Wang via
+    Sherbrooke + WHOIS + Companies House); kept auspex concur for the
+    solidly-reported criminal-service + collapse, noted the personal ID
+    is OSINT-clustered and 911-denied; re-pointed attribution_source_id
+    to the 19 Jul deep-dive (carries the operator ID). [c] DATES:
+    de-conflated the former all-2022-07-28 triple — start 2022-07-19
+    (Krebs deep-dive trigger; byline shows 18 Jul, Krebs cites it as
+    the "July 19 story", source published_on 2022-07-19 retained),
+    disclosure 2022-07-28 (shutdown notice), end 2022-07-28 (permanent
+    close). [d] DOCTRINE: none (per directive) — doctrine_links [] ✓
+    (criminal-baseline, no strategic doctrine). [e] attribution_level
+    set (named-actor). [f] ACTOR_ID: null retained — no atlas actor
+    exists for the 911/Yunhe Wang operator; subject named in prose,
+    consistent with sibling 2024-05/911-s5-botnet-takedown (also
+    actor_id null); incident_type now includes meta-type "documentary"
+    (journalism-documented, no LE action) alongside "disruption".
+    Directionality fixed in prose: 911 operators = criminal subject,
+    infected consumer PCs = victims. Both source published_on verified
+    against bylines (implodes byline "Friday 29th of July 2022"; the
+    record's 2022-07-28 reflects the shutdown-notice date and Krebs'
+    "July 28" — left as-is; deep-dive byline "Monday 18th of July 2022"
+    vs Krebs' "July 19 story" — 1-day ambiguity documented, 2022-07-19
+    retained). FLAG (not edited — belongs to the 2024 event, not this
+    one): krebs/2024-05-30_treasury-sanctions-911s5 note asserts the
+    2022 Krebs reporting "documented ... Cares Act / PUA fraud and ...
+    brute-force credential-stuffing" — NOT supported by the 2022
+    deep-dive raw (those terms are absent); recommend correcting that
+    note under the 2024 event's audit.
