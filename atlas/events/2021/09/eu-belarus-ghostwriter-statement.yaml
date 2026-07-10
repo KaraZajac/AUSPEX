@@ -1,50 +1,236 @@
+# NB id slug says "belarus" but the EU declaration attributes Ghostwriter to the RUSSIAN STATE,
+# not Belarus (verified against the raw: "Belarus"/"KGB"/"UNC1151" appear 0x). Slug kept to avoid
+# breaking FKs — flagged for orchestrator re-slug (eu-ghostwriter-russia-statement). See qc notes.
 id: 2021-09/eu-belarus-ghostwriter-statement
-name: Council of the EU attributes Ghostwriter to Belarusian-linked threat actors
-start_date: 2017-01-01
+name: EU High Representative associates the Ghostwriter campaign with the Russian state
+start_date: 2021-09-24
 disclosure_date: 2021-09-24
-end_date: null
+end_date: 2021-09-24
 incident_type:
-  - influence-operation
-  - intrusion
-initial_vector: phishing
+  - documentary
+  - policy
+initial_vector: unknown  # documentary/policy meta-event (an EU declaration) — no initial-access vector applies
 outcome_summary: |
-  The Council of the European Union issued a Declaration by the
-  High Representative attributing the Ghostwriter cyber-and-
-  influence campaign to "Belarus-linked threat actors." The
-  declaration named member states whose officials had been
-  targeted (notably Germany, Poland, Lithuania, Slovakia) and
-  characterized the operations as "unacceptable."
+  On 24 September 2021 the High Representative issued a Declaration
+  on behalf of the European Union "on respect for the EU's
+  democratic processes." It stated that "some EU Member States have
+  observed malicious cyber activities, collectively designated as
+  Ghostwriter, and associated these with the Russian state,"
+  denounced them as "unacceptable," and described them as targeting
+  "numerous members of Parliaments, government officials,
+  politicians, and members of the press and civil society in the
+  EU by accessing computer systems and personal accounts and
+  stealing data." The declaration urged "the Russian Federation to
+  adhere to the norms of responsible state behaviour in cyberspace."
+  It named no specific member state and did not mention Belarus,
+  the KGB, or UNC1151.
 false_flag_risk: none
 summary: |
-  Significant as one of the few EU collective attributions of a
-  Belarusian state-aligned cyber campaign. Followed Mandiant's
-  April 2021 UNC1151 technical attribution and Germany's
-  September 6, 2021 statement specifically attributing the
-  pre-Bundestag-election operations to Ghostwriter.
+  A documentary / policy meta-event: an EU collective political
+  attribution of the Ghostwriter cyber-and-influence activity, made
+  by the High Representative on behalf of the Union. The declaration
+  attributed Ghostwriter to "the Russian state" and called on "the
+  Russian Federation" to observe cyberspace norms — it did NOT name
+  Belarus. It followed individual member-state statements (notably
+  the German Federal Foreign Office's 6 September 2021 attribution
+  of the pre-Bundestag-election operations to "cyber actors of the
+  Russian State and specifically to the ... GRU"). NB the
+  Ghostwriter NATION is contested: AUSPEX canonically homes the
+  operator cluster to Belarus (by/unscoped/ghostwriter) on
+  Mandiant's high-confidence UNC1151 technical attribution, while
+  this EU declaration and the German statement — the political
+  attributions — name Russia/the GRU. This event records the EU
+  declaration's own language (Russian state); the Belarus-vs-Russia
+  contest is flagged on the actor record and not re-homed.
 attributions:
-  - actor_id: by/unscoped/ghostwriter
-    attributing_org: Council of the European Union (High Representative declaration)
+  - actor_id: null  # documentary/policy meta-event (an EU declaration, not a Ghostwriter operation) → actor nulled per the meta-event convention (cf. treasury-kimsuky, ofac-flax-typhoon). SUBJECT = the Ghostwriter cluster (canonical atlas actor by/unscoped/ghostwriter, resolves to atlas/actors/by/ghostwriter.yaml), which the EU here associated with "the Russian state"; named in prose above.
+    attributing_org: EU High Representative (Declaration on behalf of the European Union)
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: nation  # the EU asserted a NATION ("the Russian state" / "the Russian Federation") — no specific service/unit and no named actor/cluster
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-09-24
     attribution_source_id: council-eu/2021-09-24_belarus-ghostwriter-statement
+    notes: |
+      EU govt-primary, high confidence. VERBATIM from the raw:
+      "Some EU Member States have observed malicious cyber
+      activities, collectively designated as Ghostwriter, and
+      associated these with the Russian state. ... We urge the
+      Russian Federation to adhere to the norms of responsible
+      state behaviour in cyberspace." attribution_level = nation
+      (the Russian state is named; no unit/service, no named
+      actor). auspex_assessment = concur-with-caveat: AUSPEX
+      concurs a state-nexus Ghostwriter influence-and-intrusion
+      campaign exists and was legitimately condemned, but does NOT
+      adopt the "Russian state" nation — the canonical homing of the
+      operator cluster is Belarus / UNC1151 (Mandiant high conf +
+      MISP country=BY), with the Russia/GRU political attribution
+      flagged as contested on the actor record. actor_id nulled per
+      the meta-event convention (this is the EU's declaration, not a
+      Ghostwriter operation); the subject cluster
+      by/unscoped/ghostwriter is named in prose.
 doctrine_links:
   - doctrine_id: by/concept-info-security-2019
     pillar_id: by/concept-info-security-2019/information-sphere-defense
     program_id: null
-    confidence: attested
+    confidence: plausible
     reasoning: |
-      EU declaration explicitly attributes to Belarusian-linked
-      actors and characterizes the campaign as a threat to EU
-      democratic processes — the EU-side framing of what the
-      Belarusian doctrine calls "information sphere defense"
-      against external influence.
-    attesting_source_id: council-eu/2021-09-24_belarus-ghostwriter-statement
-    contested: false
+      Credential theft and influence operations against EU
+      parliamentarians, officials, press, and civil society fit the
+      information-sphere-defense framing the 2019 Belarusian doctrine
+      articulates — IF the operator cluster is read as Belarusian, as
+      AUSPEX canonically homes it (by/unscoped/ghostwriter). The label
+      is only plausible (not higher) because THIS source states no
+      strategic purpose and does not attribute the campaign to Belarus
+      at all — it attributes to "the Russian state" and urges "the
+      Russian Federation" — so a competing Russian-information-
+      confrontation reading genuinely survives. Not attested: the EU
+      declaration is a political condemnation, not a statement of the
+      Belarusian doctrine's terminal goal.
+    attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Belarusian information-sphere defense (by/concept-info-security-2019): anti-democratic-process influence + credential theft fits the doctrine, and AUSPEX canonically homes UNC1151/Ghostwriter to Belarus on Mandiant's high-confidence technical attribution + MISP (country BY)."
+        - "Russian information confrontation: THIS EU declaration and the German 6 Sep 2021 statement both attribute Ghostwriter to Russia / the GRU — the political attributions name Russia, so a Russian strategic reading is a live competitor to the Belarusian one."
+    contested: true
+    counter_explanation: |
+      The very source of this event (the EU declaration) attributes
+      Ghostwriter to "the Russian state," not Belarus, and the German
+      Federal Foreign Office statement it followed named Russia / the
+      GRU. A Russian-doctrine reading is therefore the reading THIS
+      source actually supports; the Belarusian-doctrine label rests
+      only on AUSPEX's canonical actor homing, which itself flags the
+      Russia/GRU attribution contest.
     analyst: claude
 targets:
-  - target_id: orgs/eu-member-state-governments
-    role: primary
+  - target_id: sectors/government
+    role: primary  # "numerous members of Parliaments, government officials, politicians ... in the EU"
+  - target_id: sectors/media/journalism
+    role: primary  # "members of the press ... in the EU"
+  - target_id: sectors/civil-society
+    role: primary  # "members of ... civil society in the EU"
 sources:
   - council-eu/2021-09-24_belarus-ghostwriter-statement
   - bundesregierung/2021-09-06_ghostwriter-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    6-point audit of the EU High Representative's 24 Sep 2021
+    Ghostwriter declaration against the RAW consilium.europa.eu press
+    release (raw_snapshot council-eu__2021-09-24_belarus-ghostwriter-
+    statement.html, sha256 acf79bbe0772d1064e4c09c95cae11b93e61208c81
+    85a4ded6f110427f558d0e, 104,928 B — Wayback 2025-10-15 capture;
+    live consilium fetch is Cloudflare-blocked (403), archive_url on
+    the source record. Hash RE-VERIFIED unchanged this audit). Two
+    cited sources; the EU primary carrying 100% of the event's
+    substance is snapshotted + hash-verified, the second (German FFO)
+    is un-snapshottable (see [c]/level) → level PARTIAL.
+
+    MODEL CHANGE: re-typed from a Ghostwriter OPERATION event
+    (incident_type [influence-operation, intrusion], actor
+    by/unscoped/ghostwriter, initial_vector phishing, start 2017) to a
+    DOCUMENTARY / POLICY meta-event (the EU's declaration), matching
+    the govt-attribution-meta house pattern (cf. treasury-kimsuky-
+    sanction, ofac-flax-typhoon-integrity-tech).
+
+    [a] FACTS — corrected to strict source support. VERBATIM-CARRIED
+    by the raw (normalized full-text check on the snapshot): "Some EU
+    Member States have observed malicious cyber activities,
+    collectively designated as Ghostwriter, and associated these with
+    the Russian state"; "Such activities are unacceptable"; "targeting
+    numerous members of Parliaments, government officials, politicians,
+    and members of the press and civil society in the EU by accessing
+    computer systems and personal accounts and stealing data"; "We urge
+    the Russian Federation to adhere to the norms of responsible state
+    behaviour in cyberspace"; the dateline "24 September 2021 12:30."
+    STRIPPED as NOT carried by the source (fabricated / anachronistic):
+    (1) the entire "Belarus-linked threat actors" attribution — the
+        strings "Belarus"/"KGB"/"UNC1151" appear 0x in the raw; the old
+        name + outcome_summary asserted the exact opposite of the
+        source's "associated these with the Russian state."
+    (2) the claim that the declaration "named member states whose
+        officials had been targeted (notably Germany, Poland,
+        Lithuania, Slovakia)" — the raw names NO member state
+        (verified: Germany/Poland/Lithuania/Slovakia = 0x each); it
+        speaks only generically of targets "in the EU."
+    KEPT: "unacceptable" (1x in raw), the target-population list, the
+    urge-Russia line. incident_type [influence-operation, intrusion] →
+    [documentary, policy]; initial_vector phishing → unknown (a
+    declaration has no initial-access vector).
+
+    [b] ATTRIBUTION — the EU associated Ghostwriter with "the Russian
+    state" and urged "the Russian Federation." attributing_org set to
+    "EU High Representative (Declaration on behalf of the European
+    Union)" (the formal instrument); attributing_org_confidence high
+    (govt-primary). actor_id CHANGED by/unscoped/ghostwriter → null
+    (documentary/policy meta-event = the EU's own act, not a
+    Ghostwriter operation; subject cluster named in prose + notes).
+    auspex_assessment concur → concur-with-caveat: AUSPEX does not
+    adopt the "Russian state" nation (canonical homing is Belarus /
+    UNC1151, Russia/GRU flagged-contested on the actor record).
+
+    [c] DATES — the raw dateline is 24 September 2021; start_date =
+    disclosure_date = end_date = 2021-09-24 (single-day documentary/
+    policy event), corrected from start_date 2017-01-01 (that is the
+    Ghostwriter CAMPAIGN onset, not the declaration) / end_date null.
+    Source published_on 2021-09-24 verified against the byline. Second
+    source bundesregierung/2021-09-06 (German FFO): re-checked live this
+    audit — HTTP 400, and the Wayback availability API returns zero
+    archived snapshots — so it remains un-snapshottable (note+skip per
+    protocol); its content (Russia/GRU attribution, 6 Sep 2021) is
+    mirror-corroborated (German Practice in Int'l Law / Univ. Bonn, per
+    the source record's 2026-06-24 note) and is cited here only as
+    contextual background, not for any load-bearing claim of the EU
+    declaration. This un-snapshottable second source is the sole reason
+    for level PARTIAL (the EU primary carries the whole event).
+
+    [d] DOCTRINE_LINKS — by/concept-info-security-2019/information-
+    sphere-defense: DOWNGRADED attested → plausible, contested false →
+    true, attesting_source_id (was the EU declaration) → null. The EU
+    declaration states NO doctrine goal in substance (it is a political
+    condemnation) and attributes to RUSSIA, so the attested bar is
+    unmet and a competing Russian-doctrine reading survives. Rebuilt
+    inference_basis as {alternatives[]} (Belarus vs Russia) + a
+    counter_explanation naming the Russia reading THIS source supports
+    — mirroring the sibling ghostwriter-unc1151-disclosure's honest
+    plausible+contested treatment. Kept the Belarusian doctrine per
+    AUSPEX's canonical actor homing (attacker-rationale, default
+    perspective), honestly flagged. See FLAG (2).
+
+    [e] ATTRIBUTION_LEVEL — set to nation (was absent). The EU named a
+    nation ("the Russian state" / "the Russian Federation"); it named
+    no specific service/unit and no actor cluster.
+
+    [f] ACTOR_ID — null (meta-event convention). Subject cluster
+    provenance: by/unscoped/ghostwriter resolves to
+    atlas/actors/by/ghostwriter.yaml (not edited). No FK dangles.
+
+    TARGETS — replaced the DANGLING orgs/eu-member-state-governments
+    (no registry file under atlas/targets/orgs/) with three resolvable,
+    source-carried sector targets the declaration explicitly names:
+    sectors/government (members of Parliaments, government officials,
+    politicians), sectors/media/journalism (members of the press),
+    sectors/civil-society (civil society) — all "in the EU," no member
+    state named (so no country code). All resolve in
+    atlas/sectors/sectors.yaml.
+
+    FLAGS for orchestrator/Kara:
+    (1) RE-SLUG: the id 2021-09/eu-belarus-ghostwriter-statement still
+        says "belarus," which the source contradicts (it names Russia).
+        Suggest re-slug to eu-ghostwriter-russia-statement (or
+        …-russian-state-statement) with FK propagation. Id left
+        unchanged per audit scope.
+    (2) DOCTRINE-STATE / NATION framing: a Belarus (by/) attacker-
+        rationale doctrine link sits on an EU declaration that names
+        RUSSIA; this is the standing Ghostwriter Belarus-vs-Russia
+        contest (flagged on the actor record, not re-homed). If the
+        Russia attribution is ever adopted as AUSPEX's position, this
+        link + the subject actor homing would need re-architecting.
+        Graded the existing Belarus link honestly (plausible+contested)
+        rather than re-home.
+    (3) EU + German source records: both were audited 2026-06-24 and are
+        correct as-is (EU: snapshot+hash present, note already carries
+        the Russia-not-Belarus correction; German: un-snapshottable,
+        noted). NEITHER source record edited this audit.

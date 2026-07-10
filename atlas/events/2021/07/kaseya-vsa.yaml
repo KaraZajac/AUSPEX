@@ -2,57 +2,223 @@ id: 2021-07/kaseya-vsa
 name: Kaseya VSA supply-chain ransomware (REvil)
 start_date: 2021-07-02
 disclosure_date: 2021-07-02
-end_date: 2021-07-23  # universal decryptor released
+end_date: 2021-07-23  # Kaseya announced universal decryptor
 incident_type:
   - ransomware
   - supply-chain
-  - disruption
+  - extortion
 initial_vector: 0-day
 outcome_summary: |
-  REvil affiliate exploited zero-day vulnerabilities (CVE-2021-30116
-  authentication bypass, CVE-2021-30119 command injection) in
-  Kaseya VSA — a remote-management platform used by managed-service
-  providers. The exploit chain ran a malicious Kaseya VSA agent
-  update against ~60 MSPs that propagated ransomware to an
-  estimated 1,500 downstream customer organizations. Operators
-  demanded a USD 70M universal decryptor. Coop supermarket chain
-  closed ~800 Swedish stores for a week. Kaseya obtained a
-  universal decryptor on July 22 from a "trusted third party"
-  (widely understood to be FBI-supplied).
+  A REvil affiliate exploited a zero-day authentication-bypass /
+  credential-disclosure vulnerability (CVE-2021-30116) in on-premises
+  Kaseya VSA servers — a remote-monitoring-and-management (RMM)
+  platform used by managed-service providers — and pushed a malicious
+  VSA agent "update" that deployed Sodinokibi/REvil ransomware
+  downstream. Kaseya counted ~50 of its ~35,000 customers breached
+  (CISA and press reporting cited ~60 MSPs); Kaseya's own estimate of
+  the downstream businesses compromised was a range of 800–1,500. REvil
+  posted a USD 70M universal-decryptor demand on its leak site — its
+  highest ever — claiming to have locked "more than a million systems."
+  Swedish supermarket chain Coop closed ~800 stores for almost a week
+  after its provider Visma was hit downstream; Coop did not pay and
+  rebuilt its systems. On July 23 2021 Kaseya announced it had obtained
+  a universal decryptor from a "trusted third party" and did not pay the
+  ransom; the Washington Post later reported the FBI had covertly held
+  the key. (The event previously mislabeled a second CVE, CVE-2021-30119,
+  as "command injection"; NVD records it as a reflected XSS, so it was
+  dropped.)
 quantified_impact:
-  organizations_affected: 1500
-  msps_affected: 60
-  initial_ransom_demand_usd: 70000000
+  organizations_affected: 1500  # ceiling of Kaseya's own 800–1,500 downstream-business range (not a firm count)
+  msps_affected: 60  # CISA/press ~60 MSPs; Kaseya counted ~50 of its ~35,000 direct customers breached
+  initial_ransom_demand_usd: 70000000  # REvil leak-site universal-decryptor demand (BleepingComputer 2021-07-05)
 false_flag_risk: none
 campaign_id: revil-kaseya-jbs-cluster
 operators_named:
-  - vasinskyi-yaroslav  # REvil affiliate alleged Kaseya operator, DOJ Nov 2021
+  - vasinskyi-yaroslav  # REvil affiliate, alleged Kaseya operator, DOJ Nov 2021
 summary: |
-  Largest ransomware supply-chain incident on public record.
-  Third major US-CII ransomware incident in the May–July 2021
-  cluster (Colonial → JBS → Kaseya). Triggered the July 9 2021
-  Biden–Putin phone call where Biden reportedly told Putin he
-  expected Russia "to take action" against criminal ransomware
-  operators on its territory; REvil's leak site went dark July 13
-  2021 (briefly), and the Jan 14 2022 FSB raid that arrested 14
-  alleged REvil members followed. Affiliate Yaroslav Vasinskyi
-  (Ukrainian national) was arrested in Poland Oct 2021 and
-  extradited to the US Mar 2022; convicted May 2024.
+  Largest ransomware supply-chain incident on public record, and the
+  third major US-critical-infrastructure ransomware event of the
+  May–July 2021 cluster (Colonial Pipeline → JBS → Kaseya). The
+  incident intensified US pressure on Russia over ransomware harboring;
+  REvil's subsequent disruption and the January 2022 FSB raid on the
+  group are modeled as sibling events (fsb-revil-raid,
+  revil-vasinskyi-indictment). REvil affiliate Yaroslav Vasinskyi
+  (Ukrainian national), the alleged Kaseya operator, was arrested in
+  Poland (Oct 2021) and charged by DOJ (Nov 2021); after extradition he
+  was convicted in May 2024 and sentenced to 13 years and 7 months
+  (see revil-vasinskyi-indictment / lockbit-2-vasinskyi-extradition).
 attributions:
   - actor_id: criminal/revil
-    attributing_org: FBI
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attributing_org: FBI and CISA
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-07-04
     attribution_source_id: cisa/2021-07-04_aa21-209a-kaseya-revil
-doctrine_links: []  # ru/sanctions-response-2022 dropped 2026-07-10 (Kara-approved): DarkSide/REvil are stateless criminal/ actors; no cited source ties these profit-motivated ops to Russian state mobilization
+    notes: |
+      Same-day FBI/CISA guidance pointed at "REvil Kaseya CnC Domains"
+      but expressly cautioned "CISA and FBI have not yet validated this
+      content" — a hedged, unvalidated attribution. REvil self-claimed
+      the attack on its leak site on July 5 (the $70M universal-decryptor
+      post; bleepingcomputer/2021-07-05).
+  - actor_id: criminal/revil
+    attributing_org: US Department of Justice
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2021-11-08
+    attribution_source_id: doj/2021-11-08_revil-vasinskyi-polyanin-indictment
+    notes: |
+      DOJ indictment names Yaroslav Vasinskyi as the Sodinokibi/REvil
+      operator of the July 2021 Kaseya attack — the firm named-actor
+      attribution; $6.1M in ransom proceeds traceable to co-conspirator
+      Polyanin seized.
+doctrine_links: []  # ru/sanctions-response-2022 dropped 2026-07-10 (Kara-approved): REvil is a stateless criminal/ actor; no cited source ties this profit-motivated op to Russian state mobilization. Confirmed unchanged by the 2026-07-10 audit.
 targets:
   - target_id: orgs/kaseya
     role: primary
-  - target_id: orgs/coop-sweden
+    outcome: |
+      VSA RMM platform weaponized as the supply-chain vector; ~50 of
+      ~35,000 Kaseya customers breached.
+  - target_id: sectors/ict/managed-services
     role: collateral
     outcome: |
-      ~800 Coop Sweden stores closed for approximately one week.
+      ~50–60 MSPs running on-premises VSA were the propagation layer,
+      pushing REvil ransomware to their downstream SMB customers
+      (directionality: Kaseya → MSPs → ~800–1,500 downstream businesses).
+  - target_id: orgs/coop-sweden  # NOTE: orgs/coop-sweden registry file MISSING (pre-existing dangling FK) — flagged for orchestrator; not created (target files out of audit scope)
+    role: collateral
+    outcome: |
+      ~800 Coop Sweden stores closed for almost a week after downstream
+      provider Visma was hit; Coop did not pay and rebuilt its systems.
 sources:
   - cisa/2021-07-04_aa21-209a-kaseya-revil
+  - kaseya/2021-07-05_kaseya-responds-cyberattack
+  - nvd/cve-2021-30116
+  - bleepingcomputer/2021-07-05_revil-70m-kaseya-decryptor
+  - enwikipedia/2021-07_kaseya-vsa-ransomware-attack
   - doj/2021-11-08_revil-vasinskyi-polyanin-indictment
+  - bleepingcomputer/2024-05-02_vasinskyi-revil-sentenced
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8, effort max) vs RAW snapshots.
+    STEP-0 triage found the sole substantive cited source
+    (cisa/...aa21-209a-kaseya-revil) was a WRONG-SOURCE (url:null; the
+    "AA21-209A" slug is CISA's unrelated "Top Routinely Exploited
+    Vulnerabilities" advisory) and the DOJ source carried only the
+    attribution/operators/seizure — leaving the CVE, counts, $70M, Coop
+    and decryptor claims UNCARRIED. Re-sourced (badrabbit model): fixed +
+    snapshotted the genuine CISA guidance and added four real carriers.
+    Snapshots (sha256, bytes):
+    - cisa__2021-07-04_aa21-209a-kaseya-revil.html
+      e194c8296b20aee84244d997cca7e6577123a9a1d426ea88eb9fc1178ec41f5b (55,987)
+    - kaseya__2021-07-05_kaseya-responds-cyberattack.html
+      b40377b4ae4254d4394dd483963c5f46dbfbd7994f16cdbef7fab6dae6466218 (90,352)
+    - nvd__cve-2021-30116.json
+      ffc6235f248c52a2148b6e922884226333bb31c4c8f73550ce2b5729756e2e12 (7,342)
+    - bleepingcomputer__2021-07-05_revil-70m-kaseya-decryptor.html
+      cf0a42d4daa546bfd4a70daaf5aaff03608f61092fb3d8c4bd544858267e43ff (90,084)
+    - enwikipedia__kaseya-vsa-ransomware-attack.html
+      070823092e82e387d8e591ca7972070012731551857a252a3db0f54f9f6dc194 (205,709)
+    - doj__2021-11-08_revil-vasinskyi-polyanin-indictment.html
+      b93a74ca85d2e3a21a01a63744482419e49eebf5ef7dc010c65bb93c44867ade (121,183) [re-verified, unchanged]
+    - bleepingcomputer__2024-05-02_vasinskyi-revil-sentenced.html
+      e7b7f229abb9689f523c0afd945ffc10eb85542311af6be91b56751f4ed81a99 (92,689) [existing corpus source, reused]
+
+    [a] FACTS — CORRECTED (CVE mislabel + count embellishment).
+    * CVE: prior outcome_summary asserted "CVE-2021-30116 authentication
+      bypass, CVE-2021-30119 command injection." NVD (snapshotted) records
+      CVE-2021-30116 verbatim as "Kaseya VSA before 9.5.7 allows credential
+      disclosure, as exploited in the wild in July 2021" (credential leak →
+      sessionId "to bypass authentication") — the auth-bypass label holds.
+      But CVE-2021-30119 is NVD-recorded as a reflected XSS
+      ("Authenticated reflective XSS in HelpDeskTab/rcResults.asp"), NOT
+      command injection — a factual error. The mislabeled CVE was DROPPED;
+      only CVE-2021-30116 is retained, now NVD-carried. enwikipedia
+      corroborates the nature: "An authentication bypass vulnerability in
+      the software allowed attackers to compromise VSA on 2 July."
+    * COUNT EMBELLISHMENT (watched per task): prior text/quantified stated
+      a firm "1,500 downstream customer organizations." Kaseya's own PR
+      (snapshotted) says only a RANGE: "Of the approximately 800,000 to
+      1,000,000 local and small businesses that are managed by Kaseya's
+      customers, only about 800 to 1,500 have been compromised." Prose now
+      states the 800–1,500 range; quantified_impact.organizations_affected
+      1500 retained but annotated as the range CEILING, not a firm count.
+    * MSP count: prior firm "~60 MSPs." Kaseya PR: "only approximately 50
+      of the more than 35,000 Kaseya customers being breached." enwikipedia
+      /CISA: "about 60 managed service providers (MSPs)." Both figures now
+      shown (msps_affected 60 kept as the CISA/press MSP-specific figure;
+      Kaseya's ~50 direct-customer count noted).
+    * $70M: BleepingComputer (snapshotted) verbatim — REvil "locked more
+      than a million systems and are willing to negotiate for a universal
+      decryptor, starting from $70 million. This is the highest ransom
+      demand to date." KEPT.
+    * Coop: enwikipedia verbatim — "Visma, who manages some systems for
+      Swedish supermarket chain Coop... had to close down its 800 stores
+      for almost a week... did not pay ransom, but rebuilt their systems."
+      KEPT; added the Visma downstream mechanism.
+    * Decryptor date: prior said "July 22." enwikipedia: "On 23 July 2021,
+      Kaseya announced that it had received a universal decryptor tool from
+      a 'trusted third party'." Aligned to July 23 (= end_date). FBI-key:
+      enwikipedia carries the Washington Post Sept-2021 report that "the
+      master key came from the FBI" — the "widely understood to be FBI-
+      supplied" claim is now sourced (softened to WaPo-reported).
+    * summary: the uncarried diplomatic/enforcement coda (the specific
+      "July 9 Biden–Putin call," a verbatim "to take action" quote, "leak
+      site went dark July 13," "FSB raid arrested 14 members") was
+      GENERALIZED to cross-references to the sibling events that carry it
+      (fsb-revil-raid, revil-vasinskyi-indictment) rather than asserted
+      here unsourced. Vasinskyi arrest/charge is DOJ-carried; his May 2024
+      conviction ("13 years and seven months... $16 million restitution")
+      is carried by bleepingcomputer/2024-05-02.
+
+    [b] ATTRIBUTION — split into two dated entries capturing latency, and
+    the same-day entry HEDGED DOWN. The July-4 CISA/FBI alert expressly
+    states "CISA and FBI have not yet validated this content" → that entry
+    is attributing_org_confidence moderate + concur-with-caveat (was a
+    single high/concur entry mis-citing the July-4 alert as firm). REvil
+    self-claimed the op on its leak site (BC 2021-07-05). The firm
+    named-actor attribution is DOJ (2021-11-08), high/concur, naming
+    Vasinskyi as the Kaseya operator. No nation/unit asserted beyond the
+    criminal brand (correct — stateless).
+
+    [c] DATES — start 2021-07-02 (Kaseya PR: "On July 2, at approximately
+    2 p.m. EST, Kaseya was alerted"). disclosure 2021-07-02 (same-day
+    public notice). end 2021-07-23 (Kaseya's decryptor announcement,
+    enwikipedia). Source published_on corrected on the CISA record
+    2021-07-28 → 2021-07-04. New source dates verified from raw metadata:
+    BC datePublished 2021-07-05T04:59:25-04:00; enwikipedia article
+    datePublished 2021-07-07 (snapshot = 2026-06-29 revision); NVD CVE
+    published 2021-07-09; Kaseya PR dated July 05, 2021.
+
+    [d] DOCTRINE_LINKS — [] retained (task-confirmed). REvil is stateless
+    profit-criminal; no cited source ties this profit-motivated op to
+    Russian state mobilization. The 2026-07-10 Kara drop of
+    ru/sanctions-response-2022 stands; NOT re-added.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to both entries. REvil/
+    Sodinokibi is a named criminal RaaS brand — not a nation or unit;
+    nothing narrower is supported.
+
+    [f] ACTOR_ID — criminal/revil resolves to atlas actor id criminal/revil
+    (verified; moved ru/proxies → ru/unscoped → criminal/ on 2026-06-24/25
+    per the actor record — stateless profit-criminal, no documented state
+    nexus). incident_type set to [ransomware, supply-chain, extortion]
+    (was [...disruption]): ransomware + VSA→MSP supply-chain + the $70M
+    universal-decryptor / double-extortion demand; all three enum-valid.
+    Directionality modeled in targets: orgs/kaseya (primary vector/vendor)
+    → sectors/ict/managed-services (collateral, the ~50–60 MSP propagation
+    layer) → orgs/coop-sweden (collateral, named downstream via Visma).
+
+    FLAGS (orchestrator — not edited here): (1) orgs/coop-sweden target
+    registry file is MISSING (dangling FK; the event + this audit reference
+    it, but atlas/targets/orgs/coop-sweden.yaml does not exist) — needs a
+    registry stub. (2) The cisa/2021-07-04_aa21-209a-kaseya-revil source
+    slug retains the misleading "aa21-209a" token (a legacy misnomer; the
+    real guidance carries no AA number) — kept only to avoid FK churn
+    across the event + orgs/kaseya target; consider a clean re-slug in a
+    dedicated FK-propagation pass.

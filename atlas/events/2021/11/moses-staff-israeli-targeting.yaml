@@ -1,66 +1,158 @@
 id: 2021-11/moses-staff-israeli-targeting
-name: Moses Staff emergence and Israeli engineering / manufacturing targeting
-start_date: 2021-09-01
-disclosure_date: 2021-11-15  # Check Point report
-end_date: 2022-12-31
+name: Moses Staff emergence — no-ransom destructive hack-and-leak against Israeli companies
+start_date: 2021-09-01   # Check Point: "In September 2021, the hacker group MosesStaff began targeting Israeli organizations"
+disclosure_date: 2021-11-15  # Check Point report (byline "November 15, 2021"; meta article:published_time 2021-11-15T10:17:04+00:00)
+end_date: 2022-01-12   # last activity documented by the cited sources (Cybereason StrifeWater report; group reported "still active"). Continued persona activity into 2023 is the separate 2023-01 Abraham's Ax sibling event.
 incident_type:
-  - destructive
+  - intrusion
   - data-theft
-  - influence-operation
-initial_vector: n-day
+  - leak
+  - destructive
+initial_vector: n-day   # Check Point: "known vulnerabilities" that "are not zero days" in public-facing infrastructure (asserted "presumably")
 outcome_summary: |
-  Israeli engineering, finance, retail, and manufacturing firms
-  hit by PyDCrypt encryption (no decryption offered); data
-  leaks via Telegram channel.
+  Israeli companies (Israel the primary target) had networks
+  encrypted by the DiskCryptor-based DCSrv payload — deployed by
+  the PyDCrypt loader — with NO ransom demand and NO decryption
+  option (encryption used for destruction, not extortion). Stolen
+  data was leaked via a "MosesStaff" Telegram channel
+  (t.me/moses_staff) and the moses-staff[.]se site. Cybereason
+  additionally observed victims in finance, energy, manufacturing,
+  government and utilities across several countries.
 false_flag_risk: none
 summary: |
-  Moses Staff (Marigold Sandstorm / DEV-0500) persona — Iran-
-  aligned, service attribution less firm than CyberAv3ngers or
-  HomeLand Justice. Coercive leak / disruption rather than
-  revenue. Check Point and Cybereason document initial access via
-  exploitation of Microsoft Exchange ProxyShell (CVE-2021-34473
-  / -34523 / -31207) on internet-facing Israeli servers, web shell
-  deployment for persistence, valid credentials harvested for
-  lateral movement, and deployment of the PyDCrypt Python-based
-  encryptor along with the DCSrv driver and the StrifeWater RAT.
-  PyDCrypt uses DiskCryptor under the hood — same primitive Iran-
-  linked Agrius / Pay2Key clusters use — and the operators never
-  offer a working decryptor, confirming the campaign as
-  destructive coercion. Stolen documents are serialized to a
-  Telegram "MosesStaff" persona channel as anti-Israel
-  hack-and-leak.
+  Moses Staff (MosesStaff) is a hacktivist-persona group that
+  emerged in September 2021 attacking Israeli companies, leaking
+  their data and encrypting their networks with, in Check Point's
+  words, "no ransom demand and no decryption option; their motives
+  are purely political." The group's own stated purpose is to
+  "Fight against the resistance and expose the crimes of the
+  Zionists in the occupied territories."
+
+  Check Point documents initial access "presumably" via known
+  (non-zero-day) vulnerabilities in public-facing infrastructure
+  "such as Microsoft Exchange Servers," followed by a
+  password-protected webshell for persistence, and lateral
+  movement with compromised administrator credentials over PsExec,
+  WMIC and PowerShell. The Python PyDCrypt loader spreads through
+  the network and drops DCSrv — a custom encryptor built on the
+  open-source DiskCryptor driver — which locks volumes with a
+  bootloader and offers no working decryptor, which Check Point
+  reads as "an attempt to cause irreversible damage." Cybereason
+  (Jan 2022) adds StrifeWater, a stealthy RAT used in the initial
+  stage (masqueraded as calc.exe and self-deleting before the
+  encryptor runs, to frustrate forensics). Stolen documents are
+  posted to a "MosesStaff" Telegram channel and the moses-staff[.]se
+  leak site as anti-Israel hack-and-leak.
+
+  Attribution is HEDGED. Cybereason calls it "the Iranian hacker
+  group known as Moses Staff" and assesses that it "leverages cyber
+  espionage and sabotage to advance Iran's geopolitical goals,"
+  with goals "aligned with Iran's cyber warfare doctrine" — an Iran
+  NEXUS with NO named Iranian service (no IRGC/MOIS/Quds). Check
+  Point, the primary-access report, explicitly DECLINES nation
+  attribution ("we can't draw any definitive conclusions") and its
+  only artifacts point toward the Palestinian territories (the
+  OICe.exe tool "submitted to VT from Palestine"; leak-site image
+  metadata created in the GMT+3 timezone "of Israel and the
+  Palestinian territories"). Check Point places Moses Staff as a
+  SEPARATE group from the earlier Pay2Key and BlackShadow gangs —
+  which "demand[ed] money" and ran public ransom negotiations —
+  distinguishing Moses Staff precisely by its refusal to demand a
+  ransom; the corpus keeps Moses Staff DISTINCT from Pay2Key /
+  Black Shadow / Agrius. Actor tracked at ir/unscoped/moses-staff
+  (Iran-aligned, service unscoped).
 attributions:
   - actor_id: ir/unscoped/moses-staff
     attributing_org: Check Point
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor   # names the MosesStaff persona; explicitly DECLINES nation attribution -> not nation/named-unit
+    auspex_assessment: concur-with-caveat
     attribution_date: 2021-11-15
     attribution_source_id: checkpoint/2021-11_moses-staff
+    notes: |
+      Check Point discovered and named the MosesStaff persona but
+      explicitly DECLINES nation attribution: "Attributing
+      politically motivated cyberattacks is always complicated ...
+      we can't draw any definitive conclusions." Its only
+      attribution artifacts point toward the Palestinian territories
+      (OICe.exe "submitted to VT from Palestine"; leak-site image
+      metadata authored in GMT+3, "the time zone of Israel and the
+      Palestinian territories"). So this source carries the
+      named-actor identification and the no-ransom / destructive
+      finding, but NOT the Iran nexus — hence concur-with-caveat.
   - actor_id: ir/unscoped/moses-staff
     attributing_org: Cybereason
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor   # "Iranian APT Moses Staff" — actor + Iran nexus; NO Iranian service named -> not named-unit
+    auspex_assessment: concur-with-caveat
     attribution_date: 2022-01-12
     attribution_source_id: cybereason/2022_moses-staff
+    notes: |
+      Cybereason Nocturnus tracks "the Iranian hacker group known as
+      Moses Staff" and assesses it "leverages cyber espionage and
+      sabotage to advance Iran's geopolitical goals," with goals
+      "aligned with Iran's cyber warfare doctrine." Iran NEXUS at
+      named-actor level; NO IRGC/MOIS/Quds or any Iranian service is
+      named ("State-Sponsored Ransomware" is a motive subheading,
+      not a service attribution) — hence ir/unscoped and
+      concur-with-caveat.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Moses Staff persona pattern matches deniable-retaliation
-      laundering of anti-Israel coercive ops.
+      Moses Staff is a named hacktivist persona (a "MosesStaff"
+      Telegram channel + moses-staff[.]se leak site) running
+      destructive, no-ransom coercive operations against Israeli
+      civilian companies while deliberately obfuscating its arsenal
+      (Cybereason: StrifeWater masqueraded as calc.exe and
+      self-deleted before the encryptor ran; ransomware used "to
+      obfuscate espionage activity" and "advance Iran's geopolitical
+      goals"). That is the deniable persona-laundering pattern this
+      pillar describes, and the pillar names Moses Staff itself as
+      an example ("Moses Staff -> Iran-aligned (inferred)"). NOT
+      attested: no cited source confirms STATE DIRECTION or names an
+      Iranian service — Cybereason hedges ("seem aligned",
+      "assessed") and Check Point declines nation attribution
+      outright — so the laundering-of-state-ops reading is AUSPEX's
+      strongly-inferred WHY, not a source-attested fact.
+    perspective: attacker-rationale
+    inference_basis:
+      signals:
+        - "Named hacktivist persona claims and publishes the ops on a Telegram channel + moses-staff[.]se leak site, affording a state sponsor plausible deniability."
+        - "Tooling deliberately masqueraded (StrifeWater as calc.exe) and self-deleted to frustrate forensics (Cybereason)."
+        - "Cybereason assesses the ransomware is used 'to obfuscate espionage activity' and to 'advance Iran's geopolitical goals'."
+        - "This doctrine's persona-laundering pillar lists Moses Staff as an example persona (Iran-aligned, inferred)."
+      ruled_out: "Financially-motivated ransomware — both Check Point ('no ransom demand and no decryption option; their motives are purely political') and Cybereason ('will leak sensitive information without demanding a ransom fee') state encryption was for destruction, not extortion."
     attesting_source_id: null
     counter_explanation: null
     contested: false
     analyst: claude
-  - doctrine_id: ir/forward-defense
-    pillar_id: null
+  - doctrine_id: ir/resistance-axis
+    pillar_id: ir/resistance-axis/anti-israel-coercion
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Israeli civilian-sector targeting consistent with Forward
-      Defense.
+      The group's stated purpose — "Fight against the resistance and
+      expose the crimes of the Zionists in the occupied territories"
+      — and its choice of Israeli civilian companies as the primary
+      target are directly attested anti-Israel coercive intent, and
+      this pillar names Moses Staff as an example ("hacktivist-
+      persona-laundered destructive ops (Moses Staff, Black Shadow,
+      CyberAv3ngers)"). It is strongly_inferred rather than attested
+      because the attachment to IRAN's Axis-of-Resistance doctrine
+      depends on the Iran nexus, which is soft here: Cybereason ties
+      the goals to Iran, but Check Point (primary source) declines
+      nation attribution and its artifacts point to the Palestinian
+      territories.
+    perspective: attacker-rationale
+    inference_basis:
+      signals:
+        - "Group's own leak-site/bootloader message states an anti-Zionist, pro-'resistance' purpose (Check Point verbatim)."
+        - "Israeli companies are the primary victim set (both sources); Israel is 'the main target of the group' (Cybereason)."
+        - "Cybereason: goals 'aligned with Iran's cyber warfare doctrine, seeking to sabotage ... its geo-political opponents'."
+      ruled_out: "Not a source-attested Iran-directed op — the Iran-doctrine attachment is inferred; Check Point declines nation attribution and notes Palestinian-territory artifacts (OICe.exe from Palestine, GMT+3 leak-site metadata), an alternative that keeps the confidence below attested."
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -72,3 +164,114 @@ targets:
 sources:
   - checkpoint/2021-11_moses-staff
   - cybereason/2022_moses-staff
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / effort max. Full 6-point audit of the event vs the two
+    cited RAW snapshots (both already captured + hashed on 2026-06-24;
+    hashes RE-VERIFIED intact this pass):
+      checkpoint/2021-11_moses-staff  sha256 d32a0fd1…21aa1ef · 199,908 B
+      cybereason/2022_moses-staff     sha256 721fddec…9cd692d8 · 86,162 B
+    Both fetched HTTP 200 with full article text -> level: full. PRESERVE
+    tier: source records left untouched (tier/url correct; snapshots +
+    audit notes already present from 2026-06-24).
+
+    [a] FACTS — STRIPPED a fabricated/garbled cross-group paragraph, the
+    same class of defect the shirbit + cyberserve audits found. The prior
+    summary claimed "PyDCrypt uses DiskCryptor under the hood — same
+    primitive Iran-linked Agrius / Pay2Key clusters use." WRONG on two
+    counts: (1) it is DCSrv (not PyDCrypt) that is built on DiskCryptor —
+    Check Point: "The complete encryption tool is based on a powerful 3rd
+    party open-source tool called DiskCryptor"; Cybereason: PyDCrypt's
+    "goal is to spread ... and to drop the payload 'DCSrv', a ransomware
+    variant based on the publicly available tool DiskCryptor." PyDCrypt is
+    the Python LOADER that drops DCSrv. (2) Neither source says Agrius or
+    Pay2Key use DiskCryptor; Agrius is not mentioned at all, and Check
+    Point treats Pay2Key/BlackShadow as SEPARATE predecessor groups that
+    "demand[ed] money and conduct[ed] lengthy and public negotiations" —
+    the OPPOSITE of Moses Staff — "Unlike those predecessors, however,
+    they made an outright mistake when they put together their own
+    encryption scheme." Moses Staff kept DISTINCT from Pay2Key / Black
+    Shadow / Agrius per the corpus. Also STRIPPED "ProxyShell (CVE-2021-
+    34473 / -34523 / -31207)": neither source names ProxyShell or any CVE;
+    Check Point says only initial access "presumably ... known
+    vulnerabilities in publicly facing infrastructure such as Microsoft
+    Exchange Servers" that "are not zero days" -> hedged to that. STRIPPED
+    unsourced sectors "engineering" and "retail": Check Point enumerates
+    no sectors; Cybereason lists "Government, Finance, Travel, Energy,
+    Manufacturing, and the Utilities industry" (no engineering, no retail)
+    and notes multi-country targeting (Italy, India, Germany, Chile,
+    Turkey, UAE, US) with "Israel ... the main target." STRIPPED the
+    Microsoft aliases "Marigold Sandstorm / DEV-0500" and the editorial
+    "service attribution less firm than CyberAv3ngers or HomeLand Justice"
+    from the event prose (not carried by either cited source; the aliases
+    remain on the actor record). KEPT + verified: no ransom / no decryptor
+    = destruction (Check Point: "There is no ransom demand and no
+    decryption option; their motives are purely political"; "an attempt to
+    cause irreversible damage"); webshell for persistence + PsExec/WMIC/
+    PowerShell lateral movement with compromised admin creds; PyDCrypt ->
+    DCSrv; StrifeWater RAT (Cybereason only); Telegram t.me/moses_staff +
+    moses-staff[.]se leak site (Check Point bootloader message: "Hacked By
+    <https://moses-staff.se> ! Join Us in Telegram : <https://t.me/
+    moses_staff>"); stated anti-Zionist purpose.
+
+    [b] ATTRIBUTION — Both entries carry actor_id ir/unscoped/moses-staff
+    (the persona), auspex_assessment moved concur -> concur-with-caveat.
+    Check Point: added a note that it explicitly DECLINES nation
+    attribution ("we can't draw any definitive conclusions") and its only
+    artifacts point to the Palestinian territories (OICe.exe "submitted to
+    VT from Palestine"; GMT+3 leak-site image metadata) — so Check Point
+    supports the named-actor ID and the no-ransom/destructive finding but
+    NOT the Iran nexus. Cybereason: "the Iranian hacker group known as
+    Moses Staff", goals "advance Iran's geopolitical goals" / "aligned
+    with Iran's cyber warfare doctrine" -> Iran NEXUS, NO named service
+    ("State-Sponsored Ransomware" is a motive subheading). Iran link left
+    HEDGED throughout (one source asserts it, the primary-access source
+    declines). attributing_org_confidence: moderate on both.
+
+    [c] DATES — start 2021-09-01 KEPT (Check Point: "In September 2021 ...
+    MosesStaff began targeting"; Cybereason's "first spotted in October
+    2021" is the later, secondary onset). disclosure 2021-11-15 KEPT +
+    verified (Check Point byline "November 15, 2021"; raw meta
+    article:published_time 2021-11-15T10:17:04+00:00). end_date 2022-12-31
+    -> 2022-01-12: the prior end had NO source (disclosure/observation vs
+    campaign-end conflation); pulled to the last activity documented by
+    the cited sources (Cybereason, which reports the group "still active"
+    as of that report). Cybereason's exact day is not machine-readable in
+    the snapshot; 2022-01-12 retained from the 2026-06-24 source record,
+    not load-bearing. Continued persona activity into 2023 is the separate
+    2023-01 Abraham's Ax / COBALT SAPLING sibling event.
+
+    [d] DOCTRINE — Replaced the broad ir/forward-defense link with
+    ir/resistance-axis / ir/resistance-axis/anti-israel-coercion (the
+    on-point pillar, which names Moses Staff as an example; consistent
+    with the 2023-01 sibling and with shirbit's "arguably more on-point"
+    flag). Kept ir/cyber-deniable-retaliation/persona-laundering. Both
+    rewritten to current schema: perspective: attacker-rationale (Iran's
+    own doctrine applied to Iran's op) + inference_basis {signals[],
+    ruled_out}. Both confidence: strongly_inferred, attesting_source_id
+    null — NOT attested, because no cited source states a named Iranian
+    service or confirms state direction in substance (Cybereason hedges;
+    Check Point declines nation attribution and points to Palestinian-
+    territory artifacts).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to both attributions (both
+    name the MosesStaff/Moses Staff persona; Cybereason adds the "Iranian"
+    nation nexus; NEITHER names an Iranian service -> not named-unit; Check
+    Point declines nation entirely).
+
+    [f] ACTOR_ID — ir/unscoped/moses-staff resolves (atlas/actors/ir/
+      moses-staff.yaml, id: ir/unscoped/moses-staff). KEPT.
+
+    FLAGS for orchestrator: (1) actor atlas/actors/ir/moses-staff.yaml
+    lists target_sector_ids including "retail", which no cited source
+    supports (same unsourced specificity stripped from this event) —
+    actor file NOT edited, flagged for review. (2) targets[] kept at
+    sectors/ics/manufacturing/il (Cybereason lists Manufacturing +
+    Israel as main target); Cybereason also lists finance/energy/
+    government/utilities and non-IL victims — not added (no new target
+    records created this pass). (3) Sources already snapshotted/hashed +
+    audit-noted on 2026-06-24; not re-stamped.

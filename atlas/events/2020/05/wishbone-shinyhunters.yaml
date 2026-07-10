@@ -5,37 +5,131 @@ disclosure_date: 2020-05-20
 end_date: 2020-05-31
 incident_type:
   - data-theft
+  - leak
 initial_vector: unknown
 outcome_summary: |
   ShinyHunters posted approximately 40 million Wishbone user
-  records on RaidForums in May 2020. Wishbone is a US-based
-  polling / quiz mobile app marketed predominantly to teenage
-  and young-women users. The exposed records included
-  usernames, email addresses, phone numbers, dates of birth,
-  geo-location data, and MD5-hashed passwords. A subset of the
-  data was offered for USD 1,500.
+  records on RaidForums in May 2020 and claimed responsibility
+  for the underlying breach. Wishbone is a US-based polling /
+  quiz mobile app marketed predominantly to teenage and
+  young-women users. The exposed records included usernames,
+  email addresses, phone numbers, gender, dates of birth,
+  geo-location data, Facebook / Twitter access tokens, and
+  MD5-hashed passwords. The full 40-million-record dataset was
+  initially advertised for sale at approximately USD 8,000;
+  ShinyHunters then leaked it in full for free on the same
+  forum, reportedly because other actors had begun reselling
+  the data.
 quantified_impact:
   individuals_affected: 40000000
-  asking_price_usd: 1500
-false_flag_risk: none
+  asking_price_usd: 8000
+false_flag_risk: suspected
 summary: |
-  Part of the April-May 2020 ShinyHunters data-broker wave
-  documented in the 2024 DOJ Raoult sentencing as among the
-  ~60 victim companies. Notable for the demographic skew (US
-  minor / young-adult dataset) and the weak password hashing,
-  both of which made the dataset unusually high-utility for
-  credential-stuffing.
+  Standalone per-company event for the Wishbone posting in the
+  April-May 2020 ShinyHunters data-broker wave -- separately
+  modeled from, and explicitly excluded by, the aggregate event
+  2020-05/shinyhunters-data-broker-wave-may (which brackets out
+  the Tokopedia 91M and Wishbone 40M postings). The DoJ's 2024
+  Raoult sentencing establishes ShinyHunters as a real, convicted
+  crew that posted stolen data from 60+ companies (April 2020 -
+  July 2021) but does NOT name Wishbone specifically. Notable for
+  the demographic skew (US minor / young-adult dataset) and the
+  weak MD5 password hashing, both of which made the dataset
+  unusually high-utility for credential-stuffing.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: ZDNET + journalism consensus
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-05-20
-    attribution_source_id: zdnet/2020-05-10_shinyhunters-73m-records
+    attributing_org: ZeroFox Alpha Team + journalism consensus (Infosecurity Magazine, Forbes)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-05-21
+    attribution_source_id: zerofox/2020-05-20_wishbone-breach
 doctrine_links: []
 targets:
   - target_id: orgs/wishbone
     role: primary
 sources:
-  - zdnet/2020-05-10_shinyhunters-73m-records
+  - zerofox/2020-05-20_wishbone-breach
+  - infosecurity/2020-05-22_wishbone-breach-40m
   - doj/2024-01-09_raoult-shinyhunters-sentencing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8, effort max) vs RAW snapshots.
+    RE-SOURCE (badrabbit model): both prior sources were WRONG-SOURCE for
+    the Wishbone-specific claims. Re-pointed to two new snapshotted sources:
+    zerofox__2020-05-20_wishbone-breach.html sha256 32689e6b..d1d4fbd8
+    (122,201 B); infosecurity__2020-05-22_wishbone-breach-40m.html sha256
+    407f2470..396b68ab (102,512 B). DoJ retained as actor-corroboration
+    (doj__2024-01-09_raoult-shinyhunters-sentencing.html sha256
+    eb577ef4..757c3cb9, unchanged).
+
+    [a] FACTS -- CORRECTED (fabrication stripped). Prior outcome/quantified
+    claimed "A subset of the data was offered for USD 1,500" +
+    asking_price_usd=1500. The $1,500 figure appears in NO Wishbone source
+    (grep-confirmed absent from ZeroFox, Infosecurity, and Forbes raws) --
+    fabricated/confabulated. RAW consensus: ZeroFox "For data on 40,000,000
+    Wishbone user profiles, the actor is asking for $8,000 USD"; Forbes "the
+    hacker who stole the data was originally selling it for $8,000. Now it's
+    being given away on hacking forums." asking_price_usd 1500 -> 8000; added
+    the free-leak (ShinyHunters "leaking the WishBone.io trove for free", per
+    ZeroFox; ISM quotes the motive: "since people are starting to resell
+    wishbone we've decided to leak it for free"). 40M count CONFIRMED verbatim
+    (ZeroFox 40,000,000; ISM "40 Million"). Field list CONFIRMED + widened:
+    ISM "usernames, email addresses, mobile numbers, gender, date-of-birth,
+    Facebook and Twitter access tokens, MD5-hashed passwords and more"; ZeroFox
+    adds "geographic locations". Added gender + FB/Twitter tokens (source-
+    carried); DOB retained (ISM-carried, though ZeroFox omits it).
+
+    [b] ATTRIBUTION -- HEDGED DOWN + RE-SOURCED. Basis is a SELF-CLAIM: ZeroFox
+    (May 21 update) "ShinyHunters made a post on the same forum leaking the
+    WishBone.io trove for free... ShinyHunters also claimed that they were
+    responsible for the breach." A different breach broker LISTED the data
+    first (~$8,000) before ShinyHunters claimed it -- a credit-taking wrinkle.
+    attributing_org "ZDNET + journalism consensus" -> "ZeroFox Alpha Team +
+    journalism consensus (Infosecurity Magazine, Forbes)"; attributing_org_
+    confidence high -> moderate; auspex_assessment concur -> concur-with-caveat.
+    attribution_source_id zdnet/2020-05-10_shinyhunters-73m-records ->
+    zerofox/2020-05-20_wishbone-breach (the ZDNET 73M article never names
+    Wishbone -- see [f]). false_flag_risk none -> suspected (self-claim basis +
+    broker-first listing + ShinyHunters-brand credit-taking, consistent with
+    the sibling aggregate event's `suspected`).
+
+    [c] DATES. disclosure_date 2020-05-20 = ZeroFox datePublished
+    2020-05-20T18:29:45Z (leak/self-claim ~May 20-21). attribution_date
+    2020-05-20 -> 2020-05-21 (ZeroFox update carrying the self-claim). end_date
+    2020-05-31 = month modeling boundary (kept). start_date 2020-01-01 is an
+    APPROXIMATE early-2020 onset placeholder: snapshotted sources say only "the
+    data was obtained this year" (ZeroFox); the widely-reported "end of January
+    2020" traces to the now-404 ZDNET Cimpanu article and is NOT snapshot-pinned
+    -- left as a first-of-period approximation, flagged here. New source
+    published_on verified: ZeroFox 2020-05-20 (JSON-LD), ISM 2020-05-22
+    (article:published_time 2020-05-22T09:15:00).
+
+    [d] DOCTRINE_LINKS -- none. Financially-motivated criminal data-broker /
+    leak activity, no strategic doctrine; [] retained.
+
+    [e] ATTRIBUTION_LEVEL -- added named-actor. ShinyHunters is a named brand /
+    forum-handle (not a nation or unit); self-claim + journalism identify a
+    named actor, nothing narrower.
+
+    [f] ACTOR_ID + TYPES. criminal/shinyhunters resolves to atlas actor id
+    criminal/shinyhunters (verified). incident_type [data-theft] ->
+    [data-theft, leak] (the free full-database leak). Directionality: Wishbone
+    (orgs/wishbone) is the VICTIM, role primary -- retained. PHANTOM/WRONG-
+    SOURCE removed: zdnet/2020-05-10_shinyhunters-73m-records is a survey of the
+    73.2M / 10-company sale wave that names Tokopedia (91M) but has ZERO
+    "Wishbone" hits in its raw -- it never covered this event; removed from
+    sources[] + attribution. It remains cited by 3 other events (tokopedia,
+    microsoft-github, data-broker-wave-may), so it is NOT orphaned -- no retire
+    flag. NB source discrepancy: passwords reported MD5 by ISM + Forbes + ZDNET
+    (3 sources, consensus kept) vs SHA1 by ZeroFox (1). NB the DoJ sentencing
+    corroborates ShinyHunters as a convicted crew (60+ companies) but does NOT
+    name Wishbone -- summary corrected to stop implying DoJ lists Wishbone among
+    its victims.
+
+    FLAG (not editable here): atlas/targets/orgs/wishbone.yaml has sources: []
+    -- could carry zerofox/2020-05-20_wishbone-breach for provenance.

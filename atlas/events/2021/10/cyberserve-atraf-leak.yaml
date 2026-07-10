@@ -4,45 +4,102 @@ start_date: 2021-10-29
 disclosure_date: 2021-10-30
 end_date: 2021-11-30
 incident_type:
+  - intrusion
   - data-theft
-  - influence-operation
+  - leak
+  - extortion
 initial_vector: unknown
 outcome_summary: |
-  Israeli hosting provider CyberServe intruded; collateral leak
-  of Atraf LGBTQ dating-site user database. Thousands of
-  Atraf users outed; broader Israeli SME data also leaked.
+  Israeli web-host CyberServe breached (Friday 29 Oct 2021);
+  several hosted sites taken offline and client databases stolen.
+  The Atraf LGBTQ dating/nightlife app's database — said to hold
+  data on ~1 million people, of which Black Shadow claimed to have
+  leaked ~1% — was published on Telegram, exposing users' names,
+  locations, sexual orientation and HIV status. Additional
+  CyberServe clients were hit, including (per CyberScoop) the
+  Machon Mor Medical Institute (~290,000 patients' medical data),
+  the transport firms Dan and Kavim, the tourism firm Pegasus and
+  Doctor Ticket. Black Shadow demanded $1M in crypto within 48
+  hours to halt the leak.
 false_flag_risk: none
 summary: |
-  Black Shadow persona claimed; INCD-attributed Iran-aligned.
-  Among the most ideologically targeted Iranian operations —
-  the Atraf leak weaponised civilian PII against a vulnerable
-  population in Israel. Initial access was via exploitation of
-  internet-facing infrastructure at CyberServe (consistent with
-  the broader MuddyWater / MOIS pattern: Fortinet / Pulse Secure
-  VPN n-day exploitation, valid credentials reused across tenant
-  environments, web shells on Linux web hosts), with lateral
-  movement into multiple hosted client databases. The operators
-  then ran a serialized public-leak campaign on Telegram of the
-  Atraf LGBTQ dating-site database, the Dan Hotels customer
-  database, the Pegasus Tours travel database, and the Kavim /
-  Dan public-transit driver records — the same persona-laundered
-  coercive PII-leak pattern Pay2Key and Moses Staff use against
-  Israeli targets.
+  The "Black Shadow" persona claimed a breach of the Israeli web-
+  hosting provider CyberServe (compromised Friday 29 Oct 2021),
+  taking down several hosted sites and exfiltrating client
+  databases — most notoriously that of Atraf, a geo-located dating
+  and nightlife app popular in Israel's LGBTQ community. The group
+  demanded $1 million in cryptocurrency within 48 hours to stop the
+  leak, then serially published data on Telegram: names, locations,
+  sexual orientation and HIV status of Atraf users, plus client
+  records from the public-transport firms Dan and Kavim, the
+  tourism firm Pegasus, the Doctor Ticket medical-appointment
+  service, a children's museum and a public-radio blog. CyberScoop
+  (Dec 2021) adds that the same intrusion exposed medical data on
+  roughly 290,000 patients of the Machon Mor Medical Institute.
+
+  Iranian attribution is analytic and HEDGED, not state-declared.
+  The Times of Israel (31 Oct 2021) described Black Shadow only as
+  "believed to be linked to Iran" and "a group of Iran-linked
+  hackers who use cyberattacks for criminal ends." SentinelOne's
+  Amitai Ben Shushan Ehrlich (via CyberScoop) equates the Black
+  Shadow persona with the Iran-affiliated Agrius cluster ("one of
+  several" extortion aliases); Israeli researchers at CYE and
+  Profero assess it as "thought to be operated in conjunction with
+  the government of Iran" and "it does look like [Iran]." No cited
+  source names a specific Iranian service -> ir/unscoped, named-
+  actor level. Analysts read the deliberate publication of the most
+  sensitive Atraf data (HIV status) as revealing coercive/messaging
+  intent — "a strategic way that countries can pass messages to
+  each other or create some kind of deterrence" (CYE's Sigal) —
+  even though the operators also issued an explicit money demand.
+  Tradecraft is assessed as low ("super weak," scanning known
+  Fortinet / Microsoft vulnerabilities). Moses Staff and Pay2Key
+  are SEPARATE-but-similar Israeli-targeting groups (Check Point),
+  not the same actor.
 attributions:
   - actor_id: ir/unscoped/agrius
-    attributing_org: Israel National Cyber Directorate
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2021-10-30
-    attribution_source_id: incd/2021-10_cyberserve-atraf
+    attributing_org: SentinelOne
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2021-12-06
+    attribution_level: named-actor
+    attribution_source_id: cyberscoop/2021-12_black-shadow-israeli-victims
+    notes: |
+      Iran nexus is analytic and HEDGED, not state-declared. Re-
+      anchored this audit from a PHANTOM INCD source (removed) to
+      CyberScoop (2021-12-06), which carries SentinelOne's Amitai
+      Ben Shushan Ehrlich equating the Black Shadow persona with the
+      Iran-affiliated Agrius cluster ("one of several" extortion
+      aliases). Israeli researchers (CYE's Lionel Sigal, Profero's
+      Omri Segev Moyal) assess Black Shadow as "thought to be
+      operated in conjunction with the government of Iran" / "it does
+      look like [Iran]"; contemporaneously the Times of Israel
+      (2021-10-31) called it only "believed to be linked to Iran."
+      No cited source names a specific Iranian service ->
+      ir/unscoped, named-actor level only. The prior record over-
+      attested this to INCD at HIGH confidence via a phantom gov.il
+      homepage source that carries ZERO CyberServe/Atraf content; no
+      cited source shows INCD attributing the incident to Iran or
+      Black Shadow.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Black Shadow persona used to launder coercive PII leak
-      targeting Israeli civil society.
+      The Black Shadow hacktivist persona launders a coercive PII
+      leak against Israeli civilian targets — the exact persona-
+      laundering pattern this doctrine's pillar names Black Shadow
+      as its example of ("Black Shadow for Israeli data-leak
+      extortion").
+    perspective: attacker-rationale
+    inference_basis:
+      signals:
+        - "Named hacktivist persona ('Black Shadow') claims the op on Telegram, giving a state sponsor plausible deniability — CyberScoop: such named groups 'give governments plausible deniability.'"
+        - "Coercive serialized PII leak against Israeli civilian targets, staged on public Telegram channels for maximum media effect; the deliberate publication of the most sensitive Atraf data (HIV status) reads as messaging rather than profit."
+        - "CYE's Lionel Sigal frames it as 'a strategic way that countries can pass messages to each other or create some kind of deterrence.'"
+        - "This doctrine's persona-laundering pillar and cyber_relevance explicitly cite Black Shadow as the example persona for Israeli data-leak extortion."
+      ruled_out: "Purely financial cybercrime — although the operators issued an explicit $1M demand, analysts (CyberScoop) assess Black Shadow as 'an attention-seeking effort more along the lines of an information operation' whose choice to leak HIV status 'betrays the intent,' and rate its tradecraft 'super weak,' inconsistent with a professional ransomware crew."
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -50,10 +107,19 @@ doctrine_links:
   - doctrine_id: ir/forward-defense
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Anti-Israel civilian targeting consistent with Forward
-      Defense projection.
+      An Iran-aligned persona striking Israeli civilian targets is
+      consistent with projecting power onto adversary networks via
+      deniable proxies, but the tie to the high-level Forward
+      Defense posture is a broad structural read, not source-stated
+      — and the Iran nexus itself is only moderately attested.
+    perspective: attacker-rationale
+    inference_basis:
+      alternatives:
+        - "Forward Defense projection via a deniable persona (adversary-network power projection at near-zero physical risk to Iran); the leak coincided with the late-Oct 2021 attack on Iran's fuel-distribution network, fitting a tit-for-tat shadow-war exchange (Times of Israel)."
+        - "Resistance-axis anti-Israel coercion (ir/resistance-axis/anti-israel-coercion, the Agrius actor record's own default alignment) — arguably the more on-point doctrine."
+        - "Opportunistic anti-Israel hacktivism / hack-and-leak crime only loosely tied to any formal state posture, given the hedged Iran nexus and the explicit money demand."
     attesting_source_id: null
     counter_explanation: null
     contested: false
@@ -64,7 +130,134 @@ targets:
   - target_id: orgs/atraf
     role: collateral
     outcome: |
-      Thousands of Atraf LGBTQ users doxed.
+      Atraf LGBTQ users' names, locations, sexual orientation and
+      HIV status leaked on Telegram; the site held data on ~1
+      million people, of which Black Shadow said ~1% was leaked.
+      Analysts read the choice to publish HIV status as revealing
+      coercive/messaging intent.
 sources:
-  - incd/2021-10_cyberserve-atraf
   - timesofisrael/2021-10_atraf-leak
+  - cyberscoop/2021-12_black-shadow-israeli-victims
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / effort max. Full 6-point audit vs raw snapshots.
+    SIBLING RE-SOURCE (badrabbit model) — this Oct-2021 event had
+    the IDENTICAL defects as its sibling 2020-12/shirbit-leak (same
+    actor, same phantom pattern, same fabricated paragraph):
+
+    PHANTOM primary removed. incd/2021-10_cyberserve-atraf cited
+    https://www.gov.il/en/departments/israel_national_cyber_directorate
+    — the generic INCD department homepage (returns a Cloudflare
+    403 shell / department landing page with ZERO CyberServe/Atraf/
+    Black Shadow/Iran content; record title "CyberServe / Atraf
+    Incident — Black Shadow Iran-Aligned Attribution" is fabricated).
+    Removed from sources[] and from the attribution; it is now
+    orphaned (grep-confirmed cited nowhere else) -> RETIRE candidate
+    (annotated in place in the source record, NOT deleted — this is
+    the same phantom the shirbit audit flagged; the shirbit twin
+    incd/2020-12_shirbit was subsequently orchestrator-retired).
+
+    [a] FACTS — Rewrote summary/outcome_summary to the raw. STRIPPED
+    a fabricated technical paragraph (MuddyWater / MOIS tradecraft,
+    "Fortinet / Pulse Secure VPN n-day" initial access, valid-
+    credential reuse, "web shells on Linux web hosts," and a Pay2Key
+    / Moses Staff EQUIVALENCE) — none of it appears in either cited
+    source. CyberScoop in fact rates Black Shadow's tradecraft
+    "super weak" ("scanning for known vulnerabilities in technology
+    made by commercial firms like Fortinet and Microsoft" — NOT
+    Pulse Secure, NOT MuddyWater), and treats Moses Staff and
+    Pay2Key as SEPARATE-but-similar groups (Check Point: Moses Staff
+    "had some similarities to Black Shadow… and another group called
+    Pay2Key"). Also CORRECTED garbled victim facts: prior "Dan
+    Hotels customer database" -> the transport company Dan (ToI:
+    "Israeli public transportation companies Dan and Kavim"); prior
+    "Kavim / Dan public-transit driver records" -> Kavim/Dan CLIENT
+    records ("names, email addresses and phone numbers of Kavim
+    clients"), not driver records; "Pegasus Tours" -> the tourism
+    firm "Pegasus"; added the real, sourced victims Doctor Ticket
+    and Machon Mor Medical Institute (~290,000 patients, CyberScoop).
+    Verified vs raw: ToI — "Hackers believed to be linked to Iran
+    demanded on Sunday a ransom payment of $1 million… to stop the
+    online leak"; Atraf "contained information on some one million
+    people"; "$1 million in our [digital] wallet in the next 48
+    hours"; "The names of some Atraf users and their locations have
+    already been posted online, as well as the HIV status"; "the
+    information leaked online so far represented just 1 percent";
+    "they breached on Friday"; fuel-network context. CyberScoop —
+    "went public with data it appeared to have stolen from an
+    Israeli LGBTQ app, doxing users"; "a larger incident at
+    Cyberserve… also yielded sensitive information from the Machon
+    Mor Medical Institute — which included medical data on roughly
+    290,000 patients"; "names and passwords… which also included
+    sexual orientation and HIV status… betrays the intent"; "an
+    attention-seeking effort more along the lines of an information
+    operation." incident_type [data-theft, influence-operation] ->
+    [intrusion, data-theft, leak, extortion] (influence-operation
+    kept as a narrative reading only, per the IO framing; the op is
+    an intrusion + hack-and-leak extortion).
+
+    [b] ATTRIBUTION — Was over-attested: ir/unscoped/agrius
+    "attributed by INCD, high confidence, concur." No cited source
+    shows INCD attributing this to Iran/Black Shadow (the anchor was
+    the phantom). Re-anchored to SentinelOne (Black Shadow ≡ Iran-
+    affiliated Agrius) as carried by CyberScoop, attributing_org_
+    confidence moderate, auspex_assessment concur-with-caveat,
+    attribution_level named-actor. Iran link kept HEDGED per the raw
+    ("believed to be linked to Iran"; "appears to be aligned with
+    Iranian government interests"; "thought to be operated in
+    conjunction with"; "it does look like [Iran]").
+
+    [c] DATES — start 2021-10-29 (ToI: breached "on Friday"; Oct 31
+    2021 was Sunday) kept. disclosure 2021-10-30 kept (the ToI Oct-31
+    snapshot states Atraf data was "already posted online," so public
+    disclosure was ≤Oct 30; no Oct-30-dated source is snapshotted, so
+    this is corroborated-but-not-directly-datelined). end 2021-11-30
+    kept (leak wave ran into November; CyberScoop notes Nov-18
+    re-post of Shirbit data). Source published_on verified: ToI
+    2021-10-31 (datePublished 2021-10-31T12:04:04) — CORRECT, no
+    change; CyberScoop 2021-12-06 — correct.
+
+    [d] DOCTRINE — Both links kept (each doctrine file explicitly
+    names Black Shadow). persona-laundering: strongly_inferred (Black
+    Shadow is the doctrine's own textbook example; cyber_relevance:
+    "Black Shadow for Israeli data-leak extortion"), perspective
+    attacker-rationale, inference_basis signals/ruled_out added (the
+    ruled_out hedges the money motive — unlike Shirbit, Atraf carried
+    an explicit $1M demand — against the analytic IO reading),
+    attesting_source_id null (no source states Iran's terminal goal
+    in substance; Iran nexus hedged). forward-defense: was
+    strongly_inferred -> DOWNGRADED to plausible (broad umbrella +
+    hedged Iran nexus), perspective attacker-rationale,
+    inference_basis.alternatives added (incl. the actor's own default
+    ir/resistance-axis/anti-israel-coercion as arguably more on-point
+    — flagged for orchestrator, and the source-supported shadow-war
+    tit-for-tat with the late-Oct 2021 Iran fuel-network attack).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (Black Shadow named
+    persona ≡ Agrius; Iran nexus asserted but hedged, no service
+    named).
+
+    [f] ACTOR_ID — ir/unscoped/agrius resolves (atlas/actors/ir/
+    agrius.yaml, id: ir/unscoped/agrius; Black Shadow merged into it
+    per Kara 2026-06-24, MISP Pink Sandstorm synonym set). Kept.
+
+    SNAPSHOTS (sha256 · bytes):
+    timesofisrael/2021-10_atraf-leak (live HTTP 200)
+    ba0d2378…acc35893 · 391,960;
+    cyberscoop/2021-12_black-shadow-israeli-victims (shared w/ shirbit
+    audit; live HTTP 200) 15426bcf…2c818b5a · 110,469. Both fetched
+    with full article text -> level: full.
+
+    FLAGS for orchestrator: (1) incd/2021-10_cyberserve-atraf =
+    PHANTOM, RETIRE candidate (now orphaned; annotated in place).
+    (2) targets orgs/cyberserve (primary) and orgs/atraf (collateral)
+    have no backing files in atlas/targets/orgs/ (corpus-wide gap;
+    same as sibling shirbit) — target_ids left as-is; Machon Mor /
+    Doctor Ticket / Dan / Kavim / Pegasus named in prose only, not
+    added as targets. (3) timesofisrael/2021-10_atraf-leak record
+    title was a paraphrase ("Atraf LGBTQ Dating Database Leaked by
+    Black Shadow") — corrected to the real ToI headline this audit.

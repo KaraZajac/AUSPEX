@@ -1,5 +1,5 @@
 id: 2019-04/talos-sea-turtle-dns-hijacking
-name: Cisco Talos discloses Sea Turtle DNS-hijacking campaign — first canonical Turkish-aligned attribution
+name: Cisco Talos discloses Sea Turtle state-sponsored DNS-hijacking campaign (40 orgs / 13 countries)
 start_date: 2017-01-01
 disclosure_date: 2019-04-17
 end_date: null
@@ -7,65 +7,309 @@ incident_type:
   - intrusion
   - data-theft
   - supply-chain
-initial_vector: valid-creds  # DNS-registrar credential compromise
+initial_vector: valid-creds  # DNS-registrar/registry credential compromise -> DNS hijack -> credential capture
 outcome_summary: |
-  Cisco Talos published the foundational Sea Turtle report
-  documenting a state-sponsored DNS-hijacking campaign active
-  since January 2017. Targets included country-code TLD operators,
-  ministries of foreign affairs, telecommunications providers,
-  and intelligence agencies across 13 countries — Albania, Egypt,
-  Iraq, Iraqi Kurdistan, Cyprus, Saudi Arabia, Syria, Turkey
-  itself, the UAE, and others. The campaign compromised DNS
-  registrars to redirect target organizations' domain resolution
-  to attacker-controlled servers, enabling credential capture
-  during ordinary user authentication.
+  Cisco Talos published the foundational "Sea Turtle" report
+  documenting a state-sponsored DNS-hijacking campaign that Talos
+  assessed "likely began as early as January 2017 and has continued
+  through the first quarter of 2019." Talos wrote that "at least 40
+  different organizations across 13 different countries were
+  compromised during this campaign." The 13 victim countries in
+  Talos's IP/country table are Albania, Armenia, Cyprus, Egypt,
+  Iraq, Jordan, Lebanon, Libya, Sweden, Syria, Turkey, the UAE, and
+  the United States (Turkey appears here only as a victim country;
+  Saudi Arabia is named separately in prose, its .sa-TLD admin
+  credentials harvested via the NetNod compromise). Primary victims
+  were "national security organizations, ministries of foreign
+  affairs, and prominent energy organizations" — Talos deliberately
+  did NOT name specific primary-victim organizations. The actors
+  reached these targets by compromising third-party DNS
+  intermediaries (secondary victims): "numerous DNS registrars,
+  telecommunication companies," IT firms, "Registrars" and "One
+  registry" — named intermediaries include the .am ccTLD registrar
+  Amnic ("listed as the technical contact on IANA for the ccTLD
+  .am"), the Sweden-based infrastructure operator NetNod (which
+  "acknowledged the compromise in a public statement on February 5,
+  2019"), the Swedish consulting firm Cafax, and NGO Packet Clearing
+  House. Once holding registrar/registry access the actors
+  manipulated DNS records to redirect victim traffic to
+  attacker-controlled servers, capturing credentials during ordinary
+  user authentication.
 false_flag_risk: none
 summary: |
-  Foundational attribution event for the Turkish-aligned cyber
-  program. Talos's April 2019 report named "actors aligned with
-  the Turkish government" as the assessed sponsor — unusual
-  precision for a Western vendor and reflective of the strength
-  of the victim-set evidence (the Greek-Cypriot-Iraqi-Kurdish
-  pattern is recognizably Turkish-strategic). ICANN had issued a
-  related public statement in February 2019 about DNS abuse
-  without attribution. The 2019 Talos disclosure quieted the
-  cluster's operations until the 2024 Hunt & Hackett / Microsoft
-  resurgence.
+  Foundational disclosure event and campaign-overview / parent for
+  the Sea Turtle DNS-hijacking cluster (Microsoft later tracked the
+  same actor as MARBLED DUST). Talos assessed the campaign "with
+  high confidence" to "an advanced, state-sponsored actor" and named
+  NO nation as the sponsor — "Turkey" appears in the April 2019
+  report only as one entry in the victim IP/country table (alongside
+  Sweden, Syria, Armenia, the US). The Turkey nexus carried by
+  actor_id tr/unscoped/sea-turtle rests on LATER, hedged reporting:
+  Reuters (27 Jan 2020) reported the activity was "believed to be the
+  work of hackers acting in the interests of the Turkish government,"
+  per "three senior Western security officials"; Hunt & Hackett
+  (2024) called Sea Turtle "Turkey based." ICANN issued a related
+  public statement (22 Feb 2019) calling for full DNSSEC deployment
+  in response to DNS-hijacking abuse — it names no actor, nation, or
+  victim. This canonical event is the campaign overview: the
+  per-operation sub-events (2018-06 Cyprus, 2018-06 Armenia/.am,
+  2018-06 UAE-Saudi-Lebanon, 2018-11 Iraqi-Kurdistan, 2019-02 NetNod,
+  and the 2019-07 Talos follow-on including the Greek ICS-Forth ccTLD
+  compromise) detail specific victims and should be cross-referenced,
+  not merged into this overview. The cluster largely went quiet after
+  the 2019 disclosures until a documented 2024 Hunt & Hackett /
+  Microsoft resurgence (see the 2024-01 resurgence event and the
+  actor record).
 attributions:
   - actor_id: tr/unscoped/sea-turtle
     attributing_org: Cisco Talos (Danny Adamitis, David Maynor, Warren Mercer, Matthew Olney, Paul Rascagneres)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: talos/2019-04-17_sea-turtle-dns-hijacking
+    notes: |
+      Talos (2019-04-17) NAMES the actor/campaign "Sea Turtle" and
+      assesses it "with high confidence" to be "an advanced,
+      state-sponsored actor" — but names NO nation as the perpetrator
+      and NO service/unit. "Turkey" appears in the report only as one
+      entry in the victim IP/country table ("159.89.101.204 December -
+      January 2018-2019 Turkey, Sweden, Syria, Armenia, US"), i.e. a
+      target location, not the sponsor. Hence attribution_level:
+      named-actor (a named cluster; state-sponsored; nation un-named
+      at this source). The Turkey nexus carried by the tr/unscoped
+      prefix rests on LATER reporting not cited as the attribution
+      source here — Reuters (2020-01-27, "acting in the interests of
+      the Turkish government," per three Western officials, hedged;
+      Reuters' own tally is "at least 30 organizations") and Hunt &
+      Hackett (2024, "Turkey based"). No cited source names a Turkish
+      service, so the actor remains tr/unscoped (demoted from tr/mit
+      on 2026-06-25).
 doctrine_links:
   - doctrine_id: tr/mavi-vatan
+    perspective: attacker-rationale
     pillar_id: tr/mavi-vatan/eastern-med-energy
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Cypriot, Greek, and Iraqi-Kurdish victim-set fits the
-      maritime-and-energy contest framing the doctrine
-      articulates; Talos's framing of "Turkish-aligned" is
-      consistent with the Mavi Vatan strategic context.
+      The campaign's Eastern-Mediterranean victim set — Cyprus
+      (three IP-table entries) among primary "ministries of foreign
+      affairs" and "prominent energy organizations" targets — fits
+      the maritime-and-energy contest that Mavi Vatan articulates,
+      contemporaneous with the 2017–2019 Turkey–Cyprus EEZ /
+      hydrocarbon dispute. Not `attested`: neither cited source names
+      Mavi Vatan or states an energy-competition goal; the link is an
+      analyst inference from victim geopolitics.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Talos names 'prominent energy organizations' and 'ministries of foreign affairs' among the primary victim classes — a strategic energy/diplomatic collection profile, not opportunistic or criminal targeting."
+        - "Cyprus is a listed victim country (three IP-table entries, Dec 2018 / Feb 2019) and is the central object of the Turkey–Cyprus EEZ / hydrocarbon-drilling dispute that Mavi Vatan codifies; Turkish drillship activity in Cypriot-claimed waters was contemporaneous with the collection."
+        - "The later-sourced Turkey nexus (Reuters 2020: 'acting in the interests of the Turkish government') aligns the campaign with Turkish strategic requirements in the Eastern Mediterranean."
+      ruled_out: |
+        Financially-motivated / non-state crime: inconsistent with the
+        credential-capture collection against government and energy
+        targets and with Talos's high-confidence "advanced,
+        state-sponsored actor" assessment. Note the pillar is inferred
+        from victim geopolitics: the primary victims are governments
+        and energy/foreign-ministry classes, not a source-stated
+        energy-competition objective.
     contested: false
     analyst: claude
   - doctrine_id: tr/counter-gulen-kurdish-surveillance
+    perspective: attacker-rationale
     pillar_id: tr/counter-gulen-kurdish-surveillance/kurdish-diaspora
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Iraqi-Kurdish ministry-of-interior and KRG targeting fits
-      the Kurdish-diaspora pillar.
+      Iraq is the single most-listed victim country in Talos's
+      IP/country table (five entries), and the Sea Turtle actor's
+      documented dual mission (per the actor record and the separate
+      2018-11 Iraqi-Kurdistan operation) includes Kurdish-region /
+      diaspora surveillance. Downgraded from strongly_inferred to
+      plausible: THIS event's cited sources (Talos 2019-04, ICANN)
+      name "Iraq" as a victim country but do NOT identify Kurdish-
+      specific or diaspora targeting — the Kurdish tasking is
+      evidenced in the separate 2018-11 sub-event, not here.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Iraq is the most frequently listed victim country in Talos's IP/country table (five entries), and the actor's documented mission (actor record; 2018-11 Iraqi-Kurdistan sub-event) includes Kurdish-region / diaspora surveillance and telecom targeting."
+        - "The actor's default doctrine alignment (per the actor record) includes tr/counter-gulen-kurdish-surveillance/kurdish-diaspora, reflecting a persistent Kurdish-surveillance tasking across the campaign."
+      alternatives:
+        - "The Iraq victims may fall entirely under the Mavi-Vatan / regional foreign-ministry collection profile (Talos frames primary victims as national-security orgs, MFAs, and energy orgs, not Kurdish-diaspora), in which case no distinct Kurdish-surveillance tasking is evidenced by this event's sources."
+        - "Iraq entries could include secondary/registrar-infrastructure victims swept up as campaign staging rather than deliberate Kurdish-diaspora targets."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/cypriot-ministries
+    country: cy
     role: primary
   - target_id: orgs/iraqi-kurdistan-government
+    country: iq
     role: primary
   - target_id: orgs/albanian-ministries
+    country: al
     role: primary
 sources:
   - talos/2019-04-17_sea-turtle-dns-hijacking
+  - reuters/2020-01-27_hackers-turkey-interests-dns-hijacking
   - icann/2019-02-22_dns-hijacking-public-statement
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit vs snapshotted raw. This is the CANONICAL /
+    campaign-overview (parent) Sea Turtle event — the April 17, 2019
+    Cisco Talos disclosure of the whole 40-org / 13-country campaign.
+    It is NOT a duplicate of the per-operation sub-events (2018-06
+    Cyprus, 2019-04 ICS-Forth/Greece, etc.); it is their parent. No
+    merge/delete. All three cited sources are REAL, 200-OK (Reuters
+    via hash-pinned mirror), and on disk with hashes re-verified this
+    pass:
+      - talos/2019-04-17_sea-turtle-dns-hijacking (primary): sha256
+        eae3a9043814c97a218e3cbd3ac61289bf260ce7fcfda79ab208a7d8b060af0f
+        (talos__2019-04-17_sea-turtle-dns-hijacking.html, 199,058 B) — MATCHES source record.
+      - icann/2019-02-22_dns-hijacking-public-statement (contextual): sha256
+        2b34f65728a41432298931cdc043e610da5e5f61b8e4693e0ebbf3d76cf22930
+        (icann__2019-02-22_dns-hijacking-public-statement.html, 277,433 B) — MATCHES.
+      - reuters/2020-01-27_hackers-turkey-interests-dns-hijacking (secondary): sha256
+        aaab0f00af708789c6d9b2cbfb6d39cb2ca53f3a79ea535e35280eca52893d81
+        (reuters__2020-01-27_hackers-turkey-interests-dns-hijacking.html, 99,867 B) — MATCHES.
+        ADDED this pass (RE-SOURCE, badrabbit-style) to carry the Turkey-nexus sentence; the
+        reuters.com canonical URL is bot-walled (HTTP 401), snapshot is the verbatim Reuters wire
+        as syndicated by Arab News. All snapshotted -> level: full.
+
+    [a] FACTS — MAJOR over-attestation stripped + scope corrected:
+      • REMOVED the FABRICATED attribution claim. The old name ("first
+        canonical Turkish-aligned attribution") and old summary
+        ('Talos's April 2019 report named "actors aligned with the
+        Turkish government" as the assessed sponsor — unusual precision
+        for a Western vendor') are UNSUPPORTED by the raw. grep of the
+        Talos snapshot: "Turkish government" = 0, "Turkish" = 0,
+        "aligned with" = 0, "Turkey" = 1 (victim IP/country table
+        only). Talos's actual assessment, verbatim: "We assess with
+        high confidence that this activity is being carried out by an
+        advanced, state-sponsored actor that seeks to obtain persistent
+        access to sensitive networks and systems." No nation named.
+        This is the exact fabrication the 2018-11 Iraqi-Kurdistan
+        sibling audit flagged against this event, and it matches the
+        already-corrected actor record (demoted tr/mit -> tr/unscoped
+        2026-06-25) and both audited sub-events. Rewrote name + summary
+        to the truthful "state-sponsored, nation un-named; Turkey nexus
+        via later hedged reporting."
+      • SCOPE corrected. Old outcome_summary implied only a country
+        count; Talos verbatim: "at least 40 different organizations
+        across 13 different countries were compromised during this
+        campaign." Added the 40-org figure.
+      • COUNTRY LIST corrected. Old list ("Albania, Egypt, Iraq, Iraqi
+        Kurdistan, Cyprus, Saudi Arabia, Syria, Turkey itself, the UAE,
+        and others") contained a fabrication and an imprecision:
+          - "Iraqi Kurdistan" is NOT in the source (grep "Kurdistan" =
+            0). Talos lists "Iraq," not Iraqi Kurdistan, as a victim
+            country. REMOVED.
+          - "Saudi Arabia" is NOT in the 13-country IP/country table;
+            it appears only in prose (".sa" TLD admin credentials
+            harvested via the NetNod compromise; "additional Saudi
+            Arabia-based victims"). Moved to a prose caveat, not the
+            13-country list.
+        Replaced with the ACTUAL 13 table countries, verbatim from the
+        IP/country table: Albania, Armenia, Cyprus, Egypt, Iraq,
+        Jordan, Lebanon, Libya, Sweden, Syria, Turkey, UAE, United
+        States. Noted Turkey is a victim country here, not the sponsor.
+      • Named-victim / mechanism facts ADDED + source-anchored (all
+        verbatim-carried by Talos): primary victims "national security
+        organizations, ministries of foreign affairs, and prominent
+        energy organizations" (Talos deliberately does NOT name primary
+        orgs); secondary/intermediary victims "numerous DNS registrars,
+        telecommunication companies," IT firms, "Registrars," "One
+        registry"; named intermediaries Amnic (".am" ccTLD registrar,
+        "listed as the technical contact on IANA for the ccTLD .am"),
+        NetNod (Sweden, "acknowledged the compromise ... on February 5,
+        2019"), Cafax, Packet Clearing House. DNS-record manipulation
+        -> attacker-controlled servers -> credential capture retained
+        (Talos).
+      • ICANN sentence retained and verified accurate: a generic
+        DNSSEC-deployment call naming NO actor/nation/victim (raw grep
+        "sea turtle"/"turkey"/"cyprus" = 0). Kept as contextual only.
+
+    [b] ATTRIBUTION — Cisco Talos / high / concur retained. Added
+    attribution_level: named-actor (Talos names the "Sea Turtle"
+    cluster and assesses "advanced, state-sponsored actor"; NO nation,
+    NO unit). Added a notes block recording that the Turkey nexus rests
+    on later, hedged reporting (Reuters 2020 "acting in the interests
+    of the Turkish government," per three Western officials — Reuters'
+    own tally "at least 30 organizations"; Hunt & Hackett 2024 "Turkey
+    based"), NOT on this 2019 Talos source. No over-attestation.
+
+    [c] DATES — start_date 2017-01-01 CONFIRMED (Talos: "likely began
+    as early as January 2017"). disclosure_date 2019-04-17 CONFIRMED
+    (byline; source published_on matches). end_date null retained: the
+    April report says the campaign "has continued through the first
+    quarter of 2019," Talos's own July follow-on shows continuation,
+    and the actor is still active — a campaign-overview end is left
+    open. Source published_on re-verified: Talos = 2019-04-17 (byline);
+    ICANN = 2019-02-22; Reuters = 2020-01-27 (wire datePublished
+    2020-01-27T10:58:03). No date fabrications remain.
+
+    [d] DOCTRINE_LINKS — both restructured to protocol spec (added
+    perspective: attacker-rationale = Turkey's own doctrine on its
+    campaign; attesting_source_id: null; inference_basis with quoted
+    list items):
+      • tr/mavi-vatan/eastern-med-energy: KEPT strongly_inferred but
+        FIXED reasoning — removed the "Greek" and "Iraqi-Kurdish"
+        victims from the basis (Greece is NOT in the April source —
+        grep "Greece"/"Greek"/"Forth" = 0; it is the July report /
+        ICS-Forth sub-event). Basis now rests on the in-source Cyprus
+        victim + Talos's "prominent energy organizations" / "ministries
+        of foreign affairs" primary classes. Not attested (no source
+        names Mavi Vatan / an energy goal).
+      • tr/counter-gulen-kurdish-surveillance/kurdish-diaspora:
+        DOWNGRADED strongly_inferred -> plausible. This event's sources
+        name "Iraq" as the top victim country but do NOT evidence
+        Kurdish-specific / diaspora targeting (that is documented in
+        the separate 2018-11 Iraqi-Kurdistan sub-event, not here).
+        Added inference_basis {signals[], alternatives[]} honestly
+        recording the gap.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor (see [b]).
+    NB sibling inconsistency (flag, not my lane): 2018-06 Cyprus uses
+    activity-cluster off this same April Talos source, while 2019-04
+    ICS-Forth uses named-actor off the July source. named-actor chosen
+    here because the April report is the event that NAMES "Sea Turtle."
+
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves to
+    atlas/actors/tr/sea-turtle.yaml (internal id tr/unscoped/sea-turtle;
+    audited + demoted from tr/mit 2026-06-25) ✓. No actor edit made.
+
+    MARBLED-DUST reconciliation (per task): the two sub-events split
+    (2018-06 Cyprus REMOVED "MARBLED DUST" as anachronistic for a 2019
+    op; 2019-04 ICS-Forth KEPT "a.k.a. MARBLED DUST"). MARBLED DUST is
+    a VALID equivalent alias per the actor record (Microsoft,
+    post-April-2023 taxonomy). Resolution: 2019-dated Talos-sourced
+    events use Talos's contemporaneous name "Sea Turtle" as the primary
+    label; the alias equivalence is stated ONCE here in the canonical /
+    parent event ("Microsoft later tracked the same actor as MARBLED
+    DUST") so sub-events can cross-reference it without anachronistically
+    labelling a 2019 op with a 2023 alias. Recommend the Cyprus/ICS-Forth
+    siblings harmonize to this convention (flag).
+
+    FLAGS for orchestrator (no cross-file edits made per protocol):
+      - targets[]: Talos deliberately names NO specific primary-victim
+        organizations (only intermediaries: NetNod, Amnic, Cafax, PCH).
+        The three primaries here (orgs/cypriot-ministries [cy],
+        orgs/iraqi-kurdistan-government [iq], orgs/albanian-ministries
+        [al]) are campaign-level ROLL-UPS mapped to victim countries in
+        the table (Cyprus, Iraq, Albania all present). orgs/iraqi-
+        kurdistan-government OVER-SPECIFIES vs the April source's "Iraq"
+        (its Kurdish specificity is sourced in the 2018-11 sub-event,
+        not here) — retained as a campaign roll-up + FK continuity with
+        that sub-event, flagged rather than re-pointed to avoid minting
+        a new FK. All three are likely DANGLING FKs (no files under
+        atlas/targets/orgs/ per the sibling audits) — orchestrator
+        should create the org registry records.
+      - Sibling attribution_level divergence (Cyprus activity-cluster
+        vs this named-actor vs ICS-Forth named-actor) — harmonize.
+      - MARBLED-DUST alias convention (above) — harmonize siblings.

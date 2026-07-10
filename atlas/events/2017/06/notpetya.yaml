@@ -10,15 +10,20 @@ incident_type:
 initial_vector: supply-chain
 outcome_summary: |
   Supply-chain compromise of the M.E.Doc Ukrainian tax-accounting
-  software pushed wiper malware (masquerading as ransomware) that
-  combined EternalBlue exploitation and Mimikatz credential
-  harvesting to self-propagate worm-style across affected
-  networks. ~$10B global damage per White House — "the most
-  destructive and costly cyberattack in history." Major victims
-  included Maersk, Merck, FedEx/TNT, Mondelez, Reckitt Benckiser,
-  Saint-Gobain.
+  software pushed destructive wiper malware masquerading as
+  ransomware (irrecoverable by design — the ransom/decrypt path
+  was bogus), which self-propagated worm-style using the
+  EternalBlue exploit plus a modified Mimikatz (Plainpwd)
+  credential harvester and PsExec for lateral movement. The White
+  House (Feb 2018) called it "the most destructive and costly
+  cyber-attack in history," causing "billions of dollars in
+  damage"; the total was later assessed at more than $10 billion
+  (a White House assessment confirmed to WIRED by then-Homeland
+  Security adviser Tom Bossert). Major victims: Maersk (~$300M),
+  Merck (~$870M), FedEx/TNT Express (~$400M), Saint-Gobain
+  (~$400M), Mondelez (~$188M), Reckitt Benckiser (~$129M).
 quantified_impact:
-  usd_damage_global: 10000000000
+  usd_damage_global: 10000000000  # ">$10B" White House assessment relayed via Tom Bossert to WIRED (2018); the Feb-2018 WH press statement itself said only "billions of dollars"
 false_flag_risk: none  # ransomware masquerade is not state-attribution false-flag
 operators_named:
   - andrienko-yuriy  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
@@ -28,22 +33,38 @@ operators_named:
   - ochichenko-artem  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
   - pliskin-petr  # GRU Unit 74455 / Sandworm, DOJ Oct 2020
 summary: |
-  Targeted at Ukrainian businesses; collateral global spread
-  read by US/UK governments as a feature rather than a bug.
-  White House Press Statement (15 Feb 2018) and UK NCSC
-  attribution (same day) called the operation a Russian military
-  campaign to destabilize Ukraine. DOJ Oct 2020 indictment named
-  six GRU Unit 74455 officers including Anatoliy Kovalev.
+  NotPetya was targeted at Ukrainian businesses via the M.E.Doc
+  tax-software supply chain, but self-propagation drove
+  indiscriminate global spread. The White House Press Statement
+  (15 Feb 2018) and the UK FCO/NCSC (same day) attributed the
+  operation to the Russian military and framed it as part of the
+  Kremlin's effort to destabilize Ukraine — the White House
+  calling it "the most destructive and costly cyber-attack in
+  history," NCSC assessing Russia "almost certainly" responsible.
+  The DOJ Oct 2020 indictment named six GRU Unit 74455 officers
+  (incl. Anatoliy Kovalev). AUSPEX reads the tolerated global
+  collateral as consistent with the Russkiy-Mir / Ukraine-theater
+  aim, though both governments characterized the spread itself as
+  "reckless and indiscriminate."
 attributions:
   - actor_id: ru/gru/74455/sandworm
     attributing_org: White House / UK NCSC
     attributing_org_confidence: high
+    attribution_level: nation  # both govts said "the Russian military" — no GRU unit named in 2018
     auspex_assessment: concur
     attribution_date: 2018-02-15
     attribution_source_id: whitehouse/2018-02-15_notpetya-attribution
+    notes: |
+      Nation-level: the WH statement and the UK FCO/NCSC statement both
+      attribute NotPetya to "the Russian military" (NCSC: "almost
+      certainly"), naming no GRU unit. AUSPEX resolves this to the
+      ru/gru/74455/sandworm actor with the benefit of the later DOJ
+      indictment. UK half corroborated by
+      ukgov/2018-02-15_notpetya-fco-ncsc-attribution.
   - actor_id: ru/gru/74455/sandworm
     attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ names "Unit 74455 of the GRU" + six officers
     auspex_assessment: concur
     attribution_date: 2020-10-15
     attribution_source_id: doj/2020-10-15_sandworm-six-gru-officers-indictment
@@ -51,26 +72,48 @@ doctrine_links:
   - doctrine_id: ru/russkiy-mir
     pillar_id: ru/russkiy-mir/ukraine-theater
     program_id: null
+    perspective: attacker-rationale
     confidence: attested
     reasoning: |
-      White House Feb 2018 statement explicitly cites
-      destabilization of Ukraine as the strategic intent. The
-      tolerated global collateral damage to Western firms reads
-      as feature, not bug — consistent with the broader
-      Russkiy-Mir / Ukraine-theater framing.
+      Both the White House (Feb 2018) and the DOJ Oct-2020
+      indictment state destabilization of Ukraine as the strategic
+      intent in substance — the Russkiy-Mir / Ukraine-theater
+      terminal goal (Ukraine as the priority Russian cyber theater).
+      WH: "part of the Kremlin's ongoing effort to destabilize
+      Ukraine"; DOJ: attacks "intended to support Russian government
+      efforts to undermine, retaliate against, or otherwise
+      destabilize: (1) Ukraine …". The tolerated global collateral to
+      Western firms reads as feature, not bug, consistent with that
+      framing.
     attesting_source_id: whitehouse/2018-02-15_notpetya-attribution
+    inference_basis:
+      source_quote: "It was part of the Kremlin's ongoing effort to destabilize Ukraine and demonstrates ever more clearly Russia's involvement in the ongoing conflict."
+      source_id: whitehouse/2018-02-15_notpetya-attribution
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/non-contact-warfare
     program_id: null
-    confidence: attested
+    perspective: attacker-rationale
+    confidence: strongly_inferred  # downgraded from attested 2026-07-10: sources name the actor ("Russian military") but do NOT state the non-contact/gray-zone-warfare doctrine goal
     reasoning: |
-      White House and UK NCSC explicit attribution framed the
-      operation as a Russian military campaign — non-contact
-      warfare destabilization at scale.
-    attesting_source_id: whitehouse/2018-02-15_notpetya-attribution
+      A destructive military cyberattack short of kinetic war is a
+      textbook instance of the 2014 doctrine's non-contact / indirect
+      (gray-zone) warfare pillar, and the WH/NCSC statements confirm
+      the perpetrator was "the Russian military." But NEITHER source
+      states non-contact/gray-zone warfare as the operation's goal or
+      doctrinal rationale — they attribute the actor and one aim
+      (destabilize Ukraine, which tags Russkiy-Mir above). So this
+      modality link is a strong inference, not an attestation.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "The White House and UK NCSC both attribute NotPetya to the Russian military (GRU) — a state military instrument, the actor the 2014 doctrine places under General Staff purview for information/cyber confrontation."
+        - "NotPetya was a destructive cyber operation executed below the threshold of open armed conflict against Ukraine and spilling into NATO states — the continuous gray-zone / non-contact modality the pillar authorizes."
+        - "The Sandworm actor record lists ru/military-doctrine-2014/non-contact-warfare as a default doctrine alignment."
+      ruled_out: "Attested: no cited source articulates 'non-contact/indirect warfare' as the operation's stated goal — the govt statements name the actor and the destabilize-Ukraine aim, not this doctrine's terminal concept."
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -86,4 +129,95 @@ targets:
     role: collateral
 sources:
   - whitehouse/2018-02-15_notpetya-attribution
+  - ukgov/2018-02-15_notpetya-fco-ncsc-attribution
   - doj/2020-10-15_sandworm-six-gru-officers-indictment
+  - welivesecurity/2017-06-30_telebots-supply-chain-medoc-notpetya
+  - securelist/2017-06-28_expetr-notpetya-wiper-not-ransomware
+  - wired/2018-08-22_notpetya-untold-story
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Level = FULL: every load-bearing claim is
+    now carried by a snapshotted source. Heavily-reported event — checked
+    hard for fabricated victims/figures; none found (all six victims + the
+    $10B trace to real sources).
+
+    SNAPSHOTS (6): whitehouse__2018-02-15_notpetya-attribution.html sha256
+    d7ea2711…969aecb9 (64,409 B); doj__2020-10-15_sandworm-six-gru-officers-
+    indictment.html sha256 89d5d4f9…620f02eb (50,433 B, via 2022-01-15
+    Wayback capture — justice.gov live URL is Akamai-bot-walled);
+    ukgov__2018-02-15_notpetya-fco-ncsc-attribution.html sha256 8ab67a7c…
+    6257211e (75,857 B); welivesecurity__2017-06-30_telebots-supply-chain-
+    medoc-notpetya.html sha256 58b3e90f…ae29974f (88,778 B);
+    securelist__2017-06-28_expetr-notpetya-wiper-not-ransomware.html sha256
+    c328dc4f…49f47720 (190,401 B); wired__2018-08-22_notpetya-untold-story.html
+    sha256 8efd16d4…b5516d17 (1,557,019 B).
+
+    [a] FACTS — technical claims re-sourced (the WH + DOJ sources carry the
+    attribution but NOT the mechanism). M.E.Doc supply-chain vector: ESET
+    "the malware was created right after execution of the M.E.Doc software"
+    + "medoc_online.php … on M.E.Doc's server." EternalBlue + modified
+    Mimikatz + PsExec: ESET "spread using the infamous EternalBlue exploit,
+    leveraging the DoublePulsar kernel-mode backdoor" / "Plainpwd (modified
+    Mimikatz …)" / "PsExec (used for lateral movement)." Wiper-not-ransomware
+    (irrecoverable): Kaspersky "designed as a wiper pretending to be
+    ransomware" + "the threat actor cannot decrypt victims' disk, even if a
+    payment was made." CORRECTED the $10B misattribution: outcome_summary
+    said "~$10B per White House," but the Feb-2018 WH statement says only
+    "billions of dollars"; the ">$10B" figure is a White House assessment
+    confirmed to WIRED by Tom Bossert (now cited to wired/…, and quantified_
+    impact comment fixed). Victim list (Maersk, Merck, FedEx/TNT, Mondelez,
+    Reckitt, Saint-Gobain) + per-company nine-figure losses carried verbatim
+    by WIRED; DOJ independently carries "nearly $1 billion" for its three
+    named victims (Heritage Valley, TNT/FedEx, unnamed US pharma=Merck).
+    Kept quantified_impact usd_damage_global 10000000000. No fabricated
+    malware/CVEs/victims found.
+
+    [b] ATTRIBUTION — both attributions concur, unchanged actor. Added
+    attribution_level: WH/NCSC = nation (both statements say "the Russian
+    military," NCSC "almost certainly" — no unit named in 2018), DOJ =
+    named-unit ("Unit 74455 of the … GRU" + six officers, all present in
+    the snapshot). Added a UK source (ukgov/…) for the NCSC half of the
+    "White House / UK NCSC" attributing_org (was uncited).
+
+    [c] DATES — start/disclosure 2017-06-27 (outbreak day, ESET/Kaspersky),
+    end 2017-07-15 (containment tail; editorial, retained). Source
+    published_on verified against raw: WH 2018-02-15, UK FCO 2018-02-15
+    (JSON-LD), DOJ 2020-10-19 (press-release pub date; indictment returned
+    2020-10-15 — slug/attribution_date retain 2020-10-15 per prior audit),
+    ESET 2017-06-30 (in-page), Kaspersky 2017-06-28 (metadata), WIRED
+    2018-08-22.
+
+    [d] DOCTRINE_LINKS — russkiy-mir/ukraine-theater KEPT attested: WH
+    "part of the Kremlin's ongoing effort to destabilize Ukraine" + DOJ
+    "…otherwise destabilize: (1) Ukraine" state the pillar's terminal goal
+    in substance; added perspective: attacker-rationale + inference_basis.
+    source_quote (verbatim WH). military-doctrine-2014/non-contact-warfare
+    DOWNGRADED attested → strongly_inferred (OVER-ATTESTATION FIX): the
+    sources name the actor ("Russian military") and the destabilize-Ukraine
+    aim but never state non-contact/gray-zone warfare as the goal;
+    attesting_source_id → null, added inference_basis {signals[], ruled_out},
+    perspective: attacker-rationale. Both links attacker-rationale (ru
+    doctrine on ru's own attack).
+
+    [e] ATTRIBUTION_LEVEL — added (was absent): nation (WH/NCSC), named-unit
+    (DOJ). Strongest source-supported level for the event is named-unit.
+
+    [f] ACTOR_ID — ru/gru/74455/sandworm resolves to
+    atlas/actors/ru/sandworm.yaml (id ru/gru/74455/sandworm). Correct; not a
+    counter-action (the DOJ indictment is cited as an attribution source,
+    not as the event). No actor-file edit.
+
+    FLAGS for orchestrator: (1) WRONG-SOURCE FIXED — whitehouse/… url
+    pointed to the gov.uk FCO page (wrong publisher); re-pointed to the
+    Trump-WH archive statement and split the UK half into ukgov/… (both now
+    snapshotted). No source orphaned. (2) TARGET FK GAPS — orgs/medoc and
+    orgs/fedex-tnt have no registry record under atlas/targets/orgs/ (searched
+    medoc/m-e-doc/fedex/tnt; orgs/maersk, orgs/merck, orgs/mondelez exist).
+    Left the target_ids in place (correct references); the org records need
+    creating — not done here (other-file). (3) DOJ live URL stays Akamai-bot-
+    walled; snapshot is a faithful Wayback capture, archive_url set to the
+    concrete capture.
