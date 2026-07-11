@@ -149,6 +149,15 @@ findings (⚠ = raw vs normalized recent-share diverge materially).
 - **Strategic pivots (state's #1 doctrine, early half → late half):** cn MCF→Nat-Intel-Law;
   ru Russkiy-Mir→Military-Doctrine-2014; ir Deniable-Retaliation→Forward-Defense; kp Songun→
   8th-Congress; in Contractor/Hack-for-Hire→Regional-Collection.
+- **Iran's operative doctrine is MULTIPOLAR (exploratory; why Iran is not in pre-reg P5):** unlike
+  cn (nat-intel-law-2017 clearly #1, 43 vs MCF 38), Iran's top is a near-tie among *four* active
+  doctrines that each lead by a different metric — cyber-deniable-retaliation 28 (#1 by total),
+  forward-defense 27 (#1 by late-half pivot), asymmetric-warfare 24, resistance-axis 23 (**#1 by
+  recency, 39% recent-3yr share**). Iran runs a deniable-retaliation / forward-defense /
+  resistance-axis escalation *cluster* in parallel rather than settling on one dominant doctrine —
+  a substantive finding the completed census clarified, and the reason Iran's single-dominant-
+  doctrine persistence claim was dropped from the confirmatory pre-registration (P5 kept as a clean
+  cn-only prediction).
 - **Lead/lag:** n=468 pairs · median **+3yr** · 18% precede / 7% same-year / 74% follow.
   *(Same computation as F1 LEG 2 — must agree, and does.)*
 - **Top same-state co-occurring pairs:** mcf+mic2025 (12); ir deniable-retaliation+resistance-axis

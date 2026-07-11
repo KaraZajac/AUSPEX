@@ -17,7 +17,13 @@ function pct(num: number, den: number): string {
 
 function printEngine(name: string, s: typeof r.attribution): void {
   console.log(`${name}  train=${s.trainSize}  test=${s.testSize}  scored=${s.scored}`);
-  console.log(`  top-1: ${pct(s.hit1, s.scored)}   top-3: ${pct(s.hit3, s.scored)}   top-5: ${pct(s.hit5, s.scored)}   top-10: ${pct(s.hit10, s.scored)}   MRR: ${s.mrr.toFixed(3)}`);
+  console.log(`  ALL-TEST (null=miss):  top-1: ${pct(s.hit1, s.scored)}   top-3: ${pct(s.hit3, s.scored)}   top-5: ${pct(s.hit5, s.scored)}   top-10: ${pct(s.hit10, s.scored)}   MRR: ${s.mrr.toFixed(3)}`);
+  // RANKABLE subset = test events whose true label existed in the training set
+  // (bestRank !== null). This is the P6 pre-registration comparator ("actor
+  // existed pre-freeze"); the ALL-TEST row above additionally counts cold-start
+  // new-label events as automatic misses and is NOT the P6 figure.
+  const rankable = s.scored - s.unrankable;
+  console.log(`  RANKABLE (P6 comparator — true label ∈ train, n=${rankable}/${s.scored}; ${s.unrankable} cold-start misses excluded):  top-1: ${pct(s.hit1, rankable)}   top-3: ${pct(s.hit3, rankable)}   top-5: ${pct(s.hit5, rankable)}`);
   // Per-year
   const years = [...s.perYear.keys()].sort();
   for (const y of years) {

@@ -42,8 +42,8 @@ falsifiable, none already-failed), with the P5/P6 caveats in the refresh note be
 | P2 | Precedence (formal) | ≥60% of (op, dated statute/strategy/treaty doctrine) pairs will postdate the document's publication | **72%** ~~71–76%~~ |
 | P3 | Doctrine→actor information | null-corrected MI(actor; doctrine) on the pooled corpus+cohort will remain ≥1.0 bits, and the cohort-only point estimate will exceed its own permutation null | **1.67 bits** ~~1.76~~ |
 | P4 | KP financial fingerprint | financial-theft/extortion terminal outcome share of KP cohort ops ≥30%, and KP will remain the only state >25% | **50%** ~~44%~~ (KP the only state >25%: cn 2% / ru 2% / ir 8%) |
-| P5 | Doctrine pivot persistence | the post-pivot dominant doctrine identified for cn (nat-intel-law-2017) and ir (cyber-deniable-retaliation) will remain that state's most-linked doctrine in the cohort | cn ✓ nat-intel-law; **ir borderline** (see note) |
-| P6 | Engine cold-start | the frozen v1.0 engine (no retraining), scored on cohort ops whose true actor existed pre-freeze, will achieve top-5 ≥ 55% (null=miss within the rankable definition stated here: actor existed pre-freeze) | LOO top-5 **64.7** ~~75.1~~; temporal-holdout top-5 **40.8% all-test / 58.8% 1yr-cohort** ~~~56~~ (see note) |
+| P5 | Doctrine pivot persistence | the post-pivot dominant doctrine identified for **cn (nat-intel-law-2017)** will remain cn's most-linked attacker-rationale doctrine in the cohort *(Iran dropped 2026-07-11 — no single dominant doctrine; reported exploratory, see note)* | cn ✓ (43 links vs MCF 38) |
+| P6 | Engine cold-start | the frozen v1.0 engine (no retraining), scored on cohort ops whose true actor existed pre-freeze, will achieve top-5 ≥ 55% (null=miss within the rankable definition stated here: actor existed pre-freeze) | temporal-holdout **RANKABLE top-5 = 56.2%** (n=130; the exact P6 comparator — clears 55% but tight); LOO top-5 **64.7** ~~75.1~~; 40.8% all-test incl. cold-starts ~~~56~~ (see note) |
 
 ## Analysis plan (locked with the predictions)
 
@@ -77,23 +77,29 @@ candidate call before freeze:
   despite the full re-audit (robustness, not luck): P1 81→76%, P3 1.76→1.67 bits, P2/P4 stable.
   The one directional move — P1 attested-legibility fell further (14→9%, tracked in FINDINGS
   F1) — is the expected consequence of holding analyst-named goals to the cited source.
-- **P5 (Iran) is borderline and needs a candidate call.** On the refreshed corpus, Iran's
-  *late-half* leading doctrine in the pivot analysis is now **forward-defense (27 links)**,
-  essentially tied with **cyber-deniable-retaliation (28)** — which remains ir's *overall*
-  most-linked doctrine. So the P5 identification ("ir post-pivot dominant = cyber-deniable-
-  retaliation") is no longer clean. **Decide before freeze:** keep the deniable-retaliation
-  identification (defensible on the overall count), switch to forward-defense, or drop ir from
-  P5 and keep only the robust cn (nat-intel-law-2017) leg. (cn is unchanged and clean.)
-- **P6 needs the rankable-filter figure, and the LOO baseline dropped.** Attribution LOO top-5
-  fell **75.1 → 64.7** — plausibly a *good* sign: the census removed over-attributed / fabricated
-  events the engine had partly learned from, so this is closer to a de-circularized number. The
-  temporal-holdout top-5 is **40.8% over all test events**, but that denominator includes
-  test-set actors that did not exist at train time (unrankable-by-construction misses) — the P6
-  prediction is explicitly scored on the *rankable* subset (true actor existed pre-freeze). The
-  1-year-ahead 2024 cohort (**58.8%**) is the closest in-sample analog and clears the 55%
-  threshold; the exact rankable figure requires the `--rankable`/train-actor filter named in the
-  locked P6 analysis plan, to be run at freeze. **The 40.8% all-test number is NOT the P6
-  comparator — do not read it as a P6 failure.**
+- **P5 — Iran DROPPED from the confirmatory prediction (2026-07-11 candidate decision); P5 is now
+  a clean single-state (cn) claim.** The refresh revealed Iran has **no single post-pivot dominant
+  doctrine** — the top of its list is a near-tie among four active doctrines, each led by a
+  different metric: cyber-deniable-retaliation (28 links, #1 by total), forward-defense (27, #1 by
+  late-half pivot), resistance-axis (23 but **highest recency, 39%**), asymmetric-warfare (24). A
+  1-link lead that the pivot analysis itself contradicts is not a well-founded basis for a
+  persistence *prediction*, so Iran is **reported as an exploratory finding — its operative doctrine
+  is genuinely multipolar** (it runs deniable-retaliation, forward-defense, and resistance-axis in
+  parallel), which is itself a substantive result the census clarified. cn is unchanged and clean
+  (nat-intel-law-2017, 43 links, clearly ahead of MCF's 38, and the pivot target). P5's power is
+  concentrated on the state where the single-dominant-doctrine claim actually holds.
+- **P6 — the exact rankable comparator is now computed: 56.2%, clears 55% but tight.** Two things
+  moved. (1) The attribution LOO top-5 fell **75.1 → 64.7** — plausibly a *good* sign: the census
+  removed over-attributed / fabricated events the engine had partly learned from, so this is a more
+  de-circularized number; report the drop as a virtue, not a regression. (2) The temporal-holdout
+  **rankable** top-5 (true actor ∈ training set — P6's literal definition, `eval-temporal` now
+  prints it directly, a tooling gap this refresh closed) is **56.2%** (n=130 of 179 test events;
+  49 cold-start new-actor events correctly excluded — they are miss-by-construction, not P6-scored).
+  That is **1.2 points above the 55% threshold** — falsifiable-and-not-already-failed, but a genuine
+  test rather than a lock. The all-test 40.8% is NOT the P6 comparator (it counts the 49 cold-starts
+  as misses). Threshold **left unchanged** (moving it after seeing the data would be goalpost-
+  shifting); the ~8-pt LOO→temporal-rankable gap (64.7→56.2) is the honest temporal-drift cost.
+  Companion engines' rankable top-5: doctrine 74.8%, pillar 61.3%, joint 59.3%.
 
 *(Engine-review items still open and NOT addressed by this refresh — candidate's methodological
 calls, see [[auspex-engine-review-2026-07]]: doctrine→actor circularity baseline; campaign-block
