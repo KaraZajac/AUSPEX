@@ -472,9 +472,9 @@ import Base from '../layouts/Base.astro';
       cold-start counted as miss) is the prospective figure. Prose summaries are
       analyst-written by someone who knew the attribution: literal actor names and
       doctrine-identifying tokens are scrubbed from the prose features, but framing vocabulary
-      remains analyst-mediated — the fully prose-ablated bound (~52% attribution) is the
-      conservative floor. Bootstrap CIs treat events as i.i.d.; events cluster by campaign and
-      actor, so true intervals are somewhat wider (estimated design effect ≈ 2 → ~√2).
+      remains analyst-mediated — the fully prose-ablated bound (a few points below the deployed
+      headline) is the conservative floor. Bootstrap CIs treat events as i.i.d.; events cluster by
+      campaign and actor, so true intervals are somewhat wider (estimated design effect ≈ 2 → ~√2).
     </p>
     <p>
       Four prediction engines run over the atlas with backtests
@@ -550,29 +550,32 @@ import Base from '../layouts/Base.astro';
       exhibits) re-ranked by an L2 logistic stacker over discriminative
       meta-features (named-operator and target-org overlap, malware-lineage hit,
       campaign match, active-window). Operations-only top-1 is
-      <strong>65.1%</strong> (ComplementNB base 55.8%&nbsp;→ +9.3&nbsp;pp from the
-      re-ranker; 5-fold CV) on the 815-event corpus. The native scorer is validated
+      <strong>50.8%</strong> (ComplementNB base 44.2%&nbsp;→ +6.6&nbsp;pp from the
+      re-ranker; 5-fold CV) on the 785-event corpus. The native scorer is validated
       against scikit-learn to the decimal, and the deployed model runs in
       <a href="/predict">/predict</a>, verified byte-identical browser-vs-server.
-      The joint (actor&nbsp;×&nbsp;doctrine) actor side also uses ComplementNB
-      (actorWeight&nbsp;2.0, top-1 <strong>46.7%</strong>); doctrine and pillar
-      remain the multi-hot Naive-Bayes engine.
+      The joint (actor&nbsp;×&nbsp;doctrine) engine also uses ComplementNB on the
+      actor side (actorWeight&nbsp;2.0); joint-pair top-1 is <strong>38.0%</strong>
+      (leave-one-out); doctrine and pillar remain the multi-hot Naive-Bayes engine.
     </p>
     <p>
-      The corpus was deliberately grown from 658 to 815 events (159&nbsp;→&nbsp;204
-      actors) to widen coverage, so the headline now reflects a <em>harder,
-      longer-tailed</em> label space. A corpus-growth experiment decomposes the
-      trade-off and finds the previous 74.5% (658-event corpus) is preserved exactly
-      on the original events — the drop is composition, not regression. Lifting the
-      tail back up takes three levers (event <em>depth</em> per actor above the
-      cross-validation threshold, source-grounded <em>feature richness</em>, and
-      <em>discriminability</em> from same-niche neighbors); raw event count moves
-      none of them. Doctrine (72.9&nbsp;→&nbsp;69.2), pillar (63.8&nbsp;→&nbsp;61.4), and
-      joint (53.9&nbsp;→&nbsp;46.7) fell once the backfilled operations were
-      <em>doctrine-tagged</em> and entered those eval label sets — the same composition
-      effect, since the added events are harder (thin actors, long-tail doctrines).
-      Doctrine coverage is now 84% of operations (the remaining ~16% are
-      criminal/stateless operations that have no strategic doctrine).
+      The corpus was first grown from 658 to 815 events to widen coverage — a
+      <em>harder, longer-tailed</em> label space — and then the completed
+      <strong>100% verification census</strong> removed fabricated and duplicate
+      events, cleaning it to 785. Both moves lowered the headline, and both are
+      integrity / composition effects rather than model regressions: growth added a
+      thin long tail, and the census performed a <em>de-circularization</em> —
+      removing the over-attributed and fabricated events the engines had partly
+      memorized. (A corpus-growth experiment on the pre-census corpus confirmed the
+      original-events accuracy was preserved exactly under expansion; the drops are
+      composition, not model change.) Lifting the tail takes three levers — event
+      <em>depth</em> per actor above the cross-validation threshold, source-grounded
+      <em>feature richness</em>, and <em>discriminability</em> from same-niche
+      neighbors; raw event count moves none. Doctrine (now <strong>62.8%</strong>),
+      pillar (<strong>57.6%</strong>), and joint (<strong>38.0%</strong>) reflect the
+      same harder, cleaner label space. Doctrine coverage is 76% of operations; the
+      remaining ~24% are criminal / stateless operations with no strategic doctrine,
+      plus a residual untagged tail.
     </p>
     <p>
       The attribution engine includes an editorial
@@ -612,17 +615,17 @@ import Base from '../layouts/Base.astro';
       and attribution notices, policy / law-enforcement actions). The
       prediction engines exist to infer the strategic frame and actor of
       <em>operations</em>; predicting the doctrine of a doctrine-publication
-      is a different — and largely circular — task. So the ~85 pure-meta
+      is a different — and largely circular — task. So the 137 pure-meta
       events (every <code>incident_type</code> a meta type) are
       <strong>excluded from the eval label sets</strong> but kept in the
       <strong>training</strong> corpus (a doctrine publication is the
       doctrine's defining text) and in the atlas (timeline, provenance,
       narrative). An event with any operational <code>incident_type</code>
       counts as an operation even if it is also documented. Excluding meta
-      events <em>raises</em> the headline (doctrine top-1
-      68.1%&nbsp;→&nbsp;69.2%) — they are off-task for an operation-trained
-      engine, not easy wins — so we publish both the operations-only and
-      all-events numbers.
+      events <em>raises</em> the doctrine headline slightly — they are
+      off-task for an operation-trained engine, not easy wins — so we
+      publish both the operations-only and all-events numbers on the
+      research page.
     </p>
   </section>
 
