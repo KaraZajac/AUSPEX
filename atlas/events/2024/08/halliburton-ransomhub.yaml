@@ -1,7 +1,7 @@
 id: 2024-08/halliburton-ransomhub
 name: RansomHub ransomware against Halliburton
 start_date: 2024-08-21
-disclosure_date: 2024-08-22
+disclosure_date: 2024-08-23
 end_date: 2024-09-30
 incident_type:
   - ransomware
@@ -9,55 +9,86 @@ incident_type:
   - disruption
 initial_vector: unknown
 outcome_summary: |
-  RansomHub affiliate intrusion of Halliburton Co. — one of the
-  largest US oilfield-services providers. Halliburton disclosed
-  the incident in an 8-K filing Aug 22 2024, reporting limitations
-  to internal systems and customer-billing operations. RansomHub
-  claimed responsibility on its leak site Sep 2 with stolen data
-  posted. Halliburton disclosed USD ~35M of impact in subsequent
-  Q3 2024 10-Q filing.
+  RansomHub-linked intrusion of Halliburton Co. — one of the
+  largest US oilfield-services providers. Halliburton became aware
+  on Aug 21 2024 that "an unauthorized third party gained access to
+  certain of its systems," disclosing the incident in an initial
+  Item 8.01 Form 8-K filed Aug 23 2024 (it proactively took certain
+  systems offline and notified law enforcement). A Sep 3 2024 Item
+  1.05 8-K confirmed the third party "accessed and exfiltrated
+  information," causing "disruptions and limitation of access to
+  portions of the Company's business applications supporting aspects
+  of the Company's operations and corporate functions." The
+  RansomHub attribution rests on a private ransom note seen by
+  TechCrunch (Sep 3) claiming credit; as of that report RansomHub
+  had NOT listed Halliburton on its dark-web leak site and no stolen
+  data had been published. Halliburton's Q3 2024 10-Q (filed Nov 7)
+  disclosed USD 35M of Q3 cyber-incident response/remediation
+  expenses and stated the incident "has not had, and is not
+  reasonably likely to have, a material impact."
 quantified_impact:
   disclosed_impact_usd: 35000000
 false_flag_risk: none
 summary: |
-  Notable for hitting energy-services CII directly. RansomHub
-  emerged in early 2024 as a Russian-tolerated successor to ALPHV;
-  the Halliburton incident is the canonical RansomHub US-CII case
-  before the brand's own abrupt disappearance in April 2025. CISA
-  AA24-242A documents the affiliate tradecraft typical of the
-  cluster: initial access via phishing or n-day exploitation of
-  Citrix NetScaler, Fortinet FortiOS, FortiClient, F5 BIG-IP, and
-  Confluence vulnerabilities; web shells on internet-facing
-  servers; Cobalt Strike beacons; valid-credentials lateral
-  movement; Mimikatz credential dumping; abuse of legitimate
-  remote-management tools (AnyDesk, Atera, Splashtop); data
-  exfiltration via rclone and MEGA; and a Curve25519 / ChaCha20-
-  based encryptor descended from the ALPHV / BlackCat code lineage.
+  Notable for hitting energy-services critical infrastructure
+  directly. RansomHub is a ransomware-as-a-service operation CISA
+  AA24-242A describes as "formerly known as Cyclops and Knight,"
+  which by 2024 had drawn "high-profile affiliates from other
+  prominent variants such as LockBit and ALPHV" after the Feb 2024
+  ALPHV exit-scam. That advisory does NOT name Halliburton (0
+  mentions) and is retained here only as background for the
+  cluster's typical affiliate tradecraft: initial access via
+  phishing emails and n-day exploitation of internet-facing systems
+  (CVEs in Citrix NetScaler, Fortinet FortiOS/FortiClientEMS, Apache
+  ActiveMQ, Atlassian Confluence, and F5 BIG-IP); Cobalt Strike;
+  account creation/re-enablement plus Mimikatz credential dumping
+  for lateral movement; abuse of legitimate remote-management tools
+  (AnyDesk, Atera); and data exfiltration via rclone and MEGA. The
+  RansomHub encryptor derives from the Knight/Cyclops code lineage —
+  NOT ALPHV/BlackCat; the ALPHV tie is affiliate migration, not
+  shared code (corroborated by the AUSPEX actor record).
 attributions:
   - actor_id: criminal/ransomhub
-    attributing_org: Halliburton + RansomHub (self-claimed)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2024-09-02
-    attribution_source_id: sec/2024-08-22_halliburton-8k
+    attributing_org: RansomHub (self-claimed via private ransom note; reported by TechCrunch)
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_level: named-actor
+    attribution_date: 2024-09-03
+    attribution_source_id: techcrunch/2024-09-03_halliburton-confirms-data-stolen
+    # 2026-07-11 audit: Halliburton NEVER named RansomHub (all its SEC filings say only
+    # "unauthorized third party" — 0 RansomHub mentions). The RansomHub attribution is a
+    # self-claim via a PRIVATE ransom note seen by TechCrunch, uncorroborated by any
+    # leak-site listing (RansomHub "has not yet listed Halliburton") — hence medium /
+    # concur-with-caveat. attribution_source_id repointed off the (phantom, non-naming) 8-K.
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
+    perspective: attacker-rationale
     pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
     program_id: null
     confidence: plausible
     reasoning: |
-      RansomHub absorbed displaced ALPHV affiliates after the
-      Feb 2024 exit-scam; operationally and personnel-wise
-      contiguous with the Russian-tolerated ransomware ecosystem
-      despite multi-jurisdiction affiliate composition.
+      Ecosystem-contiguity inference only. RansomHub absorbed
+      displaced ALPHV/LockBit affiliates after the Feb 2024 exit
+      scam, situating it in the same broad RaaS milieu as its
+      Russia-nexus predecessors. No cited source — and not the
+      AUSPEX actor record — establishes a specific Russian state
+      nexus or sanctions-response tasking; RansomHub's operator and
+      affiliate national composition is mixed. Held at plausible.
+    inference_basis:
+      signals:
+        - "CISA AA24-242A: RansomHub attracted 'high-profile affiliates from other prominent variants such as LockBit and ALPHV' — predecessors long associated with the CIS/Russia-tolerated RaaS ecosystem."
+        - "RansomHub's encryptor derives from the Knight/Cyclops lineage, part of the same criminal-tooling milieu."
+      alternatives:
+        - "Financially-motivated, multi-jurisdiction RaaS with no state direction: the AUSPEX actor record files RansomHub under criminal/ (not ru/proxies/) precisely because 'no specific state-nexus is publicly established' and national composition is mixed; CISA frames it as an efficient RaaS profit model, not a state proxy."
+      ruled_out: "Not attested — no cited source states a sanctions-response or Russian-state terminal goal; this is an AUSPEX ecosystem-contiguity inference, not a source-asserted link."
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/halliburton
     role: primary
 sources:
-  - sec/2024-08-22_halliburton-8k
-  - cisa/2024-08-29_aa24-242a-ransomhub-advisory
+  - sec/2024-08-23_halliburton-8k-cyber-incident  # 2026-07-11 badrabbit re-source off phantom shell sec/2024-08-22_halliburton-8k (initial Item 8.01 8-K, direct filing URL + snapshot)
+  - cisa/2024-08-29_aa24-242a-ransomhub-advisory  # BACKGROUND ONLY — general RansomHub TTP advisory, 0 Halliburton mentions
   - sec/2024-09-03_halliburton-8k-material-cyber-incident  # merged 2026-07-05 from 2024-09/halliburton-followup
   - sec/2024-11-07_halliburton-10q-q3-2024  # merged 2026-07-05 (carries the ~$35M response-expense figure)
   - techcrunch/2024-09-03_halliburton-confirms-data-stolen  # merged 2026-07-05 (RansomHub ransom-note self-claim)
@@ -71,3 +102,88 @@ notes: |
   unsupported (absence of a listing was read as possible negotiation). The parent's attribution
   also cites sec/2024-08-22_halliburton-8k as if it names RansomHub (it does not — only an
   "unauthorized third party"). Parent remains UNSTAMPED, queued for census with these flags.
+  2026-07-11 (census audit, claude-opus-4.8/max): ALL of the above flags RESOLVED against
+  raw snapshots. Stripped the fabricated "leak site Sep 2 / stolen data posted / refused to
+  pay" premise (TechCrunch: RansomHub "has not yet listed Halliburton"; "refus" 0 hits) and
+  the unsupported "customer-billing operations" ("billing" 0 hits across all cited sources).
+  Repointed the RansomHub attribution off the non-naming 8-K to TechCrunch, downgraded to
+  medium/concur-with-caveat. Corrected the encryptor lineage (Knight/Cyclops, not ALPHV/
+  BlackCat) and stripped unsourced Curve25519/ChaCha20, web-shells, Splashtop, "Russian-
+  tolerated," and the "April-2025 disappearance" claim. Badrabbit re-source of the phantom
+  shell 8-K citation. See qc block for the per-point audit.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs raw snapshots (5 cited sources, all curl HTTP 200 + sha256):
+    sec/2024-08-23_halliburton-8k-cyber-incident (dd87de01…, 28,006 B), sec/2024-09-03_
+    halliburton-8k-material-cyber-incident (2d2c834a…, 30,022 B), sec/2024-11-07_halliburton-
+    10q-q3-2024 (c8f12480…, 982,338 B), techcrunch/2024-09-03_halliburton-confirms-data-stolen
+    (68ed214e…, 234,362 B), cisa/2024-08-29_aa24-242a-ransomhub-advisory (cde72d5a…, 124,716 B).
+    [a] FACTS — 3 fabrications/embellishments STRIPPED. (1) "RansomHub claimed responsibility
+    on its leak site Sep 2 with stolen data posted" — FALSE. TechCrunch verbatim: "TechCrunch
+    has seen a copy of a ransom note ... The note says a ransomware gang known as RansomHub is
+    taking credit," and "RansomHub's dark web leak site ... has not yet listed Halliburton as
+    one of its victims." Self-claim was a PRIVATE ransom note, not a leak-site posting; NO data
+    published; "refused to pay" unsupported ("refus" 0 hits — TechCrunch instead notes gangs
+    publish "when negotiations fall through"). (2) "customer-billing operations" — unsupported;
+    "billing" 0 hits across every cited source (the 10-Q's 2 "invoice" hits are generic
+    receivables boilerplate). Replaced with the sourced language "business applications
+    supporting aspects of the Company's operations and corporate functions" (Sept-3 8-K + 10-Q
+    verbatim). (3) Summary TTPs: STRIPPED "Curve25519 / ChaCha20-based encryptor descended from
+    the ALPHV / BlackCat code lineage" — CISA has 0 hits for Curve25519/ChaCha20/BlackCat and
+    states RansomHub is "formerly known as Cyclops and Knight"; the lineage is Knight/Cyclops,
+    ALPHV is affiliate migration only ("attracting high-profile affiliates from other prominent
+    variants such as LockBit and ALPHV"). Corrected accordingly (aligns with the AUSPEX actor
+    record: "Code-base overlap with Knight ransomware (formerly Cyclops)"). Also stripped "web
+    shells on internet-facing servers" ("web shell"/"webshell" 0 hits) and "Splashtop"
+    (0 hits); kept AnyDesk (4) + Atera (11); added Apache ActiveMQ (in CISA CVE list); fixed
+    lateral-movement to CISA's actual "created user accounts ... reenabled disabled accounts ...
+    used Mimikatz." Stripped "before the brand's own abrupt disappearance in April 2025" — no
+    cited source carries it (all predate April 2025). $35M VERIFIED as Q3 response expense, not
+    a ransom/loss: 10-Q "we incurred $35 million in expenses during the three months ended
+    September 30, 2024 related to ... external advisors ... restore our systems ... legal fees,
+    payroll related costs, and other expenses"; impairments table "Cybersecurity incident 35 35."
+    No cited source states a $35M (or any) ransom DEMAND ("$35" 0 hits in TechCrunch). SEC
+    "no material impact" language VERIFIED verbatim in both the Sept-3 8-K and the 10-Q: "has
+    not had, and is not reasonably likely to have, a material impact on the Company's financial
+    condition or results of operations."
+    [b] ATTRIBUTION — corrected. Halliburton NEVER named RansomHub: "RansomHub" 0 hits in all
+    three SEC filings (only "unauthorized third party"), 5 hits in TechCrunch. attributing_org
+    changed from "Halliburton + RansomHub" to "RansomHub (self-claimed via private ransom note;
+    reported by TechCrunch)"; confidence downgraded high→medium; auspex_assessment concur→
+    concur-with-caveat (single-source ransom-note self-claim, uncorroborated by any leak-site
+    listing). attribution_source_id repointed sec/2024-08-22_halliburton-8k → techcrunch/2024-
+    09-03_halliburton-confirms-data-stolen.
+    [c] DATES — disclosure_date 2024-08-22 → 2024-08-23. Authoritative EDGAR filing date of the
+    initial Item 8.01 8-K (accession …049), confirmed by the 10-Q: "our Form 8-Ks filed ... on
+    August 23, 2024, and September 3, 2024" (Aug 22 was only the signature-block date). start_date
+    2024-08-21 kept = awareness date ("On August 21, 2024 ... became aware"); true intrusion onset
+    unknown (initial_vector: unknown). end_date 2024-09-30 kept as a proxy = Q3 quarter-end through
+    which response expenses were recognized (not a documented incident-close). attribution_date
+    2024-09-02 → 2024-09-03 (TechCrunch report; the "Sep 2" was tied to the fabricated leak-site
+    claim). Source published_on dates verified against filing/byline metadata.
+    [d] DOCTRINE — ru/sanctions-response-2022 / criminal-proxy-mobilization kept at confidence:
+    plausible (correctly NOT attested — no cited source states a sanctions-response/Russian-state
+    terminal goal; CISA's only "Russia" hit is an unrelated sidebar link). Added perspective:
+    attacker-rationale (Russian host-nation attacker-side doctrine on a criminal-proxy attack) and
+    a structured inference_basis {signals[], alternatives[], ruled_out}. NB the AUSPEX actor record
+    itself says "no specific state-nexus is publicly established" — the link is an ecosystem-
+    contiguity inference only; FLAG for orchestrator review of whether to retain.
+    [e] ATTRIBUTION_LEVEL — added named-actor (RansomHub is a named RaaS brand; source names the
+    actor via ransom note, not a nation/unit).
+    [f] ACTOR_ID — criminal/ransomhub resolves (atlas/actors/criminal/ransomhub.yaml). Correct;
+    unchanged.
+    SNAPSHOT/re-source — the cited sec/2024-08-22_halliburton-8k had a phantom browse-edgar
+    catalogue-shell URL (verified HTTP 200 returning "Company Search Results") and no snapshot;
+    the underlying filing is real, so badrabbit re-source: created sec/2024-08-23_halliburton-8k-
+    cyber-incident (direct filing URL https://www.sec.gov/Archives/edgar/data/45012/
+    000004501224000049/hal-20240821.htm, snapshot + sha256 dd87de01…, fresh curl byte-identical to
+    on-disk). Old shell record annotated RETIRE candidate (orphaned, cited nowhere else) — orchestrator
+    to retire + propagate FK. Other 4 sources already snapshotted; all 4 hashes re-verified unchanged.
+    ORCHESTRATOR FLAGS: (1) RETIRE sec/2024-08-22_halliburton-8k (phantom shell, now orphaned).
+    (2) Doctrine link ru/sanctions-response-2022 is an AUSPEX ecosystem-contiguity inference with
+    zero source support and conflicts with the actor record's "no specific state-nexus" — review
+    for retention/removal.

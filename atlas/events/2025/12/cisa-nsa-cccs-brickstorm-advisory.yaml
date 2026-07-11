@@ -6,19 +6,33 @@ end_date: null
 incident_type:
   - intrusion
   - data-theft
-  - supply-chain
-initial_vector: 0-day
+# supply-chain REMOVED (audit 2026-07-11): none of the 3 cited sources frames this
+# advisory's documented activity as supply-chain — it reports a single-victim IR
+# (persistence + credential/ADFS-key theft) and explicitly states initial access was
+# undetermined. The supply-chain CAMPAIGN identity belongs to the sibling event
+# 2025-09/mandiant-brickstorm-saas-legal (Mandiant's SaaS/downstream framing).
+initial_vector: unknown  # CISA advisory: "Incident data does not indicate how they obtained initial access" — no cited source establishes a 0-day for this event's victim
 outcome_summary: |
   CISA, NSA, and the Canadian Centre for Cyber Security
-  published Malware Analysis Report AR25-338A on the
-  BRICKSTORM Go/Rust backdoor used by PRC state-sponsored
-  actors (Mandiant clusters UNC3886 and UNC5221) for stealthy
-  long-term persistence on VMware vSphere and Linux/Windows
-  appliances. At one CISA-engaged victim, BRICKSTORM was
-  uploaded to an internal VMware vCenter server in April 2024
-  and maintained persistence until at least 3 September 2025.
-  A 19 December 2025 update added Rust-based variants and
-  expanded IOCs.
+  published Malware Analysis Report AR25-338A on the BRICKSTORM
+  Go/Rust backdoor, which they assess "PRC state-sponsored cyber
+  actors" use for stealthy long-term persistence on VMware
+  vSphere (vCenter, ESXi, Aria Automation Orchestrator) and
+  Windows environments. Victim organizations are primarily in
+  the Government Services and Facilities and Information
+  Technology sectors. At the one victim where CISA ran an
+  incident response, the actors gained persistent network access
+  in April 2024, uploaded BRICKSTORM to an internal VMware
+  vCenter server, reached two domain controllers and an ADFS
+  server, and exported ADFS cryptographic keys; access ran from
+  at least April 2024 through at least 3 September 2025. The
+  report analyzes 12 BRICKSTORM samples; a 19 December 2025
+  update added Rust-based variants and IOCs, and an 11 February
+  2026 update added a further variant. The advisory attributes
+  only to "PRC state-sponsored cyber actors" — it names no
+  Mandiant cluster in prose (UNC5221 appears solely as a Sigma
+  detection-rule tag; UNC3886 is absent) — and references Google
+  Mandiant's BRICKSTORM reporting for detection resources.
 false_flag_risk: none
 summary: |
   Government formalization of the BRICKSTORM exposure that
@@ -26,28 +40,55 @@ summary: |
   coordination (Canadian CCCS) and a malware-analysis-report
   format that publishes IOCs for defender ingestion. The
   joint advisory cements BRICKSTORM as the canonical 2025-26
-  PRC supply-chain implant for hypervisor/appliance layers.
+  PRC hypervisor/appliance-layer espionage implant.
 attributions:
   - actor_id: cn/unscoped/warp-panda  # consolidated 2026-07-05 (Kara): VerdantBamboo==WARP-PANDA==UNC5221 per Volexity 2026-06
     attributing_org: CISA + NSA + Canadian CCCS
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-12-04
     attribution_source_id: cisa/2025-12-04_brickstorm-mar-ar25-338a
     notes: |
-      Advisory attributes to "PRC state-sponsored cyber actors"
-      and references Mandiant clusters UNC3886 and UNC5221;
-      neither cluster is yet modeled as a named AUSPEX actor.
+      The joint advisory attributes only to "People's Republic of
+      China (PRC) state-sponsored cyber actors" (NSA's press release
+      says "China state-sponsored cyber actors") — a NATION, with NO
+      Mandiant cluster named in the advisory's prose and no Chinese
+      service (MSS/PLA/unit) named; hence attribution_level: nation
+      and attributing_org_confidence: high (unhedged CISA/NSA/CCCS
+      assessment). CORRECTION (audit 2026-07-11): the prior note
+      claimed the advisory "references Mandiant clusters UNC3886 and
+      UNC5221" — FALSE against the raw. UNC3886 does not appear at
+      all; UNC5221 appears once, only as a Sigma detection-rule tag
+      ("attack.unc5221"), not as an attribution; the advisory cites
+      Google Mandiant's BRICKSTORM report solely under "Additional
+      Detection Resources." actor_id cn/unscoped/warp-panda is
+      retained per Kara's 2026-07-05 corpus consolidation (WARP PANDA
+      == UNC5221 == VerdantBamboo, Volexity 2026-06) — an AUSPEX
+      cluster overlay, NOT this advisory's own claim; concur-with-
+      caveat marks that gap (concur PRC-state-sponsored; caveat that
+      the cluster resolution is corpus-level, not advisory prose).
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Hypervisor / appliance-layer persistence in software-supply-
-      chain victims fits the contractor-driven MSS supply-chain
-      collection pattern.
+      BRICKSTORM's signature tradecraft — long-dwell persistence on
+      VMware vSphere/appliance layers that lack EDR, at Information-
+      Technology-sector victims — is the vendor/downstream-access
+      collection pattern AUSPEX maps to this pillar across the
+      BRICKSTORM/UNC5221 events. strongly_inferred, NOT attested:
+      the malware-analysis report states no strategic purpose and
+      names no service (no MSS), so the vendor-leverage reading is
+      an AUSPEX cross-corpus inference, not the advisory's claim.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Attribution: CISA/NSA/CCCS assess 'PRC state-sponsored cyber actors' — a state-espionage cluster with no financial motive."
+        - "Tradecraft: long-dwell persistence on VMware vCenter/ESXi and appliance layers that do not support EDR, plus cloned-VM-snapshot credential theft and ADFS-key export, is the leveraged-access footprint of this cluster."
+        - "Pattern: the same BRICKSTORM/UNC5221 (WARP PANDA / VerdantBamboo) footprint that Mandiant (2025-09) and Volexity (2026-06) document reaching SaaS/MSP downstream customers, all mapped to this pillar in AUSPEX."
+      ruled_out: "The advisory itself documents only a single-victim intrusion and does not use supply-chain/vendor-leverage framing; the reading rests on the cross-corpus BRICKSTORM campaign identity, not on this report — hence strongly_inferred, not attested."
     contested: false
     analyst: claude
   - doctrine_id: cn/intelligentized-warfare
@@ -55,18 +96,119 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Long-dwell appliance persistence in critical-infrastructure
-      adjacent environments has dual-use pre-positioning
-      potential beyond pure espionage.
+      Long-dwell, EDR-blind persistence on hypervisor/appliance
+      layers has latent pre-positioning value beyond collection,
+      but the advisory documents espionage indicators (credential
+      and ADFS-key theft) at Government-Services and IT-sector
+      victims, not OT/critical-infrastructure disruption — so this
+      stays a plausible dual-use reading, not the primary one.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Tradecraft: persistent, forensics-evading footholds on vCenter/ESXi and appliance layers are the same access primitives a pre-positioning mission would require."
+      alternatives:
+        - "Espionage-only (the primary reading): every documented action — VM-snapshot/credential theft, ADFS cryptographic-key export, long-term persistence — is collection, with no observed disruptive or OT-facing tooling."
+        - "Pre-positioning (this link): those footholds are dual-use, but no cited source asserts disruptive intent, so the label stays plausible."
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/ict/software
+  # Advisory: victims "primarily in the Government Services and Facilities and
+  # Information Technology Sectors"; The Record: "government and information
+  # technology sectors". Corrected 2026-07-11 from ict/software + critical-
+  # infrastructure to match the advisory's named sectors.
+  - target_id: sectors/government
     role: primary
-  - target_id: sectors/critical-infrastructure
+  - target_id: sectors/ict
     role: primary
 sources:
   - cisa/2025-12-04_brickstorm-mar-ar25-338a
   - nsa/2025-12-04_brickstorm-malware-analysis
   - therecord/2025-12-04_cisa-nsa-brickstorm
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit vs the three cited sources, all now curl+Wayback
+    snapshotted into atlas/sources/raw/. level=partial: the NSA press release
+    (a load-bearing-free announcement) is Akamai bot-walled (HTTP 403) and its
+    short permalink is absent from Wayback — recovered only via the Internet
+    Archive full-slug capture; every load-bearing claim is otherwise carried by
+    the snapshotted CISA MAR (primary) + The Record (secondary). NOT a phantom;
+    NOT a duplicate of the sibling 2025-09/mandiant-brickstorm-saas-legal (that
+    is Mandiant's Sep-2025 vendor disclosure of the supply-chain campaign; THIS
+    is the Dec-2025 government MAR/IOC formalization — different authors, date,
+    document; kept DISTINCT per instruction).
+    SNAPSHOTS: cisa/AR25-338A raw HTTP 200, 159,218 bytes, sha256
+    78397d36ef3960ea1498170d74ed9f1288a928b68d094304be925a5d283ae514;
+    nsa Wayback id_ 2025-12-04, 92,978 bytes, sha256
+    e79401d3eb2dae32104ccc2e64653ac0cb68c9fdd50c52a6fa72d582a306e274;
+    therecord raw HTTP 200, 87,597 bytes, sha256
+    32d5993e87c9529e535720199ac32e4d3cb6a6e4977defb2f935d8abb9f88b5a.
+    [a] FACTS — FABRICATION STRIPPED: outcome_summary + attribution notes + the
+    CISA source record all claimed the advisory names "Mandiant clusters UNC3886
+    and UNC5221." FALSE vs raw: UNC3886 = 0 hits in ALL THREE sources; UNC5221 =
+    0 hits in NSA/The Record and 1 hit in the CISA MAR, occurring ONLY as a Sigma
+    detection-rule tag ("tags: - attack.brickstorm - attack.unc5221"), never as
+    an attribution. The advisory attributes to "PRC state-sponsored cyber actors"
+    and cites Google Mandiant's BRICKSTORM report only under "Additional Detection
+    Resources." Removed the cluster-naming claim everywhere. Other facts VERIFIED
+    verbatim: "Go-or Rust-based backdoor" (8 Go originals, Dec-19-2025 update adds
+    Rust) ✓; "gained long-term persistent access ... in April 2024 and uploaded
+    BRICKSTORM malware to an internal VMware vCenter server" ✓; "two domain
+    controllers and an Active Directory Federation Services (ADFS) server ...
+    exported cryptographic keys" ✓ (added to outcome); "from at least April 2024
+    through at least Sep. 3, 2025" ✓; "analysis of 12 BRICKSTORM samples" ✓;
+    "Government Services and Facilities and Information Technology Sectors" ✓.
+    CORRECTED: "VMware vSphere and Linux/Windows appliances" -> the advisory says
+    "VMware vSphere (specifically VMware vCenter servers, VMware ESXI, and VMware
+    Aria Automation Orchestrator) and Windows environments" (The Record: "VMware
+    vSphere and Windows environments"); "Linux" was not the advisory's framing.
+    ADDED the 11 Feb 2026 update (now in-snapshot; "updated this Malware Analysis
+    Report on Feb. 11, 2026 ... a new variant"). incident_type: removed
+    "supply-chain" (not carried by any of the 3 sources for this advisory's own
+    single-victim IR; belongs to the sibling Mandiant event).
+    [b] ATTRIBUTION: attributing_org CISA + NSA + Canadian CCCS ✓; confidence
+    high ✓ (unhedged assessment: "assess People's Republic of China (PRC)
+    state-sponsored cyber actors are using BRICKSTORM"); assessment concur-with-
+    caveat retained; attribution_date 2025-12-04 ✓; source cisa/AR25-338A ✓.
+    Rewrote notes to correct the false UNC-cluster reference. actor_id
+    cn/unscoped/warp-panda RETAINED per Kara's 2026-07-05 consolidation (memory
+    flag) and resolves (actors/cn/warp-panda.yaml, aliases UNC5221 [equivalent] +
+    VerdantBamboo [equivalent]); documented as an AUSPEX overlay, since the
+    advisory itself asserts only nation-level PRC attribution. NB: UNC3886 is a
+    SEPARATE cluster (cn/unscoped/unc3886), NOT part of warp-panda — a second
+    reason the old "UNC3886 and UNC5221" claim was wrong.
+    [c] DATES: start_date 2024-04-01 ✓ ("in April 2024"/"from at least April
+    2024"); disclosure_date 2025-12-04 ✓ ("Original Publication Dec. 4, 2025";
+    The Record byline "December 4th, 2025"; NSA 2025-12-04); end_date null ✓
+    (Sep-3-2025 is one victim's persistence floor, not campaign end). All three
+    source published_on = 2025-12-04 verified. No date fabrication.
+    [d] DOCTRINE_LINKS: both retained, both attesting_source_id null and NOT
+    attested (correct — a malware-analysis report states no strategic goal).
+    compelled-vendor-cooperation held strongly_inferred but reasoning DE-ASSERTED
+    (removed bare "MSS" claim; no source names a service) and grounded with a new
+    inference_basis{signals[], ruled_out}. intelligentized-warfare/pre-positioning
+    held plausible with inference_basis{signals[], alternatives[]} (espionage-only
+    is the primary reading; pre-positioning is the dual-use alternative). perspective
+    default attacker-rationale (cn doctrine on a cn operation) — no tag needed.
+    [e] ATTRIBUTION_LEVEL: was MISSING -> set nation. The attributing orgs
+    (CISA/NSA/CCCS) name only "PRC/China state-sponsored cyber actors," no named
+    cluster in prose. (Distinct axis from actor_id, which carries AUSPEX's
+    corpus-consolidated warp-panda resolution.)
+    [f] ACTOR_ID: cn/unscoped/warp-panda resolves; kept. initial_vector 0-day ->
+    null: the advisory explicitly states initial access was undetermined
+    ("Incident data does not indicate how they obtained initial access to the web
+    server or when the web shell was implanted") — no cited source establishes a
+    0-day here.
+    FLAGS for orchestrator/Kara: (1) targets[] corrected sectors/ict/software +
+    sectors/critical-infrastructure -> sectors/government + sectors/ict to match
+    the advisory's named sectors (verify no downstream target-rollup breakage).
+    (2) The CISA source record's notes previously carried the same UNC3886/UNC5221
+    fabrication — corrected in-place (edited its own record). (3) attribution_level
+    nation vs actor_id warp-panda (named cluster) is an intentional two-axis split;
+    if the corpus expects level to track the resolved actor, reconcile centrally.
+    (4) The sibling 2025-09/mandiant-brickstorm-saas-legal still carries
+    incident_type supply-chain (correct there); this event's removal is deliberate,
+    not a divergence to auto-heal.

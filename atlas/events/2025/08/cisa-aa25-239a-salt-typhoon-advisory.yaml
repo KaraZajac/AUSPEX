@@ -1,5 +1,5 @@
 id: 2025-08/cisa-aa25-239a-salt-typhoon-advisory
-name: CISA AA25-239a "Countering PRC Salt Typhoon" Five Eyes joint advisory
+name: CISA AA25-239a — 13-government joint advisory countering PRC "Salt Typhoon" telecom/backbone espionage
 start_date: 2025-08-27
 disclosure_date: 2025-08-27
 end_date: 2025-08-27
@@ -8,33 +8,41 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Thirteen-government joint advisory (AA25-239a) consolidating
-  the Salt Typhoon attribution and framing the campaign as a
-  global espionage system. FBI's accompanying statement (Aug 27
-  2025) reported 200+ companies in 80 countries compromised
-  across telecom, government, transportation, lodging, and
-  military networks. The advisory formally adopted the "fed
-  global espionage system" framing for PRC SIGINT mass
-  collection.
+  the attribution of PRC state-sponsored APT activity that
+  "partially overlaps" with the industry-named Salt Typhoon
+  cluster. The advisory's executive summary lists targeting of
+  telecommunications, government, transportation, lodging, and
+  military infrastructure networks. FBI's accompanying statement
+  (Aug 27 2025) put the impact at 200+ companies in 80 countries
+  — that figure is carried only by the FBI statement, whose page
+  body is JS-injected and did not render in the snapshot, so it
+  is mirror-corroborated rather than snapshot-verified. The
+  advisory framed the campaign under the "Feed Global Espionage
+  System" heading — PRC SIGINT mass collection.
 false_flag_risk: none
 campaign_id: salt-typhoon-telecoms
 summary: |
   Companion advisory to the September 2024 WSJ disclosure and
   the January 2025 OFAC designation of Sichuan Juxinhe. The
-  doctrinal contribution is the 13-government coalition
-  framing — peer Five Eyes plus EU partners speaking with one
-  voice on a single PRC cluster — which sets the template for
-  subsequent multi-state cost-imposition operations.
+  doctrinal contribution is the 13-government coalition framing —
+  Five Eyes plus seven European governments (Czechia, Finland,
+  Germany, Italy, Netherlands, Poland, Spain) and Japan speaking
+  with one voice on a single body of PRC state-sponsored APT
+  activity — which sets the template for subsequent multi-state
+  cost-imposition operations.
 attributions:
   - actor_id: cn/mss/salt-typhoon
-    attributing_org: CISA + NSA + FBI + Five Eyes + EU partners (13 govts)
+    attributing_org: 13-government joint advisory (US NSA/CISA/FBI/DC3 + Five Eyes + 7 European states + Japan)
     attributing_org_confidence: high
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2025-08-27
     attribution_source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
   - actor_id: cn/mss/salt-typhoon
     attributing_org: FBI (statement)
     attributing_org_confidence: high
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2025-08-27
     attribution_source_id: fbi/2025-08-27_salt-typhoon-statement
 doctrine_links:
@@ -43,20 +51,39 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      AA25-239a explicitly characterizes Salt Typhoon's targeting
-      as feeding "a global espionage system" — gold-standard
-      attestation of the SIGINT mass-collection doctrine.
+      AA25-239a is titled "...to Feed Global Espionage System" and
+      states that the stolen data "ultimately can provide Chinese
+      intelligence services with the capability to identify and
+      track their targets' communications and movements around the
+      world" — the terminal goal of strategic SIGINT collection.
     attesting_source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
+    inference_basis:
+      source_quote: "The data stolen through this activity against foreign telecommunications and Internet service providers (ISPs), as well as intrusions in the lodging and transportation sectors, ultimately can provide Chinese intelligence services with the capability to identify and track their targets' communications and movements around the world."
+      source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
+    perspective: attacker-rationale
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Advisory attributes through Sichuan Juxinhe Network
-      Technology Co. — the contractor-bureau model again.
-    attesting_source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
+      AA25-239a links the operations to named PRC contractor
+      companies (Sichuan Juxinhe, Beijing Huanyu Tianqiong,
+      Sichuan Zhixin Ruijie) that "provide cyber-related products
+      and services to China's intelligence services" (PLA + MSS) —
+      the contractor-bureau model. But the advisory does NOT invoke
+      the 2017 National Intelligence Law or assert legal COMPULSION
+      (zero occurrences of "National Intelligence Law"/"compel"),
+      so the compelled-cooperation mechanism is inferred from the
+      vendor-to-intelligence-service relationship, not attested.
+      Downgraded from attested 2026-07-11.
+    inference_basis:
+      signals:
+        - "AA25-239a: operations 'linked to multiple China-based entities, including at least Sichuan Juxinhe Network Technology Co. Ltd. ..., Beijing Huanyu Tianqiong ..., and Sichuan Zhixin Ruijie ...'"
+        - "AA25-239a: 'These companies provide cyber-related products and services to China's intelligence services, including multiple units in the People's Liberation Army and Ministry of State Security.'"
+      ruled_out: "The advisory does not cite the 2017 National Intelligence Law or any legal-compulsion mechanism; its commercial 'provide products and services' framing is equally consistent with a paid contractor relationship, so NIL-2017 compulsion is inferred from the surrounding PRC legal framework rather than stated by this source — hence strongly_inferred, not attested."
+    perspective: attacker-rationale
     contested: false
     analyst: claude
 targets:
@@ -74,3 +101,92 @@ sources:
   - cisa/2025-08-27_aa25-239a-salt-typhoon
   - fbi/2025-08-27_salt-typhoon-statement
   - crs/if12798_salt-typhoon
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit vs the three cited RAW sources. All three
+    snapshots verified present in atlas/sources/raw/ with recorded
+    sha256 matching on disk (CISA 5905b390…6ec2fd, FBI 2a3f9a42…6f40a4f,
+    CRS 44b337b4…c6c0fb). LEVEL = partial: the load-bearing "200+
+    companies / 80 countries" impact figure is carried only by the FBI
+    statement, whose page body is JS-injected — neither the preserved
+    snapshot nor a fresh 2026-07-11 curl renders the figure in captured
+    text — so it is mirror-corroborated, not snapshot-verified. Every
+    other load-bearing claim is carried by the CISA snapshot.
+
+    [a] FACTS: 13-government co-sealing list VERIFIED verbatim in the
+    CISA raw (US NSA/CISA/FBI/DC3; Australia ASD-ACSC; Canada Cyber
+    Centre + CSIS; NZ NCSC; UK NCSC; Czechia NÚKIB; Finland SUPO;
+    Germany BND/BfV/BSI; Italy AISE/AISI; Japan NCO/NPA; Netherlands
+    MIVD/AIVD; Poland SKW/AW; Spain CNI) = 13 governments. Sector list
+    (telecommunications, government, transportation, lodging, military
+    infrastructure) VERIFIED in the Executive Summary — but it is the
+    ADVISORY's list, not the FBI statement's, so outcome_summary was
+    corrected to stop attributing the sector list to the FBI. The "200+
+    companies / 80 countries" figure is NOT in the CISA raw (only IOC
+    45.61.149.200) and rests on the un-snapshottable FBI body — retained
+    with an explicit provenance caveat; level -> partial. NO fabricated
+    malware/CVEs/victim tallies (0-hit); advisory even states
+    "Exploitation of zero-day vulnerabilities has not been observed."
+
+    [b] ATTRIBUTION: source-faithful. CISA raw attributes to "PRC
+    state-sponsored cyber threat actors" and is explicit that it is "not
+    adopting a particular commercial naming convention … refer[s] … more
+    generically as 'Advanced Persistent Threat (APT) actors'," the
+    activity "partially overlaps with … Salt Typhoon, OPERATOR PANDA,
+    RedMike, UNC5807, and GhostEmperor." MSS is named only DIFFUSELY —
+    companies "provide cyber-related products and services to China's
+    intelligence services, including multiple units in the People's
+    Liberation Army and Ministry of State Security" — alongside the PLA,
+    for the contractor cluster, NOT pinned to Salt Typhoon's operating
+    company (the firm MSS tie rests on the OFAC source in the actor
+    dossier). concur/high retained (13-govt + FBI, unequivocal PRC state-
+    sponsorship). CORRECTIONS: name "Five Eyes joint advisory" -> "13-
+    government" (8 of 13 co-sealers are beyond Five Eyes); summary "Five
+    Eyes plus EU partners" -> "Five Eyes + 7 European govts + Japan"
+    (Japan is neither FVEY nor EU); CISA attributing_org de-editorialized.
+
+    [c] DATES: 2025-08-27 VERIFIED — AA25-239A = day-239 of 2025 = 27 Aug;
+    single-day documentary meta-event (start=disclosure=end) is correct;
+    CISA and FBI published_on 2025-08-27 both match. CRS source record
+    published_on 2024-12-20 was NOT supported by its snapshot (version
+    history tops out at "November 15, 2024 (IF12798 - Version 11)", no
+    December version) -> corrected to 2024-11-15 in the CRS record
+    (secondary, non-load-bearing PRC-nexus corroboration only).
+
+    [d] DOCTRINE_LINKS: link1 cn/intelligentized-warfare/sigint-c4isr-
+    collection KEPT attested — advisory states the terminal SIGINT-
+    collection goal in substance ("Feed Global Espionage System" +
+    "capability to identify and track their targets' communications and
+    movements around the world"); added inference_basis.source_quote +
+    perspective: attacker-rationale. link2 cn/national-intelligence-law-
+    2017/compelled-vendor-cooperation DOWNGRADED attested ->
+    strongly_inferred: advisory establishes the vendor-to-intelligence-
+    service relationship but never invokes the 2017 law or "compulsion"
+    (0 hits) — over-attestation corrected; added inference_basis
+    {signals, ruled_out} + perspective: attacker-rationale; removed
+    attesting_source_id.
+
+    [e] ATTRIBUTION_LEVEL: added named-actor to both attribution entries
+    (was missing). Advisory names the actor cluster + specific contractor
+    companies but references PLA/MSS units only diffusely (no single named
+    government unit) -> named-actor, not named-unit. FBI entry named-actor
+    from the statement's subject/URL (body un-rendered).
+
+    [f] ACTOR_ID: cn/mss/salt-typhoon resolves to the id field of
+    atlas/actors/cn/salt-typhoon.yaml (canonical_name Salt Typhoon,
+    primary_service_id cn/mss, status sanctioned). Documentary meta-event
+    with actor set (an advisory ABOUT the campaign, not a takedown) —
+    correct per convention. campaign_id salt-typhoon-telecoms (shared by 7
+    Salt Typhoon events) and the five sectors/* target_ids are corpus-wide
+    taxonomy references (targets dir holds only orgs/*; campaigns dir
+    empty) — consistent, not defects.
+
+    FLAGS: none requiring orchestrator action. Actor dossier
+    atlas/actors/cn/salt-typhoon.yaml already documents the OFAC-based MSS
+    placement (verdict KEEP, 2026-06-24) — consistent. Doctrine files
+    cn/intelligentized-warfare.yaml and cn/national-intelligence-law-2017
+    .yaml pillars match the links as used; no edits needed.

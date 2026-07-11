@@ -1,25 +1,32 @@
 id: 2010-05/operation-socialist-belgacom
 name: Operation Socialist — GCHQ breach of Belgacom (Five Eyes)
-start_date: 2010-05-01  # estimated; documented active period 2010-2013
-disclosure_date: 2013-09-20  # Der Spiegel disclosure
-end_date: 2013-12-31  # operational disruption following exposure
+start_date: 2010-05-01  # May estimated; Der Spiegel: access "possible since 2010"; GCHQ technique dev traces to 2009 (Intercept); active 2010-2013
+disclosure_date: 2013-09-20  # Der Spiegel GCHQ/Op-Socialist disclosure (Belgacom hack first reported ~16 Sep 2013)
+end_date: 2013-12-31  # estimated; operational disruption / Belgacom clean-up following 2013 exposure
 incident_type:
   - intrusion
-initial_vector: phishing  # Quantum Insert fake-LinkedIn against named engineers
+initial_vector: phishing  # Quantum Insert (man-on-the-side) via a fake-LinkedIn page against targeted Belgacom engineers
 outcome_summary: |
-  Persistent SIGINT access to EU/African telecom roaming traffic via
-  compromise of Belgacom engineers' workstations and lateral movement
-  to Belgacom International Carrier Services (BICS) and GRX roaming
-  infrastructure. Characterized by Snowden / Der Spiegel as "the
-  first documented case of EU-state cyber attack on another EU state."
+  Persistent SIGINT access to Belgacom / BICS international roaming
+  traffic via compromise of Belgacom engineers' workstations and lateral
+  movement to Belgacom International Carrier Services (BICS) and the
+  GRX/GPRS roaming-exchange infrastructure (the BICS hub carried roaming
+  for operators across Africa, the Middle East, Europe, Asia and the US).
+  Der Spiegel framed the operation as an EU member state (the UK) having
+  covertly penetrated the telecom of a fellow EU member — "Belgium's own
+  European Union partner Britain" behind "Operation Socialist."
 false_flag_risk: none
 summary: |
   GCHQ-led Five Eyes operation that the US (NSA) benefited from
   through SIGINT-sharing arrangements. Initial access via Quantum
-  Insert — fake LinkedIn pages serving exploits to specific
-  Belgacom engineers — followed by lateral movement to GRX
-  roaming-exchange infrastructure. Belgian federal prosecutor
-  publicly attributed the operation to GCHQ in February 2018.
+  Insert — a fake LinkedIn page serving exploits to targeted
+  Belgacom engineers — followed by lateral movement toward BICS and
+  the GRX/GPRS roaming-exchange infrastructure. Belgium's own federal
+  criminal investigation (code-named "Trinity") found forensic evidence
+  pointing to the UK; a confidential federal-prosecutor report leaked in
+  October 2018 concluded the spyware operators were in Britain (three of
+  the malware's command IP addresses were owned by a British company),
+  consistent with GCHQ authorship — though no prosecution followed.
 
   **Editorial note (2026-05 re-attribution)**: this event was
   originally filed in the US dossier with `us/cybercom/cmf-actor`
@@ -32,45 +39,77 @@ summary: |
   is preserved per the stable-slug rule.
 attributions:
   - actor_id: uk/gchq/op-socialist-operators
-    attributing_org: Belgian federal prosecutor (2018) + Snowden documents via Der Spiegel and The Intercept (2013-2014)
+    attributing_org: Snowden documents via Der Spiegel and The Intercept (2013-2014) + Belgian federal criminal investigation (2018)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2013-09-20
     attribution_source_id: spiegel/2013-09-20_socialist-belgacom
     notes: |
-      Primary attribution is to **GCHQ** (UK). Established through
-      three converging sources: (1) the September 2013 Der Spiegel
-      Snowden disclosure publishing the Op Socialist briefing
-      slides; (2) The Intercept's December 2014 full reconstruction
-      including the named MyNOC / NAC operational cells and the
-      Quantum Insert initial-access tradecraft; (3) the Belgian
-      federal prosecutor's February 2018 formal attribution to
-      GCHQ. UK government has not formally attested.
+      Primary attribution is to **GCHQ** (UK), at named-unit level — the
+      operating cell was GCHQ's Network Analysis Centre (NAC). Established
+      through converging snapshotted sources: (1) the September 2013 Der
+      Spiegel Snowden disclosure publishing the Op Socialist briefing
+      slides — "the head of GCHQ's Network Analysis Centre (NAC) described
+      Operation Socialist ... as a 'success'"; (2) The Intercept's December
+      2014 reconstruction of the NAC operation and the fake-LinkedIn
+      Quantum Insert initial-access tradecraft — "documents ... confirmed
+      that ... Government Communications Headquarters was behind the
+      attack, codenamed Operation Socialist"; (3) Belgium's "Trinity"
+      criminal investigation, whose forensic evidence pointed to the UK
+      (The Intercept, Feb 2018) and whose confidential federal-prosecutor
+      report (leaked Oct 2018) linked the malware's command IPs to a
+      British company. No formal UK government attestation; no Belgian
+      prosecution followed. (Correction: earlier text dated the Belgian
+      finding to "February 2018" — the substantive prosecutorial
+      attribution surfaced in October 2018; Feb 2018 was The Intercept's
+      retrospective, which noted the Belgian evidence "was not conclusive.")
   - actor_id: us/nsa/equation-group
-    attributing_org: Snowden documents (Regin / WARRIORPRIDE platform overlap)
+    attributing_org: Snowden documents (NSA-developed Quantum Insert tech; Regin / WARRIORPRIDE Five-Eyes platform)
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur-with-caveat
-    attribution_date: 2014-12-13
-    attribution_source_id: intercept/2014-12-13_operation-socialist
+    attribution_date: 2014-12-28
+    attribution_source_id: spiegel/2014-12-28_belgacom-bics-grx
     notes: |
-      Co-attribution to NSA reflects the Five-Eyes SIGINT-sharing
-      benefit and the use of the joint Regin / WARRIORPRIDE platform
-      (WARRIORPRIDE was the NSA codename; DAREDEVIL was GCHQ's).
-      AUSPEX assesses NSA as beneficiary and capability co-developer
-      rather than operator: the operational cell running the
-      Belgacom intrusion was GCHQ's MyNOC / NAC. `concur-with-caveat`
-      reflects the partial nature of US attribution.
+      Co-attribution to the NSA reflects Five-Eyes SIGINT-sharing benefit
+      and shared tooling, NOT operational control. Source basis: the NSA
+      developed the Quantum Insert technique used against Belgacom (Der
+      Spiegel 2013: "'Quantum Insert,' a technology developed by the NSA")
+      and Regin was run against Belgacom under WARRIORPRIDE — "a kind of
+      universal Esperanto software used by all the Five Eyes partner
+      agencies" (Der Spiegel 2014, which also states "Agents also used
+      Regin in attacks against ... Belgacom in 2011"). The Intercept
+      expressly HEDGES direct NSA involvement: "it is not clear exactly
+      which method was used by GCHQ—or whether there was any direct NSA
+      assistance." AUSPEX therefore assesses the NSA as beneficiary /
+      capability co-developer, not operator; the operating unit was GCHQ's
+      Network Analysis Centre (NAC). `moderate` / `concur-with-caveat`
+      reflects this hedge.
+      NB (actor-mapping, FLAGGED): us/nsa/equation-group is the atlas's
+      canonical NSA offensive-cyber node (same mapping used by the sibling
+      event 2014-11/regin-warriorpride); the actual Regin/WARRIORPRIDE
+      joint cluster is modelled separately as uk/gchq/regin-operators
+      (with us/nsa/tao as additional service). "Equation Group" is NOT
+      named in any Operation Socialist source (Equation x0 across all
+      snapshots) — retained for cross-event consistency, flagged for
+      orchestrator review.
 doctrine_links:
   - doctrine_id: uk/five-eyes
     pillar_id: null
     program_id: null
     confidence: attested
     reasoning: |
-      Op Socialist is the canonical Five-Eyes-partner cyber
-      operation as recorded from the UK side of the UKUSA
-      partnership. Belgian prosecutor 2018 attests GCHQ authorship
-      with explicit US SIGINT benefit per Snowden documents.
-    attesting_source_id: intercept/2014-12-13_operation-socialist
+      Op Socialist is a GCHQ operation executed within the Five-Eyes /
+      UKUSA SIGINT partnership: the Belgacom Regin deployment ran under
+      WARRIORPRIDE — documented as a platform shared across all Five Eyes
+      partner agencies — and used NSA-developed Quantum Insert tooling.
+      Attacker-rationale perspective (UK's own partnership doctrine on a
+      UK-run operation).
+    attesting_source_id: spiegel/2014-12-28_belgacom-bics-grx
+    inference_basis:
+      source_quote: "the Warriorpride program, a kind of universal Esperanto software used by all the Five Eyes partner agencies"
+      source_id: spiegel/2014-12-28_belgacom-bics-grx
     contested: false
     analyst: claude
   - doctrine_id: uk/ncs-2016
@@ -78,12 +117,16 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      Operation pre-dates the NCS 2016 publication (Op Socialist
-      ran 2010-2013). Doctrine tag is plausible-only: the
-      operational tempo of GCHQ CNE under the prior
-      Cyber Security Strategy 2011 is continuous with the NCS 2016
-      "deter" pillar that codified it after the fact.
+      Operation pre-dates the NCS 2016 publication (Op Socialist ran
+      2010-2013). Plausible-only: GCHQ CNE tempo under the prior 2011
+      Cyber Security Strategy is continuous with the NCS 2016 posture
+      that codified it after the fact. No cited source ties the operation
+      to NCS 2016.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Op Socialist is a documented GCHQ CNE operation (2010-2013), continuous with the institutional CNE tempo the NCS 2016 later codified"
+      ruled_out: "contemporaneous authorization under NCS 2016 — the strategy postdates the operation by 3-6 years, so this is a retrospective doctrinal frame, not a causal one"
     contested: false
     analyst: claude
   - doctrine_id: us/five-eyes
@@ -91,22 +134,172 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Co-tagged from the US side of the UKUSA partnership for
-      analyst convenience. The primary doctrinal frame is uk/five-eyes;
-      this tag exists so US-doctrine queries against the atlas
-      surface the event without requiring cross-state joins.
-    attesting_source_id: intercept/2014-12-13_operation-socialist
+      Tagged from the US side of the UKUSA partnership. Substantively
+      grounded, not merely a cross-reference: the NSA developed the
+      Quantum Insert technique used in the intrusion, and WARRIORPRIDE
+      (the Regin platform run against Belgacom) is documented as shared
+      across all Five Eyes agencies — i.e. the operation sits inside the
+      US-partnered SIGINT-sharing arrangement, even though GCHQ, not the
+      NSA, was the operator. The primary doctrinal frame remains
+      uk/five-eyes.
+    attesting_source_id: spiegel/2014-12-28_belgacom-bics-grx
+    inference_basis:
+      source_quote: "the Warriorpride program, a kind of universal Esperanto software used by all the Five Eyes partner agencies"
+      source_id: spiegel/2014-12-28_belgacom-bics-grx
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/belgacom
     role: primary
     outcome: |
-      Engineer workstations and GRX/BICS roaming infrastructure
-      compromised; persistent SIGINT access to EU/African roaming
-      traffic.
+      Engineer workstations compromised via a fake-LinkedIn Quantum
+      Insert; lateral movement to BICS and the GRX/GPRS roaming-exchange
+      infrastructure; persistent SIGINT access to the BICS international
+      roaming hub (operators across Africa, the Middle East, Europe, Asia
+      and the US). The Regin implant was later found on Belgacom's systems
+      and removed during the 2013 clean-up.
 sources:
   - spiegel/2013-09-20_socialist-belgacom
   - spiegel/2014-12-28_belgacom-bics-grx
   - intercept/2014-12-13_operation-socialist
+  - intercept/2018-02-17_belgacom-investigation-europe
+  - theregister/2018-10-26_belgium-gchq-belgacom-proximus
   - belgian-prosecutor/2018-02_belgacom-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs RAW cited sources. UK-as-ATTACKER SIGINT
+    directionality preserved (GCHQ -> Belgacom); attribution held to GCHQ
+    per The Intercept, NOT inverted. 3 pre-existing snapshots re-verified
+    (hashes match); 2 new fetchable secondaries curled + snapshotted this
+    pass to snapshot-back the previously-unsnapshotted Belgian-attribution
+    claim. Snapshots (atlas/sources/raw/):
+    • spiegel/2013-09-20_socialist-belgacom  sha256 ab446333… (631,135 B)
+    • spiegel/2014-12-28_belgacom-bics-grx    sha256 2ecf80d9… (728,317 B)
+    • intercept/2014-12-13_operation-socialist sha256 a30954bd… (174,989 B)
+    • intercept/2018-02-17_belgacom-investigation-europe sha256 9f42e6b0… (NEW)
+    • theregister/2018-10-26_belgium-gchq-belgacom-proximus sha256 d723de5c… (NEW)
+    • belgian-prosecutor/2018-02_belgacom-attribution — url:null, UNSNAP-
+      SHOTTABLE (no canonical Belgian prosecutor press release exists);
+      now fully redundant — every claim it corroborated is independently
+      carried by the two snapshotted 2018 secondaries. level=full stands
+      because every load-bearing claim is snapshot-carried.
+
+    [a] FACTS — one fabrication stripped, several tightened:
+    • STRIPPED fabricated quote: outcome_summary claimed the op was
+      characterized by "Snowden / Der Spiegel" as '"the first documented
+      case of EU-state cyber attack on another EU state."' This exact
+      phrase is a 0-hit across ALL snapshots ("first documented case" x0,
+      "another EU state" x0, "EU-state" x0). Replaced with the source-true
+      substance Der Spiegel actually carries: "it was Belgium's own
+      European Union partner Britain that is behind 'Operation Socialist'"
+      (spiegel 2013, ab446333…) — an EU member covertly hacking a fellow
+      EU member. No "first documented case" superlative asserted.
+    • BICS/GRX/GPRS roaming — CARRIED: spiegel 2013 "GRX routers make
+      roaming between different mobile phone networks possible"; "on the
+      verge of accessing the Belgians' central roaming router ... used to
+      process international traffic"; "the Belgacom subsidiary Bics, a
+      joint venture between Swisscom and South Africa's MTN." intercept
+      2014 (a30954bd…): "successfully hacked into data links carrying
+      information over a protocol known as GPRS"; roaming hub spans
+      "Africa, Asia, Europe, the Middle East, and the United States."
+      Narrowed "EU/African roaming" (undersold the global hub) -> the
+      documented region list.
+    • Regin found+cleaned — CARRIED: intercept 2014 "The Intercept
+      confirmed Regin as the malware found on Belgacom's systems during
+      the clean-up operation." Added to target outcome.
+    • Quantum Insert / fake-LinkedIn — CARRIED (x-checked 3 snapshots):
+      intercept 2014 "GCHQ set up a malicious page that looked like
+      LinkedIn to trick the Belgacom engineers"; intercept 2018
+      (9f42e6b0…) "luring them to a fake version of the LinkedIn website."
+      (No "Slashdot": x0 — not asserted. initial_vector note softened
+      "named" -> "targeted" engineers; the mechanism is man-on-the-side,
+      annotated.)
+
+    [b] ATTRIBUTION — directionality preserved, over-attestation trimmed:
+    • GCHQ (uk/gchq/op-socialist-operators) held at high/concur, promoted
+      to attribution_level: named-unit (the operating cell is GCHQ's
+      Network Analysis Centre / NAC — spiegel 2013 "the head of GCHQ's
+      Network Analysis Centre (NAC) described Operation Socialist ... as a
+      'success'"; intercept 2018 "a GCHQ unit called the Network Analysis
+      Centre had hacked into the computers of three Belgacom engineers").
+      Removed "MyNOC" from notes (x0 across all snapshots) — kept NAC.
+    • NSA (us/nsa/equation-group) held moderate/concur-with-caveat,
+      attribution_level: nation. Re-pointed attribution_source_id
+      intercept/2014-12-13 -> spiegel/2014-12-28 (the intercept source
+      HEDGES: "it is not clear ... whether there was any direct NSA
+      assistance" — a poor NSA-attestation source; the WARRIORPRIDE/Regin
+      substance lives in spiegel 2014). Stripped unsupported "DAREDEVIL
+      was GCHQ's [codename]" (DAREDEVIL x0 all snapshots). NSA basis kept
+      to what IS carried: NSA-developed Quantum Insert (spiegel 2013
+      "'Quantum Insert,' a technology developed by the NSA") + WARRIORPRIDE
+      Five-Eyes shared platform (spiegel 2014). Beneficiary/co-developer,
+      NOT operator — source-faithful.
+
+    [c] DATES — one real error corrected:
+    • start_date 2010-05-01: May is estimated (kept #-flag); "access ...
+      possible since 2010" IS carried (spiegel 2013). Intercept dates
+      technique origins to 2009 ("can be traced back to 2009") and the
+      working hack to Jan–Mar 2011; spiegel 2014 "Regin ... Belgacom in
+      2011." 2010 onset + 2010-2013 active window corroborated.
+    • disclosure_date 2013-09-20 = spiegel byline (verified). Noted the
+      Belgacom hack was first reported ~16 Sep 2013 (intercept).
+    • CORRECTED "Belgian federal prosecutor publicly attributed the
+      operation to GCHQ in February 2018." Per intercept 2018-02-17, as of
+      Feb 2018 the Belgian evidence "pointed toward the U.K., but it was
+      not conclusive" and NO prosecution had followed. The substantive
+      prosecutorial finding surfaced in OCTOBER 2018: theregister
+      2018-10-26 (d723de5c…) — "IP addresses ... Three of those addresses
+      were owned by a British company ... a confidential report from the
+      federal prosecutor's office that the National Security Council
+      discussed at the beginning of this week." Summary + attribution
+      notes + the belgian-prosecutor source record all corrected to the
+      Feb->Oct 2018 arc; "formal attribution" softened (no state
+      attribution / no prosecution). Also captured the "5,000 machines
+      being infected" scale detail in the source record.
+
+    [d] DOCTRINE_LINKS — all three grounded to protocol shape:
+    • uk/five-eyes (attested): re-pointed attesting_source_id intercept ->
+      spiegel/2014-12-28 and added inference_basis.source_quote "the
+      Warriorpride program, a kind of universal Esperanto software used by
+      all the Five Eyes partner agencies." Attacker-rationale perspective
+      (UK's own partnership doctrine on a UK op) — no perspective tag
+      needed.
+    • us/five-eyes (attested): removed the weak "co-tagged ... for analyst
+      convenience" basis; re-grounded on NSA-developed-QI + WARRIORPRIDE-
+      shared substance with the same source_quote. Kept attested (the
+      SIGINT-sharing-arrangement doctrine, not US operational control).
+    • uk/ncs-2016 (plausible): kept plausible (op predates the 2016
+      strategy by 3–6 yrs); added inference_basis{signals, ruled_out}
+      making the retrospective-frame explicit. attesting_source_id null
+      (correct — no source ties the op to NCS 2016).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both entries; added: GCHQ =
+    named-unit (NAC), NSA = nation (agency-level, hedged; no NSA unit
+    named for this op).
+
+    [f] ACTOR_ID — both resolve: uk/gchq/op-socialist-operators (id in
+    atlas/actors/uk/op-socialist-operators.yaml) and us/nsa/equation-group
+    (atlas/actors/us/equation-group.yaml). Targets orgs/belgacom and
+    doctrines uk/five-eyes, uk/ncs-2016, us/five-eyes all resolve.
+
+    FLAGS for orchestrator:
+    • ACTOR-MAPPING (us/nsa/equation-group): "Equation Group" is a
+      Kaspersky-coined NSA cluster NOT named in any Op Socialist source
+      (Equation x0 all snapshots); the real Regin/WARRIORPRIDE joint
+      cluster is modelled separately as uk/gchq/regin-operators (+us/nsa/
+      tao additional service). Retained here only because the sibling
+      event 2014-11/regin-warriorpride uses the identical NSA mapping —
+      a corpus-wide convention to reconcile, not a solo fix. Consider
+      re-pointing the NSA co-attribution to uk/gchq/regin-operators or
+      us/nsa/tao-sub-units across both events.
+    • SHARED SOURCE (spiegel/2014-12-28_belgacom-bics-grx): its slug and
+      the atlas title imply a BICS/GRX source, but the snapshot has
+      BICS x0 / GRX x0 / roaming x0 / "Operation Socialist" x0 — it is a
+      Five-Eyes/Regin/WARRIORPRIDE framing source (Five Eyes x7), the true
+      BICS/GRX facts come from spiegel 2013 + intercept 2014. Left
+      untouched (cited by 3 events; snapshot valid) but flagged as
+      mis-slugged.

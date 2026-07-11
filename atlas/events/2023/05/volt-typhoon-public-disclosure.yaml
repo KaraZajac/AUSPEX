@@ -1,6 +1,6 @@
 id: 2023-05/volt-typhoon-public-disclosure
 name: Volt Typhoon — Five Eyes joint disclosure of PRC pre-positioning in US critical infrastructure
-start_date: 2021-01-01  # CISA-stated intrusion-period begin; actual onset earlier in some sectors
+start_date: 2021-06-01  # Microsoft MSTIC: Volt Typhoon "active since mid-2021"; some ops possibly earlier. (Prior 2021-01-01 + "CISA-stated intrusion-period begin" comment was unsourced — no cited source states a Jan-2021 or CISA-attributed onset.)
 disclosure_date: 2023-05-24
 end_date: null  # ongoing campaign at time of writing
 incident_type:
@@ -9,40 +9,57 @@ incident_type:
 initial_vector: valid-creds
 outcome_summary: |
   CISA, NSA, FBI, and Five Eyes counterparts (NCSC-UK, ACSC, CCCS,
-  GCSB) jointly disclosed a PRC state-sponsored campaign targeting
-  US critical infrastructure — communications, energy, transportation
-  systems, water and wastewater systems — characterized as
-  pre-positioning to disrupt CII in the event of geopolitical
-  crisis. FBI Director Wray's January 2024 House Select Committee
-  testimony explicitly named a Taiwan-conflict scenario as the
-  motivating contingency. Tradecraft is "living off the land"
-  with valid credentials and built-in Windows tooling, deliberately
-  evasive of EDR detection.
+  NCSC-NZ) jointly disclosed a PRC state-sponsored campaign against
+  US critical infrastructure. Microsoft's paired MSTIC report
+  (2023-05-24) named affected organizations spanning nine sectors —
+  "communications, manufacturing, utility, transportation,
+  construction, maritime, government, information technology, and
+  education" — and assessed "with moderate confidence" that the
+  campaign "is pursuing development of capabilities that could
+  disrupt critical communications infrastructure between the United
+  States and Asia region during future crises." The 2024-02-07 update
+  (AA24-038A) sharpened the intent framing: PRC actors "are seeking
+  to pre-position themselves ... for disruptive or destructive
+  cyberattacks against U.S. critical infrastructure in the event of a
+  major crisis or conflict with the United States." FBI Director
+  Wray's 2024-01-31 testimony to the House Select Committee on the
+  CCP framed the pre-positioning as preparation to "wreak havoc and
+  cause real-world harm to American citizens and communities" "in the
+  event of a conflict," tying FBI resourcing to 2027; Wray did NOT
+  name Taiwan (verified against the raw testimony — 0 hits). Tradecraft
+  is "living off the land" with valid credentials and built-in Windows
+  tooling, deliberately evasive of EDR detection.
 quantified_impact:
-  affected_sectors: 4
-  affected_orgs: ~24-plus  # CISA-named at first disclosure; expanded subsequently
+  affected_sectors: 9  # Microsoft MSTIC (2023-05-24) named 9 affected sectors at first disclosure; AA24-038A (2024) later emphasized the 4 core CI sectors (communications, energy, transportation, water/wastewater)
+  affected_orgs: null  # STRIPPED 2026-07-11 (claude-opus-4.8/max): prior "~24-plus (CISA-named at first disclosure)" is unsourced — neither AA23-144A nor Microsoft states an org count. AA23-144A says only the activity "affects networks across U.S. critical infrastructure sectors." No "24" figure appears in any cited raw.
 false_flag_risk: none
 campaign_id: volt-typhoon-cii-prepositioning
 summary: |
   The first canonical public attribution of PRC pre-positioning
-  in US civilian critical infrastructure with explicit linkage to
-  a Taiwan-scenario motivation. The disclosure marks a tonal shift
-  in US government public communications about PRC cyber: from
-  predominantly economic-espionage framing to military-coercive
-  framing. Volt Typhoon as a distinct actor cluster (separate from
-  the broader MSS / PLA-attributed APT space) is itself a Microsoft
-  MSTIC creation; subsequent reporting (CISA, Mandiant) has refined
+  in US civilian critical infrastructure. The disclosure marks a
+  tonal shift in US government public communications about PRC cyber:
+  from predominantly economic-espionage framing to military-coercive
+  framing. The Taiwan-contingency motivation is an analyst inference
+  from context (the 2027 window; the House Select Committee on the
+  CCP setting) — no cited source (Microsoft, AA23-144A, AA24-038A, or
+  the Wray testimony) literally names Taiwan; the government's own
+  framing is "a major crisis or conflict with the United States."
+  Volt Typhoon as a distinct actor cluster (separate from the broader
+  MSS / PLA-attributed APT space) is itself a Microsoft MSTIC
+  creation; subsequent reporting (notably CISA AA24-038A) has refined
   the cluster boundaries.
 attributions:
   - actor_id: cn/unscoped/volt-typhoon
     attributing_org: CISA + NSA + FBI (with Five Eyes)
     attributing_org_confidence: high
+    attribution_level: named-actor  # AA23-144A names the GROUP ("a PRC state-sponsored cyber actor, also known as Volt Typhoon") at nation/PRC level; no Chinese service or unit named
     auspex_assessment: concur
     attribution_date: 2023-05-24
     attribution_source_id: cisa/2023-05-24_aa23-144a-volt-typhoon
   - actor_id: cn/unscoped/volt-typhoon
     attributing_org: Microsoft MSTIC
-    attributing_org_confidence: high
+    attributing_org_confidence: moderate  # DOWNGRADED from high 2026-07-11 (claude-opus-4.8/max): Microsoft states "Microsoft assesses with moderate confidence" and calls Volt Typhoon "a state-sponsored actor based in China" — no higher.
+    attribution_level: named-actor  # Microsoft named the actor cluster (Volt Typhoon / DEV-0391) at nation level ("based in China"); no service/unit
     auspex_assessment: concur
     attribution_date: 2023-05-24
     attribution_source_id: msft/2023-05-24_volt-typhoon-mstic
@@ -50,19 +67,29 @@ doctrine_links:
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/coercive-options
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # DOWNGRADED from attested 2026-07-11 (claude-opus-4.8/max). Prior source_quote appended a non-verbatim editorial gloss "(... Taiwan contingency)". Verified against raw snapshots: the word "Taiwan" appears 0 times in Wray's testimony, AA24-038A, AA23-144A, AND the Microsoft report. Sources attest coercive pre-positioning for "a major crisis or conflict with the United States"; the Taiwan-reunification nexus is analyst inference (2027 window; committee context), not source-stated.
     reasoning: |
-      FBI Director Wray's testimony to the House Select Committee
-      on the CCP (2024-01-31) framed Volt Typhoon as pre-positioning
-      "to wreak havoc and cause real-world harm to American citizens
-      and communities" "in the event of a conflict" — the hearing's
-      subject being a Taiwan contingency. CISA's AA24-038A reiterated
-      the framing. (QC pre-pass fetched a partial excerpt lacking the
-      literal word 'Taiwan'; verify against the full testimony.)
-    attesting_source_id: fbi/2024-01-31_wray-house-select-testimony
+      US-government framing attests coercive/disruptive pre-positioning
+      against US critical infrastructure for a future conflict, but NO
+      cited source names Taiwan. AA24-038A (2024-02-07): PRC actors
+      "are seeking to pre-position themselves on IT networks for
+      disruptive or destructive cyberattacks against U.S. critical
+      infrastructure in the event of a major crisis or conflict with
+      the United States." FBI Director Wray (2024-01-31, House Select
+      Committee on the CCP): China's hackers are "positioning on
+      American infrastructure in preparation to wreak havoc and cause
+      real-world harm to American citizens and communities," with
+      "low blows ... in the event of a conflict," and he tied FBI
+      resourcing to "2027 — a year that ... the CCP has circled on its
+      calendar." The Taiwan-reunification link is inferred from this
+      2027 / Davidson-window context, not attested in the source text.
+    attesting_source_id: null
     inference_basis:
-      source_id: fbi/2024-01-31_wray-house-select-testimony
-      source_quote: "pre-positioning ... to wreak havoc and cause real-world harm to American citizens and communities ... in the event of a conflict (House Select Committee on the CCP — Taiwan contingency)"
+      signals:
+        - "AA24-038A verbatim: PRC actors pre-position 'for disruptive or destructive cyberattacks against U.S. critical infrastructure in the event of a major crisis or conflict with the United States'"
+        - "Wray verbatim (2024-01-31): pre-positioning to 'wreak havoc and cause real-world harm to American citizens and communities' '... in the event of a conflict'; FBI resourcing tied to '2027 — a year that ... the CCP has circled on its calendar'"
+        - "Hearing venue: US House Select Committee on Strategic Competition Between the United States and the CCP"
+      ruled_out: "Literal source attestation of a Taiwan trigger: NONE of the five cited sources (Microsoft, AA23-144A, AA24-038A, Wray) contains the word 'Taiwan' (0 hits each, verified against raw snapshots); the Taiwan-contingency reading is analytic (2027 Davidson window), not source-stated"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -79,6 +106,11 @@ doctrine_links:
       Chinese-source attestation; inferred from doctrinal analysis
       and target selection rather than self-statement.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target mix attested by Microsoft MSTIC (2023-05-24): affected organizations span 'communications, manufacturing, utility, transportation, construction, maritime, government, information technology, and education sectors' — civilian critical infrastructure matching the cn/mcf/civil-infrastructure-targeting pillar"
+        - "AA24-038A: pre-positioning to 'disrupt functions' via 'lateral movement to OT assets' across civilian energy/water/comms/transport CI"
+      ruled_out: "No primary Chinese-source attestation of an MCF rationale; the pillar link is inferred from target selection and doctrinal analysis, not self-statement — hence strongly_inferred, not attested"
     counter_explanation: |
       The same intrusion footprint is consistent with strategic-
       intelligence collection and persistence; Volt Typhoon's
@@ -128,4 +160,85 @@ sources:
   - cisa/2024-02-07_aa24-038a-volt-typhoon-update
   - msft/2023-05-24_volt-typhoon-mstic
   - fbi/2024-01-31_wray-house-select-testimony
-  - mandiant/2024-04-30_volt-typhoon-followon
+  # mandiant/2024-04-30_volt-typhoon-followon REMOVED 2026-07-11 (claude-opus-4.8/max):
+  # PHANTOM source — url:null, no discrete Mandiant "2024-04-30 Volt Typhoon follow-on"
+  # publication exists. Web check surfaced only a Feb-1-2024 carahsoft-mirrored slide brief
+  # ("Volt Typhoon And Related Activity"), M-Trends 2024 (broad), and April-2024 press quoting
+  # Mandiant's CEO at RSA — none matching the cited slug/date. Source now orphaned; flagged
+  # RETIRE candidate in its own record. Cluster-boundary-refinement claim re-attributed to the
+  # cited CISA AA24-038A in the summary.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    6-point audit of the May-2023 Volt Typhoon joint disclosure against the RAW cited
+    sources. Snapshots (raw_snapshot / content_sha256, PRESERVE tier):
+      - cisa/AA23-144A  36b55ad1…b9d053dc (115,028 B, hash RE-VERIFIED unchanged)
+      - cisa/AA24-038A  8380c7fd…9952f0ec (204,476 B, hash RE-VERIFIED unchanged)
+      - fbi/Wray        6c8724c0…5bd032aa ( 84,263 B, hash RE-VERIFIED unchanged)
+      - msft/MSTIC      c204b806…901af83d (304,297 B; snapshot pre-existed in raw/ under the
+        parallel microsoft/ slug — ADDED raw_snapshot+content_sha256 to the msft/ record this pass;
+        live blog is 403/bot-walled to curl, snapshot is the captured copy)
+      - mandiant/followon — NO snapshot: PHANTOM, url:null, publication does not exist (see below).
+    All four snapshotted sources carry their load-bearing claims -> level: full.
+
+    [a] FACTS — corrected. STRIPPED affected_orgs "~24-plus (CISA-named at first disclosure)":
+    UNSOURCED. No cited raw states an org count (the only "24" tokens are "monitored 24 hours"
+    on an NCSC hotline and SVG viewBox="0 0 24 24"); AA23-144A says only the activity "affects
+    networks across U.S. critical infrastructure sectors." Set affected_orgs: null. affected_sectors
+    4 -> 9: Microsoft's first disclosure named NINE sectors verbatim ("communications, manufacturing,
+    utility, transportation, construction, maritime, government, information technology, and
+    education"); the "4" was the later AA24-038A/Wray core-CI emphasis (comms/energy/transport/water),
+    noted in-line. Rewrote outcome_summary + summary to remove the over-claim that Wray "explicitly
+    named a Taiwan-conflict scenario" and that the disclosure carried "explicit linkage to a
+    Taiwan-scenario motivation" — Wray's raw testimony contains 0 instances of "Taiwan" (grep-verified);
+    he says "wreak havoc and cause real-world harm to American citizens and communities" / "in the
+    event of a conflict" and ties resourcing to "2027 — a year that ... the CCP has circled on its
+    calendar." Guam SUPPORTED (Microsoft: "critical infrastructure organizations in Guam"; AA24-038A
+    2 hits) though NOT by AA23-144A. LOTL / valid-creds / built-in-Windows / EDR-evasive SUPPORTED by
+    AA23-144A (title "Living off the Land to Evade Detection"; LOTL 8 hits, valid-cred, EDR mention).
+    Fixed Five Eyes list "GCSB" -> "NCSC-NZ" to match the AA23-144A seal. No KV-botnet conflation
+    (the 2024 DOJ/FBI KV-botnet takedown is a separate event, correctly not claimed here).
+
+    [b] ATTRIBUTION — corrected. Microsoft attributing_org_confidence high -> MODERATE: Microsoft's
+    own words are "Microsoft assesses with moderate confidence" and "a state-sponsored actor based in
+    China." CISA+NSA+FBI (Five Eyes) high/concur retained — AA23-144A is a definitive nation-level
+    attribution ("a People's Republic of China (PRC) state-sponsored cyber actor, also known as Volt
+    Typhoon"). No source names the MSS, PLA, or any unit (consistent with the actor's 2026-06-24 demote
+    to cn/unscoped). ADDED attribution_level: named-actor to both entries.
+
+    [c] DATES — start_date 2021-01-01 (+"CISA-stated" comment, unverifiable) -> 2021-06-01, matching
+    Microsoft "active since mid-2021." disclosure_date 2023-05-24 verified (AA23-144A + Microsoft
+    bylines). end_date null (ongoing). All source published_on re-verified against raw metadata:
+    AA23-144A 2023-05-24, AA24-038A 2024-02-07, Microsoft 2023-05-24, Wray 2024-01-31.
+
+    [d] DOCTRINE — cn/taiwan-reunification/coercive-options DOWNGRADED attested -> strongly_inferred.
+    The prior "attested" rested on a source_quote that appended a non-verbatim editorial gloss
+    "(House Select Committee on the CCP — Taiwan contingency)"; the raw contains no such words and NO
+    cited source (Microsoft, AA23-144A, AA24-038A, Wray) says "Taiwan" (0 hits each). Restructured to
+    inference_basis {signals, ruled_out}, attesting_source_id null. Signals retain the genuinely
+    verbatim government goal-statements (AA24-038A "disruptive or destructive cyberattacks ... in the
+    event of a major crisis or conflict with the United States"; Wray "wreak havoc ... in the event of
+    a conflict" + 2027). cn/mcf/civil-infrastructure-targeting kept strongly_inferred; ADDED the
+    missing inference_basis {signals, ruled_out} (target-mix signal from Microsoft's 9-sector list;
+    counter_explanation retained). Both are attacker-rationale (default perspective).
+
+    [e] ATTRIBUTION_LEVEL — was absent; ADDED named-actor to both attributions (sources name the GROUP
+    Volt Typhoon at nation/PRC level with no service or unit — Flax Typhoon precedent).
+
+    [f] ACTOR_ID — cn/unscoped/volt-typhoon resolves to the id field in atlas/actors/cn/volt-typhoon.yaml
+    (file path is cn/, id is cn/unscoped/). Non-null is correct (this is the intrusion/pre-positioning
+    event; subject actor = Volt Typhoon). Registry checks: marker cn/taiwan/davidson-window-2027 resolves;
+    all 5 sector target_ids resolve in atlas/sectors/sectors.yaml; orgs/guam-comms-infrastructure resolves
+    in atlas/targets/. campaign_id volt-typhoon-cii-prepositioning is a cross-event grouping tag (no
+    separate registry).
+
+    PATH: normal audit + one PHANTOM remediation (Mandiant source removed, re-attributed to AA24-038A).
+    FLAGS for orchestrator (files this pass may not edit):
+      1. SOURCE DUP: msft/2023-05-24_volt-typhoon-mstic (this event's FK) and
+         microsoft/2023-05-24_volt-typhoon-mstic (the actor's FK) are two records for the SAME
+         Microsoft blog. Recommend consolidating to one slug + re-pointing FKs.
+      2. RETIRE candidate: mandiant/2024-04-30_volt-typhoon-followon — phantom (url:null; no such
+         publication); now orphaned (was cited only here). Annotated in its record; not deleted.

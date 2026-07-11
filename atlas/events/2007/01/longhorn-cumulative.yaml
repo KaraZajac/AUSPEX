@@ -1,18 +1,18 @@
 id: 2007-01/longhorn-cumulative
 name: Longhorn / Vault 7 operations (cumulative, 2007–2017)
-start_date: 2007-01-01  # Symantec earliest activity
+start_date: 2007-01-01  # Symantec: "some evidence of activity dating back as far as 2007" (confirmed active since at least 2011; first seen by Symantec 2014)
 disclosure_date: 2017-03-07  # WikiLeaks Vault 7 Year Zero release
 end_date: 2017-11-09  # last Vault 7 release
 incident_type:
   - intrusion
 initial_vector: unknown  # varies across the 40+ targets
 outcome_summary: |
-  Cumulative CIA CCI / EDG covert-action-support and HUMINT-paired
-  cyber collection across 40+ organizations in 16 countries (Europe,
-  Asia, Africa, Middle East) — governments, telecoms, financial,
-  energy, IT, aerospace. Exposed via the WikiLeaks Vault 7 dump
-  (8,761 documents) March 7 – November 9, 2017. CIA EDG developer
-  Joshua Schulte convicted in SDNY July 2022.
+  Cumulative CIA CCI / EDG cyber-espionage collection across 40+
+  organizations in at least 16 countries (Europe, Asia, Africa,
+  Middle East) — governments, telecoms, financial, energy, IT,
+  aerospace. Exposed via the WikiLeaks Vault 7 dump (8,761 documents)
+  March 7 – November 9, 2017. CIA EDG developer Joshua Schulte
+  convicted in SDNY July 2022.
 false_flag_risk: none  # though Vault 7's "Marble" framework included false-flag-capable obfuscation
 summary: |
   This is a cumulative event entry covering the operational cluster
@@ -28,16 +28,22 @@ attributions:
   - actor_id: us/cia/longhorn-lamberts
     attributing_org: Symantec
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2017-04-10
     attribution_source_id: symantec/2017-04-10_longhorn-vault7-link
     notes: |
       Symantec connected the pre-existing Longhorn cluster to Vault
       7 tools "with high confidence." Kaspersky's parallel Lamberts
-      analysis converged on the same attribution.
+      analysis converged on the same attribution. attribution_level
+      named-actor: Symantec named the coherent "Longhorn" cluster and
+      characterized it as an "English-speaking, North American",
+      "state-sponsored" actor, but did NOT itself name the CIA unit —
+      the CIA-unit naming comes via the WikiLeaks Vault 7 link.
   - actor_id: us/cia/longhorn-lamberts
     attributing_org: SDNY (US v. Schulte conviction)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-07-13
     attribution_source_id: doj/2022-07-13_schulte-conviction
@@ -49,12 +55,32 @@ doctrine_links:
   - doctrine_id: us/title-10-title-50
     pillar_id: null
     program_id: null
+    perspective: attacker-rationale
     confidence: strongly_inferred
     reasoning: |
-      CIA Title 50 covert-action cyber. Predates NSPM-13 / Defend
-      Forward operational vocabulary; authority pathway is the
-      pre-existing Title 50 §3093 finding regime.
+      Longhorn / Vault 7 tooling originated inside the CIA (a Title 50
+      intelligence-community agency), per the WikiLeaks Vault 7 release
+      (CIA CCI / EDG) and the SDNY conviction of CIA-CCI/EDG engineer
+      Joshua Schulte — so the operations sit on the Title 50 IC
+      authority track, not the Title 10 traditional-military-activity
+      track that governs USCYBERCOM. The activity/exposure window
+      (2007/2011–2017) predates NSPM-13 and Defend Forward (both 2018),
+      so no more-specific US operational cyber doctrine existed; the
+      Title 10 / Title 50 statutory frame is the applicable linkage.
+      strongly_inferred, not attested: no source states the legal-
+      authority basis, and the sources do not resolve whether the
+      collection ran as §3093 covert action (finding + notification) or
+      as Title 50 clandestine intelligence collection — only that the
+      actor is a CIA IC unit. Triangulated, not stated.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "WikiLeaks Vault 7 attributes the tooling to the CIA's Center for Cyber Intelligence / Engineering Development Group (\"8,761 documents ... inside the CIA's Center for Cyber Intelligence\"; CIA named 100+×) — a Title 50 intelligence-community agency, not a Title 10 military command."
+        - "Symantec independently characterized Longhorn as a \"state-sponsored\", \"well-resourced\" actor \"involved in intelligence gathering operations\" from \"an English-speaking, North American country\" — consistent with an IC (Title 50) collection mandate, not overt military action."
+        - "The SDNY conviction of Joshua Schulte, a CIA CCI / EDG software engineer, judicially places the tooling's authorship inside the CIA (Title 50), not the DoD (Title 10)."
+        - "The 2007/2011–2017 window predates NSPM-13 and Defend Forward (both 2018); the Title 10 / Title 50 framework is the only US doctrinal authority in force for the period, per the actor record's pre-NSPM-13 flag."
+      ruled_out: "Title 10 traditional-military-activity (USCYBERCOM) framing: WikiLeaks and the Schulte conviction place authorship inside the CIA IC (Title 50), not a DoD military command."
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -67,3 +93,83 @@ sources:
   - kaspersky/2017-04-11_lamberts-toolkit
   - wikileaks/2017-03-07_vault7-year-zero
   - doj/2022-07-13_schulte-conviction
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point event-audit vs the 4 cited RAW sources. Directionality PRESERVED: US-as-
+    ATTACKER SIGINT/CNE (CIA cyber-espionage) — no victim inversion. Cumulative cluster event,
+    not a discrete op. level=partial: after re-sourcing, every load-bearing claim is carried
+    by a snapshotted source EXCEPT the Schulte-conviction specifics (name / SDNY / Jul-2022),
+    whose sole primary (DOJ) is un-snapshottable (Akamai bot-wall) — mirror-corroborated only.
+    SNAPSHOTS (on-disk, hash-verified this audit): Symantec Broadcom mirror
+    symantec__2017-04-10_longhorn-broadcom-mirror.html sha256 7a33057d…a747235 (127,619 B);
+    Kaspersky kaspersky__2017-04-11_lamberts-toolkit.html sha256 90c4676f…098666 (matches
+    committed); WikiLeaks "Projects" wikileaks__2017-03-07_vault7-year-zero.html sha256
+    9d6ef1f4…59334 (matches committed) + companion Year Zero page
+    wikileaks__2017-03-07_ciav7p1-year-zero.html sha256 a817d8f7…c59f1d (71,229 B, new); DOJ =
+    NO snapshot (see below).
+    RE-SOURCE (badrabbit-model, in scope = event's own source record): the Symantec source's
+    recorded url + wayback were LINK-ROTTED to the content-free "Threat Intelligence |
+    SECURITY.COM" blog index (0 Longhorn/CIA/Vault7/Corentry) — a real defect. Re-pointed url
+    to the live Broadcom Symantec-Enterprise community mirror of the actual report (DocumentKey
+    7ca2e331-…, already in the actor's misp_refs) and replaced raw_snapshot/content_sha256 with
+    that capture. The dead index snapshot (old sha 7154bd7b…) is retained on disk for integrity
+    but no longer referenced. tier=secondary PRESERVED.
+    [a] FACTS — all outcome_summary/summary claims now carried by a snapshot: "40+ organizations
+    in at least 16 countries (Europe, Asia, Africa, Middle East)" ⇐ Broadcom mirror verbatim
+    "Longhorn has infected 40 targets in at least 16 countries across the Middle East, Europe,
+    Asia, and Africa"; sector list (governments, telecoms, financial, energy, IT, aerospace) ⇐
+    mirror "financial, telecoms, energy, aerospace, information technology, education, and
+    natural resources sectors"; "8,761 documents … March 7 – November 9, 2017" ⇐ WikiLeaks
+    ciav7p1 "the series, 'Year Zero', comprises 8,761 documents and files from an isolated,
+    high-security network situated inside the CIA's Center for Cyber Intelligence"; tools (HIVE,
+    Fluxwire/Corentry, Brutal Kangaroo air-gap-via-USB, Weeping Angel Samsung-TV, Pandemic,
+    ELSA Wi-Fi, Year Zero, Athena) ⇐ WikiLeaks Projects page (Corentry/Fluxwire naming ⇐ Broadcom
+    mirror, 12×/4×); Marble Framework "string obfuscation … multi-language decoys" ⇐ Projects
+    page verbatim "test examples not just in English but also in Chinese, Russian, Korean, Arabic
+    and Farsi … a forensic attribution double game" (also grounds false_flag_risk note). Longhorn
+    ⇔ Vault 7 ⇐ mirror "there can be little doubt that Longhorn's activities and the Vault 7
+    documents are the work of the same group."
+    FABRICATION STRIPPED (0-hit): "HUMINT-paired" — 0 occurrences across ALL four raw sources
+    (Broadcom, ciav7p1, Projects, Kaspersky); removed from outcome_summary. Also softened the
+    unsourced "covert-action-support" framing → source-faithful "cyber-espionage collection"
+    (Symantec: "intelligence gathering operations"; WikiLeaks: "CIA hacking tools") — the
+    covert-action/Title-50 question is confined to doctrine_links [d], not asserted as fact.
+    No fabricated CVEs/victims/figures/quotes found otherwise.
+    [b] ATTRIBUTION — chain preserved and correctly split: Symantec/Kaspersky establish Longhorn
+    = "The Lamberts" ⇔ Vault 7 (Kaspersky snapshot verbatim "Longhorn, which we internally refer
+    to as 'The Lamberts'"; 0 CIA mentions in its body → cluster identity only); WikiLeaks bridges
+    Vault7 → CIA; DOJ/Schulte gives judicial CIA-EDG corroboration. attributing_org + high
+    confidence match the sources; auspex concur retained. No over-attestation introduced.
+    [c] DATES — start_date 2007-01-01 held source-faithful: Broadcom mirror "While active since
+    at least 2011, with some evidence of activity dating back as far as 2007, Longhorn first
+    came to Symantec's attention in 2014" — 2007 is Symantec's earliest-evidence bound, so the
+    2007-01 event id/date is correct (comment sharpened to quote the source). disclosure
+    2017-03-07 (Year Zero) / end 2017-11-09 (last release) consistent with the Vault 7 series.
+    DOJ published_on 2022-07-13 = Schulte SDNY conviction date. No date fabrication.
+    [d] DOCTRINE_LINKS — us/title-10-title-50 kept @ strongly_inferred but UPGRADED to schema:
+    ADDED perspective: attacker-rationale (US is attacker; Title 50 is the attacker's OWN
+    authority) + inference_basis{signals[4], ruled_out} + counter_explanation. Reasoning REFRAMED
+    to avoid over-attestation: prior text asserted "Title 50 §3093 finding regime" as fact; the
+    sources establish only that the actor is a CIA IC (Title 50) unit and do NOT resolve §3093
+    covert-action vs. Title 50 clandestine collection — now stated as such. NOT attested
+    (attesting_source_id null): no source states the legal-authority basis. ruled_out Title 10
+    TMA (authorship is CIA, not DoD).
+    [e] ATTRIBUTION_LEVEL — ADDED (was missing on both rows): Symantec row → named-actor (names
+    the Longhorn cluster + North-American/state-sponsored characterization, but not the CIA unit
+    itself); SDNY row → named-unit (CIA CCI/EDG, via Schulte's employer). WikiLeaks supplies the
+    nation/agency bridge as a source, not a discrete attribution row.
+    [f] ACTOR_ID — us/cia/longhorn-lamberts resolves to the id field of
+    atlas/actors/us/longhorn-lamberts.yaml (present; id: us/cia/longhorn-lamberts). Correct
+    US-attacker actor; not a null-actor counter-action. targets sectors/government +
+    sectors/ict/telecom both resolve in atlas/sectors/sectors.yaml (ids government, ict/telecom).
+    FLAGS (out-of-scope, not edited): (1) actor atlas/actors/us/longhorn-lamberts.yaml — its
+    header comment still describes the Symantec link-rot as unresolved and the Symantec source
+    citation now points at the Broadcom mirror; header could be refreshed (content unaffected;
+    active_since 2007-01-01 comment already accurate). (2) doctrine atlas/doctrines/us/
+    title-10-title-50.yaml — no change needed; Longhorn now links to it as attacker-rationale
+    strongly_inferred (Title 50 IC, covert-action-vs-collection unresolved). (3) DOJ source
+    remains un-snapshottable → the single reason this event is `partial` not `full`.

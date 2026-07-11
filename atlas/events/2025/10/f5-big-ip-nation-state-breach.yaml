@@ -1,71 +1,111 @@
+# AUDIT 2026-07-11 (claude-opus-4.8/max): 4 cited sources curl-snapshotted + sha256'd (Bloomberg via its Wayback archive, live URL 403). Attribution split into an F5/CISA "nation-state (unnamed)" primary + a Bloomberg China/UNC5221 press refinement; attributing_org "US officials" -> "people familiar with the matter" (source-exact); attribution_level added to both. Added the F5/Unit42 "no supply-chain / source-code modification" scoping fact. Removed over-reaching cn/intelligentized-warfare/pre-positioning doctrine link (folded into alternatives) and downgraded compelled-vendor-cooperation strongly_inferred -> plausible with inference_basis (China predicate is press-level only). Dropped uncited "second F5-class ED" and forward-dated "December CISA-NSA advisory" from summary. See qc.notes; FLAGS for orchestrator in [d]/[f].
 id: 2025-10/f5-big-ip-nation-state-breach
 name: F5 Networks nation-state breach — BIG-IP source code and undisclosed vulnerabilities stolen
-start_date: 2024-08-09  # F5 stated 12-month-plus pre-detection access; corresponds to mid-2024
+start_date: 2024-08-09  # derived: Bloomberg reports F5 told customers the actor had "at least 12 months" access before the 2025-08-09 detection -> onset floor ~Aug 2024 ("at least", so possibly earlier)
 disclosure_date: 2025-10-15
-end_date: 2025-08-09  # F5 detection date per public statement
+end_date: 2025-08-09  # F5 detection date ("learned of the breach on August 9, 2025" per Form 8-K); containment proxy
 incident_type:
+  - espionage
   - intrusion
   - data-theft
   - supply-chain
 initial_vector: unknown
 outcome_summary: |
   F5 disclosed a nation-state intrusion that gave attackers
-  long-term access to its product-development environment and
-  engineering knowledge-management platform, resulting in theft
-  of BIG-IP source code and internal vulnerability-tracking data
-  for undisclosed flaws. Bloomberg attribution: China-linked
-  actors using the BRICKSTORM backdoor (the same UNC5221-attributed
-  malware Mandiant disclosed three weeks earlier). F5 learned of
-  the breach on 2025-08-09 but delayed disclosure at DOJ request.
-  CISA issued Emergency Directive ED 26-01 the same day requiring
-  federal civilian agencies to inventory, expose-check, and patch
-  F5 BIG-IP deployments by 22 October 2025.
+  long-term, persistent access to its product-development
+  environment and engineering knowledge-management platform,
+  resulting in theft of a portion of BIG-IP source code and
+  internal information on undisclosed vulnerabilities in the
+  product. F5 and Unit 42 report NO evidence the actor modified
+  F5's source code, build/release pipeline, or wider software
+  supply chain, and no evidence NGINX source or the product-dev
+  environment was altered — the risk is theft that hands the
+  actor material for future exploitation, not a shipped implant.
+  Bloomberg (citing people familiar) attributes the intrusion to
+  China-linked actors using the BRICKSTORM backdoor — the malware
+  Mandiant/GTIG maps to the China-nexus cluster UNC5221, disclosed
+  in September 2025. F5 learned of the breach on 2025-08-09 but
+  delayed disclosure at U.S. DOJ request. CISA issued Emergency
+  Directive ED 26-01 the same day (2025-10-15), requiring federal
+  civilian agencies to inventory, management-interface-exposure-
+  check, and patch F5 BIG-IP deployments by 22 October 2025.
 false_flag_risk: none
 summary: |
-  Among the most consequential supply-chain compromises of the
-  decade: theft of source code plus internal vulnerability data
-  hands the actor a structural advantage in finding and
-  weaponizing future BIG-IP flaws. The BRICKSTORM tie places
-  this in the same UNC5221 / China-nexus cluster ecosystem as
-  the Mandiant September disclosure and the December CISA-NSA
-  joint advisory. CISA ED 26-01 is the second F5-class emergency
-  directive (after 2020's ED 21-01 SolarWinds and 2023's ED 23-02
-  on management interfaces).
+  A high-consequence supply-chain-risk compromise: theft of
+  source code plus internal undisclosed-vulnerability data hands
+  the actor a structural advantage in finding and weaponizing
+  future BIG-IP flaws (CISA: the theft "could provide that threat
+  actor with a technical advantage to exploit F5 devices and
+  software"). The BRICKSTORM/UNC5221 tie reported by Bloomberg
+  places this in the same China-nexus cluster ecosystem as
+  Mandiant/GTIG's September 2025 BRICKSTORM disclosure. CISA
+  framed ED 26-01 as a response to a "significant cyber threat,"
+  its Acting Director warning of a potential "catastrophic
+  compromise of critical information systems." NB: F5's public
+  SEC filing named only a "nation-state threat actor" without a
+  country; the China linkage is press-level (Bloomberg's
+  people-familiar sources) and was denied by China's Foreign
+  Ministry.
 attributions:
   - actor_id: null
-    attributing_org: Bloomberg (citing US officials)
+    attributing_org: F5 Inc. (SEC Form 8-K) / CISA (ED 26-01)
+    attributing_org_confidence: high
+    attribution_level: nation
+    auspex_assessment: concur
+    attribution_date: 2025-10-15
+    attribution_source_id: cisa/2025-10-15_ed-26-01-f5
+    notes: |
+      Primary, firmest attribution: F5's Form 8-K and CISA ED
+      26-01 both attribute the breach to a "highly sophisticated
+      nation-state threat actor" / "nation-state affiliated cyber
+      threat actor" WITHOUT naming a country. AUSPEX concurs at
+      the nation (unnamed) level. The China/UNC5221 refinement
+      below is press-level and is NOT asserted by F5 or CISA.
+  - actor_id: null
+    attributing_org: Bloomberg (citing people familiar with the matter)
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-10-16
     attribution_source_id: bloomberg/2025-10-16_f5-china-attribution
     notes: |
-      Bloomberg cites people familiar with the matter for the
-      China linkage; F5 itself uses "nation-state threat actor"
-      language without naming a state. BRICKSTORM identification
-      attributed to Google GTIG.
+      Bloomberg reports the breach was "blamed on state-backed
+      hackers from China, according to people familiar with the
+      matter," and that F5 sent customers a threat-hunting guide
+      for the BRICKSTORM malware "used by Chinese state-backed
+      hackers." The BRICKSTORM / UNC5221 "China-nexus espionage
+      actor" designation is Mandiant/GTIG's, not F5's. Source is
+      unnamed "people familiar" (NOT "US officials," per the raw).
+      China's Foreign Ministry denied the accusation. AUSPEX holds
+      actor_id null and concur-with-caveat, consistent with the
+      sibling UNC5221/BRICKSTORM events; the caveat is that F5's
+      own public attribution stops at "nation-state" and the China
+      linkage rests on anonymous sourcing.
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
     pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
     program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      A long-term implant inside an enterprise security-product
-      vendor's engineering systems with source-code theft is
-      the textbook supply-chain operation enabled by the
-      contractor / vendor-cooperation model.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/intelligentized-warfare
-    pillar_id: cn/intelligentized-warfare/pre-positioning
-    program_id: null
     confidence: plausible
     reasoning: |
-      Stolen vulnerability information and source code give the
-      actor a future operational reservoir for n-day exploitation
-      of BIG-IP devices already deployed in US critical
-      infrastructure.
+      IF the intrusion is the China-nexus UNC5221/BRICKSTORM
+      cluster Bloomberg reports, long-dwell theft of a security
+      vendor's source code and undisclosed-vulnerability intel is
+      the MSS-tasked vendor-access / supply-chain signature AUSPEX
+      maps to this pillar across the 2024-2025 Ivanti/F5/VMware
+      appliance campaigns. Held at plausible (not strongly_inferred
+      as in the firmly-China-attributed sibling events) because
+      F5's own filing names no country and the China linkage here
+      is press-level only. Not attested: no cited source states
+      the strategic purpose.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Bloomberg attributes the intrusion to a China-nexus actor using BRICKSTORM, the malware Mandiant/GTIG maps to the UNC5221 espionage cluster ('known for stealing source code in popular technology providers to hunt for software bugs ... then use those bugs to breach those providers' customers')."
+        - "Target/effect: theft of a security-appliance vendor's source code plus undisclosed-vulnerability data for a product ubiquitous across US government and Fortune 500 networks fits leveraged-vendor-access strategic espionage rather than financially motivated crime."
+        - "Cluster pattern: AUSPEX maps the recurring UNC5221/BRICKSTORM edge-appliance campaigns (Ivanti/F5/VMware) to this pillar."
+      alternatives:
+        - "Nation UNCONFIRMED: F5's Form 8-K and CISA ED 26-01 name only a 'nation-state' actor with no country; the China attribution is Bloomberg's anonymous-source reporting and was denied by China's Foreign Ministry — a different nation-state cannot be excluded on the cited record."
+        - "If China-nexus, cn/intelligentized-warfare (sigint-c4isr-collection or pre-positioning) partially fits the future-exploitation rationale, but grades WHY intel is collected rather than the vendor-access MECHANISM this event turns on; the earlier pre-positioning link was removed as over-reach (this is source-code/vuln theft, not implanting in critical-infrastructure OT)."
     contested: false
     analyst: claude
 targets:
@@ -73,17 +113,110 @@ targets:
     country: us
     role: primary
     outcome: |
-      BIG-IP source-code theft; internal vulnerability tracking
-      data exfiltrated; engineering KM platform compromised.
+      BIG-IP source-code theft; internal undisclosed-vulnerability
+      information exfiltrated; engineering knowledge-management
+      platform compromised. No evidence of source-code, build, or
+      software-supply-chain modification (F5 / Unit 42).
   - target_id: sectors/government/civilian
     country: us
     role: collateral
     outcome: |
       CISA Emergency Directive ED 26-01 issued same day as
-      disclosure, forcing all FCEB agencies into emergency
-      patch / isolate posture by 2025-10-22.
+      disclosure, forcing all FCEB agencies into emergency patch /
+      management-interface-isolation posture (apply updates by
+      2025-10-22; report in-scope products by 2025-10-29; detailed
+      inventory by 2025-12-03).
 sources:
   - cisa/2025-10-15_ed-26-01-f5
   - bloomberg/2025-10-16_f5-china-attribution
   - unit42/2025-10-16_f5-source-code-theft
   - thehackernews/2025-10-16_f5-breach-bigip
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    PATH: REAL — normal audit. All 4 cited sources fetched on-point. CISA ED 26-01 (HTTP 200,
+    65,870 B, sha256 4a5d763c..3629567d), Unit42 (HTTP 200, 227,026 B, 0eaca013..6a31fde3) and
+    The Hacker News (HTTP 200, 175,459 B, ec0e03df..db3524bf) snapshotted from their live URLs;
+    Bloomberg live URL returned HTTP 403 (bot wall) so the record's own Wayback archive was
+    snapshotted instead (HTTP 200, 348,392 B, 1b91ac29..8c74c5f3) — the archive carries the full
+    article body (incl. paywalled paragraphs) in embedded JSON, so it is fully usable. No
+    fabrications found; 0 phantom sources. level=full: every load-bearing claim is carried by a
+    snapshotted source.
+    [a] FACTS — all corroborated. Source-code + undisclosed-vuln theft: CISA "exfiltrated files,
+    which included a portion of its BIG-IP source code and vulnerability information"; THN "stole
+    files containing some of BIG-IP's source code and information related to undisclosed
+    vulnerabilities." KM platform + product-dev environment: Unit42 "exfiltrated files from the
+    knowledge management platform"; THN "bolstered its product development environment." NO-
+    MODIFICATION scoping fact (was ABSENT; ADDED per audit NB): Unit42 verbatim "There is no
+    evidence of modification to F5's software supply chain, including source code and build and
+    release pipelines" and "no evidence that the threat actor accessed or modified the NGINX
+    source code or product development environment." Bloomberg attribution + BRICKSTORM/UNC5221:
+    Bloomberg "blamed on state-backed hackers from China, according to people familiar" / "a
+    threat hunting guide for a type of malware called Brickstorm used by Chinese state-backed
+    hackers" / Mandiant tracks "the hackers behind Brickstorm as 'UNC5221,' ... a 'China-nexus
+    espionage actor'" (also carried by THN, which credits Bloomberg for the BRICKSTORM/UNC5221
+    tie). DOJ delay + Aug-9 detection: THN "learned of the breach on August 9, 2025, per a Form
+    8-K ... F5 said it delayed the public disclosure at the request of the U.S. Department of
+    Justice (DoJ)." CORRECTIONS: (1) "internal vulnerability-tracking data" -> "internal
+    information on undisclosed vulnerabilities" (source-exact). (2) added the no-supply-chain-
+    modification caveat so incident_type: supply-chain is not misread as a SolarWinds-style
+    implant. (3) summary "Among the most consequential supply-chain compromises of the decade"
+    -> "high-consequence supply-chain-risk compromise" (de-hyperbolised). (4) STRIPPED the summary
+    clause "the December CISA-NSA joint advisory" — no cited source mentions it and it post-dates
+    all four sources (anachronism/forward-ref). (5) STRIPPED "CISA ED 26-01 is the second F5-class
+    emergency directive (after 2020's ED 21-01 SolarWinds and 2023's ED 23-02 ...)" — uncited by
+    any of the 4 sources and internally confused ("second" then lists two priors); replaced with
+    the source-carried CISA "significant cyber threat" / "catastrophic compromise" framing.
+    [b] ATTRIBUTION — the core of this audit. F5's PUBLIC Form 8-K + CISA ED 26-01 name only a
+    "nation-state"/"nation-state affiliated" actor with NO country (China term absent from both the
+    CISA and Unit42 raw). The China + BRICKSTORM/UNC5221 linkage is Bloomberg's, sourced to unnamed
+    "people familiar" (and denied by China's Foreign Ministry: "groundless accusations made without
+    evidence"). Restructured from a single Bloomberg-China entry into: (1) an F5/CISA nation
+    (unnamed) primary entry — high org-confidence, auspex concur, attribution_level nation — that
+    foregrounds the firm public fact; and (2) the Bloomberg refinement — moderate org-confidence,
+    concur-with-caveat, attribution_level activity-cluster (UNC5221 is an uncategorized China-nexus
+    cluster; no proper actor/service/unit named). FIX: attributing_org "Bloomberg (citing US
+    officials)" -> "Bloomberg (citing people familiar with the matter)" — the raw says "people
+    familiar ... who asked not to be named because they aren't authorized to speak publicly," never
+    "US officials." actor_id held null throughout (consistent with sibling UNC5221/BRICKSTORM
+    events). Did NOT assert China at the actor/doctrine level beyond what the cited press supports.
+    [c] DATES — verified. disclosure_date 2025-10-15 = F5's Wednesday 8-K (THN "on Wednesday
+    disclosed"; CISA ED published_on 2025-10-15; both "same day"). start_date 2024-08-09 = onset
+    FLOOR from Bloomberg "the hackers were in the company's network for at least 12 months" before
+    the 2025-08-09 detection (comment softened to "at least 12 months ... possibly earlier").
+    end_date 2025-08-09 = detection (THN "learned of the breach on August 9, 2025"; Unit42
+    "identified in early August 2025") used as containment proxy. Source published_on checks:
+    Bloomberg JSON datePublished 2025-10-16T02:00Z (record 2025-10-16 OK); Unit42
+    article:published_time 2025-10-16 (OK); CISA 2025-10-15 (OK); THN 2025-10-16 content-consistent
+    (reports both the Oct-15 disclosure and Bloomberg's Oct-16 follow-up).
+    [d] DOCTRINE_LINKS — de-over-attributed. Was TWO China-doctrine links asserted while AUSPEX
+    holds China only at concur-with-caveat. REMOVED cn/intelligentized-warfare/pre-positioning:
+    that pillar = "gain and hold access to US/allied civilian critical infrastructure ... for
+    disruption during a Taiwan/peer-conflict contingency" (Volt/Flax Typhoon CI-implant pattern) —
+    a poor fit for source-code/vuln THEFT from a vendor, and the firmly-China-attributed sibling
+    (unc5221-verdantbamboo) explicitly rules intelligentized-warfare out as purpose-not-mechanism;
+    its residual relevance folded into inference_basis.alternatives. DOWNGRADED
+    cn/national-intelligence-law-2017/compelled-vendor-cooperation strongly_inferred -> plausible
+    (kept as the house pillar for the UNC5221/F5/Ivanti/VMware cluster, but the China predicate is
+    press-level, not the sibling's flat Volexity attribution) and ADDED inference_basis{signals[],
+    alternatives[]} with the lead alternative "Nation UNCONFIRMED." attesting_source_id null
+    (correct: no cited source states the strategic goal -> not attested). Doctrine state cn matches
+    the alleged attacker nexus -> attacker-rationale default, no perspective tag.
+    [e] ATTRIBUTION_LEVEL — was MISSING on both entries. F5/CISA entry -> nation (nation-state,
+    country unnamed = the firm public claim). Bloomberg entry -> activity-cluster (UNC5221 is a
+    Mandiant/GTIG uncategorized China-nexus cluster referenced by a bare UNC number; no proper
+    named actor, service, or unit). Deliberately NOT named-actor (contrast the VerdantBamboo
+    sibling, where Volexity used a proper cluster name at high confidence).
+    [f] ACTOR_ID — null; resolves trivially. targets orgs/f5-networks and sectors/government/civilian
+    both resolve to existing registry files. FLAGS for orchestrator: (1) DOCTRINE CONSISTENCY —
+    the sibling BRICKSTORM/UNC5221 events map the F5 campaign to compelled-vendor-cooperation at
+    strongly_inferred; here it is plausible because F5 named no country and China is press-only.
+    Recommend a cluster-wide decision on whether the F5 event should track the siblings (strongly_
+    inferred) or the siblings should adopt this hedge — do not want silent divergence. (2)
+    ACTOR/ALIAS — if the corpus-wide UNC5221 == VerdantBamboo == WARP PANDA consolidation flagged
+    in unc5221-verdantbamboo-brickstorm proceeds, revisit whether this F5 event's Bloomberg entry
+    should point actor_id at cn/unscoped/warp-panda; kept null here for now (press-level China +
+    F5's own no-country public stance argue for staying null even post-consolidation).

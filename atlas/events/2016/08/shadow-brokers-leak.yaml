@@ -2,19 +2,23 @@ id: 2016-08/shadow-brokers-leak
 name: Shadow Brokers leaks (NSA TAO tooling exposed)
 start_date: 2016-08-13  # first "Equation Group Cyber Weapons Auction" post
 disclosure_date: 2016-08-13
-end_date: 2017-05-31  # last major dump (Lost in Translation, April 14, 2017)
+end_date: 2017-04-14  # last MAJOR dump "Lost in Translation" (contained the EternalBlue exploit; directly preceded WannaCry, 2017-05-12). Prior value 2017-05-31 contradicted its own comment; date carried by Greenberg (un-snapshottable), not by the two snapshotted sources — see qc [c]
 incident_type:
-  - documentary  # leak of US capability; not an offensive US operation
-initial_vector: insider  # presumed; Harold T. Martin III charged for separate retention but not convicted as the source
+  - documentary  # leak OF US capability; not an offensive US operation
+  - leak         # all-meta typing (the leaker is unattributed) — mirrors 2024-02/isoon-leak; kept out of the eval label set
+initial_vector: unknown  # NYT frames an external server breach ("broke into...the...servers of the N.S.A.") AND floats a Russian-intelligence origin; method undetermined. Harold T. Martin III was charged for separate document retention, never convicted as the source. Prior `insider` was uncarried speculation — see qc [a]
 outcome_summary: |
   Theft and serial public release of a substantial portion of NSA
-  TAO's 2007–2013 toolkit: FuzzBunch, DanderSpritz, EternalBlue,
-  DoublePulsar, EternalRomance, EternalSynergy, EternalChampion,
-  EsteemAudit, ExplodingCan, and dozens of other implants and
-  exploits. Weaponized within months by DPRK (WannaCry, May 2017,
-  ~USD 4B+ damage) and Russia GRU (NotPetya, June 2017, ~USD 10B+
-  damage per Greenberg). Subsequently used by Iranian APT34 and
-  multiple criminal actors.
+  TAO's offensive toolkit (leaked code dated to mid-2013 per NYT):
+  FuzzBunch, DanderSpritz, EternalBlue, DoublePulsar, EternalRomance,
+  EternalSynergy, EternalChampion, EsteemAudit, ExplodingCan, and
+  dozens of other implants and exploits (the specific tool names are
+  carried by Greenberg / the April 2017 "Lost in Translation" dump,
+  NOT by the two snapshotted sources — see qc [a]). The SMBv1 exploit
+  later named EternalBlue corresponds to the vulnerabilities Microsoft
+  patched in MS17-010 (2017-03-14). Weaponized within months by DPRK
+  (WannaCry, May 2017, ~USD 4B+ damage) and Russia GRU (NotPetya, June
+  2017, ~USD 10B+ damage per Greenberg).
 quantified_impact:
   notpetya_damage_estimate_usd: 10000000000
   wannacry_damage_estimate_usd: 4000000000
@@ -27,39 +31,78 @@ summary: |
   doctrinal significance for the Vulnerabilities Equities Process
   (VEP).
 
-  Cited as the counter-example for VEP reforms — the operational and
-  strategic cost of stockpiling unpatched zero-days. The leak's
-  blowback (WannaCry, NotPetya) cost more in foreign-victim damages
-  than the toolkit's marginal collection value to NSA per multiple
-  IC retrospective analyses. The source remains uncharged; Harold T.
-  Martin III was charged for separate document-retention violations
-  but not convicted of being the Shadow Brokers source.
+  Cited (AUSPEX editorial — NOT carried by this event's cited
+  sources) as the counter-example for Vulnerabilities Equities Process
+  (VEP) reform: the strategic cost of stockpiling unpatched zero-days.
+  The leak's blowback (WannaCry, NotPetya) is argued by Greenberg to
+  have cost more in foreign-victim damages than the toolkit's marginal
+  collection value to NSA (the prior "per multiple IC retrospective
+  analyses" was unsourced hand-waving — removed). The source remains
+  uncharged; Harold T. Martin III was charged for separate
+  document-retention violations but not convicted of being the Shadow
+  Brokers source.
 
   Incident-type follows the UN PoE mandate-end precedent of
   `[documentary]` for non-operational events that nonetheless are
   load-bearing in the doctrine graph.
 attributions:
   - actor_id: us/nsa/equation-group
-    attributing_org: NSA (implicit — tool authorship); NYT / Microsoft / multiple analysts
-    attributing_org_confidence: high
+    attributing_org: Kaspersky (Equation Group = NSA code name) + outside experts, per NYT; NSA declined to confirm
+    attributing_org_confidence: high  # for TOOL AUTHORSHIP (the exposed subject); NOT a confidence in who leaked
+    attribution_level: named-unit  # NYT names "the N.S.A.'s highly classified Tailored Access Operations unit"
     auspex_assessment: concur
-    attribution_date: 2016-08-13
+    attribution_date: 2016-08-16  # NYT publication (the cited attribution source); prior 2016-08-13 was the first-post date, not the attribution date
     attribution_source_id: nyt/2016-08-19_shadow-brokers-first-post
     notes: |
-      Tool authorship attribution to NSA TAO is `attested` —
-      leaked documentation contains TAO branding, internal slang,
-      classifications, and matches Kaspersky's 2015 Equation Group
-      clustering. The *leak itself* is uncharged.
+      Subject-entity attribution (Shadow Brokers / i-Soon model): the
+      attributed entity is the SUBJECT whose tooling was exposed, NOT
+      the leaker. Tool authorship to NSA TAO is strongly supported by
+      the cited source — NYT: experts found "genuine samples of the
+      code...used in the production of the N.S.A.'s custom-built
+      malware," resembling "products developed inside the N.S.A.'s
+      highly classified Tailored Access Operations unit," and "The
+      Equation Group is a code name that Kaspersky Labs...has given to
+      the N.S.A."; the 2016–17 dumps carry TAO branding/slang matching
+      Kaspersky's 2015 Equation Group clustering (per the audited
+      actor record). NSA itself "would say nothing" — the tool
+      authorship is corroborated, not confessed.
+      The LEAKER is UNATTRIBUTED — Russia was widely suspected but
+      never confirmed. NYT carries only hedged suspicion (Snowden:
+      "circumstantial evidence and conventional wisdom indicates
+      Russian responsibility"; Schneier: "likely the work of Russian
+      intelligence"; Lewis: "some Russian mind game") plus an
+      impersonation counter-theory, and states "it could take
+      considerable time to determine who is behind the release of the
+      code." The leak itself is uncharged.
 doctrine_links:
   - doctrine_id: us/title-10-title-50
     pillar_id: null
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # DOWNGRADED from attested — no cited source states the Title 10/50 legal framework OR the VEP; see qc [d]
+    perspective: attacker-rationale  # subject's OWN doctrine on the operator whose toolkit is documented (cf. 2014-12/regin-eu-commission-disclosure)
     reasoning: |
-      Counter-example doctrine link: informed Vulnerabilities Equities
-      Process (VEP) reforms. The leak demonstrated the strategic cost
-      of zero-day stockpiling.
-    attesting_source_id: nyt/2016-08-19_shadow-brokers-first-post
+      The leaked corpus is the NSA TAO OFFENSIVE toolkit — NYT: "code
+      that the National Security Agency has used to break into the
+      networks of foreign governments," "designed to break through
+      network firewalls and get inside the computer systems of
+      competitors like Russia, China and Iran," built inside "the
+      N.S.A.'s highly classified Tailored Access Operations unit." That
+      is the operational output of the Title 10 / Title 50
+      offensive-cyber authorities — the statutory backstop under every
+      US offensive cyber operation — parallel to how the Snowden corpus
+      elucidates the same framework. NOT attested: no cited source
+      states the Title 10/50 legal-authority framework, nor the
+      Vulnerabilities Equities Process; the VEP counter-example framing
+      is AUSPEX editorial (see summary), not source-carried — so the
+      link is inferred, not attested.
+    attesting_source_id: nyt/2016-08-19_shadow-brokers-first-post  # primary SUPPORTING source (link is strongly_inferred, not attested)
+    inference_basis:
+      source_id: nyt/2016-08-19_shadow-brokers-first-post
+      signals:
+        - "'top-secret computer code that the National Security Agency has used to break into the networks of foreign governments and other espionage targets'"
+        - "leaked code resembling 'products developed inside the N.S.A.'s highly classified Tailored Access Operations unit'"
+        - "'Most of the code was designed to break through network firewalls and get inside the computer systems of competitors like Russia, China and Iran'"
+      ruled_out: "a purely defensive / non-offensive reading — rejected: the NYT describes the leaked tools as the NSA's foreign-network-intrusion toolkit ('break into the networks of foreign governments'), the offensive-cyber activity the Title 10/50 authorities govern. (The legal-authority framework itself, and the VEP, are named by NO cited source — which is why the link stays inferred, not attested.)"
     contested: false
     analyst: claude
 targets: []  # not a target-oriented event
@@ -67,3 +110,96 @@ sources:
   - nyt/2016-08-19_shadow-brokers-first-post
   - greenberg/2019_sandworm-book
   - msft/2017-03-14_ms17-010-eternalblue
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Audited vs RAW cited sources. Snapshots captured this pass:
+    • nyt__2016-08-19_shadow-brokers-first-post.html — 322,358 bytes, sha256
+      366e6613…00c46b8f. Live nytimes.com = HTTP 403 (bot-walled); snapshot
+      is the Wayback capture of the record's archive_url. Confirmed the REAL
+      David E. Sanger article, dateline "Aug. 16, 2016" ("'Shadow Brokers'
+      Leak Raises Alarming Question: Was the N.S.A. Hacked?"). Phantom triage
+      (PHANTOM-REMEDIATION STEP 0): NOT a phantom — real article, on-topic;
+      normal 6-point audit performed.
+    • msft__2017-03-14_ms17-010-eternalblue.html — 78,120 bytes, sha256
+      33b85a5e…a84449e2. Live learn.microsoft.com = HTTP 200; title
+      "Microsoft Security Bulletin MS17-010 - Critical"; SMB ×34, SMBv1 ×12,
+      CVE-2017-0143/0144/0148 all present, "remote code execution". Real.
+    • greenberg/2019_sandworm-book — a BOOK, url:null → UN-SNAPSHOTTABLE. It
+      carries load-bearing claims below (tool enumeration, DPRK/GRU downstream
+      weaponization, the ~$4B/~$10B figures, the April-2017 dump), so despite
+      the two web sources being snapshotted+hashed, not every load-bearing
+      claim rests on a snapshotted source → level: PARTIAL.
+    [a] FACTS. Model = leak/documentary meta-event (subject-entity, per the
+    orchestrator NB; mirrors 2024-02/isoon-leak & 2013-06/snowden). NYT carries:
+    the exposed subject is NSA TAO tooling ("genuine samples of the code...used
+    in the production of the N.S.A.'s custom-built malware," "products developed
+    inside the N.S.A.'s highly classified Tailored Access Operations unit"); the
+    AUCTION ("we give you some Equation Group files free"..."would auction the
+    best ones"); the 2016-08-13 first post ("The Shadow Brokers first emerged
+    online on Saturday" — the Sat before the Tue 08-16 byline = Aug 13); and the
+    Equation Group↔NSA identity ("The Equation Group is a code name that
+    Kaspersky Labs...has given to the N.S.A."). MS17-010 carries the SMBv1 RCE
+    vulns (CVE-2017-0143/0144/0148) later weaponized as EternalBlue. CORRECTIONS:
+    (1) "2007–2013 toolkit" SOFTENED → "code dated to mid-2013 per NYT" ("The
+    code that was published on Monday dates to mid-2013"); the 2007 lower bound
+    is in NO cited source. (2) Tool NAMES (FuzzBunch/DanderSpritz/EternalBlue/
+    DoublePulsar/EternalRomance/EternalSynergy/EternalChampion/EsteemAudit/
+    ExplodingCan) KEPT but annotated as carried by Greenberg / the "Lost in
+    Translation" dump, NOT by the two snapshotted sources (NYT predates the
+    April-2017 dump; MS17-010 names no tool). These are accurate historical
+    fact, not fabrication → kept, snapshot-gap flagged (drives partial).
+    EternalBlue/DoublePulsar naming verified per orchestrator NB. (3) STRIPPED
+    "Subsequently used by Iranian APT34 and multiple criminal actors" — APT34
+    appears in NO cited source and is a dubious specific (0-hit fabrication-
+    class). (4) summary: removed "per multiple IC retrospective analyses"
+    (phantom sourcing) → blowback-cost thesis re-attributed to Greenberg (who
+    argues it in Sandworm); VEP framing re-marked as AUSPEX editorial (the NYT
+    raw has ZERO "VEP"/"zero-day"/"stockpil"/"equit" hits).
+    [b] ATTRIBUTION. actor_id us/nsa/equation-group = the EXPOSED subject (not
+    the leaker) — correct subject-entity model; resolves to the audited actor
+    record. attributing_org REWORDED "NSA (implicit)" → "Kaspersky (Equation
+    Group = NSA code name) + outside experts, per NYT; NSA declined to confirm"
+    (NYT: NSA "would say nothing"). attribution_level ADDED = named-unit (NYT
+    names the TAO unit). confidence high KEPT but scoped to TOOL AUTHORSHIP.
+    LEAKER hedge ADDED to notes: Russia widely suspected, NEVER confirmed — NYT
+    carries only hedged suspicion (Snowden/Schneier/Lewis quotes) + an
+    impersonation counter-theory + "it could take considerable time to
+    determine who is behind the release." (Matches orchestrator NB: hedge.)
+    [c] DATES. published_on 2016-08-16 VERIFIED against byline. start_date /
+    disclosure_date 2016-08-13 CARRIED (NYT "emerged online on Saturday").
+    attribution_date CORRECTED 2016-08-13 → 2016-08-16 (the cited NYT's
+    publication). end_date CORRECTED 2017-05-31 → 2017-04-14: the prior value
+    contradicted its OWN comment ("Lost in Translation, April 14, 2017"); 04-14
+    is the last major dump (EternalBlue) that preceded WannaCry (2017-05-12) —
+    carried by Greenberg (un-snapshottable), not the two snapshotted sources.
+    incident_type [documentary] → [documentary, leak] (orchestrator: leak/
+    documentary; all-meta, out of the eval label set). initial_vector insider →
+    unknown (NYT frames an external server breach AND a possible Russian-intel
+    origin; Martin never convicted as the source — insider was uncarried).
+    [d] DOCTRINE_LINKS. us/title-10-title-50 DOWNGRADED attested →
+    strongly_inferred: NO cited source states the Title 10/50 legal-authority
+    framework OR the VEP (the prior attested rested on a VEP rationale absent
+    from every cited source). Reframed to the source-carried basis — the leaked
+    corpus IS the NSA TAO offensive toolkit (NYT quotes), i.e. the operational
+    output of the Title 10/50 offensive-cyber authorities (parallel to Snowden's
+    same-doctrine link). Added inference_basis{source_id,signals[verbatim NYT],
+    ruled_out} + perspective: attacker-rationale (subject's own operator
+    doctrine, per the 2014-12/regin-eu-commission-disclosure documentary
+    precedent). attesting_source_id retained as primary SUPPORTING source
+    (non-attested schema semantics).
+    [e] ATTRIBUTION_LEVEL — was MISSING; ADDED named-unit (NYT names the TAO
+    unit; Equation Group = the named cluster).
+    [f] ACTOR_ID — us/nsa/equation-group resolves to the id field in
+    atlas/actors/us/equation-group.yaml (audited 2026-06-25); no actor-file edit.
+    FLAGS (not edited — orchestrator to action):
+    • 2013-06/snowden-disclosures: its us/title-10-title-50 link is `attested`
+      with attesting_source_id = doj/2013-06-21_snowden-charges (an Espionage-Act
+      charging doc that does NOT state the Title 50 architecture) — SAME
+      over-attestation pattern just downgraded here. FLAG for consistency review.
+    • greenberg/2019_sandworm-book is url:null and load-bearing across multiple
+      events; consider adding an ISBN/worldcat locator or a snapshottable
+      secondary (e.g., Wired's NotPetya excerpt) to lift dependent events to full.

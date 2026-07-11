@@ -1,39 +1,53 @@
 id: 2024-02/lockbit-cronos
 name: Operation Cronos — LockBit ransomware infrastructure takedown
-start_date: 2024-02-19
-disclosure_date: 2024-02-20  # DOJ / NCA announcement
-end_date: 2024-12-31  # ongoing 2024-2025 follow-up operations
+start_date: 2024-02-19  # takedown onset — NCA: infra "seized ... over the last 12 hours" as of the 20 Feb morning announcement
+disclosure_date: 2024-02-20  # DOJ / NCA / Europol coordinated announcement
+end_date: 2024-12-31  # campaign bracket for 2024 follow-on actions (not snapshot-pinned; see qc)
 incident_type:
+  - law-enforcement
   - disruption
-initial_vector: unknown  # undercover infiltration, server seizure, court orders
+initial_vector: unknown  # covert infiltration + court-ordered server seizure (LE method, not an attack vector)
 outcome_summary: |
   Significant operational disruption to LockBit (the most active
-  ransomware-as-a-service operator at the time). Server seizure,
-  decryption-key release, undercover infiltration. LockBit later
-  partially reconstituted; follow-on operations through 2024–25
-  (DOJ Oct 8, 2024 press release continued the campaign).
+  ransomware-as-a-service operator at the time). Covert infiltration of
+  LockBit's network, seizure of its primary administration environment,
+  public-facing leak site and 28 affiliate servers, capture of the
+  platform source code, and release of 1,000+ decryption keys to
+  victims. LockBit later partially reconstituted; follow-on enforcement
+  through 2024 (NCA/DOJ Evil Corp / Ryzhenkov actions) continued the
+  campaign — that tail is referenced via a cumulative DOJ source and is
+  not snapshot-pinned in this record.
 false_flag_risk: none
 campaign_id: lockbit-cronos
 summary: |
-  Joint FBI + Europol + NCA (UK National Crime Agency) operation
-  announced February 20, 2024. The canonical Five-Eyes-plus-Europol
-  ransomware-disruption case under NCS 2023 Pillar 2. AUSPEX
-  attribution: FBI-led (the FBI is not represented as an actor entity
-  in v0; CNMF placeholder is closest US-actor mapping but
-  understates the multilateral character — operationally a
-  Disrupt-and-Dismantle event with FBI / NCA / Europol jointly).
+  NCA-led multilateral law-enforcement takedown of LockBit, announced
+  20 February 2024. Operation Cronos was conducted by the UK National
+  Crime Agency working with the FBI and an eleven-country coalition
+  (UK, US, France, Germany, Switzerland, Japan, Australia, Sweden,
+  Canada, Netherlands, Finland) plus Europol and Eurojust. The canonical
+  NCS-2023 Pillar 2 (Disrupt and Dismantle) ransomware-disruption case.
+  This is a COUNTER-ACTION: LockBit is the subject/target of the
+  operation, not the perpetrator, so actor_id is null. Same-day companion
+  actions included a District of New Jersey indictment of two Russian
+  nationals and an OFAC designation (tracked separately).
 attributions:
   - actor_id: null
-    attributing_org: FBI + NCA (UK) + Europol
+    attributing_org: NCA (UK) + FBI + Europol
     attributing_org_confidence: high
     auspex_assessment: concur-with-caveat
+    attribution_level: named-actor
     attribution_date: 2024-02-20
     attribution_source_id: doj/2024-02-20_lockbit-cronos
     notes: |
-      Operation Cronos: multilateral law-enforcement takedown of
-      LockBit led by the NCA with FBI/Europol. No AUSPEX-tracked actor
-      conducted the takedown, so actor_id is null (was a
-      us/cybercom/cnmf-actor placeholder — corrected per AUDIT-2026-05-29 C1).
+      Operation Cronos: NCA-led multilateral law-enforcement takedown of
+      LockBit (NCA "leads international investigation" / "NCA-led
+      investigation"), with the FBI and international partners from nine
+      other countries, coordinated with Europol and Eurojust. No
+      AUSPEX-tracked actor conducted the takedown, so actor_id is null
+      (subject LockBit = ru/proxies/lockbit, named in prose). Caveat:
+      genuinely multilateral, not a single-actor operation (was a
+      us/cybercom/cnmf-actor placeholder — corrected per AUDIT-2026-05-29
+      C1; "FBI-led" summary claim corrected to NCA-led per AUDIT-2026-07-11).
 doctrine_links:
   - doctrine_id: us/ncs-2023
     perspective: defender-response
@@ -41,9 +55,10 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      Canonical Disrupt-and-Dismantle pillar operation. Officially
-      framed as such in DOJ press release; DAG Monaco states the
-      dismantle-the-ecosystem pledge in substance.
+      Canonical Disrupt-and-Dismantle pillar operation. Officially framed
+      as such: DOJ headline "Disrupt LockBit"; DAG Monaco states the
+      dismantle-the-ecosystem goal in substance (verbatim quote below,
+      verified against the DOJ snapshot).
     attesting_source_id: doj/2024-02-20_lockbit-cronos
     inference_basis:
       source_quote: "Today's actions are another down payment on our pledge to continue dismantling the ecosystem fueling cybercrime by prioritizing disruptions and placing victims first."
@@ -51,18 +66,26 @@ doctrine_links:
     contested: false
     analyst: claude
   - doctrine_id: us/ncs-2023
+    perspective: defender-response
     pillar_id: us/ncs-2023/forge-international-partnerships
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      International partnership pillar — FBI / NCA / Europol joint
-      operation.
-    attesting_source_id: doj/2024-02-20_lockbit-cronos
+      The operation is structurally a broad international partnership, but
+      no cited release states "forging international partnerships" as a
+      terminal strategic goal (the releases exercise the partnership as a
+      means to disrupt LockBit). Downgraded from attested to
+      strongly_inferred per AUDIT-2026-07-11 (over-attestation: prior link
+      had no goal-quote and no perspective).
+    inference_basis:
+      signals:
+        - "DOJ enumerates an eleven-country coalition (FBI; NCA; France's Gendarmerie Nationale; Germany's LKA Schleswig-Holstein + BKA; Switzerland; Japan's NPA; Australian Federal Police; Sweden; RCMP Canada; Netherlands Politie; Finland's Poliisi) plus Europol and Eurojust."
+        - "NCA: the operation was run 'working closely with the FBI, and supported by international partners from nine other countries' under the Operation Cronos taskforce."
+        - "Europol-coordinated wider action: two LockBit actors arrested in Poland and Ukraine; 200+ cryptocurrency accounts frozen."
+      ruled_out: "attested — no cited release frames international-partnership-building as the operation's stated end (only as the vehicle)."
     contested: false
     analyst: claude
-targets:
-  - target_id: orgs/lockbit
-    role: primary
+targets: []  # counter-action: subject LockBit named in prose (matches qakbot/hive/endgame convention; orgs/lockbit target FK is undefined in the registry — see qc FLAG)
 sources:
   - doj/2024-02-20_lockbit-cronos
   - doj/2024-10-08_lockbit-followup
@@ -74,4 +97,83 @@ notes: |
   operation-cronos-lockbit (same 20-Feb-2024 Operation Cronos LockBit
   takedown, same lead DOJ source) — its unique Europol + NCA (Feb-2024)
   sources were folded in above and the duplicate deleted. This is the
-  canonical Operation Cronos event; still unstamped, queued for census.
+  canonical Operation Cronos event.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW cited sources (Opus 4.8 / max). Counter-action
+    (COUNTER): NCA-led multilateral LE takedown of LockBit — LockBit is the
+    subject, so actor_id null and perspective defender-response throughout.
+
+    Snapshots (atlas/sources/raw/):
+      - doj__2024-02-20_lockbit-cronos.html sha256
+        87ddbbeba105b65c02a737abfb329c76fd8607f8dcedcf1c12b8342288d36b06
+        (wayback body; live justice.gov 400/403 anti-bot) — verified this pass.
+      - nca__2024-02-20_operation-cronos.html sha256
+        31e7364dcbf7940162848177d291f425cba411469908b0528f12a13a230e717b
+        (curl HTTP 200) — verified this pass.
+      - nca__operation-cronos-page.html sha256
+        f8dd8252e7320e6a95f99e977a5d0463ab1d41725f480f1f4a72a11d997e2917
+        NEW this pass (same NCA URL as the record above; per-request token
+        differs, same 43852-byte substantive body, 25 LockBit tokens).
+      - europol__2024-02-20_lockbit-cronos.html sha256
+        7e5dc07e7d028bcdc0ec31a7f58a7fbf9252286a5f0c2bc721840ff4cdac3fdb
+        NEW this pass — JS-SPA SHELL only ("You need to enable JavaScript to
+        run this app"); og:title confirms source identity ("Law enforcement
+        disrupt world's biggest ransomware operation – LockBit..."), body not
+        statically capturable via curl or wayback. Facts mirror-corroborated
+        by the DOJ + NCA snapshots.
+      - doj/2024-10-08_lockbit-followup: url:null cumulative reference —
+        UNFETCHABLE, no snapshot.
+
+    [a] FACTS — all load-bearing Feb-2024 claims carried by DOJ + NCA snapshots:
+      covert infiltration (NCA: "after infiltrating the group's network, the
+      NCA has taken control of LockBit's services"); server seizure (NCA: "28
+      servers ... taken down", Stealbit infra "based in three countries ...
+      seized"; DOJ: "seizing control of servers used by LockBit
+      administrators"); decryption-key release (NCA: "obtained over 1,000
+      decryption keys"; DOJ: "obtained keys ... to help victims decrypt");
+      source-code capture (NCA: "obtained the LockBit platform's source
+      code"); RaaS "most active ... variant" (DOJ). NO fabricated
+      malware/CVE/victim/figure in the event prose — 0 items stripped. The
+      "partially reconstituted" tail is foreshadowed by DG Biggar ("LockBit may
+      seek to rebuild") but the actual reconstitution and the Oct-2024 follow-on
+      are NOT in these Feb-20 snapshots -> qualified in outcome_summary + drives
+      level=partial.
+    [b] ATTRIBUTION — corrected summary's factual error "FBI-led" -> NCA-led
+      (NCA source title "NCA Leads International Investigation"; DG Biggar
+      "This NCA-led investigation"; DOJ credits "The U.K. National Crime
+      Agency's (NCA) Cyber Division"). attributing_org reordered FBI->NCA-first.
+      Added attribution_level: named-actor (matches hive/endgame/ladybird).
+      confidence high / concur-with-caveat retained (primary govt sources,
+      unambiguous). No over-attestation of the SUBJECT (actor_id stays null).
+    [c] DATES — disclosure 2024-02-20 verified verbatim (DOJ "Tuesday, February
+      20, 2024"; NCA "20 February 2024"; Europol same day, mirror). start
+      2024-02-19 = takedown onset, basis NCA "over the last 12 hours this
+      infrastructure ... has been seized" (weak but defensible). end 2024-12-31
+      = campaign bracket for the 2024 follow-ons; rests on the url:null Oct-8
+      source, NOT snapshot-pinned -> partial.
+    [d] DOCTRINE — us/ncs-2023/disrupt-dismantle: attested UPHELD; Monaco
+      goal-quote verified EXACT against DOJ snapshot; perspective
+      defender-response. us/ncs-2023/forge-international-partnerships:
+      DOWNGRADED attested -> strongly_inferred (over-attestation fix — prior
+      link had no goal-quote / no perspective); added perspective
+      defender-response + inference_basis.signals (enumerated 11-nation
+      coalition + Europol/Eurojust; Poland/Ukraine arrests). Both pillar_ids
+      exist in atlas/doctrines/us/ncs-2023.yaml (P2, P5).
+    [e] ATTRIBUTION_LEVEL — added named-actor (LockBit is a named group per
+      all sources).
+    [f] ACTOR_ID — null (correct; LE counter-action, LockBit=subject). actor
+      entity is ru/proxies/lockbit. targets set to [] (was orgs/lockbit) to
+      match sibling counter-action convention.
+
+    FLAGS for orchestrator (not edited here):
+      - REGISTRY DANGLING FK: target orgs/lockbit is referenced by 3 events
+        (this one [now removed], trickbot-disruption, lockbitsupp-khoroshev-
+        unmasking) but has NO definition file under atlas/targets/orgs/.
+        Removed from this event; still dangling in the other two.
+      - doj/2024-10-08_lockbit-followup remains url:null/unfetchable — orphan
+        candidate for a pinned canonical Oct-2024 DOJ release, or retire.

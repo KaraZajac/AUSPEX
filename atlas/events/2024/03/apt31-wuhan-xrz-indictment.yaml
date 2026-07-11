@@ -4,20 +4,33 @@ start_date: 2024-03-25
 disclosure_date: 2024-03-25
 end_date: 2024-03-25
 incident_type:
-  - documentary  # indictment + sanctions; references underlying 14-year campaign
-initial_vector: unknown
+  - law-enforcement        # DOJ EDNY indictment (24-CR-43) unsealed 2024-03-25
+  - policy                 # OFAC SDN designations + UK FCDO/OFSI sanctions
+  - attribution-publication  # coordinated US-UK public attribution to APT31 / MSS-Hubei
+initial_vector: unknown    # meta counter-action (paper indictment + sanctions); no initial-access vector applies
 outcome_summary: |
-  Coordinated US-UK action: DOJ indicted seven PRC nationals
-  associated with Wuhan Xiaoruizhi Science and Technology
-  Company ("Wuhan XRZ"), an MSS-Hubei front company, for a
-  14-year APT31 campaign targeting White House and State
-  Department officials, US senators and House members, IPAC
-  parliamentarians (UK / EU), US defense contractors, energy
-  and telecom companies, and dissidents. OFAC simultaneously
-  added Wuhan XRZ and two named officers (Zhao Guangzong, Ni
-  Gaobin) to the SDN list. UK FCDO and NCSC issued a parallel
-  attribution naming UK Electoral Commission breach and IPAC-MP
-  targeting.
+  Coordinated US-UK counter-action. DOJ (EDNY, 24-CR-43) unsealed an
+  indictment of seven PRC nationals — contractors and associates of
+  Wuhan Xiaoruizhi Science & Technology Co. ("Wuhan XRZ"), a front
+  company the Hubei State Security Department (HSSD, the MSS's provincial
+  foreign-intelligence arm) created in approximately 2010 — charging a
+  computer-intrusion and wire-fraud conspiracy (Dec 2014 – Jan 2024)
+  carried out on behalf of the HSSD. Named campaign targets include
+  White House and State Department officials; U.S. Senators from more
+  than ten states and other members of Congress; EU and UK members of
+  the Inter-Parliamentary Alliance on China (IPAC, including 43 UK
+  parliamentary accounts); cleared defense contractors; and companies
+  across IT/telecom (including a 5G-equipment provider), energy (an
+  energy company based in Texas), finance, and research. OFAC
+  simultaneously designated Wuhan XRZ and two named individuals (Zhao
+  Guangzong, Ni Gaobin) to the SDN list, and State offered a Rewards for
+  Justice bounty. The UK FCDO/NCSC issued a parallel attribution and
+  matching OFSI sanctions: the UK Electoral Commission compromise
+  (2021–2022) attributed to "a Chinese state-affiliated entity" ("highly
+  likely"; APT31 NOT named for that strand), and "almost certain" APT31
+  reconnaissance against UK parliamentarians prominent in criticising
+  China; the UK sanctioned Wuhan XRZ and the two individuals and summoned
+  the Chinese Ambassador.
 false_flag_risk: none
 operators_named:
   - zhao-guangzong  # APT31 / Wuhan XRZ, DOJ + OFAC Mar 2024
@@ -28,66 +41,122 @@ operators_named:
   - sun-xiaohui  # APT31 / Wuhan XRZ, DOJ Mar 2024
   - xiong-wang  # APT31 / Wuhan XRZ, DOJ Mar 2024
 summary: |
-  Canonical example of coordinated transatlantic attribution
-  and cost imposition against a PRC MSS contractor. References
-  named-victim events from across the 14-year period including
-  a 2018 Texas energy-company compromise — itself a precursor
-  signal for the Volt-Typhoon-era critical-infrastructure
-  pre-positioning doctrine.
+  Canonical example of coordinated transatlantic attribution and cost
+  imposition against a PRC MSS (Hubei SSD) contractor operation. This
+  event models the same-day US paper counter-action (DOJ indictment +
+  OFAC sanctions, with the UK FCDO/NCSC joint action noted); the
+  underlying UK Electoral Commission / parliamentarian strands are
+  modeled separately at 2024-03/ncsc-fcdo-apt31-electoral-commission
+  (cross-linked, not merged). The indictment enumerates named-victim
+  sectors across a roughly 14-year period (since at least 2010). The
+  companion OFAC release — not the indictment — adds that "In 2018,
+  employees of Wuhan XRZ conducted an APT 31 malicious cyber operation
+  on a Texas-based energy company, gaining unauthorized access"; the
+  indictment itself lists that energy company undated in a victim
+  enumeration. The only tradecraft stated for that victim is
+  "unauthorized access" — no malware, no pre-positioning; neither source
+  mentions Volt Typhoon or grid/power-equipment pre-positioning.
 attributions:
-  - actor_id: cn/mss/apt31
-    attributing_org: US DOJ
+  - actor_id: null  # counter-action (US DOJ law-enforcement); subject actor is cn/mss/apt31 (Wuhan XRZ / HSSD), named in prose
+    attributing_org: US DOJ (EDNY)
     attributing_org_confidence: high
+    attribution_level: named-unit  # indictment chains MSS -> Hubei SSD -> Wuhan XRZ front -> APT31
     auspex_assessment: concur
     attribution_date: 2024-03-25
     attribution_source_id: doj/2024-03-25_apt31-indictment
-  - actor_id: cn/mss/apt31
+  - actor_id: null  # counter-action (US Treasury OFAC sanctions); subject actor cn/mss/apt31
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
+    attribution_level: named-unit  # OFAC: Wuhan XRZ "a ... MSS front company"; APT31 operates "on behalf of the HSSD"
     auspex_assessment: concur
     attribution_date: 2024-03-25
     attribution_source_id: treasury/2024-03-25_apt31-wuhan-xrz
-  - actor_id: cn/mss/apt31
+  - actor_id: null  # counter-action (UK FCDO/NCSC attribution + OFSI sanctions); subject actor cn/mss/apt31
     attributing_org: UK FCDO + NCSC
     attributing_org_confidence: high
+    attribution_level: named-actor  # UK named APT31 ("almost certain") for the parliamentary strand; MSS named only in the sanctions designation, not the incident attribution
     auspex_assessment: concur
     attribution_date: 2024-03-25
-    attribution_source_id: ncsc-uk/2024-03-25_apt31-electoral-commission
+    attribution_source_id: gov-uk/2024-03-25_apt31-china-state-affiliated  # repointed from tombstoned ncsc-uk page to the reachable, hashed FCDO companion
 doctrine_links:
   - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: null
+    perspective: attacker-rationale  # China's (attacker's) doctrine explaining the underlying APT31 campaign this counter-action addresses
+    pillar_id: cn/national-intelligence-law-2017/diaspora-and-dissident-collection
     program_id: null
     confidence: attested
     reasoning: |
-      DOJ indictment and OFAC press release name the political-
-      espionage objective — US senators, IPAC parliamentarians,
-      White House and State officials — directly invoking the
-      Intelligence Law's compelled-vendor-cooperation and
-      political-intelligence mandate.
+      The indictment states the strategic purpose at the goal level of
+      the NIL's diaspora/dissident-collection pillar: the MSS "focused
+      collection and subsequent related malign influence efforts on
+      politicians that the PRC perceived as being critical of PRC
+      government policies," and the conspirators targeted Hong Kong
+      democracy activists, Uyghurs, PRC dissidents/critics, and IPAC
+      parliamentarians "in response to geopolitical events affecting the
+      PRC." (The prior reasoning wrongly cited the compelled-vendor-
+      cooperation pillar — no vendor is compelled here; corrected to the
+      dissident/critic-collection pillar, which the actor record also
+      carries as APT31's alignment.)
     attesting_source_id: doj/2024-03-25_apt31-indictment
+    inference_basis:
+      source_quote: "the MSS focused collection and subsequent related malign influence efforts on politicians that the PRC perceived as being critical of PRC government policies"
+      source_id: doj/2024-03-25_apt31-indictment
     contested: false
     analyst: claude
   - doctrine_id: cn/mic2025
-    pillar_id: cn/mic2025/power-equipment
+    perspective: attacker-rationale
+    pillar_id: null  # was cn/mic2025/power-equipment — dropped: a single undated Texas energy-company victim does not carry a power-equipment industrial-policy attribution
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # DOWNGRADED from attested (over-attestation)
     reasoning: |
-      The indictment specifically cites the 2018 Texas
-      energy-company compromise — the first publicly-disclosed
-      PRC critical-infrastructure pre-positioning precursor
-      against the MIC2025 power-equipment pillar.
-    attesting_source_id: doj/2024-03-25_apt31-indictment
+      The indictment names the proximate economic-collection purpose that
+      MIC2025 specializes — the MSS "sought to target intellectual
+      property that could be utilized to the economic advantage of
+      PRC-based commercial firms," and the campaign stole "economic plans,
+      intellectual property, and trade secrets belonging to American
+      businesses ... to transfer U.S. technology to the PRC." That is a
+      proximate goal, not a stated MIC2025 objective, so strongly_inferred
+      (not attested). The prior framing — "2018 Texas energy-company
+      compromise ... first publicly-disclosed critical-infrastructure
+      pre-positioning precursor against the power-equipment pillar" — was
+      fabricated/misattributed: the indictment lists the Texas energy
+      company undated in a victim enumeration (para 25(d)); the "2018" date
+      and "malicious cyber operation" wording are the OFAC release's, not
+      the indictment's; and neither source uses "pre-positioning," "power
+      equipment," or "Volt Typhoon."
+    attesting_source_id: doj/2024-03-25_apt31-indictment  # supporting source (names the proximate economic-collection goal, not the MIC2025 objective)
+    inference_basis:
+      signals:
+        - "Indictment (para 2): the MSS 'sought to target intellectual property that could be utilized to the economic advantage of PRC-based commercial firms.'"
+        - "Indictment (para 15): campaign compromised 'economic plans, intellectual property, and trade secrets belonging to American businesses ... to transfer U.S. technology to the PRC.'"
+        - "Named victim sectors overlap MIC2025 pillars (IT/telecom incl. 5G, aerospace/defense, energy) — but as a broad multi-sector espionage set, not one pillar."
+      ruled_out: "Power-equipment industrial-policy pillar (the prior tag): the sole energy victim is one undated entry with no stated IP theft (OFAC: only 'unauthorized access'); no source states a power-equipment objective. Also set aside: pure political-espionage (captured by the cn/national-intelligence-law-2017 link)."
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
-    pillar_id: cn/mcf/civil-infrastructure-targeting
+    perspective: attacker-rationale
+    pillar_id: cn/mcf/dual-use-research  # was cn/mcf/civil-infrastructure-targeting — re-homed: APT31 is an espionage actor; the raw describes defense-industrial/R&D collection, not coercive infrastructure pre-positioning
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # DOWNGRADED from attested
     reasoning: |
-      Defense contractor targeting plus critical-infrastructure
-      pre-positioning (energy, telecom) maps to the MCF
-      civil-infrastructure-targeting pillar.
-    attesting_source_id: doj/2024-03-25_apt31-indictment
+      The indictment repeatedly names cleared-defense-contractor and
+      defense-R&D targets that map to MCF's dual-use-research pillar: a
+      Long Island cleared defense contractor breached via a zero-day
+      (Oct–Dec 2016); an Oklahoma contractor that "designed and
+      manufactured military flight simulators for the U.S. Army, Air Force
+      and Navy"; a Tennessee aerospace-and-defense contractor; an Alabama
+      aerospace-and-defense research corporation; a Maryland DoD
+      support-services company; plus a Virginia machine-learning lab and
+      universities — alongside the stated "economic espionage objectives."
+      No source states the MCF civil-military-fusion objective by name, so
+      strongly_inferred. The prior civil-infrastructure-targeting pillar
+      (coercive leverage over homeland infrastructure) was a category error
+      for an espionage actor and is re-homed here.
+    attesting_source_id: doj/2024-03-25_apt31-indictment  # supporting source (names defense-industrial/R&D victims + economic-espionage objective, not the MCF fusion goal)
+    inference_basis:
+      signals:
+        - "Indictment (para 23/25(a)): multiple named cleared-defense and aerospace/defense R&D victims (a flight-simulator maker for the US military; TN & AL aerospace-defense contractors; a MD DoD support-services firm)."
+        - "Indictment frames the conspiracy as serving 'the MSS's foreign intelligence and economic espionage objectives' with 'transfer [of] U.S. technology to the PRC' — the dual-use collection MCF licenses."
+      ruled_out: "cn/mcf/civil-infrastructure-targeting (the prior pillar): it encodes coercive leverage over homeland critical infrastructure (Volt-Typhoon-style pre-positioning); APT31 here is an espionage/political-intelligence actor and neither source states a coercive-infrastructure or pre-positioning purpose (0 hits for 'critical infrastructure' in the indictment; OFAC frames the energy access as espionage)."
     contested: false
     analyst: claude
 targets:
@@ -95,9 +164,9 @@ targets:
     role: primary
   - target_id: orgs/us-state-department
     role: primary
-  - target_id: orgs/uk-electoral-commission
-    role: primary
   - target_id: sectors/government
+    role: primary
+  - target_id: sectors/defense/contractor
     role: primary
   - target_id: sectors/energy/electric-power
     role: primary
@@ -106,4 +175,117 @@ targets:
 sources:
   - doj/2024-03-25_apt31-indictment
   - treasury/2024-03-25_apt31-wuhan-xrz
+  - gov-uk/2024-03-25_apt31-china-state-affiliated
   - ncsc-uk/2024-03-25_apt31-electoral-commission
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Audited vs RAW cited sources. Snapshots verified/added in
+    atlas/sources/raw/: doj__2024-03-25_apt31-indictment.pdf (sha256
+    bdc75e3b…e2d0c64d — the EDNY 24-CR-43 indictment, 27pp, captured via the
+    DOJ media /dl endpoint; the PR HTML Akamai-403s automated fetchers);
+    treasury__2024-03-25_apt31-wuhan-xrz.html (sha256 55a99339…7fe38aba);
+    gov-uk__2024-03-25_apt31-china-state-affiliated.html (sha256
+    6a9fd3d6…f3fbea76 — ADDED to sources[]). The ncsc-uk source is TOMBSTONED
+    (url null; only archive on web.archive.org, blocked for the fetcher) — not
+    hashable, but every UK claim it carried is mirror-corroborated verbatim by
+    the hashed FCDO companion (gov-uk), so level=full holds.
+
+    [a] FACTS — corrected. (1) STRIPPED fabrication from the summary: "a 2018
+    Texas energy-company compromise — itself a precursor signal for the
+    Volt-Typhoon-era critical-infrastructure pre-positioning doctrine." Neither
+    source mentions "Volt Typhoon" (0 hits; APT31's alias is "Violet Typhoon"),
+    "pre-positioning" (0), "critical infrastructure" in the indictment (0),
+    "power equipment" (0) or "grid" (0). The Texas energy company appears ONLY
+    as an undated entry in the indictment's victim enumeration (para 25(d): "an
+    energy company based in Texas"); the "In 2018 … malicious cyber operation …
+    gaining unauthorized access" wording is the OFAC release's, not the
+    indictment's. Rewrote the summary to state this. (2) outcome_summary
+    CORRECTED the UK strand (was: "UK FCDO and NCSC issued a parallel
+    attribution naming UK Electoral Commission breach and IPAC-MP targeting"):
+    the FCDO release attributes the EC compromise only to "a Chinese
+    state-affiliated entity" ("highly likely"; APT31 NOT named for that strand)
+    and names APT31 ("almost certain") ONLY for the separate parliamentary
+    reconnaissance; the UK release never uses "IPAC" (that descriptor is the US
+    DOJ indictment's). (3) "House members" softened to "members of Congress"
+    (the indictment names "Senators … from more than ten states" and "members of
+    Congress"; the House is not separately named). (4) Seven defendants + the
+    Wuhan XRZ / HSSD / MSS chain VERIFIED verbatim (indictment paras 4–5, 14;
+    OFAC "a … MSS front company").
+
+    [b] ATTRIBUTION — converted all 3 attributions from actor_id: cn/mss/apt31
+    to actor_id: null (counter-action: this event is the US paper action —
+    indictment + sanctions — whose perpetrator is DOJ/OFAC/UK, not APT31;
+    APT31/Wuhan XRZ/HSSD is the SUBJECT, named in prose). Matches the sibling
+    counter-action model at 2025-01/treasury-salt-typhoon-sanctions (OFAC
+    designation → actor_id null). attribution_level ADDED (was unset): DOJ
+    named-unit (indictment chains MSS → Hubei SSD → Wuhan XRZ → APT31), OFAC
+    named-unit (Wuhan XRZ "a … MSS front company"), UK named-actor ("almost
+    certain … APT31"; the MSS appears only in the UK designation, not the
+    incident attribution). auspex_assessment concur (well-supported, named).
+    The UK attribution_source_id REPOINTED from the tombstoned ncsc-uk page to
+    the hashed FCDO companion (gov-uk). attributing_org_confidence high tracks
+    DOJ/OFAC "charged/designated" + UK "highly likely"/"almost certain".
+
+    [c] DATES — start=disclosure=end=2024-03-25 KEPT (single-day counter-action:
+    DOJ unseal + OFAC + FCDO all 2024-03-25). Verified each source published_on
+    is 2024-03-25 (Treasury page "March 25, 2024"; FCDO "Published 25 March
+    2024"). The underlying campaign span (indictment: conspiracy "December 2014
+    and January 2024"; "since at least 2010") is the SUBJECT, not the event date
+    — reflected as "roughly 14-year (since at least 2010)" in prose.
+
+    [d] DOCTRINE_LINKS — all 3 were confidence:attested with no perspective;
+    re-graded per the 2026-06-19 attested reframe + the memory over-attestation
+    flag:
+      • cn/national-intelligence-law-2017 — KEPT attested but pillar CORRECTED
+        null → diaspora-and-dissident-collection (prior reasoning wrongly invoked
+        the compelled-vendor-cooperation pillar — no vendor is compelled here;
+        the actor record already aligns APT31 to the dissident pillar). The
+        indictment states the pillar's goal in substance (source_quote added):
+        MSS "focused collection … on politicians that the PRC perceived as being
+        critical of PRC government policies" + Hong Kong/Uyghur/dissident/IPAC
+        targeting.
+      • cn/mic2025 — DOWNGRADED attested → strongly_inferred; pillar
+        power-equipment → null. Over-attestation: no source states a MIC2025 (let
+        alone power-equipment) objective; the sources name only the proximate
+        economic-collection goal ("target intellectual property … to the economic
+        advantage of PRC-based commercial firms"; "transfer U.S. technology to
+        the PRC"). inference_basis.signals + ruled_out added.
+      • cn/mcf — DOWNGRADED attested → strongly_inferred; pillar
+        civil-infrastructure-targeting → dual-use-research (the prior pillar
+        encodes Volt-Typhoon-style coercive infrastructure pre-positioning — a
+        category error for an espionage actor). Re-homed to the
+        defense-industrial/R&D collection the indictment actually names
+        (flight-simulator maker for the US military; TN/AL aerospace-defense; MD
+        DoD services). inference_basis.signals + ruled_out added.
+      All 3 tagged perspective: attacker-rationale (China's doctrines explaining
+      the underlying campaign; also avoids the null-actor cross-state
+      doctrine-state-mismatch flag).
+
+    [e] ATTRIBUTION_LEVEL — added (see [b]): DOJ named-unit, OFAC named-unit, UK
+    named-actor.
+
+    [f] ACTOR_ID — set to null (counter-action). Subject actor cn/mss/apt31
+    RESOLVES (atlas/actors/cn/apt31.yaml, id: cn/mss/apt31) and is named in
+    prose. operators_named (7 indicted individuals) KEPT — all named verbatim in
+    the indictment; free slugs, no individual registry files (corpus norm).
+    incident_type documentary → [law-enforcement, policy, attribution-publication]
+    (all meta). targets: REMOVED orgs/uk-electoral-commission (not
+    APT31-attributed by the UK; owned by the companion event
+    2024-03/ncsc-fcdo-apt31-electoral-commission); ADDED sectors/defense/contractor
+    (prominently named Defense Industrial Base victims).
+
+    ORCHESTRATOR FLAGS (files I did NOT edit):
+    1. atlas/actors/cn/apt31.yaml default_doctrine_alignment_ids does NOT include
+       cn/mcf — reconcile with this event's (downgraded) cn/mcf/dual-use-research
+       link: either add it to the actor or drop the event link.
+    2. Sibling same-day event 2024-03/ncsc-fcdo-apt31-electoral-commission models
+       the identical UK action as a NAMED-ACTOR intrusion event (actor_id
+       cn/mss/apt31), whereas this US-side event is now a NULL-actor counter-
+       action — two valid modeling levels, but Kara may want them harmonized.
+    3. actor cn/apt31 ttp_summary still calls the Texas energy hit a "2018
+       compromise … cited in the indictment" — the indictment lists it undated;
+       the 2018 date is OFAC's. Minor precision note for the actor record.

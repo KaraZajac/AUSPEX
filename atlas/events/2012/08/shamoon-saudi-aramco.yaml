@@ -1,74 +1,216 @@
 id: 2012-08/shamoon-saudi-aramco
-name: Shamoon — destructive wiper against Saudi Aramco and RasGas
+name: Shamoon — destructive wiper against Saudi Aramco
 start_date: 2012-08-15
 disclosure_date: 2012-08-15
-end_date: 2012-08-30
+end_date: 2012-08-30  # AUDIT 2026-07-11: re-anchored to Aramco's recovery — "By the end of August 2012, Aramco published a statement saying that it managed to restore all the main internal network services" (CCDCOE). Prior basis (the RasGas wave) belongs to the sister event 2012-08/rasgas-shamoon.
 incident_type:
   - destructive
   - wiper
-initial_vector: unknown  # likely insider-credential or phishing
+initial_vector: unknown  # CCDCOE's synthesis names a privileged "company insider" as the leading (but unconfirmed) vector; no primary/forensic source proves it — held at unknown.
 outcome_summary: |
-  Approximately 30,000 Saudi Aramco workstations destroyed by
-  the Shamoon disk-wiper which overwrote the MBR with an image
-  of a burning US flag. Two weeks later RasGas (Qatar) hit by a
-  similar variant. Recovery costs in the tens of millions USD;
-  significant operational disruption to Aramco IT operations.
+  The Shamoon (Disttrack) disk-wiper struck Saudi Aramco's
+  corporate network on 15 August 2012, erasing and overwriting
+  the hard drives of roughly three-quarters of the company's PCs
+  (NYT/CCDCOE); the attacker persona itself claimed "thirty
+  thousand computers." The wiper overwrote the master boot record
+  with a fragment of a JPEG of a burning U.S. flag. Damaged
+  workstations had to be replaced; Aramco said it had restored its
+  main internal network by the end of August 2012. A similar wiper
+  struck RasGas (Qatar) about two weeks later — held canonically
+  as the sister event 2012-08/rasgas-shamoon.
 quantified_impact:
-  endpoints_destroyed: 30000
-false_flag_risk: none
+  endpoints_destroyed: 30000  # attacker-CLAIMED figure ("thirty thousand", Cutting Sword pastebin), corroborated qualitatively as "three-quarters of Aramco's PCs" (NYT/CCDCOE); no independent exact count is snapshotted.
+false_flag_risk: suspected  # the "Cutting Sword of Justice" hacktivist persona is widely read as deniable cover for suspected Iranian state action (harmonized with sister 2012-08/rasgas-shamoon).
 campaign_id: apt33-shamoon-iran-oil
 summary: |
-  Claimed by the "Cutting Sword of Justice" persona; assessed
-  Iran / APT33 by vendor consensus (Mandiant / FireEye, McAfee,
-  Symantec). No US indictment specifically for Shamoon 1.
+  Claimed by the hacktivist persona "Cutting Sword of Justice,"
+  whose pastebin (15 Aug 2012) took credit for destroying "thirty
+  thousand" Aramco computers over Saudi regional policy.
+  Contemporaneous attribution to Iran is an ASSESSMENT by U.S.
+  intelligence officials, explicitly hedged — "they offered no
+  specific evidence" (NYT, Oct 2012; echoed by CCDCOE) — and the
+  hacktivist framing is widely read as deniable cover for state
+  action. The "APT33" actor bucket used here is a RETROSPECTIVE
+  vendor lineage label (FireEye 2017) that the same report
+  SEPARATES from the 2012 Shamoon operator ("the suspected Iranian
+  group that previously used SHAMOON … a separate, less widely
+  known suspected Iranian group … whom we call APT33"; "we have not
+  directly observed APT33 … carry out destructive operations") and
+  which it ties only to "the Iranian government," naming no IRGC
+  unit (IRGC: 0 hits). Directionality Iran -> Saudi Arabia.
   Foundational event for the Iranian destructive-wiper pattern
-  later expressed in Shamoon 2 (2016), Shamoon 3 (2018), and
-  ZeroCleare / Dustman (2019).
+  later reused in Shamoon 2 (2016), Shamoon 3 (2018) and
+  ZeroCleare / Dustman (2019). No U.S. indictment for Shamoon 1.
 attributions:
   - actor_id: ir/irgc/apt33
-    attributing_org: Mandiant / FireEye
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2017-09-20
+    attributing_org: |
+      Contemporaneous layer: U.S. intelligence officials ASSESSED Iran (hedged, "no specific
+      evidence" — NYT 2012 / CCDCOE). Actor label: retrospective Shamoon-lineage "APT33" bucket
+      (FireEye 2017), which itself separates APT33 from the 2012 operator.
+    attributing_org_confidence: low
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2017-09-20  # date of the retrospective FireEye APT33 lineage label; the contemporaneous nation-level assessment is Oct 2012 (NYT).
     attribution_source_id: fireeye/2017-09-20_apt33-report
     notes: |
-      No US indictment for Shamoon 1; vendor consensus
-      attribution to APT33 / IRGC.
+      The well-supported layer is NATION-LEVEL (Iran, suspected/assessed). Contemporaneous
+      support reaches only "U.S. intelligence officials say the attack's real perpetrator was
+      Iran, although they offered no specific evidence to support that claim" (NYT 2012; CCDCOE
+      repeats it). The "Cutting Sword of Justice" persona claimed Aramco (pastebin) but that is a
+      hacktivist self-report, NOT a confession of state sponsorship.
+      The ir/irgc/apt33 bucket is retained for CAMPAIGN CONTINUITY with the sister events
+      (2012-08/rasgas-shamoon, 2016-11/shamoon-2-saudi) but is OVER-SPECIFIED for a 2012 op:
+      the cited FireEye 2017 report explicitly SEPARATES APT33 from "the suspected Iranian group
+      that previously used SHAMOON," states "we have not directly observed APT33 … carry out
+      destructive operations," and attributes APT33 only to "the Iranian government" (IRGC /
+      "Revolutionary Guard": 0 occurrences). The actor was re-homed ir/unscoped -> ir/irgc on
+      2026-07-02 on the basis of a MODERN (2024 MSTIC) op, compounding the anachronism.
+      confidence therefore set LOW; auspex_assessment concur-with-caveat. Prior stamp
+      (high / concur, attributing_org "Mandiant / FireEye") was over-attestation and is corrected.
+      No U.S. indictment for Shamoon 1. See orchestrator FLAG: campaign-level attribution review.
 doctrine_links:
   - doctrine_id: ir/asymmetric-warfare
-    pillar_id: null
+    pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Retaliation for sanctions and Stuxnet against the Gulf oil
-      adversary; cyber chosen as the asymmetric equalizer.
+      A purpose-built disk wiper against the flagship national oil company of a US-aligned Gulf
+      adversary, during the post-Stuxnet sanctions confrontation, reads as the low-cost, deniable
+      harassment of an adversary's civilian critical infrastructure that this pillar encodes.
+      Downgraded from any "attested": no cited source states the strategic PURPOSE of the attack
+      (the FireEye report names no goal and separates APT33 from the 2012 operator; the pastebin
+      states only an anti-Al-Saud grievance) — this is AUSPEX's triangulated inference.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target + timing: the Gulf's largest national oil company (Saudi Aramco) hit during the post-Stuxnet/sanctions confrontation — the canonical Iranian asymmetric-retaliation window against a US-aligned adversary's civilian energy sector."
+        - "Payload = pure destruction: Shamoon/Disttrack overwrote ~three-quarters of corporate PCs (and the MBR) with no theft, ransom, or collection — the high-signal harassment of civilian IT this pillar describes."
+        - "Deniable framing: fronted by the 'Cutting Sword of Justice' hacktivist persona, matching the pillar's cost/deniability logic."
+      ruled_out: "Espionage or financial motive — Shamoon/Disttrack is a purpose-built wiper with no data-exfiltration, ransom, or intelligence-collection rationale evidenced; the goal is destruction of the adversary's civilian IT estate."
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/forward-defense
     pillar_id: ir/forward-defense/proxy-projection
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Saudi Aramco is the canonical Gulf-energy proxy target
-      for Iranian projection against Saudi Arabia.
+      Destructive cyber against the flagship energy asset of a US-aligned Gulf monarchy can also
+      be read as projecting Iranian coercive reach extraterritorially at near-zero physical risk —
+      the forward-defense proxy-projection logic. Kept only "plausible": the forward-defense
+      doctrine was articulated more explicitly by IRGC leadership later in the decade (a mild
+      anachronism for 2012), and no cited source ties this specific op to that posture.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Forward-defense proxy projection: destructive cyber against a US-aligned Gulf monarchy's flagship energy asset projects Iranian reach extraterritorially at near-zero physical risk."
+        - "Simple asymmetric retaliation (the civilian-CII-coercion reading above) as post-Stuxnet/sanctions payback, with no distinct power-projection intent."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/saudi-aramco
+    country: sa
     role: primary
     outcome: |
-      ~30,000 endpoints destroyed; multi-week operational
-      disruption.
+      ~three-quarters of corporate PCs wiped and had to be replaced
+      (attacker-claimed "thirty thousand computers"); MBR overwritten
+      with a burning-US-flag JPEG fragment; main internal network
+      restored by the end of August 2012. Production/OT not evidenced
+      as affected in the cited sources.
   - target_id: orgs/rasgas
-    role: primary
+    country: qa
+    role: collateral  # AUDIT 2026-07-11: demoted primary->secondary; RasGas is held canonically as its own event 2012-08/rasgas-shamoon. See orchestrator FLAG (double-representation).
     outcome: |
-      Follow-on wave two weeks later (August 30, 2012).
+      Follow-on Shamoon-family wave ~2 weeks later (late Aug 2012);
+      documented canonically at 2012-08/rasgas-shamoon.
 sources:
-  - mandiant/2012_shamoon-analysis
-  - mcafee/2012_shamoon-analysis
+  - securelist/2012-09-11_shamoon-the-wiper-part-ii
+  - nytimes/2012-10-23_cyberattack-saudi-oil-iran
   - ccdcoe/shamoon-cyberlaw
+  - pastebin/2012-08-15_cutting-sword-of-justice
   - fireeye/2017-09-20_apt33-report
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Audited vs RAW cited sources. TRIAGE found 3 of the 4 original sources were PHANTOM shells:
+    mandiant/2012_shamoon-analysis (url = bare mandiant.com homepage -> Google Cloud marketing,
+    2.3MB, zero Shamoon content; Mandiant published no canonical 2012 Shamoon analysis),
+    mcafee/2012_shamoon-analysis (url = bare McAfee Labs blog INDEX; live curl HTTP 000), and
+    ccdcoe/shamoon-cyberlaw (url = bare wiki root -> Main_Page). "badrabbit-model" RE-SOURCE
+    applied: the event is REAL but was re-sourced to genuine snapshotted sources.
+
+    SOURCES / HASHES (all HTTP 200 and snapshotted -> level=full):
+    - securelist/2012-09-11_shamoon-the-wiper-part-ii (Kaspersky/Tarakanov): raw
+      c446f0a3…853023, 191,003 B. published_on corrected to 2012-09-11 (page JSON-LD
+      datePublished 2012-09-11T01:08Z; the raw file was mis-slugged 08-29 pre-audit).
+    - nytimes/2012-10-23_cyberattack-saudi-oil-iran (Perlroth): raw 077735fd…fec2e, 62,670 B.
+      Live nytimes.com is BOT-WALLED (HTTP 403) so the snapshot is the web.archive id_ copy —
+      hashed, so this still counts as snapshotted.
+    - ccdcoe/shamoon-cyberlaw: PHANTOM REPAIRED -> /wiki/Shamoon_(2012) (HTTP 200); raw
+      a5b0cc46…e295536, 30,071 B; published_on 2018-01-01 -> 2021-09-17 (page "last edited").
+    - pastebin/2012-08-15_cutting-sword-of-justice: raw 9fcbb343…722333, 15,257 B (web.archive
+      capture of the primary claim; byline "Aug 15th, 2012").
+    - fireeye/2017-09-20_apt33-report: raw ec8fe72a…e595b27, 300,441 B — sha256 RE-VERIFIED
+      against the record (matches).
+
+    [a] FACTS — corrected. STRIPPED (0-hit, unsourced): "Recovery costs in the tens of millions
+    USD" — no snapshotted source states any dollar figure. The 30,000 figure is now correctly
+    framed as the ATTACKER'S CLAIM: pastebin verbatim "sended a malicious virus to destroy thirty
+    thousand computers networked in this company," corroborated qualitatively as "three-quarters
+    of Aramco's PCs" (NYT: "wiped out data on three-quarters of Aramco's PCs"; CCDCOE: "erased
+    data on three-quarters of Aramco's corporate PCs … had to be replaced"). Burning-US-flag MBR
+    overwrite CONFIRMED: Securelist "the overwriting of a hard drive with the mentioned JPEG …
+    the MBR section" + "a JPEG picture of a burning U.S. flag"; NYT "replacing all of it with an
+    image of a burning American flag"; CCDCOE same. Onset time added-context: pastebin "began on
+    Wednesday, Aug 15, 2012 at 11:08 AM (Local time in Saudi Arabia)." RasGas follow-on:
+    Securelist "just about two weeks later, another energy company … (RasGas) fell victim."
+
+    [b] ATTRIBUTION — OVER-ATTESTATION FIXED. Prior stamp high / concur / "Mandiant / FireEye"
+    -> LOW / concur-with-caveat. The one real prior source (FireEye 2017) does NOT attribute
+    2012 Shamoon-Aramco to APT33 — verbatim it separates them ("the suspected Iranian group that
+    previously used SHAMOON – aka Disttrack …" vs "a separate, less widely known suspected Iranian
+    group … whom we call APT33") and states "we have not directly observed APT33 … carry out
+    destructive operations"; it attributes APT33 only to "the Iranian government" (grep IRGC /
+    "Revolutionary Guard" = 0). The firm layer is NATION-LEVEL: US intelligence ASSESSED Iran,
+    hedged "no specific evidence" (NYT/CCDCOE). Actor bucket kept for campaign continuity; see
+    FLAG. attribution_level added: named-actor.
+
+    [c] DATES — start_date 2012-08-15 ✓ (pastebin + CCDCOE "unleashed on 15 August 2012").
+    disclosure_date 2012-08-15 ✓ (the public claim was posted 15 Aug). end_date 2012-08-30
+    RE-ANCHORED from the RasGas wave to Aramco's own recovery (CCDCOE: "By the end of August 2012,
+    Aramco … restore[d] all the main internal network services"). Source published_on verified:
+    Securelist 2012-09-11 (JSON-LD, corrected from a mis-slug), NYT 2012-10-23 (byline), CCDCOE
+    2021-09-17 (last-edited), pastebin 2012-08-15 (byline), FireEye 2017-09-20.
+
+    [d] DOCTRINE_LINKS — brought to standard. ir/asymmetric-warfare: pillar_id null ->
+    ir/asymmetric-warfare/civilian-cii-coercion; kept strongly_inferred; added
+    inference_basis.signals + ruled_out; attesting_source_id null (no source states the goal).
+    ir/forward-defense/proxy-projection: strongly_inferred -> PLAUSIBLE (doctrine articulated more
+    explicitly later in the decade; no source ties the op to it); added inference_basis.alternatives;
+    attesting null. Both are attacker-rationale (Iran's own doctrine on its own attack) = default
+    perspective. Grades now harmonized with the sister rasgas-shamoon event.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (the retrospective APT33 label is a named actor; the
+    source stops at "the Iranian government," i.e. does not reach named-unit; contemporaneous
+    support is nation-level, noted in the attribution).
+
+    [f] ACTOR_ID — ir/irgc/apt33 RESOLVES (atlas/actors/ir/apt33.yaml, id ir/irgc/apt33). Target
+    ids orgs/saudi-aramco + orgs/rasgas both resolve.
+
+    ORCHESTRATOR FLAGS (no cross-file edits made): (1) CAMPAIGN-LEVEL ATTRIBUTION REVIEW — the
+    apt33-shamoon-iran-oil campaign attributes the 2012 Shamoon operator to APT33, which FireEye's
+    own report separates from that operator; the IRGC-unit scope came from a 2024 MSTIC op
+    (re-home 2026-07-02) and is anachronistic for 2012. Both this event (now low) and the sister
+    (low) flag it. (2) CAMPAIGN REGISTRY MISSING — campaign_id apt33-shamoon-iran-oil has no
+    registry file (used by 3 events); the "apt33" slug is itself anachronistic. (3) RASGAS
+    DOUBLE-REPRESENTATION — RasGas appears here (demoted primary->secondary) and as its own
+    canonical event 2012-08/rasgas-shamoon; orchestrator to decide whether to drop the RasGas
+    target from this Aramco event entirely. (4) ORPHANED PHANTOMS — mandiant/2012_shamoon-analysis
+    and mcafee/2012_shamoon-analysis removed from sources[]; cited nowhere else -> RETIRE
+    candidates (annotated in-record, not deleted). (5) DUPLICATE FireEye source records —
+    fireeye/2017-09-20_apt33-report (used here) vs bare fireeye/2017-09-20_apt33 (carry-over flag
+    from the sister audit; still cited elsewhere) — consolidate.

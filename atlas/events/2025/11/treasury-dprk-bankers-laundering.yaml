@@ -8,15 +8,20 @@ incident_type:
   - policy
 initial_vector: unknown
 outcome_summary: |
-  OFAC and State designated eight individuals and two entities
-  for laundering proceeds of DPRK cybercrime and IT-worker fraud.
-  Jang Kuk Chol and Ho Jong Son, North Korean bankers operating
-  from Vladivostok, were sanctioned for managing USD 5.3M in
-  cryptocurrency on behalf of OFAC-designated First Credit Bank,
-  with funds linkable to a DPRK ransomware actor that has
-  targeted US victims and to DPRK IT-worker revenue. Jong Sung
-  Hyok, chief representative of the OFAC-designated DPRK
-  Foreign Trade Bank in Vladivostok, was also designated.
+  OFAC designated eight individuals and two entities for
+  laundering proceeds of DPRK cybercrime and IT-worker fraud
+  (with a companion US State Department statement). The two
+  newly designated entities were Korea Mangyongdae Computer
+  Technology Company (KMCTC, a DPRK IT-worker delegation
+  operator based in Shenyang and Dandong, China) and Ryujong
+  Credit Bank. Jang Kuk Chol and Ho Jong Son, North Korean
+  bankers, were sanctioned for managing USD 5.3M in
+  cryptocurrency on behalf of the previously OFAC-designated
+  First Credit Bank, with a portion of those funds linkable to
+  a DPRK ransomware actor that has previously targeted US
+  victims and to DPRK IT-worker revenue. Jong Sung Hyok, chief
+  representative of the previously OFAC-designated DPRK Foreign
+  Trade Bank in Vladivostok, Russia, was also designated.
 false_flag_risk: none
 campaign_id: dprk-it-worker-enforcement-arc
 summary: |
@@ -26,19 +31,8 @@ summary: |
   because most successful DPRK crypto launder paths surface
   through Russia-China physical-cash off-ramps.
 attributions:
-  - actor_id: kp/rgb/lazarus
-    attributing_org: US Treasury OFAC + State Department
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-11-04
-    attribution_source_id: treasury/2025-11-04_dprk-bankers-sb0302
-    notes: |
-      Treasury links USD 5.3M in laundered crypto to "a DPRK
-      ransomware actor that has previously targeted U.S.
-      victims" — operationally Lazarus / APT38, though the
-      press release does not use a cluster name.
-  - actor_id: kp/it-worker-fraud
-    attributing_org: US Treasury OFAC + State Department
+  - actor_id: null  # US-sanction COUNTER-ACTION (jy1498 / sb0416 / treasury-sinbad precedent + SCHEMA directionality): the DPRK bankers, the First Credit Bank / FTB financial-representative network, the linked ransomware actor, and the it-worker-fraud cluster are the SANCTIONED SUBJECTS, not the event's actor; OFAC is the acting body. The release links USD 5.3M to "a DPRK ransomware actor that has previously targeted U.S. victims" but names NO cluster — Lazarus / APT38 is AUSPEX inference, not asserted by the source.
+    attributing_org: US Treasury OFAC
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2025-11-04
@@ -58,7 +52,11 @@ doctrine_links:
     attesting_source_id: treasury/2025-11-04_dprk-bankers-sb0302
     inference_basis:
       source_id: treasury/2025-11-04_dprk-bankers-sb0302
-      source_quote: "fund the regime's nuclear weapons program ... WMD and ballistic missile programs"
+      source_quote: >
+        The Government of the DPRK relies on a broad range of illicit activity,
+        including cybercrime, to generate revenue for its WMD and ballistic
+        missile programs and explicitly tasks its hackers to raise revenue
+        using illicit methods.
     contested: false
     analyst: claude
   - doctrine_id: kp/office-39-sanctions-evasion
@@ -79,14 +77,98 @@ doctrine_links:
       ruled_out: "'Office 39' / Bureau 39 by name — not named in the release"
     contested: false
     analyst: claude
-targets:
-  - target_id: orgs/dprk-first-credit-bank
-    country: kp
-    role: primary
-  - target_id: orgs/dprk-foreign-trade-bank
-    country: kp
-    role: primary
+targets: []  # AUDIT 2026-07-11: was [orgs/dprk-first-credit-bank, orgs/dprk-foreign-trade-bank] — BOTH were dangling FKs (no atlas/targets/orgs/ registry file exists for either; referenced nowhere else) AND neither was among the two NEW entity designations (KMCTC + Ryujong Credit Bank). The sanctioned DPRK institutions are the SUBJECTS of this counter-action (named in prose), not victim-targets — set [] per sb0416 precedent. See qc FLAGS.
 sources:
   - treasury/2025-11-04_dprk-bankers-sb0302
   - state/2025-11-04_dprk-bankers
   - therecord/2025-11-04_dprk-launderers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    STEP 0 TRIAGE — all three cited sources REAL (HTTP 200, full body,
+    topic-match). Snapshotted + hashed to atlas/sources/raw/:
+    treasury__2025-11-04_dprk-bankers-sb0302.html (sha256
+    f2c0d582…5dd700ab, 131,998 B); state__2025-11-04_dprk-bankers.html
+    (sha256 9737995e…b27df9690, 175,267 B);
+    therecord__2025-11-04_dprk-launderers.html (sha256 48b1d008…6834d714,
+    84,624 B). URL slug sb0302 is the correct real OFAC release number.
+
+    [a] FACTS — one FABRICATION/CONFLATION stripped. Original outcome_summary
+    read "Jang Kuk Chol and Ho Jong Son, North Korean bankers operating from
+    Vladivostok." NO cited source places Jang/Ho in Vladivostok — all three
+    attach Vladivostok ONLY to Jong Sung Hyok (FTB chief rep). Treasury
+    verbatim: "Jang Kuk Chol (Jang) and Ho Jong Son are North Korean bankers
+    who have helped manage funds, including $5.3 million in cryptocurrency, on
+    behalf of OFAC-designated First Credit Bank" (no location) and "Jong is
+    the chief representative of the U.S.-designated DPRK Foreign Trade Bank
+    (FTB) in Vladivostok, Russia." Record: "Jong Sung Hyok serves as a North
+    Korean financial representative in Vladivostok, Russia." Removed the
+    Jang/Ho-Vladivostok claim. Also corrected the "two entities" foregrounding:
+    the two NEWLY designated entities are Korea Mangyongdae Computer Technology
+    Company (KMCTC) and Ryujong Credit Bank (Treasury + State + Record) — NOT
+    First Credit Bank / FTB, which are PRE-existing designations named only as
+    context; added KMCTC + Ryujong to the summary. Verified carried: 8
+    individuals + 2 entities (all 3); USD 5.3M crypto via First Credit Bank
+    ("$5.3 million in cryptocurrency"); "a portion of these funds can be linked
+    to a DPRK ransomware actor that has previously targeted U.S. victims and
+    handled revenue from DPRK IT workers"; Jong = FTB chief rep, Vladivostok.
+
+    [b] ATTRIBUTION — actor_id NULLED (was kp/rgb/lazarus + kp/it-worker-fraud).
+    US OFAC counter-action: the DPRK bankers, the First Credit Bank / FTB
+    financial-representative network, the linked ransomware actor, and the
+    it-worker-fraud cluster are the SANCTIONED SUBJECTS, not the event's actor
+    — per jy1498 (2026-07-02) / sb0416 (2026-07-04) / treasury-sinbad precedent
+    + SCHEMA directionality. Single row: actor_id null + attributing_org
+    US Treasury OFAC, confidence high, concur. Dropped "+ State Department"
+    from attributing_org — the designations are Treasury/OFAC actions ("The
+    Department of Treasury actions were taken pursuant to Executive Orders…" —
+    State release); State's companion statement stays a corroborating source.
+    Both nulled actor ids DID resolve (kp/rgb/lazarus →
+    atlas/actors/kp/lazarus.yaml; kp/it-worker-fraud →
+    atlas/actors/kp/it-worker-fraud.yaml). No cluster named by the release —
+    Lazarus/APT38 is AUSPEX inference (preserved in the actor_id comment).
+
+    [c] DATES — start=disclosure=end=2025-11-04 CORRECT (point-in-time
+    designation). All three published_on 2025-11-04 verified vs raw
+    (Treasury meta content="2025-11-04" + "November 4, 2025"; State
+    "November 4, 2025"; Record datePublished "2025-11-04T18:23:19Z" /
+    "November 4th, 2025"). No change.
+
+    [d] DOCTRINE — kp/8th-congress-defense-plan/revenue-aggregation KEPT
+    attested: the source states the TERMINAL WMD-financing goal in substance,
+    not merely proximate revenue. Improved source_quote to a full verbatim
+    sentence: "The Government of the DPRK relies on a broad range of illicit
+    activity, including cybercrime, to generate revenue for its WMD and
+    ballistic missile programs…" (also Under Sec. Hurley: "North Korean
+    state-sponsored hackers steal and launder money to fund the regime's
+    nuclear weapons program"). Attacker-rationale (DPRK's own doctrine) — no
+    perspective tag, per jy1498/sb0416. program_id kept null (a mixed
+    ransomware-laundering + IT-worker aggregation action, not one program).
+    kp/office-39-sanctions-evasion/laundering-network KEPT strongly_inferred —
+    raw grep for "office 39" / "bureau 39" = 0 hits; the release's "Sanctions
+    evasion networks" section describes the laundering plumbing but never names
+    Office/Bureau 39. Both doctrine + pillar FKs resolve.
+
+    [e] ATTRIBUTION_LEVEL — n/a (null-actor counter-action); omitted, per
+    jy1498/sb0416.
+
+    [f] ACTOR_ID — n/a after nulling.
+
+    SNAPSHOT — level=FULL: every load-bearing claim is carried by a
+    snapshotted+hashed source; all 3 captured at HTTP 200 with full body.
+
+    FLAGS for orchestrator/Kara (NOT edited — out of scope):
+    - TARGET REGISTRY: event previously cited target_ids
+      orgs/dprk-first-credit-bank and orgs/dprk-foreign-trade-bank; NEITHER has
+      a registry file under atlas/targets/orgs/ (dangling FKs, referenced
+      nowhere else). Set targets:[] per sb0416. If DPRK-institution targets are
+      wanted, the two NEW designees are KMCTC + Ryujong Credit Bank (registry
+      entries would need creating).
+    - STALE SIBLING: atlas/events/2025/07/ofac-song-kum-hyok-andariel-it-worker
+      .yaml (same campaign, no qc block) still carries actor_id kp/rgb/andariel
+      + kp/it-worker-fraud on an OFAC counter-action — jy1498's own QC notes
+      already flag it "should be nulled + policy-tagged." Recommend nulling for
+      convention consistency.

@@ -1,6 +1,6 @@
 id: 2016-02/bangladesh-bank-swift
 name: Bangladesh Bank SWIFT heist
-start_date: 2015-08-01  # long pre-positioning began months earlier
+start_date: 2015-08-01  # network-dwell pre-positioning; sourced anchors: recon "as early as October 7 and 8, 2014" and Philippine mule accounts "created in the Philippines in May 2015" (DOJ 2018 complaint)
 disclosure_date: 2016-02-05
 end_date: 2016-02-08
 incident_type:
@@ -11,16 +11,21 @@ outcome_summary: |
   Long-dwell network compromise (months of pre-positioning)
   inside Bangladesh Bank with SWIFT Alliance Access message
   manipulation; printer-output suppression to delay detection
-  over a weekend. 35 fraudulent transfer instructions sent via
-  the New York Fed correspondent account; $81M routed to RCBC
-  Manila and $20M to Sri Lanka completed before the remaining
-  $850M were blocked. ~$15M of the $81M was recovered. Largest
-  publicly-confirmed bank cyber-heist of its time and the
-  canonical APT38 origin event.
+  over a weekend. Fraudulent transfer instructions were sent
+  via the New York Fed (FRBNY) correspondent account; $81M
+  routed to accounts in the Philippines and $20M to Sri Lanka
+  (the Sri Lanka leg stopped by the recipient bank) before the
+  remainder of the ~$951M attempted was blocked. The majority
+  of the $81M was never recovered. Largest publicly-confirmed
+  bank cyber-heist of its time and the defining SWIFT heist of
+  the APT38 campaign.
 quantified_impact:
-  usd_stolen: 81000000
-  usd_attempted: 951000000
-  usd_recovered: 15000000
+  usd_stolen: 81000000       # DOJ 2018 complaint: "$81,000,000"; BAE: "$81m is still unaccounted for"
+  usd_attempted: 951000000   # BAE Systems: "attempted to steal $951m"; DOJ 2018: attempt "approached $1 billion"
+  # usd_recovered omitted: no cited source states a recovery figure — DOJ 2018 says "The
+  # majority of the $81,000,000 has not been recovered to date"; BAE (Apr-2016) says the
+  # $81M was "still unaccounted for". The widely-reported ~$15M RCBC/Philippine-court
+  # recovery is post-dating and carried by none of the cited sources.
 false_flag_risk: none
 campaign_id: apt38-swift-bank-heists
 operators_named:
@@ -28,39 +33,48 @@ operators_named:
   - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
   - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
 summary: |
-  Origin event of the modern APT38 SWIFT campaign. DOJ February
-  2021 three-hacker indictment formally attributed the operation
-  to RGB / Lab 110 personnel including Park Jin Hyok. Initial
-  access was via spear-phishing of bank IT staff (a watering-hole
-  compromise of jobs.bangladeshbank.org and weaponized resume
-  attachments) delivering the Nestegg / Manuscrypt remote-access
-  trojans; operators then dwelled for months mapping the SWIFT
-  Alliance Access environment, harvested valid credentials via
-  Mimikatz-style credential dumping, and deployed the DYEPACK
-  toolkit on the SWIFT workstation to manipulate the outgoing
-  MT-103 messages while patching the Alliance Access nroff-based
-  print routine and database so confirmation receipts would not
-  print on the bank's monitoring printer over the Bangladesh
-  weekend. The Hermes wiper was scheduled for post-heist
-  evidence destruction — the same primitive later reused in the
-  FEIB Taiwan operation. Treasury and DOJ language ties proceeds
-  to DPRK weapons-program financing.
+  The defining SWIFT heist of the APT38 campaign — though not
+  its first: Mandiant dates APT38 operations to 2014 and lists
+  the December-2015 Vietnam TP Bank heist ahead of it. The DOJ
+  February 2021 three-hacker indictment attributed the operation
+  to RGB personnel (Lab 110 per the 2018 Park Jin Hyok complaint),
+  including Park Jin Hyok. Initial access was via spear-phishing
+  of bank staff; the intrusion used the Nestegg backdoor (DOJ
+  2018: "a backdoor that was used in connection with … intrusions
+  at financial institutions, including at Bangladesh Bank"), and
+  operators dwelled for months mapping the SWIFT Alliance Access
+  environment, harvested valid credentials (Mimikatz-class
+  dumping, per Mandiant), and used the DYEPACK toolkit on the
+  SWIFT workstation to manipulate outgoing SWIFT payment messages
+  while patching the Alliance Access nroff-based print routine and
+  Oracle database so confirmation receipts would not print on the
+  bank's monitoring printer over the Bangladesh weekend (BAE:
+  "submitted for printing by using another executable file called
+  nroff.exe"). A cleanup component then deleted the operation's
+  own artifacts to frustrate forensic recovery. DOJ 2021 frames
+  the theft as furthering "the strategic and financial interests
+  of the DPRK government and its leader, Kim Jong Un" under
+  sanctions pressure; no cited source states the terminal
+  weapons-program-financing goal (see doctrine note).
 attributions:
   - actor_id: kp/rgb/apt38
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor  # DOJ 2021: defendants "members of units of the Reconnaissance General Bureau (RGB) … known by … Lazarus Group and Advanced Persistent Threat 38 (APT38)"
     auspex_assessment: concur
     attribution_date: 2021-02-17
     attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
   - actor_id: kp/rgb/lazarus
     attributing_org: US DOJ (Park Jin Hyok complaint)
     attributing_org_confidence: high
+    attribution_level: named-actor  # 2018 complaint names the "Lazarus Group" (24 hits) and NOT "APT38" (0 hits; the label postdates it by a month) — era-correct kp/rgb/lazarus tag
     auspex_assessment: concur
     attribution_date: 2018-09-06
     attribution_source_id: doj/2018-09-06_park-jin-hyok-complaint
   - actor_id: kp/rgb/apt38
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor  # Mandiant "Un-usual Suspects" defines the APT38 financial-theft cluster (separated from the Lazarus core); lists "Bangladesh Bank in February 2016"
     auspex_assessment: concur
     attribution_date: 2018-10-03
     attribution_source_id: mandiant/2018-10-03_apt38-report
@@ -68,24 +82,162 @@ doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: strongly_inferred  # downgraded 2026-07-01 from attested: the only cited attesting source (DOJ 2021 indictment) states the PROXIMATE goal (evade sanctions / prop up the regime), not the pillar's TERMINAL weapons-program-funding purpose (SCHEMA attestation boundary); no WMD-financing source is cited on this event
+    confidence: strongly_inferred  # downgraded 2026-07-01 from attested, re-verified 2026-07-11: the cited govt-primary sources state only the PROXIMATE goal — "the strategic and financial interests of the DPRK government" (DOJ 2021) / regime revenue under sanctions (Mandiant) — not the pillar's TERMINAL weapons-program-funding purpose; term-scan of all three cited sources: "weapons of mass destruction"=0, "revenue"=0-in-DOJ (SCHEMA attestation boundary)
+    perspective: attacker-rationale
     reasoning: |
-      The DOJ 2021 indictment ties APT38 financial operations to DPRK
-      regime hard-currency needs, but names only the proximate
-      sanctions-evasion / revenue goal — not the terminal weapons-
-      program financing the Byungjin pillar encodes. A strong inference,
-      not attested (no cited source here states the terminal goal).
+      APT38's SWIFT-network bank thefts are the operational core of the
+      DPRK's cyber-enabled hard-currency generation, which the Byungjin
+      sanctions-evasion-revenue pillar encodes (era-correct for 2016).
+      The cited sources tie the theft to DPRK regime money needs under
+      sanctions pressure (Mandiant: "raise large sums of money for the
+      North Korean regime"; DOJ 2021: "the strategic and financial
+      interests of the DPRK government and its leader, Kim Jong Un") — a
+      strong signal of the terminal weapons-financing goal but short of a
+      flat attestation of it. Hence strongly_inferred, not attested
+      (harmonized with the 2015-12 Tien Phong and 2017-10 global-SWIFT
+      siblings, likewise downgraded).
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Mandiant APT38 report: the group's 'primary mission is targeting financial institutions and manipulating inter-bank financial systems to raise large sums of money for the North Korean regime … heavy … sanctions have been levied on North Korea following the regime's continued weapons development' — proximate revenue goal against a weapons-driven-sanctions backdrop."
+        - "DOJ 2021 press release: the conspiracy acted to 'further the strategic and financial interests of the DPRK government and its leader, Kim Jong Un' — the proximate regime-revenue function the pillar encodes."
+        - "APT38 / Lazarus is a dedicated financial-theft element of the RGB (DOJ 2021; Mandiant), whose raison d'etre is sanctions-evasion revenue generation."
+      ruled_out: |
+        Attested: no cited source on this event states the terminal
+        weapons-program-financing purpose in substance — the cited
+        DOJ/Mandiant sources name only the proximate regime-revenue /
+        sanctions-evasion goal (0 "weapons of mass destruction" hits).
+        The CISA AA20-239A WMD/ballistic-missile linkage that carries
+        this inference on the campaign-level sibling is NOT cited here.
+        Pure-criminal (non-state) financial crime is ruled out by the
+        DPRK-state attribution.
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/bangladesh-bank
     role: primary
-    outcome: $81M stolen via SWIFT manipulation; $850M attempted but blocked.
-  - target_id: orgs/ny-fed
+    outcome: $81M stolen via SWIFT Alliance Access manipulation; remainder of the ~$951M attempted was blocked.
+  - target_id: orgs/ny-fed  # FLAG: no registry file atlas/targets/orgs/ny-fed.yaml exists (dangling target_id, referenced only by this event) — orchestrator to create. Substantively correct + sourced: DOJ 2018 names the "Federal Reserve Bank of New York (FRBNY)"; BAE names the "FEDERAL RESERVE BANK".
     role: transit
-    outcome: Used as correspondent-account routing for fraudulent transfers; processed instructions before pattern detected.
+    outcome: Held Bangladesh Bank's USD account and processed the fraudulent SWIFT transfer instructions before the pattern was detected.
 sources:
   - doj/2021-02-17_lazarus-three-officers-indictment
   - doj/2018-09-06_park-jin-hyok-complaint
   - mandiant/2018-10-03_apt38-report
+  - baesystems/2016-04-25_two-bytes-to-951m  # added 2026-07-11: carries the $951M-attempted figure + the nroff print-suppression mechanics (cited by URL in the DOJ 2018 complaint's own footnote); technical analysis only, makes no DPRK attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point re-audit against RAW cited sources. All four sources
+    snapshotted + sha256-verified matching on disk 2026-07-11:
+      - doj/2021-02-17_lazarus-three-officers-indictment (.html mirror)
+        sha 4e3209c4…f98b8f21
+      - doj/2018-09-06_park-jin-hyok-complaint (.pdf, 179-pp complaint)
+        sha 4876114d…d31ba021
+      - mandiant/2018-10-03_apt38-report (.pdf, "Un-usual Suspects")
+        sha b6460375…d986ed71
+      - baesystems/2016-04-25_two-bytes-to-951m (.html) sha e1da037b…
+        757083da — NEWLY ADDED this audit (re-source, "badrabbit" path).
+
+    [a] FACTS — corrections/strips:
+      - STRIP "Manuscrypt": 0 hits in ALL cited sources (incl. BAE);
+        the Mandiant source record itself notes Manuscrypt=0. Fabricated
+        malware attribution. Removed; Nestegg KEPT (DOJ 2018: "'NESTEGG'
+        is a backdoor that was used in connection with … intrusions at
+        financial institutions, including at Bangladesh Bank").
+      - FIX "Hermes wiper … scheduled for post-heist evidence destruction
+        — later reused in FEIB Taiwan": doubly wrong. Hermes is Mandiant-
+        documented RANSOMWARE (not a wiper) used as a distraction, and it
+        is tied to the Oct-2017 Far Eastern International Bank (Taiwan)
+        heist, NOT Bangladesh 2016 (Mandiant timeline: "OCTOBER - Heist at
+        Far Eastern International Bank"). Removed from this event; replaced
+        with the sourced generic cleanup (DOJ 2018: subjects "used other
+        malware to delete evidence"; BAE: malware self-deletion).
+      - STRIP "MT-103": 0 hits in all sources. Generalized to "SWIFT
+        payment messages" (DOJ 2018: "SWIFT messages"; BAE: "confirmation
+        SWIFT messages" / "FIN 900 Confirmation of Debit").
+      - STRIP "watering-hole compromise of jobs.bangladeshbank.org":
+        0 hits; the only watering-hole in DOJ 2018 is the SEPARATE Polish-
+        banking-regulator campaign ("candidate to be used as a watering
+        hole to infect banks in Poland"). Not a Bangladesh initial vector
+        in any cited source. Reworded to the sourced spear-phishing vector
+        (DOJ 2018: spear-phishing 102 hits; Bangladesh recon→spear-phish
+        narrative, para 147).
+      - STRIP "35 fraudulent transfer instructions": the "35" count is
+        carried by no cited source (the "35" hits in DOJ 2018 are para/
+        page numbers, hex, a TOR footnote). Dropped the count.
+      - SOFTEN "RCBC Manila": 0 hits in all cited sources (incl. BAE);
+        DOJ says "accounts in the Philippines", BAE says "accounts in The
+        Philippines". Reworded to "the Philippines". RCBC/Jupiter-St branch
+        is the universally-reported recipient but is carried by none of the
+        reachable cited sources (Reuters paywalled, HTTP 401).
+      - REMOVE quantified_impact.usd_recovered=15000000: no cited source
+        states a recovery figure. DOJ 2018: "The majority of the
+        $81,000,000 has not been recovered to date"; BAE (Apr-2016): the
+        $81m was "still unaccounted for". The ~$15M RCBC/court recovery
+        post-dates and is uncited.
+      - FIX "canonical APT38 origin event": Mandiant dates APT38 ops to
+        2014 and lists "Vietnam TP Bank in December 2015" BEFORE Bangladesh
+        — so this is the DEFINING, not the origin, SWIFT heist. Reworded.
+      - CONFIRMED + KEPT: $81,000,000 (DOJ 2018 x4 + "$81 million"; BAE
+        "$81m"); $951M attempted (BAE verbatim: "The attackers attempted
+        to steal $951m, of which $81m is still unaccounted for" — this is
+        why BAE was added; DOJ 2018 only says the attempt "approached $1
+        billion"); $20,000,000 to Sri Lanka "stopped by the recipient bank"
+        (DOJ 2018); FRBNY correspondent routing (DOJ 2018 "Federal Reserve
+        Bank of New York (FRBNY)"; BAE "FEDERAL RESERVE BANK"); Alliance
+        Access manipulation + confirmation/Oracle-DB + nroff print-
+        suppression (DOJ 2018 para 142 + nroff x5; BAE "Printer
+        manipulation … nroff.exe, a legitimate tool from the SWIFT software
+        suite"; Mandiant DYEPACK x21 / nroff x1); DYEPACK + Mimikatz-class
+        (Mandiant); "over a weekend" detection delay (DOJ 2018 / BAE).
+
+    [b] ATTRIBUTION — unchanged and source-faithful. kp/rgb/lazarus is
+      era-correct for the 2018 complaint (24 "Lazarus Group" hits, 0
+      "APT38"); kp/rgb/apt38 correct for Mandiant (cluster-definition) and
+      DOJ 2021 ("known by … Lazarus Group and Advanced Persistent Threat 38
+      (APT38)"). All three attributing_org_confidence=high + concur match
+      the govt-primary/vendor assertions. BAE makes NO DPRK attribution in
+      this technical post — added to sources[] only, NOT to attributions[].
+
+    [c] DATES — start_date 2015-08-01 kept as network-dwell midpoint; the
+      comment now cites the sourced anchors (recon "as early as October 7
+      and 8, 2014"; Philippine mule accounts "created … in May 2015", DOJ
+      2018). Month-level "February 2016" is solidly sourced (DOJ/Mandiant/
+      BAE); the day-level disclosure/end dates (2016-02-05/08) are the
+      canonical execution-weekend, not stated verbatim in cited sources.
+      Source published_on all match bylines: DOJ 2021-02-17, DOJ complaint
+      announced 2018-09-06, Mandiant 2018-10-03, BAE 2016-04-25 (read from
+      the page datePublished itemprop, 2016-04-25T08:00:00).
+
+    [d] DOCTRINE — kp/byungjin/sanctions-evasion-revenue KEPT at
+      strongly_inferred (was already downgraded 2026-07-01; re-verified).
+      MEMORY-FLAG confirmed: over-attestation removed from the summary prose
+      ("Treasury and DOJ language ties proceeds to DPRK weapons-program
+      financing" → reworded to the sourced proximate goal). Term-scan of all
+      three cited sources: "weapons of mass destruction"=0, "revenue"=0-in-
+      DOJ; the cited sources state only the proximate regime-revenue goal
+      (Mandiant "raise large sums of money for the North Korean regime";
+      DOJ 2021 "the strategic and financial interests of the DPRK government
+      and its leader, Kim Jong Un"). Added perspective: attacker-rationale
+      + inference_basis {signals[], ruled_out} per schema. Not attested.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to all three attributions
+      (matches the 2015-12 Tien Phong and 2017-10 global-SWIFT siblings;
+      RGB is the named-unit umbrella, APT38/Lazarus the named actor).
+
+    [f] ACTOR_ID — actor_ids resolve: kp/rgb/apt38 → atlas/actors/kp/
+      apt38.yaml; kp/rgb/lazarus → atlas/actors/kp/lazarus.yaml. operators_
+      named (park-jin-hyok / jon-chang-hyok / kim-il) are free-form person
+      slugs consistent with sibling SWIFT events (no actor files; all three
+      named in DOJ 2021, Park Jin Hyok also in the 2018 complaint).
+
+    ORCHESTRATOR FLAGS (not edited here):
+      - MISSING TARGET FILE: orgs/ny-fed has no atlas/targets/orgs/ny-fed.yaml
+        (dangling target_id, referenced only by this event). FRBNY is a
+        legitimate + sourced transit party; registry entry should be created.
+      - RETIRE CANDIDATE: none — all removed claims were prose/field strips,
+        no source was orphaned (all four sources remain cited here).

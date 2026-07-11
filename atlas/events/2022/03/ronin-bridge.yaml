@@ -5,53 +5,98 @@ disclosure_date: 2022-03-29
 end_date: 2022-03-23
 incident_type:
   - financial-theft
-initial_vector: phishing
+initial_vector: phishing  # cited Sky Mavis snapshot says "socially engineered"; enum has no social-engineering value (phishing = that bucket). The fake-job-offer/LinkedIn spear-phishing lure is from later reporting (The Block, Jul 2022), not the 4 cited sources.
 outcome_summary: |
-  Attackers obtained five of nine Ronin sidechain validator keys
-  via spear-phishing a Sky Mavis engineer with a forged job offer,
-  then signed two transactions draining approximately USD 625M in
-  ETH and USDC from the bridge. The theft was undetected for
-  approximately six days until a user withdrawal failed and Sky
-  Mavis discovered the depleted reserves.
+  Attackers gained control of five of the nine Ronin sidechain
+  validator signatures (the threshold required to approve a
+  withdrawal), including the Axie DAO validator reached via a
+  gas-free RPC allowlist, using hacked private keys obtained
+  through social engineering of a Sky Mavis employee. They then
+  signed two transactions draining 173,600 ETH and 25.5M USDC
+  (valued at approximately USD 620M) from the bridge. The theft
+  went undetected for roughly six days until a user reported an
+  inability to withdraw 5,000 ETH and Sky Mavis discovered the
+  depleted reserves.
 quantified_impact:
-  usd_stolen: 625000000
+  usd_stolen: 620000000
   asset_classes:
     - ETH
     - USDC
 false_flag_risk: none
 campaign_id: ronin-laundering-trail
 summary: |
-  At the time, the largest DeFi theft on record. The Treasury
-  designation 22 days later was the first US government action to
-  formally attribute a major crypto-bridge theft to the DPRK and
-  explicitly tie the proceeds to WMD-program funding, establishing
-  the canonical attribution pattern subsequently used for Harmony,
+  At the time, among the largest crypto thefts on record. On
+  2022-04-14 — 22 days after the drain — the FBI publicly attributed
+  the theft to the Lazarus Group and APT38, and OFAC added the
+  receiving Ethereum address to the existing LAZARUS GROUP SDN entry.
+  The FBI framed the proceeds as the DPRK's use of "cryptocurrency
+  theft ... to generate revenue for the regime"; neither the FBI
+  statement nor the bare OFAC SDN update named the DPRK weapons
+  program or an RGB unit. This same-day FBI-attribution /
+  OFAC-designation pattern was subsequently repeated for Harmony,
   Atomic Wallet, DMM, and Bybit.
 attributions:
+  - actor_id: kp/rgb/lazarus
+    attributing_org: US FBI
+    attributing_org_confidence: high
+    auspex_assessment: concur
+    attribution_level: named-actor
+    attribution_date: 2022-04-14
+    attribution_source_id: fbi/2022-04-14_ronin-attribution
+    notes: |
+      FBI statement (2022-04-14), verbatim: "Through our investigation
+      we were able to confirm Lazarus Group and APT38, cyber actors
+      associated with the DPRK, are responsible for the theft of $620
+      million in Ethereum reported on March 29." This is the narrative
+      attribution. The FBI names no specific RGB unit and no weapons
+      program — only the DPRK's use of "cryptocurrency theft ... to
+      generate revenue for the regime."
   - actor_id: kp/rgb/lazarus
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2022-04-14
     attribution_source_id: treasury/2022-04-14_lazarus-axie
     notes: |
-      OFAC added the receiving Ethereum address
-      0x098B716B8Aaf21512996dC57EB0615e2383E2f96 to the SDN list
-      and named the Lazarus Group as the perpetrator. Chainalysis
-      published the on-chain tracing the same day.
+      OFAC's 2022-04-14 "North Korea Designation Update" added the
+      receiving digital-currency address
+      0x098B716B8Aaf21512996dC57EB0615e2383E2f96 to the existing
+      LAZARUS GROUP SDN entry (E.O. 13722). The SDN update itself is a
+      bare list update — it carries no narrative, no dollar figure,
+      and no RGB/WMD/ballistic language (verified against snapshot,
+      term scan RGB/WMD/ballistic/weapons = 0). On-chain tracing was
+      attributed to Chainalysis the same day (corroborated by Sky
+      Mavis: "working with Chainalysis to monitor the stolen funds");
+      the Chainalysis blog post is now link-rotted / un-snapshottable.
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Treasury's 2022-04-14 press release states that "the Lazarus
-      Group ... is a state-sponsored cyber hacking group that is
-      attributed to the Reconnaissance General Bureau (RGB) ...
-      [and] the funds ... support the DPRK's weapons of mass
-      destruction and ballistic missile programs." This is
-      gold-standard attestation per the SCHEMA definition.
-    attesting_source_id: treasury/2022-04-14_lazarus-axie
+      State-attributed, high-magnitude theft of hard-currency crypto
+      assets from a DeFi bridge — the signature behaviour of the
+      sanctions-evasion-revenue pillar. The FBI (cited) frames the
+      proceeds as the DPRK's use of "cryptocurrency theft ... to
+      generate revenue for the regime," which attests the revenue
+      function but stops short of the byungjin terminal goal (funding
+      the WMD / ballistic-missile programs). No cited source here
+      names the weapons program, an RGB unit, or byungjin, so the
+      strategic-goal linkage is inferred, not attested.
+      DOWNGRADED from "attested" (2026-07-11 audit): the prior grade
+      rested on a purported Treasury press-release quote naming RGB
+      and the WMD/ballistic-missile programs — that quote does NOT
+      exist in the cited OFAC SDN update (snapshot term scan:
+      RGB=0, WMD=0, ballistic=0, weapons=0). It was a fabrication.
+    attesting_source_id: fbi/2022-04-14_ronin-attribution
+    inference_basis:
+      source_id: fbi/2022-04-14_ronin-attribution
+      signals:
+        - "FBI (cited) frames the proceeds as the DPRK's use of 'cryptocurrency theft ... to generate revenue for the regime' — the revenue function of the sanctions-evasion pillar"
+        - "OFAC added the receiving ETH address to the DPRK LAZARUS GROUP SDN entry under E.O. 13722 — a sanctions-evasion enforcement action"
+        - "target is a DeFi bridge drained for 173,600 ETH + 25.5M USDC hard currency (finance/defi-bridge is a pillar target_sector)"
+      ruled_out: "strategic-goal attestation — no cited source names the WMD/ballistic-missile program or byungjin; the FBI stops at 'revenue for the regime'"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -59,12 +104,115 @@ targets:
   - target_id: orgs/ronin-bridge
     role: primary
     outcome: |
-      USD 625M drained from bridge reserves. Sky Mavis later
-      restored Axie user balances via fundraising; bridge operator
-      losses absorbed by Sky Mavis and parent Animoca-backed
-      investors.
+      173,600 ETH + 25.5M USDC (~USD 620M per FBI) drained from
+      bridge reserves. Sky Mavis later restored Axie user balances
+      via fundraising; bridge operator losses absorbed by Sky Mavis
+      and parent Animoca-backed investors.
 sources:
   - treasury/2022-04-14_lazarus-axie
   - chainalysis/2022-04-14_ronin-tracing
   - skymavis/2022-04-27_root-cause-postmortem
   - fbi/2022-04-14_ronin-attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit vs snapshotted raw. Event is REAL and
+    correctly identified. Headline correction: the doctrine_link was
+    OVER-ATTESTED on a fabricated quote (see [d]). level=partial
+    because one cited source (Chainalysis) is un-snapshottable
+    (link-rotted, no Wayback) — its one claim is mirror-corroborated.
+
+    [a] FACTS. All on-chain figures verified against the Sky Mavis
+    snapshot (sha 57197598…): "The Ronin bridge has been exploited
+    for 173,600 Ethereum and 25.5M USDC", "on March 23rd ... in two
+    transactions", "The attacker used hacked private keys in order to
+    forge fake withdrawals", "9 validator nodes ... five out of the
+    nine validator si[gnatures]" (confirms five-of-nine), Axie DAO
+    validator reached "using the gas-free RPC", "increased the
+    validator threshold from five to eight", discovery "after a
+    report from a user being unable to withdraw 5k ETH". VECTOR: the
+    snapshot says "All evidence points to this attack being socially
+    engineered" — it does NOT contain "phishing", "job offer",
+    "LinkedIn", "spear", or "employee" (all 0 hits). The
+    "spear-phishing a Sky Mavis engineer with a forged job offer"
+    prose was therefore STRIPPED and softened to "social engineering"
+    (the fake-job/LinkedIn lure is from later reporting — The Block,
+    Jul 2022 — not the 4 cited sources). initial_vector kept as
+    "phishing" (corpus's social-engineering bucket) with a clarifying
+    comment. USD: FBI (cited primary) says "$620 million"; no cited
+    snapshotted source says "$625M" (that valuation traces to the
+    un-snapshottable Chainalysis post). Aligned usd_stolen 625M ->
+    620M and prose to "173,600 ETH + 25.5M USDC (~USD 620M)".
+
+    [b] ATTRIBUTION. FBI snapshot (sha 2deed3ad…) is the narrative
+    attributor: "we were able to confirm Lazarus Group and APT38,
+    cyber actors associated with the DPRK, are responsible for the
+    theft of $620 million in Ethereum reported on March 29." ADDED an
+    FBI attribution entry (was only OFAC). OFAC snapshot (sha
+    1487dcbb…, re-verified this audit) is a bare "North Korea
+    Designation Update" adding ETH addr
+    0x098B716B8Aaf21512996dC57EB0615e2383E2f96 to the LAZARUS GROUP
+    SDN entry (E.O. 13722) — no narrative/figure. Both -> concur /
+    high / named-actor. actor_id kp/rgb/lazarus HELD (resolves to
+    atlas/actors/kp/lazarus.yaml; RGB placement rests on that actor's
+    OWN cited sources — DOJ/Mandiant — NOT on the sources cited here,
+    neither of which names RGB). attribution_level named-actor added
+    to both entries.
+
+    [c] DATES. start 2022-03-23 (Sky Mavis "on March 23rd") ✓;
+    disclosure 2022-03-29 (Sky Mavis "posted 3/29/2022 8:29am PST";
+    FBI "reported on March 29") ✓; end 2022-03-23 (single-day drain)
+    ✓; attribution 2022-04-14 (FBI + OFAC, both snapshots) ✓.
+
+    [d] DOCTRINE — headline finding. Was confidence=attested with
+    reasoning quoting a "Treasury 2022-04-14 press release": "the
+    Lazarus Group ... attributed to the Reconnaissance General Bureau
+    (RGB) ... [and] the funds ... support the DPRK's weapons of mass
+    destruction and ballistic missile programs." This quote is
+    FABRICATED — it appears in NO cited source. OFAC snapshot term
+    scan: Reconnaissance=0, RGB=0, WMD=0, ballistic=0, weapons=0,
+    "mass destruction"=0 (and no $ figure, no "Ronin"/"Axie"). FBI
+    snapshot names APT38 (not RGB) and says only "generate revenue
+    for the regime" — no WMD/missile terminal goal. DOWNGRADED to
+    strongly_inferred; removed the fabricated quote + the
+    attesting_source_id=treasury claim; built inference_basis on the
+    FBI revenue signal + OFAC sanctions-evasion action + DeFi-bridge
+    target_sector; ruled_out = strategic-goal attestation. Summary's
+    "explicitly tie the proceeds to WMD-program funding" over-claim
+    likewise removed. (Per task rule: sanctions-evasion doctrine =
+    strongly_inferred unless a cited Treasury/OFAC source states the
+    WMD terminal goal in substance — none here does.)
+
+    [e] ATTRIBUTION_LEVEL. named-actor on both attributions (FBI
+    names Lazarus Group + APT38; OFAC designates the LAZARUS GROUP
+    SDN entry). Not named-unit — no cited source here names RGB/a
+    specific bureau.
+
+    [f] ACTOR_ID. kp/rgb/lazarus resolves (id field in
+    atlas/actors/kp/lazarus.yaml). Not a counter-action — DPRK is the
+    perpetrator, actor_id correctly non-null.
+
+    SNAPSHOTS (PRESERVE tier, snapshot keys only):
+    - fbi/2022-04-14_ronin-attribution: NEW snapshot from LIVE
+      fbi.gov (HTTP 200), sha 2deed3add85e3ebe27d3d354a69b9dade4c5139d154bcfbafacd7baced22a9f6.
+    - skymavis/2022-04-27_root-cause-postmortem: live substack 404;
+      NEW snapshot from Wayback 2023-04-01 capture, sha
+      57197598d7a2ee6078e89eb0889239cc5b6b9e78509c366b6ca660a0fbe32b81.
+      Notes corrected — the snapshot is the "Community Alert" post
+      (posted 3/29, updated through Jun-2022); it says "socially
+      engineered", NOT "fake job offer".
+    - treasury/2022-04-14_lazarus-axie: pre-existing snapshot (sha
+      1487dcbb…) re-verified this audit; unchanged.
+    - chainalysis/2022-04-14_ronin-tracing: UN-SNAPSHOTTABLE — live
+      404 + Wayback availability API returns no capture. Its sole
+      claim (same-day on-chain tracing) is mirror-corroborated by the
+      Sky Mavis snapshot ("working with Chainalysis to monitor the
+      stolen funds"). Retained; drives level=partial.
+
+    FLAGS (not edited — out of scope): none blocking. doctrines
+    (kp/byungjin) and actor (kp/rgb/lazarus) unchanged and correct;
+    campaign_id ronin-laundering-trail is a valid shared tag across 7
+    laundering events (no registry file). No make/commit/git run.

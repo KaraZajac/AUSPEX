@@ -1,70 +1,86 @@
 id: 2026-04/drift-protocol-dprk-285m
-name: Drift Protocol — USD 285M DPRK theft via social-engineering pre-signed transactions
-start_date: 2025-10-01  # social-engineering buildup
-disclosure_date: 2026-04-01
-end_date: 2026-04-01
+name: Drift Protocol — ~USD 285M DPRK-suspected theft via social-engineering pre-signed transactions
+start_date: 2026-03-11  # earliest SOURCED on-chain staging (TRM: single 10 ETH ex-Tornado Cash); social-engineering onset "months" earlier but undated in sources (was fabricated-precise 2025-10-01)
+disclosure_date: 2026-04-01  # Drift confirmed an "active attack" on X the same day; Elliptic/The Record wrote it up 2026-04-02
+end_date: 2026-04-01  # ~12-minute drain completed 01 Apr 2026 (bridging to Ethereum continued for hours after)
 incident_type:
   - financial-theft
-initial_vector: phishing
+initial_vector: phishing  # enum lacks "social-engineering"; actual vector was long-tail social engineering — posing as a quant trading firm + (per TRM) in-person meetings — to induce signers to pre-sign durable-nonce txns. Drift denied any smart-contract/program bug.
 outcome_summary: |
-  Solana-based DeFi platform Drift was drained of USD 285M
-  (Drift's own loss reckoning USD 295.4M including platform
-  reserves) in a 12-minute attack on 2026-04-01 capping a
-  six-month social-engineering operation. DPRK operators
-  cultivated relationships with Drift Security Council members
-  and abused Solana's "durable nonces" mechanism to obtain
-  pre-signed administrative transactions. With admin control,
-  the attackers whitelisted a worthless attacker-issued token
-  (CVT) as collateral, deposited 500 million CVT, and withdrew
-  USD 285M in real USDC, SOL, and ETH. Attribution by Mandiant
-  at moderate confidence to UNC4736 / Citrine Sleet / AppleJeus /
-  Gleaming Pisces.
+  Solana-based DeFi platform Drift Protocol was drained of an
+  estimated USD 285M on 2026-04-01 (Chainalysis and TRM Labs;
+  Elliptic calculated USD 286M; Drift's own same-day confirmation
+  and The Record cited USD 280M). Per TRM the drain itself — 31
+  withdrawals — executed in ~12 minutes, capping a months-long
+  social-engineering operation with roughly three weeks of on-chain
+  pre-staging. DPRK-linked operators posed as a quantitative
+  trading firm and, per TRM, held in-person meetings with Drift
+  personnel over a period of months; they abused Solana's "durable
+  nonces" feature to get Drift Security Council multisig signers to
+  unknowingly pre-sign administrative transactions handing over
+  admin control. With that control the attackers whitelisted a
+  worthless attacker-issued token (CVT / CarbonVote Token) as
+  collateral, deposited 500 million CVT (priced at ~USD 1 via a
+  wash-traded pool plus an attacker-controlled oracle), and drained
+  real assets across 18+ token types — the single largest being
+  ~41.7M JLP (~USD 155–159M), plus USDC, SOL, cbBTC and others —
+  before bridging to Ethereum and swapping to ETH.
+  ATTRIBUTION IS DPRK-SUSPECTED AND SUBGROUP-UNRESOLVED: Chainalysis
+  (2026-04-09) called formal attribution "pending" ("likely" DPRK);
+  Elliptic (2026-04-02) said "suspected DPRK"; the Drift team + the
+  SEAL 911 collective (05-Apr X post, "medium-high" confidence,
+  relayed by Elliptic) assessed the same actor as the Oct-2024
+  Radiant Capital hack that Mandiant attributed to UNC4736
+  (AppleJeus / Citrine Sleet); TRM Labs (2026-04-30) attributes the
+  Drift theft to a DPRK group DISTINCT from both Lazarus Group and
+  TraderTraitor, with the specific subgroup "under investigation."
 quantified_impact:
-  usd_stolen: 285000000
-  asset_classes:
+  usd_stolen: 285000000  # Chainalysis + TRM; sourced range USD 280M (Drift/The Record) – 286M (Elliptic)
+  asset_classes:  # 18+ token types drained; JLP was the single largest; funds later swapped to USDC then bridged to ETH (ETH was a laundering output, not a stolen class)
+    - JLP
     - USDC
     - SOL
-    - ETH
+    - cbBTC
 false_flag_risk: none
-campaign_id: apt38-crypto-pivot
+campaign_id: apt38-crypto-pivot  # FLAG(orchestrator): umbrella name implies APT38/Lazarus, but TRM assesses THIS actor distinct from Lazarus AND TraderTraitor; sister KelpDAO event (2026-04-18) carries no campaign_id — normalize the grouping
 summary: |
-  Operationally similar to the Bybit February 2025 attack: a
+  Operationally similar to the Bybit February 2025 attack (which
+  The Record notes researchers cited as a tactical parallel): a
   long-tail social-engineering operation against signers,
-  culminating in a UI / signing-flow abuse that delivered an
-  apparently-routine transaction with malicious effect. The
-  Drift attack is the second nine-figure DPRK theft of the
-  Trump-administration era and per TRM Labs accounts for the
-  bulk of the 76% DPRK share of all 2026 H1 crypto theft.
+  culminating in a signing-flow abuse that delivered
+  apparently-routine transactions with malicious effect. Elliptic
+  called it the largest DeFi hack of 2026 to date and the
+  second-largest Solana-ecosystem incident after the 2022 USD 326M
+  Wormhole exploit; per Elliptic/DefiLlama Drift's TVL collapsed
+  from ~USD 550M to under USD 250M. Together with the 2026-04-18
+  KelpDAO theft (~USD 292M), TRM Labs assessed the two attacks as
+  ~76% of all crypto-hack value stolen in 2026 through April (YTD).
 attributions:
   - actor_id: kp/rgb/citrine-sleet
-    attributing_org: Google Mandiant
-    attributing_org_confidence: moderate
-    auspex_assessment: concur
-    attribution_date: 2026-04-30
-    attribution_source_id: chainalysis/2026-04_drift-protocol-hack
-  - actor_id: kp/rgb/lazarus
-    attributing_org: Elliptic / TRM Labs (cluster overlap)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2026-04-30
-    attribution_source_id: elliptic/2026-04_drift-protocol-dprk
+    attributing_org: Drift Protocol + SEAL 911 (relayed by Elliptic)  # NOT a direct Mandiant attribution of Drift: Mandiant attributed the Oct-2024 Radiant Capital hack to UNC4736; the Drift→same-actor inference is the Drift team's + SEAL 911's X assessment
+    attributing_org_confidence: moderate  # source phrasing was "medium-high"; a relayed victim/SEAL-911 self-assessment resting on an inferential same-actor-as-Radiant link
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat  # CAVEAT: TRM Labs (independent, on-chain) does NOT corroborate the Citrine subgroup — it assesses the actor as DPRK "distinct from Lazarus and TraderTraitor", subgroup "under investigation". See FLAG in qc.
+    attribution_date: 2026-04-05  # Drift/SEAL-911 X assessment date (relayed via Elliptic's 07-Apr update); was erroneously 2026-04-30
+    attribution_source_id: elliptic/2026-04_drift-protocol-dprk  # CORRECTED from chainalysis (which names no actor and calls attribution "pending")
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      High-magnitude DeFi theft attributed (moderate confidence)
-      to RGB-aligned actors; proceeds are presumed to fund the
-      regime. Neither Elliptic nor Chainalysis names the strategic
-      goal, and the attribution itself is hedged, so the linkage
-      is inferred.
-    attesting_source_id: elliptic/2026-04_drift-protocol-dprk
+      High-magnitude DeFi theft attributed (suspected/moderate) to
+      DPRK-linked actors; proceeds are presumed to fund the regime.
+      No cited source (Chainalysis, Elliptic, The Record, TRM) names
+      the strategic goal, and the attribution itself is hedged, so
+      the linkage is inferred.
+    attesting_source_id: null
     inference_basis:
       source_id: elliptic/2026-04_drift-protocol-dprk
       signals:
-        - "Elliptic/TRM attribute the $285M Drift theft to DPRK-overlap clusters (revenue behaviour)"
-      ruled_out: "strategic-goal attestation — neither source names byungjin or the financing goal; attribution is moderate/suspected"
+        - "Elliptic ties the ~USD 286M Drift theft to the DPRK (suspected; 'consistent with previous DPRK-attributed operations') — sanctions-evasion revenue behaviour"
+        - "The Record: 'The U.S. has accused Pyongyang's government of using the stolen cryptocurrency to fund its military weapons program'"
+      ruled_out: "strategic-goal attestation — no cited source names byungjin or the financing goal for this incident; attribution is suspected/moderate"
     contested: false
     analyst: claude
   - doctrine_id: kp/8th-congress-defense-plan
@@ -72,27 +88,158 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Vendor consensus frames the operation as revenue
-      aggregation; tying it to the defense-plan priorities is
-      inferred — the cited sources do not name the defense plan,
-      and attribution is moderate.
-    attesting_source_id: chainalysis/2026-04_drift-protocol-hack
+      Vendor framing (Chainalysis, TRM) presents the operation as
+      large-scale DPRK revenue aggregation; tying it to the
+      8th-Congress defense-plan priorities is inferred — the cited
+      sources do not name the defense plan, and subgroup attribution
+      remains unresolved. Aligns with kp/rgb/citrine-sleet's default
+      doctrine (kp/8th-congress-defense-plan/revenue-aggregation).
+    attesting_source_id: null
     inference_basis:
       source_id: chainalysis/2026-04_drift-protocol-hack
       signals:
-        - "Chainalysis / vendor consensus: revenue-aggregation operation by DPRK-overlap clusters"
-      ruled_out: "8th-Congress defense plan — not named; attribution moderate/suspected"
+        - "Chainalysis: incident 'part of a broader DPRK campaign that has extracted billions' — revenue-aggregation behaviour"
+        - "TRM: two 2026 DPRK thefts (Drift + KelpDAO) = ~76% of all crypto-hack value stolen in 2026 through April"
+      ruled_out: "8th-Congress defense plan — not named by any cited source; subgroup attribution still under investigation"
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/drift-protocol
-    country: us
+    country: us  # NB: US incorporation not confirmed by any cited source; per org registry — FLAG for verification
     role: primary
     outcome: |
-      USD 285M drained via fake-collateral admin abuse;
-      platform announced recovery-token plan to make users
-      whole over time.
+      ~USD 280–286M drained via social-engineered pre-signed admin
+      transactions plus fake-CVT collateral. Drift confirmed the
+      theft, denied any bug in its programs/smart contracts (tracing
+      it to "unauthorized or misrepresented transaction approvals
+      obtained prior to execution ... likely facilitated through
+      sophisticated social engineering"), suspended deposits and
+      withdrawals, and said it was coordinating with security firms,
+      bridges, exchanges and law enforcement to trace and freeze
+      assets and would issue a fuller post-incident report. Some
+      affected downstream Solana protocols began exploring user
+      reimbursements (Chainalysis).
 sources:
   - chainalysis/2026-04_drift-protocol-hack
   - elliptic/2026-04_drift-protocol-dprk
   - therecord/2026-04_drift-280m-dprk
+  - trmlabs/2026-04_kelp-dao-rseth-layerzero-bridge-exploit-  # added: carries the ~12-min drain, months-SE + 3-week staging, 76% share, and the "distinct from Lazarus/TraderTraitor, subgroup under investigation" attribution
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Audited against all cited sources, each curl'd + snapshotted +
+    hashed into atlas/sources/raw/ (PRESERVE tier). TRM Labs blog
+    (already snapshotted for the sister KelpDAO event) added as a
+    4th source to carry claims the original three do not.
+    Snapshots: chainalysis__2026-04_drift-protocol-hack.html
+    sha256 36d6d18d…d6ffb650; elliptic__2026-04_drift-protocol-dprk.html
+    sha256 a90d9062…62351ea8; therecord__2026-04_drift-280m-dprk.html
+    sha256 68b1f088…d3bcb8e0; trmlabs__2026-04_kelp-dao-rseth-layerzero-bridge-exploit-.html
+    sha256 dd1e1490…f2ac6cb.
+
+    [a] FACTS — STRIPPED 2 fabrications (0 source hits):
+    (1) "Drift's own loss reckoning USD 295.4M including platform
+    reserves" — the string 295 appears in ZERO of the four sources;
+    Drift's OWN confirmed figure (The Record) is USD 280M. Removed.
+    (2) "platform announced recovery-token plan to make users whole
+    over time" — no source mentions any recovery-token/make-whole
+    plan; rewritten to what Drift actually said (denied a
+    contract/program bug; coordinating with firms/bridges/exchanges/
+    LE to trace+freeze; pledged a fuller report — The Record) plus
+    Chainalysis's note that some AFFECTED DOWNSTREAM protocols (not
+    Drift) "began exploring user reimbursements". Confirmed-verbatim
+    facts kept: durable nonces (Chainalysis/TRM), pre-signed
+    Security-Council admin txns (all), CVT/CarbonVote fake token +
+    500M CVT deposit (Chainalysis: "deposited 500 million CVT"),
+    ~12-minute / 31-withdrawal drain (TRM: "31 withdrawals executed
+    in approximately 12 minutes"). CORRECTED figures: usd_stolen
+    kept 285M (Chainalysis+TRM) but range noted 280–286M; asset_classes
+    fixed USDC/SOL/ETH → JLP/USDC/SOL/cbBTC (JLP was the single
+    LARGEST asset, ~41.7M JLP ≈ USD 155–159M per Elliptic/Chainalysis,
+    and was omitted; ETH was a laundering OUTPUT, not a stolen class).
+    Removed editorial "second nine-figure DPRK theft of the
+    Trump-administration era" (unsourced); "six-month" → "months-long"
+    (sources say "months"/"multi-week", never six); "2026 H1" → "2026
+    through April (YTD)" (TRM's actual window).
+
+    [b] ATTRIBUTION — the load-bearing correction. Original claimed
+    "Attribution by Mandiant at moderate confidence to UNC4736 /
+    Citrine Sleet / AppleJeus / Gleaming Pisces" and carried TWO
+    attributions: kp/rgb/citrine-sleet (org "Google Mandiant", via
+    chainalysis) + kp/rgb/lazarus (org "Elliptic / TRM Labs", high,
+    via elliptic).
+    • "Gleaming Pisces" — 0 hits in every source. FABRICATED, removed.
+    • Chainalysis names NO actor at all: "likely linked to North
+      Korean (DPRK) actors ... though formal attribution remains
+      pending" / "yet to be confirmed" — zero Mandiant/Citrine/UNC4736
+      mentions. So the citrine attribution's source was WRONG
+      (chainalysis → elliptic) and "Google Mandiant" as attributor
+      was WRONG.
+    • Where the Citrine name actually comes from: Elliptic RELAYS a
+      Drift-team X post (05 Apr, "medium-high confidence, supported by
+      SEAL 911") that Drift = "the same threat actors responsible for
+      the October 2024 Radiant Capital hack attributed by Mandiant to
+      UNC4736 ... also tracked as AppleJeus or Citrine Sleet." So
+      Mandiant attributed RADIANT; the Drift→same-cluster link is the
+      victim's + SEAL 911's inference. Reset attributing_org →
+      "Drift Protocol + SEAL 911 (relayed by Elliptic)", confidence
+      moderate ("medium-high"), level named-actor, date 2026-04-05,
+      source → elliptic, assessment concur-with-caveat.
+    • kp/rgb/lazarus REMOVED: NO source says Lazarus for Drift.
+      Elliptic = "suspected DPRK"; Elliptic never mentions Lazarus or
+      TRM. TRM AFFIRMATIVELY REFUTES it — "assessed as distinct from
+      Lazarus Group" and "distinct from TraderTraitor ... the specific
+      subgroup attribution remains under investigation." This mirrors
+      the kelp-dao correction. The "high" confidence + "Elliptic / TRM
+      Labs (cluster overlap)" org were both unsupported.
+    >> ORCHESTRATOR FLAG (actor reassignment): the surviving
+    kp/rgb/citrine-sleet tag rests ONLY on a relayed victim+SEAL-911
+    X self-assessment via an inferential Radiant-cluster link;
+    independent TRM leaves the subgroup "under investigation" and
+    rules out Lazarus/TraderTraitor. There is no kp/unscoped DPRK
+    actor to downgrade to (all kp actors are named). Recommend the
+    orchestrator either (i) create a kp/unscoped DPRK-subgroup actor
+    and reassign (most source-faithful to TRM), or (ii) retain
+    citrine-sleet as concur-with-caveat as done here. Held
+    source-faithful pending that registry decision.
+
+    [c] DATES — start_date 2025-10-01 (fabricated-precise "six-month
+    buildup") → 2026-03-11 (earliest SOURCED on-chain staging, TRM:
+    "On-chain staging began March 11, with a single 10 ETH withdrawal
+    from Tornado Cash"; social engineering ran "months" earlier but is
+    undated). disclosure/end 2026-04-01 confirmed (Drift's same-day
+    "active attack" confirmation; drain 16:05 UTC 01 Apr). SOURCE
+    published_on audit: chainalysis JSON-LD datePublished =
+    2026-04-09 (record had 2026-04-30 — CORRECTED); elliptic "02
+    April, 2026" (updated 07 Apr) = 2026-04-02 CONFIRMED; therecord
+    JSON-LD 2026-04-02 CONFIRMED. attribution_date 2026-04-30 →
+    2026-04-05 accordingly.
+
+    [d] DOCTRINE — both links kept strongly_inferred (NOT attested):
+    no cited source names byungjin or the 8th-Congress defense plan
+    or the regime-financing purpose. Set attesting_source_id: null on
+    both (was elliptic/chainalysis — attestation implied where none
+    exists) and kept inference_basis {signals, ruled_out}. Perspective
+    is attacker-rationale (default; DPRK doctrine on a DPRK op).
+    Softened "RGB-aligned actors" → "DPRK-linked actors" (sources say
+    DPRK, not a specific service). 8th-congress link aligns with
+    citrine-sleet's own default_doctrine_alignment_ids.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to the citrine
+    attribution (Elliptic's relayed assessment names the cluster).
+
+    [f] ACTOR_ID — kp/rgb/citrine-sleet resolves in atlas/actors/kp/.
+    kp/rgb/lazarus removed. No LE/meta counter-action here.
+
+    Source-record edits (own records only): added raw_snapshot +
+    content_sha256 to all three; corrected chainalysis published_on
+    2026-04-30→2026-04-09 and its notes (which wrongly asserted a
+    "UNC4736 / Citrine Sleet attribution per Mandiant" the article
+    does not make); added audit notes to elliptic + therecord.
+    FLAGGED (not edited): campaign_id apt38-crypto-pivot vs TRM's
+    "distinct from Lazarus/TraderTraitor" + sister-event inconsistency;
+    target country=us unverified by sources; possible kp/unscoped
+    actor reassignment.

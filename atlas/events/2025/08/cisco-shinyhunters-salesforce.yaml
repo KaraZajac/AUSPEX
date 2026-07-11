@@ -1,44 +1,207 @@
 id: 2025-08/cisco-shinyhunters-salesforce
-name: Cisco third-party CRM breach (Salesforce vishing chain)
-start_date: 2025-07-15
-disclosure_date: 2025-08-05
-end_date: 2025-08-31
+name: Cisco third-party CRM data theft (Salesforce vishing chain)
+start_date: 2025-07-24  # Cisco "made aware" 24 Jul 2025 (GMT+9); access terminated on discovery — no distinct earlier intrusion-onset date given
+disclosure_date: 2025-08-05  # earliest public evidence (Wayback capture + TC/BC coverage); Cisco advisory stamps "First Published Aug 1" but nothing predates Aug 5
+end_date: 2025-08-05  # actor access terminated immediately on discovery (~24 Jul); bounded through public disclosure. Prior 2025-08-31 was unsourced.
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # UNC6040 vishing → Salesforce OAuth
+initial_vector: phishing  # Cisco-confirmed: a Cisco representative was voice-phished (vishing) → access to a third-party cloud CRM
 outcome_summary: |
-  In August 2025 Cisco confirmed that an attacker had accessed
-  a Cisco-owned third-party cloud-based CRM containing limited
-  customer-contact data via the UNC6040 / ShinyHunters voice-
-  phishing campaign. Cisco emphasized that core product and
-  customer-deployment data were not affected; exposed records
-  were limited to business-contact information.
+  On 5 August 2025 Cisco publicly disclosed (in a "Cisco Event Response:
+  Vishing Attack Impacting Third-Party CRM System" advisory, first
+  published 1 August 2025) that on 24 July 2025 (GMT+9) a bad actor had
+  voice-phished a Cisco representative and thereby accessed and exported
+  "a subset of basic profile information" from one instance of a
+  third-party, cloud-based CRM system Cisco uses. The exported data was
+  the basic account-profile information of individuals who had registered
+  a Cisco.com user account — "name, organization name, address, Cisco
+  assigned user ID, email address, phone number, and account-related
+  metadata such as creation date." Cisco stated the actor "did not obtain
+  any of [its] organizational customers' confidential or proprietary
+  information, or any passwords or other types of sensitive information,"
+  that the incident did not impact its products or services, and that no
+  other Cisco CRM instances were affected. Cisco terminated the actor's
+  access, opened an investigation, and notified affected users where
+  required by law; it did not disclose the number of individuals affected.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event. Separately notable from the
-  state-sponsored Cisco-device exploitation events recorded
-  in the 2025 corpus (Salt Typhoon, Static Tundra,
-  CVE-2025 ASA 0-days) — this event sits on the criminal-
-  baseline side and concerns Cisco's CRM data rather than
-  its network products.
+  Per-victim child event of the 2025 UNC6040 / ShinyHunters Salesforce-
+  cloud campaign (campaign_id shinyhunters-salesforce-2025) — the same
+  vishing -> third-party-CRM chain as the Adidas and LVMH-brand siblings.
+  Separately notable from the state-sponsored Cisco-DEVICE exploitation
+  events in the 2025 corpus (Salt Typhoon, Static Tundra, the CVE-2025
+  ASA 0-days): this event sits on the criminal-baseline side and concerns
+  Cisco's own CRM account data, not its network products. Attribution is
+  hedged: Cisco's own advisory names NEITHER the CRM vendor ("Salesforce")
+  NOR any threat actor ("ShinyHunters" / "UNC6040"), and a Cisco
+  spokesperson "did not confirm whether the data was stolen from a
+  compromised Salesforce instance." The Salesforce + ShinyHunters
+  placement is security-press inference (BleepingComputer: "not yet
+  confirmed by the company, this is likely part of an ongoing wave of
+  Salesforce data theft attacks ... linked to the ShinyHunters extortion
+  group"), and "ShinyHunters" is the extortion self-claim brand over
+  GTIG's UNC6040 (vishing) / UNC6240 (extortion) clusters, not a confirmed
+  stable group. No Cisco-specific extortion demand or leak is documented
+  (Cisco is not named in the Oct-2025 "Scattered LAPSUS$ Hunters"
+  leak-site reporting), so extortion is NOT recorded as a Cisco
+  incident_type. The originally-cited campaign sources (mandiant/2025-08-08,
+  krebs/2025-10) name no Cisco and were re-sourced this audit to
+  Cisco-specific reporting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group + Cisco statement
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: BleepingComputer (Cisco-brand placement) + security-industry consensus
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-08-05
+    attribution_source_id: bleepingcomputer/2025-08-05_cisco-data-breach-ciscocom-user-accounts
+    attribution_level: activity-cluster
+    notes: |
+      Cisco's own advisory names NO threat actor and NO CRM vendor. The
+      ShinyHunters / Salesforce placement is BleepingComputer's hedged
+      press inference: "Although not yet confirmed by the company, this is
+      likely part of an ongoing wave of Salesforce data theft attacks
+      using vishing and social engineering techniques that have been
+      linked to the ShinyHunters extortion group," and "a Cisco
+      spokesperson ... did not confirm whether the data was stolen from a
+      compromised Salesforce instance." GTIG's own reports (incl.
+      mandiant/2025-08-08) name NO Cisco victim. "ShinyHunters" is an
+      extortion self-claim brand over the UNC6040 (vishing) / UNC6240
+      (extortion) clusters — hence moderate / concur-with-caveat /
+      activity-cluster, NOT high.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism (cluster overlap)
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-10-07
+    attribution_source_id: krebs/2025-10_shinyhunters-corporate-extortion-spree
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster overlap only; NO Cisco-specific Scattered Spider
+      evidence exists, and neither Cisco's advisory nor the BleepingComputer
+      Cisco article names Scattered Spider. Retained for cross-event
+      campaign-modeling consistency with the Adidas / LVMH siblings: Krebs
+      describes the "Scattered LAPSUS$ Hunters" brand as "an amalgamation
+      of three hacking groups — Scattered Spider, Lapsus$ and ShinyHunters"
+      (krebs/2025-10 carries the amalgamation framing only; it names no
+      Cisco). Prior record pointed this attribution to mandiant/2025-08-08,
+      which is not among this event's sources and names no Cisco —
+      corrected, confidence moderate -> low.
 doctrine_links: []
 targets:
   - target_id: orgs/cisco
     role: primary
 sources:
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+  - cisco/2025-08-01_crm-vishing-attack
+  - bleepingcomputer/2025-08-05_cisco-data-breach-ciscocom-user-accounts
+  - techcrunch/2025-08-05_hacker-vishing-cisco-customers-personal-information
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. RE-SOURCE (badrabbit model):
+    the two originally-cited sources are REAL but name NO Cisco — verbatim
+    checks: the Krebs snapshot (sha256 9c2d11a8..97619835) has ZERO "Cisco"
+    occurrences, and the Mandiant 2025-08-08 cloud.google.com article both
+    (a) is JavaScript-rendered — a raw curl returns a content-less shell —
+    AND (b) has DRIFTED far past its 2025-08-08 state (the live page now
+    carries 36x "UNC6661", 36x "UNC6671" and 8x "January 2026"), so no
+    faithful 2025-08-08 snapshot is obtainable and it names no Cisco.
+    Mandiant 2025-08-08 was DROPPED from this event (still cited by the
+    actor + umbrella + sibling events, so not orphaned — FLAG below). Three
+    Cisco-specific sources created + snapshotted this audit; Krebs retained
+    for the Scattered-Spider amalgamation framing only.
+
+    [a] FACTS — rewritten; every load-bearing claim now carried verbatim by
+    a snapshotted source. Cisco's own advisory page is JS-rendered (curl =
+    CSS shell only, sha256 e4665821..de5f78129, facts read via WebFetch),
+    but ALL its facts are independently mirror-corroborated by two
+    fully-snapshotted secondaries: BleepingComputer (sha256 3b98be9e..
+    6511b392) and TechCrunch (sha256 a6b64144..8d0f78571) — hence level:full.
+      - "On July 24, 2025 (GMT+9), Cisco was made aware of an incident
+        involving a bad actor targeting a Cisco representative through a
+        voice phishing attack" (Cisco advisory; BC "became aware ... on
+        July 24th"; TC "discovered the breach on July 24").
+      - Accessed/exported "a subset of basic profile information from one
+        instance of a third-party, cloud-based CRM system" (advisory; BC; TC).
+      - Field list carried verbatim by BC + TC: "name, organization name,
+        address, Cisco assigned user ID, email address, phone number, and
+        account-related metadata such as creation date."
+      - "did not obtain any of [its] organizational customers' confidential
+        or proprietary information, or any passwords or other types of
+        sensitive information"; "the incident didn't impact its products or
+        services, and no other Cisco CRM system instances were affected" (BC).
+      - STRIPPED the old outcome_summary's unhedged "via the UNC6040 /
+        ShinyHunters voice-phishing campaign" — Cisco attributes to NO actor.
+        REWORDED old "core product and customer-deployment data were not
+        affected ... business-contact information" to Cisco's actual words
+        (Cisco.com account-profile data; no products/services impact).
+      - NO victim-count figure added: Cisco "did not specify how many
+        Cisco.com users were affected" (TC); the press "3 million records"
+        figure (cxtoday) is speculative and was NOT imported.
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters high ->
+        moderate, concur -> concur-with-caveat, attribution_level
+        activity-cluster; attributing_org "Google Threat Intelligence Group
+        + Cisco statement" CORRECTED (Cisco named no actor; GTIG named no
+        Cisco) to "BleepingComputer (Cisco-brand placement) + security-
+        industry consensus"; attribution_source_id re-pointed from
+        mandiant/2025-08-08 (no Cisco) to bleepingcomputer/2025-08-05, which
+        carries the hedged linkage ("not yet confirmed by the company, this
+        is likely part of an ongoing wave of Salesforce data theft attacks
+        ... linked to the ShinyHunters extortion group"; "a Cisco spokesperson
+        ... did not confirm whether the data was stolen from a compromised
+        Salesforce instance"). Scattered Spider moderate -> low, re-pointed
+        from mandiant/2025-08-08 (not even among this event's sources) to
+        krebs/2025-10 (amalgamation framing only; names no Cisco).
+        false_flag_risk: suspected retained (deliberate ShinyHunters
+        brand-borrowing / self-claim).
+    [c] DATES — start 2025-07-15 (unsourced) -> 2025-07-24 (Cisco "made
+        aware", GMT+9; the only anchored onset). disclosure KEPT 2025-08-05:
+        earliest Wayback capture of the advisory is 20250805122430 and all
+        press (TC "the company said on Tuesday" = Aug 5; BC) is Aug 5 —
+        though Cisco's advisory stamps "First Published: Friday, August 1,
+        2025" (documented, but no public evidence predates Aug 5). end
+        2025-08-31 (unsourced) -> 2025-08-05 (access terminated immediately
+        on discovery; bounded through disclosure). Source published_on
+        verified: Cisco 2025-08-01 (advisory "First Published"; Latest Update
+        Oct 3 2025), BC 2025-08-05, TC 2025-08-05 (datePublished
+        2025-08-05T15:03:03Z).
+    [d] DOCTRINE_LINKS — none (per scope; criminal financially-motivated
+        extortion cluster, no strategic-doctrine terminal goal). Correct.
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions:
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) clusters;
+        "ShinyHunters" is a self-applied brand over them and the Cisco
+        placement is inferential (Cisco named no actor) — activity-cluster
+        is the honest granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider both
+        resolve to existing atlas actor ids. Not a counter-action (no
+        LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] -> [intrusion, data-theft]: intrusion
+    (unauthorized access to a third-party cloud CRM via vishing) +
+    data-theft (Cisco.com account-profile data exported) are Cisco-confirmed.
+    Extortion NOT added: no Cisco-specific extortion demand/leak is
+    documented (Cisco terminated access on discovery; Cisco is not named in
+    the Oct-2025 Krebs leak-site reporting) — deliberately DIVERGES from the
+    Adidas/LVMH siblings, which inherited campaign-chain extortion.
+
+    FLAGS (not edited — outside event / own-source scope):
+    - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft source
+      record: the live cloud.google.com article is JS-rendered AND has
+      drifted past its publication state (now references post-Aug-2025
+      UNC6661 / UNC6671 + Jan-2026 activity), so a faithful 2025-08-08 curl
+      snapshot is not obtainable; it names no Cisco. Dropped from this event
+      but still cited by the actor + umbrella + siblings — orchestrator
+      should mark that source record snapshot: partial (same flag raised by
+      the LVMH audit).
+    - actor criminal/shinyhunters roster line already lists "Cisco" among
+      the 2025 Salesforce-campaign victims — consistent with the hedged
+      placement here; no change needed.
+    - target orgs/cisco.yaml exists (resolves); its sources: [] could
+      optionally carry these Cisco-specific records (orchestrator).
+    - umbrella event 2025-06/unc6040-shinyhunters-salesforce-campaign models
+      Cisco as a campaign child — consistent; not edited.

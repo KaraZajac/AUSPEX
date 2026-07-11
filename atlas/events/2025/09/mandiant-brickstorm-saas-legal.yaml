@@ -1,6 +1,6 @@
 id: 2025-09/mandiant-brickstorm-saas-legal
 name: Mandiant BRICKSTORM — UNC5221 espionage into US legal, SaaS, BPO, tech sectors
-start_date: 2024-04-01  # Mandiant-stated earliest persistence at one victim
+start_date: 2024-04-01  # derived onset: 393-day mean dwell + Carmakal's "could have been there for a year and a half" (CyberScoop), back-projected from the March-2025 IR window. NOT a Mandiant-stated exact date — this Sept report gives no 2024 date (0 hits); the specific April-2024 implantation figure comes from the later CISA MAR AR25-338A (Dec 2025), not here. See qc.notes.
 disclosure_date: 2025-09-24
 end_date: null
 incident_type:
@@ -10,8 +10,8 @@ incident_type:
 initial_vector: 0-day
 outcome_summary: |
   Google Threat Intelligence Group / Mandiant publicly disclosed
-  a sustained China-nexus espionage campaign delivering the
-  BRICKSTORM Go/Rust backdoor against US legal-services firms,
+  a sustained, suspected China-nexus espionage campaign delivering
+  the Go-based BRICKSTORM backdoor against US legal-services firms,
   Software-as-a-Service providers, Business Process Outsourcers,
   and technology companies. Mean dwell time across investigated
   intrusions was 393 days; the malware targets edge appliances
@@ -22,63 +22,69 @@ outcome_summary: |
   to US national-security and international-trade collection.
 false_flag_risk: none
 summary: |
-  BRICKSTORM is now the single most consequential PRC backdoor
-  family in the AUSPEX 2025 corpus: Golang/Rust polyglot, SOCKS
-  proxy capability, deliberate targeting of appliance / hypervisor
-  layers where EDR doesn't reach. The 393-day average dwell time
-  represents an operational tier above anything except long-tail
-  Volt Typhoon. Attributed by Mandiant to UNC5221 and closely
-  related clusters; the same activity overlaps with UNC3886 in
-  the December 2025 CISA/NSA/Canadian CCCS joint advisory.
+  BRICKSTORM is among the most consequential suspected-PRC
+  espionage backdoor families in the 2025 corpus — GTIG called
+  its operators a "next-level threat" and the "most prevalent"
+  China-centered threat group. A Golang backdoor (Mandiant states
+  Go only; no Rust in this report — Rust variants surface later in
+  the Dec-2025 CISA MAR) with SOCKS-proxy capability and deliberate
+  targeting of appliance / hypervisor layers where EDR doesn't
+  reach. The 393-day average dwell (~400 per CyberScoop) dwarfs the
+  industry-typical dwell measured in days or weeks. Attributed by
+  Mandiant to UNC5221 and closely related, suspected China-nexus
+  clusters; GTIG explicitly does NOT equate UNC5221 with Silk
+  Typhoon or Volt Typhoon. The later, distinct December 2025
+  CISA/NSA/Canadian CCCS joint advisory (2025-12 event) names both
+  UNC5221 and UNC3886.
 attributions:
   - actor_id: cn/unscoped/warp-panda  # consolidated 2026-07-05 (Kara): VerdantBamboo==WARP-PANDA==UNC5221 per Volexity 2026-06
     attributing_org: Google Threat Intelligence Group / Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor   # Mandiant names UNC5221 (a named China-nexus cluster) + "suspected China-nexus"; no Chinese service/unit named -> named-actor, not named-unit
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-09-24
     attribution_source_id: mandiant/2025-09-24_brickstorm-espionage
     notes: |
-      Mandiant attributes activity to UNC5221 and related
-      China-nexus clusters; AUSPEX does not yet model UNC5221
-      as a named actor. Treated as null actor_id pending a
-      cluster decision; service_id is implicitly MSS by
-      Mandiant's framing.
+      Mandiant attributes to "UNC5221 and closely related,
+      suspected China-nexus threat clusters" — consolidated in
+      AUSPEX to cn/unscoped/warp-panda (WARP PANDA == UNC5221 ==
+      VerdantBamboo, Kara-approved 2026-07-05). Caveat: the nexus
+      is SUSPECTED, not confirmed, and NO Chinese service is named
+      — CyberScoop: the researchers "declined to comment on
+      possible Chinese government agency connections," and GTIG
+      explicitly does not consider UNC5221 to be the same as Silk
+      Typhoon or Volt Typhoon. Hence cn/unscoped (the actor was
+      deliberately demoted from cn/mss on 2026-06-24 for exactly
+      this no-service-named reason); no MSS assertion is warranted.
 doctrine_links:
-  - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      SaaS supply-chain targeting fits the MSS contractor model
-      of leveraging compromised vendors to reach downstream
-      collection targets, mirroring the i-SOON / Sichuan Juxinhe
-      pattern.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
-  - doctrine_id: cn/intelligentized-warfare
-    pillar_id: cn/intelligentized-warfare/sigint-c4isr-collection
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Targeting of US legal services for national-security and
-      international-trade material is the strategic-collection
-      mode of the SIGINT/C4ISR pillar applied to non-government
-      sources of policy intelligence.
-    attesting_source_id: mandiant/2025-09-24_brickstorm-espionage
-    contested: false
-    analyst: claude
   - doctrine_id: cn/mic2025
-    pillar_id: cn/mic2025/next-gen-it
+    pillar_id: null   # cross-sector (legal/SaaS/BPO/tech); fits no single MIC2025 sector pillar (next-gen-IT is semiconductors/AI/5G, too narrow) -> pillar null, per the 2025-12 warp-panda sibling precedent
     program_id: null
     confidence: plausible
     reasoning: |
-      SaaS/tech-sector intrusions plausibly feed MIC2025 next-gen
-      IT pillar collection but Mandiant does not name a specific
-      industrial-policy connection in the disclosure.
+      Mandiant states the tech-sector intrusions aim at "theft of
+      valuable IP to further the development of zero-day exploits"
+      — IP acquisition consistent with PRC tech-upgrading (MIC2025)
+      logic. plausible (not attested/strongly_inferred): this rests
+      on AUSPEX sector-fit inference, NOT a source-stated industrial-
+      policy goal (Mandiant names no MIC2025/industrial connection),
+      and the legal-sector collection for "US national security and
+      international trade" leaves classic political/strategic
+      espionage as an equally live reading of the campaign's purpose.
     attesting_source_id: null
     contested: false
     analyst: claude
+  # REMOVED 2026-07-11 (claude-opus-4.8/max audit), both as source-unsupported mismatches:
+  #  - cn/national-intelligence-law-2017/compelled-vendor-cooperation (was strongly_inferred):
+  #    category error. That pillar is legal COMPULSION of PRC-DOMICILED vendors (NIL Art.7/14);
+  #    BRICKSTORM is offensive COMPROMISE of US/foreign SaaS providers. The old reasoning also
+  #    asserted an "MSS contractor model" the source never states (Mandiant declined to name any
+  #    Chinese service). No NIL mention in any cited source.
+  #  - cn/intelligentized-warfare/sigint-c4isr-collection (was strongly_inferred w/ an unwarranted
+  #    attesting_source_id): pillar is Salt-Typhoon telecom-carrier SIGINT / CALEA; parent doctrine
+  #    is PLA warfighting (system-destruction / pre-positioning). BRICKSTORM is espionage against
+  #    legal/SaaS/tech, not carrier SIGINT or warfighting prep. No intelligentized-warfare/C4ISR/
+  #    SIGINT language in any cited source. See qc.notes + orchestrator FLAG (doctrine-pillar gap).
 targets:
   - target_id: sectors/legal
     country: us
@@ -96,3 +102,69 @@ sources:
   - mandiant/2025-09-24_brickstorm-espionage
   - therecord/2025-09-24_brickstorm-china-ip
   - cyberscoop/2025-09-24_brickstorm-mandiant
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    All three cited sources re-fetched (Mozilla UA), HTTP 200, snapshotted + hashed to
+    atlas/sources/raw/:
+      mandiant__2025-09-24_brickstorm-espionage.html    (420,906 B; SHA-256 c6f1586e2142b3c8e45036f2859f185ff42f3f74f0058f35019cd3209e1d3e5c)
+      therecord__2025-09-24_brickstorm-china-ip.html    (85,842 B;  SHA-256 4468637e67afe53460c77455bba4bfa228cd1a4712576550f040abe17176d824)
+      cyberscoop__2025-09-24_brickstorm-mandiant.html   (119,391 B; SHA-256 904adbec6d3a06e647483a4823f956da7c8d7a2b56e5625a66f0d684bef6be5b)
+
+    [a] FACTS — mostly confirmed; one fabrication stripped.
+      CONFIRMED (Mandiant primary): "Since March 2025, Mandiant Consulting has responded to
+      intrusions ... most notably legal services, Software as a Service (SaaS) providers,
+      Business Process Outsourcers (BPOs), and Technology"; "remain undetected ... for 393 days,
+      on average" (x2); BRICKSTORM "written in Go" + "includes SOCKS proxy functionality";
+      "appliance platforms that do not support traditional EDR"; "consistently targets VMware
+      vCenter and ESXi hosts"; SaaS objective "to gain access to downstream customer environments"
+      (stated at "high confidence"); legal targeting "primarily to gather information related to
+      US national security and international trade"; tech targeting for "theft of valuable IP to
+      further the development of zero-day exploits". CyberScoop corroborates ("~400" days dwell vs
+      "days or weeks"; "next-level threat"; "most prevalent" China group). The Record corroborates
+      ("China-linked", legal/SaaS/tech, PRC economic+espionage interests, Ivanti Connect Secure
+      0-day).
+      STRIPPED (fabrication / anachronism): "Go/Rust backdoor" + "Golang/Rust polyglot" -> Go ONLY.
+      The Mandiant report has ZERO "Rust" (the single grep hit was "T-rust-ed Platform Module") and
+      ZERO "polyglot". Rust BRICKSTORM variants are a LATER development first noted in the 19-Dec-2025
+      CISA MAR AR25-338A update, not this Sept report -> anachronistic here. Also softened two
+      unsourced editorial superlatives: "single most consequential PRC backdoor family" -> measured,
+      source-anchored wording; "operational tier above anything except long-tail Volt Typhoon" ->
+      the source's own comparison ("dwell times more commonly measured in days or weeks"), since the
+      cited sources explicitly say UNC5221 is NOT Volt Typhoon.
+    [b] ATTRIBUTION — over-attestation removed. Mandiant: "We attribute this activity to UNC5221 and
+      closely related, suspected China-nexus threat clusters" (note SUSPECTED). CyberScoop: the
+      researchers "declined to comment on possible Chinese government agency connections". Both
+      Mandiant + The Record: GTIG "does not currently consider" UNC5221 to be the same as Silk
+      Typhoon / Volt Typhoon. -> Removed the stale/contradictory notes ("null actor_id pending" while
+      actor_id was set; "service_id is implicitly MSS by Mandiant's framing" — a firmer service than
+      any source states, and directly contra the canonical actor record which was demoted cn/mss ->
+      cn/unscoped on 2026-06-24 precisely because no source names a service). attributing_org_confidence
+      high (firm UNC5221 attribution) + auspex_assessment concur-with-caveat HELD. Zero "Ministry of
+      State Security"/"MSS" in any source.
+    [c] DATES — disclosure_date 2025-09-24 confirmed on all three bylines (Mandiant "September 24, 2025";
+      The Record "September 24th, 2025"; CyberScoop "September 24, 2025") -> source published_on all
+      correct. start_date 2024-04-01 comment corrected: this Sept report states NO 2024 date (0 hits);
+      the value is a back-projection from the 393-day mean dwell + Carmakal's "could have been there for
+      a year and a half" (CyberScoop), consistent with (but not sourced to) the April-2024 implantation
+      the later CISA MAR documents. Kept the date, relabeled the basis.
+    [d] DOCTRINE_LINKS — de-attested from 3 links to 1. REMOVED cn/national-intelligence-law-2017/
+      compelled-vendor-cooperation (category error: that pillar is legal compulsion of PRC-domiciled
+      vendors per NIL Art.7/14; BRICKSTORM is offensive compromise of US/foreign SaaS — and its old
+      reasoning invoked an "MSS contractor model" no source states). REMOVED cn/intelligentized-warfare/
+      sigint-c4isr-collection (pillar = Salt-Typhoon telecom-carrier SIGINT/CALEA; parent doctrine =
+      PLA warfighting — neither matches legal/SaaS/tech espionage; it also carried an unwarranted
+      attesting_source_id implying attestation). KEPT cn/mic2025 but moved pillar next-gen-it -> null
+      (cross-sector; next-gen-IT is narrowly semiconductors/AI/5G) and reworded to flag AUSPEX sector-fit
+      inference, not a source-stated industrial-policy goal; HELD at plausible (Mandiant's "IP ... to
+      further development of zero-day exploits" supports it, but political/strategic espionage is an
+      equally live reading). No source states any doctrine's terminal goal verbatim -> nothing rises to
+      attested.
+    [e] ATTRIBUTION_LEVEL — was absent; added named-actor (Mandiant names UNC5221, a named China-nexus
+      cluster; nexus suspected; no service/unit named), matching the 2025-12 warp-panda sibling.
+    [f] ACTOR_ID — cn/unscoped/warp-panda resolves (atlas/actors/cn/warp-panda.yaml, id: cn/unscoped/
+      warp-panda; aliases UNC5221 [equivalent, Mandiant/GTIG] + VerdantBamboo + "BRICKSTORM cluster").
+      HELD. Not a counter-action (named-actor espionage) -> non-null actor_id correct.

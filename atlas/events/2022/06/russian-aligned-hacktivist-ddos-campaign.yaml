@@ -1,6 +1,6 @@
 id: 2022-06/russian-aligned-hacktivist-ddos-campaign
 name: Sustained Killnet / NoName057(16) / XakNet DDoS campaign (2022-onward)
-start_date: 2022-03-01  # earliest Killnet activity; NoName founded March 2022
+start_date: 2022-03-01  # CISA AA22-110A: Killnet US-airport DDoS March 2022; XakNet "active as early as March 2022"
 disclosure_date: 2022-04-20  # CISA AA22-110A
 end_date: null  # ongoing as of 2026
 incident_type:
@@ -9,30 +9,54 @@ incident_type:
 initial_vector: unknown
 outcome_summary: |
   Continuous low-tier Layer-7 DDoS and defacement operations by a
-  loose tier of Russia-aligned "hacktivist" fronts — Killnet,
-  NoName057(16) (DDoSia), XakNet, Anonymous Russia, RaHDIt — against
-  government, finance, transport, and healthcare web infrastructure
-  of NATO and Ukraine-aiding states. NoName057(16) self-claimed more
-  than 1,500 DDoS attacks since 2022 against Lithuania, Italy,
-  Germany, Poland, Czechia, the UK, and the US. Effects are largely
-  performative; strategic value is morale, signaling, and friction.
+  loose activity-cluster of Russia-aligned "hacktivist" fronts —
+  Killnet and XakNet (both named in CISA AA22-110A) and NoName057(16)
+  / DDoSia (DOJ, Europol) — against government, finance, and transport
+  web infrastructure of Ukraine and its NATO-aligned supporters. Per
+  DOJ (Dec 2025, raw-verified), NoName "claimed credit for hundreds of
+  cyberattacks" and its victims "included government agencies,
+  financial institutions, and critical infrastructure, such as public
+  railways and ports." Europol's Operation Eastwood (2025) documents
+  named target sets: Swedish authorities and bank websites (2023-24),
+  "14 separate waves of attacks targeting more than 250 companies and
+  institutions" in Germany (since Nov 2023), and Switzerland (June
+  2023, June 2024). Effects are largely performative (DDoS =
+  availability, usually transient); strategic value is morale,
+  signaling, and friction.
+  # STRIPPED (2026-07-11 audit): "self-claimed more than 1,500 DDoS
+  # attacks ... against Lithuania, Italy, Germany, Poland, Czechia, the
+  # UK, and the US" — the 1,500 figure appears in NO cited source (DOJ
+  # says "hundreds"); the country list matches Europol's LAW-ENFORCEMENT
+  # participants, not NoName's victims (a conflation). Also stripped
+  # "Anonymous Russia, RaHDIt" (only in the actor file, no cited source)
+  # and "healthcare" (CISA's healthcare mentions attach to WIZARD
+  # SPIDER/Conti ransomware, not this DDoS cluster).
 false_flag_risk: none
 summary: |
-  CISA AA22-110A (April 20, 2022) named Killnet, XakNet, and
-  affiliated Russia-aligned cybercrime/hacktivist groups as part of
-  the threat picture following the full-scale invasion. State nexus
-  is assessed by US/EU services and Mandiant rather than proven for
-  Killnet/XakNet (proxy posture). DOJ December 2025 announcement
-  assessed NoName057(16) as state-sanctioned via CISM (Center for
-  the Study and Network Monitoring of the Youth Environment);
-  separate Europol "Operation Eastwood" (July 2025) took down >100
-  NoName servers across 13 countries with 6 arrest warrants. AUSPEX
-  treats the cluster as a single proxy-tier campaign rather than
-  itemizing every claimed DDoS.
+  CISA AA22-110A (April 20, 2022) named Killnet and XakNet — among
+  other Russia-aligned "cybercrime" fronts — as self-declared,
+  independently pledged actors; the advisory asserts NO Russian
+  service or command relationship for them and cautions cyber
+  criminals "will most likely continue to operate primarily based on
+  financial motivations." A state nexus is source-documented only for
+  NoName057(16): DOJ (Dec 9, 2025) assessed NoName as a
+  "state-sanctioned" project "administered in part by an information
+  technology organization established by order of the President of
+  Russia in October 2018" — i.e. CISM (the Center for the Study and
+  Network Monitoring of the Youth Environment), whose employees built
+  the DDoSia infrastructure. Europol "Operation Eastwood" (action day
+  15 July 2025) disrupted "over 100 servers ... worldwide" with 12
+  states acting simultaneously; national authorities "issued seven
+  arrest warrants ... against six Russian nationals" (six by Germany,
+  one by Spain) with two arrests (France, Spain). XakNet's GRU tie
+  rests on Mandiant's Sep-2023 report, which is NOT among this event's
+  cited sources (FLAG). AUSPEX treats the cluster as a single
+  activity-cluster campaign rather than itemizing every claimed DDoS.
 attributions:
   - actor_id: ru/unscoped/killnet  # was ru/proxies/killnet — demoted 2026-06-24 (audit): source documents no state nexus/service
     attributing_org: US CISA (AA22-110A grouping)
     attributing_org_confidence: moderate
+    attribution_level: named-actor  # CISA names Killnet; state-nexus only self-declared/nation-level, no service asserted
     auspex_assessment: concur-with-caveat
     attribution_date: 2022-04-20
     attribution_source_id: cisa/2022-04-20_aa22-110a-russian-cyber-threats-to-cii
@@ -48,35 +72,63 @@ attributions:
   - actor_id: ru/proxies/noname05716
     attributing_org: Europol / Operation Eastwood
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2024-07-17
+    attribution_date: 2025-07-16  # was 2024-07-17 — Op Eastwood action day 15 Jul 2025; release/source published_on 16 Jul 2025
     attribution_source_id: europol/2024-07_operation-eastwood-noname
   - actor_id: ru/proxies/noname05716
     attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-12-01
+    attribution_date: 2025-12-09  # was 2025-12-01 — raw meta datePublished 2025-12-09T18:15:13-05:00
     attribution_source_id: doj/2025-12_carr-noname-actions
     notes: |
       DOJ Dec 2025 assessed NoName as a state-sanctioned project
       administered partially through CISM.
   - actor_id: ru/gru/xaknet
-    attributing_org: Microsoft MSTIC / Mandiant
+    # was attributing_org "Microsoft MSTIC / Mandiant" citing mstic/2023-06-14 — WRONG-SOURCE:
+    # the MSTIC snapshot has 0 XakNet mentions (it attributes Cadet Blizzard, a different actor).
+    # Re-pointed to CISA AA22-110A, which DOES name XakNet (7 mentions). MSTIC dropped from sources[].
+    attributing_org: US CISA (AA22-110A grouping)
     attributing_org_confidence: moderate
+    attribution_level: named-actor  # CISA names XakNet at self-declared level; the ru/gru (named-unit) tie is NOT carried by any cited source here
     auspex_assessment: concur-with-caveat
-    attribution_date: 2023-06-14
-    attribution_source_id: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+    attribution_date: 2022-04-20
+    attribution_source_id: cisa/2022-04-20_aa22-110a-russian-cyber-threats-to-cii
+    notes: |
+      CISA AA22-110A names the XakNet Team as a self-declared
+      Russia-aligned front: "on March 31, 2022, XakNet released a
+      statement stating they would work 'exclusively for the good of
+      [Russia]'" and "may be working with or associated with Killnet
+      actors." CISA asserts NO Russian service for XakNet. The actor's
+      ru/gru placement rests on Mandiant's 2023-09-14 "Hacktivists
+      Collaborate with GRU-sponsored Threat Actors" report (moderate
+      confidence: XakNet moderators "directly supported by" / "are GRU
+      intelligence officers or work directly with the GRU APT44"),
+      which is NOT among this event's cited sources. FLAG: add the
+      Mandiant source or reconcile the actor_id's named-unit claim.
 doctrine_links:
   - doctrine_id: ru/sanctions-response-2022
     pillar_id: ru/sanctions-response-2022/criminal-proxy-mobilization
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
       Mobilization of nominally hacktivist proxies for deniable
       retaliatory force is the central operational pattern of the
-      post-2022 sanctions-response posture. State nexus is attested
-      for NoName (DOJ Dec 2025) and assessed for Killnet/XakNet.
+      post-2022 sanctions-response posture. A state nexus is
+      source-documented for NoName (DOJ Dec 2025, state-sanctioned via
+      CISM); for Killnet/XakNet the cited sources show only
+      self-declared alignment, so the "proxy-mobilization" frame is
+      inferred, not attested.
     attesting_source_id: doj/2025-12_carr-noname-actions
+    inference_basis:
+      source_id: doj/2025-12_carr-noname-actions
+      signals:
+        - "DOJ (Dec 2025, raw-verified): 'NoName was a state-sanctioned project administered in part by an information technology organization established by order of the President of Russia in October 2018' — a documented state-directed proxy."
+        - "DOJ: NoName membership 'included multiple employees of The Center for the Study and Network Monitoring of the Youth Environment (CISM)' whose infrastructure ran the DDoSia program."
+      ruled_out: "a codified 'sanctions-response-2022 / criminal-proxy-mobilization' Russian doctrine — DOJ documents the state-nexus FACT but names no such doctrine or sanctions-retaliation frame; the doctrine label is AUSPEX's analytic construct."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -84,6 +136,7 @@ doctrine_links:
     pillar_id: ru/sanctions-response-2022/performative-disruption
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
       Low-sophistication, high-visibility DDoS for signaling fits
       the performative-disruption pillar; CISA AA22-110A ties the
@@ -102,11 +155,20 @@ doctrine_links:
   - doctrine_id: ru/nato-ultimatum-2021
     pillar_id: ru/nato-ultimatum-2021/nato-degradation
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # was strongly_inferred — downgraded 2026-07-11: no cited source ties the 2022 DDoS to the 2021 NATO-ultimatum doctrine
+    perspective: attacker-rationale
     reasoning: |
-      Target set (NATO members supporting Ukraine) and timing fit
-      the NATO-degradation pillar of the 2021 ultimatum posture.
+      Target set (NATO members supporting Ukraine) and timing loosely
+      fit the NATO-degradation pillar of the 2021 ultimatum posture,
+      but no cited source connects the 2022 hacktivist DDoS to the
+      pre-invasion 2021 NATO ultimatum, so this is a weak,
+      analyst-only link. FLAG for orchestrator review.
     attesting_source_id: null
+    inference_basis:
+      source_id: europol/2024-07_operation-eastwood-noname
+      signals:
+        - "Europol (raw-verified): NoName 'targeted primarily Ukraine, but have shifted their focus to attacking countries that support Ukraine ... many of which are members of NATO' — establishes NATO-member targeting."
+      ruled_out: "a substantive link to the ru/nato-ultimatum-2021 doctrine — CISA/DOJ frame the DDoS as retaliation for materiel support to Ukraine (2022), not as execution of the 2021 pre-invasion NATO ultimatum; downgraded strongly_inferred -> plausible."
     contested: false
     analyst: claude
 targets:
@@ -115,11 +177,109 @@ targets:
   - target_id: sectors/finance/banking
     role: primary
   - target_id: sectors/transport/aviation
-    role: primary
-  - target_id: sectors/healthcare/hospital
-    role: collateral
+    role: primary  # CISA: Killnet DDoS vs a U.S. airport (DOJ adds railways/ports for NoName)
+  # REMOVED 2026-07-11 audit: sectors/healthcare/hospital — no cited source ties
+  # healthcare to this DDoS cluster (CISA's healthcare mentions = WIZARD SPIDER/Conti
+  # ransomware, a different actor). Killnet's real-world hospital DDoS (Jan 2023) is
+  # not in any cited source; re-add only if a source is added.
 sources:
   - cisa/2022-04-20_aa22-110a-russian-cyber-threats-to-cii
   - europol/2024-07_operation-eastwood-noname
   - doj/2025-12_carr-noname-actions
-  - mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+  # REMOVED 2026-07-11 audit: mstic/2023-06-14_cadet-blizzard-novel-distinct-threat-actor
+  # — WRONG-SOURCE (0 XakNet mentions in snapshot; it attributes Cadet Blizzard). Still
+  # cited by 2 other events (whispergate, cadet-blizzard graduation) so NOT orphaned.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW cited snapshots. 3 of the original 4
+    sources retained + raw-verified (hashes re-confirmed byte-for-byte);
+    the 4th (MSTIC) removed as a wrong-source. level=partial for ONE
+    residual: the ru/gru/xaknet actor_id embeds a named-unit (GRU) claim
+    carried by NO cited source (rests on the uncited Mandiant 2023-09-14
+    report) — flagged, not resolved (actor-file matter). All other
+    load-bearing claims are carried by a snapshotted source.
+
+    Snapshots re-verified (PRESERVE tier, all pre-existing, hashes match):
+      cisa/2022-04-20_aa22-110a  sha256 7d2213fd0f01e126e15010e0b552e94f8e99b690f0d65b58e2e1e684e50aac39 (121,438 B)
+      europol/2024-07_op-eastwood sha256 6519b8afc9ed4690c65a8789a5fbb93d2b37d7a52ab6ada7a471b36aad99e9ad (52,018 B)
+      doj/2025-12_carr-noname    sha256 261fa447b471b87109b96353cecf020807f77566ff297ece1c68d5e623933952 (98,207 B)
+      [DROPPED] mstic/2023-06-14 sha256 e6ed731423f183c169131b3c6f96d39a4ab83b659cff12ce41c5cac737d3280c — 0 XakNet mentions.
+
+    [a] FACTS — corrections/strips:
+      * STRIPPED "NoName self-claimed more than 1,500 DDoS attacks" — the
+        "1,500" figure is in NO cited source (the only "1500" byte-hits are
+        false positives: DOJ JS 'refreshInterval:15000', MSTIC CSS '1500px').
+        DOJ's real figure, verbatim: NoName "claimed credit for hundreds of
+        cyberattacks."
+      * STRIPPED the victim country list "Lithuania, Italy, Germany, Poland,
+        Czechia, the UK, and the US" — this matches Europol's LAW-ENFORCEMENT
+        participants ("Czechia, France, Finland, Germany, Italy, Lithuania,
+        Poland, Spain, Sweden, Switzerland, the Netherlands and the United
+        States took simultaneous actions"), NOT NoName's victims. A conflation.
+        Real sourced victim sets: DOJ — "government agencies, financial
+        institutions, and critical infrastructure, such as public railways and
+        ports"; Europol — Swedish authorities + bank websites (2023-24), "14
+        separate waves ... more than 250 companies and institutions" in Germany,
+        Switzerland (Jun 2023, Jun 2024).
+      * STRIPPED "Anonymous Russia, RaHDIt" from the front-list — named only in
+        the ru/gru/xaknet ACTOR file, in NO cited event source.
+      * STRIPPED "healthcare" (outcome_summary) + the sectors/healthcare/hospital
+        target — CISA's only "healthcare" mentions attach to WIZARD SPIDER/Conti
+        RANSOMWARE, not this DDoS cluster; 0 healthcare in Europol/DOJ.
+      * FIXED "took down >100 servers across 13 countries with 6 arrest warrants"
+        -> Europol verbatim: "Over 100 servers disrupted worldwide"; 12 states
+        acted; "seven arrest warrants ... against six Russian nationals" (6 by
+        Germany, 1 by Spain); "2 arrests (1 ... France and 1 in Spain)."
+      * KEPT + verified verbatim: CISM = "The Center for the Study and Network
+        Monitoring of the Youth Environment"; "state-sanctioned" NoName;
+        "established by order of the President of Russia in October 2018"; DDoSia
+        as NoName's "proprietary distributed denial of service (DDoS) program."
+    [b] ATTRIBUTION:
+      * Killnet (ru/unscoped/killnet) — CISA lists it under "Russian-Aligned
+        Cybercrime Groups" (financially motivated), self-declared pledge, no
+        service; disclaimer verbatim "cyber criminals will most likely continue
+        to operate primarily based on financial motivations." moderate /
+        concur-with-caveat retained; added attribution_level: named-actor. NO
+        over-attribution to ru/gru or a service (per NB).
+      * NoName Europol row — concur / high; NoName is the takedown subject.
+      * NoName DOJ row — concur / high; DOJ documents the state nexus verbatim.
+      * XakNet row — WRONG-SOURCE fixed: cited mstic/2023-06-14 has 0 XakNet
+        mentions. Re-pointed to CISA (names XakNet: "work 'exclusively for the
+        good of [Russia]'"; "may be working with or associated with Killnet").
+        CISA supports only self-declared alignment (named-actor), NOT the GRU
+        (named-unit) claim the actor_id embeds. FLAG.
+    [c] DATES: start_date 2022-03-01 CISA-sourced (Killnet US-airport DDoS Mar
+        2022; XakNet "active as early as March 2022"). disclosure 2022-04-20 =
+        CISA publish. FIXED Europol attribution_date 2024-07-17 -> 2025-07-16
+        (op action day 15 Jul 2025 / release 16 Jul 2025). FIXED DOJ
+        attribution_date 2025-12-01 -> 2025-12-09 (raw meta datePublished). end
+        null (ongoing) OK.
+    [d] DOCTRINE_LINKS: added perspective: attacker-rationale to all 3 (attacker's
+        own doctrine on its attacks). Link1 (criminal-proxy-mobilization) kept
+        strongly_inferred, added inference_basis (DOJ state-sanctioned signal +
+        ruled_out the codified doctrine label). Link2 (performative-disruption)
+        already well-formed. Link3 (nato-degradation) DOWNGRADED
+        strongly_inferred -> plausible (had null source + no inference_basis);
+        added Europol NATO-member-targeting signal + ruled_out. FLAG: the
+        ru/nato-ultimatum-2021 linkage is weak/analyst-only.
+    [e] ATTRIBUTION_LEVEL: added (was missing on all rows) — named-actor for all
+        4; campaign-level framing = activity-cluster (loose Russia-aligned tier).
+    [f] ACTOR_ID: all resolve — ru/unscoped/killnet (killnet.yaml), ru/proxies/
+        noname05716, ru/gru/xaknet. Not a counter-action, so actor_ids retained.
+
+    ORCHESTRATOR FLAGS (files I did NOT edit):
+      * ACTOR ru/gru/xaknet (atlas/actors/ru/xaknet.yaml): named-unit (GRU/APT44)
+        placement rests on Mandiant 2023-09-14 "Hacktivists Collaborate with
+        GRU-sponsored Threat Actors" — NOT in this event's cited sources.
+        Recommend adding that Mandiant source (would raise this event to full) or
+        reconciling the actor_id. Actor file also lists Anonymous Russia/RaHDIt.
+      * DOCTRINE ru/nato-ultimatum-2021 (atlas/doctrines/ru/nato-ultimatum-2021.
+        yaml): the nato-degradation link from this 2022 DDoS is weak; no source
+        connects it to the 2021 ultimatum posture. Downgraded to plausible here.
+      * SOURCE mstic/2023-06-14_cadet-blizzard: removed from THIS event as a
+        wrong-source; still valid + cited by whispergate + cadet-blizzard-
+        graduation events (NOT orphaned, no RETIRE).

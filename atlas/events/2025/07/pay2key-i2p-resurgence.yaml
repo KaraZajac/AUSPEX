@@ -1,7 +1,7 @@
 id: 2025-07/pay2key-i2p-resurgence
-name: Pay2Key.I2P resurfaces as IRGC-aligned RaaS post Israel-Iran kinetic exchanges
-start_date: 2025-07-01
-disclosure_date: 2025-07-15
+name: Pay2Key.I2P resurgence — Iran-linked (Fox Kitten) RaaS with anti-US/Israel affiliate bonus
+start_date: 2025-02-01
+disclosure_date: 2025-07-08
 end_date: null
 incident_type:
   - ransomware
@@ -9,58 +9,118 @@ incident_type:
   - influence-operation
 initial_vector: n-day
 outcome_summary: |
-  Pay2Key persona returned as Pay2Key.I2P with an I2P-hosted
-  leak site and an affiliate model offering 80% profit-share.
-  Approximately USD 4M extorted in the first four months.
-  US and Israeli organizations targeted.
+  The Pay2Key persona returned as Pay2Key.I2P, an Iran-linked
+  (Fox Kitten) RaaS platform hosted on the I2P network. It raised
+  the affiliate cut to 80% (from 70%) as an ideological bonus for
+  affiliates supporting Iran or attacking "the enemies of Iran"
+  (primarily the US and Israel). The operators claimed >USD 4M
+  from ~50 ransom payouts over the first four months. Western,
+  chiefly US and Israeli, organizations targeted.
 quantified_impact:
   usd_extorted: 4000000
 false_flag_risk: none
 summary: |
-  Re-emergence of the Pay2Key persona under Pioneer Kitten /
-  Fox Kitten lineage following the June 2025 Israel-Iran kinetic
-  exchanges (Natanz / Fordow strikes). Halcyon, KELA, and The
-  Register documented the affiliate model: I2P-hosted leak site,
-  Telegram and Tox recruitment of Russian-speaking ransomware
-  affiliates, 80% revenue share, and explicit prohibition on
-  encrypting Iranian / Iran-allied victims. Underlying intrusion
-  tradecraft inherits the Pioneer Kitten / Fox Kitten playbook —
-  mass exploitation of unpatched Citrix NetScaler, Fortinet
-  FortiOS, Palo Alto GlobalProtect, Ivanti Connect Secure, and
-  Check Point edge appliances; web shells on internet-facing
-  servers; valid-credentials lateral movement; Mimikatz credential
-  dumping; abuse of legitimate remote-management tools (AnyDesk,
-  Atera, ScreenConnect) — re-fitted with a new Pay2Key.I2P
-  ChaCha20 encryptor and an I2P-tunneled negotiation channel.
+  Resurgence of the Pay2Key persona, attributed to the Iran-linked
+  Fox Kitten APT cluster, as Pay2Key.I2P — a ransomware-as-a-
+  service platform that debuted on Russian/Chinese darknet forums
+  in February 2025 (X presence from January 2025) and escalated
+  after the June 2025 Israel-Iran-US conflict. Disclosed by
+  Morphisec (2025-07-08; reported by The Register 2025-07-09) and
+  later corroborated by KELA and a Halcyon/Beazley report. The
+  affiliate model: an I2P-hosted platform and leak/victim portal,
+  recruitment of Russian-speaking affiliates on darknet forums and
+  X (no Telegram/Tox recruitment channel is documented — one reused
+  Telegram handle was noted on a single forum post), and an 80%
+  affiliate cut (up from 70%) offered as a bonus for attacks on
+  "enemies of Iran" (US/Israel), with "advantageous conditions for
+  Iran's friends" (KELA). Operators claimed >USD 4M from ~50-51
+  payouts over four months, and added a Linux build in June 2025.
+  The encryptor is a Mimic ransomware variant (Morphisec ties it to
+  the ELENOR-Corp / Mimic family; the July-2025 sample "enc-build.exe"
+  was Themida-packed); later Halcyon/Beazley reverse-engineering of a
+  Q1-2026 variant details ChaCha20 + Curve25519 file encryption, a
+  "No Defender"/fake-Avast AV-evasion chain, credential harvesting
+  (Mimikatz, LaZagne, ExtPassword), abuse of TeamViewer for hands-on
+  access, and I2P-tunneled victim negotiation. Broader Fox Kitten /
+  Pioneer Kitten tradecraft (mass exploitation of internet-facing
+  edge devices — VPNs and firewalls) is documented for the actor by
+  FBI/CISA advisory AA24-241A, but the specific initial-access vector
+  of this campaign was not established by the cited reporting.
 attributions:
+  - actor_id: ir/unscoped/pioneer-kitten
+    attributing_org: Morphisec
+    attributing_org_confidence: moderate
+    auspex_assessment: concur
+    attribution_date: 2025-07-08
+    attribution_source_id: morphisec/2025-07_pay2key-resurgence
+    attribution_level: named-actor
+    notes: |
+      Morphisec (primary technical disclosure): "an Iranian-backed
+      ransomware-as-a-service (RaaS) operation ... Linked to the
+      notorious Fox Kitten APT group." A hedged, actor-level
+      ("linked to") Iran/Fox Kitten nexus — hence moderate, not
+      high. Morphisec names only Fox Kitten; "IRGC"/"Revolutionary
+      Guard" and even "Pioneer Kitten" are 0 hits — so no service
+      placement and no IRGC, consistent with the ir/unscoped actor.
   - actor_id: ir/unscoped/pioneer-kitten
     attributing_org: Halcyon
     attributing_org_confidence: moderate
     auspex_assessment: concur
-    attribution_date: 2025-07-15
+    attribution_date: 2026-03-24
     attribution_source_id: halcyon/2025-07_pay2key-i2p
+    attribution_level: named-actor
+    notes: |
+      Later corroboration (Halcyon + Beazley, ~March 2026): calls
+      Pay2Key "an Iranian government-linked threat actor" tracked as
+      "Fox Kitten, Pioneer Kitten, UNC757, Parasite, RUBIDIUM, and
+      Lemon Sandstorm," and recaps the July-2025 Morphisec figures.
+      "IRGC"/"Revolutionary Guard" = 0 hits. Iran-nexus / named-actor,
+      no service.
 doctrine_links:
   - doctrine_id: ir/sanctions-evasion
     pillar_id: ir/sanctions-evasion/ransomware-revenue
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      RaaS affiliate model is the sanctions-evasion revenue
-      pattern under maximum-pressure sanctions (NSPM-2 Feb
-      2025).
+      The RaaS profit-share and >$4M in ransoms over four months
+      give the operation a genuine revenue function that KELA frames
+      as "an additional revenue stream through financially motivated
+      cyber activity" for Iranian state-linked actors. AUSPEX maps
+      that revenue function onto the Resistance-Economy /
+      sanctions-evasion pillar (the doctrine record itself enumerates
+      Pay2Key / Pay2Key.I2P here), but the sanctions-evasion FRAMING
+      is an AUSPEX inference — none of the cited sources describe the
+      motive as sanctions evasion — hence strongly_inferred.
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "KELA: Iran-based actors sharing access / ransomware for a cut of proceeds 'provides Iranian actors with an additional revenue stream through financially motivated cyber activity.'"
+        - "Morphisec: a RaaS with an 80% affiliate profit share and 'over $4 million in ransom payments collected in just four months,' with 'individual operators boasting $100,000 in profits' — a real revenue engine."
+        - "Doctrine record ir/sanctions-evasion/ransomware-revenue explicitly enumerates 'Pay2Key / Pay2Key.I2P' as revenue generation plus asymmetric harassment under the Resistance-Economy framing."
+      ruled_out: "Pure apolitical cybercrime-for-profit: ruled out because all sources tie victim selection to Iran's geopolitical adversaries (US/Israel) plus an ideological affiliate bonus, not profit-maximising target selection."
     contested: false
     analyst: claude
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: null
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Timing post-strike on Iranian nuclear sites; pattern fits
-      asymmetric retaliation.
-    attesting_source_id: null
-    counter_explanation: null
+      All sources characterise the resurgence as state-directed
+      asymmetric retaliation rather than ordinary profit crime: the
+      80%-vs-70% affiliate bonus is explicitly conditioned on attacks
+      against "the enemies of Iran" (Morphisec), operations "shifted
+      into high gear" after the June-2025 Israel-Iran-US conflict (The
+      Register), and KELA states the group acts as "a punitive arm of
+      the Iranian state" for "geopolitical retribution." That
+      substantively states the asymmetric-warfare terminal goal —
+      deniable, low-cost harassment/coercion of a stronger adversary
+      that has struck Iran — so attested per the AUSPEX attested-label
+      standard (corroboration of strategic purpose by the source, NOT
+      a claim the perpetrator confessed a doctrine slug).
+    attesting_source_id: kela/2025-07_pay2key-i2p
+    inference_basis:
+      source_id: kela/2025-07_pay2key-i2p
+      source_quote: "expanded its operations to act as a punitive arm of the Iranian state"
     contested: false
     analyst: claude
   - doctrine_id: ir/cyber-deniable-retaliation
@@ -68,10 +128,23 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pay2Key.I2P persona launders IRGC-affiliated coercive
-      ops as ransomware.
+      The Pay2Key.I2P ransomware persona lets an Iran-linked (Fox
+      Kitten) actor run coercive, geopolitically-timed operations
+      while presenting as an ordinary Russian-speaking RaaS crew — the
+      deniability function of the persona-laundering pillar.
+      Deliberate origin-obfuscation and an information-operation
+      character are documented, but no cited source states this is a
+      directed state persona-laundering programme — hence
+      strongly_inferred. (Corrected this audit: the prior reasoning
+      asserted an "IRGC-affiliated" link; no cited source names the
+      IRGC — Fox Kitten is placed at ir/unscoped.)
     attesting_source_id: null
-    counter_explanation: null
+    inference_basis:
+      signals:
+        - "Halcyon: affiliation with Russian-speaking actors on criminal forums is 'consistent with the group's longstanding pattern of obscuring their nationality and origin.'"
+        - "Halcyon: 'The FBI, CISA, and DoD Cyber Crime Center assessed Pay2Key as an information operation in 2024,' and financial trails 'point toward Iranian state interests rather than traditional cyber criminals.'"
+        - "Morphisec / The Register: 'Pay2Key.I2P represents a dangerous convergence of Iranian state-sponsored cyber warfare and global cybercrime' — a state operation wearing a cybercrime persona and hosting on I2P for anonymity."
+      ruled_out: "A genuinely independent Russian RaaS: ruled out by the Iran-nexus attribution (Fox Kitten), the anti-US/Israel ideological bonus, and conflict-synchronised operational tempo."
     contested: false
     analyst: claude
 targets:
@@ -82,6 +155,95 @@ targets:
     country: il
     role: primary
 sources:
-  - halcyon/2025-07_pay2key-i2p
-  - kela/2025-07_pay2key-i2p
+  - morphisec/2025-07_pay2key-resurgence
   - theregister/2025-07_pay2key-i2p
+  - kela/2025-07_pay2key-i2p
+  - halcyon/2025-07_pay2key-i2p
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs raw, hashed snapshots. Added the primary technical source (Morphisec) and
+    snapshotted all four. Snapshots (sha256):
+      morphisec/2025-07_pay2key-resurgence  6097d828d60e45fa089b93e796d60979e1be69f5c60f7c0f0c2d202810eea93c
+      theregister/2025-07_pay2key-i2p       05cb61b4dfc9339bf24c65a1087f19e408d942033b7c67849b9b1068b5cef93e
+      kela/2025-07_pay2key-i2p              24498c2168c71a70daaebdf2c06c4c12baabf83e9e2728d13b4aa84ce67f59a1
+      halcyon/2025-07_pay2key-i2p           a41487b597050176adc23f1471cd5ce406ef99896cc013e137956923dadc6e05
+
+    [a] FACTS — corrected against raw:
+      - I2P leak/victim portal: CONFIRMED. Morphisec: "a platform hosted on the I2P network";
+        The Register: "hosts its ransomware website on I2P."
+      - 80% affiliate cut: CONFIRMED, and clarified as a BONUS up from 70% for anti-Iran-enemy
+        attacks. Morphisec: "an 80% profit share (up from 70%) to affiliates supporting Iran or
+        participating in attacks against the enemies of Iran." The Register: "80 percent instead of
+        70 percent ... against enemies of Iran. This is primarily Israel and the United States."
+      - ~$4M / ~50-51 payouts / four months: CONFIRMED as the group's own claim. Morphisec: "over
+        $4 million ... in just four months" / "over 51 successful ransom payouts"; the actor's
+        end-June-2025 claim "over 4$ Million and over 50 successfully conducted ransom payouts ...
+        during 4 months." usd_extorted 4000000 kept.
+      - "Telegram and Tox recruitment of Russian-speaking affiliates" — CORRECTED. "Tox" = 0 hits in
+        all four sources (FABRICATION, stripped). Recruitment channels per sources: Russian/Chinese
+        darknet/underground forums + X. "Telegram" appears once in Morphisec as a single reused handle
+        on one late-March forum post, NOT a recruitment channel. Russian-speaking affiliates confirmed
+        (Halcyon "Russian-speaking threat actors"; Morphisec "Russian-speaking darknet forums").
+      - "explicit prohibition on encrypting Iranian / Iran-allied victims" — SOFTENED to source wording:
+        no cited source states an encryption prohibition; KELA offers "Special advantageous conditions
+        for Iran's friends" and the bonus is for attacking Iran's enemies.
+      - Edge-appliance list (Citrix NetScaler / Fortinet FortiOS / Palo Alto GlobalProtect / Ivanti /
+        Check Point) + "web shells" — STRIPPED as event-specific claims: 0 hits in all four cited
+        sources (imported from CISA AA24-241A, which is NOT cited on this event; it is on the actor).
+        Halcyon states the initial-access vector of its incident could not be determined. Reframed as
+        generic actor-playbook ("edge devices — VPNs and firewalls") attributed to AA24-241A.
+      - RMM tools "AnyDesk, Atera, ScreenConnect" — CORRECTED to TeamViewer. AnyDesk/ScreenConnect =
+        0 hits; the 3 "atera" hits are substring/JS artifacts (lateral, createRange). Halcyon's only
+        documented RMM abuse: "the use of TeamViewer on a compromised host."
+      - Encryptor: "new Pay2Key.I2P ChaCha20 encryptor" — ChaCha20+Curve25519 is real but is Halcyon's
+        Q1-2026 reverse-engineering ("Pay2Key uses ChaCha20+Curve25519 ... .6zldh_p2k"); the July-2025
+        Morphisec sample is "enc-build.exe ... a Mimic ransomware protected with Themida." Added the
+        Mimic/ELENOR-Corp lineage (stressed by all three corroborators) and Mimikatz (Halcyon:
+        "We observed Mimikatz, LaZagne, and ExtPassword").
+      - "Natanz / Fordow strikes" — STRIPPED: 0 hits; sources say "airstrikes against Iranian nuclear
+        facilities" / "Israel-Iran-USA conflict" only.
+    [b] ATTRIBUTION — "IRGC-aligned" REMOVED from name and doctrine reasoning. "IRGC"/"Revolutionary
+        Guard" = 0 hits in Morphisec, The Register, Halcyon; KELA's 3 IRGC mentions are about an
+        UNRELATED front company (Mahak Rayan Afraz / IRGC-CEC), never Fox Kitten. Sources name only
+        Fox Kitten (Morphisec "Linked to the notorious Fox Kitten APT group"; KELA "Iranian
+        state-aligned group Fox Kitten"; The Register "linked ... to Pioneer Kitten"). actor_id
+        ir/unscoped/pioneer-kitten confirmed (matches actor id). Both attributions hedged ("linked
+        to"/"government-linked") = moderate; auspex_assessment concur. Attributing org set to Morphisec
+        (primary, 2025-07-08) + Halcyon (corroboration, 2026-03).
+    [c] DATES — start_date 2025-07-01 -> 2025-02-01 (Morphisec: "debut in February 2025"; darknet
+        campaign 2025-02-20; X presence from Jan 2025; The Register "reemerging in early 2025").
+        disclosure_date 2025-07-15 -> 2025-07-08 (Morphisec JSON-LD datePublished). Source published_on
+        all corrected: Morphisec 2025-07-08; The Register 2025-07-15 -> 2025-07-09 (article:published_time
+        2025-07-09T06:33Z); KELA 2025-07-15 -> 2026-03-28 (it is a March-2026 survey, "Beyond the
+        Regime," not a July-2025 post); Halcyon 2025-07-15 -> 2026-03-24 (a Q1-2026 Beazley incident
+        write-up; earliest Wayback 2026-03-24). Source titles for The Register and KELA were AUSPEX
+        paraphrases and were corrected to the real headlines.
+    [d] DOCTRINE_LINKS — ir/asymmetric-warfare UPGRADED strongly_inferred -> attested (KELA attests the
+        strategic purpose: group "expanded its operations to act as a punitive arm of the Iranian state"
+        for "geopolitical retribution"; Morphisec "tool of cyber warfare / ideological agenda"). Added
+        inference_basis with source_id/source_quote. ir/sanctions-evasion/ransomware-revenue and
+        ir/cyber-deniable-retaliation/persona-laundering kept strongly_inferred with signals[]/ruled_out
+        (revenue + deniability corroborated; sanctions-evasion + directed-persona-laundering framings
+        are AUSPEX inference). Removed legacy counter_explanation:null fields. All perspectives are
+        attacker-rationale (Iran's own doctrine motivating Iran's op). Pillar/doctrine ids all resolve.
+    [e] ATTRIBUTION_LEVEL — added named-actor to both attributions (sources name Fox Kitten / Pioneer
+        Kitten specifically; no service/unit named -> not named-unit; more than nation-nexus).
+    [f] ACTOR_ID — ir/unscoped/pioneer-kitten resolves to atlas/actors/ir/pioneer-kitten.yaml (id field
+        ir/unscoped/pioneer-kitten). Held to source-named actor with no service, per instruction.
+
+    ORCHESTRATOR FLAGS (not edited here):
+      - actor atlas/actors/ir/pioneer-kitten.yaml: consider adding source morphisec/2025-07_pay2key-
+        resurgence to its sources[] (primary Pay2Key.I2P disclosure; currently only Halcyon is cited
+        for the 2025 wave). No IRGC change needed — Morphisec corroborates ir/unscoped (Fox Kitten only).
+      - source-id slugs kela/2025-07_pay2key-i2p and halcyon/2025-07_pay2key-i2p are misnomers (both are
+        2026-03 articles). Ids left unchanged to avoid breaking FKs — candidates for rename + FK
+        propagation by the orchestrator.
+      - A separate contemporaneous July-2025 Halcyon piece exists ("Iranian Ransomware Crew Blurs the
+        Line Between Profit and Proxy Attacks," listed in the cited Halcyon article's own Sources) —
+        candidate additional source if a July-2025 Halcyon citation is wanted.
+      - doctrine ir/sanctions-evasion already enumerates Pay2Key/Pay2Key.I2P and NSPM-2 — consistent;
+        no edit needed.

@@ -1,68 +1,209 @@
 id: 2024-07/handala-crowdstrike-outage-wiper
 name: Handala wiper phishing exploits CrowdStrike Falcon-sensor outage narrative
 start_date: 2024-07-20
-disclosure_date: 2024-07-22
-end_date: 2024-07-25
+disclosure_date: 2024-07-21  # AUDIT 2026-07-11: real BleepingComputer article published 2024-07-21 (Ionut Ilascu) and Handala claimed on 21 Jul (Picus); prior 2024-07-22 was unsourced.
+end_date: 2024-07-21  # AUDIT: Picus dates the op "20-21 July 2024"; prior end_date 2024-07-25 was unsourced (no cited source carries activity past 21 Jul).
 incident_type:
   - destructive
-  - wiper
-  - intrusion
+  - wiper  # AUDIT: dropped "intrusion" — cited sources confirm wiper distribution + destructive-on-execution design, not any confirmed victim intrusion/breach.
 initial_vector: phishing
 outcome_summary: |
-  On 20 July 2024 — within 24 hours of the global CrowdStrike
-  Falcon-sensor outage on 19 July — the Handala persona
-  distributed phishing emails to Israeli organizations
-  containing a wiper masquerading as a PDF with "instructions
-  on how to fix" the CrowdStrike outage. The operation exploited
-  the urgency and noise of the outage event to bypass user
-  vigilance. Vendor and Israeli-press reporting documented
-  successful wiper deployment at multiple Israeli targets.
+  Within ~24-48 hours of the 19 July 2024 (Friday) global
+  CrowdStrike Falcon content-update outage, the Handala persona
+  sent phishing emails to Israeli companies impersonating
+  CrowdStrike — using the spoofed sender domain
+  "crowdstrike.com.vc" and telling recipients that a tool had
+  been created to bring Windows systems back online. The emails
+  carried a PDF (seen by BleepingComputer) with instructions to
+  run the fake update plus a link to a malicious ZIP; the ZIP
+  held an executable ("Crowdstrike.exe") that, once run,
+  extracted and launched a data wiper which "decimates the
+  system by overwriting files with zero bytes and then reports
+  it over Telegram" (AnyRun analysis relayed by BleepingComputer;
+  wiper-renders-systems-unbootable mechanism corroborated by
+  Picus). Handala claimed responsibility (on X/Twitter and its
+  leak site) on 21 July 2024. NOTE: the cited sources confirm
+  the wiper's distribution to Israeli companies and its
+  destructive design but do NOT quantify confirmed victims or
+  successful-deployment counts.
 false_flag_risk: suspected  # presents as hacktivist
 campaign_id: handala-iran-israel-campaign
 summary: |
   Sharp operational-tempo data point illustrating the persona's
-  capacity to mobilize a same-day phishing wave exploiting a
-  global IT event. Doctrinally fits the cyber-deniable-
-  retaliation persona-laundering pillar and the asymmetric-
-  warfare civilian-CII-coercion pillar; the speed of weaponizing
-  a non-related global outage is a notable tradecraft data point
-  for the broader IR-IL cyber-exchange tempo.
+  capacity to mobilize a rapid (~1-2 day) phishing wave
+  weaponizing an unrelated global IT event. Doctrinally anchored
+  in the cyber-deniable-retaliation persona-laundering pillar
+  (strongly inferred — a self-styled "pro-Iranian"/"Iranian-
+  linked" hacktivist front); the asymmetric-warfare civilian-CII-
+  coercion pillar is a weaker (plausible) fit given the cited
+  sources name only "Israeli companies" (sector-unspecified) with
+  no confirmed critical-infrastructure victim. The speed of
+  weaponizing a non-related global outage is a notable tradecraft
+  data point for the broader IR-IL cyber-exchange tempo.
 attributions:
   - actor_id: ir/mois/handala
-    attributing_org: BleepingComputer; The Record; Israeli press
+    # AUDIT 2026-07-11: attributing_org corrected — the real BleepingComputer article
+    # cites AnyRun analysis + Handala's own X/Twitter claim; it does NOT mention "The
+    # Record", and no Israeli-press permalink was cited/snapshotted. Both cited sources
+    # say only "pro-Iranian hacktivist group Handala" (BleepingComputer) / "Iranian-
+    # linked hacktivist group" (Picus) — the persona + a HEDGED Iranian nation-linkage,
+    # NOT a MOIS-unit attestation. The actor_id keeps ir/mois/handala as the atlas
+    # registry entity, but the MOIS (named-unit) linkage rests on the actor file's
+    # other sources (CheckPoint / Iran-International), not this event's sources.
+    attributing_org: BleepingComputer (Ionut Ilascu — citing AnyRun analysis and Handala's own X/Twitter claim); Picus Security
     attributing_org_confidence: moderate
+    attribution_level: named-actor  # sources support the Handala persona (self-claimed + vendor-corroborated); Iranian linkage is hedged/nation-level; no MOIS unit named in the cited sources.
     auspex_assessment: concur
-    attribution_date: 2024-07-22
+    attribution_date: 2024-07-21
     attribution_source_id: bleepingcomputer/2024-07-22_handala-crowdstrike-outage-wiper
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
+    # perspective: attacker-rationale (default) — Iranian doctrine on an Iranian(-linked) op vs Israel.
     reasoning: |
-      Handala persona-driven wiper operation against Israeli
-      civilian targets matches the persona-laundering doctrine
-      template.
+      A destructive wiper op conducted openly behind a self-styled
+      "pro-Iranian" / "Iranian-linked" hacktivist persona (Handala)
+      matches the persona-laundering template. The two cited sources
+      evidence the PATTERN (hacktivist front over an Iranian-linked
+      operator) but do not themselves attest MOIS direction, so this
+      stays strongly_inferred rather than attested.
+    inference_basis:
+      signals:
+        - "BleepingComputer (2024-07-21): campaign 'claimed by the pro-Iranian hacktivist group Handala, who stated on Twitter that they impersonated CrowdStrike in emails to Israeli companies to distribute the data wiper' — activity run openly behind a hacktivist persona."
+        - "Picus Security threat-database: Handala is an 'Iranian-linked hacktivist group that emerged in late 2023, operating under a pro-Palestinian agenda' — hacktivist cover over an Iranian-linked operator, the persona-laundering signature."
+      ruled_out: "Genuinely autonomous Palestinian hacktivism — contradicted by both cited sources characterizing Handala as pro-Iranian / Iranian-linked rather than independent."
     attesting_source_id: null
     contested: false
     analyst: claude
   - doctrine_id: ir/asymmetric-warfare
     pillar_id: ir/asymmetric-warfare/civilian-cii-coercion
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # AUDIT 2026-07-11: downgraded from strongly_inferred — cited sources name only "Israeli companies" (sector-unspecified, no confirmed CII victim) and record no coercive demand.
+    # perspective: attacker-rationale (default) — Iranian doctrine on an Iranian(-linked) op vs Israel.
     reasoning: |
-      Wiper deployment against Israeli civilian organizations
-      fits the asymmetric-warfare civilian-CII-coercion pillar.
+      A destructive wiper aimed at Israeli civilian organizations
+      is asymmetric harm against adversary civilians; but the
+      cited sources name only "Israeli companies" broadly (no
+      confirmed critical-infrastructure victim) and no coercive
+      demand, so the specific civilian-CII-coercion pillar is a
+      plausible rather than strong fit.
+    inference_basis:
+      signals:
+        - "Destructive wiper deployed against Israeli civilian organizations ('emails to Israeli companies', BleepingComputer 2024-07-21) — asymmetric destruction targeting adversary civilians."
+        - "Wiper 'decimates the system by overwriting files with zero bytes' (AnyRun via BleepingComputer) and renders systems unbootable (Picus) — collateral-tolerant civilian harm."
+      alternatives:
+        - "Opportunistic claim-and-leak / hacktivist signalling rather than deliberate CII coercion: the cited sources name only sector-unspecified 'Israeli companies' (no confirmed critical-infrastructure victim) and record no coercive demand, so the parent asymmetric-warfare posture fits better than this specific pillar."
     attesting_source_id: null
     contested: false
     analyst: claude
 targets:
+  # AUDIT 2026-07-11: over-specification corrected. Both cited sources name only
+  # "Israeli companies" (BleepingComputer) / "Israeli ... infrastructure" broadly
+  # (Picus) with NO specific sector and NO named victim for this op. Removed
+  # sectors/government (contradicted — sources say "companies", not government).
+  # sectors/critical-infrastructure retained ONLY as the broadest cross-cutting
+  # civilian-target marker for a destructive wiper phishing-blasted at unspecified
+  # Israeli private-sector orgs during a CII-impacting global outage — NOT because a
+  # formally-designated CII victim was confirmed (its registry definition implies one).
+  # REGISTRY-GAP FLAG: atlas/sectors/sectors.yaml has no generic commercial /
+  # private-sector / enterprise sector id to carry a sector-unspecified "companies"
+  # target set; this cross-cutting bucket is the least-wrong stand-in pending one.
   - target_id: sectors/critical-infrastructure
-    country: il
-    role: primary
-  - target_id: sectors/government
     country: il
     role: primary
 sources:
   - bleepingcomputer/2024-07-22_handala-crowdstrike-outage-wiper
   - picussecurity/handala-threat-group-tactics
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs RAW cited sources. Event is REAL and well-corroborated;
+    the primary defect was a PHANTOM source record (url:null) — RE-SOURCED (below) to
+    the genuine BleepingComputer article, which was snapshotted + hashed. All load-
+    bearing claims are now carried by a snapshotted source, so level=full.
+
+    SNAPSHOTS:
+    - bleepingcomputer/2024-07-22_handala-crowdstrike-outage-wiper: PHANTOM-FIX. The
+      record had url:null / archive_url:null ("canonical URL unverified"). Located the
+      genuine article — "Fake CrowdStrike fixes target companies with malware, data
+      wipers", Ionut Ilascu, BleepingComputer, 2024-07-21 (live HTTP 200). Snapshotted
+      to raw/bleepingcomputer__2024-07-21_fake-crowdstrike-fixes-malware-wipers.html,
+      sha256 3613328112dd78da712a415e73e23cf9157f3b0a6bbc85bfdd37e60467b44f68 (93,810
+      bytes). Set url + archive_url (Wayback 20240723002220), real title/author,
+      published_on 2024-07-22->2024-07-21, tier tertiary->secondary. NB: the source ID
+      retains "2024-07-22" for FK stability (real byline is 2024-07-21) -> orchestrator
+      may optionally rename; cited only by this event.
+    - picussecurity/handala-threat-group-tactics: already snapshotted 2026-07-11,
+      raw/picussecurity__handala-threat-group-tactics.html, sha256
+      64b990183cd7a009ac12a2ba014a113239b66a222108e647a31c923027b0f398 (re-verified,
+      matches). Left unchanged (also cited by 2024-02 rafah-defacement).
+
+    [a] FACTS — all core claims carried by raw:
+      - CrowdStrike-outage lure: BleepingComputer verbatim: "The threat actors
+        impersonated CrowdStrike by sending emails from the domain 'crowdstrike.com.vc,'
+        telling customers that a tool was created to bring Windows systems back online.
+        The emails include a PDF seen by BleepingComputer that contains further
+        instructions on running the fake update, as well as a link to download a
+        malicious ZIP archive... This zip file contains an executable named
+        'Crowdstrike.exe.' Once the fake CrowdStrike update is executed, the data wiper
+        is extracted to a folder under %Temp% and launched to destroy data". Picus:
+        "20-21 July 2024 - Handala distributed a destructive wiper payload disguised as
+        a recovery fix for the global CrowdStrike IT outage, claiming responsibility on
+        their data leak site on July 21." Wiper mechanism (AnyRun via BleepingComputer):
+        "It decimates the system by overwriting files with zero bytes and then reports
+        it over #Telegram."
+      - Israeli victims: BleepingComputer: "emails to Israeli companies to distribute
+        the data wiper." (Companies = private-sector; NO sector/named-victim detail.)
+      - STRIPPED over-claim: prior outcome_summary "Vendor and Israeli-press reporting
+        documented successful wiper deployment at multiple Israeli targets" — NOT
+        supported. "victim" and "recovery" strings are ABSENT from the BleepingComputer
+        article; neither source quantifies confirmed victims/deployments. Rewrote to
+        distribution + destructive-design only. 0 fabricated malware/CVE/BTC figures
+        found (and the deleted handala-healthcare 8-BTC fabrication was NOT imported —
+        confirmed absent from both raws).
+      - "The Record; Israeli press" removed from attributing_org: "The Record"/"Recorded
+        Future" are ABSENT from the BleepingComputer article; no Israeli-press permalink
+        was cited or snapshotted.
+    [b] ATTRIBUTION — both sources HEDGE: BleepingComputer "pro-Iranian hacktivist group
+      Handala"; Picus "Iranian-linked hacktivist group." Neither attests a MOIS unit.
+      Kept actor_id ir/mois/handala (atlas registry entity) but set attribution_level:
+      named-actor and left attributing_org_confidence: moderate (self-claim + vendor
+      corroboration of the PERSONA; Iranian linkage hedged). auspex_assessment concur
+      retained. The MOIS (named-unit) filing rests on the actor file's OTHER sources
+      (CheckPoint / Iran-International) -> see FLAG.
+    [c] DATES — disclosure 2024-07-22 -> 2024-07-21 (BleepingComputer byline "July 21,
+      2024 03:31 PM"; Handala claimed 21 Jul per Picus). end_date 2024-07-25 (unsourced)
+      -> 2024-07-21 (Picus op window "20-21 July 2024"). start_date 2024-07-20 kept
+      (carried by Picus "20-21 July"; outage was Friday 19 Jul). Source published_on
+      corrected to 2024-07-21.
+    [d] DOCTRINE — persona-laundering kept strongly_inferred (+inference_basis
+      {signals, ruled_out}); the pattern is well-evidenced but sources don't attest
+      MOIS, so not attested. civilian-cii-coercion DOWNGRADED strongly_inferred ->
+      plausible (+inference_basis {signals, alternatives}): target is sector-unspecified
+      "companies", no confirmed CII victim, no coercive demand. Both perspective =
+      attacker-rationale (default; Iranian doctrine vs Israel). attesting_source_id null
+      (correct — no source states the doctrine's terminal goal).
+    [e] ATTRIBUTION_LEVEL — added: named-actor (Handala persona; sources stop at hedged
+      Iranian nation-linkage, no unit).
+    [f] ACTOR_ID — ir/mois/handala resolves to atlas/actors/ir/handala.yaml (id:
+      ir/mois/handala). Valid. incident_type "intrusion" dropped (no confirmed victim
+      breach); destructive + wiper retained. campaign_id handala-iran-israel-campaign
+      consistent with sibling handala events (persona-launch, rafah-defacement).
+
+    ORCHESTRATOR FLAGS (out-of-scope files — not edited):
+    - actor atlas/actors/ir/handala.yaml: filed as ir/mois/handala. NOT a defect from
+      this event (MOIS placement is documented via CheckPoint/Iran-International in the
+      actor notes). Flagged only so reviewers know THIS event's two sources support just
+      "pro-Iranian/Iranian-linked" persona, not the MOIS unit.
+    - registry atlas/sectors/sectors.yaml: no generic commercial / private-sector /
+      enterprise sector id exists to carry a sector-unspecified "Israeli companies"
+      target; sectors/critical-infrastructure used as least-wrong cross-cutting stand-in
+      (see targets: comment). Consider adding a commercial/private-sector sector.
+    - source ID bleepingcomputer/2024-07-22_...: real byline date is 2024-07-21; ID kept
+      for FK stability -> optional rename to ...2024-07-21_fake-crowdstrike-fixes-wipers
+      (cited only by this event).

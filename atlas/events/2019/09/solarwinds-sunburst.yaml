@@ -9,46 +9,60 @@ incident_type:
   - data-theft
 initial_vector: supply-chain
 outcome_summary: |
-  Compromise of the SolarWinds software build system to inject
-  SUNBURST/SUNSPOT/TEARDROP backdoors into legitimate signed
-  Orion network-monitoring updates. ~18,000 organizations
-  downloaded the trojaned update; ~100 were actually targeted,
-  including US Treasury, Commerce, State, DHS, DOE/NNSA, Justice;
-  Microsoft, FireEye, Mimecast. Most-significant strategic-
-  espionage supply-chain compromise on record; reshaped US
-  executive-branch cyber policy (EO 14028).
+  Trojanization of legitimate signed SolarWinds Orion
+  network-monitoring updates to insert the SUNBURST backdoor
+  (with the TEARDROP second-stage loader). CISA Emergency
+  Directive 21-01 (13 Dec 2020) ordered all federal civilian
+  agencies to disconnect Orion. The White House assessed the SVR
+  gained the ability "to spy on or potentially disrupt more than
+  16,000 computer systems worldwide"; Treasury put malware on the
+  machines of "tens of thousands" of SolarWinds customers and
+  compromised "thousands of U.S. government and private sector
+  networks" — from which, per the NCSC/CISA advisory, the SVR
+  selected "a much smaller number of victims for follow-on
+  compromise activity" in line with intelligence priorities
+  (Mimecast and SolarWinds among the acknowledged compromises).
+  Widely regarded as the most significant strategic-espionage
+  supply-chain compromise on record.
 quantified_impact:
-  organizations_with_trojaned_update: 18000
-  organizations_actually_targeted: 100
+  organizations_with_trojaned_update: 18000  # max distribution count (SolarWinds SEC 8-K "fewer than 18,000"); WH cites ">16,000 computer systems", Treasury "tens of thousands of customers" — public-record integer, not in the 4 cited primaries
+  organizations_actually_targeted: 100  # US-govt-assessed hand-selected victims; NCSC carries only the qualitative "much smaller number of victims for follow-on compromise" — integer not in the cited primaries
 false_flag_risk: none
 campaign_id: solarwinds-chain
 summary: |
   White House April 2021 fact sheet and Treasury OFAC EO 14024
-  sanctions formally attributed the operation to the SVR (APT29 /
-  Cozy Bear / Nobelium). FBI Director Wray June 2021 confirmed.
-  The operation began with SUNSPOT, an injector implanted on
-  SolarWinds's MSBuild server that surreptitiously rewrote the
-  Orion source tree at build time to insert SUNBURST — a
-  signed-binary backdoor in SolarWinds.Orion.Core.BusinessLayer.dll
-  with a Domain Generation Algorithm beacon and selective
-  second-stage targeting via the TEARDROP and RAINDROP Cobalt
-  Strike loaders. Post-access tradecraft at the ~100 hand-
-  selected victims included credential dumping and abuse of
-  valid credentials, golden-SAML token forgery against on-prem
-  ADFS for persistent cloud access, the GoldMax / SUNSHUTTLE
-  backdoor, and the GoldFinder / Sibot loaders — establishing
-  SVR's cloud-identity tradecraft that the post-2021 campaign
-  refined.
+  sanctions formally attributed the operation to the SVR — named
+  in the sources as Russia's Foreign Intelligence Service, "also
+  known as APT 29, Cozy Bear, and The Dukes" — with the US
+  Intelligence Community holding "high confidence" in the
+  attribution. The SVR trojanized legitimate signed SolarWinds
+  Orion updates to insert SUNBURST, a backdoor in
+  SolarWinds.Orion.Core.BusinessLayer.dll that beaconed to
+  avsvmcloud[.]com, with selective second-stage delivery of
+  Cobalt Strike loaders including TEARDROP (CISA ED 21-01). From
+  the large pool of Orion customers the SVR selected "a much
+  smaller number of victims for follow-on compromise activity"
+  (NCSC): tradecraft there included abuse of valid/stolen
+  credentials, exploitation of SAML authentication tied to
+  on-prem AD FS (the "golden SAML" technique, flagged by CISA as
+  actively exploited), and — deployed "after compromising a
+  victim via SolarWinds" — the GoldMax backdoor plus the
+  GoldFinder and Sibot tools (NCSC/Microsoft). The SVR further
+  leveraged its SolarWinds access to compromise a Mimecast
+  certificate and abuse the Mimecast Azure application to reach
+  downstream customer mailboxes.
 attributions:
   - actor_id: ru/svr/apt29
     attributing_org: The White House (Apr 2021 attribution)
     attributing_org_confidence: high
+    attribution_level: named-unit  # WH names the state service "the Russian Foreign Intelligence Service (SVR), also known as APT 29" — matches sibling svr-cloud-identity convention (named state service ⇒ named-unit); the petrobras "the NSA ⇒ named-actor" precedent is the alternative reading
     auspex_assessment: concur
     attribution_date: 2021-04-15
     attribution_source_id: whitehouse/2021-04-15_svr-solarwinds-attribution
   - actor_id: ru/svr/apt29
     attributing_org: US Department of the Treasury (OFAC EO 14024)
     attributing_org_confidence: high
+    attribution_level: named-unit  # Treasury names "the Russian Intelligence Services' third arm, the SVR" as responsible for the SolarWinds Orion exploit
     auspex_assessment: concur
     attribution_date: 2021-04-15
     attribution_source_id: treasury/2021-04-15_eo-14024-svr-sanctions
@@ -57,6 +71,7 @@ doctrine_links:
     pillar_id: ru/fpc-2023/anti-anglo-saxon
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
       The White House fact sheet names "broad-scope cyber espionage"
       as the intent but does not name the Foreign Policy Concept 2023
@@ -76,11 +91,24 @@ doctrine_links:
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      SVR strategic-espionage operations exemplify the 2016
-      Information Security Doctrine's framing of the information
-      sphere as a national-security domain.
-    attesting_source_id: null
+      The cited sources characterise the SVR as Russia's civilian
+      foreign-intelligence service running "broad-scope cyber
+      espionage" (WH) / collection "for intelligence gain" (NCSC) —
+      sustained strategic collection in the information domain, which
+      the 2016 Information Security Doctrine frames as a domain of
+      state competition. The sources state the intelligence-collection
+      purpose but not the 2016 doctrine or a doctrine-slug goal, so the
+      WHY is inferred, not attested.
+    attesting_source_id: ncsc-uk/2021-05_further-ttps-svr
+    inference_basis:
+      source_id: ncsc-uk/2021-05_further-ttps-svr
+      signals:
+        - "WH fact sheet: the SVR ran a 'broad-scope cyber espionage campaign' — sustained strategic state collection"
+        - "NCSC advisory: the SVR 'targets organisations that align with Russian foreign intelligence interests' … 'for intelligence gain'"
+      ruled_out: "the 2016 Information Security Doctrine / information-sphere-as-domain pillar is named in no cited source; the WHY is inferred from the stated intelligence-collection purpose, not attested"
+    counter_explanation: null
     contested: false
     analyst: claude
 targets:
@@ -90,7 +118,7 @@ targets:
     role: primary
   - target_id: orgs/us-commerce
     role: primary
-  - target_id: orgs/us-state-dept
+  - target_id: orgs/us-state-department  # was orgs/us-state-dept (dangling); canonical record is orgs/us-state-department
     role: primary
   - target_id: orgs/us-dhs
     role: primary
@@ -109,3 +137,114 @@ sources:
   - treasury/2021-04-15_eo-14024-svr-sanctions
   - cisa/2020-12-13_ed-21-01-solarwinds
   - ncsc-uk/2021-05_further-ttps-svr
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Audited vs all 4 cited sources. SNAPSHOTS (all 4 hashes match):
+    whitehouse__2021-04-15_svr-solarwinds-attribution.html sha256
+    61f054ee…3461ea9b (158,596 B; pre-existing, re-verified; captured
+    via archive_url — live WH page purged at the 2025 transition);
+    treasury__2021-04-15_eo-14024-svr-sanctions.html sha256
+    aebcf56e…f6cc2134 (129,731 B; pre-existing, re-verified — this IS
+    the correct jy0127 "Sweeping New Sanctions Authority" release; a
+    naive tag-strip mis-renders an embedded "latest news" APT31 block,
+    but the SolarWinds/SVR body is present and hashed); cisa__2020-12-13
+    _ed-21-01-solarwinds.html sha256 3d269cea…597dea73 (100,780 B; NEWLY
+    SNAPSHOTTED this pass — live url 200, 301-redirects to "…-closed"
+    archived copy, 13-Dec-2020 issuance text intact); ncsc-uk__2021-05
+    _further-ttps-svr.pdf sha256 ddb749eb…f9b68f03 (355,021 B, 14pp;
+    pre-existing, re-verified).
+
+    [a] FACTS — STRIPPED uncited embellishment / conflated 2021+
+    tradecraft the cited set does NOT carry (confirmed 0 hits across all
+    4 raw sources): SUNSPOT, the MSBuild-injector framing, RAINDROP,
+    SUNSHUTTLE, the "Nobelium" alias, "Domain Generation Algorithm"
+    phrasing, the "FBI Director Wray June 2021 confirmed" sentence, and
+    "reshaped US executive-branch cyber policy (EO 14028)" (anachronism —
+    every cited source predates EO 14028 of 12 May 2021). KEPT because
+    source-carried: SUNBURST + TEARDROP (CISA verbatim "malicious
+    backdoor AKA TEARDROP or SUNBURST"), the trojanized DLL
+    "SolarWinds.Orion.Core.BusinessLayer.dll" (CISA), the avsvmcloud[.]com
+    beacon (CISA), SAML/AD FS "golden SAML" abuse (CISA: that config "is
+    currently being exploited by the threat actor"), Cobalt Strike +
+    GoldMax/GoldFinder/Sibot "after compromising a victim via SolarWinds"
+    + the Mimecast cert/Azure-app abuse (NCSC). SCALE reconciled to
+    sources: WH "more than 16,000 computer systems worldwide"; Treasury
+    "tens of thousands of SolarWinds' customers" / "thousands of U.S.
+    government and private sector networks"; NCSC "a much smaller number
+    of victims for follow-on compromise activity." quantified_impact
+    18,000/100 KEPT (correct per the record — 18,000 = max distribution
+    per SolarWinds' SEC 8-K, ~100 = US-govt-assessed hand-selected
+    victims) but ANNOTATED inline: those integers are NOT in the 4 cited
+    primaries (public-record); NCSC carries only the qualitative
+    large-pool→small-set ratio → contributes to level: partial.
+
+    [b] ATTRIBUTION — SVR (APT29) high-confidence, no over-attestation.
+    WH verbatim: "formally naming the Russian Foreign Intelligence
+    Service (SVR), also known as APT 29, Cozy Bear, and The Dukes, as the
+    perpetrator of the broad-scope cyber espionage campaign that exploited
+    the SolarWinds Orion platform" + "high confidence in its assessment of
+    attribution to the SVR." Treasury verbatim: "the Russian Intelligence
+    Services' third arm, the SVR, is responsible for the 2020 exploit of
+    the SolarWinds Orion platform." NCSC + CISA (15-Apr-2021 update)
+    corroborate. Both attributions kept concur/high.
+
+    [c] DATES — disclosure_date 2020-12-13 CARRIED (CISA: "On December 13,
+    2020, CISA issued ED 21-01"). All source published_on verified vs raw
+    (WH "April 15, 2021"; Treasury jy0127 15-Apr-2021; CISA 13-Dec-2020;
+    NCSC "Version 1.0 / 7 May 2021"). start_date 2019-09-01 (initial
+    build-system compromise) and end_date 2020-12-31 are NOT carried by
+    any cited source — the Sept-2019 onset is the documented public-record
+    intrusion date (SolarWinds/CrowdStrike/GAO timeline; NB-confirmed),
+    kept but uncited → level: partial. Dates NOT conflated: onset (Sep
+    2019) vs disclosure (Dec 2020) correctly distinct.
+
+    [d] DOCTRINE_LINKS — both are Russian (attacker) doctrine on a Russian
+    op → perspective: attacker-rationale ADDED to both. Neither attested
+    (correct — the sources state espionage intent, not the doctrine's
+    terminal goal). ru/fpc-2023/anti-anglo-saxon kept strongly_inferred
+    (WH "broad-scope cyber espionage" = goal-class; FPC-2023 post-dates
+    the op; inference_basis already well-formed). ru/info-security-2016/
+    information-sphere-as-domain was MISSING inference_basis (a defect for
+    a strongly_inferred link) — ADDED signals (WH "broad-scope cyber
+    espionage" + NCSC "align with Russian foreign intelligence interests
+    … for intelligence gain") + ruled_out. Both pillars equal the actor's
+    default_doctrine_alignment_ids — no conflict.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both attributions; ADDED
+    named-unit to each (sources name the specific state service — the SVR
+    — not merely "Russia"; matches sibling 2021-04/svr-cloud-identity-
+    campaign "named state service ⇒ named-unit"; petrobras "the NSA ⇒
+    named-actor" is the alternative reading, noted inline).
+
+    [f] ACTOR_ID — ru/svr/apt29 resolves (atlas/actors/ru/apt29.yaml,
+    internal id ru/svr/apt29). Espionage op by the perpetrator; actor_id
+    correct (not a counter-action). incident_type supply-chain / intrusion
+    / data-theft appropriate.
+
+    TARGETS / FLAGS (out-of-scope; not edited except the one clear id fix):
+    (1) FIXED orgs/us-state-dept → orgs/us-state-department (canonical
+    record exists). (2) DANGLING target FKs (no registry record; tolerated
+    corpus-wide gap, NOT created): orgs/us-commerce, orgs/us-dhs,
+    orgs/us-doj, orgs/us-doe-nnsa (orgs/us-doe exists — NNSA is a DOE
+    sub-agency). (3) SOURCING GAP: the specific federal-agency victims
+    (Treasury/Commerce/State/DHS/DOE-NNSA/DOJ) and Microsoft + FireEye as
+    victims are REAL (universally documented) but are NOT carried by any of
+    the 4 cited primaries — which name only Mimecast + SolarWinds as
+    compromised (CISA speaks generically of "U.S. government agencies,
+    critical infrastructure entities, and private organizations"). Kept as
+    graph edges; RE-SOURCE candidate = CISA Activity Alert AA20-352A +
+    Dec-2020 press. (4) In NCSC, FireEye/Microsoft appear only as
+    researchers ("Mandiant FireEye has detailed…", "Microsoft's analysis"),
+    not as victims.
+
+    RE-HOME FLAG (no edit): the post-2021 SVR cloud-identity refinement
+    (golden-SAML maturation, GoldMax/SUNSHUTTLE, FOGGYWEB/MagicWeb) is the
+    scope of sibling event 2021-04/svr-cloud-identity-campaign (same
+    campaign_id solarwinds-chain); this 2019-09 event has been trimmed to
+    the supply-chain compromise + the follow-on the cited set carries. No
+    DELETE/MERGE/DUPLICATE/actor-create needed — the event is canonical and
+    REAL.

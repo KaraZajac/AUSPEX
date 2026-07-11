@@ -1,80 +1,105 @@
 id: 2020-10/emennet-proud-boys-voter-intimidation
 name: Emennet Pasargad "Proud Boys" voter-intimidation emails and voter-data theft
-start_date: 2020-09-01
-disclosure_date: 2020-10-22  # CISA AA20-296B / DNI Ratcliffe press conf
-end_date: 2020-11-03
+start_date: 2020-08-01  # DOJ "Starting in approximately August 2020"; Treasury "approximately August 2020 and November 2020" (state-site scanning Sep 20-28 per CISA AA20-304A)
+disclosure_date: 2020-10-22  # AA20-296B "Last Revised October 22, 2020"; first public attribution Oct 21 2020 Ratcliffe/Wray presser
+end_date: 2020-11-04  # DOJ documents a Nov 4 2020 media-company intrusion attempt as the campaign's last stage; Treasury "until November 2020"
 incident_type:
   - influence-operation
   - data-theft
-initial_vector: n-day  # cURL exploitation of misconfigured state portals
+initial_vector: unknown  # cURL scraping of a misconfigured public state voter portal — DOJ "exploitation of a misconfigured computer system", CISA "abuse of website misconfigurations" + scripted cURL; broken access control, no software CVE or stolen credential described (so not n-day/0-day/valid-creds)
 outcome_summary: |
-  Voter-registration data scraped from at least one state's
-  misconfigured portal via cURL exploitation. Approximately
-  25,000 spoofed "Proud Boys" intimidation emails sent to US
-  registered voters (~90% spam-filtered). Disinformation
-  video implying fraudulent ballot casting.
+  Voter-registration data for more than 100,000 voters was scraped
+  from one state's ("State-1") misconfigured portal via scripted
+  cURL iteration; ~11 state voter websites were probed. Spoofed
+  "Proud Boys" emails threatening physical harm were sent to tens
+  of thousands of registered Democratic voters unless they changed
+  party affiliation and voted for Trump. A fabricated video (built
+  from State-1 voter data) purported to show a Proud Boys affiliate
+  hacking voter sites to create fraudulent FVAP absentee ballots.
+  "Proud Boys volunteers" messages were also sent to Republican
+  members of Congress, Trump-campaign figures and media; a U.S.
+  media company's network was breached (mitigated by the FBI).
 quantified_impact:
-  intimidation_emails_sent: 25000
-  states_voter-data_scraped: 1
-false_flag_risk: suspected  # operation impersonated US extremist group Proud Boys
+  state_voter_records_stolen: 100000  # DOJ: "more than 100,000 State-1 voters' information"
+  states_data_exfiltrated: 1          # State-1 (DOJ "at least one state")
+  state_voter_sites_probed: 11        # DOJ: recon on "approximately eleven state voter websites"
+  # intimidation emails: DOJ says "tens of thousands" — no exact count in any cited source (prior "25000" + "~90% spam-filtered" were unsourced, STRIPPED 2026-07-11)
+false_flag_risk: confirmed  # DOJ: emails "purporting to be from the Proud Boys" / senders "claiming to be a 'group of Proud Boys volunteers'"; CISA video "purporting to misattribute the activity to a U.S. domestic actor" — documented impersonation, not merely suspected
 operators_named:
   - kazemi-seyyed-mohammad-hosein-musa  # Emennet Pasargad, DOJ SDNY Nov 2021
   - kashian-sajjad  # Emennet Pasargad, DOJ SDNY Nov 2021
 summary: |
-  Foundational election-interference event attested by CISA
-  (AA20-304A, AA20-296B), DOJ (Kazemi / Kashian indictment
-  November 18, 2021), and Treasury (jy0494, November 18, 2021)
-  to Emennet Pasargad / IRGC contractor. The "Enemies of the
-  People" persona was also used in this period for hack-and-
-  leak operations against US officials.
+  Iranian cyber-enabled election-interference operation (approx.
+  August-November 2020): scripted cURL scraping of a misconfigured
+  state voter portal, spoofed "Proud Boys" voter-intimidation emails
+  to tens of thousands of registered Democrats, and a fabricated
+  video implying fraudulent absentee-ballot casting. CISA/FBI
+  (AA20-296B Oct 22, AA20-304A Oct 30, 2020) attributed the activity
+  only to an "Iranian Advanced Persistent Threat Actor" (nation-level,
+  no firm named). DOJ SDNY (Kazemi / Kashian indictment, Nov 18 2021)
+  and Treasury OFAC (jy0494, Nov 18 2021) later named Emennet Pasargad,
+  an IRGC-EWCD contractor firm, and its employees Kazemi and Kashian —
+  the IRGC-EWCD sponsor linkage is stated only by Treasury.
 attributions:
   - actor_id: ir/irgc/emennet-pasargad
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
+    attribution_level: named-actor  # names Emennet Pasargad + designates IRGC-EWCD as the sponsoring service
     auspex_assessment: concur
     attribution_date: 2021-11-18
     attribution_source_id: treasury/2021-11-18_emennet-pasargad
   - actor_id: ir/irgc/emennet-pasargad
     attributing_org: US DOJ SDNY
     attributing_org_confidence: high
+    attribution_level: named-actor  # names Emennet Pasargad (fmr Eeleyanet Gostar) + individuals Kazemi & Kashian; does NOT name the IRGC
     auspex_assessment: concur
     attribution_date: 2021-11-18
     attribution_source_id: doj/2021-11-18_kazemi-kashian
-  - actor_id: ir/irgc/emennet-pasargad
-    attributing_org: US CISA
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-10-30
-    attribution_source_id: cisa/2020-10-30_aa20-304a-voter-data
+  # CISA AA20-304A (2020-10-30) attribution entry REMOVED 2026-07-11: the 2020 CISA/FBI
+  # advisories named only an "Iranian Advanced Persistent Threat Actor" (nation-level) and
+  # did NOT name Emennet Pasargad — keeping an Emennet-keyed high-confidence CISA attribution
+  # here was over-attestation. CISA AA20-304A / AA20-296B remain cited in sources[] as the
+  # nation-level operational corroboration (the Emennet naming came from DOJ/Treasury in Nov 2021).
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Treasury/DOJ/CISA attest Emennet Pasargad's operation of the
-      "Proud Boys" and "Enemies of the People" personas — the
-      persona-laundering mechanism as fact; they do not name a
-      'deniable-retaliation' strategic goal, so the doctrine label
-      is inferred.
-    attesting_source_id: treasury/2021-11-18_emennet-pasargad
+      DOJ attests the operation impersonated a U.S. domestic group —
+      emails "purporting to be from the Proud Boys" and senders
+      "claiming to be a 'group of Proud Boys volunteers'" — the
+      persona-laundering mechanism as fact. The cited sources do not
+      name a 'deniable-retaliation' strategic goal, so that doctrine
+      label is inferred, not attested.
+    attesting_source_id: doj/2021-11-18_kazemi-kashian
     inference_basis:
-      source_id: treasury/2021-11-18_emennet-pasargad
+      source_id: doj/2021-11-18_kazemi-kashian
       signals:
-        - "Treasury/DOJ/CISA attest Emennet Pasargad behind the 'Proud Boys' and 'Enemies of the People' personas (persona-laundering mechanism)"
-      ruled_out: "a 'cyber-deniable-retaliation' strategic goal — not named by the sources"
+        - "DOJ: the voter-intimidation emails were 'purporting to be from the Proud Boys' and senders were 'claiming to be a group of Proud Boys volunteers' — impersonation of a U.S. domestic extremist group to launder attribution"
+        - "CISA AA20-304A: the propaganda video 'purporting to misattribute the activity to a U.S. domestic actor'"
+      ruled_out: "a 'cyber-deniable-retaliation' strategic goal — not named by any cited source"
     counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/post-soleimani-retaliation
     pillar_id: ir/post-soleimani-retaliation/electoral-discord
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Election-interference operation within nine months of the
-      Soleimani strike; pattern matches the electoral-discord
-      pillar later attested in the 2024 indictment.
+      A purely circumstantial link: this Iranian election-interference
+      operation ran ~8-10 months after the Jan 3 2020 Soleimani strike.
+      None of the cited 2020-21 sources frames it as Soleimani revenge
+      or names a retaliation motive — the connection is temporal /
+      pattern-based only, so this is plausible, not strongly inferred.
     attesting_source_id: null
+    inference_basis:
+      source_id: null
+      signals:
+        - "Timing: an Iranian state-sponsored election-interference / discord-sowing operation running approximately August-November 2020, within the year following the Jan 3 2020 Soleimani strike"
+        - "Effect pattern matches the electoral-discord pillar — Treasury: the actors 'sought to sow discord and undermine voters' faith in the U.S. electoral process'"
+      alternatives:
+        - "Generic Iranian election-interference / influence intent independent of Soleimani — no cited source ties this specific operation to the Soleimani killing"
     counter_explanation: null
     contested: false
     analyst: claude
@@ -89,3 +114,69 @@ sources:
   - cisa/2020-10-22_aa20-296b-election
   - treasury/2021-11-18_emennet-pasargad
   - doj/2021-11-18_kazemi-kashian
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs the 4 cited RAW sources, all now snapshotted + hashed:
+    CISA AA20-304A (sha256 55b7c03e…, pre-existing), CISA AA20-296B (sha256
+    30b683c8…, captured this pass), Treasury jy0494 (sha256 0b7af314…, pre-existing),
+    DOJ SDNY (sha256 640addeb…, captured this pass via Wayback id_ raw — the live
+    justice.gov URL is Akamai-bot-walled). Framed as the operation, so actor_id is
+    the Iranian cluster (not a null-actor counter-action).
+
+    [a] FACTS — two fabricated figures STRIPPED (0-hit across ALL four raws):
+    "Approximately 25,000 … intimidation emails" and "~90% spam-filtered" — no source
+    states a 25,000 count or any spam-filter statistic; DOJ says only the emails went
+    "to tens of thousands of registered voters." Replaced with sourced DOJ figures:
+    "more than 100,000 State-1 voters' information" downloaded, recon on "approximately
+    eleven state voter websites," "at least one state" exfiltrated. Also STRIPPED the
+    summary claim that the "Enemies of the People" persona was used in this period —
+    0 hits in every cited source (a separate, uncited doxxing campaign). Kept +
+    re-sourced: cURL/misconfiguration scraping (DOJ "exploitation of a misconfigured
+    computer system"; CISA "abuse of website misconfigurations and a scripted process
+    using the cURL tool"); "Proud Boys" emails to registered Democrats (DOJ);
+    fabricated FVAP absentee-ballot video (DOJ "False Election Video … create
+    fraudulent absentee ballots through the Federal Voting Assistance Program"; CISA
+    "propaganda video"; Treasury "fake video"). Added source-backed Nov-4 media-company
+    breach + "Proud Boys volunteers" messages to Republican officials/media (DOJ).
+
+    [b] ATTRIBUTION — over-attestation removed. The CISA (2020-10-30) attribution entry
+    keyed to ir/irgc/emennet-pasargad at high confidence was DELETED: CISA AA20-304A /
+    AA20-296B name only an "Iranian Advanced Persistent Threat Actor(s)" (nation-level)
+    and do NOT name Emennet or the IRGC. Two genuine named-actor attributions retained —
+    DOJ SDNY (names Emennet Pasargad fmr "Eeleyanet Gostar" + Kazemi & Kashian; does NOT
+    say IRGC) and Treasury OFAC (names Emennet + IRGC-EWCD sponsor: "materially assisted
+    … the Islamic Revolutionary Guard Corps-Electronic Warfare and Cyber Defense
+    Organization (IRGC-EWCD)"). The IRGC-EWCD service linkage rests SOLELY on Treasury.
+
+    [c] DATES — start 2020-09-01 -> 2020-08-01 (DOJ "Starting in approximately August
+    2020"; Treasury "Between approximately August 2020 and November 2020"). end
+    2020-11-03 -> 2020-11-04 (DOJ documents the Nov 4 2020 media-company intrusion as
+    the campaign's last stage). disclosure 2020-10-22 CONFIRMED (AA20-296B "Last Revised
+    October 22, 2020"). published_on verified: AA20-296B Oct 22 2020, DOJ "Thursday,
+    November 18, 2021".
+
+    [d] DOCTRINE — persona-laundering link (strongly_inferred) re-pointed
+    attesting/inference source treasury -> doj (only DOJ names "Proud Boys"); signal
+    trimmed to the DOJ Proud-Boys impersonation + CISA "misattribute to a U.S. domestic
+    actor"; dropped the unsourced "Enemies of the People" signal. electoral-discord link
+    DOWNGRADED strongly_inferred -> plausible: no cited source ties this op to Soleimani
+    (prior reasoning leaned on an uncited "2024 indictment"); added inference_basis
+    {signals: timing + Treasury discord-sowing; alternatives: generic election-interference
+    intent}. Both are attacker-rationale (default perspective).
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to both retained attributions (Emennet is a
+    named IRGC-EWCD contractor firm; individuals also named).
+
+    [f] ACTOR_ID — ir/irgc/emennet-pasargad resolves (id field of
+    atlas/actors/ir/emennet-pasargad.yaml). Doctrine pillars + sectors/government/
+    election-systems resolve.
+
+    FLAGS (orchestrator; not editable here): (1) target orgs/us-voters-2020 has no
+    registry file (dangling FK) — kept as the recipient-population pointer, tolerated per
+    the gate-informational orgs/ policy. (2) false_flag_risk upgraded suspected ->
+    confirmed (documented Proud Boys impersonation). (3) initial_vector n-day -> unknown
+    (misconfiguration/cURL scraping; no CVE or stolen credential described).

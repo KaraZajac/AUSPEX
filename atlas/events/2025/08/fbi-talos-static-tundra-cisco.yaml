@@ -1,68 +1,123 @@
 id: 2025-08/fbi-talos-static-tundra-cisco
 name: FBI PSA + Cisco Talos — FSB Center 16 "Static Tundra" Cisco device campaign
-start_date: 2018-03-01  # CVE-2018-0171 exploitation lineage
-disclosure_date: 2025-08-20
+start_date: 2015-01-01  # Talos: Static Tundra "first observed in 2015" / unit active "over a decade"; aggressive CVE-2018-0171 exploitation "since at least 2021" (AUDIT 2026-07-11: was 2018-03-01, an unsourced CVE-disclosure date, not an exploitation onset)
+disclosure_date: 2025-08-20  # FBI IC3 PSA I-082025-PSA + Cisco Talos "Static Tundra" blog, both 2025-08-20
 end_date: null
 incident_type:
-  - intrusion
-  - pre-positioning
-initial_vector: n-day
+  - espionage      # Talos: "Russian state-sponsored cyber espionage group"; "primary goal is to steal data"
+  - intrusion      # n-day exploitation of Cisco IOS Smart Install + legacy SNMP
+  - pre-positioning  # persistent access + config extraction "leveraged as needed"; ICS-protocol reconnaissance interest
+initial_vector: n-day  # CVE-2018-0171 Cisco Smart Install + legacy SNMP v1/v2 community strings
 outcome_summary: |
-  FBI Internet Crime Complaint Center PSA (IC3 250820) and a
-  companion Cisco Talos blog publicly named "Static Tundra"
-  as the Cisco-Talos cluster assessed to be FSB Center 16
-  (the same unit AUSPEX models as the Berserk Bear lineage),
-  documenting more than a decade of sustained exploitation of
-  CVE-2018-0171 (Cisco Smart Install) against end-of-life
-  carrier-grade equipment in telecommunications, higher
-  education, and manufacturing sectors across North America,
-  Asia, Africa, and Europe. The FBI reports the actor has
-  exfiltrated configuration files from thousands of US-critical-
-  infrastructure networking devices over the past year.
+  FBI Internet Crime Complaint Center PSA (IC3 alert
+  I-082025-PSA) and a companion Cisco Talos blog, both dated
+  2025-08-20, publicly named "Static Tundra" as the Talos
+  cluster assessed to be FSB Center 16 (the same FSB unit AUSPEX
+  models as the Berserk Bear / Energetic Bear / Dragonfly
+  lineage). The FBI states the activity is "attributed to the
+  Russian FSB's Center 16" and describes actors exploiting legacy
+  SNMP (v1/v2 community strings) and the unpatched CVE-2018-0171
+  in Cisco IOS / IOS XE Smart Install against end-of-life
+  networking devices. Talos documents over a decade of this
+  unit's network-device intrusions — the group first observed by
+  Talos in 2015 — with aggressive CVE-2018-0171 exploitation
+  "since at least 2021" (the flaw itself is seven years old and
+  was patched in 2018). Targeting spans the telecommunications,
+  higher-education, and manufacturing sectors across North
+  America, Asia, Africa, and Europe, with victims "selected based
+  on their strategic interest to the Russian government." The FBI
+  reports that in the past year the actors were collecting
+  configuration files for thousands of networking devices
+  associated with US entities across critical-infrastructure
+  sectors, modified some device configurations to enable further
+  access, and used that access for reconnaissance "revealing
+  their interest in protocols and applications commonly
+  associated with industrial control systems."
 false_flag_risk: none
 summary: |
-  The FBI/Talos pivot from the earlier CISA + Five Eyes joint
-  advisory (AA25 series, mid-August 2025) — same operator, same
-  CVE, but with Talos's new "Static Tundra" branding and a
-  named US-side cluster owner (FBI Cyber Division). Operations
-  against Ukraine reportedly escalated at the start of the
-  Russia-Ukraine war and have remained elevated. Pairs
-  doctrinally with Volt Typhoon as the Russian peer pre-positioning
-  pattern.
+  Coordinated same-day disclosure (2025-08-20): the FBI IC3 PSA
+  and a Cisco Talos blog introduced the "Static Tundra" cluster
+  name for the long-running FSB Center 16 Cisco-device
+  exploitation operator (aka Berserk Bear / Energetic Bear /
+  Dragonfly), which Talos has tracked since 2015. Talos states
+  Static Tundra's operations against entities in Ukraine
+  "escalated at the start of the Russia-Ukraine war, and have
+  remained high since then." Talos frames the campaign's purpose
+  as compromising and extracting device configuration data en
+  masse "which can later be leveraged as needed based on
+  then-current strategic goals and interests of the Russian
+  government" — a long-term strategic-espionage / persistent-
+  access posture whose primary goal both sources describe as data
+  theft and persistent access. The mass configuration collection
+  gives latent, pre-positioning-adjacent value, but neither cited
+  source frames the activity as a destructive attack-staging
+  operation. (AUDIT 2026-07-11: removed an unsupported "earlier
+  CISA + Five Eyes AA25 joint advisory" pivot framing — a
+  conflation with the separate PRC "Salt Typhoon" advisory CISA
+  AA25-239A, 2025-08-27 — and a "Volt Typhoon Russian peer
+  pre-positioning" claim absent from all cited sources.)
 attributions:
   - actor_id: ru/fsb/center-16/berserk-bear
-    attributing_org: FBI / Cisco Talos
+    attributing_org: FBI (IC3)
     attributing_org_confidence: high
+    attribution_level: named-unit  # FBI PSA: activity "attributed to the Russian Federal Security Service's (FSB) Center 16"; unit known as "Berserk Bear" and "Dragonfly"
     auspex_assessment: concur
     attribution_date: 2025-08-20
     attribution_source_id: fbi/2025-08-20_static-tundra-psa
   - actor_id: ru/fsb/center-16/berserk-bear
     attributing_org: Cisco Talos
     attributing_org_confidence: high
+    attribution_level: named-unit  # Talos "high confidence" Russian state-sponsored espionage; Static Tundra "likely a sub-cluster of ... Energetic Bear (aka BERSERK BEAR)" linked to FSB Center 16 via the 2022 DOJ indictment, FBI-corroborated (SYNful Knock link = moderate confidence)
     auspex_assessment: concur
     attribution_date: 2025-08-20
     attribution_source_id: talos/2025-08-20_static-tundra
 doctrine_links:
   - doctrine_id: ru/info-security-2016
+    perspective: attacker-rationale
     pillar_id: ru/info-security-2016/critical-information-infrastructure
-    program_id: null
-    confidence: attested
-    reasoning: |
-      Sustained FSB collection against carrier and CII network
-      equipment matches the 2016 Information Security Doctrine's
-      critical-information-infrastructure pillar.
-    attesting_source_id: fbi/2025-08-20_static-tundra-psa
-    contested: false
-    analyst: claude
-  - doctrine_id: ru/fpc-2023
-    pillar_id: ru/fpc-2023/anti-anglo-saxon
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Global telecom-collection campaign against NATO-aligned
-      states aligns with the FPC-2023 anti-Anglo-Saxon strategic
-      collection priority.
+      Sustained FSB Center 16 collection against telecom and other
+      critical-information-infrastructure network equipment matches
+      the 2016 Information Security Doctrine's CII pillar. DOWNGRADED
+      from attested (AUDIT 2026-07-11, over-attestation): the FBI PSA
+      and Talos document the CII targeting and a general strategic-
+      collection purpose, but neither articulates the doctrine's
+      CII-control / proportionate-retaliation terminal goal, so the
+      link is inferred, not attested.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "FBI PSA: FSB Center 16 was 'collecting configuration files for thousands of networking devices associated with US entities across critical infrastructure sectors,' with reconnaissance 'revealing their interest in protocols and applications commonly associated with industrial control systems.'"
+        - "Talos: victims are in telecommunications (and other) sectors, 'selected based on their strategic interest to the Russian government,' with configuration data 'leveraged as needed based on then-current strategic goals and interests of the Russian government' — sustained state collection against CII, the pillar's subject matter."
+      ruled_out: "Purely criminal / financially motivated access: both cited sources attribute the activity to the FSB, a state intelligence service, not to a profit-driven actor."
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/fpc-2023
+    perspective: attacker-rationale
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: plausible
+    reasoning: |
+      The campaign's targeting of US critical infrastructure and of
+      Ukraine's Western allies is broadly consistent with the
+      FPC-2023 anti-Anglo-Saxon posture, but the fit is weak:
+      Static Tundra's named victim sectors (telecom, higher
+      education, manufacturing network infrastructure) do not match
+      the pillar's specific targets (foreign ministries, election
+      infrastructure, defense industrial base, media / think-tanks),
+      and victimology is primarily Ukraine + allies, which reads more
+      as war-support strategic collection than the pillar's
+      civilizational anti-US/NATO policy-targeting. DOWNGRADED from
+      strongly_inferred (AUDIT 2026-07-11).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "FBI PSA foregrounds targeting of US critical infrastructure ('thousands of networking devices associated with US entities'); Talos notes victims 'primarily based in Ukraine and allied countries' and expects Ukraine and its allies to remain targets — an anti-US/NATO-aligned targeting flavour."
+      alternatives:
+        - "War-support / strategic-collection reading: Talos's 'primarily based in Ukraine and allied countries' victimology and the escalation 'at the start of the Russia-Ukraine war' fit Ukraine-war intelligence support more than the anti-Anglo-Saxon pillar's foreign-ministry / election / defense / media targeting."
+        - "The ru/info-security-2016 CII pillar is the stronger doctrinal home for this network-infrastructure collection campaign."
     contested: false
     analyst: claude
 targets:
@@ -78,3 +133,128 @@ sources:
   - fbi/2025-08-20_static-tundra-psa
   - talos/2025-08-20_static-tundra
   - therecord/2025-08-20_static-tundra-fsb
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Canonical primary-sourced record of the 2025-08-20 FBI IC3 PSA +
+    Cisco Talos "Static Tundra" disclosure. All three cited sources
+    live-fetched (HTTP 200), snapshotted, and hashed this session:
+    FBI IC3 (ic3__2025-08-20_static-tundra-psa.html, sha256 3a6822c3…
+    9407a9, 5242 B — the page carries a per-request nonce, so the hash
+    differs from a prior fetch though byte-length + body text are
+    stable), Cisco Talos (blogtalosintelligence__2025-08-20_static-
+    tundra.html, sha256 19d39a82…11a41792, 89818 B), The Record
+    (therecord__2025-08-20_static-tundra-fsb.html, sha256 90b18a4a…
+    1b6de574, 86998 B). Every load-bearing claim is carried by a
+    snapshotted source → level: full.
+
+    [a] FACTS — corrected. (1) ANACHRONISM fixed: outcome_summary said
+    "more than a decade of sustained exploitation of CVE-2018-0171" —
+    impossible (Talos calls it a "seven-year-old vulnerability,"
+    patched 2018). The "over a decade" applies to the UNIT's activity;
+    Talos: "first observed in 2015" and aggressive CVE-2018-0171
+    exploitation "since at least 2021." Rewritten to separate the
+    decade-long unit activity from the CVE sub-phase. (2) STRIPPED
+    "carrier-grade equipment" — 0 hits in all three raw sources
+    (embellishment); replaced with source term "end-of-life networking
+    devices." (3) "exfiltrated" → "collecting" (FBI verbatim: "collecting
+    configuration files for thousands of networking devices associated
+    with US entities across critical infrastructure sectors"). (4) ADDED
+    load-bearing SNMP vector the event omitted — FBI PSA leads with
+    "exploiting Simple Network Management Protocol (SNMP) and end-of-life
+    networking devices running an unpatched vulnerability (CVE-2018-0171)
+    in Cisco Smart Install"; Talos details SNMP community-string abuse
+    for initial access/execution/exfil. (5) Sectors (telecom / higher-ed
+    / manufacturing) and geographies (N.America / Asia / Africa / Europe)
+    ✓ verified verbatim (Talos, Record). (6) ICS-protocol reconnaissance
+    interest ✓ (FBI, Record).
+
+    [a-STRIP] summary FABRICATIONS removed. (1) "The FBI/Talos pivot from
+    the earlier CISA + Five Eyes joint advisory (AA25 series, mid-August
+    2025)" — NO such advisory for FSB Center 16 exists in any cited
+    source; a conflation with the SEPARATE PRC "Salt Typhoon" advisory
+    (CISA AA25-239A, 2025-08-27). The only advisories the FBI PSA
+    references are the 2018-04-20 Technical Alert (TA18-074A) and the
+    2025-05-06 OT Joint Advisory. "Five Eyes"/"AA25 series (mid-Aug)"
+    = 0 hits; The Record's single "AA25" string is a coincidental
+    substring inside a media-asset URL. (2) "FBI Cyber Division" — 0
+    hits ("Cyber Division" absent); the PSA is an IC3 product. (3) "Pairs
+    doctrinally with Volt Typhoon as the Russian peer pre-positioning
+    pattern" — "Volt Typhoon" = 0 hits; also self-contradictory (Volt
+    Typhoon is PRC) and mischaracterises this ESPIONAGE op (Talos:
+    "primary goal is to steal data and establish persistent access") as
+    attack-staging pre-positioning. Replaced with the source-grounded
+    strategic-collection framing ("leveraged as needed based on
+    then-current strategic goals … of the Russian government").
+
+    [b] ATTRIBUTION — actor_id ru/fsb/center-16/berserk-bear upheld
+    (concur, high). Split the muddy attributing_org "FBI / Cisco Talos"
+    into two clean entries: FBI (IC3) and Cisco Talos, each on its own
+    primary. FBI is unequivocal: activity "attributed to the Russian
+    Federal Security Service's (FSB) Center 16" (known as "Berserk Bear"
+    and "Dragonfly"). Talos: "high confidence … Russian state-sponsored
+    cyber espionage group," Static Tundra "likely a sub-cluster of …
+    'Energetic Bear' (aka BERSERK BEAR)," linked to FSB Center 16 via a
+    "2022 U.S. Department of Justice indictment," "corroborated by the
+    FBI"; SYNful Knock association = moderate confidence. No
+    over-attestation: high + concur is warranted by the FBI's flat
+    unit-level attribution + Talos's high-confidence state-sponsorship.
+
+    [c] DATES — start_date 2018-03-01 (labelled "CVE-2018-0171
+    exploitation lineage") was an UNSOURCED CVE-disclosure date, not an
+    exploitation onset. Corrected to 2015-01-01, anchored to Talos
+    "first observed in 2015" / unit "over a decade," with the CVE
+    sub-phase ("since at least 2021") noted in the comment + prose.
+    disclosure_date 2025-08-20 ✓ (both primaries published that day).
+    end_date null ✓ (ongoing; Talos expects continuation). Source
+    published_on dates all verified 2025-08-20.
+
+    [d] DOCTRINE — (1) ru/info-security-2016/critical-information-
+    infrastructure DOWNGRADED attested → strongly_inferred
+    (over-attestation): sources document the CII targeting + general
+    strategic-collection purpose but do not state the doctrine's
+    CII-control / retaliation terminal goal; cleared attesting_source_id,
+    added inference_basis {signals, ruled_out}. (2) ru/fpc-2023/
+    anti-anglo-saxon DOWNGRADED strongly_inferred → plausible: victim
+    sectors (telecom / higher-ed / manufacturing) don't match the
+    pillar's political / defense / media targets and victimology is
+    Ukraine-primary (war-support reading survives); added inference_basis
+    {signals, alternatives}. Both are RU (attacker) doctrine on a RU
+    attack → perspective: attacker-rationale added explicitly. These two
+    downgrades match the independently-audited duplicate sibling
+    (2026-07-05), which predicted this canonical event carried "the same
+    attested-CII over-label."
+
+    [e] ATTRIBUTION_LEVEL — added named-unit to both attributions (FBI +
+    Talos both reach the specific FSB unit, Center 16).
+
+    [f] ACTOR_ID — ru/fsb/center-16/berserk-bear resolves to the id:
+    field of atlas/actors/ru/berserk-bear.yaml ✓ (canonical_name "Berserk
+    Bear / Energetic Bear / Dragonfly," primary_service_id ru/fsb/
+    center-16); mission [pre-positioning, espionage] consistent.
+
+    FLAGS (orchestrator — not edited here):
+    • DUPLICATE (confirmed both ways): 2025-08/fsb-center-16-cisco-ios-
+      advisory is a RETIRE/MERGE candidate that already names THIS event
+      as canonical (its 2026-07-05 qc). This event is the canonical,
+      primary-sourced record (3 primaries incl. FBI PSA + Talos); the
+      sibling carries only a bot-walled Industrial Cyber secondary
+      (source id cisa/2025-08_fsb-center-16-cisco-ios, a legacy misnomer).
+      Recommend merge sibling → this event.
+    • ACTOR alias: atlas/actors/ru/berserk-bear.yaml could gain a "Static
+      Tundra" (Cisco Talos, 2025) equivalent alias — currently absent
+      from its alias list.
+    • ACTOR minor: The Record's "In 2021, the U.S. Justice Department
+      indicted four Russian nationals … part of Static Tundra" conflates
+      the FSB Center 16 Dragonfly indictment (3 officers: Akulov/
+      Gavrilov/Tyukov, unsealed 2022-03-24) with the separate TsNIIKhM /
+      Triton indictment; the actor file's "Mar 2022" unsealing date is
+      correct — no change needed, informational.
+    • TARGET FK (informational only per validate.ts): all four
+      sectors/* targets resolve in atlas/sectors/sectors.yaml
+      (ict/telecom, ict/networking, academic/university, ics/
+      manufacturing); ict/networking is the device substrate more than a
+      distinct victim sector but is defensible and left in place.

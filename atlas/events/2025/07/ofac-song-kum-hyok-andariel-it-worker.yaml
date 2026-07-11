@@ -8,15 +8,22 @@ incident_type:
   - policy
 initial_vector: unknown
 outcome_summary: |
-  OFAC designated Song Kum Hyok, a cyber actor associated with
-  the RGB-subordinated Andariel group, for facilitating the
-  DPRK IT-worker scheme that placed North Korean nationals in
-  remote-work positions at US companies in 2022-2023 using
-  stolen US identities. Treasury also sanctioned Russian
-  national Gayk Asatryan and four Russian companies operating
-  a parallel Russia-based DPRK IT-worker pipeline. Some workers
-  introduced malware into employer networks for follow-on
-  exploitation.
+  OFAC designated Song Kum Hyok, whom Treasury states is "a
+  malicious cyber actor associated with the sanctioned ... RGB
+  hacking group Andariel," for facilitating the DPRK IT-worker
+  scheme. Per OFAC, in 2022-2023 Song used U.S. persons'
+  information (names, Social Security numbers, and addresses) to
+  create aliases for foreign-hired workers who then posed as
+  U.S. persons to obtain remote jobs at U.S. companies. Treasury
+  also designated Russian national Gayk Asatryan and four
+  entities running a parallel Russia-based DPRK IT-worker
+  pipeline — two Russia-based firms (Asatryan LLC, Fortuna LLC)
+  and two North Korean trading corporations (Korea Songkwang
+  Trading, Korea Saenal Trading), which contracted to dispatch
+  up to 30 and 50 DPRK IT workers to Russia respectively. In
+  some cases, per OFAC, these DPRK IT workers "have been known
+  to introduce malware into company networks for additional
+  exploitation."
 false_flag_risk: none
 campaign_id: dprk-it-worker-enforcement-arc
 operators_named:
@@ -31,43 +38,49 @@ summary: |
   DPRK "IT worker fraud" is not a separate criminal track but
   an extension of the RGB revenue-and-access portfolio.
 attributions:
-  - actor_id: kp/rgb/andariel
+  - actor_id: null  # counter-action (US state sanction), actor nulled per the US-sanction convention (cf. siblings treasury-kimsuky, ofac-zedcex-zedxion, salt-typhoon, sim-hyon-sop). Sanctioned SUBJECTS named below + in prose; were kp/rgb/andariel + kp/it-worker-fraud (AUDIT 2026-07-11).
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
+    attribution_level: named-unit  # OFAC names Song "associated with the sanctioned ... RGB hacking group Andariel" — reaching the named RGB-subordinate group and its parent service (Reconnaissance General Bureau)
     auspex_assessment: concur
     attribution_date: 2025-07-08
     attribution_source_id: treasury/2025-07-08_song-kum-hyok-andariel
-  - actor_id: kp/it-worker-fraud
-    attributing_org: US Treasury OFAC
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-07-08
-    attribution_source_id: treasury/2025-07-08_song-kum-hyok-andariel
+    notes: |
+      Sanctioned subjects (resolvable if de-nulled): kp/rgb/andariel
+      (atlas/actors/kp/andariel.yaml — Song Kum Hyok's group; OFAC
+      "associated with") and the kp/it-worker-fraud activity cluster
+      (atlas/actors/kp/it-worker-fraud.yaml — the DPRK IT-worker scheme
+      OFAC describes). OFAC attributes the scheme to the DPRK regime and
+      Song to Andariel; AUSPEX concurs. Individuals in operators_named.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
+    perspective: attacker-rationale  # DPRK's own doctrine = the sanctioned party's rationale for the underlying scheme; this event is a US counter-action
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
-    program_id: null
+    program_id: kp/8th-congress-defense-plan/revenue-aggregation/it-worker-fraud
     confidence: attested
     reasoning: |
-      Treasury explicitly frames the scheme as revenue
-      generation for the DPRK regime, with cyber-enabled
-      identity fraud and access-monetization the operational
-      method.
+      OFAC states the IT-worker revenue funds the DPRK's terminal
+      WMD / ballistic-missile programs (the terminal goal of this
+      doctrine's revenue-aggregation pillar), satisfying the doctrine
+      file's per-event attestation rule (attested only where the
+      event's own OFAC source states the WMD-financing goal in
+      substance). Anchored to the ACTIVE post-2021 plan and its
+      it-worker-fraud program — not the superseded Byungjin frame —
+      per that program's own guidance: "AUSPEX tags events to the
+      active doctrine."
     attesting_source_id: treasury/2025-07-08_song-kum-hyok-andariel
+    inference_basis:
+      source_id: treasury/2025-07-08_song-kum-hyok-andariel
+      source_quote: "The DPRK maintains a workforce of thousands of highly skilled IT workers globally, primarily located in the People's Republic of China and Russia, who generate significant revenue that contributes to its WMD and ballistic missile programs."
     contested: false
     analyst: claude
-  - doctrine_id: kp/byungjin
-    pillar_id: kp/byungjin/sanctions-evasion-revenue
-    program_id: null
-    confidence: attested
-    reasoning: |
-      Continues the Byungjin-era sanctions-evasion revenue
-      doctrine the IT-worker scheme operationalizes; Treasury
-      cites WMD-program-funding rationale consistent with the
-      Bybit and Ronin attribution patterns.
-    attesting_source_id: treasury/2025-07-08_song-kum-hyok-andariel
-    contested: false
-    analyst: claude
+  # REMOVED (AUDIT 2026-07-11): kp/byungjin / sanctions-evasion-revenue link.
+  # Byungjin is status: superseded (superseded_by_id: kp/8th-congress-defense-plan,
+  # 2021); the 8th-Congress it-worker-fraud program file explicitly directs "AUSPEX
+  # tags events to the active doctrine" for this exact activity. The prior byungjin
+  # reasoning also cited "Bybit and Ronin attribution patterns" — neither is in this
+  # event's OFAC source (cross-event embellishment, stripped). Doctrinal lineage is
+  # already captured by 8th-congress-defense-plan.inherits_from_ids: [kp/byungjin].
 targets:
   - target_id: sectors/ict/software
     country: us
@@ -79,3 +92,104 @@ sources:
   - treasury/2025-07-08_song-kum-hyok-andariel
   - therecord/2025-07-08_song-kum-hyok-sanctions
   - trmlabs/2025-07-08_song-kum-hyok-it-worker
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    6-point audit of the OFAC Song Kum Hyok / Andariel + Asatryan
+    IT-worker designation against all three RAW cited sources, each
+    curl'd HTTP-200, snapshotted to atlas/sources/raw/ and hashed
+    (PRESERVE tier, snapshot keys added):
+      - treasury/2025-07-08_song-kum-hyok-andariel (govt-primary, SB0190)
+        raw treasury__2025-07-08_song-kum-hyok-andariel.html
+        sha256 44d664b3…22afb2d4 (127,362 B)
+      - therecord/2025-07-08_song-kum-hyok-sanctions (journalism)
+        raw therecord__2025-07-08_song-kum-hyok-sanctions.html
+        sha256 4e8b9a88…19dc04c7 (80,998 B)
+      - trmlabs/2025-07-08_song-kum-hyok-it-worker (vendor-research)
+        raw trmlabs__2025-07-08_song-kum-hyok-it-worker.html
+        sha256 93d2399e…694a83bf (200,831 B)
+    Primary is a first-party US-govt release and IS snapshotted; both
+    secondaries corroborate and are snapshotted -> level: full.
+
+    [a] FACTS — CORRECTED one factual error. RAW Treasury SB0190
+    verbatim-carries: Song is "a malicious cyber actor associated with
+    the sanctioned ... RGB ... hacking group Andariel"; he "facilitated
+    an information technology (IT) worker scheme"; "In 2022 and 2023,
+    Song used U.S. persons' information, including names, social security
+    numbers, and addresses to create aliases for the hired foreign
+    workers"; workers "have been known to introduce malware into company
+    networks for additional exploitation." CORRECTION: the event said
+    Treasury sanctioned "four Russian companies" — WRONG. RAW: Asatryan +
+    four entities = TWO Russia-based firms (Asatryan LLC, Fortuna LLC,
+    E.O. 13722) + TWO North Korean trading corporations (Korea Songkwang
+    Trading, Korea Saenal Trading, E.O. 13810), with 10-yr/30-worker and
+    50-worker dispatch contracts. Both secondaries agree ("both North
+    Korean companies and Asatryan's Russian companies" — The Record;
+    "four entities linked to a Russia-based DPRK IT worker network" —
+    TRM). Rewrote outcome_summary to OFAC's own words. No fabricated
+    malware/CVE/victim/figure found; summary's Andariel background
+    (Maui/defense-IP/crypto) is flagged analytic ("historically") and
+    lives in the actor record, not asserted as from this release.
+
+    [b] ATTRIBUTION — over-attestation FIXED. Event asserted two named
+    actor_ids (kp/rgb/andariel, kp/it-worker-fraud) directly in
+    attributions on a COUNTER-ACTION. Per the dominant US-sanction
+    convention (siblings treasury-kimsuky, treasury-blender, tornado-cash,
+    sim-hyon-sop, ofac-zedcex-zedxion, salt-typhoon) collapsed to a single
+    actor_id: null attribution, attributing_org US Treasury OFAC, high +
+    concur retained (OFAC states the Andariel association flatly), subjects
+    named in notes/prose. ADDED attribution_level: named-unit — OFAC names
+    Andariel (RGB-subordinate group) and its parent service the RGB.
+
+    [c] DATES — single-day OFAC action; RAW dated "July 8, 2025".
+    start=disclosure=end=2025-07-08 ✓ (underlying Song activity was
+    2022-2023, correctly NOT used as the event date). All three
+    published_on 2025-07-08 verified in RAW (Treasury "July 8, 2025";
+    The Record JSON datePublished 2025-07-08T19:48:31Z; TRM "On July 8,
+    2025"). No start/disclosure conflation.
+
+    [d] DOCTRINE — kp/8th-congress-defense-plan/revenue-aggregation KEPT
+    attested and made more precise: program_id set to the specific
+    .../it-worker-fraud program; perspective: attacker-rationale added
+    (DPRK's own doctrine = sanctioned party's rationale on a US
+    counter-action); inference_basis.source_quote added (the verbatim WMD
+    terminal-goal sentence). Attested is warranted per the doctrine file's
+    own per-event rule (lines 39-48: attested only where the event's own
+    source states the terminal WMD/ballistic-missile-financing goal — an
+    OFAC designation, which this is). Faulkender: "the DPRK's continued
+    efforts to clandestinely fund its WMD and ballistic missile programs."
+    REMOVED the second link kp/byungjin/sanctions-evasion-revenue
+    (attested): byungjin is status: superseded (superseded_by
+    kp/8th-congress-defense-plan, 2021) and the 8th-Congress it-worker
+    program file explicitly directs "AUSPEX tags events to the active
+    doctrine"; its reasoning also cited "Bybit and Ronin" patterns absent
+    from this OFAC source (cross-event embellishment, stripped). Lineage
+    is preserved via 8th-congress inherits_from_ids: [kp/byungjin].
+
+    [e] ATTRIBUTION_LEVEL — added named-unit (see [b]).
+
+    [f] ACTOR_ID — no top-level actor_id (correct for a counter-action).
+    Attribution actor_id nulled (subjects kp/rgb/andariel +
+    kp/it-worker-fraud, both resolve: atlas/actors/kp/andariel.yaml [id
+    kp/rgb/andariel, status indicted] and atlas/actors/kp/it-worker-fraud.yaml
+    [status sanctioned]). operators_named song-kum-hyok / asatryan-gayk
+    are free-text (no people-registry dir exists). Target FKs
+    sectors/ict/software + sectors/finance/crypto-exchange are the
+    conventional sector ids used by many siblings; country us carried.
+
+    ORCHESTRATOR FLAGS (out-of-scope files, NOT edited):
+    - DOCTRINE hygiene: this event previously double-linked the superseded
+      kp/byungjin alongside the active kp/8th-congress-defense-plan. Other
+      post-2021 DPRK IT-worker/crypto events may carry the same redundant
+      superseded-doctrine link — worth a sweep.
+    - REGISTRY (consistent, informational): related policy-action file
+      atlas/policy-actions/us/2025-07-08_song-kum-hyok-andariel-sanctions.yaml
+      is accurate (does NOT repeat the "four Russian companies" error) but
+      asserts a "same-day FBI/State Rewards-for-Justice bounty" not carried
+      by this event's three sources — verify/roster separately if modeled.
+    - SOURCE note: trmlabs source-record note corrected in-place (its
+      claimed "on-chain links to prior DPRK IT-worker revenue flows" is not
+      in the article; "Asatryan"=0, "on-chain"=0 in the snapshot).
