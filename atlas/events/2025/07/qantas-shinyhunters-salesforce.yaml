@@ -1,54 +1,251 @@
 id: 2025-07/qantas-shinyhunters-salesforce
 name: Qantas frequent-flyer breach (Salesforce vishing chain)
-start_date: 2025-06-30
-disclosure_date: 2025-07-02
-end_date: 2025-09-30
+start_date: 2025-06-30  # detection: Qantas "On Monday 30 June 2025, we detected unusual activity"
+disclosure_date: 2025-07-02  # Qantas media release "QANTAS CYBER INCIDENT" published 2 July 2025 09:04 AEST (BleepingComputer US-TZ: "July 1st")
+end_date: 2025-10-12  # Qantas customer notice "Update: 12 October 2025" (campaign data-release / ongoing NSW injunction); intrusion itself contained 30 June
 incident_type:
+  - intrusion
   - data-theft
   - extortion
-initial_vector: phishing  # via vishing → third-party platform
+initial_vector: phishing  # campaign-inferred: UNC6040 vishing → Salesforce OAuth (Qantas named neither vishing nor Salesforce; only "a cyber criminal targeted a call centre and gained access to a third party customer servicing platform")
 outcome_summary: |
-  On July 2 2025 Qantas disclosed a cyber-intrusion into a
-  third-party customer-service platform used by one of its
-  contact centres, exposing approximately 5.7 million Qantas
-  frequent-flyer customer records — including names, email
-  addresses, dates of birth, phone numbers, frequent-flyer
-  numbers, and tier-status data. Payment-card and credential
-  data were not affected. Initial vendor reporting attributed
-  the intrusion to Scattered Spider; subsequent Google Threat
-  Intelligence Group analysis and October 2025 Krebs reporting
-  linked the case to the UNC6040 / ShinyHunters voice-phishing
-  / Salesforce-OAuth campaign with a ShinyHunters-branded
-  follow-on extortion attempt.
+  On 2 July 2025 Qantas publicly disclosed a cyber incident it had
+  detected on Monday 30 June 2025: "a cyber criminal targeted a call
+  centre and gained access to a third party customer servicing
+  platform" used by one of its airline contact centres, which was then
+  contained. Qantas initially reported ~6 million customers had service
+  records in the platform; after de-duplication its 9 July 2025 update
+  confirmed 5.7 million unique customers' data was held in the system.
+  Exposed fields varied by customer and included names, email addresses,
+  Qantas Frequent Flyer numbers (with tier and, for a subset, points
+  balance / status credits), plus — for ~1.7 million customers —
+  combinations of residential/business address (~1.3M), date of birth
+  (~1.1M), phone number (~900k), gender (~400k) and meal preferences
+  (~10k). Qantas stated no credit-card, personal-financial or passport
+  details were stored in the system and that Frequent Flyer accounts,
+  passwords, PINs and login details were not accessed or compromised.
+  The intrusion was first framed (by contemporaneous reporting) as part
+  of the aviation-sector wave linked to Scattered Spider; BleepingComputer
+  (30 July 2025) subsequently placed Qantas — alongside Allianz Life,
+  LVMH brands and Adidas — in the UNC6040 / ShinyHunters voice-phishing
+  Salesforce-OAuth campaign that Google Threat Intelligence Group
+  documented on 4 June 2025, while noting "none of these companies have
+  publicly named Salesforce." The threat actors contacted Qantas to
+  extort it, and Qantas was among the companies whose Salesforce-linked
+  data the "Scattered LAPSUS$ Hunters" actors folded into their October
+  2025 data-leak / extortion site; Qantas obtained an ongoing NSW Supreme
+  Court injunction restraining any access to or publication of the stolen
+  data and, as of its 12 October 2025 update, maintained there was still
+  "no evidence that any personal data stolen from Qantas has been
+  released."
 quantified_impact:
-  individuals_affected: 5700000
+  individuals_affected: 5700000  # 5.7M unique customers (Qantas 9 Jul 2025, post de-duplication of the ~6M platform service records)
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Notable as the only major-airline-loyalty-program intrusion
-  in the 2025 campaign and as a marker of the AUS/NZ scope
-  expansion of the ShinyHunters brand. Initial Scattered-
-  Spider attribution + later GTIG UNC6040 / ShinyHunters
-  attribution is a clean illustration of the AUSPEX cluster-
-  fuzziness pattern for the 2025 campaign.
+  Per-victim child of the 2025 UNC6040 / ShinyHunters Salesforce-cloud
+  campaign (campaign_id shinyhunters-salesforce-2025) and the only
+  major-airline loyalty-program intrusion in it. Qantas's own statements
+  attribute the breach to nothing beyond "a cyber criminal" and a "third
+  party customer servicing platform"; it named neither Salesforce nor any
+  threat actor. The Salesforce / UNC6040 / ShinyHunters placement is
+  BleepingComputer's campaign confirmation (pattern-matched to the
+  GTIG-documented campaign), and "ShinyHunters" is the extortion self-
+  claim brand over GTIG's UNC6040 (vishing) / UNC6240 (extortion)
+  clusters, not a confirmed stable group — hence attribution is hedged.
+  The case is a clean illustration of the AUSPEX cluster-fuzziness
+  pattern: an initial Scattered-Spider (aviation-wave) framing later
+  reframed to UNC6040 / ShinyHunters. Unlike the Adidas sibling, Qantas
+  WAS actively extorted (the actors contacted it) and WAS carried on the
+  October-2025 "Scattered LAPSUS$ Hunters" leak-site campaign, prompting
+  an NSW Supreme Court injunction — though Qantas asserts no evidence its
+  specific data has been publicly released. The originally-cited sources
+  (mandiant/2025-08-08, krebs/2025-10) name NO Qantas fact (Krebs snapshot
+  has zero "Qantas" occurrences; the 08-08 expansion names Qantas zero
+  times) and were re-sourced this audit to Qantas-specific reporting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group + Krebs on Security
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - actor_id: criminal/scattered-spider
-    attributing_org: vendor reporting + UK NCSC
+    attributing_org: BleepingComputer (Qantas placement) + Google Threat Intelligence Group (campaign)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-07-15
-    attribution_source_id: ncsc-uk/2025-05-20_scattered-spider-uk-retail
+    attribution_date: 2025-07-30
+    attribution_source_id: bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+    attribution_level: activity-cluster
+    notes: |
+      BleepingComputer (2025-07-30) reported the wave "impacting companies
+      like Qantas, Allianz Life, LVMH, and Adidas has been linked to the
+      ShinyHunters extortion group, which has been using voice phishing
+      attacks to steal data from Salesforce CRM instances" and that it had
+      "confirmed that all were targeted in the same campaign detailed by
+      Google" (UNC6040) — but "none of these companies have publicly named
+      Salesforce," so the placement is a press confirmation / inference,
+      not a Qantas or GTIG victim-naming. GTIG's canonical campaign report
+      (mandiant/2025-06-04) reports "UNC6240 has consistently claimed to be
+      the threat group ShinyHunters ... likely as a method to increase
+      pressure," and "We have not confirmed the nature of the relationship
+      between these intrusions and the prior use of this handle" — a self-
+      claim brand over activity clusters, hence moderate / concur-with-
+      caveat / activity-cluster. (attribution_source_id re-pointed this
+      audit from mandiant/2025-08-08, which names Qantas zero times, to the
+      BleepingComputer article that actually carries the Qantas placement.)
+  - actor_id: criminal/scattered-spider
+    attributing_org: initial vendor/press reporting (aviation-sector wave framing)
+    attributing_org_confidence: moderate
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-07-09
+    attribution_source_id: bleepingcomputer/2025-07-09_qantas-confirms-data-breach-57-million
+    attribution_level: activity-cluster
+    notes: |
+      The Qantas breach was first framed within the aviation-sector wave
+      attributed to Scattered Spider: BleepingComputer (2025-07-09) noted
+      the attack "shared similarities with other attacks on the aviation
+      industry linked to threat actors classified as Scattered Spider."
+      This framing was subsequently contested / superseded by the UNC6040
+      / ShinyHunters campaign attribution — BleepingComputer (2025-07-30):
+      "The breaches have caused confusion ... with the attacks attributed
+      to Scattered Spider (tracked by Mandiant as UNC3944) ... However,
+      threat actors associated with Scattered Spider tend to perform
+      full-blown network intrusions." Campaign-cluster overlap (shared
+      "Com" milieu / TTPs), not confirmed Qantas-specific Scattered Spider
+      evidence — hence concur-with-caveat / activity-cluster.
+      (attribution_source_id re-pointed this audit from
+      ncsc-uk/2025-05-20, whose url is null/link-rotted, to the snapshotted
+      BleepingComputer article that carries the Qantas-specific SS framing.)
 doctrine_links: []
 targets:
   - target_id: orgs/qantas
     role: primary
 sources:
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - krebs/2025-10_shinyhunters-corporate-extortion-spree
-  - ncsc-uk/2025-05-20_scattered-spider-uk-retail
+  - qantas/2025-07-02_qantas-cyber-incident
+  - qantas/2025-07-09_update-on-qantas-cyber-incident
+  - qantas/2025-10_information-for-customers-on-cyber-incident
+  - bleepingcomputer/2025-07-09_qantas-confirms-data-breach-57-million
+  - bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+  - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
+  - bleepingcomputer/2025-10_scattered-lapsus-hunters-launch-salesfor
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. RE-SOURCE (badrabbit model):
+    all three originally-cited sources fail to carry a Qantas-specific
+    fact — verbatim-checked: the Krebs snapshot (sha256 9c2d11a8..97619835)
+    has ZERO "Qantas" occurrences; mandiant/2025-08-08 (the old
+    ShinyHunters attribution_source_id) names Qantas ZERO times; and
+    ncsc-uk/2025-05-20 (the old Scattered-Spider attribution_source_id) has
+    url: null (link-rotted). All three dropped from this event and replaced
+    with a Qantas-specific, fully-snapshotted set. Sources now, all
+    snapshotted:
+      - qantas/2025-07-02 (primary; IA capture, sha256 4661ba4d..2cbe4635)
+      - qantas/2025-07-09 (primary; IA capture, sha256 d12a1102..4be06633)
+      - qantas/2025-10 customer notice (primary; IA capture, sha256
+        a6b93ad0..9e5a5e27)
+      - bleepingcomputer/2025-07-09 (sha256 24b3c481..7297070)
+      - bleepingcomputer/2025-07-30 (sha256 d8de5cd4..f0636dad)
+      - mandiant/2025-06-04 (sha256 4dce0e4b..f79c1051)
+      - bleepingcomputer/2025-10 leak-site (sha256 374d1241..3b51e9c863)
+    Dropped sources remain cited elsewhere → NOT orphaned (krebs/2025-10:
+    umbrella + actor + 8 siblings; mandiant/2025-08-08: umbrella + actor +
+    6 siblings; ncsc-uk/2025-05-20: still cited by scattered-spider-
+    airlines-uk-retail).
+
+    [a] FACTS — every load-bearing claim now carried verbatim by a
+    snapshotted source:
+      - Detection "On Monday 30 June 2025, we detected unusual activity on
+        a third-party platform used by a Qantas airline contact centre"
+        and "a cyber criminal targeted a call centre and gained access to
+        a third party customer servicing platform" (Qantas 07-02 primary).
+      - "There are 6 million customers that have service records in this
+        platform" (Qantas 07-02) → "After removing duplicate records, our
+        investigation has found that there were 5.7 million unique
+        customers' data held in the system" (Qantas 07-09). individuals_
+        affected 5,700,000 retained and now source-exact; the ~6M is
+        clarified as the pre-dedup platform record count, not the confirmed
+        affected figure (was ambiguous in the old summary).
+      - Field breakdown (4M name/email/FF; 1.2M name+email; 2.8M
+        name+email+FF number, majority w/ tier; remaining 1.7M w/ address
+        1.3M, DOB 1.1M, phone 900k, gender 400k, meal 10k) — Qantas 07-09
+        + BleepingComputer 07-09, verbatim. Old summary's flat field list
+        kept but now backed by the primary.
+      - "[N]o credit card details, personal financial information or
+        passport details were stored in this system ... Passwords, PINs and
+        login details were not accessed or compromised" (Qantas 07-09) —
+        old "Payment-card and credential data were not affected" corrected
+        to the fuller, source-exact statement.
+      - STRIPPED the fabricated attribution claim that "October 2025 Krebs
+        reporting linked the case" — the Krebs snapshot names Qantas ZERO
+        times; it carries no Qantas fact. Replaced with the sourced
+        chain (initial SS aviation-wave framing → BC 30-Jul UNC6040/
+        ShinyHunters placement).
+      - ADDED the October phase, source-exact: extortion contact ("the
+        threat actors had contacted them, likely to begin extorting" — BC
+        07-09); Qantas among the Scattered LAPSUS$ Hunters campaign victims
+        ("breaches that have impacted companies such as Google, Cisco,
+        Qantas, Adidas ..." — BC 2025-10, sha256 374d1241); NSW Supreme
+        Court injunction + "no evidence that any personal data stolen from
+        Qantas has been released" (Qantas 10-2025 primary). No fabricated
+        dump-volume (e.g. "150GB") asserted — Qantas's own hedge is kept.
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters high→
+        moderate, concur→concur-with-caveat; attribution_source_id
+        re-pointed from mandiant/2025-08-08 (Qantas: 0 hits) to
+        bleepingcomputer/2025-07-30, which carries the placement + the
+        "none ... have publicly named Salesforce" caveat + the "have not
+        confirmed the nature of the relationship [to] the prior use of this
+        handle" self-claim caveat. attributing_org corrected (was "Google
+        Threat Intelligence Group + Krebs on Security" — Krebs carries no
+        Qantas fact). Scattered Spider retained moderate/concur-with-caveat
+        but re-pointed from the null-url ncsc-uk/2025-05-20 to
+        bleepingcomputer/2025-07-09, which carries the Qantas-specific
+        aviation-wave SS framing; note records it as an initial framing
+        later contested by the UNC6040/ShinyHunters attribution. false_flag_
+        risk: suspected retained (deliberate ShinyHunters brand-borrowing /
+        unconfirmed handle relationship + SS↔ShinyHunters cluster fuzziness).
+    [c] DATES — start_date 2025-06-30 KEPT and now source-exact (Qantas
+        "Monday 30 June 2025"). disclosure_date 2025-07-02 KEPT and now
+        source-exact (Qantas release "Published on 2nd July 2025 at 9:04";
+        BleepingComputer's "July 1st" is the US-timezone rendering — noted,
+        not conflated). end_date 2025-09-30 (unsourced) → 2025-10-12,
+        anchored to Qantas's "Update: 12 October 2025" data-release /
+        injunction notice (close of the documented arc; the intrusion
+        itself was contained 30 June). Source published_on verified: Qantas
+        07-02 (2 July 09:04), Qantas 07-09 (Wed 9 July), Qantas customer
+        notice (Update 12 Oct 2025), BC-07-09 (datePublished 2025-07-09
+        T16:14:28-04:00, Lawrence Abrams), BC-07-30 (2025-07-30 15:52),
+        mandiant 06-04 (2025-06-04), BC leak-site (2025-10-03).
+    [d] DOCTRINE_LINKS — none (per scope): criminal, financially-motivated
+        (vishing → Salesforce data theft → extortion); no strategic-doctrine
+        terminal goal. Correct as empty.
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions.
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) as activity
+        clusters; "ShinyHunters" / "Scattered LAPSUS$ Hunters" are self-
+        applied brands over those clusters and the Qantas placement is
+        inferential (Qantas named no actor), so activity-cluster is the
+        honest granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider both
+        resolve to existing atlas actor ids. Not a counter-action (no LE /
+        policy meta type); actor_ids retained.
+
+    incident_type [data-theft, extortion] → [intrusion, data-theft,
+    extortion]: intrusion (unauthorized access to the third-party
+    contact-centre platform) + data-theft (5.7M records) are Qantas-
+    supported; extortion is Qantas-specific here (not merely inherited) —
+    the actors contacted Qantas to extort it and it was carried on the
+    Oct-2025 leak-site campaign, distinguishing Qantas from the Adidas
+    sibling.
+
+    FLAGS (not edited — outside event / own-source scope):
+    - actor criminal/shinyhunters roster (line ~34) already lists "Qantas"
+      among 2025 Salesforce-campaign victims — consistent with this hedged
+      placement; no change needed.
+    - mandiant/2025-08-08 and krebs/2025-10 were dropped here as carrying
+      no Qantas fact but remain cited by the umbrella + actor + several
+      siblings; orchestrator should re-check any sibling that leans on
+      08-08/Krebs for a victim those articles do not actually name.
+    - ncsc-uk/2025-05-20 has url: null (link-rotted) and is still cited by
+      scattered-spider-airlines-uk-retail; RE-SOURCE / RETIRE candidate for
+      the orchestrator (aviation-wave SS attribution should be re-anchored
+      to a live advisory).
+    - target orgs/qantas.yaml resolves; its sources: [] could optionally
+      carry these Qantas primaries (orchestrator).

@@ -1,24 +1,26 @@
 id: 2025-08/google-shinyhunters-salesforce
 name: Google corporate Salesforce instance breached by UNC6040 / ShinyHunters
-start_date: 2025-06-01
+start_date: 2025-06-01  # "In June" (GTIG); no exact day — June-month bracket
 disclosure_date: 2025-08-05
-end_date: 2025-08-31
+end_date: 2025-06-30  # access "cut off" after a "small window" in June (GTIG); no exact day
 incident_type:
+  - intrusion
   - data-theft
 initial_vector: phishing  # UNC6040 vishing → Salesforce OAuth
 outcome_summary: |
-  On August 5 2025 Google disclosed that one of its own
-  corporate Salesforce instances — used to manage business-
-  contact data for small / medium businesses interacting with
-  Google's sales and partnerships organizations — had been
-  compromised in June 2025 by the UNC6040 actor cluster.
-  Per Google's statement, the exposed data was limited to
-  basic business-contact details (names and contact
-  information) and did not include consumer Google-account
-  data. Investigation by Google's own Threat Intelligence
-  Group attributed the intrusion to the UNC6040 voice-
-  phishing campaign that GTIG had publicly documented two
-  months earlier on June 4 2025.
+  On August 5 2025 Google disclosed — in an "Update (August 5)"
+  appended to the Google Threat Intelligence Group (GTIG) 4 June
+  2025 UNC6040 publication — that "In June, one of Google's
+  corporate Salesforce instances was impacted by similar UNC6040
+  activity described in this post." Per GTIG's statement the
+  instance "was used to store contact information and related
+  notes for small and medium businesses," and the data the threat
+  actor retrieved "during a small window of time before the access
+  was cut off" was "confined to basic and largely publicly
+  available business information, such as business names and
+  contact details." Because the victim (Google) and the primary
+  attributor (GTIG) are the same organization, this is one of the
+  few 2025 Salesforce-campaign victims confirmed by GTIG itself.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
@@ -36,18 +38,152 @@ attributions:
     attributing_org_confidence: high
     auspex_assessment: concur
     attribution_date: 2025-08-05
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_source_id: mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
+    attribution_level: activity-cluster
+    notes: |
+      GTIG's own primary carries Google's self-disclosure as an
+      "Update (August 5)" appended to the 4 June 2025 UNC6040 post:
+      "In June, one of Google's corporate Salesforce instances was
+      impacted by similar UNC6040 activity described in this post."
+      Because the victim (Google) and the primary attributor (GTIG)
+      are the SAME organization, this per-victim attribution is
+      firmer than the press-inference siblings — GTIG naming its own
+      breach. GTIG tracks the intrusion cluster as UNC6040 and the
+      extortion follow-on as UNC6240, which "has consistently claimed
+      to be the threat group ShinyHunters ... likely as a method to
+      increase pressure" (a self-claim, not a GTIG identity-confidence
+      assertion) — hence activity-cluster and false_flag_risk:
+      suspected. (attribution_source_id re-pointed this audit from
+      mandiant/2025-08-08_expansion, whose live URL has content-drifted
+      to a 30 Jan 2026 rewrite that no longer carries Google's breach.)
   - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: journalism consensus (campaign-level "Scattered LAPSUS$ Hunters" amalgamation)
     attributing_org_confidence: low
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-10-07
+    attribution_source_id: krebs/2025-10_shinyhunters-corporate-extortion-spree
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster-level overlap only — NOT a Google-specific GTIG
+      attribution. GTIG's own-incident statement names ONLY UNC6040 /
+      ShinyHunters (no Scattered Spider). Krebs describes "Scattered
+      LAPSUS$ Hunters" as "an amalgamation of three hacking groups —
+      Scattered Spider, Lapsus$ and ShinyHunters." No Google-specific
+      Scattered Spider evidence exists. (attribution_source_id
+      re-pointed this audit from mandiant/2025-08-08_expansion —
+      content-drifted, not carrying this claim — to the cited Krebs
+      article that actually carries the amalgamation framing.)
 doctrine_links: []
 targets:
   - target_id: orgs/google
     role: primary
 sources:
+  - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
   - infosec-magazine/2025-08-06_google-salesforce-data-theft
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. This is the reflexive child of
+    the 2025 UNC6040 / ShinyHunters Salesforce campaign — Google's OWN
+    corporate Salesforce instance, one of the few victims GTIG itself
+    confirmed. RE-SOURCE (badrabbit model): the event's attribution +
+    a cited source both pointed at mandiant/2025-08-08_expansion, whose
+    LIVE URL has content-drifted (see FLAGS); Google's self-disclosure
+    actually lives in the ALREADY-snapshotted 4 June 2025 GTIG post as an
+    "Update (August 5)". Re-pointed to it. Two new Google-specific sources
+    fetched this audit (Infosec HTTP 200; expansion HTTP 200 = drift-
+    evidence). Per shared-source caution, June-04 + Krebs were NOT
+    re-snapshotted (already stamped 2026-07-10) — verified + cited.
+
+    [a] FACTS — every load-bearing claim now carried verbatim by the
+    GTIG June-04 primary (Aug-5 update, sha256 4dce0e4b..f79c1051):
+      - "In June, one of Google's corporate Salesforce instances was
+        impacted by similar UNC6040 activity described in this post."
+      - "The instance was used to store contact information and related
+        notes for small and medium businesses."
+      - "data was retrieved by the threat actor during a small window of
+        time before the access was cut off." (= the "small window")
+      - "confined to basic and largely publicly available business
+        information, such as business names and contact details."
+      Corroborated by Infosec (sha256 d9f75c32..f201a0c702): "Google has
+      confirmed that it is among the victims ... largely publicly
+      available business information, such as business names and contact
+      details ... tracked ... as UNC6040 and UN6240 [sic]."
+      STRIPPED (0-hit in BOTH snapshots — "consumer"/"account"/"sales
+      and partnership"/"did not" all count 0): (i) "used to manage
+      business-contact data ... interacting with Google's sales and
+      partnerships organizations" → replaced with GTIG's verbatim "store
+      contact information and related notes for small and medium
+      businesses"; (ii) "did not include consumer Google-account data"
+      → deleted (unsourced; not in any cited/snapshotted source). Scope
+      held to what GTIG states about its own incident; not over-stated.
+    [b] ATTRIBUTION — ShinyHunters kept high / concur: this is GTIG
+      naming its OWN breach (victim == attributor), so firmer than the
+      press-inference siblings. attribution_source_id re-pointed
+      mandiant/2025-08-08_expansion → mandiant/2025-06-04_unc6040 (the
+      post that carries the Aug-5 Google update). Scattered Spider kept
+      low / concur-with-caveat but re-pointed 08-08_expansion →
+      krebs/2025-10 (carries "an amalgamation of ... Scattered Spider,
+      Lapsus$ and ShinyHunters", sha256 9c2d11a8..97619835); flagged as
+      campaign-level only — GTIG's own-incident statement names NO
+      Scattered Spider. false_flag_risk: suspected retained (UNC6240
+      "self-claim" of the ShinyHunters brand "to increase pressure").
+    [c] DATES — disclosure_date 2025-08-05 CONFIRMED (GTIG "Update
+      (August 5)"). end_date 2025-08-31 was UNSOURCED/fabricated → fixed
+      to 2025-06-30 (GTIG: access "cut off" after a "small window" in
+      June; op ended in June, no exact day). start_date 2025-06-01 kept
+      as June-month bracket (GTIG "In June", no day). Source
+      published_on FIXED on the Infosec record 2025-08-06 → 2025-08-07
+      (raw article:published_time / datePublished = 2025-08-07T14:10:00
+      +01:00; visible byline "News 7 August 2025"); id-slug retains -06
+      as a creation artifact (FK stability).
+    [d] DOCTRINE_LINKS — none (correct). Financially-motivated criminal
+      actor; no strategic-doctrine terminal goal. Kept [].
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions.
+      GTIG's own tracking is UNC6040 (intrusion) + UNC6240 (extortion)
+      clusters; "ShinyHunters" is a self-applied brand over those
+      clusters — activity-cluster is the honest granularity.
+    [f] ACTOR_ID — criminal/shinyhunters + criminal/scattered-spider both
+      resolve to existing atlas actor ids; target orgs/google resolves.
+      Not a counter-action; actor_ids retained.
+
+    incident_type [data-theft] → [intrusion, data-theft]: GTIG describes
+    the instance being "impacted" (intrusion) + data "retrieved" (data-
+    theft). NO extortion added — Google self-disclosed and is on no
+    leak-site list; a Google-specific ransom demand is undocumented.
+
+    SNAPSHOTS this audit: infosec-magazine/2025-08-06 (raw d9f75c32..
+    f201a0c702, 103,520 B, HTTP 200) NEW + stamped. June-04 (4dce0e4b..
+    f79c1051) + Krebs (9c2d11a8..97619835) already snapshotted — verified,
+    NOT re-snapshotted. mandiant/2025-08-08_expansion captured as drift-
+    evidence (raw 7f5f8413..d9297981, ~350 KB) but NOT certified / NOT
+    cited by this event; the GTIG blog HTML carries ~20 per-request CSP
+    nonce= attributes so its hash is fetch-dependent (not a stable
+    content hash) — a further reason it is not set as a raw_snapshot
+    (see FLAGS).
+
+    FLAGS (not edited — outside event/own-source scope):
+    - SHARED-SOURCE CONTENT-DRIFT (corpus-wide): the live URL for
+      mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+      (cloud.google.com/blog/.../expansion-shinyhunters-saas-data-theft)
+      now serves a REWRITTEN, RE-DATED GTIG article — H1 "Vishing for
+      Access: Tracking the Expansion of ShinyHunters-Branded SaaS Data
+      Theft", byline 30 Jan 2026, covering clusters UNC6661 / UNC6671 /
+      UNC6240 with Jan-2026 log timestamps. It NO LONGER names Google's
+      own breach, Scattered Spider, or any 2025 date (0-hit each). Wayback
+      CDX shows NO 2025 capture of this URL (earliest 2026-01-31). The
+      source record still says published_on 2025-08-08 + notes claiming it
+      "Explicitly identifies Google itself as ... affected" — now FALSE vs
+      live. This shared record is cited by 8 sibling events (qantas,
+      unc6040-campaign, pandora, air-france-klm, cisco, google[removed
+      here], workday, allianz-life) + actor criminal/shinyhunters.
+      ORCHESTRATOR: re-point/split those citations to the correct
+      Aug-2025-vintage source (or re-title the record to the Jan-2026
+      "Vishing for Access" update + re-date) — do NOT rely on it for any
+      Aug-2025 fact. A drift note was added to that source record.
+    - actor criminal/shinyhunters cites mandiant/2025-08-08_expansion in
+      its roster — same drift caveat applies.

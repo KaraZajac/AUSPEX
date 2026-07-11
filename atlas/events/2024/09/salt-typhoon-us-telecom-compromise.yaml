@@ -1,7 +1,7 @@
 id: 2024-09/salt-typhoon-us-telecom-compromise
 name: Salt Typhoon US tier-1 telecom mass compromise (CALEA gateways)
-start_date: 2022-01-01  # earliest assessed initial access per FBI / CRS
-disclosure_date: 2024-09-25  # WSJ initial public reporting
+start_date: 2021-01-01  # CISA AA25-239a: APT ops "since at least 2021" (IOCs Aug 2021-Jun 2025); Treasury: actor "active since at least 2019". No source supports the prior 2022 / "per FBI/CRS" (CRS gives no onset; FBI page is a 404).
+disclosure_date: 2024-09-25  # WSJ published_on (body paywalled/uncaptured); consistent with CRS "In early October 2024, media outlets reported".
 end_date: null  # ongoing exposure / eviction across carriers
 incident_type:
   - intrusion
@@ -9,45 +9,60 @@ incident_type:
   - pre-positioning
 initial_vector: n-day  # edge-router / appliance N-day exploitation
 outcome_summary: |
-  Salt Typhoon / MSS-aligned operators compromised every major
-  US tier-1 wireless and wireline carrier — AT&T, Verizon,
-  T-Mobile, Lumen, Spectrum / Charter, Consolidated, Windstream
-  — including CALEA lawful-intercept gateways. Bulk metadata
-  access at >1M-user scale; targeted content interception
-  against political figures including campaign staff for both
-  2024 US presidential candidates and senior congressional
-  members. FBI (August 2025) subsequently reported 200+
-  companies in 80 countries compromised in the broader campaign.
+  Salt Typhoon (PRC state-sponsored; MSS operating-company tie
+  per OFAC) compromised the network infrastructure of "multiple
+  major U.S. telecommunication and internet service provider
+  companies" (Treasury/OFAC wording — no captured source gives a
+  count). Public reporting named the carriers as AT&T, Verizon,
+  Lumen and T-Mobile, with Charter/Spectrum, Consolidated and
+  Windstream reported later; that roster is carried by press
+  (WSJ et al.), NOT by any captured snapshot (the WSJ page is a
+  paywall interstitial). CRS states the hackers "may have targeted
+  the systems used to provide court-approved access to
+  communication systems" for law-enforcement/intelligence (the
+  lawful-intercept / "CALEA" angle — hedged) and "may have sought
+  access ... to presidential candidate communications", and that
+  Salt Typhoon is "being investigated for ... targeting political
+  figures". A separate FBI statement (Aug 2025) put the broader
+  campaign at 200+ companies in 80 countries — mirror-corroborated
+  only (the FBI page is a dead 404; the figure is absent from the
+  CISA advisory snapshot).
 quantified_impact:
-  affected_carriers: 8
-  affected_users: ">1,000,000 metadata"
+  affected_carriers: null  # no captured source gives a US-carrier count; press named 4 core (AT&T/Verizon/Lumen/T-Mobile) + 3 later and cited "at least nine" telecoms — mirror-corroborated, not snapshot-carried
+  affected_users: null  # prior ">1,000,000 metadata" was fabricated precision — no cited source quantifies users/metadata (0 hits); press described bulk metadata access
 false_flag_risk: none
 campaign_id: salt-typhoon-telecoms
 summary: |
-  The most consequential single PRC intelligence collection
+  The most consequential single PRC intelligence-collection
   operation against the US telecom sector on the public record.
-  CALEA-gateway compromise was the doctrinally significant
-  detail — it gave the operator visibility into US
-  law-enforcement and intelligence wire-tap selectors. Treasury
-  OFAC designated the operating company (Sichuan Juxinhe
-  Network Technology) on January 17, 2025 (separate event).
+  The doctrinally significant detail is the reported targeting of
+  lawful-intercept ("CALEA") systems — court-authorized
+  law-enforcement/intelligence wiretap infrastructure — though CRS
+  frames this as what the hackers "may have targeted" per public
+  reporting, not a confirmed finding (no cited source uses the word
+  "CALEA"). Treasury/OFAC designated the operating company (Sichuan
+  Juxinhe Network Technology Co.) on January 17, 2025 (separate
+  event: 2025-01/treasury-salt-typhoon-sanctions).
 attributions:
   - actor_id: cn/mss/salt-typhoon
     attributing_org: WSJ (initial)
-    attributing_org_confidence: high
+    attributing_org_confidence: high  # China-level ("China's Salt Typhoon Hackers"); WSJ names no service (body paywalled/uncaptured)
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2024-09-25
     attribution_source_id: wsj/2024-09-25_salt-typhoon-telecom-breach
   - actor_id: cn/mss/salt-typhoon
     attributing_org: US Treasury OFAC (Jan 2025)
-    attributing_org_confidence: high
+    attributing_org_confidence: high  # decisive MSS tie: names Sichuan Juxinhe as Salt Typhoon's operating company + "MSS has maintained strong ties with ... Sichuan Juxinhe"
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2025-01-17
     attribution_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
   - actor_id: cn/mss/salt-typhoon
     attributing_org: FBI (Aug 2025 statement)
-    attributing_org_confidence: high
+    attributing_org_confidence: high  # FBI co-authored the joint AA25-239a; NB the standalone fbi-statement source is a dead 404 (see qc FLAGS)
     auspex_assessment: concur
+    attribution_level: named-actor
     attribution_date: 2025-08-27
     attribution_source_id: fbi/2025-08-27_salt-typhoon-statement
 doctrine_links:
@@ -56,34 +71,45 @@ doctrine_links:
     program_id: null
     confidence: attested
     reasoning: |
-      CISA AA25-239a framing of Salt Typhoon as "feed global
-      espionage system" plus the CALEA-gateway compromise is
-      gold-standard attestation of the SIGINT mass-collection
-      doctrine. (Re-fetched 2026-06-19: the advisory title names the
-      collection goal directly.)
+      CISA AA25-239a is titled "...to Feed Global Espionage System"
+      and states the stolen data "ultimately can provide Chinese
+      intelligence services with the capability to identify and track
+      their targets' communications and movements around the world" —
+      the terminal goal of strategic SIGINT mass-collection stated in
+      substance (not merely the doctrine's name). (The CALEA/lawful-
+      intercept angle is press/CRS-hedged and is NOT the basis for
+      this attestation.)
     attesting_source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
     inference_basis:
       source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
-      source_quote: "Countering Chinese State-Sponsored Actors Compromise of Networks Worldwide to Feed Global Espionage System"
+      source_quote: "The data stolen through this activity against foreign telecommunications and Internet service providers (ISPs), as well as intrusions in the lodging and transportation sectors, ultimately can provide Chinese intelligence services with the capability to identify and track their targets' communications and movements around the world."
+    perspective: attacker-rationale
     contested: false
     analyst: claude
   - doctrine_id: cn/taiwan-reunification
     pillar_id: cn/taiwan-reunification/decision-maker-sigint
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
-      Targeted content interception against US presidential campaign
-      staff and senior congressional members is decision-maker SIGINT;
-      the WSJ source documents the interception but does not frame it
-      as Taiwan-reunification, so tying it to that doctrine is inferred
-      (the general-collection reading is captured by the
-      intelligentized-warfare link above).
-    attesting_source_id: wsj/2024-09-25_salt-typhoon-telecom-breach
+      CRS states Salt Typhoon is "being investigated for ... targeting
+      political figures" and that PRC actors "may have sought access
+      ... to gain access to presidential candidate communications" —
+      decision-maker SIGINT behaviour. But the target set is US
+      political figures, not cross-strait decision-makers, and no
+      source ties this to Taiwan-reunification; the general strategic-
+      collection reading is already captured by the intelligentized-
+      warfare link — so this pillar is a plausible doctrinal home only.
+      (Re-anchored 2026-07-11 from WSJ, whose snapshot is a paywall
+      interstitial carrying no body text, to CRS, which actually
+      carries the political-targeting language.)
     inference_basis:
-      source_id: wsj/2024-09-25_salt-typhoon-telecom-breach
+      source_id: crs/if12798_salt-typhoon
       signals:
-        - "WSJ documents Salt Typhoon interception of US presidential campaign staff and senior congressional members (decision-maker SIGINT behaviour)"
-      ruled_out: "a Taiwan-reunification framing — not named by WSJ (the interception is general decision-maker collection)"
+        - "CRS: Salt Typhoon 'being investigated for attacking telecommunications companies, stealing customer communications and law enforcement information, and targeting political figures'"
+        - "CRS: 'PRC actors may have sought access to these systems and companies to gain access to presidential candidate communications' (hedged)"
+      alternatives:
+        - "General strategic decision-maker collection (already captured by cn/intelligentized-warfare/sigint-c4isr-collection); no cited source connects the US-political-figure targeting to Taiwan-reunification, so that framing is a plausible AUSPEX inference"
+    perspective: attacker-rationale
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
@@ -91,29 +117,43 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Sichuan Juxinhe is a private Chinese company performing MSS
-      tasking (per the Jan 2025 OFAC designation) — the
-      private-vendor-doing-state-work mechanism; the OFAC release does
-      not name the 2017 National Intelligence Law or 'compelled
-      cooperation', so the doctrine label is inferred (consistent with
-      ofac-flax-typhoon-integrity-tech).
-    attesting_source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
+      OFAC names Sichuan Juxinhe as a Sichuan-based company with
+      "direct involvement in the Salt Typhoon cyber group" and states
+      "The MSS has maintained strong ties with multiple computer
+      network exploitation companies, including Sichuan Juxinhe" — the
+      private-vendor-doing-state-work mechanism. OFAC does not invoke
+      the 2017 National Intelligence Law or assert legal compulsion,
+      so the compelled-cooperation label is inferred from the PRC legal
+      framework, not attested (consistent with the AA25-239a event).
     inference_basis:
       source_id: treasury/2025-01-17_salt-typhoon-sichuan-juxinhe
       signals:
-        - "OFAC designates Sichuan Juxinhe as a private PRC company enabling Salt Typhoon's MSS-tasked telecom intrusions (vendor-state-tasking mechanism)"
-      ruled_out: "the 2017 National Intelligence Law / compelled-vendor-cooperation framing — not named by OFAC"
+        - "OFAC: 'Sichuan Juxinhe Network Technology Co., LTD., a Sichuan-based cybersecurity company with direct involvement in the Salt Typhoon cyber group'"
+        - "OFAC: 'The MSS has maintained strong ties with multiple computer network exploitation companies, including Sichuan Juxinhe'"
+      ruled_out: "the 2017 National Intelligence Law / 'compelled cooperation' framing — OFAC establishes the vendor-to-MSS relationship but never names the law or asserts legal compulsion; the mechanism is inferred, not stated"
+    perspective: attacker-rationale
     contested: false
     analyst: claude
   - doctrine_id: cn/mcf
     pillar_id: cn/mcf/civil-infrastructure-targeting
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible
     reasoning: |
       Telecom-edge mass-compromise is dual-use intelligence /
-      pre-positioning infrastructure consistent with the MCF
-      civil-infrastructure-targeting pillar.
-    attesting_source_id: null
+      pre-positioning against civil infrastructure. CISA AA25-239a
+      documents targeting of "telecommunications, government,
+      transportation, lodging, and military infrastructure networks",
+      but no cited source invokes Military-Civil Fusion (MCF) — so the
+      civil-infrastructure-targeting label is a plausible AUSPEX
+      inference. (Downgraded from strongly_inferred and given an
+      inference_basis 2026-07-11; was previously undocumented with a
+      null attesting source.)
+    inference_basis:
+      source_id: cisa/2025-08-27_aa25-239a-salt-typhoon
+      signals:
+        - "CISA AA25-239a: actors target 'telecommunications, government, transportation, lodging, and military infrastructure networks' — civil (dual-use) infrastructure"
+      ruled_out: "an MCF / Military-Civil Fusion framing — not named by any cited source; the label is inferred from the target set alone"
+    perspective: attacker-rationale
     contested: false
     analyst: claude
 targets:
@@ -137,3 +177,150 @@ sources:
   - cisa/2025-08-27_aa25-239a-salt-typhoon
   - fbi/2025-08-27_salt-typhoon-statement
   - crs/if12798_salt-typhoon
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point audit of the Sept-Oct-2024 Salt Typhoon telecom
+    OPERATION event (distinct from 2025-08/cisa-aa25-239a-salt-typhoon
+    advisory and 2025-01/treasury-salt-typhoon-sanctions) vs its five
+    cited RAW sources. All five snapshots present in atlas/sources/raw/
+    with recorded sha256 matching on disk: WSJ 4f65b5b4…ba9ab (767 B),
+    Treasury 7c2cfe78…652451, CISA 5905b390…6ec2fd, FBI 2a3f9a42…6f40a4f,
+    CRS 44b337b4…c6c0fb.
+
+    LEVEL = partial: two of five sources are un-capturable — WSJ is a
+    767-byte paywall/JS-captcha interstitial (fresh 2026-07-11 curl =
+    HTTP 401, same 767 B) and the FBI statement URL is a hard 404 "Page
+    not found" (fresh 2026-07-11 curl = HTTP 404; web.archive.org 503 —
+    link-rot). Several load-bearing facts rest on those un-captured
+    sources (mirror-corroborated, not snapshot-verified): the specific
+    carrier roster, the "CALEA"/lawful-intercept specifics, the
+    campaign-staff detail, and the 200+/80 figure.
+
+    [a] FACTS — corrections/strips:
+    • FABRICATED PRECISION STRIPPED → both quantified_impact fields
+      nulled: affected_users ">1,000,000 metadata" (no cited source
+      gives any user/metadata figure — 0 hits across all five) and
+      affected_carriers 8 (no source gives a US-carrier count; was also
+      internally inconsistent with the 7-name prose).
+    • CARRIER ROSTER (AT&T/Verizon/Lumen/T-Mobile + Charter-Spectrum/
+      Consolidated/Windstream) is NOT in any captured snapshot — the
+      only source that would carry it (WSJ) is a paywall interstitial;
+      Treasury says only "multiple major U.S. telecommunication and
+      internet service provider companies"; CISA/CRS name no US carrier.
+      Retained as mirror-corroborated (press) with an explicit
+      provenance caveat, not asserted as snapshot-carried.
+    • CALEA/lawful-intercept softened from flat fact to CRS's hedge:
+      "public reporting suggests that the hackers may have targeted the
+      systems used to provide court-approved access to communication
+      systems used for investigations by law enforcement and
+      intelligence agencies" (CRS; no cited source uses the word
+      "CALEA").
+    • Presidential/political targeting softened to CRS wording — Salt
+      Typhoon "being investigated for … targeting political figures"
+      and PRC actors "may have sought access … to gain access to
+      presidential candidate communications" (hedged). The "both 2024
+      candidates / senior congressional members" specificity is press-
+      only (WSJ uncaptured) and was generalised.
+    • 200+/80 figure retained with caveat — it is NOT in the CISA raw
+      (0 hits for "200"/"two hundred" companies or "80 countries") and
+      the FBI page is a 404; mirror-corroborated only. This also
+      corrects the FBI source record's prior claim that CISA
+      corroborates the figure (it does not).
+    • No fabricated malware/CVEs asserted by this event (TTP detail
+      lives in the actor dossier).
+
+    [b] ATTRIBUTION: source-faithful, no over-attribution. MSS placement
+    rests on Treasury/OFAC (2025-01-17): names the operating company as
+    part of Salt Typhoon — "Sichuan Juxinhe … a Sichuan-based
+    cybersecurity company with direct involvement in the Salt Typhoon
+    cyber group" — and its service — "The MSS has maintained strong ties
+    with multiple computer network exploitation companies, including
+    Sichuan Juxinhe." WSJ = China-level only ("China's Salt Typhoon
+    Hackers"; body uncaptured); CISA names MSS diffusely (alongside the
+    PLA, for the contractor cluster); CRS says only "PRC state-
+    sponsored". concur/high retained. Added attribution_level:
+    named-actor to all three rows (was missing). The FBI row points at a
+    dead-404 statement; FBI is a legitimate co-attributor via the joint
+    AA25-239a it co-authored, so the row is kept (matching the sibling
+    advisory event) — see FLAGS.
+
+    [c] DATES: start_date CORRECTED 2022-01-01 → 2021-01-01. The prior
+    "earliest assessed initial access per FBI / CRS" was false — CRS
+    gives no onset date and the FBI page is a 404. Sourced onsets: CISA
+    "The APT actors have been performing malicious operations globally
+    since at least 2021" (IOCs "August 2021 to June 2025"); Treasury
+    "Salt Typhoon has been active since at least 2019" (actor-level).
+    Used the campaign-level 2021. disclosure_date 2024-09-25 kept (WSJ
+    published_on; body paywalled) — consistent with CRS "In early
+    October 2024, media outlets reported". Separately, the CRS SOURCE-
+    RECORD published_on CORRECTED 2024-11-15 → 2025-01-23: the snapshot's
+    version history tops out at "January 23, 2025 (IF12798 - Version:
+    15)" (also Version 14, same date) and the header reads "Updated
+    January 23, 2025"; the prior 2026-07-11 correction to Nov-15 misread
+    the snapshot (which does contain the Jan-2025 versions + the Jan-2025
+    sanctions paragraph; sha256 unchanged).
+
+    [d] DOCTRINE_LINKS:
+    • link1 cn/intelligentized-warfare/sigint-c4isr-collection KEPT
+      attested — CISA states the terminal SIGINT-collection goal in
+      substance ("…to Feed Global Espionage System" + data "can provide
+      Chinese intelligence services with the capability to identify and
+      track their targets' communications and movements around the
+      world", verbatim in raw). Swapped source_quote to that body
+      sentence; added perspective: attacker-rationale; removed the
+      unsupported "CALEA-gateway compromise" clause from the reasoning.
+    • link2 cn/taiwan-reunification/decision-maker-sigint DOWNGRADED
+      strongly_inferred → plausible and RE-ANCHORED from WSJ (paywall
+      interstitial — carried nothing) to CRS (carries the political-
+      targeting language). No source ties US-political-figure targeting
+      to Taiwan-reunification; added inference_basis {signals,
+      alternatives} + perspective.
+    • link3 cn/national-intelligence-law-2017/compelled-vendor-
+      cooperation KEPT strongly_inferred (Treasury carries the
+      vendor→MSS relationship; the 2017 law / compulsion is not named);
+      removed the redundant top-level attesting_source_id (kept
+      inference_basis.source_id), added perspective.
+    • link4 cn/mcf/civil-infrastructure-targeting DOWNGRADED
+      strongly_inferred → plausible and given an inference_basis
+      (previously null attesting-source, no basis) anchored to CISA's
+      target-sector list; MCF is named by no source; added perspective.
+
+    [e] ATTRIBUTION_LEVEL: added named-actor to every attribution row
+    (was absent). OFAC names the actor + a specific operating company
+    and ties it to the MSS service, but no single named MSS unit →
+    named-actor, not named-unit.
+
+    [f] ACTOR_ID: cn/mss/salt-typhoon resolves to the id field of
+    atlas/actors/cn/salt-typhoon.yaml (canonical_name Salt Typhoon,
+    primary_service_id cn/mss, status sanctioned) — correct. Intrusion/
+    espionage event with an actor set (not a counter-action) → actor_id
+    appropriate. campaign_id salt-typhoon-telecoms and the sectors/*
+    target_ids are corpus-wide taxonomy refs (no campaigns dir; sectors
+    defined in atlas/sectors/sectors.yaml) — consistent.
+
+    FLAGS (orchestrator):
+    • REGISTRY (missing org target files): orgs/verizon, orgs/t-mobile,
+      orgs/lumen, orgs/charter-spectrum are referenced by this event's
+      targets[] but have NO file under atlas/targets/orgs/ (only
+      orgs/att exists). These 4 dangling FKs originate solely from this
+      event — create the org registry entries, or demote them to the
+      sectors/ict/telecom/carrier target. Left as-is (real victims).
+    • SOURCE link-rot (FK-shared, do NOT delete): fbi/2025-08-27_salt-
+      typhoon-statement is a hard 404 (snapshot is a "Page not found"
+      page). Still cited by atlas/actors/cn/salt-typhoon.yaml,
+      atlas/policy-actions/us/2025-01-17_salt-typhoon-sichuan-juxinhe-
+      sanctions.yaml and atlas/events/2025/08/cisa-aa25-239a-salt-
+      typhoon-advisory.yaml → not orphaned; left in place; its record
+      note corrected this pass (states the 404 + that CISA does NOT
+      carry the 200+/80 figure). Consider re-sourcing 200+/80 to a live
+      mirror corpus-wide.
+    • WSJ source is paywalled/bot-walled (401 captcha) — un-
+      snapshottable; record note already documents this; left in place
+      (real article, also cited by the actor dossier).
+    • No actor/doctrine FILE edits made (only flagged). Actor dossier
+      already documents the OFAC-based MSS placement (KEEP, 2026-06-24);
+      the four doctrine pillars used all exist and match.

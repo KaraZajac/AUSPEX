@@ -1,11 +1,14 @@
 id: 2013-09/bullrun-edgehill-disclosure
 name: BULLRUN / EDGEHILL — Snowden disclosure of NSA-GCHQ crypto-subversion programme
-start_date: 2000-01-01  # programmes documented as predating Snowden by over a decade
+start_date: 2000-01-01  # NYT: "Beginning in 2000 ... the N.S.A. invested billions of dollars in a clandestine campaign"; Guardian: "10-year NSA program ... breakthrough in 2010"
 disclosure_date: 2013-09-05
 end_date: null
 incident_type:
-  - bulk-collection
-  - supply-chain
+  - espionage      # SIGINT/eavesdropping purpose (NYT: NSA acted "to preserve its ability to eavesdrop")
+  - supply-chain   # backdoors/trapdoors inserted into commercial encryption products (Guardian)
+  # bulk-collection DROPPED 2026-07-11 audit: BULLRUN/EDGEHILL is the cryptanalytic
+  # ENABLER that makes collected traffic decryptable; the bulk-collection programmes
+  # are its TEMPORA / MUSCULAR siblings (per this event's own summary).
 initial_vector: unknown
 outcome_summary: |
   Joint Guardian / New York Times / ProPublica publication
@@ -30,13 +33,19 @@ summary: |
 
   The disclosure is the canonical primary-source reference for
   the long-suspected NSA-GCHQ posture toward commercial crypto
-  standards (later corroborated by the 2013 Dual_EC_DRBG
-  controversy and Reuters' December 2013 reporting on the
-  RSA / NSA $10m contract). EDGEHILL specifically is GCHQ's
-  named contribution to the joint programme; the publicly-
-  documented FY2013 budget was £25m, targeting the encryption
-  of "3 major (unnamed) internet companies and 1 major internet
-  service provider."
+  standards. Per the NYT, the NSA spent "more than $250 million a
+  year on its Sigint Enabling Project," which "actively engages
+  the U.S. and foreign IT industries to covertly influence and/or
+  overtly leverage their commercial products' designs" to make
+  them exploitable, and cryptographers "have long suspected that
+  the agency planted vulnerabilities in a standard adopted in 2006
+  by the National Institute of Standards and Technology" (the
+  suspicion later crystallised as the Dual_EC_DRBG controversy).
+  EDGEHILL is GCHQ's named contribution: the Guardian reports its
+  "initial aim was to decode the encrypted traffic certified by
+  three major (unnamed) internet companies and 30 types of Virtual
+  Private Network (VPN)", with a 2015 goal of "15 major internet
+  companies, and 300 VPNs".
 
   Doctrinally this is a load-bearing event for the Five Eyes
   cryptanalysis pillar: BULLRUN / EDGEHILL is the operational
@@ -46,26 +55,56 @@ attributions:
   - actor_id: uk/gchq/cne-actor
     attributing_org: The Guardian / The New York Times / ProPublica (Snowden archive)
     attributing_org_confidence: moderate
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2013-09-05
     attribution_source_id: guardian/2013-09-05_nsa-gchq-encryption-codes
     notes: |
-      Snowden-archive primary-source attribution. UK government
-      has not formally attested EDGEHILL by name. AUSPEX rates
-      attributing-org confidence `moderate` to reflect this
-      non-attestation despite high documentary confidence in
-      the underlying Snowden material.
+      Snowden-archive documentary attribution: the Guardian and NYT name
+      GCHQ directly as operator of the EDGEHILL leg ("its British
+      counterpart, Edgehill"), citing GCHQ/NSA internal classification
+      guides. attribution_level named-actor — a named agency (GCHQ), not a
+      specific sub-unit; the actor entry is the deliberately-generic
+      uk/gchq bucket, and no source names a sub-unit such as JTRIG for
+      EDGEHILL (matches the sibling TEMPORA attribution). attributing_org_
+      confidence moderate reflects that the UK government has never
+      formally attested the EDGEHILL codename, NOT a weakness in the
+      documentary evidence. BULLRUN is the NSA parent programme (the
+      $250M/yr Sigint Enabling Project) — named in prose but NOT
+      co-attributed here because the registry has no generic NSA
+      SIGINT/cryptanalysis actor (only us/nsa/equation-group and
+      us/nsa/tao-sub-units exist, both the wrong sub-cluster for a
+      cryptanalysis/standards-subversion programme). FLAGGED for
+      orchestrator.
 doctrine_links:
   - doctrine_id: uk/five-eyes
     pillar_id: null
     program_id: null
     confidence: attested
     reasoning: |
-      EDGEHILL is the GCHQ-side joint contribution to the
-      NSA BULLRUN cryptanalysis programme; canonical Five Eyes
-      cryptanalysis cooperation as documented in the Snowden
-      archive.
-    attesting_source_id: guardian/2013-09-05_nsa-gchq-encryption-codes
+      BULLRUN (NSA) and EDGEHILL (GCHQ) are sister legs of one
+      programme, and the NYT states the compartment is the Five Eyes
+      alliance itself: the program "is known only to a limited group of
+      top analysts from the so-called Five Eyes: the N.S.A. and its
+      counterparts in Britain, Canada, Australia and New Zealand. Only
+      they are cleared for the Bullrun program." That states the
+      doctrine's terminal purpose — pooled UKUSA cryptanalysis restricted
+      to the alliance — in substance, so the link is attested (matching
+      sibling GCHQ Snowden disclosures TEMPORA / KARMA POLICE).
+      Perspective is attacker-rationale/default: this is the Five Eyes'
+      own SIGINT-cooperation doctrine applied to their own programme, not
+      a defender/victim response. attesting_source_id re-pointed
+      guardian -> nyt (audit 2026-07-11): the Guardian raw contains no
+      "Five Eyes" string; the NYT raw carries the compartmentalisation
+      quote.
+    attesting_source_id: nyt/2013-09-05_nsa-foils-much-encryption
+    inference_basis:
+      source_id: nyt/2013-09-05_nsa-foils-much-encryption
+      source_quote: "is known only to a limited group of top analysts from the so-called Five Eyes: the N.S.A. and its counterparts in Britain, Canada, Australia and New Zealand. Only they are cleared for the Bullrun program"
+      signals:
+        - "NYT: BULLRUN is compartmented to the Five Eyes (US, UK, Canada, Australia, New Zealand) — the UKUSA alliance named explicitly as the clearance boundary"
+        - "NYT + Guardian: BULLRUN (NSA) and EDGEHILL (GCHQ) are named sister programmes — GCHQ is 'its British counterpart' running the parallel EDGEHILL leg"
+      ruled_out: "A UK-unilateral / non-UKUSA reading — the sources frame EDGEHILL as GCHQ's leg of a joint NSA-led programme compartmented to the Five Eyes, so a single-nation reading does not survive"
     contested: false
     analyst: claude
 targets:
@@ -79,3 +118,130 @@ sources:
   - guardian/2013-09-05_nsa-gchq-encryption-codes
   - nyt/2013-09-05_nsa-foils-much-encryption
   - intercept/snowden-archive
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit vs raw cited sources. Snapshots (PRESERVE tier —
+    only snapshot keys added):
+      • guardian__2013-09-05_nsa-gchq-encryption-codes.html — live URL
+        HTTP 200, sha256 750b3ea65be51acc2d6066ff4dfdaea64613eb0c6a4463a5a09e382ed4c514d8.
+      • nyt__2013-09-05_nsa-foils-much-encryption.html — live nytimes.com
+        bot-walls (HTTP 403); captured via the record's archive_url
+        (web.archive.org 2026-02-20), HTTP 200, full article body
+        (Bullrun/Edgehill/Five Eyes all present), sha256
+        8001cb961c653454eab2ce6659f50bfa32e35ee8416a583c40ce7d90f1cd1660.
+      • intercept__snowden-archive.html — already snapshotted (sha256
+        104a5607867dafab238c2f3160330590f326e8aa3d6121040c05b4d843536a17),
+        provenance-only SIDtoday index, NOT load-bearing here.
+    DIRECTIONALITY (not inverted): this is disclosure of the FVEY agencies'
+    OWN offensive SIGINT programme — SUBJECT/actor = NSA (BULLRUN) + GCHQ
+    (EDGEHILL). Modeled on the sibling GCHQ Snowden-disclosure pattern
+    (TEMPORA / MUSCULAR), which keep uk/gchq/cne-actor as actor (per that
+    actor's 2026-06-25 audit note, which lists THIS event) — NOT the
+    null-actor documentary/leak meta-event pattern of the parent
+    2013-06/snowden-disclosures.
+
+    [a] FACTS — all load-bearing claims source-carried:
+      • BULLRUN (NSA) / EDGEHILL (GCHQ) codenames — Guardian: "The NSA's
+        codeword for its decryption program, Bullrun ... Its British
+        counterpart, Edgehill"; NYT: "A parallel GCHQ counterencryption
+        program is called Edgehill."
+      • $250M/yr Sigint Enabling Project — NYT: "the N.S.A. spends more
+        than $250 million a year on its Sigint Enabling Project, which
+        'actively engages the U.S. and foreign IT industries to covertly
+        influence and/or overtly leverage their commercial products'
+        designs' to make them 'exploitable'"; Guardian: "$250m a year".
+      • Supply-chain backdoors — Guardian: "inserted secret vulnerabilities
+        — known as backdoors or trapdoors — into commercial encryption
+        software."
+      • Targets SSL/VPN/4G/VoIP — Guardian: "HTTPS, voice-over-IP and
+        Secure Sockets Layer (SSL)"; VPN; "encryption used by the next
+        generation of 4G phones."
+      • Covert key access — NYT: "surreptitiously stealing their
+        encryption keys or altering their software or hardware."
+      CORRECTIONS (strips/fixes):
+      • "publicly-documented FY2013 budget was £25m" — FABRICATED: the
+        £/"25m" figure is in NEITHER cited source (0 hits, both raws).
+        STRIPPED; replaced with the real source-carried budget, the NSA
+        Sigint Enabling Project at ">$250 million a year" (NYT/Guardian).
+      • "3 major (unnamed) internet companies and 1 major internet service
+        provider" — MISQUOTE: Guardian raw reads "three major (unnamed)
+        internet companies and 30 types of Virtual Private Network (VPN)".
+        FIXED to the verbatim quote (+ the 2015 goal "15 major internet
+        companies, and 300 VPNs").
+      • "Reuters' December 2013 reporting on the RSA / NSA $10m contract" —
+        UNCITED (no Reuters source in sources[]; not carried by any of the
+        3 cited sources). REMOVED. The Dual_EC_DRBG reference was KEPT but
+        re-anchored to the NYT's own carried substance: cryptographers
+        "have long suspected that the agency planted vulnerabilities in a
+        standard adopted in 2006 by the National Institute of Standards and
+        Technology" (the 2006 NIST standard = Dual_EC_DRBG in substance).
+      outcome_summary verified end-to-end against the raws — no strips.
+
+    [b] ATTRIBUTION — actor uk/gchq/cne-actor (resolves to
+    atlas/actors/uk/cne-actor.yaml; KEEP-audited 2026-06-25, which lists
+    this event among its 6 legitimate referencing events). attributing_org_
+    confidence moderate and auspex_assessment concur KEPT (no over-
+    attestation; matches the moderate sibling MUSCULAR). Rewrote the notes
+    to stop conflating documentary strength with the codename-non-attestation
+    caveat. NSA/BULLRUN named in prose, not co-attributed — see [f].
+
+    [c] DATES — start_date 2000-01-01 UPHELD and re-commented: NYT
+    "Beginning in 2000 ... the N.S.A. invested billions of dollars in a
+    clandestine campaign"; Guardian "10-year NSA program ... breakthrough
+    in 2010." disclosure_date 2013-09-05 correct. Source published_on dates
+    verified: Guardian byline "Fri 6 Sep 2013 06.24 EDT" (filed 2013-09-05,
+    record 2013-09-05 OK); NYT byline "By Nicole Perlroth, Jeff Larson and
+    Scott Shane, Sept. 5, 2013" (record 2013-09-05 OK; the /09/06/ URL slug
+    is the print date).
+
+    [d] DOCTRINE_LINKS — uk/five-eyes (FK resolves to
+    atlas/doctrines/uk/five-eyes-signals-cooperation.yaml, id uk/five-eyes).
+    confidence: attested KEPT (earned) but attesting_source_id RE-POINTED
+    guardian -> nyt: the Guardian raw has NO "Five Eyes" string (0 hits),
+    whereas the NYT explicitly names the alliance as BULLRUN's clearance
+    boundary — "known only to a limited group of top analysts from the
+    so-called Five Eyes: the N.S.A. and its counterparts in Britain,
+    Canada, Australia and New Zealand. Only they are cleared for the Bullrun
+    program." Added the required inference_basis {source_id, verbatim
+    source_quote, signals[], ruled_out}. Perspective = attacker-rationale/
+    default (FVEY's own doctrine on their own programme) — no perspective
+    tag, consistent with the TEMPORA/MUSCULAR siblings.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; ADDED named-actor (a named agency,
+    GCHQ; not a named-unit — the generic uk/gchq bucket, per that actor's
+    own audit caution against named-unit over-specification; matches the
+    freshly-audited TEMPORA sibling).
+
+    [f] ACTOR_ID — uk/gchq/cne-actor resolves and is correct for the
+    EDGEHILL (GCHQ) leg; this is documentary disclosure of a FVEY offensive
+    programme, so actor_id is the agency (not null; no law-enforcement/meta
+    counter-action). incident_type CORRECTED [bulk-collection, supply-chain]
+    -> [espionage, supply-chain]: dropped bulk-collection (BULLRUN/EDGEHILL
+    is the cryptanalytic ENABLER, not itself a collection programme — its
+    TEMPORA/MUSCULAR siblings are the bulk-collection events); added
+    espionage (the SIGINT/eavesdropping purpose). supply-chain kept
+    (backdoors into commercial encryption products).
+
+    ORCHESTRATOR FLAGS (out of scope — not edited):
+      (1) NO generic NSA SIGINT/cryptanalysis actor exists. BULLRUN is the
+          NSA parent programme ($250M Sigint Enabling Project) but the only
+          us/nsa actors are us/nsa/equation-group (Kaspersky CNE cluster)
+          and us/nsa/tao-sub-units — both the wrong sub-cluster for a
+          cryptanalysis/standards-subversion programme. Recommend creating a
+          generic us/nsa bucket (parallel to the generic uk/gchq/cne-actor)
+          and co-attributing BULLRUN here.
+      (2) attribution_level harmonisation: the sibling GCHQ Snowden events
+          (MUSCULAR/HACIENDA/Cable&Wireless/KARMA POLICE) omit
+          attribution_level on uk/gchq/cne-actor; TEMPORA + now this event
+          set named-actor. Consider harmonising the cohort.
+      (3) intercept/snowden-archive is a provenance-only SIDtoday index
+          cited across many GCHQ events; fine, but not load-bearing here.
+
+    level: full — every load-bearing claim (codenames; $250M Sigint
+    Enabling Project; supply-chain backdoors; SSL/VPN/4G targets; EDGEHILL
+    3-companies/30-VPN aim; 2000 origin; Five Eyes compartmentalisation) is
+    carried by a snapshotted source (Guardian live-200 + NYT via archive_url).

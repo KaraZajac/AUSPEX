@@ -8,20 +8,28 @@ incident_type:
   - destructive
 initial_vector: n-day
 outcome_summary: |
-  Self-propagating ransomware worm leveraging EternalBlue
-  (CVE-2017-0144, leaked NSA exploit) plus DoublePulsar backdoor.
-  Estimated ~200,000 systems in 150+ countries infected within
-  72 hours, including UK National Health Service surgeries
-  cancelled. Estimated global economic damage $4B+. Actual
-  ransom collected: ~$140,000 — many assessments consider the
-  worm an out-of-control test rather than a deliberate
-  revenue operation. Kill-switch domain registered by Marcus
-  Hutchins halted further propagation.
+  Self-propagating ransomware worm ("WannaCry Version 2" in the
+  DOJ complaint) leveraging the CVE-2017-0144 SMB exploit (widely
+  known as EternalBlue), which the Shadow Brokers had publicly
+  released in April 2017. Hundreds of thousands of computers
+  across 150+ countries were infected within days (the UK FCO
+  cited 300,000 computers in 150 countries). The UK NHS was
+  heavily hit: per the DOJ complaint, at least 80 of 236 English
+  NHS trusts were affected (37 infected) plus 603 primary-care /
+  other NHS organizations, and 6,912 appointments were cancelled
+  between 12-18 May 2017; no NHS organization paid the ransom.
+  Actual ransom collected: ~$140,000 from roughly 330 payers, and
+  paying did not decrypt files — many assessments therefore read
+  the worm as an out-of-control test or a destructive operation
+  rather than a deliberate revenue op. The malware embedded a
+  long domain that infected machines attempted to resolve (the
+  DOJ used resolution traffic to it to count victims); registering
+  that "kill-switch" domain — widely reported as the work of
+  researcher Marcus Hutchins — sinkholed the primary variant.
 quantified_impact:
-  systems_infected_estimate: 200000
+  systems_infected_estimate: 300000  # UK FCO 2017-12-19: "300,000 computers in 150 countries"; DOJ complaint cites Europol's "hundreds of thousands ... in more than 150 countries"
   countries_affected: 150
-  usd_economic_damage_estimate: 4000000000
-  usd_ransom_collected: 140000
+  usd_ransom_collected: 140000  # DOJ complaint: ~330 victims paid "over $140,000"; paying did not decrypt files
 false_flag_risk: none
 operators_named:
   - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Sep 2018 complaint + Feb 2021 indictment
@@ -29,23 +37,23 @@ operators_named:
   - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 superseding indictment
 summary: |
   Largest publicly impactful ransomware event in history at the
-  time. Self-propagating worm that paired the leaked NSA
-  EternalBlue SMB exploit (CVE-2017-0144) with the DoublePulsar
-  kernel backdoor for code execution, then dropped the WannaCry
-  / WannaCryptor ransomware payload to encrypt local files and
-  spread laterally over SMB. Five Eyes joint public attribution
-  to DPRK on 19 December 2017 (UK NCSC + US/AU/CA/NZ/JP). DOJ
-  Park Jin Hyok complaint (September 2018) charges WannaCry
-  alongside Sony and the Bangladesh Bank theft, linking the
-  worm's earlier 1.x prototypes to Lazarus development
-  infrastructure shared with those operations.
+  time. Self-propagating worm built on the CVE-2017-0144 SMB
+  exploit (EternalBlue), which the Shadow Brokers had leaked in
+  April 2017, dropping the WannaCry / WannaCryptor payload to
+  encrypt local files and spread laterally over SMB. UK NCSC,
+  alongside allied governments, publicly attributed WannaCry to
+  DPRK — "North Korean actors known as the Lazarus Group" — on
+  19 December 2017. The DOJ Park Jin Hyok complaint (September
+  2018) then charged WannaCry alongside Sony and the Bangladesh
+  Bank theft, linking the worm's earlier "Version 1" to Lazarus
+  development infrastructure shared with those operations.
 attributions:
   - actor_id: kp/rgb/lazarus
     attributing_org: UK NCSC + Five Eyes
-    attributing_org_confidence: high
+    attributing_org_confidence: high  # FCO raw: NCSC "assesses it is highly likely that North Korean actors known as the Lazarus Group were behind the WannaCry ransomware campaign"
     auspex_assessment: concur
     attribution_date: 2017-12-19
-    attribution_source_id: uknscsc/2017-12-19_wannacry-attribution
+    attribution_source_id: gov-uk/2017-12-19_fco-wannacry-attribution  # re-pointed 2026-07-11 from uknscsc (url:null, dead NCSC release) to its live, snapshotted FCO twin, which carries the same NCSC assessment verbatim
   - actor_id: kp/rgb/lazarus
     attributing_org: US DOJ
     attributing_org_confidence: high
@@ -58,38 +66,140 @@ doctrine_links:
     program_id: null
     confidence: plausible
     reasoning: |
-      DOJ Park Jin Hyok complaint and Five Eyes attribution place
-      WannaCry within the Byungjin window, but the complaint frames
-      it as destructive ransomware, not a hard-currency operation
-      (the revenue framing in the complaint attaches to the
-      Bangladesh Bank theft). With analyst consensus that the
-      actual revenue yield was accidental, the financing-doctrine
-      linkage is plausible, not attested.
-    attesting_source_id: doj/2018-09-06_park-jin-hyok-complaint
+      The UK FCO (19 Dec 2017) framed WannaCry as "North Korean
+      actors using their cyber programme to circumvent sanctions"
+      — a cited primary govt signal toward the sanctions-evasion
+      pillar. But the linkage is only plausible, not attested: no
+      cited source states a revenue / WMD-financing terminal goal
+      for WannaCry, the DOJ Park Jin Hyok complaint frames it as
+      indiscriminate destructive ransomware (its hard-currency
+      framing attaches to the Bangladesh Bank theft), and the
+      actual yield was trivial (~$140k, ~330 payers, with paying
+      failing to decrypt) — consistent with a botched test rather
+      than a deliberate revenue operation.
+    attesting_source_id: null
     inference_basis:
-      source_id: doj/2018-09-06_park-jin-hyok-complaint
+      signals:
+        - "UK FCO (2017-12-19), verbatim: 'The indiscriminate use of the WannaCry ransomware demonstrates North Korean actors using their cyber programme to circumvent sanctions.'"
+        - "WannaCry sits inside the Byungjin era (2013-2018) and was run by the same RGB / Lazarus apparatus the doctrine funds."
       alternatives:
-        - "WannaCry as an out-of-control test / development failure rather than a deliberate revenue operation (actual yield ~$140k)"
-      ruled_out: "deliberate WMD-financing intent — the complaint's revenue framing attaches to the Bangladesh Bank theft, not WannaCry"
+        - "WannaCry as an out-of-control test / development failure rather than a deliberate revenue operation (actual yield ~$140k across ~330 payers; the DOJ complaint notes paying did not decrypt files)."
+      ruled_out: "attested WMD-financing intent — no cited source states a revenue / WMD-financing terminal goal for WannaCry; the DOJ complaint's hard-currency framing attaches to the Bangladesh Bank theft, and its only 'sanction' reference is to regime-authorized ('regime-sanctioned') accounts, not sanctions-evasion."
     counter_explanation: |
-      Many analysts have argued WannaCry was a test or
-      development failure rather than a deliberate revenue
-      operation, given the trivial actual yield. The doctrine
-      tag holds on the regime's *intended* purpose for the tool;
-      operational outcome may have been incidental.
+      Many analysts read WannaCry as a test or development failure
+      rather than a deliberate revenue operation, given the trivial
+      actual yield. The doctrine tag holds only on the regime's
+      *intended* sanctions-circumvention purpose for the tool (per
+      the FCO); operational outcome may have been incidental.
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/critical-infrastructure
     role: primary
     outcome: |
-      UK NHS surgeries cancelled; FedEx, Renault, Deutsche Bahn,
-      Spanish Telefonica, Russian Interior Ministry, Indian
-      police affected; global economic disruption estimated $4B+.
+      Hundreds of thousands of computers across 150+ countries
+      infected (UK FCO: 300,000 in 150 countries); widespread
+      cross-sector disruption. The cited govt sources detail the
+      UK NHS impact specifically (see the healthcare target);
+      the broader victim roster commonly reported at the time
+      (FedEx, Renault, Deutsche Bahn, Telefonica, etc.) is not
+      carried by these four cited sources.
   - target_id: sectors/healthcare/hospital
     role: primary
+    outcome: |
+      UK NHS heavily affected (DOJ complaint): at least 80 of 236
+      English NHS trusts hit (37 infected) plus 603 primary-care /
+      other NHS organizations; 6,912 appointments cancelled 12-18
+      May 2017; ~1,220 pieces of diagnostic equipment affected; no
+      NHS organization paid the ransom.
 sources:
   - uknscsc/2017-12-19_wannacry-attribution
   - gov-uk/2017-12-19_fco-wannacry-attribution
+  - msft/2017-03-14_ms17-010-eternalblue
   - doj/2018-09-06_park-jin-hyok-complaint
   - doj/2021-02-17_lazarus-three-officers-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Full 6-point audit against RAW cited sources. Snapshots verified this pass:
+    gov-uk__2017-12-19_fco-wannacry-attribution.html sha256
+    cd03fbdcd698d4f7816c68ec2148a2d20220c0b9a06dfe96ad43544ab0055564 (NEW, HTTP 200,
+    73 KB); doj__2018-09-06_park-jin-hyok-complaint.pdf sha256 4876114d...5d31ba021
+    (179-pp criminal complaint, re-verified matching); doj__2021-02-17_lazarus-three-
+    officers-indictment.html sha256 4e3209c4...f98b8f21 (globalsecurity mirror, matching);
+    msft__2017-03-14_ms17-010-eternalblue.html sha256 33b85a5e...a84449e2 (matching).
+    uknscsc/2017-12-19 has url:null (dead NCSC release, no Wayback) — UNSNAPSHOTTABLE, but
+    its attribution is mirror-corroborated verbatim by the snapshotted FCO twin.
+
+    [a] FACTS — corrections made:
+      * systems_infected 200000 -> 300000. NO cited source says 200,000. FCO raw:
+        "The WannaCry ransomware incident impacted 300,000 computers in 150 countries
+        including 48 NHS trusts." DOJ complaint: "hundreds of thousands of computers in
+        more than 150 countries have been affected" (Europol). Used the cited-primary
+        hard number (FCO 300k); DOJ range noted in the inline comment.
+      * usd_economic_damage_estimate 4000000000 ($4B) STRIPPED — carried by NO cited
+        source (the complaint's only billion-figures are Bangladesh Bank: "$1 billion"
+        attempted / "$81,000,000" actual). $4B is a secondary Cyence estimate; re-add
+        only with a cited source.
+      * "DoublePulsar" STRIPPED — 0 hits in all four cited sources. Mechanism now
+        described per the complaint: "designed to self-propagate as a worm (using the
+        SMB CVE-2017-0144 vulnerability)."
+      * "leaked NSA exploit" corrected -> "Shadow Brokers"-released. NSA/"National
+        Security Agency" 0 hits (word-boundary) in the complaint; it says the
+        "CVE-2017-0144 exploit... was publicly released by a group calling itself the
+        'Shadow Brokers.'" MS17-010 raw carries CVE-2017-0144 (x6) + the 2017-03-14 patch
+        (-> initial_vector n-day) but NOT the strings EternalBlue/DoublePulsar/NSA/Shadow
+        Brokers (those live only in that record's analyst notes).
+      * Uncarried victim roster (FedEx/Renault/Deutsche Bahn/Telefonica/Russian Interior
+        Ministry/Indian police) STRIPPED from the critical-infra target (0 hits in cited
+        sources); replaced with the richly-carried DOJ NHS detail (80/236 trusts affected,
+        37 infected, 603 primary-care orgs, 6,912 appts cancelled 12-18 May 2017, ~1,220
+        diagnostic devices, no NHS ransom paid).
+      * usd_ransom_collected 140000 CONFIRMED — complaint: "approximately 330 victims paid
+        the ransom demanded by WannaCry Version 2 totaling over $140,000"; also "it does
+        not appear that victims... have been able to actually decrypt their files by paying
+        the ransom" (supports destructive framing).
+      * Residual non-cited proper nouns RETAINED (non-load-bearing, hedged): "EternalBlue"
+        (definitional alias for carried CVE-2017-0144) and "Marcus Hutchins"/"kill-switch"
+        (the embedded sinkhole domain IS carried by the complaint — "a lengthy domain
+        embedded in the code of the malware" that infected machines "tried to resolve";
+        the registrant name + halt-causality are flagged "widely reported").
+    [b] ATTRIBUTION — DPRK/Lazarus, high/concur, correct. FCO raw carries it verbatim:
+        NCSC "assesses it is highly likely that North Korean actors known as the Lazarus
+        Group were behind the WannaCry ransomware campaign" (highly likely = high). First
+        attribution's source re-pointed uknscsc(dead) -> gov-uk FCO(live+snapshotted).
+        DOJ 2018 complaint + 2021 indictment corroborate. attribution_level: named-actor
+        (Lazarus Group named; kp/rgb/lazarus resolves).
+    [c] DATES — start/disclosure 2017-05-12 (outbreak day), end 2017-05-15 (acute window;
+        complaint puts NHS cancellations "between May 12 and 18, 2017") OK. Attribution
+        2017-12-19 (FCO byline "Published 19 December 2017") and 2018-09-06 (DOJ) verified
+        against source metadata.
+    [d] DOCTRINE — kp/byungjin/sanctions-evasion-revenue KEPT at plausible (not upgraded,
+        per over-attestation guard). Fixed schema to corpus convention for plausible links
+        (attesting_source_id: null; inference_basis -> signals/alternatives/ruled_out;
+        removed the mis-cited DOJ-complaint attesting pointer). Added the genuine FCO
+        signal it previously omitted ("using their cyber programme to circumvent sanctions").
+        NOT attested: no cited source states a revenue/WMD terminal goal for WannaCry
+        (complaint: "weapons of mass destruction" 0, "ballistic" 0, revenue 0, "nuclear" 1
+        = a fictional TV plot; its lone "sanction" hit = "regime-sanctioned" authorized
+        accounts). perspective: attacker-rationale (default; DPRK's own tool-purpose).
+    [e] ATTRIBUTION_LEVEL — named-actor (Lazarus Group). Consistent.
+    [f] ACTOR_ID — kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml, id verified).
+        operators_named park-jin-hyok/jon-chang-hyok/kim-il are free-text person slugs
+        (no dedicated actor/person records; referenced in atlas/services/kp/bureau-121.yaml)
+        — carried: Park in the 2018 complaint; all three in the 2021 indictment.
+
+    FLAGS (not editable here):
+      * atlas/doctrines/kp/byungjin.yaml — cyber_relevance asserts WannaCry "serves" the
+        sanctions-evasion-revenue pillar as an equal to Bangladesh Bank/crypto theft; the
+        event-level evidence supports only a PLAUSIBLE link (trivial/botched yield). Consider
+        hedging the doctrine's WannaCry inclusion.
+      * uknscsc/2017-12-19_wannacry-attribution — genuine but link-rotted (url:null, 404, no
+        Wayback); retained in sources[] for provenance, attribution re-pointed to its live
+        FCO twin. Not orphaned (still cited here). Fixed a broken internal cross-ref in that
+        record (it pointed at a non-existent "ukfco/..." id).
+      * FCO says "48 NHS trusts" vs DOJ "80 of 236 affected / 37 infected" — both cited;
+        prose uses the more granular DOJ figures.

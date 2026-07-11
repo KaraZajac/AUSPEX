@@ -1,48 +1,206 @@
 id: 2025-08/workday-shinyhunters-salesforce
 name: Workday third-party CRM breach (Salesforce vishing chain)
-start_date: 2025-08-01
-disclosure_date: 2025-08-15
-end_date: 2025-08-31
+start_date: 2025-08-06  # Workday breach "first identified on August 6" (CSO); no distinct intrusion-onset date disclosed. Prior 2025-08-01 was unsourced.
+disclosure_date: 2025-08-15  # Workday blog og:published_time 2025-08-15T05:00:00 (updated 2025-08-18); press pickup Aug 18 (BleepingComputer) / Aug 19 (CSO).
+end_date: 2025-08-15  # Workday "acted quickly to cut the access" on discovery (~Aug 6); bounded through disclosure. Prior 2025-08-31 was unsourced.
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # via UNC6040 vishing → Salesforce OAuth
+initial_vector: phishing  # Workday-confirmed: social engineering by text/phone posing as HR/IT to trick employees into granting access (vishing/pretexting). Workday named no CRM vendor.
 outcome_summary: |
-  On August 15 2025 Workday disclosed in a blog post that
-  attackers had accessed a Workday-owned Salesforce instance
-  containing third-party business-contact data — including
-  names, email addresses, and phone numbers — and that the
-  intrusion was traced to a social-engineering campaign
-  targeting Workday employees. CSO Online and other vendors
-  identified the campaign as the UNC6040 / ShinyHunters
-  voice-phishing / Salesforce-OAuth chain. Workday emphasized
-  that customer Workday-tenant data was not affected.
+  On 15 August 2025 Workday published a blog post ("Protecting You
+  From Social Engineering Campaigns: An Update From Workday") disclosing
+  that "threat actors were able to access some information from our
+  third-party CRM platform." Workday stated the data obtained was
+  "commonly available business contact information, like names, email
+  addresses, and phone numbers," and that "there is no indication of
+  access to customer tenants or the data within them"; it "acted
+  quickly to cut the access and ... added extra safeguards." The
+  intrusion was traced to a social-engineering campaign in which
+  "threat actors contact employees by text or phone pretending to be
+  from human resources or IT." Workday's own statement named NEITHER
+  the CRM vendor (Salesforce) NOR any threat actor; the Salesforce /
+  UNC6040 / ShinyHunters placement is security-press inference
+  (BleepingComputer, CSO Online), consistent with the wider 2025
+  Salesforce-cloud voice-phishing campaign.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event. Notable because Workday is itself
-  a major SaaS-platform vendor with privileged HR-data access
-  for ~10,000 enterprise customers — the campaign's pivot
-  into SaaS-vendor self-service Salesforce instances raises
-  the threat model for downstream customer-data exposure even
-  when the Workday production tenant itself is unaffected.
+  Per-victim child event of the 2025 UNC6040 / ShinyHunters Salesforce-
+  cloud campaign (campaign_id shinyhunters-salesforce-2025) — the same
+  vishing -> third-party-CRM chain as the Adidas / LVMH / Cisco / Google
+  siblings. Analytically notable because Workday is itself a major
+  SaaS-platform vendor with privileged HR-data access across a large
+  enterprise customer base — the campaign's pivot into SaaS-vendor
+  self-service CRM instances raises the threat model for downstream
+  customer-data exposure even though Workday's own production tenants
+  were unaffected. Attribution is hedged: Workday's blog named neither
+  the CRM vendor ("Salesforce") nor any actor ("ShinyHunters" /
+  "UNC6040"); a Workday spokesperson, asked to confirm a Salesforce
+  instance, only "referenced the company's Friday blog post"
+  (BleepingComputer). "ShinyHunters" is the extortion self-claim brand
+  over GTIG's UNC6040 (vishing) / UNC6240 (extortion) clusters, not a
+  confirmed stable group. No Workday-specific extortion demand or leak
+  is documented (Workday is not named in the Oct-2025 "Scattered
+  LAPSUS$ Hunters" leak-site reporting — the Krebs survey names no
+  Workday), so extortion is NOT recorded as a Workday incident_type.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group + CSO Online + Workday disclosure
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-15
-    attribution_source_id: csoonline/2025-08-17_workday-shinyhunters-salesforce
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: BleepingComputer (Workday-brand placement) + security-industry consensus (GTIG UNC6040 campaign)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-17
-    attribution_source_id: csoonline/2025-08-17_workday-shinyhunters-salesforce
+    attribution_date: 2025-08-18
+    attribution_source_id: bleepingcomputer/2025-08-18_workday-data-breach-salesforce
+    attribution_level: activity-cluster
+    notes: |
+      Workday's own disclosure names NO threat actor and NO CRM vendor.
+      The ShinyHunters / Salesforce placement is BleepingComputer's
+      hedged reporting: "While the company didn't directly confirm it,
+      BleepingComputer has learned that the Workday incident is part of
+      a wave of security breaches linked to the ShinyHunters extortion
+      group, which targets Salesforce CRM instances through social
+      engineering and voice phishing attacks." GTIG's own campaign
+      reports name no Workday victim. "ShinyHunters" is a self-applied
+      extortion brand over the UNC6040 (vishing) / UNC6240 (extortion)
+      clusters — hence moderate / concur-with-caveat / activity-cluster,
+      NOT high.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism (cluster overlap)
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-10-07
+    attribution_source_id: krebs/2025-10_shinyhunters-corporate-extortion-spree
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster overlap only; NO Workday-specific Scattered Spider
+      evidence exists, and neither Workday's blog, the BleepingComputer
+      article, nor CSO Online names Scattered Spider (0 occurrences in
+      each snapshot). Retained for cross-event campaign-modeling
+      consistency with the Adidas / Cisco / LVMH siblings: Krebs describes
+      the "Scattered LAPSUS$ Hunters" brand as "an amalgamation of three
+      hacking groups — Scattered Spider, Lapsus$ and ShinyHunters" (the
+      Krebs snapshot carries the amalgamation framing only; it names no
+      Workday). Prior record pointed this attribution to CSO Online
+      (moderate), which names no Scattered Spider — corrected to Krebs,
+      confidence moderate -> low.
 doctrine_links: []
 targets:
   - target_id: orgs/workday
     role: primary
 sources:
+  - workday/2025-08-15_protecting-you-from-social-engineering-campaigns
+  - bleepingcomputer/2025-08-18_workday-data-breach-salesforce
   - csoonline/2025-08-17_workday-shinyhunters-salesforce
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+  - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. Workday had NO primary source
+    cited before this audit; added Workday's own disclosure blog
+    (primary) + BleepingComputer (Workday-specific secondary), both
+    snapshotted this audit, and re-sourced the campaign context. Every
+    load-bearing claim is now carried verbatim by a snapshotted source —
+    hence level: full.
+
+    Snapshots (all sha256-pinned):
+      - workday/2025-08-15 (primary, blog)   f3f2bd8d..e6f38b2a (82,326 B) [NEW]
+      - bleepingcomputer/2025-08-18          d6ef36a6..2122af40 (91,294 B) [NEW]
+      - csoonline/2025-08-17_workday         92d9e8dc..bfc56eb (255,602 B) [NEW]
+      - mandiant/2025-06-04_unc6040          4dce0e4b..f79c1051 (pre-existing, verified) [campaign origin]
+      - krebs/2025-10                        9c2d11a8..97619835 (pre-existing, verified; 0 "Workday")
+
+    [a] FACTS — rewritten; carried verbatim by the Workday primary + BC + CSO:
+      - Workday primary (f3f2bd8d..): "threat actors were able to access
+        some information from our third-party CRM platform. There is no
+        indication of access to customer tenants or the data within them.
+        We acted quickly to cut the access and have added extra safeguards
+        to protect against similar incidents." Data = "commonly available
+        business contact information, like names, email addresses, and
+        phone numbers." Method = "threat actors contact employees by text
+        or phone pretending to be from human resources or IT."
+      - CORRECTED the old outcome_summary's "attackers had accessed a
+        Workday-owned Salesforce instance": Workday named NO CRM vendor.
+        CSO (92d9e8dc..): "While refraining from naming the CRM software or
+        the attackers, the company revealed that attackers used the
+        familiar Vishing and phone-based pretexting." Reworded to Workday's
+        own words ("third-party CRM platform") + labelled the Salesforce/
+        ShinyHunters identification as press inference.
+      - "no customer tenants" scoping (task focus) VERIFIED verbatim in
+        THREE snapshots — Workday primary, BC ("no customer tenants were
+        impacted"), CSO ("There is no indication of access to customer
+        tenants or the data within them"). Kept.
+      - Discovery date anchor: "the breach was discovered almost two weeks
+        ago, on August 6" (BC); "first identified on August 6" (CSO).
+      - summary's "~10,000 enterprise customers" figure (unsourced in the
+        snapshots) softened to "a large enterprise customer base."
+      - ZERO fabricated malware/CVEs/victim-counts/quotes found or added.
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters
+        high -> moderate, concur -> concur-with-caveat, +attribution_level
+        activity-cluster; attributing_org CORRECTED from "Google Threat
+        Intelligence Group + CSO Online + Workday disclosure" (Workday
+        named no actor; GTIG named no Workday) to "BleepingComputer
+        (Workday-brand placement) + security-industry consensus (GTIG
+        UNC6040 campaign)"; attribution_source_id re-pointed csoonline ->
+        bleepingcomputer/2025-08-18 (carries the explicit hedged linkage).
+        Scattered Spider moderate -> low, re-pointed from csoonline (0
+        "Scattered") to krebs/2025-10 (amalgamation framing), +activity-
+        cluster. false_flag_risk: suspected retained (deliberate
+        ShinyHunters brand-borrowing / self-claim).
+    [c] DATES — disclosure_date 2025-08-15 CONFIRMED by the Workday blog's
+        own og:published_time meta (2025-08-15T05:00:00; updated
+        2025-08-18) — kept. start_date 2025-08-01 (unsourced) -> 2025-08-06
+        (the "first identified"/discovery date; no onset disclosed).
+        end_date 2025-08-31 (unsourced) -> 2025-08-15 (access cut on
+        discovery ~Aug 6; bounded through disclosure). Source published_on
+        FIXED: CSO 2025-08-17 -> 2025-08-19 (byline "Aug 19, 2025" +
+        datePublished meta 2025-08-19; dateModified 2025-08-21). BC
+        published_on 2025-08-18 (byline "August 18, 2025 03:53 AM").
+    [d] DOCTRINE_LINKS — none (correct: criminal financially-motivated
+        extortion cluster; no strategic-doctrine terminal goal).
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions:
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) clusters and
+        "ShinyHunters" is a self-applied brand over them; the Workday
+        placement is inferential (Workday named no actor) — activity-
+        cluster is the honest granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider
+        both resolve to existing atlas actor ids. Not a counter-action
+        (no LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] -> [intrusion, data-theft]: intrusion
+    (unauthorized access to a third-party CRM via social engineering) +
+    data-theft (business-contact data accessed) are Workday-confirmed.
+    Extortion NOT added: no Workday-specific extortion demand/leak is
+    documented (Workday absent from the Oct-2025 Krebs leak-site survey,
+    which has 0 "Workday") — mirrors the Cisco sibling's handling.
+
+    SOURCES — dropped mandiant/2025-08-08_expansion (see FLAG) and added
+    mandiant/2025-06-04_unc6040 (campaign-origin UNC6040/UNC6240 +
+    ShinyHunters-self-claim framing; names no Workday, no anachronism) for
+    campaign context, matching the Adidas template.
+
+    FLAGS (not edited — outside event / own-source scope):
+    - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft source
+      record: the live cloud.google.com article is JS-rendered AND has
+      DRIFTED past its 2025-08-08 publication state (live + Wayback-May-2026
+      captures both carry 30x UNC6661/UNC6671/"January 2026" and ZERO
+      "Workday"), so a faithful 2025-08-08 snapshot supporting a Workday
+      fact is NOT obtainable. DROPPED from this event; still cited by the
+      actor + umbrella + sibling events (Pandora etc.), so not orphaned —
+      orchestrator should mark that record snapshot: partial (same flag
+      raised by the Cisco + LVMH audits).
+    - actor criminal/shinyhunters roster line already lists "Workday"
+      among the 2025 Salesforce-campaign victims — consistent with the
+      hedged placement here; no change needed.
+    - target orgs/workday.yaml exists (resolves); its summary asserts the
+      breach "was attributed to the UNC6040 / ShinyHunters voice-phishing
+      campaign" more firmly than Workday's own disclosure supports and
+      says "~10,000 enterprise customers" (unsourced here); sources: [] —
+      orchestrator may soften the attribution wording and attach these
+      Workday-specific source records.
+    - sibling event 2025-08/pandora-shinyhunters-salesforce (unaudited)
+      still cites mandiant/2025-08-08 as attribution_source_id at
+      high/concur — same drift issue; orchestrator to re-audit.

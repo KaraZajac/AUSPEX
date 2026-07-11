@@ -1,40 +1,217 @@
 id: 2025-08/pandora-shinyhunters-salesforce
 name: Pandora customer-data breach (Salesforce vishing chain)
-start_date: 2025-07-20
-disclosure_date: 2025-08-04
-end_date: 2025-08-31
+start_date: 2025-07-20  # UNSOURCED campaign-window estimate — Pandora disclosed NO intrusion/discovery date; retained for campaign modeling only
+disclosure_date: 2025-08-05  # earliest snapshot-anchored public disclosure (BleepingComputer, Lawrence Abrams, Aug 5 06:16 PM; "As first reported by Forbes"). Prior 2025-08-04 unanchored.
+end_date: 2025-08-05  # Pandora "stopped the access" on discovery; bounded through public disclosure. Prior 2025-08-31 was unsourced.
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # UNC6040 vishing → Salesforce OAuth
+  - extortion
+initial_vector: phishing  # campaign-inferred: UNC6040 vishing → Salesforce OAuth (Pandora named neither Salesforce nor a vector)
 outcome_summary: |
-  In early August 2025 Pandora disclosed a customer-data
-  breach via a third-party platform, exposing customer names
-  and email addresses. The intrusion was attributed to the
-  UNC6040 / ShinyHunters voice-phishing / Salesforce-OAuth
-  campaign. Chanel disclosed a comparable breach in the same
-  week and is treated as part of the same wave.
+  On 5 August 2025 Danish jewelry brand Pandora disclosed a
+  customer-data breach after customer information was stolen "in
+  the ongoing Salesforce data theft attacks" (BleepingComputer).
+  Pandora's own customer notice stated only that "your contact
+  information was accessed by an unauthorized party through a
+  third-party platform we use" and that it had "stopped the access
+  and have further strengthened our security measures." Per the
+  notice, "only customers' names, birthdates, and email addresses
+  were stolen"; "Passwords, IDs, and financial information were not
+  exposed" (BleepingComputer; Infosecurity: "no financial data or
+  passwords stolen"). Pandora named NEITHER the third-party platform
+  ("Salesforce") NOR any threat actor; BleepingComputer separately
+  "learned that the data was stolen from the company's Salesforce
+  database," and the ShinyHunters / UNC6040 attribution is hedged
+  security-press inference (Infosecurity: "suspicion is mounting
+  that the attacks could be part of an ongoing data extortion
+  campaign by the ShinyHunters (UNC6040) group"). No Pandora-specific
+  victim/record count was disclosed. Chanel disclosed a comparable
+  US-customer breach (discovered 25 July 2025, third-party-hosted
+  database) in the same week and is reported as part of the same
+  Salesforce-campaign wave.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event. Companion to the LVMH-brand,
-  Adidas, Cisco, Allianz Life cluster across summer 2025.
+  Per-victim child event of the 2025 UNC6040 / ShinyHunters
+  Salesforce-cloud campaign (campaign_id shinyhunters-salesforce-2025)
+  — the same vishing → third-party-CRM chain as the Adidas, LVMH-brand
+  and Cisco siblings. Attribution is hedged: Pandora's own notice
+  attributes nothing beyond "a third-party platform we use" and names
+  no actor; the Salesforce placement is BleepingComputer's own reporting
+  ("BleepingComputer has learned that the data was stolen from the
+  company's Salesforce database") and the ShinyHunters / UNC6040 link is
+  press inference ("suspicion is mounting"), not a victim or GTIG
+  victim-naming. "ShinyHunters" is recorded as the extortion self-claim
+  brand over GTIG's UNC6040 (vishing) / UNC6240 (extortion) clusters,
+  not a confirmed stable group. Extortion is inherited from the campaign
+  chain (BC frames the theft as "used to extort the company into paying
+  a ransom"; "ShinyHunters confirmed to BleepingComputer that they are
+  privately extorting companies") — but NO Pandora-specific ransom demand
+  or public leak is documented, and Pandora is NOT named in the Oct-2025
+  "Scattered LAPSUS$ Hunters" leak-site reporting. The originally-cited
+  sources (mandiant/2025-08-08, krebs/2025-10) name NO Pandora and were
+  re-sourced this audit to Pandora-specific reporting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group + Krebs on Security
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: BleepingComputer (Pandora-brand placement) + Google Threat Intelligence Group (campaign)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-08-05
+    attribution_source_id: bleepingcomputer/2025-08-05_pandora-salesforce-data-breach
+    attribution_level: activity-cluster
+    notes: |
+      Pandora named NO actor and NO platform. The Salesforce placement is
+      BleepingComputer's own reporting ("BleepingComputer has learned that
+      the data was stolen from the company's Salesforce database") and the
+      ShinyHunters link is hedged press inference (Infosecurity: "suspicion
+      is mounting that the attacks could be part of an ongoing data
+      extortion campaign by the ShinyHunters (UNC6040) group"). GTIG's own
+      reports (incl. mandiant/2025-06-04) name NO Pandora victim.
+      "ShinyHunters" is an extortion self-claim brand over the UNC6040
+      (vishing) / UNC6240 (extortion) clusters — hence moderate /
+      concur-with-caveat / activity-cluster, NOT high.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism (cluster overlap)
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-10-07
+    attribution_source_id: krebs/2025-10_shinyhunters-corporate-extortion-spree
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster overlap only; NO Pandora-specific Scattered Spider
+      evidence exists, and neither Pandora's notice nor the Pandora press
+      coverage names Scattered Spider. Retained for cross-event campaign-
+      modeling consistency with the Adidas / LVMH / Cisco siblings: Krebs
+      describes the "Scattered LAPSUS$ Hunters" brand as "an amalgamation
+      of three hacking groups — Scattered Spider, Lapsus$ and ShinyHunters"
+      (krebs/2025-10 carries the amalgamation framing only; it names no
+      Pandora). Prior record pointed this attribution to mandiant/2025-08-08,
+      which names no Pandora and is un-snapshottable — corrected.
 doctrine_links: []
 targets:
   - target_id: orgs/pandora
     role: primary
 sources:
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+  - bleepingcomputer/2025-08-05_pandora-salesforce-data-breach
+  - infosecurity-magazine/2025-08-06_chanel-pandora-salesforce-breach
+  - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. RE-SOURCE (badrabbit model):
+    the two originally-cited sources are REAL but name NO Pandora —
+    verbatim checks: the Krebs snapshot (sha256 9c2d11a8..97619835) has
+    ZERO "Pandora" occurrences (it names only Google among campaign
+    victims), and the Mandiant 2025-08-08 cloud.google.com article both
+    (a) is JavaScript-rendered (a raw curl returns a content shell) AND
+    (b) has DRIFTED far past its 2025-08-08 state (the live page now
+    carries 36x "UNC6661", 36x "UNC6671", 8x "January 2026" and ZERO
+    "Pandora"), so no faithful 2025-08-08 snapshot is obtainable and it
+    names no Pandora. mandiant/2025-08-08 was DROPPED from this event
+    (still cited by the actor + umbrella + sibling events, so not
+    orphaned — FLAG below). Two Pandora-specific sources created +
+    snapshotted this audit; the canonical campaign primary
+    mandiant/2025-06-04 (already snapshotted) added; Krebs retained for
+    the Scattered-Spider amalgamation framing only.
+
+    [a] FACTS — rewritten; every load-bearing Pandora claim now carried
+    verbatim by a snapshotted source: BleepingComputer 2025-08-05 (sha256
+    e90d6662..4bf7521f) + Infosecurity 2025-08-06 (sha256 288d19e2..
+    838121ef).
+      - Disclosure: "Danish jewelry giant Pandora has disclosed a data
+        breach after its customer information was stolen in the ongoing
+        Salesforce data theft attacks" (BC, Aug 5).
+      - Pandora notice (verbatim): "your contact information was accessed
+        by an unauthorized party through a third-party platform we use ...
+        We stopped the access and have further strengthened our security
+        measures."
+      - SCOPE CORRECTED — ADDED birthdates: prior outcome_summary said
+        only "customer names and email addresses"; the actual scope is
+        "only customers' names, birthdates, and email addresses were
+        stolen ... Passwords, IDs, and financial information were not
+        exposed" (BC; Infosec: "no financial data or passwords stolen").
+      - Pandora named NEITHER "Salesforce" NOR any actor: "While Pandora
+        has not shared the name of the third-party platform, BleepingComputer
+        has learned that the data was stolen from the company's Salesforce
+        database" (BC).
+      - NO FABRICATED FIGURE imported: press figures are inconsistent and
+        unreliable ("Millions" vs "approximately 30,000" in secondary
+        coverage) and are NOT in Pandora's notice — no count is asserted
+        (BC/Infosec give none). Prior event carried no figure; none added.
+      - Chanel same-week context retained + sourced (Infosec): "Chanel
+        informed its US customers of an incident it discovered on July 25
+        ... hosted by a third-party ... names, email and home addresses,
+        and phone numbers" — a separate victim, same campaign wave.
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters high →
+        moderate, concur → concur-with-caveat, attribution_level
+        activity-cluster; attributing_org "Google Threat Intelligence
+        Group + Krebs on Security" CORRECTED (Krebs names no Pandora; GTIG
+        names no Pandora) to "BleepingComputer (Pandora-brand placement) +
+        Google Threat Intelligence Group (campaign)"; attribution_source_id
+        re-pointed from mandiant/2025-08-08 (no Pandora, un-snapshottable)
+        to bleepingcomputer/2025-08-05, which carries the placement ("data
+        was stolen from the company's Salesforce database") and the hedged
+        ShinyHunters link (Infosec: "suspicion is mounting"). Scattered
+        Spider high/moderate → low, re-pointed from mandiant/2025-08-08
+        (not among a corrected source set; names no Pandora) to krebs/2025-10
+        (amalgamation framing only; names no Pandora). false_flag_risk:
+        suspected retained (deliberate ShinyHunters brand-borrowing /
+        self-claim).
+    [c] DATES — disclosure 2025-08-04 → 2025-08-05 (earliest snapshot-
+        anchored public disclosure: BC, Lawrence Abrams, "August 5, 2025
+        06:16 PM"; "As first reported by Forbes"; Pandora customer notices
+        circulated on Reddit/X around this window). end 2025-08-31
+        (unsourced) → 2025-08-05 (Pandora "stopped the access" on
+        discovery; bounded through disclosure). start 2025-07-20 KEPT but
+        FLAGGED as an unsourced campaign-window estimate — Pandora
+        disclosed no intrusion/discovery date (matches the adidas-sibling
+        treatment of a withheld intrusion date). Source published_on
+        verified against bylines: BC 2025-08-05 (Lawrence Abrams, 06:16 PM),
+        Infosec 2025-08-06 (Phil Muncaster, "News 6 August 2025"),
+        mandiant 2025-06-04, krebs 2025-10-07.
+    [d] DOCTRINE_LINKS — none (per scope; criminal financially-motivated
+        extortion cluster, no strategic-doctrine terminal goal). Correct.
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions:
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) clusters;
+        "ShinyHunters" is a self-applied brand over them and the Pandora
+        placement is inferential (Pandora named no actor) — activity-cluster
+        is the honest granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider both
+        resolve to existing atlas actor ids. Not a counter-action (no
+        LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] → [intrusion, data-theft, extortion]:
+    intrusion (unauthorized access to a third-party / Salesforce CRM via
+    the campaign's vishing chain) + data-theft (customer names/birthdates/
+    emails exfiltrated) are Pandora-supported; extortion is inherited from
+    the campaign chain (BC: the stolen DB is "used to extort the company
+    into paying a ransom"; "ShinyHunters confirmed to BleepingComputer that
+    they are privately extorting companies"). Caveat (stated in summary):
+    NO Pandora-specific ransom demand or public leak is documented, and
+    Pandora is NOT named in the Oct-2025 Krebs "Scattered LAPSUS$ Hunters"
+    leak-site reporting.
+
+    FLAGS (not edited — outside event / own-source scope):
+    - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft source
+      record: the live cloud.google.com article is JS-rendered AND has
+      drifted past its publication state (this audit's curl: 36x UNC6661,
+      36x UNC6671, 8x "January 2026", ZERO Pandora), so a faithful
+      2025-08-08 curl snapshot is not obtainable; it names no Pandora.
+      Dropped from this event but still cited by the actor + umbrella +
+      siblings (adidas/LVMH/Cisco audits raised the same) — orchestrator
+      should mark that source record snapshot: partial.
+    - actor criminal/shinyhunters roster line already lists "Pandora" among
+      the 2025 Salesforce-campaign victims — consistent with the hedged
+      placement here; no change needed.
+    - target orgs/pandora.yaml exists (resolves); its sources: [] could
+      optionally carry these two Pandora-specific records (orchestrator).
+    - umbrella event 2025-06/unc6040-shinyhunters-salesforce-campaign models
+      Pandora as a campaign child — consistent; not edited.
+    - Chanel is named as same-wave context (Infosec-sourced) but has no
+      target/event of its own in scope here — orchestrator may create a
+      Chanel per-victim child if desired.

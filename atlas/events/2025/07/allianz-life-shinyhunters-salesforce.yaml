@@ -1,48 +1,224 @@
 id: 2025-07/allianz-life-shinyhunters-salesforce
 name: Allianz Life third-party CRM breach (Salesforce vishing chain)
-start_date: 2025-07-16
-disclosure_date: 2025-07-26
-end_date: 2025-08-31
+start_date: 2025-07-16  # Allianz: "On July 16, 2025, a malicious threat actor gained access"; discovered ~Jul 17
+disclosure_date: 2025-07-26  # earliest snapshot-anchored public disclosure (BC 2025-07-26 + Maine-AG placeholder filing that weekend)
+end_date: 2025-07-26  # single-access intrusion contained "immediately" on discovery; bounded through public disclosure. Prior 2025-08-31 was unsourced.
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # via UNC6040 vishing → Salesforce OAuth
+initial_vector: phishing  # campaign-inferred: social engineering (vishing) -> third-party cloud CRM. Allianz said "social engineering technique" but declined to confirm Salesforce / UNC6040.
 outcome_summary: |
-  In late July 2025 Allianz Life Insurance Company of North
-  America disclosed that on July 16 2025 a malicious actor had
-  accessed personal data of the majority of its approximately
-  1.4 million US customers, financial professionals, and
-  selected employees via a third-party cloud-based CRM
-  platform. Exposed fields included names, dates of birth,
-  addresses, contact information, and financial-professional
-  business data. The intrusion was attributed by Google Threat
-  Intelligence Group and journalism consensus to the UNC6040
-  / ShinyHunters voice-phishing / Salesforce-OAuth campaign.
-quantified_impact:
-  individuals_affected: 1100000  # "the majority of" ~1.4M
+  On 26 July 2025 Allianz Life Insurance Company of North America
+  confirmed that on 16 July 2025 a malicious threat actor had
+  gained access to a third-party, cloud-based CRM system and
+  obtained personally identifiable data related to "the majority"
+  of its approximately 1.4 million US customers, financial
+  professionals, and select Allianz Life employees, using — in the
+  company's words — "a social engineering technique." Allianz Life
+  stated it "took immediate action to contain and mitigate the
+  issue and notified the FBI," and that "there is no evidence the
+  Allianz Life network or other company systems were accessed,
+  including our policy administration system." The company first
+  revealed the breach in a mandatory placeholder filing with
+  Maine's Attorney General's Office that weekend; no exact number
+  of affected individuals was published (the Maine AG filing lists
+  the total as "Unknown"). Allianz "declined to answer questions
+  about the threat actor and whether they were being extorted" and
+  declined to confirm whether the CRM was Salesforce; BleepingComputer
+  reported it "has learned that the attack is believed to have been
+  conducted by the ShinyHunters extortion group" and linked it to the
+  Google-Threat-Intelligence-Group-documented UNC6040 voice-phishing /
+  Salesforce-OAuth campaign — a press inference, not a GTIG victim-
+  naming or an Allianz confirmation.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event. Notable as the first major US-
-  insurance-sector intrusion in the 2025 campaign and a marker
-  for the sensitive-PII trajectory of UNC6040 targeting.
+  Per-victim child event of the 2025 UNC6040 / ShinyHunters
+  Salesforce-cloud campaign (campaign_id shinyhunters-salesforce-2025)
+  — the same vishing -> third-party-CRM chain as the Adidas, LVMH-brand
+  and Cisco siblings. Notable as an early major US-insurance-sector
+  intrusion in the campaign and a marker for the sensitive-PII
+  trajectory of the ShinyHunters brand. Attribution is hedged:
+  GTIG's reports name NO victim (no Allianz); "ShinyHunters" is the
+  extortion self-claim brand over GTIG's UNC6040 (vishing) / UNC6240
+  (extortion) clusters, not a confirmed stable group; and Allianz's
+  own statement attributes nothing beyond "a social engineering
+  technique" against a third-party CRM (Allianz declined to name the
+  threat actor, confirm Salesforce, or confirm extortion). The
+  ShinyHunters placement is BleepingComputer's press inference
+  ("BleepingComputer has learned ... is believed"). No Allianz-
+  specific public extortion or data leak is documented (Allianz is
+  not named in the Oct-2025 "Scattered LAPSUS$ Hunters" leak-site
+  reporting), so extortion is NOT recorded as an Allianz incident_type.
+  The originally-cited attribution source (mandiant/2025-08-08, which
+  names no victim and is un-snapshottable) was re-sourced this audit to
+  Allianz-specific reporting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group (Mandiant)
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: BleepingComputer (Allianz-Life placement) + Google Threat Intelligence Group (campaign)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-07-26
+    attribution_source_id: bleepingcomputer/2025-07-26_allianz-life-confirms-majority-14-million
+    attribution_level: activity-cluster
+    notes: |
+      Allianz's own statement names NO threat actor and does not
+      confirm Salesforce ("declined to comment"). The ShinyHunters
+      placement is BleepingComputer's press inference: "While Allianz
+      Life declined to answer questions about the threat actor and
+      whether they were being extorted, BleepingComputer has learned
+      that the attack is believed to have been conducted by the
+      ShinyHunters extortion group" (BC 2025-07-26, sha256 d15dcb45..
+      92b99c56), corroborated by BC 2025-07-30 placing Allianz in "the
+      same campaign detailed by Google" (UNC6040). GTIG's own reports
+      (incl. the un-snapshottable mandiant/2025-08-08) name NO Allianz
+      victim, and GTIG reports "UNC6240 has consistently claimed to be
+      the threat group ShinyHunters ... likely as a method to increase
+      pressure" (mandiant/2025-06-04, sha256 4dce0e4b..f79c1051) — a
+      self-claim, not a GTIG identity assertion. Hence moderate /
+      concur-with-caveat / activity-cluster, NOT high.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism (cluster overlap)
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-07-30
+    attribution_source_id: bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster overlap only, and expressly contested. Neither
+      Allianz's statement nor the Allianz-specific BC 2025-07-26 article
+      mentions Scattered Spider. BC 2025-07-30 (sha256 d8de5cd4..
+      f0636dad) frames it as confusion: "the attacks attributed to
+      Scattered Spider (tracked by Mandiant as UNC3944) ... However,
+      threat actors associated with Scattered Spider tend to perform
+      full-blown ne[twork intrusions]" — a similar-sector / similar-TTP
+      overlap, not Allianz-specific evidence. Krebs (2025-10, sha256
+      9c2d11a8..97619835) describes "Scattered LAPSUS$ Hunters" as "an
+      amalgamation of three hacking groups - Scattered Spider, Lapsus$
+      and ShinyHunters" (it names no Allianz). Prior record pointed this
+      attribution to mandiant/2025-08-08 (un-snapshottable, names no
+      Allianz); corrected, confidence moderate -> low.
 doctrine_links: []
 targets:
   - target_id: orgs/allianz-life
     role: primary
 sources:
   - mandiant/2025-06-04_unc6040-voice-phishing-data-extortion
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+  - bleepingcomputer/2025-07-26_allianz-life-confirms-majority-14-million
+  - bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
   - krebs/2025-10_shinyhunters-corporate-extortion-spree
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. RE-SOURCE (badrabbit model):
+    the event is REAL but its sole attribution source (mandiant/2025-08-08)
+    names NO victim and is un-snapshottable (JS-rendered + drifted past its
+    2025-08-08 state to post-Aug UNC6661/UNC6671 + Jan-2026 content, as the
+    Adidas/LVMH/Cisco sibling audits established), so the Allianz-specific
+    facts + attribution were re-pointed to Allianz-specific reporting. One
+    NEW Allianz-specific source created + snapshotted this audit
+    (bleepingcomputer/2025-07-26); the two shared campaign sources
+    (mandiant/2025-06-04, krebs/2025-10) and bleepingcomputer/2025-07-30
+    were already snapshotted by siblings and are VERIFIED + CITED here.
+
+    [a] FACTS - every load-bearing claim now carried verbatim by a
+    snapshotted source:
+      - "On July 16, 2025, a malicious threat actor gained access to a
+        third-party, cloud-based CRM system used by Allianz Life Insurance
+        Company of North America" (Allianz spokesperson, via BC 2025-07-26
+        sha256 d15dcb45..92b99c56; corroborated by BC 2025-07-30).
+      - "the personal information for the 'majority' of its 1.4 million
+        customers was exposed"; "personally identifiable data related to
+        the majority of Allianz Life's customers, financial professionals,
+        and select Allianz Life employees, using a social engineering
+        technique" (BC 2025-07-26).
+      - "no evidence the Allianz Life network or other company systems were
+        accessed, including our policy administration system"; "notified
+        the FBI"; Maine-AG placeholder filing (BC 2025-07-26).
+      - STRIPPED the fabricated field enumeration "names, dates of birth,
+        addresses, contact information, and financial-professional business
+        data" - NO cited source enumerates fields; the raw says only
+        "personally identifiable data" ("date of birth" = 0 hits in the
+        snapshot). REWORDED to the source's actual wording.
+      - REMOVED quantified_impact individuals_affected: 1,100,000 -
+        fabricated precision. No source gives an exact count; Allianz said
+        only "the majority" of 1.4M and the Maine AG filing lists the total
+        affected as "Unknown". The 1.4M-customer population + "majority
+        affected" bound is preserved verbatim in outcome_summary.
+      - STRIPPED the unhedged "attributed by Google Threat Intelligence
+        Group ... to the UNC6040 / ShinyHunters campaign": GTIG names no
+        Allianz victim; the link is BleepingComputer's inference.
+    [b] ATTRIBUTION - de-escalated over-attestation. ShinyHunters high ->
+        moderate, concur -> concur-with-caveat, attribution_level added
+        (activity-cluster); attributing_org "Google Threat Intelligence
+        Group (Mandiant)" CORRECTED to "BleepingComputer (Allianz-Life
+        placement) + Google Threat Intelligence Group (campaign)" (GTIG
+        names no Allianz); attribution_source_id re-pointed
+        mandiant/2025-08-08 -> bleepingcomputer/2025-07-26, which carries
+        the placement ("BleepingComputer has learned that the attack is
+        believed to have been conducted by the ShinyHunters extortion
+        group"). Scattered Spider moderate -> low, re-pointed
+        mandiant/2025-08-08 -> bleepingcomputer/2025-07-30 (which carries
+        the contested-SS caveat + names Allianz). false_flag_risk:
+        suspected retained (deliberate ShinyHunters brand-borrowing /
+        self-claim; Allianz declined to confirm the actor).
+    [c] DATES - start 2025-07-16 KEPT (Allianz-stated intrusion date,
+        source-exact). disclosure 2025-07-26 KEPT (BC datePublished
+        2025-07-26T14:00:55-04:00 = earliest snapshot-anchored public
+        disclosure; Maine-AG placeholder filing that weekend - note a
+        Fri-25/Sat-26 filing-date ambiguity in secondary reporting).
+        end_date 2025-08-31 (unsourced) -> 2025-07-26: the intrusion was a
+        single-access event contained "immediately" on discovery (~Jul 17)
+        with "no evidence the ... network or other company systems were
+        accessed"; bounded through public disclosure. Source published_on
+        verified: BC-Allianz 2025-07-26 (datePublished 14:00:55), BC-0730
+        2025-07-30, Mandiant 2025-06-04, Krebs 2025-10-07.
+    [d] DOCTRINE_LINKS - none (per scope; criminal financially-motivated
+        extortion cluster, no strategic-doctrine terminal goal). Correct.
+    [e] ATTRIBUTION_LEVEL - added activity-cluster on both attributions:
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) clusters;
+        "ShinyHunters" is a self-applied brand over them and the Allianz
+        placement is inferential (Allianz named no actor) - activity-cluster
+        is the honest granularity, not named-actor.
+    [f] ACTOR_ID - criminal/shinyhunters and criminal/scattered-spider both
+        resolve to existing atlas actor ids. Not a counter-action (no
+        LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] -> [intrusion, data-theft]: intrusion
+    (unauthorized access to a third-party cloud CRM via social engineering)
+    + data-theft (PII of the majority of 1.4M customers obtained) are
+    Allianz-confirmed. Extortion NOT added: Allianz "declined to answer ...
+    whether they were being extorted", no Allianz-specific extortion demand
+    or public leak is documented, and Krebs (2025-10) names no Allianz
+    (0 hits) - so this DIVERGES from the Adidas/LVMH siblings (which
+    inherited campaign-chain extortion) and matches the Cisco sibling.
+
+    SOURCING: DROPPED mandiant/2025-08-08_expansion-shinyhunters-saas-data-
+    theft (un-snapshottable + names no Allianz). KEPT mandiant/2025-06-04
+    (campaign anchor, sha256 4dce0e4b..f79c1051) + krebs/2025-10 (SS
+    amalgamation framing, sha256 9c2d11a8..97619835). ADDED
+    bleepingcomputer/2025-07-26 (NEW, sha256 d15dcb45..92b99c56, Allianz
+    figure + notice + attribution) + bleepingcomputer/2025-07-30 (sha256
+    d8de5cd4..f0636dad, campaign placement + SS caveat, already snapshotted).
+
+    FLAGS (not edited - outside event / own-source scope):
+    - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft source
+      record: un-snapshottable (JS-rendered + drifted past publication to
+      UNC6661/UNC6671 + Jan-2026 content) and names no victim. Dropped from
+      this event but STILL cited by qantas, pandora, air-france-klm, google,
+      workday events + actor + umbrella (not orphaned) - orchestrator should
+      mark that source record snapshot: partial (same flag raised by the
+      LVMH + Cisco audits) and re-check the qantas event, whose ShinyHunters
+      attribution still rests high/concur on it.
+    - actor criminal/shinyhunters roster (line ~33) already lists "Allianz
+      Life" among UNC6240 2025-Salesforce-campaign victims - consistent with
+      the hedged placement here; no change needed.
+    - target orgs/allianz-life.yaml summary reflects the hedged UNC6040 /
+      ShinyHunters placement (consistent); its sources: [] could optionally
+      carry the two BleepingComputer records (orchestrator).
+    - umbrella event 2025-06/unc6040-shinyhunters-salesforce-campaign and
+      bleepingcomputer/2025-07-30 source record are shared across siblings;
+      not edited.

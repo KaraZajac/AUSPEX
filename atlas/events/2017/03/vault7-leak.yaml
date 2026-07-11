@@ -2,14 +2,14 @@ id: 2017-03/vault7-leak
 name: Vault 7 leak (CIA CCI / EDG tooling exposed)
 start_date: 2017-03-07  # WikiLeaks Year Zero release
 disclosure_date: 2017-03-07
-end_date: 2017-11-09  # final Vault 7 release
+end_date: 2017-09-07  # final Vault 7 release = "Protego" per WikiLeaks "Projects" page (last dated release); Nov 9 2017 was Vault 8 (Hive source code), a SEPARATE WikiLeaks series
 incident_type:
   - documentary  # leak of US capability; not an offensive US operation
 initial_vector: insider  # Joshua Schulte (EDG developer), exfiltrated 2016
 outcome_summary: |
   ~8,761 documents and files exposing CIA CCI / EDG cyber tooling
   published by WikiLeaks across 24 partial releases (March 7 –
-  November 9, 2017). Documented sub-branches of the CCI / EDG, named
+  September 7, 2017). Documented sub-branches of the CCI / EDG, named
   tools (HIVE, Fluxwire, Brutal Kangaroo, Weeping Angel, Pandemic,
   ELSA, Year Zero, Athena, Marble Framework), and operational
   tradecraft. Joshua Schulte (former CIA EDG developer) convicted
@@ -21,33 +21,67 @@ summary: |
   of CIA CCI / EDG attribution to the Longhorn / Lamberts cluster
   (per Symantec / Kaspersky April 2017).
 
-  Doctrinal significance: exposed the operational architecture of
-  CIA covert-action cyber under Title 50 §3093 — sub-branch
-  structure (EDB, OSB, RDB, MDB, NDB), the Marble Framework's
-  false-flag-capable string obfuscation with multi-language decoys
-  (Chinese, Russian, Korean, Arabic, Farsi), and the tradecraft
-  norms around tool revocation and burn protocols.
+  Doctrinal significance: documented the operational architecture of
+  the CIA's Center for Cyber Intelligence / Engineering Development
+  Group — sub-branch structure (EDB = Embedded Development Branch,
+  OSB = Operational Support Branch, RDB = Remote Development Branch,
+  MDB = Mobile Devices Branch, NDB = Network Devices Branch), the
+  Marble Framework's false-flag-capable string obfuscation with
+  multi-language decoys (Chinese, Russian, Korean, Arabic, Farsi),
+  and WikiLeaks' claim that "the CIA lost control of the majority of
+  its hacking arsenal." The Title 50 intelligence-community authority
+  framing is treated as strongly_inferred in doctrine_links, not
+  asserted here: no cited source states a §3093 covert-action legal
+  basis.
 attributions:
   - actor_id: us/cia/longhorn-lamberts
     attributing_org: SDNY (US v. Schulte conviction)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-07-13
     attribution_source_id: doj/2022-07-13_schulte-conviction
     notes: |
-      Tool authorship attribution to CIA CCI / EDG is `attested` via
-      judicial conviction of the EDG developer responsible for the
-      leak. WikiLeaks publication is the primary documentary record.
+      Tool authorship to CIA CCI / EDG is judicially corroborated by
+      the SDNY conviction of Joshua Schulte, the CIA EDG developer
+      responsible for the leak. WikiLeaks publication is the primary
+      documentary record and names the CIA throughout (105× on the
+      Year Zero page). attribution_level named-unit: the CIA Engineering
+      Development Group is explicitly named as the tooling's origin.
+      NOTE: the DOJ conviction page is un-snapshottable (Akamai
+      bot-wall) — the Schulte / SDNY / Jul-2022 specifics are
+      mirror-corroborated public record, which holds the event at qc
+      level partial.
 doctrine_links:
   - doctrine_id: us/title-10-title-50
     pillar_id: null
     program_id: null
-    confidence: attested
+    perspective: attacker-rationale
+    confidence: strongly_inferred
     reasoning: |
-      Documentary exposure of CIA Title 50 §3093 covert-action cyber
-      architecture. Informed subsequent reforms to insider-threat
-      and tool-handling protocols at CIA per congressional reporting.
-    attesting_source_id: doj/2022-07-13_schulte-conviction
+      Vault 7 documents the CIA's own cyber tooling (CCI / EDG), so the
+      exposed operations sit on the Title 50 intelligence-community
+      authority track, not the Title 10 traditional-military-activity
+      track that governs USCYBERCOM. The March–September 2017 exposure
+      window (and the 2016 exfiltration) predates NSPM-13 and Defend
+      Forward (both 2018), so no more-specific US operational cyber
+      doctrine was in force; the Title 10 / Title 50 statutory frame is
+      the applicable linkage. strongly_inferred, not attested: no cited
+      source states the legal-authority basis, and the sources do not
+      resolve whether the collection ran as §3093 covert action (finding
+      + notification) or as Title 50 clandestine intelligence collection
+      — only that the tooling's author is a CIA IC unit. (Prior
+      `attested` + reference to "congressional reporting" was
+      over-attestation: no such congressional source is cited, and the
+      DOJ conviction PR does not state a legal-authority basis.)
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "WikiLeaks Year Zero attributes the tooling to the CIA's Center for Cyber Intelligence / Engineering Development Group (\"the series, 'Year Zero', comprises 8,761 documents and files from an isolated, high-security network situated inside the CIA's Center for Cyber Intelligence\"; CIA named 105× on the Year Zero page) — a Title 50 intelligence-community agency, not a Title 10 military command."
+        - "The SDNY conviction of Joshua Schulte, a CIA CCI / EDG software engineer, judicially places the tooling's authorship inside the CIA (Title 50), not the DoD (Title 10)."
+        - "The 2016 exfiltration / March–September 2017 exposure window predates NSPM-13 and Defend Forward (both 2018); the Title 10 / Title 50 framework is the only US doctrinal authority in force for the period."
+      ruled_out: "Title 10 traditional-military-activity (USCYBERCOM) framing: WikiLeaks and the Schulte conviction place authorship inside the CIA IC (Title 50), not a DoD military command."
+    counter_explanation: null
     contested: false
     analyst: claude
 targets: []  # not a target-oriented event
@@ -56,3 +90,93 @@ sources:
   - doj/2022-07-13_schulte-conviction
   - symantec/2017-04-10_longhorn-vault7-link
   - kaspersky/2017-04-11_lamberts-toolkit
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-11
+  level: partial
+  notes: |
+    Full 6-point event-audit vs the 4 cited RAW sources (all four snapshots hash-verified
+    on disk this audit). This is the DOCUMENTARY/leak meta-event: subject = us/cia (the
+    longhorn-lamberts lineage), leaker = Joshua Schulte via WikiLeaks — NOT a CIA "attack".
+    Kept DISTINCT from the sibling intrusion event 2007-01/longhorn-cumulative (same actor).
+    SNAPSHOTS (hash-verified, matches source records): WikiLeaks "Projects" page
+    wikileaks__2017-03-07_vault7-year-zero.html sha256 9d6ef1f4…59334 (95,735 B) carries the
+    release list + tools + Marble decoys + branch codes; WikiLeaks Year Zero page
+    wikileaks__2017-03-07_ciav7p1-year-zero.html sha256 a817d8f7…c59f1d (71,229 B) carries the
+    8,761 figure + CCI + Weeping Angel/Samsung + "lost control of … hacking arsenal"; Symantec
+    Broadcom mirror symantec__2017-04-10_longhorn-broadcom-mirror.html sha256 7a33057d…a747235
+    (127,619 B) carries Longhorn⇔Vault7 + Fluxwire (4×); Kaspersky
+    kaspersky__2017-04-11_lamberts-toolkit.html sha256 90c4676f…098666 (213,131 B) carries
+    Longhorn = "The Lamberts". DOJ = NO snapshot (see [b]).
+    [a] FACTS — verified against raw:
+      • "8,761 documents and files" ⇐ Year Zero page VERBATIM: "The first full part of the
+        series, 'Year Zero', comprises 8,761 documents and files from an isolated,
+        high-security network situated inside the CIA's Center for Cyber Intelligence in
+        Langley, Virgina."
+      • "24 partial releases" ⇐ Projects page enumerates Year Zero (7 Mar) + 23 dated
+        releases (Dark Matter 23 Mar … Protego 7 Sep 2017) = 24. CORRECT.
+      • Tools HIVE(17×), Brutal Kangaroo(11×), Weeping Angel(5×), Pandemic(21×), ELSA(9×),
+        Athena(18×), Marble(17×), Year Zero ⇐ Projects page; Fluxwire ⇐ Symantec mirror (4×,
+        0× in WikiLeaks — genuine CIA tool, source-carried by Symantec, NOT fabricated).
+      • Weeping Angel / Samsung TVs ⇐ Year Zero page VERBATIM: "even Samsung TVs, which are
+        turned into covert microphones" / "Weeping Angel places the target TV in a 'Fake-Off'
+        mode". (NB-flagged tool — CONFIRMED, not embellished.)
+      • Sub-branches EDB/OSB/RDB/MDB/NDB — ALL FIVE confirmed as genuine CIA EDG branch names:
+        "Embedded Development Branch (EDB)", "Remote Development Branch (RDB)" (Projects page);
+        "Mobile Devices Branch (MDB)", "Operational Support Branch" (OSB), "Network Devices
+        Branch (NDB)" (Year Zero page). Not coincidental substrings.
+      • Marble multi-language decoys ⇐ Projects page VERBATIM: "not just in English but also in
+        Chinese, Russian, Korean, Arabic and Farsi. This would permit a forensic attribution
+        double game".
+      FABRICATION STRIPPED (0-hit): summary claimed "tradecraft norms around tool revocation
+      and burn protocols" — 0 occurrences of revocation/revoke/burn/kill-switch across BOTH
+      WikiLeaks pages (fabricated tool lore, per NB warning). Replaced with the source-carried
+      "the CIA lost control of the majority of its hacking arsenal" (Year Zero page, verbatim).
+      Also softened summary's asserted "CIA covert-action cyber under Title 50 §3093" → the
+      Title-50 framing is confined to doctrine_links as strongly_inferred (no source states
+      §3093). No fabricated CVEs/victims/figures/quotes otherwise.
+    [b] ATTRIBUTION — actor us/cia/longhorn-lamberts, SDNY (Schulte conviction), high, concur —
+      retained (judicial + WikiLeaks CIA-naming 105× fully support it; no over-attestation).
+      ADDED attribution_level: named-unit (CIA EDG explicitly named as origin). De-loaded the
+      notes prose ("`attested` via judicial conviction" → "judicially corroborated"). RAW
+      UNFETCHABLE: justice.gov serves a 2,324-byte Akamai "bm-verify" interstitial (0 "Schulte"
+      hits, 3 "bm-verify"; HTTP 200 but not the release) — no snapshot obtainable, so the
+      Schulte/SDNY/Jul-2022 specifics and initial_vector=insider are mirror-corroborated public
+      record only. This is the SOLE reason level = partial (all other load-bearing claims are
+      carried by a snapshotted source).
+    [c] DATES — CORRECTED: end_date 2017-11-09 → 2017-09-07. The WikiLeaks Projects page (2026
+      capture) lists the final Vault 7 release as "Protego – 7 September, 2017"; "Vault 8"=0,
+      "9 November"=0, "November 2017"=0 (the 2 stray "November" hits are 2014/2016 document
+      dates, not a release). Nov 9 2017 was the start of WikiLeaks "Vault 8" (Hive SOURCE CODE),
+      a separate series — the event conflated the two. outcome_summary date range fixed to
+      "March 7 – September 7, 2017". start/disclosure 2017-03-07 (Year Zero) ✓. Source
+      published_on dates verified: WikiLeaks 2017-03-07, Symantec 2017-04-10, Kaspersky
+      2017-04-11 (all match bylines); DOJ 2022-07-13 = Schulte SDNY conviction date (public
+      record, un-snapshottable).
+    [d] DOCTRINE_LINKS — us/title-10-title-50 DOWNGRADED attested → strongly_inferred
+      (over-attestation fix, matching sibling 2007-01/longhorn-cumulative): prior block set
+      confidence=attested with attesting_source_id=DOJ and cited unnamed "congressional
+      reporting" — but the DOJ conviction PR does not state a Title-50/§3093 legal-authority
+      goal, and no congressional source is cited. Set attesting_source_id: null; ADDED
+      perspective: attacker-rationale (US/CIA is the subject; Title 50 is its OWN authority) +
+      inference_basis{signals[3], ruled_out} + counter_explanation: null. Sources establish
+      only that the tooling's author is a CIA IC (Title 50) unit; §3093-covert-action vs
+      Title-50-clandestine-collection is NOT resolved — stated as such. ruled_out Title 10 TMA
+      (authorship is CIA, not DoD).
+    [e] ATTRIBUTION_LEVEL — ADDED named-unit (was missing): CIA Engineering Development Group
+      is explicitly named across the WikiLeaks pages and via Schulte's employer in the
+      conviction. Consistent with the sibling event's SDNY row.
+    [f] ACTOR_ID — us/cia/longhorn-lamberts resolves to the id field of
+      atlas/actors/us/longhorn-lamberts.yaml (present; id: us/cia/longhorn-lamberts). Correct
+      subject-entity for a leak meta-event about the CIA cluster (not a null-actor
+      counter-action; the leaker Schulte is named in prose, incident_type=documentary).
+    FLAGS (out-of-scope — NOT edited here):
+      (1) SIBLING EVENT atlas/events/2007/01/longhorn-cumulative.yaml — its end_date: 2017-11-09
+          "# last Vault 7 release" and outcome_summary "March 7 – November 9, 2017" carry the
+          SAME Vault7/Vault8 conflation found here; the primary (same WikiLeaks Projects
+          snapshot it cites) shows the final Vault 7 release = Protego, 7 Sep 2017. Recommend
+          correcting that event's end_date to 2017-09-07 for consistency.
+      (2) DOJ source atlas/sources/doj/2022-07-13_schulte-conviction.yaml — remains
+          un-snapshottable (Akamai bot-wall, re-confirmed this audit: 2,324 B interstitial);
+          the single reason this event is partial not full. No edit needed.
