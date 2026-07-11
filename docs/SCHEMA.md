@@ -9,9 +9,9 @@ data disagree, the data wins; re-run the introspector.
 This document is the human-readable form; the **machine-checkable form** is
 [`audit/schemas/atlas.schema.json`](../audit/schemas/atlas.schema.json) (standard JSON
 Schema), enforced over every record by `audit/check_conformance.py` — currently
-**PASS, 2,934/2,934 records conform**. Keep the two in step.
+**PASS, 3,459/3,459 records conform**. Keep the two in step.
 
-Current as of the 815-event corpus (2026-05-31). Regenerate / verify:
+Current as of the 785-event corpus (2026-07-11). Regenerate / verify:
 
 ```sh
 python3 audit/check_conformance.py        # validate every record against the JSON Schema (PASS/FAIL)
@@ -20,8 +20,8 @@ python3 audit/verify_atlas.py             # consistency + referential audit
 pnpm --dir site validate                  # the engine's own validator (FKs + feature enums)
 ```
 
-Entity counts: events 815 · actors 204 · services 88 · nation-states 17 · doctrines 86
-(199 pillars) · sources 1,269 · targets 108 · timeline-markers 73 · policy-actions 178 ·
+Entity counts: events 785 · actors 222 · services 93 · nation-states 18 · doctrines 86
+(199 pillars) · sources 1,794 · targets 113 · timeline-markers 73 · policy-actions 179 ·
 sectors 96 (one aggregate file). `campaigns/` is empty — campaigns are editorial
 `campaign_id` strings on events, not their own files.
 
@@ -85,7 +85,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `anticipated_timeline_markers` | list\<dict\> | optional | forecast linkage: `{marker_id (FK→timeline-markers), confidence (attested\|strongly_inferred), reasoning}` |
 | `notes` | str | optional | editorial note |
 
-**`attributions[]`** (914 across the corpus):
+**`attributions[]`** (929 across the corpus):
 
 | field | type | req | notes |
 |---|---|---|---|
@@ -99,7 +99,7 @@ The central entity: a cyber operation (or a meta/announcement event).
 | `notes` | str | optional (28%) | |
 | `service_id` | str\|null | optional (4%) | FK → services; overrides the actor's default service |
 
-**`doctrine_links[]`** (1,021 across the corpus):
+**`doctrine_links[]`** (934 across the corpus):
 
 | field | type | req | notes |
 |---|---|---|---|
@@ -133,7 +133,7 @@ encodes that goal even if it never says "8th Congress defense plan"; a source na
 **behaviour or a weaker/adjacent goal** ("circumvent sanctions", "generate revenue for the
 regime", or nothing) does **not** — that is `strongly_inferred`/`plausible`.
 
-**`targets[]`** (1,382 across the corpus):
+**`targets[]`** (1,363 across the corpus):
 
 | field | type | req | notes |
 |---|---|---|---|
@@ -213,12 +213,12 @@ Intelligence services / military units / state-aligned vendors.
 
 | field | type | req | notes |
 |---|---|---|---|
-| `id` | str | REQUIRED | `us`, `ru`, `cn`, … (17: ae by cn fr il in ir kp kr pk ps ru sa tr uk us vn) |
+| `id` | str | REQUIRED | `us`, `ru`, `cn`, … (18: ae by cn fr il in ir kp kr lb pk ps ru sa tr uk us vn) |
 | `name` | str | REQUIRED | full official name |
 | `short_name` | str | REQUIRED | common name |
 | `summary` | str | REQUIRED | strategic posture prose |
 
-> Note: 17 nation-states exist but only **15 have doctrines** (`ps`, `sa` are actor-only).
+> Note: 18 nation-states exist but only **15 have doctrines** (`lb`, `ps`, `sa` are actor-only).
 
 ---
 

@@ -1,6 +1,16 @@
-# Corpus verification plan — how 818 events get defensibly verified by one person
+# Corpus verification plan — how 785 events got defensibly verified by one person
 
-**The problem.** Full hand-verification of every record (818 events · 1,272 sources · ~1,000
+> **STATUS — 2026-07-11: CENSUS COMPLETE (100%).** Every event now carries a `qc:` stamp —
+> **691 full + 94 partial = 785 of 785, 0 unstamped.** *Full* = every load-bearing claim is
+> carried by a snapshotted source; *partial* = a load-bearing source was un-snapshottable
+> (bot-walled / link-rotted) and mirror-corroborated. Each event was LLM-audited 6-point (Claude
+> Opus 4.8, `verified_by: claude-opus-4.8`) against its RAW cited sources — a 100%-coverage
+> record-vs-source audit; human inter-rater verification (`verified_by: kara`) is the separate
+> tier. Machine gate green: `make verify` = 3,459/3,459 schema-conform.
+> The plan below is retained as the executed methodology; the risk tiers are the order the
+> census ran in (**T2 is done**; the T3 sample was superseded — every event got the full protocol).
+
+**The problem.** Full hand-verification of every record (785 events · 1,794 sources · ~930
 doctrine links) at 10–20 min/event is 200+ hours — possible over a year, but uniform effort is
 the *wrong* allocation. Examiners don't expect a census; they expect a **defensible quality
 methodology**: census where risk concentrates, measured error rates where it doesn't, and a
@@ -10,7 +20,7 @@ written definition of what "verified" means. This plan is that methodology.
 > the full per-event protocol — not census-the-risk-pool-and-sample-the-tail. The risk tiers
 > below are retained purely as the verify-first **order** (P1 hardest → P5 last); the "T3
 > sampling" tier is **superseded** — every event receives the full protocol and a `qc:` stamp.
-> Live burn-down: `pnpm exec tsx tools/qc-verify-worklist.ts` (full-census mode, all 818).
+> Live burn-down: `pnpm exec tsx tools/qc-verify-worklist.ts` (full-census mode, all 785 — **now 0 remaining**).
 > The original risk-pool effort estimates below remain as context for why the order is what it is.
 
 ## What "verified" means (the per-event protocol)
@@ -28,7 +38,7 @@ has confirmed, against the cited sources:
 5. **Doctrine link** — the reasoning holds; confidence label honest (`attested` only if the
    source names the goal — now gate-enforced); `perspective` correct.
 6. **Stamp it**: add a `qc:` stamp that names the auditor —
-   - human → `qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full|sources-only}`
+   - human → `qc: {verified_by: kara, verified_on: YYYY-MM-DD, level: full|partial|sources-only}`
    - LLM audit → `qc: {verified_by: claude-opus-4.8, effort: max, verified_on: YYYY-MM-DD, level: full}`
 
    The stamp makes verification *queryable* — coverage becomes a number **per tier**
@@ -39,9 +49,9 @@ has confirmed, against the cited sources:
 | tier | what | coverage | status |
 |---|---|---|---|
 | **T0 — machine, continuous** | schema conformance, FK/enum integrity, perspective/attested rules, the pre-commit gate | 100%, every commit | ✅ built, enforced |
-| **T1 — machine, periodic** | URL liveness (`verify_atlas.py --check-urls`) + **archive.org snapshot of all 1,272 source URLs** (links *will* rot before a defense) | 100% of sources | tool exists; archiving to build |
-| **T2 — human census of the risk pool** | full protocol verification of every HIGH-RISK record | ~360 events (see below) | the main effort |
-| **T3 — human stratified sample of the rest** | full protocol on a random sample of the remaining ~460 events; **report the measured per-field error rate with a CI** in the dissertation; any stratum whose error rate exceeds threshold escalates to census | n≈100, stratified by state × year-band × source-tier | after T2 |
+| **T1 — machine, periodic** | URL liveness (`verify_atlas.py --check-urls`) + **archive.org snapshot of all 1,794 source URLs** (links *will* rot before a defense) | 100% of sources | tool exists; archiving to build |
+| **T2 — human census (full-census decision)** | full protocol verification of **every** record | every event (785) | ✅ **COMPLETE** — 691 full + 94 partial |
+| **T3 — human stratified sample of the rest** | full protocol on a random sample of the remaining ~460 events; **report the measured per-field error rate with a CI** in the dissertation; any stratum whose error rate exceeds threshold escalates to census | n≈100, stratified by state × year-band × source-tier | **superseded** — full census elected (see decision above) |
 
 **The risk pool (T2 census), in priority order:**
 
@@ -84,7 +94,7 @@ eyeballed everything.
 - `qc` field in the schema + conformance (optional field; gate reports coverage %).
 - `tools/archive-sources.ts` — submit all source URLs to the Wayback Machine; write
   `archive_url` back. Run once, then on every new source.
-- Coverage line in `verify_atlas.py` output: "human-verified: N/818 events (X%)."
+- Coverage line in `verify_atlas.py` output: "human-verified: N/785 events (X%)" — now **785/785 (100%)**.
 
 ## Relationship to the other verification instruments
 

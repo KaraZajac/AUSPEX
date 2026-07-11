@@ -2,7 +2,7 @@
 
 *Structure follows Gebru et al., "Datasheets for Datasets" (CACM 2021). Sections marked
 **[KARA]** require the author's own words — they are the motivation/judgment sections reviewers
-read most closely. Numbers below are from the 2026-06-09 corpus (818 events); regenerate from
+read most closely. Numbers below are from the 2026-07-11 corpus (785 events, 100% QC-audited); regenerate from
 `stats.json` (`publish/export_release.py`) at freeze time.*
 
 ## Motivation
@@ -17,9 +17,9 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 
 ## Composition
 
-- **Instances:** 818 events (731 operational, 87 meta/announcement), 205 actors, 88 services,
-  17 nation-states, 86 doctrines (199 pillars; kinds: 48 strategy / 23 posture / 7 statute /
-  6 treaty / 2 event-anchor), 1,272 sources, 179 policy-actions, 108 target entities,
+- **Instances:** 785 events (648 operational, 137 meta/announcement), 222 actors, 93 services,
+  18 nation-states, 86 doctrines (199 pillars; kinds: 48 strategy / 23 posture / 7 statute /
+  6 treaty / 2 event-anchor), 1,794 sources, 179 policy-actions, 113 target entities,
   96 sectors, 73 timeline markers. Years 2003–2026 (regenerate from stats.json).
 - **What does an instance contain?** An event carries dated summary prose, typed incident
   classification, victims (sector × country), `attributions[]` (actor FK + attributing
@@ -64,7 +64,13 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   the published protocol (`docs/CORPUS-VERIFICATION-PLAN.md`): **LLM-audited** — an independent audit
   by Claude Opus 4.8 (max effort) against the cited primary sources, correcting errors and capturing
   the raw source + a content hash for reproducibility — and/or **human-verified** by the candidate.
-  At freeze: __% LLM-audited, __% human-verified (regenerate from stats.json). No record is
+  **The verification census is now complete (2026-07-11): 100% coverage — 691 full + 94 partial
+  of 785 events, 0 unstamped.** *Full* = every load-bearing claim is carried by a snapshotted
+  source; *partial* = a load-bearing source was un-snapshottable (bot-walled or link-rotted) and was
+  mirror-corroborated instead. Every event received a 6-point **LLM audit (Claude Opus 4.8, max
+  effort)** against its captured RAW source — a 100%-coverage record-vs-source audit; independent
+  **human** verification by the candidate (`verified_by: kara`) is a separate tier, disclosed as
+  such and not implied by the LLM census. No record is
   represented as "verified" absent a `qc:` stamp, and the stamp always names the auditor (audit model
   + effort, or `kara`) so the tier is unambiguous. The 157 backfill-imported events promoted on
   2026-06-20 carry no special status — they enter the same protocol.
@@ -74,7 +80,12 @@ self-funded; machine-assisted curation with human verification (see Reliability)
   (`docs/OVER-ATTESTATION-FINDING-2026-06-19.md`) — a systematic audit that found `attested`
   over-applied, corrected ~120 doctrine links (350→~226) to `strongly_inferred`/`plausible`,
   redefined the confidence rubric to the WHY-ladder, and attached an auditable `inference_basis`
-  to each re-graded link. Verified engine-neutral: doctrine top-1 unchanged at 68.7%.
+  to each re-graded link. Verified engine-neutral: doctrine top-1 unchanged at 68.7%. The subsequent
+  **2026-07 verification census** (100% coverage, above) then re-audited every event 6-point against
+  its captured RAW source and withdrew over-attributed and unsupported material; because that removed
+  material had inflated retrodiction, measured engine accuracy **dropped honestly** — attribution
+  (deployed) top-1 64.9%→50.8%, doctrine top-1 68.5%→62.8%, pillar 61.6%→57.6%, joint actor×doctrine
+  47.9%→38.0% — a de-circularization of the evaluation, not a regression in the models.
 - **Threat-actor reference (MISP-galaxy cross-walk):** actor identity, naming, and nation
   attribution are anchored to **MISP-galaxy** `clusters/threat-actor.json` — the open community
   threat-actor registry (MISP Project; snapshot **v341, 2026-06-24**, UUID

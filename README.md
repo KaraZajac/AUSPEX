@@ -1,206 +1,157 @@
 # AUSPEX
 
-**Doctrine-tagged cyber-event intelligence atlas.** A flagship product of [Black Flag Intelligence](https://blackflagintel.com).
+<!-- DOI badge: added after the first Zenodo release mints the concept DOI
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LICENSE)
 
-AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events tagged against the strategic doctrines under which they were tasked. The thesis: vendor attribution names the *who*; doctrine names the *why*. Both are necessary; only the join is the product.
+**A doctrine-tagged corpus of state-sponsored cyber operations.** A research dataset from
+[Black Flag Intelligence](https://blackflagintel.com).
 
-## Current state (atlas snapshot)
+AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events tagged against the
+strategic doctrines under which they were tasked. The thesis: vendor attribution names the *who*;
+doctrine names the *why*. Both are necessary; the join is the contribution.
+
+**Live site:** [auspex.blackflagintel.com](https://auspex.blackflagintel.com) — browse every event,
+actor, and doctrine, with the attribution/doctrine engine and prospective forecasts.
+
+## The dataset
 
 | | |
-|---|---|
-| Events | 818 |
-| Doctrine states | 15 |
-| Doctrines | 86 (across 199 pillars, 7 programs) |
-| Actors | 205 (state + criminal) |
-| Services | 88 |
-| Sources | 1,272 |
-| Timeline markers | 73 |
+|---|---:|
+| Events | **785** |
+| Doctrine-authoring states | **15** |
+| Doctrines (pillars / programs) | **86** (199 / 7) |
+| Actors (state + criminal) | **222** |
+| Services | **93** |
+| Policy-actions (takedowns / sanctions / indictments) | **179** |
+| Source records | **1,794** |
+| Target entities · timeline markers | 113 · 73 |
 
-Doctrine states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, KR, AE.**
+Doctrine-authoring states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, KR, AE.**
+
+**Every event has been audited against its raw sources.** The corpus is **100% qc-stamped**
+(691 full + 94 partial of 785): each event checked 6-point against its raw cited sources — facts,
+attribution, dates, doctrine links, attribution level, actor id — under a documented protocol
+([docs/CORPUS-VERIFICATION-PLAN.md](docs/CORPUS-VERIFICATION-PLAN.md)). This is **machine-performed
+verification** (LLM, `verified_by: claude-opus-4.8`, recorded per event in the `qc:` block) — a
+100%-coverage audit of every record against its primary sources, which is rare for an event dataset;
+it is *not* the same as, and is disclosed separately from, independent human inter-rater
+verification (a distinct reliability study). *Full* means every load-bearing claim is carried by a
+snapshotted source; *partial* means a load-bearing source was un-snapshottable (bot-walled or
+link-rotted) and was mirror-corroborated. Independently, the machine gate (`make verify`) proves
+3,459/3,459 records fit the JSON Schema with zero structural errors.
 
 ## Repo layout
 
 ```
 AUSPEX/
-├── atlas/        # the canonical YAML dataset — read atlas/README.md
-├── site/         # Astro 6 static site that renders the atlas + engine
-├── docs/         # SCHEMA.md (authoritative field schema), methodology + QA reports
-├── audit/        # independent Python verification harness (verify_atlas.py, introspect_schema.py)
-├── research/     # reference notes per state / actor / doctrine + decision-log audits
-└── examples/     # (reserved)
+├── atlas/        # the canonical YAML dataset — one file per event/actor/doctrine/source/…
+├── site/         # Astro static site that renders the atlas + engine + forecasts
+├── docs/         # SCHEMA.md (authoritative field schema), methodology, verification, audits
+├── audit/        # independent Python verification harness (check_conformance.py, verify_atlas.py)
+├── analysis/     # the who×why analyses (FINDINGS.md numeric ledger)
+├── thesis/       # the pre-registered confirmatory predictions
+├── publish/      # release datasheet + bundle exporter
+└── research/     # per-state / per-actor / per-doctrine reference notes + decision logs
 ```
 
-Each subdirectory has its own README where useful. The atlas is the product; the site renders it.
+The atlas is the product; the site renders it. Rights and layered attribution:
+[DATA-RIGHTS.md](DATA-RIGHTS.md). Full dataset documentation: [publish/DATASHEET.md](publish/DATASHEET.md).
 
 ## Editorial discipline
 
-- **Source-anchored.** Every claim links to a primary source (govt, vendor TIR, court doc, indictment). URLs are curl-verified; unverifiable URLs get `url: null` plus an explanatory note. No fabricated URLs.
-- **ICD-203 confidence labels.** `attested` only when the attributing source explicitly named the strategic goal. `strongly_inferred` / `plausible` for weaker linkages with editorial reasoning.
-- **Doctrine linkage is independent of actor attribution.** A `doctrine_links:` entry on an event can be `attested` even when `actor_id: null` — the operation can be doctrinally legible without a named cluster.
-- **Stable slugs forever.** Once a slug is published it never gets renamed; corrections add aliases.
-- **No conflict of interest.** AUSPEX does not work for, contract with, or take funding from any government, intelligence service, or commercial vendor named in the atlas.
+- **Source-anchored.** Every claim links to a primary source (government release, vendor report,
+  court doc, indictment). URLs are curl-verified; unverifiable ones get `url: null` + a note. No
+  fabricated URLs. Copyrighted source *bodies* are not redistributed — only the URL and a SHA-256
+  content hash (`content_sha256`) are published, so anyone can re-fetch and verify.
+- **Confidence labels (ICD-203 style).** A doctrine link is `attested` only when a cited source
+  names the strategic goal in substance; `strongly_inferred` / `plausible` for weaker linkages,
+  each with structured `inference_basis` reasoning.
+- **Doctrine linkage is independent of actor attribution.** A `doctrine_links:` entry can be
+  `attested` even when `actor_id: null` — an operation can be doctrinally legible without a named
+  cluster (e.g. a counter-action where the acting state's doctrine is the point).
+- **Perspective-tagged doctrine.** Links carry `attacker-rationale` / `victim-response` /
+  `defender-response`, so the who×why analyses use only the attacker's own doctrine.
+- **Stable slugs forever.** Once published a slug is never renamed; corrections add aliases.
+- **No conflict of interest.** AUSPEX takes no funding from, and does no work for, any government,
+  intelligence service, or commercial vendor named in the atlas.
 
 ## Engine
 
-Multi-hot Naive Bayes with Laplace smoothing (doctrine / pillar / joint); **attribution** is served by **ComplementNB + a stacked logistic re-ranker** (2026-05-30). Feature families:
+A leakage-aware who×why engine: multi-hot Naive Bayes (doctrine / pillar / joint) and a deployed
+**ComplementNB base + stacked logistic re-ranker** for attribution, over feature families spanning
+target sectors/countries, initial vectors, incident types, MITRE ATT&CK techniques (+ co-occurrence),
+malware families with lineage partial-credit, named targets, geopolitical-marker proximity,
+dyad-reactivity lag, campaign clusters, de-leaked TF-IDF prose, and indictment-named operators.
+Temporal-weighted training, IDF reweighting, hierarchical service priors (Empirical Bayes),
+out-of-distribution detection, and temperature-scaled calibration.
 
-- Target sectors, target countries, initial vectors, incident types, event year
-- MITRE ATT&CK techniques (parent T-codes) + co-occurrence pairs
-- Malware families with lineage-group partial credit (Trickbot↔Conti, IcedID↔Latrodectus)
-- Named target organizations and infrastructure
-- Geopolitical-marker proximity (attacker-side + target-side)
-- Cyber-to-cyber dyad reactivity lag
-- Editorial campaign clusters + algorithmic latent campaign clusters
-- TF-IDF prose terms (extracted from event summary/outcome)
-- Indictment-named individual operators
+**Current accuracy** (corpus of 785 events). Two honesty caveats first: *(1)* ground truth is
+analyst-concurred **vendor attribution**, not a verified oracle — every figure is agreement with
+that consensus; *(2)* leave-one-out / cross-validation is **retrodiction** (trains on events before
+*and* after the held-out one), which is not forward-prediction skill — for that, see the temporal
+holdout. `null = miss` throughout; counter-actions carry a null actor and sit outside the
+attribution label space.
 
-Temporal-weighted training, IDF reweighting, hierarchical service-prior (Empirical Bayes, λ = 0.2), out-of-distribution detection (Jaccard nearest-neighbour + calibrated-entropy), and temperature-scaling calibration (T = 3.0 / 3.0 for doctrine / pillar; the attribution re-ranker emits calibrated probabilities directly).
+| engine | top-1 | top-5 | method |
+|---|---|---|---|
+| **Attribution** (deployed CNB + stacked re-ranker) | **50.8%** | **66.1%** | 5-fold CV, ops-only |
+| **Doctrine** | **62.8%** | **88.1%** | leave-one-out |
+| **Pillar** | **57.6%** | **83.4%** | leave-one-out |
+| **Joint** (actor × doctrine) | **38.0%** | **56.9%** | leave-one-out |
+| Naive baseline (MITRE ATT&CK Groups lookup) | — | 3.4% | the floor |
 
-### Current accuracy (retrodictive: leave-one-out; attribution via 5-fold CV)
+**Prospective skill (temporal holdout, train ≤ 2023-12-31, score 2024+).** For actors with pre-2024
+history (the rankable set), the true actor is in the attribution **top-5 56.2%** of the time;
+counting cold-start new-actor events as misses, the all-test figure is **top-1 18.4% / top-5 40.8%**.
+Doctrine generalizes best temporally (rankable top-5 74.8%). This retrodictive-vs-prospective gap is
+stated plainly rather than papered over.
 
-**Two framing facts before the numbers.** *(1) Ground truth:* labels are analyst-concurred
-**vendor attributions**, not a verified oracle — every figure below measures agreement with that
-consensus, which itself carries an unknown error rate. *(2) Retrodiction:* LOO/CV trains on
-events before *and after* each held-out event; these numbers measure attribution of operations
-whose actors have corpus history, **not** forward-prediction skill — for that, see the temporal
-holdout below (26.5% top-1), which is the honest prospective figure.
+**On the numbers moving.** Every accuracy figure here is *lower* than earlier AUSPEX reports
+(attribution 64.9→50.8, doctrine 68.5→62.8, joint 47.9→38.0). That is the **100% human census
+working as intended**: it removed fabricated and over-attributed events the engines had partly
+memorized, so these are de-circularized, honest numbers on a harder, cleaner corpus. Full
+diagnostics — actor-depth stratification, corpus-growth composition, prose de-leak, calibration —
+live in [`docs/`](docs/) and on the site's research pages. The numeric ledger for the who×why
+analyses is [`analysis/FINDINGS.md`](analysis/FINDINGS.md).
 
-Each engine reports two numbers: **operations-only** (the headline — the engine's task is to infer
-the strategic frame / actor of actual cyber *operations*) and *all-events* (the same eval also
-scoring the ~85 meta/announcement events — doctrine publications, sanctions notices, attribution
-advisories — which are a *different* prediction task). Meta events are excluded from eval but kept
-in training and in the atlas. Reported under the **null = miss** convention (an event whose sole
-true label is a corpus singleton, unrankable under LOO, counts as a miss, not an exclusion);
-counter-operations (state takedowns / sanctions / bounties) carry a null actor and are excluded
-from the attribution/joint label spaces. See [`docs/AUDIT-2026-05-29.md`](docs/AUDIT-2026-05-29.md).
+## Reproducing everything
 
-| Engine | top-1 (ops / all) | top-3 (ops / all) | mAP·MRR (ops / all) | n (ops / all) |
-|---|---|---|---|---|
-| Attribution (ComplementNB + stacked re-ranker) | **64.9%** | **73.0%** | **0.693** MRR | 627 |
-| Doctrine | **68.5%** / 67.0% | **86.9%** / 85.4% | **0.698** / 0.679 mAP | 594 / 666 |
-| Pillar | **61.6%** / 60.5% | **81.2%** / 80.0% | **0.678** / 0.668 mAP | 516 / 574 |
-| Joint (CNB actor × NB doctrine) | **47.9%** / 42.6% | **60.5%** / 59.0% | **0.556** / 0.526 MRR | 526 / 563 |
-
-> **2026-06-09 correction re-baseline** (see [`docs/MODELING-AUDIT-2026-06-09.md`](docs/MODELING-AUDIT-2026-06-09.md)):
-> these figures follow two integrity fixes. **(1) who×why semantics** — doctrine links that named
-> the *victim's* or the *discloser's* doctrine (e.g. Stuxnet tagged with Iran's asymmetric-warfare
-> doctrine; UK NCS on a Sandworm advisory) are now `perspective`-tagged and excluded from engine
-> labels: doctrine/pillar/joint n shrank by ~15 events each and accuracy **rose** (joint +1.3pp) —
-> the removed labels were wrong-side noise. **(2) leak scrubs** — doctrine-name tokens are scrubbed
-> from prose features (the WHY-side twin of the actor-name scrub; −0.5pp doctrine) and the stacked
-> re-ranker's campaign-match feature no longer sees the held-out event's own campaign (stack lift
-> 9.3→8.6pp). Headline top-1 is unchanged at 64.9%; top-3/MRR moved within noise. Lower-but-true.
-
-Doctrine, pillar, and joint fell from their pre‑expansion figures (72.9 / 63.8 / 53.9) once the
-backfilled operations were **doctrine‑tagged** — those events then entered these eval label sets, and
-they are harder (thin actors, long‑tail doctrines). The drop is composition, not regression — the
-same effect documented for attribution. Joint moves most because it must get *both* a long‑tail actor
-and its doctrine right. Excluding meta events still *raises* the doctrine headline (+1.1pp): meta
-events are off‑task for an operation‑trained engine, not easy wins.
-
-**Attribution accuracy is data‑bound, not capability‑bound.** The 64.9% headline is a weighted
-average over a deliberately long‑tailed corpus. Stratified by how much training data each true actor
-has, the engine is strong wherever evidence exists and unrankable only on the singleton tail:
-
-| true actor has… | attribution top‑1 | events |
-|---|---|---|
-| **≥10 events** | **87.5%** | 216 |
-| **5–9 events** | **76.8%** | 185 |
-| 3–4 events | 55.8% | 113 |
-| 2 events | 23.8% | 42 |
-| 1 event (singleton) | 4.3% | 69 |
-
-Half the actor *roster* (98 of 177) is thin (≤2 events) — but only ~17% of events. The headline is
-therefore an honest map of the data‑availability frontier, not a capability ceiling: deepening thin
-actors is the proven lever (a targeted depth round moved 10 of them from 0% to 61.9%).
-
-**Attribution engine — ComplementNB + stacked re-ranker (deployed live).** On the QC'd **818-event**
-corpus, attribution top-1 is **64.9%** (top-3 73.0%, MRR 0.693; 5-fold CV, operations-only): a
-**ComplementNB** base (Rennie et al. 2003 — built for the severe class imbalance of the long tail of
-one-and-few-event actors) at **56.3%**, re-ranked by the L2 logistic stacker (**+8.6pp**), and
-**+16.1pp over the raw-NB baseline (48.8%)**. ComplementNB was validated against scikit-learn to the
-decimal; the deployed model (CNB base + an all-corpus logreg) runs in
-[`/predict`](https://auspex.blackflagintel.com/predict) and is verified byte-identical
-browser-vs-server. The **joint** actor side also uses ComplementNB (actorWeight 2.0 — top-1
-**47.9%**). Attribution does not use doctrine links, so it is unaffected by the doctrine‑tagging that
-moved the doctrine / pillar / joint figures (see the table note above). Ablating the analyst-assigned
-`campaign_id` is a ~6–7pp sensitivity bound.
-
-**Corpus growth (2026-05-30).** This corpus was deliberately grown from 658→815 events (159→204
-actors) to widen coverage. The attribution headline fell from the previous **74.5%** (658-event
-corpus) to 65.1% — and the
-[corpus-growth experiment](docs/CORPUS-GROWTH-EXPERIMENT-2026-05-30.md) shows the drop is
-**composition, not regression**: the original 470 events still score **74.5%** under the expanded
-model (net-zero change), while the added long tail of thin/new-actor events is harder under the
-**null = miss** + CV-rankability conventions. Lifting the tail back up takes three levers — event
-**depth** per actor above the CV threshold (deepening 10 thin actors moved them 0%→61.9%),
-source-grounded **feature richness** (+11.4pp on enriched events), and **discriminability** from
-same-niche neighbors; raw event *count* moves none. On a cold temporal holdout (train ≤ 2023-12-31,
-score 2024+) raw-NB attribution is **26.5% top-1 / 38.9% top-5** under **null = miss** — cold-start
-events whose actor has no pre-2024 history stay in the denominator as misses (the convention every
-other table uses; the earlier 36.1% figure silently dropped them). This is the **retrodictive vs
-prospective gap stated plainly**: the LOO headline measures attribution of events whose actors have
-corpus history; the temporal number is what forward prediction on a fast-moving corpus actually
-yields, cold-start tail included.
-
-**Prose de-leak (2026-05-30 actors; 2026-06-09 doctrines).** The TF-IDF prose feature is scrubbed of
-actor names/aliases **and** of doctrine-identifying tokens. Previously a large majority of events
-carried their own actor's name as a prose token, and ~11% of doctrine-labeled events carried their
-doctrine's identifier (`mcf`, `mic2025`, `intelligentized`…) — analyst summaries naming the label
-leaked it into the features. The doctrine scrub is a deterministic, label-free rule (a token is
-scrubbed iff it appears in ≤2 doctrines' names — generic vocabulary like "national"/"strategy"
-stays). Each scrub lowered its headline well under 1pp (attribution −0.8pp actors; doctrine −0.5pp
-doctrines), because the engines weight prose at just 0.4 and lean on operators / campaign / malware;
-the numbers above are therefore leak-free *and* nearly unchanged.
-See [`docs/MODELING-DIAGNOSTICS-2026-05-30.md`](docs/MODELING-DIAGNOSTICS-2026-05-30.md).
-
-Temperature scaling (T = 2.0 / 3.0 / 3.0, refit on the 815-event corpus — temperatures unchanged,
-robust to the expansion) reduces softmax overconfidence; per-engine reliability diagrams (with ECE)
-on the research pages show calibration quality on the deployed engine. Rank-1 stability under 10%
-corpus dropout (seeded resampler, reproducible build-to-build) is recomputed and reported live on
-those pages. NotPetya counterfactual carried as a standing adversarial test for false-flag handling.
-
-### Forecasting (experimental)
-
-Beyond retrodicting observed events, AUSPEX **forecasts prospective attacks**: given a target profile
-(sector / country / org), [`/forecast`](https://auspex.blackflagintel.com/forecast) ranks the likely
-actors, names the **doctrine each would be advancing** (the who×why join), and gives a relative-risk
-indication with comparable historical operations. It uses only forecast-available features — target
-side + state-level dyad + recency, **no** post-hoc tradecraft (TTPs / malware / prose). Forward-
-validated (train ≤ 2023-12-31, score 2024+ cold): for actors seen pre-split (74% of test events), the
-true actor is in the **top-5 ~40%** of the time from target profile alone — **2.6× the usual-suspects
-base rate**; counting the ~26% cold-start new-actor events as misses, the all-test figure is
-**28.9%**. Relative risk is a corpus-frequency
-percentile, **not** an absolute probability (the corpus records attacks, not the population of
-targets, so absolute likelihood is not identifiable). Shares one isomorphic engine module
-(`forecast-core.ts`) across the server eval and the browser page. See
-[`docs/FORECASTING-2026-05-31.md`](docs/FORECASTING-2026-05-31.md).
-
-## Quick start
+Requires Python ≥ 3.11 + PyYAML (harness/analyses) and Node/pnpm (site/engine). From the repo root:
 
 ```sh
-cd site
-pnpm install
-pnpm exec tsx tools/extract-mitre-ttps.ts   # REQUIRED once per clone: builds .cache/mitre-*.json —
-                                            # without it actor TTP/malware features are silently empty
-                                            # and the eval numbers will NOT match the published ones
-pnpm validate              # validate the atlas (must be clean)
-pnpm dev                   # local dev at http://localhost:4321
-pnpm build                 # full static build (~90 min — runs LOO eval at build time)
-pnpm eval-attribution      # standalone attribution LOO (raw NB) + Monte Carlo stability
-pnpm exec tsx tools/eval-stacked-cnb.ts   # deployed attribution headline (ComplementNB + stacked, 5-fold CV)
-pnpm eval-doctrine         # standalone doctrine LOO
-pnpm eval-pillar           # standalone pillar LOO
-pnpm eval-temporal         # temporal holdout (train ≤ 2023-12-31, test 2024+)
-pnpm exec tsx tools/eval-forecast.ts      # forecasting forward-validation (vs popularity/affinity baselines)
+make verify                    # schema conformance + consistency + engine validator (must be clean)
+make findings                  # regenerate the who×why numeric ledger (analysis/FINDINGS.md)
+cd site && pnpm install
+pnpm exec tsx tools/extract-mitre-ttps.ts   # REQUIRED once per clone: builds .cache/mitre-*.json,
+                                            # else actor TTP/malware features are silently empty
+pnpm validate                  # validate the atlas
+pnpm dev                       # local dev at http://localhost:4321
+pnpm eval-doctrine             # doctrine LOO ·  eval-pillar · eval-temporal · etc.
+pnpm exec tsx tools/eval-stacked-cnb.ts     # deployed attribution headline (CNB + stacked, 5-fold)
 ```
 
-The atlas is the source of truth. Run `pnpm validate` after any edit; it must return clean before committing.
+The atlas is the source of truth; `make verify` must be clean before any commit (a pre-commit hook
+enforces it).
 
-## Status
+## Citation and license
 
-**Private, pre-v1.0.** Path is atlas-first: keep widening doctrine coverage, deepening event corpus, and tightening engine accuracy until the atlas is defensible as a v1.0 product. Public launch via [auspex.blackflagintel.com](https://auspex.blackflagintel.com) lands after v1.0 freeze.
+**Cite this dataset** via [CITATION.cff](CITATION.cff) (GitHub renders a "Cite this repository"
+button) or the archival DOI once minted. Rights and layered upstream attribution are in
+[DATA-RIGHTS.md](DATA-RIGHTS.md); please also cite **MISP galaxy** (actor identities) and
+**MITRE ATT&CK** (technique taxonomy) where relevant, and note that each factual claim carries its
+own source in the record.
+
+Dataset and documentation: **[CC BY 4.0](LICENSE)** — reuse freely, including commercially, with
+attribution.
+
+## Scope
+
+An analytic atlas of publicly reported events. It contains no exploit code and no operational
+tradecraft beyond what the cited public sources disclose; named individuals trace to public
+indictments, OFAC designations, or court records. Unaffiliated with any government or vendor named
+in the atlas.
 
 ---
 
-© 2026 Black Flag Intelligence. All rights reserved.
+© 2026 Kara Zajac / Black Flag Intelligence — released under CC BY 4.0.
