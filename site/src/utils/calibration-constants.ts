@@ -7,15 +7,16 @@
  * Refit whenever the corpus changes substantially, or the engine
  * configuration changes.
  */
-// Refit 2026-05-30 on the QC'd 815-event corpus (grown from 658 via the backfill
-// + targeted depth + actor-wiring QC). Temperatures are UNCHANGED at
-// T = 2.0 / 3.0 / 3.0 — robust to the corpus expansion, as in every prior refit
-// (null=miss LOO, λ=0.2 service prior + malware-lineage grouping, inferred-campaign
-// LOO suppression). Only the eval sample sizes and NLL-improvement percentages moved.
+// Refit 2026-07-11 on the 785-event corpus after the completed 100% verification
+// census (which cleaned the corpus down from 815 by removing fabricated/duplicate
+// events). Temperatures are UNCHANGED at T = 2.0 / 3.0 / 3.0 — robust across every
+// prior refit, this one included (null=miss LOO, λ=0.2 service prior + malware-lineage
+// grouping, inferred-campaign LOO suppression). The eval sample sizes and NLL-improvement
+// percentages moved with the corpus (calibration improved on the cleaner label space).
 export const CALIBRATION = {
-  attribution: { temperature: 2.0, improvementPct: 19.6, sampleSize: 564 },
-  doctrine:    { temperature: 3.0, improvementPct: 38.1, sampleSize: 480 },
-  pillar:      { temperature: 3.0, improvementPct: 42.8, sampleSize: 426 },
+  attribution: { temperature: 2.0, improvementPct: 24.5, sampleSize: 494 },
+  doctrine:    { temperature: 3.0, improvementPct: 44.1, sampleSize: 494 },
+  pillar:      { temperature: 3.0, improvementPct: 45.4, sampleSize: 420 },
 } as const;
 
 export type EngineKind = keyof typeof CALIBRATION;
