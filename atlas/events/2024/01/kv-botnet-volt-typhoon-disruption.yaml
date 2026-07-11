@@ -1,20 +1,22 @@
 id: 2024-01/kv-botnet-volt-typhoon-disruption
 name: KV-Botnet / Volt Typhoon FBI disruption
-start_date: 2023-12-01  # secret court order issued December 2023
+start_date: 2023-12-06  # earliest court-authorized warrant signed 2023-12-06 (Lumen/Black Lotus Labs, citing the DOJ operation); takedown executed early Dec 2023
 disclosure_date: 2024-01-31  # DOJ press release; Wray HASC testimony
 end_date: 2024-01-31
 incident_type:
+  - law-enforcement  # court-authorized FBI counter-action (meta type; actor_id null)
   - disruption
 initial_vector: unknown  # court-ordered remote action against adversary infrastructure
 outcome_summary: |
   Court-ordered remote eviction of KV-Botnet malware from hundreds of
   compromised Cisco/NetGear small-office/home-office (SOHO) routers
-  used by PRC MSS-linked Volt Typhoon actors to obfuscate intrusions
-  into US critical infrastructure. FBI used Volt Typhoon's own
-  toolset to delete the malware and sever C2 connection. Coordinated
-  with the CISA AA24-038A joint advisory publicly exposing Volt
-  Typhoon's "living-off-the-land" pre-positioning against US water,
-  energy, transport, and communications sectors.
+  used by PRC state-sponsored Volt Typhoon actors to obfuscate
+  intrusions into US critical infrastructure. FBI remotely issued
+  commands to delete the malware and sever the routers' C2
+  connection. Coordinated with the CISA AA24-038A joint advisory
+  publicly exposing Volt Typhoon's "living-off-the-land"
+  pre-positioning against US water, energy, transport, and
+  communications sectors.
 false_flag_risk: none
 campaign_id: volt-typhoon-cii-prepositioning
 summary: |
@@ -32,15 +34,21 @@ attributions:
     attributing_org: FBI / DOJ + CISA + NSA
     attributing_org_confidence: high
     auspex_assessment: concur
+    attribution_level: named-actor  # sources name "Volt Typhoon" as the PRC state-sponsored group; PRC sponsorship asserted at nation level, NO Chinese service/unit named (see cn/unscoped/volt-typhoon)
     attribution_date: 2024-01-31
     attribution_source_id: doj/2024-01-31_kv-botnet-disruption
     notes: |
       Court-ordered, FBI-executed disruption of Volt Typhoon's
       KV-botnet; CYBERCOM/NSA contributed attribution work but did not
-      conduct the operation. No AUSPEX-tracked actor perpetrated this
-      law-enforcement action, so actor_id is null (previously a
-      us/cybercom/cnmf-actor placeholder — corrected per AUDIT-2026-05-29 C1).
-      attributing_org records the executing/announcing coalition.
+      conduct the operation (Wray HASC testimony credits "the NSA,
+      Cyber Command, and CISA, as well as ONCD" as partners). No
+      AUSPEX-tracked actor perpetrated this law-enforcement action, so
+      actor_id is null (previously a us/cybercom/cnmf-actor
+      placeholder — corrected per AUDIT-2026-05-29 C1). attributing_org
+      records the executing/announcing coalition. The subject named in
+      prose is Volt Typhoon (cn/unscoped/volt-typhoon); no cited source
+      names the MSS — the prior "PRC MSS-linked" prose was
+      over-attribution, corrected 2026-07-11.
 doctrine_links:
   - doctrine_id: us/ncs-2023
     perspective: defender-response
@@ -60,13 +68,26 @@ doctrine_links:
     analyst: claude
   - doctrine_id: us/ncs-2023
     pillar_id: us/ncs-2023/defend-cii
+    perspective: defender-response
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred
     reasoning: |
-      Defend Critical Infrastructure pillar — the operation directly
-      protects US CI (water, energy, transport, communications) from
-      Volt Typhoon pre-positioning.
-    attesting_source_id: doj/2024-01-31_kv-botnet-disruption
+      Defend Critical Infrastructure pillar — the operation removed
+      Volt Typhoon's KV-botnet pre-positioning that concealed PRC
+      hacking of US critical infrastructure, i.e. it defended US CI.
+      Downgraded from attested 2026-07-11: no cited source states
+      defending/protecting critical infrastructure as the operation's
+      terminal GOAL in a clean verbatim quote (the DOJ release's
+      explicit terminal-goal quote is the disrupt-and-dismantle one on
+      the sibling link); defend-CII is a strong inference from the
+      release title and the co-released FBI/CISA sector framing. The
+      event itself frames this as "a secondary frame."
+    inference_basis:
+      signals:
+        - "DOJ release title: 'U.S. Government Disrupts Botnet People's Republic of China Used to Conceal Hacking of Critical Infrastructure' — frames the operation around US critical infrastructure."
+        - "FBI Director Wray (cited testimony, snapshotted): the KV-botnet enabled PRC pre-positioning 'against critical infrastructure like our communications, energy, transportation, and water sectors' — the sectors the operation protected."
+        - "Coordinated with CISA AA24-038A (cited, snapshotted), whose express purpose is to warn and defend critical-infrastructure organizations against the same Volt Typhoon pre-positioning."
+      ruled_out: "Not attacker-rationale/victim-response: this is US (defender) doctrine applied to a US counter-action, hence perspective defender-response."
     contested: false
     analyst: claude
 targets:
@@ -79,3 +100,106 @@ sources:
   - doj/2024-01-31_kv-botnet-disruption
   - cisa/2024-02-07_aa24-038a-volt-typhoon-update
   - fbi/2024-01-31_wray-house-select-testimony
+  - therecord/2024-01-31_china-run-botnet-takedown-fbi-doj-routers  # fetchable secondary corroborating the bot-walled DOJ primary (dismantle quote + PRC attribution)
+  - securityweek/2024-01-31_us-gov-disrupts-soho-router-botnet-volt-typhoon  # fetchable secondary corroborating "hundreds of routers" + delete/sever + EOL Cisco/NetGear
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW cited sources (Opus 4.8, max effort). The
+    DOJ primary press release (doj/2024-01-31_kv-botnet-disruption) is
+    Akamai/Imperva bm-verify bot-walled from this environment — curl 200
+    returns a 2.5 KB interstitial, WebFetch 403, and the archive.org
+    capture itself archived the interstitial; the SDTX mirror
+    (/usao-sdtx/pr/) is identically walled. Hence level: partial — every
+    load-bearing DOJ-specific claim is instead mirror-corroborated by
+    newly snapshotted+hashed secondaries and by the already-hashed
+    Lumen/CISA/FBI raws.
+
+    [a] FACTS — all carried by snapshotted sources:
+      • "hundreds of Cisco/NetGear SOHO routers" cleaned, C2 severed:
+        SecurityWeek (sha 3f9d12a3…) verbatim "a court-authorized
+        operation cleared the way for the FBI to remotely seize control
+        of hundreds of infected routers and send instructions to delete
+        malware and change settings"; AHA reproduces DOJ "hundreds of
+        small office and home office routers." "mostly … Cisco and
+        NetGear" + EOL: SecurityWeek subtitle "end-of-life Cisco and
+        Netgear routers"; The Record (sha 8bdee25b…) "mostly targeted
+        routers made by Cisco and NetGear."
+      • Corrected the embellishment "FBI used Volt Typhoon's own toolset"
+        → "FBI remotely issued commands to delete the malware and sever
+        the routers' C2 connection" (mirror-supported; the "own toolset"
+        mechanism is not carried by any snapshotted source).
+      • Dec-2023 court order: Lumen (repo-hashed) "FBI conducted a
+        court-authorized takedown … in early December 2023 … earliest
+        warrant … signed, December 6, 2023" → start_date refined
+        2023-12-01 → 2023-12-06.
+      • "operators rebuilt infrastructure subsequently": Lumen — operators
+        stood up "new infrastructure" (null-routed early Jan 2024),
+        re-exploited ~2,100 NetGear ProSAFE devices, "rebuilding the JDY
+        cluster."
+      • CYBERCOM/NSA coordination: FBI Wray raw (sha 6c8724c0…) credits
+        "the NSA, Cyber Command, and CISA, as well as ONCD" as partners —
+        so the summary's CYBERCOM/NSA framing is sourced, not stripped.
+      • disrupt-dismantle = Pillar 2 of NCS 2023: confirmed vs
+        atlas/doctrines/us/ncs-2023.yaml (defend-cii=P1, disrupt-dismantle=P2).
+    [b] ATTRIBUTION — OVER-ATTRIBUTION FIXED. Prose "PRC MSS-linked Volt
+        Typhoon" → "PRC state-sponsored Volt Typhoon." NO cited source
+        names the MSS or any Chinese service: DOJ title ("…People's
+        Republic of China…"), CISA AA24-038A ("PRC State-Sponsored
+        Actors"), FBI Wray ("PRC state-sponsored hacking group known as
+        Volt Typhoon"), Lumen ("Chinese state-sponsored actors"), The
+        Record ("Chinese government hacking operation known as Volt
+        Typhoon"), SecurityWeek/AHA (generic PRC/China). Subject resolves
+        to cn/unscoped/volt-typhoon; actor_id null (counter-action);
+        attributing_org FBI/DOJ+CISA+NSA, concur, high.
+    [c] DATES — start 2023-12-06 (Lumen warrant date, was unsourced
+        2023-12-01); disclosure/end 2024-01-31 (DOJ PR + Wray HASC + all
+        mirrors). Source published_on verified: The Record datePublished
+        2024-01-31T19:31:52Z; SecurityWeek article:published_time
+        2024-01-31T20:14:34Z; FBI Wray 2024-01-31; CISA 2024-02-07; DOJ
+        2024-01-31 (title-confirmed via wayback shell + 3 mirrors).
+    [d] DOCTRINE — disrupt-dismantle KEPT attested/defender-response;
+        inference_basis.source_quote verified VERBATIM vs The Record:
+        AG Garland "The United States will continue to dismantle
+        malicious cyber operations – including those sponsored by foreign
+        governments – that undermine the security of the American
+        people." (exact, incl. en-dashes). defend-cii DOWNGRADED
+        attested → strongly_inferred (+perspective defender-response,
+        +inference_basis.signals[]): no clean verbatim terminal-goal
+        quote for defending CI; strong inference from the release title +
+        Wray sector list + coordinated CISA AA24-038A.
+    [e] ATTRIBUTION_LEVEL — added named-actor (Volt Typhoon named; PRC at
+        nation level; no unit/service).
+    [f] ACTOR_ID — null (LE counter-action). incident_type gains meta
+        type law-enforcement (was disruption-only).
+
+    SNAPSHOTS: added 2 fetchable secondaries —
+      therecord/2024-01-31_china-run-botnet-takedown-fbi-doj-routers
+        (therecord__…-routers.html, sha256 8bdee25bf94958d60a1fb0c46d8ce6f1369a7af5e2c59b3654227ce38f442ced, 96,046 B);
+      securityweek/2024-01-31_us-gov-disrupts-soho-router-botnet-volt-typhoon
+        (securityweek__…-volt-typhoon.html, sha256 3f9d12a37ccb0f167fda053c8c0877ae42b58ee862e820c4ff1ec49b62b01280, 161,567 B).
+      DOJ disruption record annotated (bot-wall; no fake snapshot).
+      CISA (sha 8380c7fd…) + FBI Wray (sha 6c8724c0…) + Lumen already hashed.
+
+    FLAGS for orchestrator (out of this event's edit scope):
+      (1) DUPLICATE DOJ source records for the SAME 2024-01-31 press
+          release: doj/2024-01-31_kv-botnet-disruption (url /archives/opa/pr/…,
+          cited by THIS event + policy-action) vs
+          doj/2024-01-31_kv-botnet-takedown (url /opa/pr/…, cited by
+          actor cn/volt-typhoon + policy-action) — same title, publisher,
+          date, content. MERGE candidate; recommend canonical =
+          …_kv-botnet-disruption (its /archives/ URL is the live path and
+          it carries the attested doctrine quote); FK-propagate to the
+          actor + policy-action, preserving the richer takedown audit note.
+      (2) OVER-ATTRIBUTION in atlas/policy-actions/us/2024-01-31_kv-botnet-disruption.yaml
+          line 8: "PRC-MSS-controlled SOHO-router botnet" — same MSS
+          over-attribution; fix to "PRC state-sponsored."
+      (3) DANGLING TARGET FK orgs/kv-botnet — known informational gap
+          (corpus-consistent; per the sister flax-typhoon audit,
+          validate.ts counts these as informational, not errors). Left as-is.
+      (4) campaign_id volt-typhoon-cii-prepositioning — no campaigns
+          registry exists in the atlas; campaign_id is a free grouping
+          tag corpus-wide. Informational.

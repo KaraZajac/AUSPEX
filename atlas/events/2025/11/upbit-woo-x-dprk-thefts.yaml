@@ -1,67 +1,87 @@
 id: 2025-11/upbit-woo-x-dprk-thefts
 name: DPRK crypto-exchange theft sequence — WOO X (July), Upbit (November) — 2025-H2
-start_date: 2025-07-23  # WOO X attack onset (vendor-reported)
-disclosure_date: 2025-11-30
-end_date: 2025-11-30
+start_date: 2025-07-24  # WOO X incident (WOO X post-mortem "On July 24, 2025"); Upbit theft 2025-11-27
+disclosure_date: 2025-11-28  # Upbit public disclosure (Yonhap/CoinDesk); WOO X separately disclosed via post-mortem 2025-08-19
+end_date: 2025-11-27  # Upbit hot-wallet breach — last theft in the sequence
 incident_type:
+  - intrusion
   - financial-theft
-initial_vector: phishing
+initial_vector: phishing  # WOO X: social-engineered open-source "debug" request -> backdoor on a dev machine; Upbit: hijack/impersonation of admin credentials
 outcome_summary: |
-  Two named DPRK-attributed cryptocurrency-exchange thefts
-  capped 2025's second-half: an approximate USD 14M loss to
-  WOO X targeting nine individual users via social-engineering
-  in late July, and an approximate USD 36M breach of South
-  Korea's largest exchange Upbit on 27 November 2025. Both
-  attacks were attributed by blockchain-analytics firms
-  (Chainalysis, TRM Labs, CertiK) to Lazarus / TraderTraitor
-  with subsequent on-chain laundering through mixer
-  infrastructure consistent with the post-Bybit pattern.
+  Two DPRK-attributed cryptocurrency-exchange thefts book-ended
+  2025's second half. On 24 July 2025 approximately USD 14M was
+  taken from nine WOO X user accounts after a developer was
+  social-engineered on an open-source forum into running a
+  backdoored "debug" tool; WOO X and security firm Hacken tied the
+  intrusion to the RGB-aligned DPRK actor tracked as UNC4899 /
+  TraderTraitor (aka Jade Sleet). All affected WOO X users were
+  compensated from the exchange treasury, and the stolen funds were
+  rapidly converted to BTC through infrastructure previously linked
+  to the 2024 BingX exploit. On 27 November 2025 approximately
+  USD 36M in Solana-based tokens (SOL, USDC and other SPL tokens
+  such as BONK, JTO, SONIC, RAY, RENDER, ORCA, PYTH) was drained
+  from a hot wallet at South Korea's largest exchange, Upbit; South
+  Korean authorities (via Yonhap) SUSPECT — but have not confirmed —
+  the Lazarus Group, citing hijacked/impersonated admin credentials
+  that mirror the 2019 Upbit heist, and the funds were moved via
+  multichain laundering. Aggregate 2025 DPRK crypto theft reached
+  ~USD 2.02B (Chainalysis / The Hacker News); these two mid-tier
+  thefts were a small part of that total.
 false_flag_risk: none
 campaign_id: apt38-crypto-pivot
 summary: |
-  Operationally important as the consistent middle-tier of
-  DPRK exchange operations between the Bybit megasteal and
-  smaller continuous OPSEC/IT-worker operations. The Upbit
-  breach is particularly notable: Upbit had previously been
-  hit by Lazarus in November 2019 for ~USD 49M, making
-  2025-11-27 the second Lazarus attack on the same exchange
-  six years later — a rare case of repeat targeting.
+  Operationally the consistent middle tier of DPRK exchange
+  operations in 2025 — between the ~USD 1.5B Bybit megasteal
+  (February) and the smaller continuous IT-worker / OPSEC revenue
+  streams. The Upbit breach is notable as repeat targeting: Upbit
+  was previously hit in November 2019 for 342,000 ETH (framed by
+  CCN as a ~USD 50M "Ethereum heist"), later attributed by South
+  Korean police to Lazarus and Andariel — making 27 November 2025
+  the second DPRK-attributed compromise of the same exchange,
+  almost exactly six years to the day.
 attributions:
-  - actor_id: kp/rgb/tradertraitor
-    attributing_org: Chainalysis / TRM Labs / vendor consensus
+  - actor_id: kp/rgb/tradertraitor  # WOO X leg
+    attributing_org: WOO X post-mortem ("there is evidence") + security firm Hacken; DPRK actor UNC4899 / TraderTraitor / Jade Sleet, RGB-aligned
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2025-11-30
-    attribution_source_id: chainalysis/2026-01_2025-crypto-theft-recap
-  - actor_id: kp/rgb/lazarus
-    attributing_org: CertiK / vendor consensus
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-11-30
-    attribution_source_id: thehackernews/2025-12_dprk-2025-crypto-theft
+    attribution_date: 2025-08-19
+    attribution_source_id: woox/2025-08_july-24-security-incident-post-mortem
+  - actor_id: kp/rgb/lazarus  # Upbit leg
+    attributing_org: South Korean authorities (Yonhap-reported), via CoinDesk / The Hacker News — Lazarus SUSPECTED, not confirmed
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-11-28
+    attribution_source_id: coindesk/2025-11-28_upbit-lazarus-36m-solana-hack
 quantified_impact:
   usd_stolen: 50000000
   asset_classes:
     - ETH
-    - BTC
-    - stablecoins
+    - SOL
+    - USDC
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Continuation of the sanctions-evasion-revenue pillar
-      (Treasury-attested at campaign level) through additional
-      exchange compromises in the second half of 2025. The cited
-      Chainalysis recap attributes the thefts to DPRK but does
-      not itself name the strategic goal.
-    attesting_source_id: chainalysis/2026-01_2025-crypto-theft-recap
+      Both thefts fit the DPRK sanctions-evasion-revenue pillar
+      (Treasury-attested at campaign level). No cited source names
+      the strategic financing goal for these specific thefts, so
+      this stays strongly_inferred: Chainalysis frames DPRK's record
+      2025 crypto theft as revenue behaviour at the aggregate level,
+      and CoinDesk reports "security pundits noted a high probability
+      that North Korea, facing foreign currency shortages,
+      orchestrated" the Upbit hack — a revenue motive, not a
+      WMD-financing attestation.
+    attesting_source_id: null
     inference_basis:
       source_id: chainalysis/2026-01_2025-crypto-theft-recap
       signals:
-        - "Chainalysis recap attributes the 2025-H2 thefts to DPRK/TraderTraitor (revenue behaviour)"
-      ruled_out: "strategic-goal attestation — the recap does not name byungjin or the sanctions-evasion goal for these specific thefts"
+        - "Chainalysis 2025 recap attributes the record USD 2.02B annual DPRK crypto-theft total to North Korea as revenue behaviour (aggregate / campaign level)"
+        - "CoinDesk: 'security pundits noted a high probability that North Korea, facing foreign currency shortages, orchestrated' the Upbit hack (revenue motive)"
+      ruled_out: "strategic-goal attestation — no cited source names byungjin or the sanctions-evasion / WMD-financing end for these specific WOO X / Upbit thefts"
     contested: false
     analyst: claude
   - doctrine_id: kp/8th-congress-defense-plan
@@ -69,31 +89,119 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Vendor consensus frames the heist series as an operational
-      revenue stream; tying it to the 8th-Congress defense-plan
-      objectives is an inference — the cited recap does not name
-      the defense plan.
-    attesting_source_id: chainalysis/2026-01_2025-crypto-theft-recap
+      The heist series reads as an operational revenue stream feeding
+      the 8th-Congress revenue-aggregation pillar; tying it to the
+      defense-plan objectives is an inference — no cited source names
+      the defense plan. (Exchange hot-wallet theft, not the more
+      specific revenue-aggregation/crypto-bridge-theft sub-pillar.)
+    attesting_source_id: null
     inference_basis:
       source_id: chainalysis/2026-01_2025-crypto-theft-recap
       signals:
-        - "Chainalysis / vendor consensus attribute the heist series to DPRK revenue operations"
-      ruled_out: "8th-Congress defense-plan goal — not named in the recap"
+        - "Vendor consensus (Chainalysis / The Hacker News) frames 2025 DPRK exchange thefts as a sustained state revenue stream"
+      ruled_out: "8th-Congress defense-plan goal — not named in any cited source"
     contested: false
     analyst: claude
 targets:
   - target_id: orgs/woo-x
-    country: kr
+    country: tw  # WOO X is Taiwan-based (blockchainreporter); NOT South Korean
     role: primary
     outcome: |
-      Approximately USD 14M stolen across nine user accounts.
+      Approximately USD 14M stolen from nine user accounts on
+      24 July 2025; all affected users fully compensated from WOO's
+      treasury.
   - target_id: orgs/upbit
     country: kr
     role: primary
     outcome: |
-      Approximately USD 36M stolen on 27 November 2025; second
-      Lazarus-attributed compromise of the exchange after the
-      2019 USD ~49M heist.
+      Approximately USD 36M in Solana-based tokens drained from a
+      hot wallet on 27 November 2025; second Lazarus-attributed
+      compromise of the exchange after the 2019 342,000-ETH heist.
+      Operator Dunamu / Upbit pledged to reimburse affected users
+      from corporate reserves.
 sources:
-  - chainalysis/2026-01_2025-crypto-theft-recap
+  - woox/2025-08_july-24-security-incident-post-mortem
+  - blockchainreporter/2025-10_woo-x-14m-tradertraitor-theft
+  - coindesk/2025-11-28_upbit-lazarus-36m-solana-hack
+  - ccn/2025-11_upbit-36m-solana-hack
   - thehackernews/2025-12_dprk-2025-crypto-theft
+  - chainalysis/2026-01_2025-crypto-theft-recap
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs snapshotted raw. RE-SOURCE ("badrabbit
+    model"): both originally-cited sources (Chainalysis recap + The
+    Hacker News) carry only aggregate 2025 DPRK figures + the Upbit
+    $36M line — NEITHER mentions WOO X, the $14M figure, July 2025,
+    or Solana (0 hits for "Upbit"/"WOO"/"$14M"/"Lazarus" in the
+    Chainalysis raw). Both thefts are real; genuine primary/secondary
+    sources were added, snapshotted and hashed. Distinct from the
+    2019 Upbit heist (verified — the 2019 event is invoked only as
+    context / repeat-targeting).
+
+    [a] FACTS. WOO X — woox.io post-mortem (sha fe4595c6…): "On July
+    24, 2025, WOO X experienced a sophisticated security incident
+    that resulted in $14 million in unauthorized withdrawals from 9
+    user accounts" + social-engineering vector + full user
+    compensation. Upbit — CoinDesk (sha bdbc6096…) "$36M" / "Solana
+    network tokens"; CCN (sha 91f59ccb…) "reported on November 27,
+    2025" + token list "USDC, BONK, JTO, and SONIC, Raydium (RAY),
+    Render (RENDER), Orca (ORCA), and Pyth Network (PYTH)" +
+    "reimbursed all affected users in full, using corporate
+    reserves". CORRECTED asset_classes ETH/BTC/stablecoins ->
+    ETH (WOO X, per blockchainreporter ETH->BTC trail, sha
+    325e87ca…) / SOL / USDC (Upbit). STRIPPED fabrications not in any
+    cited source: "TRM Labs, CertiK" attribution and "mixer
+    infrastructure consistent with the post-Bybit pattern" (replaced
+    with the sourced BingX-2024 laundering-infra + multichain
+    laundering). usd_stolen 50M = 14M + 36M, both legs now sourced
+    (no amount embellishment).
+
+    [b] ATTRIBUTION. WOO X -> kp/rgb/tradertraitor: WOO X + Hacken,
+    "carried out by a DPRK-linked actor tracked in law-enforcement
+    circles as 'TraderTraitor'" / UNC4899 aka Lazarus/Jade Sleet,
+    RGB-aligned -> high / concur. Upbit -> kp/rgb/lazarus: South
+    Korean authorities SUSPECT, not confirmed ("considering the North
+    Korea-linked Lazarus group as a possible source"; THN "believed
+    to be involved") -> DOWNGRADED medium / concur-with-caveat (was
+    high/concur). Fixed attributing_org strings (removed Chainalysis/
+    TRM/CertiK, which do not attribute these thefts) and re-pointed
+    attribution_source_id to the leg sources.
+
+    [c] DATES. start 2025-07-23 -> 2025-07-24 (post-mortem "On July
+    24, 2025"). end 2025-11-30 -> 2025-11-27 (Upbit theft). disclosure
+    2025-11-28 (Upbit; WOO X separately disclosed 2025-08-19).
+    Source-record fix: chainalysis published_on 2026-01-15 ->
+    2025-12-18 (article:published_time 2025-12-18T12:45:02Z); THN
+    2025-12-18 confirmed.
+
+    [d] DOCTRINE. Both links stay strongly_inferred (NOT attested):
+    no cited source names byungjin / the 8th-Congress defense plan /
+    a WMD-financing goal for these thefts. CoinDesk's "foreign
+    currency shortages" line is a revenue MOTIVE, not a strategic-goal
+    attestation. Set attesting_source_id null on both; tightened
+    inference_basis signals (Chainalysis attributes the AGGREGATE, not
+    these specific thefts). perspective n/a (attacker-rationale
+    default).
+
+    [e] ATTRIBUTION_LEVEL. Added named-actor to both attributions
+    (TraderTraitor and Lazarus are named atlas actors; UNC4899 is the
+    underlying activity cluster).
+
+    [f] ACTOR_ID. kp/rgb/tradertraitor and kp/rgb/lazarus both resolve
+    (atlas/actors/kp/tradertraitor.yaml, .../lazarus.yaml).
+
+    FLAGS (out of edit scope — orchestrator): (1) target referents
+    orgs/woo-x and orgs/upbit have NO backing files in
+    atlas/targets/orgs/ — both need creation; orgs/woo-x country
+    corrected kr -> tw (WOO X is Taiwan-based per blockchainreporter,
+    not South Korean). (2) chainalysis source id slug "2026-01_" is a
+    misnomer (actual pub 2025-12-18); retained as an opaque handle
+    (cited only by this event) to avoid FK churn.
+
+    Snapshots (6/6 live-fetched + hashed): woox fe4595c6…,
+    blockchainreporter 325e87ca…, coindesk bdbc6096…, ccn 91f59ccb…,
+    thehackernews 6991e313…, chainalysis f9f7811d….

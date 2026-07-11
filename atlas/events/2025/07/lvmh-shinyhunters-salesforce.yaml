@@ -1,49 +1,208 @@
 id: 2025-07/lvmh-shinyhunters-salesforce
 name: LVMH luxury-brands customer data theft (Salesforce vishing chain)
-start_date: 2025-06-15
-disclosure_date: 2025-07-15
-end_date: 2025-09-30
+start_date: 2025-01-26  # earliest covered brand intrusion (Dior, per breach notice); Tiffany ~2025-04-08, Louis Vuitton ~Jun 2025
+disclosure_date: 2025-05-29  # earliest snapshot-anchored public disclosure of an LVMH-brand breach (Tiffany + Dior, South Korea; ISMG). LV UK disclosed Jul 2025.
+end_date: 2025-07-31  # close of the documented notification wave for the covered breaches (Dior US notices began Jul 21; LV UK mid-Jul); private-extortion status open. Aggregate estimate.
 incident_type:
+  - intrusion
   - data-theft
-initial_vector: phishing  # via UNC6040 vishing → Salesforce OAuth
+  - extortion
+initial_vector: phishing  # campaign-inferred: UNC6040 vishing → Salesforce OAuth (none of the LVMH brands publicly named Salesforce)
 outcome_summary: |
-  Between July and September 2025 multiple LVMH-owned luxury
-  brands separately disclosed customer-data intrusions via
-  third-party platforms: Louis Vuitton (Jul 2025, ~UK-Korea
-  customer database), Christian Dior (May-Jul 2025 disclosures
-  in multiple jurisdictions), and Tiffany & Co. (Aug 2025, Korea
-  + US customer data). Exposed fields varied by brand but
-  generally included names, contact information, purchase
-  history, and tier / loyalty data. Google Threat Intelligence
-  Group and October 2025 Krebs on Security reporting attributed
-  the LVMH-brand intrusions to the UNC6040 / ShinyHunters
-  voice-phishing / Salesforce-OAuth campaign.
+  Between May and July 2025 three LVMH-owned luxury brands separately
+  disclosed unauthorized access to customer-information databases held
+  on third-party / vendor CRM platforms:
+    - Tiffany & Co. (Korea): intrusion 8 Apr 2025, discovered 9 May
+      2025; South-Korean customer data stolen from a "vendor platform
+      used for managing customer data"; disclosed to customers and
+      reported (alongside Dior) by 29 May 2025. No bank/payment-card
+      data.
+    - Christian Dior: intrusion 26 Jan 2025, discovered 7 May 2025;
+      Korea/China disclosures in May and U.S. breach-notification
+      letters from ~21 Jul 2025. Exposed: full names, contact details,
+      physical address, date of birth and — in some cases — passport /
+      government-ID and Social Security numbers; no payment/bank data.
+    - Louis Vuitton: LV UK became aware 2 Jul 2025 (LV Korea disclosed
+      ~a week earlier); exposed PII included first/second name, gender,
+      country, phone, email, postal address, date of birth, purchase
+      and preference data; no passwords or payment-card data. Reported
+      to the UK ICO; also affected South Korea and Turkey.
+  BleepingComputer (30 Jul 2025) reported the three LVMH-brand breaches
+  — with Adidas, Qantas and Allianz Life — were "linked to the
+  ShinyHunters extortion group," which used voice-phishing to steal
+  data from Salesforce CRM instances, and that BleepingComputer had
+  "confirmed that all were targeted in the same campaign detailed by
+  Google" (UNC6040) — while noting "none of these companies have
+  publicly named Salesforce." Extortion was attempted privately by
+  email under the self-applied "ShinyHunters" name; no public
+  LVMH-brand leak had occurred as of that reporting.
 false_flag_risk: suspected
 campaign_id: shinyhunters-salesforce-2025
 summary: |
-  Per-victim child event covering the LVMH-brand subset of
-  the 2025 campaign. Modeled as a single aggregate event
-  across the three confirmed brand disclosures because the
-  underlying intrusion chain (third-party Salesforce-cloud
-  CRM) is documented as a single vector across the
-  conglomerate.
+  Per-victim child event covering the LVMH-brand subset of the 2025
+  UNC6040 / ShinyHunters Salesforce-cloud campaign (campaign_id
+  shinyhunters-salesforce-2025). Modeled as a single aggregate across
+  three brand disclosures (Louis Vuitton, Christian Dior, Tiffany &
+  Co.) because BleepingComputer documents them as one cyberattack
+  chain against LVMH via a third-party / vendor CRM platform.
+  Attribution is hedged: none of the LVMH brands publicly named
+  Salesforce; the ShinyHunters / UNC6040 placement is BleepingComputer's
+  campaign confirmation (pattern-matched to the GTIG-documented
+  campaign), not a victim or GTIG victim-naming, and "ShinyHunters" is
+  recorded as the extortion self-claim brand over the UNC6040 (vishing)
+  / UNC6240 (extortion) clusters, not a confirmed stable group. NB
+  timing anomaly: Dior's intrusion (26 Jan 2025) predates the main
+  vishing-campaign window (spring 2025+), making Dior the most weakly
+  campaign-linked of the three. The originally-cited sources
+  (mandiant/2025-08-08, krebs/2025-10) name NO LVMH brand and were
+  re-sourced this audit to LVMH-specific reporting.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: Google Threat Intelligence Group + Krebs on Security
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - actor_id: criminal/scattered-spider
-    attributing_org: journalism consensus
+    attributing_org: BleepingComputer (LVMH-brand placement) + Google Threat Intelligence Group (campaign)
     attributing_org_confidence: moderate
     auspex_assessment: concur-with-caveat
-    attribution_date: 2025-08-08
-    attribution_source_id: mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
+    attribution_date: 2025-07-30
+    attribution_source_id: bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+    attribution_level: activity-cluster
+    notes: |
+      BleepingComputer (2025-07-30) confirmed the LVMH-brand breaches
+      were "targeted in the same campaign detailed by Google" (UNC6040
+      vishing → Salesforce), extorted privately under the self-applied
+      "ShinyHunters" name — but "none of these companies have publicly
+      named Salesforce," so the placement is a press confirmation /
+      inference, not a brand or GTIG victim-naming. GTIG's own reports
+      (incl. mandiant/2025-08-08) name NO LVMH victim. "ShinyHunters" is
+      an extortion brand over the UNC6040 / UNC6240 clusters;
+      BleepingComputer quotes: "We have not confirmed the nature of the
+      relationship between these intrusions and the prior use of this
+      handle on underground forums." Hence moderate / concur-with-caveat
+      / activity-cluster.
+  - actor_id: criminal/scattered-spider
+    attributing_org: journalism (cluster overlap)
+    attributing_org_confidence: low
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2025-07-30
+    attribution_source_id: bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+    attribution_level: activity-cluster
+    notes: |
+      Campaign-cluster overlap only, and expressly contested.
+      BleepingComputer (2025-07-30): "The breaches have caused confusion
+      ... with the attacks attributed to Scattered Spider (tracked by
+      Mandiant as UNC3944) ... However, threat actors associated with
+      Scattered Spider tend to perform full-blown ne[twork intrusions]"
+      — a similar-sector / similar-TTP overlap, not LVMH-specific
+      Scattered Spider evidence.
 doctrine_links: []
 targets:
   - target_id: orgs/lvmh
     role: primary
 sources:
-  - mandiant/2025-08-08_expansion-shinyhunters-saas-data-theft
-  - krebs/2025-10_shinyhunters-corporate-extortion-spree
+  - bleepingcomputer/2025-07-30_shinyhunters-salesforce-qantas-allianz-lvmh
+  - infosecurity-magazine/2025-07-14_louis-vuitton-uk-retailer-data-breach
+  - bleepingcomputer/2025-07-21_dior-data-breach-notifications-us-customers
+  - bankinfosecurity/2025-05-29_tiffany-dior-south-korean-customer-data-breaches
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Opus 4.8 / max. 6-point audit vs RAW. RE-SOURCE (badrabbit model):
+    the two originally-cited sources (mandiant/2025-08-08, krebs/2025-10)
+    are REAL but name NO LVMH brand — verbatim-checked: the Krebs
+    snapshot (sha256 9c2d11a8..97619835) has ZERO occurrences of LVMH /
+    Louis Vuitton / Dior / Tiffany (it names only Google among campaign
+    victims), and GTIG Mandiant 2025-08-08 names no victim (WebFetch of
+    the live article: victims referenced only generically). Both dropped
+    from this event (each still cited by the umbrella + actor records, so
+    not orphaned) and replaced with four LVMH-specific sources, all
+    snapshotted this audit:
+      - bleepingcomputer/2025-07-30 (sha256 d8de5cd4..f0636dad) —
+        LVMH-brand placement + campaign linkage + extortion + SS caveat
+      - infosecurity-magazine/2025-07-14 (sha256 417415d7..834646a7) —
+        Louis Vuitton specifics
+      - bleepingcomputer/2025-07-21 (sha256 a4a86fe5..06d3f5e6b) — Dior
+        specifics
+      - bankinfosecurity/2025-05-29 (sha256 bab30e7c..012357f3) — Tiffany
+        specifics (+ Dior Korea corroboration)
+
+    [a] FACTS — rewritten; every LVMH-brand claim now carried verbatim:
+      - Louis Vuitton "became aware of the breach on July 2"; PII "first
+        and second name, gender, country, phone number, email and postal
+        address, date of birth, purchases and preference data";
+        ICO-notified; UK + South Korea + Turkey (Infosecurity 2025-07-14).
+      - Dior intrusion "occurred on January 26, 2025 ... became aware ...
+        on May 7, 2025"; exposed "Full names, Contact details, Physical
+        address, Date of birth, Passport or government ID number (in some
+        cases), Social Security Number (in some cases)"; "no payment
+        details" (BC 2025-07-21).
+      - Tiffany "breach occurred on April 8 but the company discovered on
+        May 9 ... South Korean shoppers" from "a third-party vendor's
+        platform"; "did not compromise customers' bank account or payment
+        card information" (BankInfoSecurity 2025-05-29).
+      - STRIPPED the false claim (old outcome_summary) that "Google Threat
+        Intelligence Group and October 2025 Krebs on Security reporting
+        attributed the LVMH-brand intrusions" — neither cited source names
+        any LVMH brand. STRIPPED "Tiffany & Co. (Aug 2025, Korea + US)":
+        the Tiffany Korea breach was disclosed MAY 2025 (occurred Apr 8);
+        a separate Tiffany gift-card breach (Sep 2025) is a DIFFERENT
+        incident not covered here.
+    [b] ATTRIBUTION — de-escalated over-attestation. ShinyHunters high→
+        moderate, concur→concur-with-caveat, attribution_source_id
+        re-pointed from mandiant/2025-08-08 (names no LVMH victim) to
+        bleepingcomputer/2025-07-30, which actually carries the placement:
+        "linked to the ShinyHunters extortion group ... BleepingComputer
+        has since confirmed that all were targeted in the same campaign
+        detailed by Google," while "none of these companies have publicly
+        named Salesforce." Scattered Spider moderate→low, re-pointed to
+        the same BC article, which frames SS as contested cluster overlap
+        ("attributed to Scattered Spider (tracked by Mandiant as UNC3944)
+        ... However..."). attributing_org corrected (was "Google Threat
+        Intelligence Group + Krebs on Security" — both wrong for LVMH).
+        false_flag_risk: suspected retained (deliberate ShinyHunters
+        brand-borrowing / self-claim).
+    [c] DATES — start 2025-06-15 → 2025-01-26 (earliest covered brand
+        intrusion = Dior, per breach notice; the aggregate spans Dior Jan,
+        Tiffany Apr 8, LV ~Jun). disclosure 2025-07-15 → 2025-05-29
+        (earliest snapshot-anchored public disclosure of an LVMH-brand
+        breach: Tiffany + Dior Korea, ISMG). end 2025-09-30 → 2025-07-31
+        (close of the documented notification wave for the covered
+        breaches; private-extortion status open). Source published_on all
+        verified against bylines: BC-LVMH 2025-07-30 (datePublished
+        15:52:39), Infosec 2025-07-14 (Phil Muncaster), BC-Dior 2025-07-21
+        (datePublished 10:31, Bill Toulas), ISMG 2025-05-29 (Jayant
+        Chakravarti).
+    [d] DOCTRINE_LINKS — none (per scope; criminal financially-motivated,
+        no strategic-doctrine terminal goal). Correct.
+    [e] ATTRIBUTION_LEVEL — added activity-cluster on both attributions:
+        GTIG tracks UNC6040 (vishing) + UNC6240 (extortion) clusters;
+        "ShinyHunters" is a self-applied brand over them and the LVMH
+        placement is inferential — activity-cluster is the honest
+        granularity, not named-actor.
+    [f] ACTOR_ID — criminal/shinyhunters and criminal/scattered-spider
+        both resolve to existing atlas actor ids. Not a counter-action (no
+        LE/policy meta type); actor_id retained.
+
+    incident_type [data-theft] → [intrusion, data-theft, extortion]:
+    intrusion (unauthorized access to customer databases via third-party /
+    vendor CRM platform) + data-theft (customer PII exfiltrated) are
+    brand-supported; extortion is carried by BC-LVMH ("attempting to
+    privately extort companies over email, where they name themselves as
+    ShinyHunters"). Consistent with the adidas sibling.
+
+    FLAGS (not edited — outside event / own-source scope):
+    - Event id/path is 2025-07 but the earliest brand disclosure was May
+      2025; kept in place (not renamed) to avoid FK breakage — orchestrator
+      may re-home to 2025-05 if desired.
+    - target orgs/lvmh.yaml summary already reflects the hedged GTIG +
+      journalism placement (consistent); its sources: [] could optionally
+      carry these 4 records (orchestrator).
+    - actor criminal/shinyhunters roster line lists "LVMH brands" among
+      2025 Salesforce-campaign victims — consistent with the hedged
+      placement here.
+    - mandiant/2025-08-08 source record: the live cloud.google.com article
+      is JS-rendered AND has drifted since publication (now references
+      post-Aug-2025 UNC6661 / UNC6671 and Jan 2026 activity), so a faithful
+      curl snapshot of the 2025-08-08 version is not obtainable; it carries
+      NO LVMH fact and was dropped here — orchestrator may mark that record
+      snapshot partial.

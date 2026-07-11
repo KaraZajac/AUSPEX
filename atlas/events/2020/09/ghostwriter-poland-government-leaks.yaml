@@ -1,67 +1,291 @@
 id: 2020-09/ghostwriter-poland-government-leaks
 name: Ghostwriter compromise and leak of Polish government officials' email
-start_date: 2020-04-01
-disclosure_date: 2021-06-09
-end_date: 2021-06-09
+start_date: 2020-09-01  # APPROXIMATE — no source pins the onset day/month; VSquare (2022-03-19): Dworczyk's wp.pl accounts "were targets of phishing attacks carried out between 2020-21". Month aligned to the event id namespace (2020-09); the LEAK began June 2021 (disclosure_date).
+disclosure_date: 2021-06-09  # Dworczyk's public confirmation after the Telegram leak surfaced (Notes from Poland, 2021-06-09)
+end_date: null  # the hack-and-leak distribution ran on past disclosure — VSquare (2022-03-19) reports the mailbox still being leaked "daily" nine months on; no clean end date is sourced
 incident_type:
   - intrusion
   - data-theft
   - influence-operation
-initial_vector: phishing
+initial_vector: phishing  # Żaryn via Notes from Poland 2021-06-24: attacks carried out through "phishing ... several outside logins to the mailbox used by Michał Dworczyk"
 outcome_summary: |
-  Ghostwriter / UNC1151 conducted credential phishing against
-  Polish government officials including senior figures in the
-  ruling Law and Justice (PiS) coalition. The most consequential
-  case was the compromise of Minister of Defence (later Head of
-  the Chancellery of the Prime Minister) Michał Dworczyk's
-  personal email account, with contents leaked through Telegram
-  channels in mid-2021. The Polish government formally attributed
-  the operation to a Belarusian-aligned actor at the EU collective-
-  statement level in September 2021.
+  Ghostwriter / UNC1151 ran credential-phishing against Polish
+  government officials and "senior figures associated with the ruling
+  Law and Justice (PiS) party" (Notes from Poland). The most
+  consequential case was the compromise of the private email account
+  of Michał Dworczyk — head of the Chancellery of the Prime Minister,
+  a ministerial-rank post in Mateusz Morawiecki's government — whose
+  mailbox of over 60,000 emails was leaked from June 2021 through a
+  Telegram channel in a hack-and-leak disinformation operation
+  (seeded via a fabricated post on his wife's hacked Facebook
+  account). Poland's security services (ABW / SKW), via spokesman
+  Stanisław Żaryn, said the attack was "carried out by the UNC1151
+  group" and that they had "reliable information linking the actions
+  of the UNC1151 group with the Russian security services," and
+  Jarosław Kaczyński said it was "carried out from the territory of
+  the Russian Federation." Mandiant separately attributes UNC1151 to
+  the Belarusian government with high confidence; the EU High
+  Representative's 24 September 2021 declaration associated the wider
+  Ghostwriter campaign with "the Russian state."
+quantified_impact:
+  email_accounts_targeted: 4350  # Żaryn via Notes from Poland 2021-06-24: "attempted attacks ... against 4,350 Polish email accounts"
+  public_function_holders_targeted: 100  # Żaryn via Notes from Poland 2021-06-24: "100 people holding 'public functions'"
+  emails_in_dworczyk_mailbox: 60000  # VSquare 2022-03-19: "over 60,000 emails in Michał Dworczyk's hacked mailbox"
 false_flag_risk: none
 summary: |
   Most politically consequential Ghostwriter operation in Polish
-  domestic terms — fueled months of political crisis and prompted
-  the Polish government's formal request for EU support and
-  attribution. Demonstrates the credential-theft + selective-leak
-  template that is Ghostwriter's signature combined operation:
-  intrusion produces material for downstream information
-  operations.
+  domestic terms — the leaked Dworczyk correspondence fuelled months
+  of political controversy. Demonstrates Ghostwriter's signature
+  combined operation: credential theft feeding a downstream
+  hack-and-leak information operation. NB the standing Ghostwriter
+  Belarus-vs-Russia attribution contest — AUSPEX canonically homes
+  the operator cluster to Belarus (by/unscoped/ghostwriter) on
+  Mandiant's high-confidence UNC1151 technical attribution, while
+  Poland's own government and the EU Council attributed the activity
+  to Russia / the Russian state. The political attributions named
+  Russia; the contest is flagged on the actor record and not
+  re-homed.
 attributions:
-  - actor_id: by/unscoped/ghostwriter
-    attributing_org: Polish government / EU Council
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2021-09-24
-    attribution_source_id: council-eu/2021-09-24_belarus-ghostwriter-statement
   - actor_id: by/unscoped/ghostwriter
     attributing_org: Mandiant
     attributing_org_confidence: high
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2021-11-16
     attribution_source_id: mandiant/2021-04-28_ghostwriter-unc1151
+    notes: |
+      Mandiant's 16 Nov 2021 report (captured under the April-dated slug per
+      the stable-slug rule) assesses "with high confidence that UNC1151 is
+      linked to the Belarusian government" and documents this very operation:
+      the leaked Polish government documents "were promoted in a hack-and-leak
+      style Ghostwriter operation that began in June 2021," with narratives
+      "alleging corruption or scandal within the ruling parties in ... Poland"
+      and "discrediting the Polish government." Graduated attribution —
+      attribution_level=nation (HIGH-confidence Belarusian government); NOT
+      raised to named-unit (the Belarusian-military link is only moderate).
+      Russia hedge preserved: Mandiant "cannot rule out Russian contributions"
+      but has "not uncovered direct evidence." auspex_assessment=concur per the
+      canonical actor homing (Belarus nexus).
+  - actor_id: by/unscoped/ghostwriter
+    attributing_org: Polish security services (ABW / SKW, via spokesman Stanisław Żaryn; PiS chairman Jarosław Kaczyński)
+    attributing_org_confidence: high
+    attribution_level: named-actor  # Poland named the UNC1151 cluster AND asserted a Russian-security-services sponsor (nation-level), but no specific GRU/FSB unit
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2021-06-24
+    attribution_source_id: notesfrompoland/2021-06-24_poland-russia-attribution-officials-hack
+    notes: |
+      Poland's own (victim-government) attribution. Żaryn: "the attack [was]
+      carried out by the UNC1151 [cyber espionage] group ... [We] have reliable
+      information linking the actions of the UNC1151 group with the Russian
+      security services"; Kaczyński: the cyberattack was "carried out from the
+      territory of the Russian Federation." Poland named the actor (UNC1151)
+      but attributed the sponsor to RUSSIA (Belarus 0× in the source).
+      auspex_assessment=concur-with-caveat: AUSPEX concurs the operator is
+      UNC1151/Ghostwriter but does NOT adopt the Russian-state nation — the
+      canonical homing is Belarus (Mandiant, high conf); the Russia framing is
+      the standing contest, flagged on the actor record, not re-homed here.
+  - actor_id: by/unscoped/ghostwriter
+    attributing_org: EU High Representative (Declaration on behalf of the European Union)
+    attributing_org_confidence: high
+    attribution_level: nation  # the EU named "the Russian state" / "the Russian Federation"; no unit, no named actor/cluster
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2021-09-24
+    attribution_source_id: council-eu/2021-09-24_belarus-ghostwriter-statement
+    notes: |
+      The EU-level collective political attribution of the wider Ghostwriter
+      campaign this operation belongs to. Verbatim: "Some EU Member States have
+      observed malicious cyber activities, collectively designated as
+      Ghostwriter, and associated these with the Russian state ... We urge the
+      Russian Federation to adhere to the norms of responsible state behaviour
+      in cyberspace." Names NO member state and does NOT mention Poland,
+      Dworczyk, Belarus, the KGB, or UNC1151 (all 0×). attribution_level=nation
+      (the Russian state). auspex_assessment=concur-with-caveat: AUSPEX does not
+      adopt the Russian-state nation (canonical homing is Belarus / UNC1151).
+      CORRECTS the event's prior claim that the EU attributed the operation to
+      "a Belarusian-aligned actor" — it named Russia (see sibling event
+      2021-09/eu-belarus-ghostwriter-statement).
 doctrine_links:
   - doctrine_id: by/concept-info-security-2019
     pillar_id: by/concept-info-security-2019/information-sphere-defense
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale  # Belarus's own doctrine on Belarusian-attributed operations
     reasoning: |
-      Targeting of senior PiS officials and weaponized leak of
-      Dworczyk correspondence fits the information-sphere-
-      defense and adversarial-information-influence framing
-      of the 2019 Belarusian doctrine. The anti-Polish narrative
-      content aligns with broader Lukashenko-government
-      framing of Polish-Belarusian tensions.
-    contested: false
+      Credential theft against Polish officials feeding a hack-and-leak that
+      "discredit[ed] the Polish government" and framed the leaked material as
+      "evidence of alleged Polish interference in Belarus's internal affairs"
+      operationalizes the 2019 Concept's information-sphere-defense pillar —
+      anti-Polish / pro-regime narrative operations run in the service of
+      Belarusian state information objectives. Strongly_inferred (not
+      attested): Mandiant corroborates the alignment ("narratives consistent
+      with Belarusian government interests") and the HIGH-confidence
+      Belarus-government link, but no source names the 2019 doctrine or states
+      its terminal goal.
+    attesting_source_id: null
+    inference_basis:
+      source_id: mandiant/2021-04-28_ghostwriter-unc1151
+      signals:
+        - "Mandiant: 'assesses with high confidence that UNC1151 is linked to the Belarusian government'"
+        - "Mandiant: the leaked Polish government documents 'were promoted in a hack-and-leak style Ghostwriter operation that began in June 2021,' with narratives 'alleging corruption or scandal within the ruling parties in ... Poland' and 'discrediting the Polish government' — narratives 'consistent with Belarusian government interests'"
+        - "Notes from Poland (2021-06-09): the leaked material framed as 'evidence of alleged Polish interference in Belarus's internal affairs' — a Belarusian information-sphere-defense narrative"
+      alternatives:
+        - "Russian information confrontation (ru/info-security-2016): Poland's own government (Kaczyński/Żaryn, 2021-06-24) attributed the operation to Russia ('from the territory of the Russian Federation'; UNC1151 'linked ... with the Russian security services'), and the EU Council (2021-09-24) named 'the Russian state.' If the true sponsor were Russia, the operative doctrine would be Russian information confrontation, not Belarusian information-sphere defense."
+    contested: true
+    counter_explanation: |
+      The Belarus-vs-Russia contest is live at the nation level: the victim
+      government (Poland) and the EU Council both attributed the operation to
+      Russia, so a Russian-doctrine reading survives. AUSPEX retains the
+      Belarusian-doctrine label per its canonical actor homing (Mandiant's
+      high-confidence UNC1151-to-Belarus attribution + narratives consistent
+      with Belarusian government interests), honestly flagged.
     analyst: claude
 targets:
   - target_id: orgs/polish-government
     country: pl
-    role: primary
-  - target_id: orgs/michal-dworczyk-email
-    country: pl
-    role: primary
+    role: primary  # Polish government officials incl. head-of-chancellery Michał Dworczyk (named in prose); the orgs/polish-government registry entry itself covers "the 2021 compromise of the personal email of head-of-chancellery Michał Dworczyk"
 sources:
   - mandiant/2021-04-28_ghostwriter-unc1151
   - council-eu/2021-09-24_belarus-ghostwriter-statement
-  - mandiant/2021-04-28_ghostwriter-unc1151
+  - notesfrompoland/2021-06-09_dworczyk-email-hack-confirmed
+  - notesfrompoland/2021-06-24_poland-russia-attribution-officials-hack
+  - vsquare/2022-03-19_behind-hack-and-leak-scandal-poland
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit + RE-SOURCE (badrabbit-style enrichment) of the 2020-21
+    Ghostwriter/UNC1151 compromise-and-leak of Polish government officials'
+    email (the Michał Dworczyk affair), against five snapshotted sources.
+
+    FK VERIFICATION (per task): the batch-38 re-point is CORRECT. The
+    Mandiant attribution FK mandiant/2021-04-28_ghostwriter-unc1151 resolves
+    to the captured 16 Nov 2021 Mandiant Belarus-attribution report
+    (raw_snapshot mandiant__2021-04-28_ghostwriter-unc1151.html, sha256
+    d273878617f53e9674944dbb49b295682bbdc0316dbb78f12bd2e08f9f7ea095; its slug
+    keeps the April date, published_on corrected to 2021-11-16). This is the
+    real report the phantom mandiant/2021-11-16_unc1151-belarus-link was a
+    fabricated mashup of; the re-point off that phantom (flagged by the
+    sibling 2021-11/mandiant-unc1151-microbackdoor-tooling audit) landed on
+    the right record. attribution_date 2021-11-16 now matches the source's
+    published_on. FIXED a duplicate mandiant/2021-04-28_ghostwriter-unc1151 in
+    sources[] (was listed twice).
+
+    STEP-0 / RE-SOURCE rationale: the two prior cited sources are REAL and
+    correctly snapshotted (hashes re-verified unchanged this audit), but
+    between them they carry only the GENERIC Polish hack-and-leak (Mandiant)
+    and a Russia-attribution of the wider campaign (EU) — neither names
+    Dworczyk, his role, the mailbox scale, the June-2021 Telegram leak, or
+    Poland's own attribution. The event's load-bearing specifics were
+    therefore unsourced (and one — "Minister of Defence" — was flat wrong).
+    Added three genuine secondary sources (created + snapshotted + hashed this
+    audit), keeping the two priors at PRESERVE tier:
+      - notesfrompoland/2021-06-09_dworczyk-email-hack-confirmed (sha256
+        81d204cc…a8e772cf, 290,024 B) — disclosure anchor: Dworczyk's role +
+        email hack + Telegram + PiS-senior-figures scope.
+      - notesfrompoland/2021-06-24_poland-russia-attribution-officials-hack
+        (sha256 9e271ec5…ba37b006, 291,052 B) — Poland's own attribution +
+        4,350/100 scope + phishing vector.
+      - vsquare/2022-03-19_behind-hack-and-leak-scandal-poland (sha256
+        2160de5b…1b47ec4d, 134,306 B) — 2020-21 phishing window + 60k-mailbox
+        scale + Facebook-seeding + leak-continuation.
+
+    [a] FACTS — corrected to strict source support.
+      FIXED (fabricated / wrong scope): "Minister of Defence (later Head of
+      the Chancellery of the Prime Minister)" — Dworczyk was NOT Minister of
+      Defence. Both Notes from Poland pieces and the orgs/polish-government
+      registry give his role as HEAD OF THE CHANCELLERY OF THE PRIME MINISTER
+      ("also holds ministerial rank"). Corrected. (He was earlier a deputy
+      defence minister, 2015-17 — not load-bearing, dropped.)
+      NOW SOURCE-CARRIED (verbatim): "the head of the chancellery of Poland's
+      prime minister ... also holds ministerial rank" (NfP 06-09); "senior
+      figures associated with the ruling Law and Justice (PiS) party" (NfP
+      06-09); "private email accounts belonging to him and his wife were
+      hacked" (NfP 06-09); Telegram leak (NfP 06-09 / VSquare); "over 60,000
+      emails in Michał Dworczyk's hacked mailbox" (VSquare); "large-scale
+      disinformation campaign" (NfP 06-09); Facebook-account seeding of the
+      Telegram link (VSquare); the Mandiant-carried core "leaked Polish
+      government communications and documents ... promoted in a hack-and-leak
+      style Ghostwriter operation that began in June 2021." Added a
+      quantified_impact block (4,350 accounts / 100 public-function holders /
+      60,000 emails), each with its citing comment.
+      KEPT incident_type [intrusion, data-theft, influence-operation] (phishing
+      intrusion -> 60k-email exfil -> hack-and-leak IO — all three verified).
+
+    [b] ATTRIBUTION — rebuilt from one muddled entry ("Polish government / EU
+      Council" attributing to "a Belarusian-aligned actor") into THREE
+      accurate entries, each with attribution_level:
+        1. Mandiant -> Belarusian government, HIGH conf, nation, concur
+           (2021-11-16). Graduated; not raised to named-unit.
+        2. Polish security services (ABW/SKW via Żaryn; Kaczyński) ->
+           UNC1151 cluster + "Russian security services" / "territory of the
+           Russian Federation," named-actor, concur-with-caveat (2021-06-24).
+        3. EU High Representative -> "the Russian state," nation,
+           concur-with-caveat (2021-09-24).
+      CORRECTED the central error: the EU declaration attributed to RUSSIA,
+      not "a Belarusian-aligned actor" (Belarus/KGB/UNC1151/Poland all 0× in
+      that raw). Both political attributions (Poland, EU) name Russia;
+      AUSPEX homes the actor to Belarus per Mandiant and flags the Russia
+      contest (concur-with-caveat on the two Russia entries). Did NOT
+      over-specify Russia as AUSPEX's position (per task) and did NOT
+      over-specify a Belarusian unit (Mandiant's military lean is only
+      moderate).
+
+    [c] DATES — disclosure_date 2021-06-09 KEPT (Dworczyk's confirmation;
+      NfP 06-09 byline/og:published_time 2021-06-09T10:53Z+02). start_date
+      2020-04-01 -> 2020-09-01 (APPROXIMATE): no source pins the onset;
+      VSquare gives the phishing window as "2020-21"; month aligned to the id
+      namespace (2020-09). end_date 2021-06-09 -> null: the leak DID NOT end
+      at disclosure — VSquare (2022-03-19) reports it still running "daily"
+      nine months on (blocked for Polish viewers July 2021, moved platforms
+      27 July). New-source published_on verified against bylines/og-metadata
+      (NfP 2021-06-09, NfP 2021-06-24, VSquare 2022-03-19); prior-source
+      hashes re-verified unchanged.
+
+    [d] DOCTRINE_LINKS — by/concept-info-security-2019/information-sphere-
+      defense KEPT at strongly_inferred but rebuilt to house shape: added
+      perspective=attacker-rationale, inference_basis {source_id, signals[],
+      alternatives[]}, counter_explanation, attesting_source_id=null; flipped
+      contested false -> TRUE. Strongly_inferred (not attested — no source
+      names the doctrine/terminal goal) is carried by Mandiant's high-conf
+      Belarus link + Poland-specific "discrediting the Polish government" /
+      "consistent with Belarusian government interests" narratives + the NfP
+      "Polish interference in Belarus's internal affairs" framing. contested
+      TRUE because Poland and the EU both named Russia (a live Russian-
+      information-confrontation alternative). Mirrors the sibling
+      2021-11/mandiant-unc1151-microbackdoor-tooling treatment.
+
+    [e] ATTRIBUTION_LEVEL — added to all three attributions (nation / named-
+      actor / nation) — previously absent on every entry.
+
+    [f] ACTOR_ID — by/unscoped/ghostwriter resolves
+      (atlas/actors/by/ghostwriter.yaml); not edited. Directionality correct
+      (Belarus/Ghostwriter attacker -> Polish government victim). TARGETS: the
+      prior second target orgs/michal-dworczyk-email is DANGLING (no registry
+      file; only the orgs/ namespace exists). Dropped it — Dworczyk is named
+      in prose and the resolving orgs/polish-government (pl, primary) already
+      documents "the 2021 compromise of the personal email of head-of-
+      chancellery Michał Dworczyk" in its own summary.
+
+    LEVEL=full: all five sources are snapshotted + hash-verified and every
+    load-bearing claim is now source-carried. The only non-pinned value is the
+    approximate start_date month (VSquare gives only the "2020-21" window),
+    transparently flagged in [c].
+
+    FLAGS for orchestrator/Kara (out of single-event remit):
+    (1) TARGET REGISTRY: no atlas/targets/orgs/michal-dworczyk-email.yaml
+        exists (there is no person/individual target namespace). The dangling
+        ref was dropped here; if AUSPEX wants individual-victim granularity, a
+        registry entry (or a persons/ namespace) would be needed — not created
+        in single-event scope.
+    (2) SOURCE RE-USE: the two new Notes from Poland records and the VSquare
+        record are strong secondary sources for the Dworczyk affair and could
+        be cited by the actor by/unscoped/ghostwriter and by sibling Polish-
+        targeting Ghostwriter events.
+    (3) STANDING CONTEST (not a defect): the Ghostwriter Belarus-vs-Russia
+        nation split is intrinsic here — the VICTIM government (Poland) and the
+        EU both named Russia, Mandiant names Belarus. Recorded per AUSPEX's
+        Belarus homing (concur-with-caveat on the Russia entries); if Russia is
+        ever adopted as AUSPEX's position, the actor homing + this event's
+        attributions/doctrine would need re-architecting.

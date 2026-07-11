@@ -1,80 +1,238 @@
 id: 2022-07/cisa-aa22-187a-maui-ransomware
 name: CISA AA22-187A Maui Ransomware advisory (Andariel)
-start_date: 2021-05-01  # campaign onset per advisory
+start_date: 2021-05-01  # campaign onset — AA22-187A "Since May 2021"; DOJ Kansas hospital 4 May 2021
 disclosure_date: 2022-07-06
-end_date: null  # ongoing per CISA AA23-040A
+end_date: null  # campaign ongoing at disclosure (AA23-040A / DOJ show activity into March 2023)
 incident_type:
+  - documentary  # CISA/FBI/HHS/Treasury joint advisory (the artifact this event anchors on)
   - ransomware
-  - intrusion
-initial_vector: n-day
+initial_vector: unknown  # AA22-187A: "The initial access vector(s) for these incidents is unknown"; the Log4Shell (n-day) vector belongs to the DEFENSE intrusions per DOJ/AA23-040A, not the healthcare Maui deployments
 outcome_summary: |
-  Manually-deployed Maui custom ransomware (AES encryption with
-  operator-supplied keys) against US healthcare and public-health
-  sector targets since May 2021. Multiple hospital encryption
-  events; ransoms paid in BTC. CISA / FBI / HHS / Treasury joint
-  advisory consolidates the campaign and provides IoCs.
+  Manually-deployed custom Maui ransomware — AES-128 per-file
+  encryption, RSA-wrapped, using operator-staged key files
+  (maui.key / maui.evd) — against US Healthcare and Public Health
+  (HPH) sector targets since May 2021. Multiple hospital /
+  clinical-care encryption events disrupting electronic health
+  records, diagnostics, imaging, and intranet services; at least
+  one ransom (the Kansas hospital: two Bitcoin) was paid and
+  laundered per the 2024 DOJ indictment. CISA / FBI / HHS /
+  Treasury joint advisory (AA22-187A) consolidates the campaign
+  and provides IoCs.
 false_flag_risk: none
 operators_named:
   - rim-jong-hyok  # Andariel, DOJ Kansas Jul 2024 (retroactive Maui attribution)
 summary: |
-  Canonical Andariel revenue-self-funding operation per the 2024
-  Rim Jong Hyok DOJ indictment, which retroactively confirms that
-  ransom proceeds were laundered via PRC facilitators to fund
-  follow-on defense-network intrusions. Maui is a manually run
-  command-line encryptor — operators pre-stage it on the victim
-  domain, select files, and trigger AES encryption with an
-  operator-supplied key, then leave a manual ransom demand
-  outside the encrypted filesystem. Initial access tradecraft
-  per the advisory and follow-on DOJ indictment includes
-  Log4Shell exploitation against VMware Horizon, web shells on
-  internet-facing servers, valid credentials harvested via
-  Mimikatz-style credential dumping, lateral movement on RDP and
-  SMB, and the BLINDINGCAN, Dtrack, and 3PROXY tooling from the
-  broader Andariel toolset before the Maui encryptor runs.
+  Canonical Andariel revenue-self-funding operation, retroactively
+  resolved to Andariel by the 2024 Rim Jong Hyok DOJ indictment,
+  which confirms Maui ransom proceeds were laundered via PRC
+  facilitators (Bitcoin -> Tether -> Chinese yuan -> Chinese bank
+  -> a Dandong ATM at the Sino-Korean Friendship Bridge) and used
+  to buy the server infrastructure for the RGB's follow-on
+  defense-network intrusions. Maui (maui.exe) is a manually run
+  command-line encryptor: per AA22-187A the operator uses a
+  command-line interface to select files and AES-128-encrypts each
+  with a unique, RSA-wrapped key (the RSA pair maui.key / maui.evd
+  staged in the working directory), writing a maui.log the
+  operators exfiltrate to decrypt; the indictment adds that Maui
+  leaves a ransom note carrying a cryptocurrency address (two
+  Bitcoin demanded from the Kansas hospital). AA22-187A states the
+  initial-access vector for the Maui healthcare incidents is
+  UNKNOWN; the Log4Shell (CVE-2021-44228) exploitation named in
+  AA23-040A and in the indictment pertains to the RGB's follow-on
+  intrusions against defense targets (e.g. US Air Force bases), not
+  the healthcare Maui deployments. DTrack appears in the DOJ's
+  inventory of RGB/Andariel malware (para 25).
 attributions:
   - actor_id: kp/rgb/andariel
-    attributing_org: US CISA + FBI + HHS + Treasury
+    attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
-    attribution_date: 2022-07-06
-    attribution_source_id: cisa/2022-07-06_aa22-187a-maui-ransomware
+    attribution_date: 2024-07-25
+    attribution_source_id: doj/2024-07-25_andariel-rim-jong-hyok-indictment
+    notes: |
+      Attribution reassigned from the namesake advisory to the 2024 DOJ
+      indictment — the source that actually names the unit. The
+      contemporaneous AA22-187A (2022) attributed only at NATION level:
+      "North Korean state-sponsored cyber actors", with 0 raw occurrences
+      of "Andariel" / "RGB" / "Reconnaissance General Bureau" in its
+      snapshot (sha256 ee8368b0...10627848); AA23-040A (2023) likewise
+      names neither. The Rim Jong Hyok indictment names the Reconnaissance
+      General Bureau as "North Korea's primary military intelligence
+      agency" (para 1) and Andariel / Onyx Sleet / Silent Chollima as "a
+      cyber unit within the RGB" (para 2), retroactively resolving the
+      Maui campaign to Andariel -> attributing_org US DOJ, attribution_date
+      2024-07-25, attribution_level named-unit, auspex concur. Consistent
+      with the sibling event 2024-07/andariel-rim-jong-hyok-indictment.
 doctrine_links:
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      AA22-187A says ransom proceeds may 'fund illicit activities'
-      and AA23-040A cites 'DPRK national-level priorities' —
-      neither names the WMD goal or the defense plan. The 2024 Rim
-      indictment ties Maui proceeds to Andariel's defense-collection
-      budget (indictment not re-fetched in pre-pass). Strategic-goal
-      linkage inferred.
-    attesting_source_id: cisa/2022-07-06_aa22-187a-maui-ransomware
+      Maui is DPRK ransomware run for revenue. The primary advisory
+      (AA22-187A) states only that paying ransoms "may ... fund illicit
+      activities" (generic), and AA23-040A that DPRK ransomware revenue
+      "supports DPRK national-level priorities and objectives, including
+      cyber operations targeting the United States and South Korea
+      governments" — neither names a WMD / regime-financing terminal
+      goal. The 2024 DOJ indictment (raw captured, sha256 b10b92a8...)
+      articulates the revenue->operations loop — ransom proceeds
+      laundered via PRC facilitators and used to "purchase internet
+      servers to commit computer intrusions" (para 23) — but names only
+      that PROXIMATE self-funding goal, never the WMD / ballistic-missile
+      PROGRAMS (0 raw hits "WMD" / "ballistic" / "weapons of mass
+      destruction"). Terminal WMD-financing linkage therefore inferred,
+      not attested.
     inference_basis:
-      source_id: cisa/2022-07-06_aa22-187a-maui-ransomware
       signals:
-        - "AA22-187A: proceeds may 'fund illicit activities'; AA23-040A: 'DPRK national-level priorities'; Rim indictment ties proceeds to defense collection (not re-fetched)"
-      ruled_out: "WMD-financing / 8th-Congress defense plan — not named in the fetched advisories"
+        - "AA22-187A: ransom payment 'may ... fund illicit activities'; AA23-040A: DPRK ransomware revenue 'supports DPRK national-level priorities and objectives'."
+        - "DOJ indictment paras 23/27: ransom proceeds buy the VPS / internet servers used for the defense-tech intrusions — revenue directly underwrites the collection operations."
+        - "Laundering chain routes proceeds back toward the DPRK regime (Bitcoin -> Tether -> Chinese yuan -> Chinese bank -> a Dandong ATM at the Sino-Korean Friendship Bridge; two Hong Kong intermediaries)."
+      ruled_out: "Pure financially-motivated cybercrime with no state-program nexus — rejected: the indictment ties the ransom-funded operations to RGB collection furthering DPRK military/nuclear aims. Stays strongly_inferred (not attested) only because no cited source states the ransom proceeds finance the WMD / ballistic-missile PROGRAMS themselves."
     contested: false
     analyst: claude
   - doctrine_id: kp/8th-congress-defense-plan
     pillar_id: kp/8th-congress-defense-plan/strategic-tech-collection
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
     reasoning: |
-      Ransomware revenue tightly coupled to Andariel's
-      defense-network intrusion budget per 2024 DOJ indictment;
-      secondary mission of disruption-tolerance against US
-      healthcare.
+      The 2024 DOJ indictment states the terminal goal IN SUBSTANCE and
+      draws the full chain from this event's healthcare ransomware to it:
+      the ransoms "in turn funded the Conspirators' computer intrusions
+      into government agencies, military bases, and companies supporting
+      the military, including with missile, aerospace, and uranium
+      processing technology[;] ... these hacking operations aligned with
+      the RGB's goal of collecting information that furthers the North
+      Korean regime's military and nuclear aspirations" (para 3).
+      Collection against defense / aerospace / nuclear targets serving
+      DPRK military modernization is exactly the goal the
+      strategic-tech-collection pillar encodes; the doctrine slug need
+      not appear. NB strategic-tech-collection is the DOWNSTREAM purpose
+      the Maui healthcare revenue funds (this event's own targets are
+      healthcare), but the indictment makes the ransom -> server-buy ->
+      defense-collection -> military/nuclear-aspirations linkage
+      explicit. Consistent with the sibling indictment event's treatment
+      of the same DOJ source.
+    attesting_source_id: doj/2024-07-25_andariel-rim-jong-hyok-indictment
+    inference_basis:
+      source_id: doj/2024-07-25_andariel-rim-jong-hyok-indictment
+      source_quote: |
+        These hacking operations aligned with the RGB's goal of
+        collecting information that furthers the North Korean regime's
+        military and nuclear aspirations. [DOJ indictment para 3; the
+        ransom-funded intrusions exfiltrated "missile, aerospace, and
+        uranium processing technology" (para 3).]
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/healthcare/hospital
     role: primary
-  - target_id: sectors/healthcare/research
-    role: primary
+    outcome: |
+      Maui encryption of hospital / clinical-care servers (electronic
+      health records, diagnostics, imaging, intranet) at multiple US
+      HPH-sector organizations since May 2021; named victims include a
+      Kansas hospital (May 2021) and a Florida hospital (2022) per the
+      DOJ indictment.
 sources:
   - cisa/2022-07-06_aa22-187a-maui-ransomware
   - cisa/2023-02-09_aa23-040a-stopransomware-dprk
   - doj/2024-07-25_andariel-rim-jong-hyok-indictment
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited against RAW snapshots — all three cited sources captured and
+    hash-re-verified this pass: AA22-187A HTML sha256
+    ee8368b0...10627848; AA23-040A HTML sha256 e56423c3...b4f3ba97; DOJ
+    Rim Jong Hyok filed-indictment PDF (US v. Rim, 2:24-cr-20061-HLT-ADM,
+    Doc 1, 17 pp) sha256 b10b92a8...f6d4589d. DOCUMENTARY advisory event
+    (AA22-187A) on the DPRK Maui healthcare-ransomware campaign.
+
+    [a] FACTS — STRUCK a heavily fabricated tradecraft sentence. Prior
+    summary asserted the Maui initial-access chain "includes Log4Shell
+    exploitation against VMware Horizon, web shells on internet-facing
+    servers, valid credentials harvested via Mimikatz-style credential
+    dumping, lateral movement on RDP and SMB, and the BLINDINGCAN,
+    Dtrack, and 3PROXY tooling." Verified vs all three raws: "VMware" /
+    "Horizon" 0 hits in every source; "web shell" / "webshell" 0;
+    "Mimikatz" 0; "BLINDINGCAN" 0; "3proxy" 0. RDP (9) / SMB (4) appear
+    in AA22-187A ONLY in mitigations boilerplate (secure RDP; restrict
+    SMB), not as observed tradecraft. AA22-187A explicitly states "The
+    initial access vector(s) for these incidents is unknown." Log4Shell
+    IS real but tied to the DEFENSE intrusions — DOJ para 45 "exploited
+    the Log4Shell vulnerability" (US Air Force bases), AA23-040A lists
+    CVE-2021-44228 generically — NOT the healthcare Maui vector. Only
+    DTrack survives (DOJ para 25 RGB malware list "Valefor, VSingle,
+    ValidAlpha, YamaBot, DTrack, TigerRAT, and MagicRAT"). Rewrote
+    summary/outcome to sourced facts: Maui = manual CLI encryptor,
+    AES-128 per-file RSA-wrapped keys (maui.key / maui.evd), maui.log
+    exfiltrated (AA22-187A paras re Stairwell analysis); ransom note with
+    crypto address, two BTC paid by the Kansas hospital, laundered
+    Bitcoin -> Tether -> yuan -> Chinese bank -> Dandong ATM (DOJ paras
+    26/30-32). "ransoms paid in BTC" retained (DOJ-carried; AA22-187A
+    itself only notes FBI seeking "bitcoin wallet information"). Changed
+    initial_vector n-day -> unknown (AA22-187A) and incident_type
+    [ransomware, intrusion] -> [documentary, ransomware] (documentary
+    advisory; healthcare vector explicitly unknown). REMOVED target
+    sectors/healthcare/research — unsupported: AA22-187A victims are
+    hospitals / EHR / diagnostics / imaging (= healthcare/hospital
+    "Hospitals & clinical care"); the lone DOJ "research and development
+    data" hit (para 49) is DEFENSE R&D, not a healthcare research/vaccine
+    entity.
+
+    [b] ATTRIBUTION — CORRECTED over-attestation. Prior entry credited
+    the kp/rgb/andariel attribution to AA22-187A (attributing_org "US
+    CISA + FBI + HHS + Treasury", attribution_date 2022-07-06). But
+    AA22-187A attributes only at NATION level ("North Korean
+    state-sponsored cyber actors"; 0 raw "Andariel" / "RGB" /
+    "Reconnaissance General Bureau"), and AA23-040A names neither. The
+    named-unit attribution rests solely on the 2024 DOJ indictment: para
+    1 "North Korea's primary military intelligence agency is the
+    Reconnaissance General Bureau (RGB)"; para 2 "A cyber unit within the
+    RGB is known ... as Andariel, Onyx Sleet, and Silent Chollima."
+    Reassigned attributing_org -> US DOJ, attribution_date -> 2024-07-25,
+    attribution_source_id -> the indictment; auspex concur, confidence
+    high (grand-jury indictment). Matches sibling
+    2024-07/andariel-rim-jong-hyok-indictment.
+
+    [c] DATES ok — start_date 2021-05-01 (AA22-187A "Since May 2021"; DOJ
+    Kansas hospital 4 May 2021); disclosure_date 2022-07-06 = AA22-187A
+    published_on (verified vs record + snapshot); end_date null (campaign
+    ongoing). Source published_on all verified: 2022-07-06 / 2023-02-09 /
+    2024-07-25.
+
+    [d] DOCTRINE_LINKS — revenue-aggregation KEPT strongly_inferred; its
+    STALE reasoning fixed (prior text "indictment not re-fetched in
+    pre-pass" — the PDF IS now captured/hashed). No cited source names the
+    WMD / ballistic-missile PROGRAMS as the revenue's terminal goal (0
+    hits WMD / ballistic / weapons of mass destruction); the indictment
+    names only the proximate self-funding goal (para 23 "purchase
+    internet servers to commit computer intrusions"), so strongly_inferred
+    is correct; added inference_basis {signals, ruled_out}.
+    strategic-tech-collection UPGRADED strongly_inferred -> attested (it
+    previously carried NO inference_basis — a schema gap): the indictment
+    states the terminal goal in substance — para 3 "these hacking
+    operations aligned with the RGB's goal of collecting information that
+    furthers the North Korean regime's military and nuclear aspirations"
+    (missile / aerospace / uranium-processing tech) — and draws the full
+    healthcare-ransom -> server-buy -> defense-collection chain. Added
+    attesting_source_id + inference_basis.source_quote. Consistent with
+    the sibling indictment event's doctrine treatment of the same DOJ
+    source. Perspective default attacker-rationale (DPRK doctrine on its
+    own operation).
+
+    [e] ATTRIBUTION_LEVEL — was ABSENT; added named-unit (DOJ names the
+    controlling military-intelligence organ, the RGB, and Andariel as a
+    unit within it).
+
+    [f] ACTOR_ID ok — kp/rgb/andariel resolves ->
+    atlas/actors/kp/andariel.yaml (id kp/rgb/andariel). Campaign event,
+    actor retained (not a counter-action); the DOJ raw directly
+    corroborates the RGB placement. No actor-file edit.
+
+    SNAPSHOTS: PRESERVE tier — all three sources already carried
+    raw_snapshot + content_sha256; re-hashed on disk this pass, all three
+    match exactly. No source-record tier/url/snapshot changes.

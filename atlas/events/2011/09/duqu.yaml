@@ -1,45 +1,105 @@
 id: 2011-09/duqu
-name: Duqu reconnaissance toolkit
-start_date: 2011-09-01  # CrySyS Lab discovery
-disclosure_date: 2011-10-18  # Symantec advisory
-end_date: null
+name: Duqu reconnaissance / intelligence-collection toolkit (Stuxnet-related)
+start_date: 2011-04-01  # op onset: Symantec "the first recording of an attack occurred in early April 2011"; file-compilation times suggest as early as Nov 2010. (CrySyS discovery is Sept 2011 — the id-month anchor — but that milestone is not in the snapshotted sources.)
+disclosure_date: 2011-10-18  # Symantec "W32.Duqu" v1.0 advisory (version history: "Version 1.0 (October 18, 2011)"); CrySyS initial report v0.93 dated 14/Oct/2011
+end_date: null  # C&C servers scrubbed ~2011-10-20 after exposure; Duqu-family activity continued into 2012 (indeterminate end)
 incident_type:
-  - intrusion
-initial_vector: 0-day  # Word zero-day kernel exploit
+  - espionage
+  - surveillance
+initial_vector: 0-day  # Microsoft Word 0-day kernel exploit in the installer — Symantec confirms "in one case"; vector in other cases "unknown"
 outcome_summary: |
-  Intelligence collection enabling subsequent ICS operations against
-  Iranian and other Middle Eastern targets. Particular focus on
-  industrial certificate authorities and ICS-adjacent organizations.
+  Highly targeted intelligence-collection / reconnaissance operation: a
+  remote-access Trojan (RAT) plus a keylogging infostealer used to steal
+  design documents and system data from industrial / ICS-equipment
+  manufacturers (and some organizations outside the industrial sector),
+  assessed by Symantec as preparation "to more easily conduct a future
+  attack against another third party" on industrial-control-system
+  facilities. Duqu itself contained NO ICS payload and did not
+  self-replicate. Infections confirmed in ~6 organizations across ~8
+  countries (Europe, India, Iran, Sudan); the original sample was
+  recovered from a European organization. No follow-on attack has been
+  publicly attributed to Duqu's collection.
 false_flag_risk: none
-campaign_id: olympic-games
+campaign_id: olympic-games  # matches the Stuxnet sibling event; NB no campaign registry record exists for this id (flagged)
 summary: |
-  Sister malware to Stuxnet in the Tilded Platform family. Discovered
-  by CrySyS Lab (Hungary) and analyzed by Symantec/Kaspersky. Code
-  similarity with Stuxnet establishes shared authorship with high
-  technical confidence; the operational tasking pattern (Iranian and
-  Middle Eastern targets, ICS reconnaissance) is consistent with
-  Olympic Games team continuation. Pre-attack reconnaissance for the
-  Olympic Games family.
+  Duqu is an espionage / reconnaissance platform closely related to
+  Stuxnet. Symantec ("W32.Duqu: The precursor to the next Stuxnet",
+  first published 2011-10-18) and CrySyS Lab (which discovered it;
+  report 2011-10-14) found Duqu "nearly identical to Stuxnet, but with a
+  completely different purpose", "written by the same authors, or those
+  that have access to the Stuxnet source code" — CrySyS: "Stuxnet code
+  is massively re-used in targeted attacks". Unlike Stuxnet it carries
+  no ICS-sabotage payload; it is "primarily a remote access Trojan
+  (RAT)" that installs a keylogging infostealer to gather "design
+  documents that could help them mount a future attack". One infection
+  vector was a targeted email carrying a Microsoft Word document with an
+  undisclosed 0-day kernel exploit; one driver variant was signed with a
+  code-signing certificate whose private key was stolen from a hardware
+  manufacturer in Taipei, Taiwan (NOT a "certificate authority").
+
+  ATTRIBUTION HEDGE (2011 was cautious): the vendor sources establish
+  ONLY shared code / authorship with Stuxnet — they make NO nation-state
+  attribution. AUSPEX clusters Duqu to the joint US-Israel "Olympic
+  Games" team via that code-identity link (Duqu is part of the
+  Stuxnet / Flame / Gauss family the actor record covers); the US-Israel
+  identity is INHERITED from the separately-sourced Stuxnet attribution,
+  not stated by Symantec / CrySyS / Kaspersky. DIRECTIONALITY: Iran (ir)
+  and the other industrial victims are targets; the United States and
+  Israel are the assessed attacker. NB Duqu 2.0 (2015, which hit
+  Kaspersky Lab) is a SEPARATE later event — do not conflate.
 attributions:
-  - actor_id: us/olympic-games-team
-    attributing_org: Kaspersky / Symantec (technical clustering)
-    attributing_org_confidence: high
+  - actor_id: us/olympic-games-team  # joint US+Israel; anchored us/ via us/nsa/tao, Unit 8200 noted in the actor record
+    attributing_org: Symantec / CrySyS / Kaspersky (technical clustering — shared code & authorship with Stuxnet)
+    attributing_org_confidence: high  # HIGH on the shared-Stuxnet-authorship link (stated flatly in the raw); the nation identity is inherited, not source-stated
+    attribution_level: activity-cluster  # 2011 sources support only the Stuxnet-code-lineage cluster; the named-actor / nation identity is inherited from the Stuxnet attribution
     auspex_assessment: concur-with-caveat
     attribution_date: 2011-10-18
     attribution_source_id: symantec/2011-10-18_duqu-w32
     notes: |
-      Attribution is `journalistic + technical clustering` — code
-      similarity with Stuxnet via the Tilded Platform; no government
-      acknowledgement.
+      DIRECTIONALITY: assessed attacker = United States + Israel (the
+      joint "Olympic Games" team, anchored us/ via us/nsa/tao with Unit
+      8200); VICTIMS = industrial / ICS-manufacturer organizations across
+      ~8 countries incl. Iran (ir), Sudan, India, France, Netherlands,
+      Austria, Hungary.
+
+      The 2011 raw sources establish ONLY code similarity / shared
+      authorship with Stuxnet and make NO nation attribution — Symantec:
+      "written by the same authors, or those that have access to the
+      Stuxnet source code" / "The creators of Duqu had access to the
+      source code of Stuxnet, not just the Stuxnet binaries"; CrySyS:
+      "Stuxnet code is massively re-used in targeted attacks"; Kaspersky
+      frames the developers as "two different groups of people". The leap
+      to us/olympic-games-team is AUSPEX clustering via that code-identity
+      link (Duqu is in the Stuxnet / Tilded family the actor record
+      covers); the US-Israel identity is INHERITED from the (later,
+      separately-sourced) Stuxnet attribution — hence attribution_level =
+      activity-cluster and auspex_assessment = concur-with-caveat. 2011
+      vendor attribution was deliberately cautious. Rejected
+      us/nsa/equation-group: the actor record explicitly distinguishes
+      the Stuxnet / Olympic-Games cluster from Equation Group and lists
+      Duqu under Olympic Games.
 doctrine_links:
   - doctrine_id: us/title-10-title-50
+    perspective: attacker-rationale
     pillar_id: null
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Counter-proliferation reconnaissance preparing follow-on Olympic
-      Games operations. Predates NSPM-13 / Defend Forward.
+      Duqu, as a covert US intelligence-collection operation in the
+      Stuxnet / Olympic Games lineage, falls under the Title 50 covert-
+      action authority the framework encodes — the same basis assessed
+      for Stuxnet. The more specific US operational cyber doctrines
+      (NSPM-13, Defend Forward) postdate the 2010-2011 operation.
+      strongly_inferred, not attested: no government / tier-1-vendor
+      source states the legal-authority basis; it is triangulated from
+      the Olympic Games covert-action reporting via the Stuxnet link.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Duqu is assessed as part of the joint US-Israel Olympic Games program (via code-identity with Stuxnet), which Sanger's reporting frames as a presidentially-authorized covert action — the Title 50 track."
+        - "The operation (2010-2011) predates NSPM-13 (2018) and Defend Forward (2018); no more-specific US operational cyber doctrine existed at the time."
+      ruled_out: "Title 10 traditional-military-activity framing: the Olympic Games lineage is reported as a covert action, not an overt USCYBERCOM / Title 10 operation."
+    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: il/begin-doctrine
@@ -48,30 +108,189 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Pre-attack reconnaissance for Stuxnet — code-similarity via
-      the Tilded Platform places Duqu in the Olympic Games family
-      under the same Begin Doctrine cyber extension. No Israeli
-      acknowledgement.
+      Duqu is the reconnaissance precursor to the Stuxnet-family cyber-
+      sabotage campaign — Symantec titled its report "The precursor to
+      the next Stuxnet". Code-identity with Stuxnet places Duqu in the
+      same Olympic Games family the il/begin-doctrine record names under
+      its counter-WMD-cyber-sabotage pillar. strongly_inferred, not
+      attested: Israel has never acknowledged the operation and no source
+      states its strategic purpose; Duqu's OWN function is collection,
+      not sabotage.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Symantec: Duqu is 'essentially the precursor to a future Stuxnet-like attack', built by the Stuxnet authors or those with Stuxnet source-code access — placing it in the counter-WMD cyber-sabotage campaign lineage."
+        - "The il/begin-doctrine record explicitly names Stuxnet / Olympic Games under the counter-wmd-cyber-sabotage pillar; Duqu is the reconnaissance component of that family."
+      ruled_out: "Duqu being an independent / unrelated espionage tool: Symantec and CrySyS establish direct code-identity with Stuxnet ('Stuxnet code is massively re-used'), not a coincidental overlap."
+    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: il/counter-iran-posture
     perspective: attacker-rationale
     pillar_id: il/counter-iran-posture/counter-nuclear-program
     program_id: null
-    confidence: strongly_inferred
+    confidence: plausible  # DOWNGRADED from strongly_inferred: Duqu's confirmed victimology was broad multi-country industrial collection, NOT specifically Iran's nuclear program
     reasoning: |
-      ICS reconnaissance against industrial certificate authorities
-      and ICS-adjacent organizations sets up subsequent counter-
-      enrichment action at Natanz.
+      IF Duqu fed the Olympic Games / Natanz counter-enrichment campaign,
+      its collection served Israel's counter-Iran-nuclear-program
+      objective. But Duqu's actual confirmed victimology was broad —
+      industrial / ICS-equipment manufacturers across ~8 countries
+      (Europe, India, Iran, Sudan) — not Iran-nuclear-specific; only ~2-3
+      of ~6 confirmed organizations were in Iran, and the original sample
+      came from Europe. The Iran-nuclear specificity is inherited from
+      the campaign thesis, not demonstrable from Duqu's own targeting —
+      hence plausible, not strongly_inferred.
     attesting_source_id: null
+    counter_explanation: |
+      Duqu's collection reads equally as generic ICS-attack preparation
+      or broad industrial / IP espionage; no cited source ties Duqu
+      specifically to Iran's nuclear program (contrast Stuxnet / Natanz).
+    inference_basis:
+      alternatives:
+        - "Generic ICS-attack preparation: Symantec says Duqu gathered design docs to enable a future attack on 'various industries, including industrial control system facilities' — not specifically Iran's nuclear program."
+        - "Broad industrial / IP espionage: confirmed victims spanned France, Netherlands, Austria, Hungary, India, Iran and Sudan; the Iran nexus is one of several, and the first-recovered sample was European."
     contested: false
     analyst: claude
 targets:
-  - target_id: sectors/government
-    country: ir
+  - target_id: sectors/manufacturing
+    country: null  # multi-country; Duqu's actual collection: design-doc / IP theft from industrial & ICS-equipment manufacturers' corporate networks (Symantec: "does not contain any code related to industrial control systems... primarily a remote access Trojan"; steals "design documents"). Confirmed orgs across FR, NL, AT, HU, IN, IR, SD
+    role: primary
+  - target_id: sectors/ics
+    country: ir  # Iran nexus + the ultimate ICS-facility target class the collection was preparing (Symantec: "future attack on... industrial control system facilities"). Iran = ~2-3 of ~6 confirmed orgs + the "Stars" malware Iran reported April 2011 (Symantec: "may in fact be Duqu")
     role: primary
 sources:
   - symantec/2011-10-18_duqu-w32
   - crysys/2011-10_duqu-initial-discovery
   - kaspersky/2011_duqu-analysis
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    HISTORICAL audit vs RAW (Duqu, 2011; CrySyS Lab + Symantec +
+    Kaspersky). Level = FULL: every load-bearing factual claim is carried
+    by a snapshotted source; the nation-level attribution is transparently
+    represented as an INHERITED inference (activity-cluster), not asserted
+    as source-carried.
+
+    SNAPSHOTS (all captured this pass):
+    - symantec/2011-10-18_duqu-w32 — "W32.Duqu: The precursor to the next
+      Stuxnet" v1.4 (Nov 23 2011), 71pp PDF. sha256
+      8c556df1…e69593dd, 4,050,496 bytes. NB the recorded url
+      (docs.broadcom.com/docs/...) now returns a JS "browser-not-supported"
+      shell; the actual PDF is at docs.broadcom.com/doc/w32-duqu-11-en
+      (noted on the source record). published_on 2011-10-18 = v1.0 first
+      publication (confirmed in the PDF version history); the snapshot is
+      the v1.4 revision.
+    - crysys/2011-10_duqu-initial-discovery — "Duqu: A Stuxnet-like malware
+      found in the wild" v0.93 (14/Oct/2011), 60pp PDF. sha256
+      09cb54b8…4fd40c3b, 1,544,935 bytes.
+    - kaspersky/2011_duqu-analysis — RE-SOURCED (link-rot): the recorded
+      url securelist.com/the-mystery-of-duqu/29826/ has rotted — post-id
+      29826 now serves an unrelated article "Tuesday's Interesting IE
+      Patch" (ZERO Duqu mentions). Re-pointed to the genuine article "The
+      Mystery of Duqu: Part One", securelist.com/the-mystery-of-duqu-part-
+      one/31177/ (datePublished 2011-10-20). HTML snapshot sha256
+      0dad0afc…97944750, 198,744 bytes.
+
+    [a] FACTS — corrected. VERIFIED verbatim: Stuxnet relationship —
+    Symantec "nearly identical to Stuxnet, but with a completely different
+    purpose" / "written by the same authors, or those that have access to
+    the Stuxnet source code" / "The creators of Duqu had access to the
+    source code of Stuxnet, not just the Stuxnet binaries"; CrySyS finding
+    #1 "Stuxnet code is massively re-used in targeted attacks". Info-stealer
+    capability (task asked to verify — CONFIRMED): Symantec "used Duqu to
+    install another infostealer that can record keystrokes and collect
+    other system information"; CrySyS standalone "Keylogger" (screen +
+    key logging). Purpose: Symantec "gather intelligence data and assets
+    from entities such as industrial infrastructure and system
+    manufacturers... in order to more easily conduct a future attack
+    against another third party... design documents... future attack on
+    various industries, including industrial control system facilities";
+    "Duqu does not contain any code related to industrial control systems
+    and is primarily a remote access Trojan (RAT). The threat does not
+    self-replicate." 0-day vector: "a Microsoft Word document... contained
+    a currently undisclosed 0-day kernel exploit that was able to install
+    Duqu" (confirmed "in one case"). STRIPPED / CORRECTED:
+    (1) "Particular focus on industrial certificate authorities" — FALSE /
+    misreading. No source targets "certificate authorities"; the cert
+    angle is a STOLEN code-signing certificate "issued to a company
+    headquartered in Taipei, Taiwan" (a hardware manufacturer) whose
+    "private keys... were stolen", used to sign one Duqu driver. Removed.
+    (2) "against Iranian and other Middle Eastern targets" — OVERSTATED.
+    "Middle East" appears in NO source re Duqu (the one Kaspersky hit is a
+    2025 sidebar headline). Victims = ~6 orgs in ~8 countries: France,
+    Netherlands, India, Iran (×2), Sudan (Symantec) + Austria, Hungary,
+    Iran (CrySyS); original sample European. Kaspersky's "tens of thousands
+    of infections (especially in Iran)" describes STUXNET, contrasted with
+    Duqu for which Kaspersky "found just ONE real infection". Reworded to
+    the multi-country industrial-manufacturer framing with a hedged Iran
+    nexus. (3) "enabling subsequent ICS operations" reframed as stated
+    INTENT (no follow-on attack is publicly attributed to Duqu's
+    collection).
+
+    [b] ATTRIBUTION — the 2011 vendors make NO nation attribution (grep of
+    all three: no "United States/Israel/NSA/nation-state/state-sponsored"
+    in body). They assert only shared Stuxnet code/authorship. Kept actor
+    us/olympic-games-team (per the Stuxnet code-identity clustering; NB the
+    actor record itself lists "Duqu (reconnaissance, 2011)" under the
+    Tilded family) but: added attribution_level = activity-cluster (was
+    missing) — what the raw supports; attributing_org relabelled to
+    "technical clustering — shared code & authorship with Stuxnet";
+    attributing_org_confidence kept high but scoped to the authorship link;
+    auspex_assessment kept concur-with-caveat; notes now state the
+    US-Israel identity is INHERITED from the Stuxnet attribution, not
+    source-carried, and that 2011 attribution was cautious. Rejected
+    us/nsa/equation-group (actor record preserves the Equation/Olympic-
+    Games distinction).
+
+    [c] DATES — start_date 2011-09-01 ("CrySyS discovery", not in the
+    snapshotted sources and semantically a discovery, not op-onset) →
+    2011-04-01, the source-carried op-onset (Symantec: "first recording of
+    an attack occurred in early April 2011"; compile-times "as early as
+    November 2010"), matching the sibling Stuxnet convention (start =
+    op-onset). disclosure_date 2011-10-18 CONFIRMED (Symantec version
+    history "Version 1.0 (October 18, 2011)"). Source published_on: Symantec
+    2011-10-18 ✓ (v1.0; snapshot is v1.4 Nov-23); CrySyS 2011-10-14 ✓ (PDF
+    "v0.93 (14/Oct/2011)"); Kaspersky corrected 2011-10-26 → 2011-10-20 (the
+    genuine part-one datePublished) on re-source. end_date null (C&C scrub
+    ~Oct-20-2011; family continued).
+
+    [d] DOCTRINE_LINKS — all three previously strongly_inferred with NO
+    inference_basis (and the US link missing perspective). Added
+    perspective + inference_basis to all: us/title-10-title-50 (attacker-
+    rationale, strongly_inferred, signals+ruled_out — Title-50 covert-action
+    frame, pre-NSPM-13, via the Stuxnet link); il/begin-doctrine/counter-
+    wmd-cyber-sabotage (attacker-rationale, strongly_inferred, signals+
+    ruled_out — Duqu as the "precursor to the next Stuxnet" recon component;
+    the doctrine record names Stuxnet/Olympic Games); il/counter-iran-
+    posture/counter-nuclear-program DOWNGRADED strongly_inferred → PLAUSIBLE
+    (alternatives[]) — Duqu's confirmed victimology was broad multi-country
+    industrial collection, not Iran-nuclear-specific. None attested (no govt
+    source states strategic purpose). Per-event US + IL doctrine retained
+    for the joint op.
+
+    [e] ATTRIBUTION_LEVEL — added activity-cluster (was missing).
+
+    [f] ACTOR_ID — us/olympic-games-team resolves to
+    atlas/actors/us/olympic-games-team.yaml (id verified). No actor-file
+    edit.
+
+    incident_type [intrusion] → [espionage, surveillance] per the tool's
+    RAT/infostealer/keylogger nature. targets sectors/government+ir
+    (unsupported: no source calls victims "government", and Iran-only
+    overstates) → sectors/manufacturing (country null, multi-country design-
+    doc theft) + sectors/ics (country ir, the ICS-facility target class +
+    Iran/"Stars" nexus).
+
+    FLAGS for orchestrator: (1) kaspersky/2011_duqu-analysis was link-rotted
+    to a wrong article and is re-pointed in place (url+published_on+title
+    corrected) — verify no other event relied on the old rotted content.
+    (2) campaign_id "olympic-games" has NO campaign registry record (same
+    as the Stuxnet sibling) — either create the registry entry or drop the
+    field corpus-wide. (3) start_date (2011-04) now differs from the id-
+    month (2011-09, the CrySyS-discovery anchor) — same accepted pattern as
+    Stuxnet (id 2010-06 vs start 2009-06); not renaming the file. (4)
+    Symantec source url returns a JS shell; direct PDF endpoint noted on the
+    record — a future pass could switch url to /doc/.

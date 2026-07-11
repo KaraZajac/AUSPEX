@@ -5,71 +5,124 @@ disclosure_date: 2014-10-28
 end_date: 2015-04-30
 incident_type:
   - intrusion
-  - data-theft
+  - espionage
 initial_vector: phishing
 outcome_summary: |
-  SVR-attributed APT29 ("Cozy Bear" / "The Dukes") penetrated
-  unclassified Executive Office of the President networks and
-  the US State Department's unclassified email system in
-  mid-to-late 2014. Access to the unclassified White House
-  network was discovered in October 2014 following allied
-  tipoff; State Department remediation efforts continued into
-  spring 2015 with intermittent re-compromise. The intrusion is
-  the most prominent pre-2016-DNC public exposure of SVR cyber
-  capability against US executive-branch targets.
+  APT29 ("Cozy Bear" / "The Dukes") — attributed by US officials
+  to the Russian government — penetrated the unclassified
+  Executive Office of the President network and the US State
+  Department's unclassified email system in mid-to-late 2014.
+  Access to the unclassified White House network was discovered
+  in October 2014 following an allied tipoff; investigators
+  believe the intruders reached the White House by first
+  compromising State and pivoting via a phishing email sent from
+  a hijacked State account. State Department remediation efforts
+  continued into spring 2015 with intermittent re-compromise (US
+  officials told CNN the hackers had "owned" the State system
+  "for months" and were not clearly eradicated). The
+  contemporaneous 2014-15 attribution was to "the Russian
+  government" at nation level; the SVR-unit designation is a
+  later (2016+) refinement not asserted by these sources. The
+  intrusion is the most prominent pre-2016-DNC public exposure of
+  Russian-state cyber capability against US executive-branch
+  targets.
 false_flag_risk: none
 summary: |
   Reporting (notably CNN, Washington Post) framed the intrusion
-  as part of a long-running SVR campaign that F-Secure had
-  documented as "The Dukes" toolset from 2008 onward. The
-  campaign is the institutional predecessor to the SVR
-  intrusion of the DNC (2015-09 to 2016-06) and the operational
-  baseline against which APT29's later SolarWinds (2020)
-  operation should be evaluated.
+  as part of a long-running Russian state cyberespionage campaign
+  that F-Secure (September 2015) documented as "The Dukes" toolset
+  operating "on behalf of the Russian Federation" from 2008
+  onward. Neither the 2014-15 press nor the F-Secure report names
+  the SVR specifically; the SVR/APT29 unit attribution
+  consolidated only with later (2016+) US/allied reporting. The
+  campaign is the institutional predecessor to the same actor's
+  (APT29) intrusion of the DNC (2015-09 to 2016-06) and an
+  operational baseline for its later SolarWinds (2020) operation.
 attributions:
   - actor_id: ru/svr/apt29
     attributing_org: US officials (anonymous, press)
     attributing_org_confidence: moderate
+    attribution_level: nation
     auspex_assessment: concur
     attribution_date: 2014-10-28
     attribution_source_id: wapo/2014-10-28_white-house-russia
     notes: |
-      US-official attribution to Russian state actors was made
-      via anonymous source on disclosure. F-Secure's September
-      2015 "The Dukes" report consolidated the technical
-      attribution to the SVR-aligned cluster later canonized as
-      APT29.
+      Contemporaneous US-official attribution was nation-level and
+      hedged: WaPo (2014-10-28) reported "hackers thought to be
+      working for the Russian government," and CNN (2015-04-07)
+      that investigators "found tell-tale codes and other markers
+      that they believe point to hackers working for the Russian
+      government." Neither press source named APT29 / Cozy Bear /
+      the Dukes, nor the SVR; NSC declined to confirm ("not going
+      to comment on [the] article's attribution to specific
+      actors"). actor_id ru/svr/apt29 reflects the modern canonical
+      identity of the cluster, NOT what the 2014 press asserted —
+      hence attribution_level: nation for this source.
   - actor_id: ru/svr/apt29
     attributing_org: F-Secure
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2015-09-17
     attribution_source_id: fsecure/2015-09-17_the-dukes
+    notes: |
+      F-Secure's "The Dukes" whitepaper (Sept 2015) consolidated
+      the toolset cluster (MiniDuke/CosmicDuke/CozyDuke/…) later
+      canonized as APT29 and assessed it "operates on behalf of the
+      Russian Federation," "working for the Russian Federation
+      since at least 2008" — a named-actor, nation-of-origin
+      attribution. The report does NOT name the SVR, and does not
+      itself document the White House / State Department intrusion
+      (it dates the first large CozyDuke spear-phishing campaign to
+      "the early days of July 2014" and cites US "high-profile
+      victims"). Supports the actor cluster + spear-phishing TTP,
+      not the event specifics — hence attribution_level:
+      named-actor, not named-unit.
 doctrine_links:
   - doctrine_id: ru/military-doctrine-2014
     pillar_id: ru/military-doctrine-2014/nato-as-principal-threat
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      The 2014 Russian Military Doctrine (December 2014) names
-      NATO expansion as the principal external threat. SVR
-      collection against US executive branch decision-making in
-      the same operational window is the canonical foreign-
-      intelligence service tasking under that doctrine.
+      Russian doctrine treats NATO/US as the principal external
+      danger (codified in the December 2014 Military Doctrine,
+      continuous with the 2010 edition). Clandestine foreign-
+      intelligence collection against US executive-branch
+      decision-making — here, real-time non-public details of the
+      president's schedule and foreign-policy deliberations — is
+      the canonical SVR-type tasking that this posture rationalizes.
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Target = US executive decision-making: CNN reports the hackers reached 'real-time non-public details of the president's schedule' — political/strategic intelligence on Russia's declared principal adversary."
+        - "Actor remit: APT29 / the Dukes is a foreign-intelligence collection cluster (F-Secure: it 'provides the Russian government with intelligence on foreign and security policy interests'), matching collection tasking rather than disruption."
+        - "Geopolitical timing: CNN ties the intrusions to the period when 'the U.S. and Russia increasingly confront each other' over Ukraine and Syria — the NATO-confrontation frame the doctrine names."
+      ruled_out: "Criminal / financially-motivated intrusion — no monetization, ransom, or data-sale is reported; the tradecraft (schedule and foreign-policy collection, months-long stealth persistence) is pure espionage. Destabilization-via-info is also ruled out here: this was covert collection, not a hack-and-leak, so the nato-as-principal-threat collection pillar fits better than the destabilization pillar used for the 2016 DNC operation."
     contested: false
     analyst: claude
   - doctrine_id: ru/gerasimov-framework
     pillar_id: ru/gerasimov-framework/non-military-means
     program_id: null
     confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      The Gerasimov 2013 article reframed information-domain
-      operations as primary in modern conflict; intrusions into
-      executive-branch unclassified email are consistent with
-      that framing although Gerasimov did not name SVR cyber
-      tasking specifically.
+      The intrusion is often folded into the Western "Gerasimov"
+      framing of information-domain operations as primary in modern
+      conflict. Tagged only plausible: the framework is informal
+      (Galeotti, who coined the label, has retracted it) and this
+      operation is classic clandestine collection, not the
+      influence / information-confrontation the framework emphasizes.
     attesting_source_id: null
+    inference_basis:
+      alternatives:
+        - "Military Doctrine 2014 / nato-as-principal-threat: espionage against the principal adversary's leadership is more cleanly captured by the formal collection pillar (the strongly_inferred link above) than by the informal Gerasimov 'non-military means' label."
+        - "No discrete 'Gerasimov doctrine': the label is a Western reading of Gerasimov's 2013 article that may name no distinct Russian doctrine; retained only for queries that filter on the framework."
+    counter_explanation: |
+      Better captured under Military Doctrine 2014
+      nato-as-principal-threat; the Gerasimov tag is a loose fit
+      because pure collection is not the information-confrontation
+      the framework centers on.
     contested: false
     analyst: claude
 targets:
@@ -83,3 +136,94 @@ sources:
   - wapo/2014-10-28_white-house-russia
   - fsecure/2015-09-17_the-dukes
   - cnn/2015-04-07_state-department-russia
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8 / Opus 4.8 / effort max) vs the
+    RAW cited sources; all three snapshotted to atlas/sources/raw/.
+
+    SNAPSHOTS:
+    - wapo__2014-10-28_white-house-russia.html — Wayback capture of the
+      retired WaPo slug (live url is null); sha256 edd381ea…f447c5;
+      159,535 B.
+    - cnn__2015-04-07_state-department-russia.html — live edition.cnn.com,
+      HTTP 200; sha256 f2d67832…89caa7; 4,655,590 B.
+    - fsecure__2015-09-17_the-dukes.pdf — 37-pp F-Secure whitepaper via
+      Wayback (live blog-assets URL CloudFront-403s to curl); sha256
+      dfd8829c…791ce7; 1,789,176 B.
+
+    [a] FACTS — CORRECTED. WH + State unclassified intrusion, allied
+    tipoff, October-2014 discovery, phishing pivot, and difficulty of
+    eviction are carried verbatim. WaPo: "Hackers thought to be working
+    for the Russian government breached the unclassified White House
+    computer networks"; "U.S. officials were alerted to the breach by an
+    ally." CNN: "Russian hackers behind the damaging cyber intrusion of
+    the State Department … used that perch to penetrate sensitive parts
+    of the White House computer system"; "the White House intrusion began
+    with a phishing email that was launched using a State Department
+    email account that the hackers had taken over"; "the Russian hackers
+    have 'owned' the State Department system for months and it is not
+    clear the hackers have been fully eradicated." STRIPPED the "SVR"
+    over-attestation from outcome_summary + summary (no cited source says
+    SVR — see [b]). incident_type data-theft → espionage: WaPo hedges
+    exfil ("how much data, if any, was taken"); CNN frames the loss as
+    collection of information "prized by foreign intelligence agencies" —
+    espionage, not established theft.
+
+    [b] ATTRIBUTION — de-over-attested. All three sources attribute to
+    "the Russian government / Russian Federation" only; NONE names the
+    SVR. F-Secure (the technical anchor) says the Dukes "operates on
+    behalf of the Russian Federation" and has been "working for the
+    Russian Federation since at least 2008" — grep of the extracted PDF
+    returns ZERO occurrences of "SVR." Per-source attribution_level
+    added: WaPo = nation (hedged "thought to be"); F-Secure = named-actor
+    (the Dukes / APT29). actor_id ru/svr/apt29 retained as the modern
+    canonical cluster identity, with notes making explicit it is NOT what
+    the 2014-15 sources asserted. NSC declined to confirm.
+
+    [c] DATES. disclosure_date 2014-10-28 = WaPo byline (verified).
+    Source published_on verified: WaPo 2014-10-28; CNN "Published Apr 7,
+    2015, 5:01 PM ET" (record 2015-04-07 ✓); F-Secure page footers state
+    only "F-Secure Whitepaper, September 2015" (no day; PDF CreationDate
+    2020-03-26 is a re-host artifact) — published_on 2015-09-17 retained
+    as the widely-cited release date. start_date 2014-08-01 and end_date
+    2015-04-30 are analytic op-onset / remediation-window ESTIMATES
+    bounded by sourced anchors (F-Secure dates the first large CozyDuke
+    spear-phishing campaign to "the early days of July 2014"; discovery
+    Oct 2014; CNN Apr-2015 shows the actor still not evicted) — not
+    stated verbatim by any source.
+
+    [d] DOCTRINE_LINKS. Neither link is `attested` (no source states a
+    Russian doctrinal goal), so attesting_source_id stays null and
+    inference_basis was added to both; perspective: attacker-rationale
+    added to both (Russia's doctrine rationalizing Russia's own
+    operation). military-doctrine-2014 / nato-as-principal-threat kept
+    strongly_inferred with signals + ruled_out — collection against the
+    declared principal adversary's leadership; criminal motive and
+    destabilization-via-info both ruled out (covert collection, not
+    hack-and-leak). gerasimov-framework / non-military-means kept
+    plausible with alternatives + counter_explanation flagging the loose
+    fit (pure espionage ≠ the information-confrontation the framework
+    centers on; Galeotti has retracted the label). Removed the stray
+    "SVR" phrasings from the reasoning.
+
+    [e] ATTRIBUTION_LEVEL — ADDED (was absent). nation for the 2014
+    press; named-actor for F-Secure. Firmest cited level is named-actor
+    (the Dukes/APT29); named-unit (SVR) is NOT source-supported here —
+    consistent with the 2014 attribution being less firm than the later
+    2016 DNC-era APT29 attribution.
+
+    [f] ACTOR_ID ru/svr/apt29 — VERIFIED resolves to
+    atlas/actors/ru/apt29.yaml (id: ru/svr/apt29; canonical_name "APT29 /
+    Cozy Bear / Midnight Blizzard"). Named-actor, not a counter-action;
+    correct.
+
+    Targets orgs/us-white-house + orgs/us-state-department both verified
+    to exist and are carried by CNN (State = perch, WH = objective). Only
+    this event file + its three own source records were modified
+    (snapshot keys + notes); no actor/doctrine/other-event file changed.
+    level: full — every load-bearing factual claim is carried by a
+    snapshotted source after the SVR over-attestation was stripped.

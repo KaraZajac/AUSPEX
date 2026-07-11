@@ -1,86 +1,128 @@
 id: 2022-09/najee-afkar-irgc-ransomware
-name: Treasury / DOJ coordinated action — IRGC-affiliated ransomware contractors
-start_date: 2020-01-01  # underlying campaign onset
+name: Treasury / DOJ / CISA coordinated action — IRGC-affiliated ransomware contractors (Najee Technology / Afkar System)
+start_date: 2020-01-01  # underlying campaign onset — Treasury: "compromising networks based in the United States and other nations since at least 2020"
 disclosure_date: 2022-09-14
-end_date: 2022-09-14
+end_date: 2022-09-14  # single-day coordinated US counter-action
 incident_type:
-  - ransomware
-  - data-theft
-initial_vector: n-day  # Fortinet / Exchange / Log4j
+  - law-enforcement  # DOJ (US Attorney, District of New Jersey) unsealed CFAA indictment of Mansour Ahmadi, Ahmad Khatibi, Amir Hossein Nikaeen Ravari
+  - policy           # OFAC jy0948 designation of ten individuals + two entities under E.O. 13694
+initial_vector: n-day  # of the UNDERLYING campaign (the counter-action itself has no access vector): CISA AA22-257A — Fortinet FortiOS (CVE-2018-13379 / 2020-12812 / 2019-5591), Exchange ProxyShell (CVE-2021-34473), Log4j on VMware Horizon (CVE-2021-44228)
 outcome_summary: |
-  Treasury OFAC jy0948 sanctioned the Najee Technology / Afkar
-  System cluster; DOJ indicted Mansour Ahmadi, Ahmad Khatibi
-  Aghda, and Amir Hossein Nikaeen Ravari. CISA AA22-257A
-  documented IRGC-affiliated ransomware exploitation of
-  Fortinet, Microsoft Exchange, and VMware Horizon Log4j.
-  Underlying campaign hit US, UK, Israel, Australia, and Iran-
-  adversary critical infrastructure including Boston Children's,
-  Vermont healthcare, a US domestic-violence shelter, and US
-  accounting firms. Hundreds of victims; tens of millions
-  extorted.
-quantified_impact:
-  affected_orgs_estimate: hundreds
+  Coordinated US counter-action of 14 September 2022 against an
+  IRGC-affiliated ransomware contractor cluster. Treasury OFAC
+  (jy0948) sanctioned ten individuals and two entities — Najee
+  Technology Hooshmand Fater LLC and Afkar System Yazd Company —
+  under E.O. 13694; the U.S. Attorney's Office for the District of
+  New Jersey unsealed an indictment charging Mansour Ahmadi, Ahmad
+  Khatibi Aghda, and Amir Hossein Nikaeen Ravari with violating and
+  conspiring to violate the Computer Fraud and Abuse Act; and CISA
+  with the FBI, NSA, Treasury, Australia's ACSC, Canada's CCCS and
+  the UK's NCSC published joint advisory AA22-257A documenting the
+  exploitation tradecraft. State's Rewards for Justice offered up to
+  $10 million for information on the actors. Per the sources the
+  underlying campaign (since at least 2020) hit US critical-
+  infrastructure sectors plus Australian, Canadian and UK
+  organizations; named US victims include a New Jersey municipality,
+  small businesses (a law firm, an accounting firm, a construction
+  contractor), a US children's-hospital SCADA network (June 2021),
+  and a rural US electric utility (October 2021).
 false_flag_risk: none
 operators_named:
-  - ahmadi-mansour  # Najee Technology, DOJ Sep 2022
-  - khatibi-aghda-ahmad  # Afkar System, DOJ Sep 2022
-  - nikaeen-ravari-amir-hossein  # DOJ Sep 2022
+  - ahmadi-mansour  # Mansour Ahmadi, Najee Technology — DOJ (D.N.J.) indictment Sep 14 2022
+  - khatibi-aghda-ahmad  # Ahmad Khatibi Aghda, Afkar System managing director — DOJ Sep 14 2022
+  - nikaeen-ravari-amir-hossein  # Amir Hossein Nikaeen Ravari — DOJ Sep 14 2022 (Treasury spelling "Nikaeen")
 summary: |
-  Foundational attestation of IRGC-contractor ransomware as
-  state-tolerated revenue. Treasury press release identifies the
-  IRGC affiliation explicitly. CISA AA22-257A documents the
-  intrusion tradecraft: initial access via Fortinet FortiOS
-  vulnerabilities (CVE-2018-13379, CVE-2020-12812, CVE-2019-5591),
-  Microsoft Exchange ProxyShell (CVE-2021-34473), and VMware
-  Horizon Log4Shell (CVE-2021-44228); post-exploitation use of
-  PowerShell, scheduled tasks, BitLocker abuse for impact, the
-  Plink / Ngrok / Fast Reverse Proxy tools for tunneling, and
-  Mimikatz for credential dumping. The operators encrypted with
-  full-disk BitLocker rather than custom ransomware on Windows
-  endpoints, providing plausibly criminal cover for state-tasked
-  destruction.
+  Counter-action event (not an Iranian cyber operation): the 14
+  September 2022 coordinated US action against the IRGC-affiliated
+  ransomware contractor cluster operating "under the auspices of"
+  Najee Technology Hooshmand Fater LLC (Karaj) and Afkar System Yazd
+  Company (Yazd). Three instruments landed the same day: (1) an OFAC
+  designation (jy0948) of ten individuals and two entities under E.O.
+  13694 — Afkar System designated for having "acted for or on behalf
+  of" its managing director Ahmad Khatibi; (2) a District of New
+  Jersey CFAA indictment of Mansour Ahmadi, Ahmad Khatibi Aghda and
+  Amir Hossein Nikaeen Ravari; and (3) joint advisory AA22-257A.
+  CISA AA22-257A documents the intrusion tradecraft of the underlying
+  campaign: initial access via Fortinet FortiOS vulnerabilities
+  (CVE-2018-13379, CVE-2020-12812, CVE-2019-5591), Microsoft Exchange
+  ProxyShell (CVE-2021-34473, with CVE-2021-34523 / CVE-2021-31207),
+  and Log4Shell on VMware Horizon (CVE-2021-44228); post-exploitation
+  use of PowerShell, scheduled tasks, the Plink and Fast Reverse Proxy
+  tunneling utilities, LSASS memory dumping for credential harvesting,
+  and — for impact — activating Microsoft BitLocker without
+  authorization and holding the decryption keys for ransom (Treasury
+  additionally names Mimikatz and FileZilla). Directionality: the
+  victims are US (and Australian / Canadian / UK) critical
+  infrastructure; the action documented by this event is US law
+  enforcement and sanctions. NB the June-2021 "U.S.-based children's
+  hospital" SCADA compromise named by Treasury is the real event
+  behind the fenced Najee/Afkar inference note in
+  2021-06/boston-childrens-hospital-thwarted, though Treasury does not
+  name Boston. DOJ frames the defendants as IRGC-affiliated while
+  acting substantially for ransom revenue (see doctrine links).
 attributions:
-  - actor_id: ir/irgc/najee-technology
+  - actor_id: null  # counter-action (US state action); SUBJECT actors are ir/irgc/najee-technology + ir/irgc/afkar-system (OFAC-designated, IRGC-affiliated) — named in prose per convention
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-unit  # OFAC names the affiliated service (IRGC) AND the operating entities (Najee Technology, Afkar System) plus ten named individuals
+    auspex_assessment: concur-with-caveat
     attribution_date: 2022-09-14
     attribution_source_id: treasury/2022-09-14_irgc-ransomware-contractors
-  - actor_id: ir/irgc/afkar-system
-    attributing_org: US Treasury OFAC
+    notes: |
+      OFAC jy0948 sanctioned "ten individuals and two entities" who are
+      "all affiliated with Iran's Islamic Revolutionary Guard Corps
+      (IRGC)"; the two entities are Najee Technology and Afkar System.
+      Subject actors ir/irgc/najee-technology + ir/irgc/afkar-system
+      (both status: sanctioned). named-unit: the named affiliated
+      service is the IRGC. concur-with-caveat rather than plain concur:
+      the IRGC affiliation is firmly attested, but the sources frame the
+      actors as operating "under the auspices of" contractor front
+      companies and conducting ransom-for-money operations — the degree
+      of per-operation IRGC direction is not asserted (DOJ frames the
+      defendants as acting substantially independently for profit).
+  - actor_id: null  # counter-action; SUBJECT = the three indicted principals (Najee Technology / Afkar System)
+    attributing_org: US DOJ (US Attorney, District of New Jersey)
     attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2022-09-14
-    attribution_source_id: treasury/2022-09-14_irgc-ransomware-contractors
-  - actor_id: ir/irgc/najee-technology
-    attributing_org: US DOJ
-    attributing_org_confidence: high
-    auspex_assessment: concur
+    attribution_level: named-actor  # three named individuals indicted under the CFAA
+    auspex_assessment: concur-with-caveat
     attribution_date: 2022-09-14
     attribution_source_id: doj/2022-09-14_najee-afkar-indictment
+    notes: |
+      The DOJ press release could NOT be raw-captured (justice.gov
+      Akamai bm-verify bot-wall on 2026-06-24 and re-attempted this
+      audit pass; archive.org returns the same challenge page). It
+      carries no unique load-bearing claim: the snapshotted Treasury
+      release states the indictment verbatim — "the U.S. Attorney's
+      Office for the District of New Jersey unsealed an indictment
+      charging Mansour, Khatibi, and Nikaeen with violating the Computer
+      Fraud and Abuse Act (CFAA) and conspiring to violate the CFAA."
+      CISA AA22-257A independently judges "these actors are an APT group
+      affiliated with the IRGC." concur-with-caveat: the profit /
+      relative-independence framing attributed to DOJ is not itself
+      snapshot-verified.
 doctrine_links:
   - doctrine_id: ir/sanctions-evasion
     pillar_id: ir/sanctions-evasion/ransomware-revenue
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      DOWNGRADED from attested 2026-07-05 (over-attestation sweep;
-      same pattern as pioneer-kitten). The Treasury jy0948 release
-      attests the IRGC affiliation (E.O. 13694 — one actor acts "for
-      or on behalf of" Khatibi) and the ransomware activity, but does
-      NOT state a sanctions-evasion / regime-revenue GOAL in
-      substance: it frames the designation as a response to the
-      actors' ransomware targeting of US critical infrastructure, not
-      as a state revenue-generation or sanctions-evasion program. The
-      ransomware-for-revenue reading is a strong inference from the
-      IRGC nexus, not a source-stated goal — hence strongly_inferred,
-      not attested.
+      The IRGC affiliation and the ransomware activity are attested by
+      Treasury jy0948 and CISA AA22-257A, but neither source states a
+      regime sanctions-evasion / state-revenue GOAL in substance:
+      Treasury frames the designation as a response to the actors'
+      ransomware targeting of US critical infrastructure, not as a
+      sanctions-evasion revenue program. The ransomware-for-revenue
+      reading is a strong inference from the IRGC nexus plus the
+      ransom-for-money character of the ops, not a source-stated goal —
+      hence strongly_inferred, not attested (DOWNGRADED from attested
+      2026-07-05; same over-attestation pattern as pioneer-kitten).
     attesting_source_id: treasury/2022-09-14_irgc-ransomware-contractors
     inference_basis:
+      source_id: treasury/2022-09-14_irgc-ransomware-contractors
       signals:
-        - "OFAC designates ten IRGC-affiliated individuals + two entities for ransomware activity under E.O. 13694; one acts 'for or on behalf of' Khatibi."
-        - "Documented ransomware ops (NJ municipality via Fortinet CVE, unauthorized-BitLocker extortion of small businesses, a US children's-hospital SCADA network) demonstrate a revenue-extraction function."
-      ruled_out: "A pure personal-criminal-profit reading (the companion DOJ indictment emphasizes indiscriminate victim selection and individual enrichment) competes with the regime-sanctions-evasion reading; the release states neither a regime-revenue purpose nor a sanctions-evasion motive, so attested is unwarranted."
+        - "OFAC sanctioned 'ten individuals and two entities' who are 'all affiliated with Iran's Islamic Revolutionary Guard Corps (IRGC)' under E.O. 13694; Afkar System designated for having 'acted for or on behalf of' its managing director Khatibi."
+        - "Documented ransom-for-money ops — a New Jersey municipality compromised via a Fortinet vulnerability (Feb 2021), unauthorized-BitLocker extortion of small businesses (a law firm, an accounting firm, a construction contractor), and SCADA access to a US children's hospital — demonstrate a revenue-extraction function."
+      ruled_out: "attested — the release states neither a regime-revenue purpose nor a sanctions-evasion motive; a substantially for-profit reading (ransom operations; DOJ frames the defendants as acting somewhat independently for profit) competes with the regime-sanctions-evasion reading, so a source-stated strategic goal is absent."
     counter_explanation: null
     contested: false
     analyst: claude
@@ -89,28 +131,164 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Target set (hospitals, domestic-violence shelter, local
-      government, accounting firms) is consistent with civilian-CII
-      impact, but CISA AA22-257A is a technical TTP advisory that
-      never frames a coercion intent or names asymmetric warfare;
-      the doctrine linkage is inferred from the victim set.
+      The victim set (a children's-hospital SCADA network, local
+      government, healthcare practices, emergency services, a rural
+      electric utility) is consistent with civilian-CII impact, but CISA
+      AA22-257A is a technical TTP advisory that never frames a coercion
+      intent or names asymmetric warfare; the doctrine linkage is
+      inferred from the victim set, not source-stated.
     attesting_source_id: cisa/2022-09-14_aa22-257a-irgc-ransomware
     inference_basis:
       source_id: cisa/2022-09-14_aa22-257a-irgc-ransomware
       signals:
-        - "CISA AA22-257A documents IRGC-affiliated ransomware TTPs and a civilian-CII victim set (TTPs + targets)"
-      ruled_out: "an 'asymmetric warfare' / civilian-CII-coercion strategic intent — not framed by the technical advisory"
+        - "CISA AA22-257A documents 'an APT group affiliated with the IRGC' exploiting known vulnerabilities against 'multiple U.S. critical infrastructure sectors as well as Australian, Canadian, and United Kingdom organizations' (IRGC-affiliated TTPs + civilian-CII victim set)."
+      ruled_out: "an 'asymmetric warfare' / civilian-CII-coercion strategic intent — not framed by the technical advisory (no coercion goal is stated)."
     counter_explanation: null
     contested: false
     analyst: claude
 targets:
   - target_id: sectors/healthcare/hospital
+    country: us
     role: primary
   - target_id: sectors/government/local
+    country: us
     role: primary
   - target_id: sectors/critical-infrastructure
+    country: us
     role: primary
 sources:
   - treasury/2022-09-14_irgc-ransomware-contractors
   - doj/2022-09-14_najee-afkar-indictment
   - cisa/2022-09-14_aa22-257a-irgc-ransomware
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit of the 14 Sept 2022 coordinated US counter-action vs
+    the RAW cited primaries. Snapshots re-verified (PRESERVE tier, keys
+    only): Treasury jy0948 raw_snapshot
+    treasury__2022-09-14_irgc-ransomware-contractors.html sha256
+    fad8ec43…2bb1382f (137,215 B) — hash UNCHANGED; CISA AA22-257A raw_
+    snapshot cisa__2022-09-14_aa22-257a-irgc-ransomware.html sha256
+    b0439344…ca6c6329 (93,473 B) — hash UNCHANGED. DOJ press release re-
+    attempted this pass and again could NOT be captured (justice.gov
+    Akamai bm-verify bot-wall → 2,583 B challenge page; archive.org
+    /web/2022id_/ returns the same 2,586 B challenge). level=full: every
+    load-bearing claim is carried by a snapshotted primary — the DOJ
+    source carries NO unique claim (its indictment fact is quoted
+    verbatim in the snapshotted Treasury release), so it is non-load-
+    bearing, not merely mirror-corroborated. Path: CORRECT-IN-PLACE
+    (real event, real sources; the defects were unsourced technical/
+    victim embellishment + an un-reframed counter-action).
+
+    [a] FACTS — corrected against the two snapshots (tag-stripped full-
+    text membership tests). VERBATIM-CARRIED (Treasury): "sanctioned ten
+    individuals and two entities … including ransomware activity";
+    "affiliated with Iran's Islamic Revolutionary Guard Corps (IRGC)";
+    Mansour Ahmadi / Ahmad Khatibi Aghda / Amir Hossein Nikaeen Ravari
+    (spelling "Nikaeen" ×14 — the entry "Nikaeen" is CORRECT); "Afkar
+    System … acted for or on behalf of … Khatibi"; "since at least 2020";
+    Feb 2021 "New Jersey municipality … using a specific Fortinet
+    vulnerability" + "fast reverse proxy"; Mar–Apr 2021 "first known …
+    encryption … activating Microsoft BitLocker without authorization";
+    small businesses "a law firm, an accounting firm, and a construction
+    contractor"; June 2021 "supervisory control and data acquisition
+    systems associated with a U.S.-based children's hospital"; Oct 2021
+    "electric utility company serving a rural area"; "Mimikatz and
+    Filezilla"; "District of New Jersey unsealed an indictment charging
+    Mansour, Khatibi, and Nikaeen with violating the … CFAA"; "reward of
+    up to $10 million." CARRIED (CISA): all five CVEs (CVE-2018-13379/
+    2020-12812/2019-5591 ×4 each, CVE-2021-34473 ×7, CVE-2021-44228 ×6,
+    plus the ProxyShell trio +34523/+31207 and Log4j +45046/+45105),
+    FortiOS/Exchange/VMware Horizon, BitLocker, Plink, Fast Reverse
+    Proxy/FRP, PowerShell, Scheduled Tasks, LSASS dumping/credential
+    harvesting, "APT group affiliated with the IRGC", victims "multiple
+    U.S. critical infrastructure sectors as well as Australian, Canadian,
+    and United Kingdom organizations". STRIPPED as NOT carried by either
+    snapshot (0 occurrences in both): "Ngrok" (Plink/FRP are carried,
+    Ngrok is not); "Israel" (0×) and Australia/UK reframed to CISA's
+    victim wording (they were mis-stated + partly conflated with the
+    authoring agencies); "Boston Children's" → "a U.S.-based children's
+    hospital" (Treasury names the hospital only generically; "Boston" 0×
+    — retained as an explicit inference tied to boston-childrens);
+    "Vermont healthcare" (0×); "US domestic-violence shelter" (0×);
+    "hundreds of victims" / "tens of millions extorted" (both 0× —
+    removed, and quantified_impact.affected_orgs_estimate: hundreds
+    DELETED); the analytical embellishment "plausibly criminal cover for
+    state-tasked destruction" (unsourced interpretation — the sources
+    frame BitLocker abuse as ransom-for-money, not destruction). Rewrote
+    name (added CISA + cluster names), outcome_summary and summary to
+    the sourced facts and to the counter-action frame.
+
+    [b] ATTRIBUTION — REFRAMED to counter-action. Was three entries with
+    actor_id = ir/irgc/najee-technology / ir/irgc/afkar-system (treating
+    the Iranian actors as the event's actor). Set actor_id: null on all
+    (the event-action is US LE/sanctions); consolidated to the two
+    distinct attributing bodies (Treasury OFAC; US DOJ, D.N.J.) with the
+    SUBJECT actors (ir/irgc/najee-technology, ir/irgc/afkar-system) named
+    in prose + notes per the salt-typhoon-sanctions convention. ADDED
+    missing attribution_level: named-unit for OFAC (names the IRGC
+    service + the two operating entities + ten individuals), named-actor
+    for DOJ (three named individuals). auspex_assessment concur →
+    concur-with-caveat: IRGC affiliation is firmly attested, but the
+    sources frame the actors as ransom-for-money contractors operating
+    "under the auspices of" front companies and do not assert per-op IRGC
+    direction (DOJ's independent-for-profit framing is unsnapshotted).
+    attributing_org_confidence high retained (govt primaries state the
+    IRGC affiliation flatly).
+
+    [c] DATES — start_date 2020-01-01 CONFIRMED sourced (Treasury "since
+    at least 2020"; CISA's "since early 2021" is the narrower scanning/
+    exploitation window). disclosure_date = end_date = 2022-09-14 = the
+    single-day coordinated action (no start/disclosure conflation).
+    Source published_on: Treasury 2022-09-14 ✓, CISA 2022-09-14 ✓
+    ("Release Date: September 14, 2022"), DOJ 2022-09-14 ✓.
+
+    [d] DOCTRINE_LINKS — both KEPT strongly_inferred, attacker-rationale
+    (default; no perspective field — these are the SUBJECT's Iranian
+    doctrine, per the "per-event ir doctrine" directive). ir/sanctions-
+    evasion/ransomware-revenue: NOT attested — Treasury states no regime-
+    revenue/sanctions-evasion GOAL; signals reset to sourced quotes (ten
+    individuals + two entities under E.O. 13694; Afkar "for or on behalf
+    of" Khatibi; NJ-municipality-Fortinet, small-business BitLocker
+    extortion, children's-hospital SCADA); ruled_out reground in
+    snapshotted ransom-for-money language (previous "individual
+    enrichment" leaned on the unsnapshotted DOJ). ir/asymmetric-warfare/
+    civilian-cii-coercion: NOT attested — CISA is a TTP advisory stating
+    no coercion goal; signals reset to the CISA IRGC-affiliation +
+    victim-geography quote; malformed self-referential ruled_out
+    replaced. Both retain attesting_source_id as the primary SUPPORTING
+    source (schema-permitted on strongly_inferred). Doctrine/pillar FKs
+    resolve (atlas/doctrines/ir/sanctions-evasion.yaml,
+    atlas/doctrines/ir/asymmetric-warfare.yaml).
+
+    [e] ATTRIBUTION_LEVEL — added (was missing on all entries): named-
+    unit (Treasury/OFAC — IRGC service named), named-actor (DOJ — three
+    named individuals).
+
+    [f] ACTOR_ID — null (counter-action). incident_type [ransomware,
+    data-theft] → [law-enforcement, policy] (DOJ indictment = law-
+    enforcement; OFAC sanction = policy). initial_vector KEPT n-day but
+    re-scoped in comment to the UNDERLYING campaign (CISA-documented
+    Fortinet/Exchange/Log4j n-day), since the counter-action itself has
+    no access vector. SUBJECT actor ids resolve: atlas/actors/ir/najee-
+    technology.yaml (id ir/irgc/najee-technology) + atlas/actors/ir/afkar-
+    system.yaml (id ir/irgc/afkar-system), both primary_service_id
+    ir/irgc, status sanctioned. operators_named (ahmadi-mansour, khatibi-
+    aghda-ahmad, nikaeen-ravari-amir-hossein) VERIFIED against Treasury —
+    exactly the three DOJ-indicted principals; free-text handles (no
+    actor registry expected). targets: added country: us (named victims
+    for all three sector targets are US — children's hospital, NJ
+    municipality, rural electric utility).
+
+    FLAGS (orchestrator / Kara — NOT edited, out of scope): (1) DOJ
+    source doj/2022-09-14_najee-afkar-indictment remains un-snapshottable
+    (Akamai bm-verify); non-load-bearing (Treasury carries its facts
+    verbatim). (2) SUBJECT actor files ir/najee-technology + ir/afkar-
+    system and both doctrine files were read to verify FKs but not edited
+    (protocol scope). (3) The June-2021 children's-hospital SCADA fact
+    materially connects this event to 2021-06/boston-childrens-hospital-
+    thwarted (each fences the other as an inference); a formal campaign/
+    relationship link could be added if desired.

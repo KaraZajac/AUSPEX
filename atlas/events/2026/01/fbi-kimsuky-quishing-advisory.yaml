@@ -1,35 +1,45 @@
 id: 2026-01/fbi-kimsuky-quishing-advisory
-name: FBI CSA 260108 — Kimsuky malicious QR-code spearphishing of US think tanks and policy orgs
-start_date: 2025-05-01  # FBI-stated campaign onset
-disclosure_date: 2026-01-08
-end_date: null
+name: FBI FLASH AC-000001-MW — Kimsuky malicious QR-code (quishing) spearphishing of US think tanks and policy orgs
+start_date: 2025-05-01  # FBI-stated earliest documented incident ("In May 2025")
+disclosure_date: 2026-01-08  # FLASH masthead "08 JANUARY 2026"
+end_date: null  # FBI frames quishing as an ongoing/emerging vector; no campaign end stated
 incident_type:
-  - intrusion
-  - influence-operation
-initial_vector: phishing
+  # AUDIT 2026-07-10: was [intrusion, influence-operation]. This event IS the FBI FLASH
+  # documenting a Kimsuky campaign -> documentary (cf. babar/mandiant-apt43 precedent).
+  # espionage = Kimsuky's activity (every Kimsuky campaign event). Dropped influence-operation
+  # (WRONG: credential-harvesting espionage for policy collection, not an influence op) and
+  # intrusion (subsumed; documentary-espionage disclosures omit it).
+  - documentary
+  - espionage
+initial_vector: phishing  # FBI: "Quishing (QR Code Phishing) is a phishing technique"
 outcome_summary: |
-  FBI Cybersecurity Advisory 260108 warned NGOs, think tanks,
-  academic institutions, and foreign-policy experts that the
-  RGB-attributed Kimsuky cluster has shifted to "quishing" —
-  QR-code spearphishing — to drive victims from corporate
-  endpoints to mobile devices and bypass enterprise email
-  filtering. Observed May-June 2025 lures impersonated foreign
-  advisors, embassy officials, and conference organisers
-  inviting victims to scan QR codes leading to credential-
-  harvesting pages mimicking Microsoft 365, Google, Okta, and
-  VPN login portals.
+  FBI FLASH AC-000001-MW (08 January 2026, coordinated with
+  DHS/CISA, TLP:CLEAR) alerted NGOs, think tanks, academia, and
+  foreign-policy experts "with a nexus to North Korea" that the
+  North Korean state-sponsored Kimsuky group has adopted
+  "quishing" — QR-code spearphishing — to force victims to pivot
+  from their corporate endpoint to a mobile device, bypassing
+  traditional email security controls. Observed May-June 2025
+  lures impersonated a foreign advisor, an embassy employee, a
+  think-tank employee, and a non-existent conference, inviting
+  victims to scan QR codes leading to credential-harvesting pages
+  impersonating Microsoft 365, Okta, VPN portals, and Google.
 false_flag_risk: none
 summary: |
-  Continues Kimsuky's two-decade policy-collection lineage with
-  a new mobile-device pivot. The QR-code vector exploits the
-  fact that scanning typically occurs on personal phones outside
-  enterprise email-security perimeters. The FBI advisory is
-  notable for naming Kimsuky directly rather than using a
-  cluster-agnostic "DPRK-affiliated" framing.
+  Continues Kimsuky's decade-plus (since ~2012) policy-collection
+  lineage with a new mobile-device pivot. The QR-code vector
+  exploits the fact that scanning typically occurs on unmanaged
+  mobile devices outside enterprise EDR and email-security
+  perimeters. The FBI FLASH is notable for naming Kimsuky directly
+  rather than using a cluster-agnostic "DPRK-affiliated" framing —
+  though it stops at the "North Korean state-sponsored" group level
+  and does not name RGB (that mapping is AUSPEX's, via CISA/Treasury/
+  Mandiant, not asserted by this FLASH).
 attributions:
   - actor_id: kp/rgb/kimsuky
     attributing_org: US FBI
     attributing_org_confidence: high
+    attribution_level: named-actor  # AUDIT 2026-07-10 (was MISSING): FBI unequivocally names the "North Korean state-sponsored cyber threat group Kimsuky" (nation + named group), but names NO unit — "RGB"/"Reconnaissance General Bureau" = 0 in the raw. Hence named-actor, not named-unit; firmer than bare nation.
     auspex_assessment: concur
     attribution_date: 2026-01-08
     attribution_source_id: fbi/2026-01-08_kimsuky-quishing
@@ -38,18 +48,25 @@ doctrine_links:
     pillar_id: kp/strategic-information/policy-collection
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale  # AUDIT 2026-07-10 (was MISSING): DPRK's own strategic-information doctrine on a DPRK op -> attacker-rationale (default)
     reasoning: |
-      The advisory documents targeting of US think tanks,
-      academia, and foreign-policy experts (the victim set) but
-      does not name a strategic-information collection goal; the
-      policy-collection linkage is a strong inference from the
-      target profile.
+      The FBI FLASH documents targeting of US think tanks,
+      academia, and foreign-policy experts (the victim set) plus
+      Korea-nexus lure themes, but does not name a strategic-
+      information collection goal; the policy-collection linkage is
+      a strong inference from the target profile and lure topics.
+      Doctrine fit verified 2026-07-10: kp/strategic-information/
+      policy-collection targets exactly this set (think tanks,
+      Korea-watchers, nuclear/foreign-policy academics) — NOT
+      8th-Congress technical/weapons collection.
     attesting_source_id: fbi/2026-01-08_kimsuky-quishing
     inference_basis:
       source_id: fbi/2026-01-08_kimsuky-quishing
       signals:
-        - "FBI advisory names the victim set: think tanks, academia, foreign-policy experts (target profile)"
-      ruled_out: "explicit attestation of a strategic-information / policy-collection goal — the advisory describes targets, not intent"
+        - "FBI FLASH names the victim set: NGOs, think tanks, academia, and foreign-policy experts (target profile)"
+        - "Lure themes are Korea policy intelligence: a foreign advisor requesting 'insight from a think tank leader regarding recent developments on the Korean Peninsula'; an embassy employee requesting input 'regarding North Korean human rights issues'"
+        - "FBI scopes the audience to entities 'with a nexus to North Korea' — consistent with adversary-policy-planning collection, not financial/technical theft"
+      ruled_out: "explicit attestation of a strategic-information / policy-collection goal — the FLASH describes targets and lure topics, not stated intent; also rules out kp/8th-congress revenue/tech-collection (no financial or weapons-component nexus)"
     contested: false
     analyst: claude
 targets:
@@ -65,3 +82,59 @@ targets:
 sources:
   - fbi/2026-01-08_kimsuky-quishing
   - securityaffairs/2026-01-08_kimsuky-quishing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. Primary: FBI FLASH AC-000001-MW
+    (ic3.gov/CSA/2026/260108.pdf, HTTP 200 application/pdf, sha256
+    469e24ad1476ac490265dc6e7208b9c96f7b24be3e7c3c19ab197c1c0f14dc6a).
+    Secondary: SecurityAffairs (sha256
+    f702a55573215261779c4a9e04e9a783f68e1d8789dedfaab0c7f442b743dcf8).
+    Both snapshotted live 2026-07-10. level=full: every load-bearing
+    claim carried by the snapshotted FBI primary.
+
+    [a] FACTS — carried by FBI raw: quishing/QR-code spearphishing
+    ("Quishing (QR Code Phishing) is a phishing technique in which
+    adversaries embed malicious URLs inside QR codes to force victims to
+    pivot from their corporate endpoint to a mobile device, bypassing
+    traditional email security controls"); May-June 2025 lures (foreign
+    advisor re "recent developments on the Korean Peninsula"; embassy
+    employee re "North Korean human rights issues"; think-tank employee;
+    June-2025 "non-existent conference"); credential pages "impersonating
+    Microsoft 365, Okta, or VPN portals" + "fake Google account login
+    page" — all four verbatim, NOT fabricated. No fabricated malware/CVE/
+    victim/figure. CORRECTED: (1) "CSA 260108"/"Cybersecurity Advisory
+    260108" -> document masthead is "FLASH Number AC-000001-MW" (FBI
+    FLASH, not a CSA; /CSA/ is only IC3's URL path) — fixed in name,
+    outcome_summary, FBI source title+notes; (2) "two-decade lineage" ->
+    "decade-plus (since ~2012)" (actor active_since 2012).
+    [b] ATTRIBUTION — FBI directly attributes "the North Korean state-
+    sponsored cyber threat group Kimsuky"; US FBI/high/concur retained
+    (correct). CORRECTED over-attestation: outcome_summary put "RGB-
+    attributed ... FBI warned" — FBI FLASH has ZERO "RGB"/"Reconnaissance
+    General Bureau" (grep=0); RGB appears only in SecurityAffairs
+    background (citing CISA Oct-2020). Reworded to FBI's own language;
+    RGB mapping kept where it belongs (actor_id + note).
+    [c] DATES — start 2025-05-01 = earliest FBI incident ("In May 2025");
+    disclosure 2026-01-08 = masthead "08 JANUARY 2026"; end null (ongoing/
+    emerging). Source fix: SecurityAffairs published_on 2026-01-08 ->
+    2026-01-10 (JSON-LD datePublished 2026-01-10T15:34:36Z).
+    [d] DOCTRINE — kp/strategic-information/policy-collection,
+    strongly_inferred: CORRECT, doctrine fits precisely (pillar targets
+    think tanks/Korea-watchers/nuclear-policy academics = FLASH victim
+    set); NOT 8th-congress revenue/tech (ruled out). Kept strongly_
+    inferred (FLASH states targets + lure themes, never the collection
+    GOAL -> not attested). Added perspective: attacker-rationale + two
+    raw-quoted lure-theme signals.
+    [e] ATTRIBUTION_LEVEL — added named-actor (was missing): nation +
+    named group, no unit named.
+    [f] ACTOR_ID — kp/rgb/kimsuky resolves (atlas/actors/kp/kimsuky.yaml
+    id=kp/rgb/kimsuky). incident_type [intrusion, influence-operation] ->
+    [documentary, espionage]: documentary (event IS the FBI FLASH
+    documenting the campaign; babar/mandiant-apt43 precedent) + espionage
+    (Kimsuky's activity). Dropped influence-operation (mis-type: espionage,
+    not influence) and intrusion (subsumed). Named-actor subject retained
+    per DOCUMENTARY-advisory framing.

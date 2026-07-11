@@ -1,95 +1,284 @@
 id: 2022-07/albania-homeland-justice
 name: Albania destructive attack — MOIS / HomeLand Justice
-start_date: 2021-05-01  # 14-month dwell prior to launch
-disclosure_date: 2022-07-15
-end_date: 2022-09-10  # follow-on retaliatory wave after attribution
+start_date: 2021-05-01  # initial access May 2021 (MSTIC: "gained access … in May 2021" via CVE-2019-0604; CISA: ~14 months before the July-2022 launch)
+disclosure_date: 2022-07-15  # destructive launch / public claim (MSTIC: "on July 15, 2022 … a destructive cyberattack")
+end_date: 2022-09-10  # Sept-2022 second wave (CISA: "In September 2022 … another wave"; exact 9–10 Sept day is external reporting, not the cited primaries)
 incident_type:
   - destructive
   - wiper
+  - disruption
   - data-theft
-initial_vector: n-day
+  - influence-operation
+initial_vector: n-day  # unpatched Internet-facing Microsoft SharePoint, CVE-2019-0604 (CISA + MSTIC)
 outcome_summary: |
-  14-month dwell time culminating in destructive launch
-  against the Government of Albania on July 15, 2022. ROADSWEEP
-  wiper plus ransomware-style file encryptor. Data leak via
-  HomeLand Justice site and Telegram. Forced shutdown of
-  Albanian e-government services including the Total
-  Information Management System, state police, immigration,
-  and civil registry. Albania severed diplomatic ties with
-  Iran on September 7, 2022 — the first state to do so over a
-  cyber attack. Follow-on retaliatory wave September 9, 2022.
-false_flag_risk: none
+  Iranian state cyber actors operating as "HomeLand Justice" gained
+  access to an Albanian government network in May 2021 via an
+  unpatched Internet-facing SharePoint server (CVE-2019-0604),
+  exfiltrated email for roughly a year, then on July 15, 2022 launched
+  a destructive attack: a ransomware-style file encryptor (GoXml.exe)
+  followed by disk-wiping malware (cl.exe, sharing ZeroCleare's EldoS
+  RawDisk license key). The attack disrupted Albanian government
+  websites and online public services (Microsoft assessed <~10%
+  environmental impact). Stolen documents and personal data were
+  leaked through the HomeLand Justice website and social-media
+  personas as an accompanying anti-MEK information operation. Treasury
+  attributed the operation to Iran's MOIS and sanctioned MOIS and
+  Minister Esmail Khatib on September 9, 2022. A second wave of attacks
+  followed in September 2022, which CISA assessed as retaliation for
+  the public attribution and for the severing of Albania–Iran
+  diplomatic ties.
+false_flag_risk: none  # MSTIC: mirrored messaging "reduces the likelihood that the attack was a false flag operation by a country other than Iran"
 summary: |
-  Foundational US-government attestation event for the
-  hacktivist-persona-laundering doctrine. CISA AA22-264A cited
-  the MEK/anti-dissident targeting motive (the Treasury release as
-  cited does not name it); Mandiant published technical details.
+  US-government and Microsoft attestation event for the Iranian
+  hacktivist-persona-laundering pattern — a MOIS operation run behind
+  the "HomeLand Justice" persona. Treasury (jy0941) names MOIS and
+  Minister Esmail Khatib but NOT the persona or the MEK motive; CISA
+  AA22-264A names the persona and the anti-MEK (Mujahedin-e Khalq)
+  targeting at nation level ("Iranian state cyber actors"); Microsoft
+  MSTIC independently attributes the July-15 destructive attack to the
+  Iranian government (high confidence) with a moderate-confidence
+  EUROPIUM→MOIS link and states the MEK-retaliation motive in
+  substance. Mandiant (now link-rotted) is the origin of the
+  "ROADSWEEP" name for the GoXml.exe ransomware.
 attributions:
-  - actor_id: ir/mois/homeland-justice
-    attributing_org: US Treasury OFAC
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2022-09-09
-    attribution_source_id: treasury/2022-09-09_mois-albania
   - actor_id: null
     service_id: ir/mois
     attributing_org: US Treasury OFAC
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2022-09-09
     attribution_source_id: treasury/2022-09-09_mois-albania
+    notes: |
+      Treasury/OFAC (jy0941) names the service explicitly — "designating
+      Iran's Ministry of Intelligence and Security (MOIS)" and Minister
+      Esmail Khatib — for the July 2022 attack: "cyber threat actors
+      assessed to be sponsored by the Government of Iran and MOIS disrupted
+      Albanian government computer systems." Treasury does NOT use the name
+      "HomeLand Justice" (0 occurrences) and does NOT name the MEK motive
+      (0 occurrences); those come from CISA/MSTIC. This is the firm,
+      explicit MOIS attribution (named-unit).
   - actor_id: ir/mois/homeland-justice
-    attributing_org: US CISA
+    attributing_org: US CISA / FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2022-09-21
     attribution_source_id: cisa/2022-09-21_aa22-264a-albania
+    notes: |
+      CISA/FBI name the "HomeLand Justice" persona and assert nation-level
+      sponsorship only — "In July 2022, Iranian state cyber actors—
+      identifying as 'HomeLand Justice'—launched a destructive cyber
+      attack." Zero "MOIS"/"Ministry of Intelligence" in the advisory; the
+      MOIS unit placement rests on the co-cited Treasury release.
+  - actor_id: ir/mois/homeland-justice
+    attributing_org: Microsoft (MSTIC / DART)
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2022-09-08
+    attribution_source_id: microsoft/2022-09-08_mstic-albania
+    notes: |
+      MSTIC: "high confidence that on July 15, 2022, actors sponsored by
+      the Iranian government conducted a destructive cyberattack against
+      the Albanian government." The MOIS nexus is MODERATE confidence, via
+      EUROPIUM ("linked to EUROPIUM, which has been publicly linked to …
+      MOIS"); phases tracked as DEV-0842 (ransomware+wiper), DEV-0861 /
+      DEV-0166 (access+exfil), DEV-0133 (probing), with "HomeLand Justice"
+      running the accompanying information operation.
 doctrine_links:
   - doctrine_id: ir/cyber-deniable-retaliation
     pillar_id: ir/cyber-deniable-retaliation/persona-laundering
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
+    perspective: attacker-rationale
     reasoning: |
-      HomeLand Justice is a MOIS persona and the MEK presence in
-      Albania is the motivating factor; the cited Treasury release
-      does not contain this (the MEK/anti-dissident motive is named
-      in CISA AA22-264a, not Treasury), so as cited the linkage is
-      inferred — candidate for re-attestation to CISA on review.
-    attesting_source_id: treasury/2022-09-09_mois-albania
+      Textbook persona-laundering: a state intelligence operation run
+      behind a hacktivist front for deniability. CISA states the
+      state-actor-behind-persona structure in substance ("Iranian state
+      cyber actors—identifying as 'HomeLand Justice'"); Treasury names the
+      state hand (MOIS + Minister Khatib, "responsible for the leaking of
+      documents"); MSTIC describes "Homeland Justice, the group overtly
+      pushing messages and leaking data," amplified by "a broad-based
+      information operation." That is exactly the deniable-retaliation-via-
+      hacktivist-front end the doctrine encodes — the doctrine file itself
+      marks HomeLand Justice → MOIS as attested.
+    attesting_source_id: cisa/2022-09-21_aa22-264a-albania
     inference_basis:
+      source_quote: "In July 2022, Iranian state cyber actors—identifying as “HomeLand Justice”—launched a destructive cyber attack against the Government of Albania which rendered websites and services unavailable."
       source_id: cisa/2022-09-21_aa22-264a-albania
-      signals:
-        - "CISA AA22-264a names the MOIS persona (HomeLand Justice) and the MEK/anti-dissident retaliation motive"
-      ruled_out: "the cited Treasury release does not name the motive; 'cyber-deniable-retaliation' as a doctrine is not literally named"
-    counter_explanation: null
     contested: false
     analyst: claude
   - doctrine_id: ir/constitutional-irgc-role
     pillar_id: ir/constitutional-irgc-role/regime-preservation
     program_id: null
-    confidence: strongly_inferred
+    confidence: attested
+    perspective: attacker-rationale
     reasoning: |
-      MEK is the regime's existential opposition; targeting a
-      MEK-hosting state fits the regime-preservation pillar. The
-      cited Treasury release does not name this nexus (CISA
-      AA22-264a names the MEK motive); the constitutional-IRGC-role
-      framing is AUSPEX inference.
-    attesting_source_id: treasury/2022-09-09_mois-albania
+      The strategic purpose — regime-preservation against the MEK, the
+      regime's existential opposition — is stated in substance by MSTIC:
+      the attack was "retaliation … [against] the Mujahedin-e Khalq (MEK),
+      an Iranian dissident group largely based in Albania that seeks to
+      overthrow the Islamic Republic of Iran," with the MEK "the primary
+      target," timed "one week ahead of the MEK-sponsored Free Iran World
+      Summit." CISA independently carries the anti-MEK targeting ("anti-
+      Mujahideen E-Khalq (MEK) message on desktops"; "posting anti-MEK
+      messages"). CAVEAT: constitutional-IRGC-role is AUSPEX's frame for
+      what is a MOIS operation — the doctrine's regime-preservation pillar
+      is authored MOIS-inclusive (APT39/Rana = MOIS is mapped to it), so
+      the corroboration here is of the counter-MEK/regime-preservation
+      MOTIVE, not of an IRGC nexus.
+    attesting_source_id: microsoft/2022-09-08_mstic-albania
     inference_basis:
-      source_id: cisa/2022-09-21_aa22-264a-albania
-      signals:
-        - "CISA AA22-264a names the MEK/anti-dissident targeting motive"
-      ruled_out: "the 'constitutional IRGC role' / regime-preservation doctrine — not named in any cited source; an inferential leap from the MEK motive"
-    counter_explanation: null
+      source_quote: "Tehran likely used the attacks as retaliation for cyberattacks Iran perceives were carried out by Israel and the Mujahedin-e Khalq (MEK), an Iranian dissident group largely based in Albania that seeks to overthrow the Islamic Republic of Iran."
+      source_id: microsoft/2022-09-08_mstic-albania
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/government-of-albania
+  - target_id: sectors/government
+    country: al  # Government of Albania (dangling orgs/government-of-albania re-pointed; matches sibling 2022-09/hunt-forward-albania)
     role: primary
     outcome: |
-      Forced shutdown of e-government services; diplomatic
-      break with Iran September 7, 2022.
+      Government websites and online public services disrupted; email
+      exfiltrated over ~a year then leaked; Albania severed diplomatic
+      ties with Iran in September 2022 (CISA).
 sources:
   - treasury/2022-09-09_mois-albania
   - cisa/2022-09-21_aa22-264a-albania
+  - microsoft/2022-09-08_mstic-albania
   - mandiant/2022-09_albania-roadsweep
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. You are Opus 4.8. Sources snapshotted +
+    sha256-hashed: Treasury OFAC jy0941, CISA/FBI AA22-264A, Microsoft
+    MSTIC (ADDED this pass), Mandiant (link-rotted, retained).
+
+    PHANTOM CHECK (PHANTOM-REMEDIATION.md): the two govt sources are REAL
+    and on-topic (HTTP 200; canonical/og:url = jy0941 for Treasury,
+    aa22-264a for CISA — I confirmed the Treasury body is the Albania
+    release, not the 2020 APT39 item that appears in its related-links
+    block). Path = RE-SOURCE (enrich): ADDED Microsoft MSTIC to carry the
+    July-15 date, May-2021 initial access, ZeroCleare lineage and MEK
+    motive that Treasury+CISA under-carry (badrabbit-style enrichment, not
+    a phantom swap). Only genuine link-rot = Mandiant: its live URL 302s to
+    a content-less "Mandiant Cybersecurity Consulting | Google Cloud" shell
+    (0 hits for ROADSWEEP/Albania/Iran in the 2.3 MB capture) — retained as
+    a real-but-unfetchable secondary.
+
+    SNAPSHOTS (all sha256-verified this pass):
+    - treasury/2022-09-09_mois-albania: 83249fd2…aa80e2d2, 123,282 B.
+    - cisa/2022-09-21_aa22-264a-albania: 1152b5c6…6a7cf2a9, 89,046 B.
+    - microsoft/2022-09-08_mstic-albania: cbb18919…2026c5e8, 338,982 B
+      (ADDED + snapshotted; HTTP 200).
+    - mandiant/2022-09_albania-roadsweep: no valid snapshot (JS shell) —
+      level-limiting for the ROADSWEEP name only.
+
+    [a] FACTS — removed fabricated/uncarried scope; enriched to source.
+    (1) "ROADSWEEP wiper" REMOVED (doubly wrong): no fetchable source names
+    ROADSWEEP (CISA/MSTIC 0 hits; it is Mandiant's link-rotted name for the
+    GoXml.exe *ransomware*, not the wiper). Rewrote to CISA+MSTIC-verified
+    malware — ransomware-style encryptor GoXml.exe + disk wiper cl.exe
+    "using the same license key and EldoS RawDisk driver as ZeroCleare"
+    (MSTIC); CISA: "a ransomware-style file encryptor and disk wiping
+    malware." (2) "Total Information Management System, state police,
+    immigration, and civil registry" + "e-Albania" REMOVED — FABRICATED
+    SCOPE: none of the three good sources names these systems; all say
+    generically Treasury "suspend online public services for its citizens" /
+    CISA "rendered websites and services unavailable" / MSTIC "disrupting
+    government websites and public services." (3) "Telegram" REMOVED — 0
+    hits in any cited source; CISA/MSTIC say "website"/"social media persona
+    accounts." (4) ADDED source-carried facts: May-2021 initial access via
+    unpatched Internet-facing SharePoint CVE-2019-0604 (MSTIC: "gained
+    access … in May 2021 by exploiting the CVE-2019-0604 vulnerability on an
+    unpatched SharePoint Server, administrata.al"; CISA verbatim), ~a-year
+    email exfiltration, <~10% impact (MSTIC), the anti-MEK information
+    operation, Minister Esmail Khatib sanctioned.
+
+    [b] ATTRIBUTION — de-conflicted; attribution_level added; over-
+    attestation removed. Treasury names the MOIS SERVICE explicitly
+    ("designating Iran's Ministry of Intelligence and Security (MOIS) …
+    cyber threat actors … sponsored by the Government of Iran and MOIS
+    disrupted Albanian government computer systems") but NOT "HomeLand
+    Justice" (0) and NOT the MEK motive (0) — so the redundant Treasury→
+    persona row was DROPPED; kept Treasury→service_id ir/mois at named-unit.
+    CISA/FBI name the persona at NATION level only ("Iranian state cyber
+    actors—identifying as 'HomeLand Justice'"; zero "MOIS") → named-actor.
+    ADDED MSTIC row: high-confidence "actors sponsored by the Iranian
+    government" with a MODERATE-confidence EUROPIUM→MOIS link + DEV-0842/
+    0861/0166/0133 clusters → named-actor. All concur (three-source
+    convergence: firm MOIS = Treasury, moderate MOIS = MSTIC, nation = CISA).
+
+    [c] DATES — start_date 2021-05-01 now SOURCE-CARRIED (MSTIC "in May
+    2021"; CISA "approximately 14 months before" the July-2022 launch);
+    kept, comment corrected. disclosure_date 2022-07-15 = destructive
+    launch/public-claim, source-carried by MSTIC ("on July 15, 2022").
+    end_date 2022-09-10 = the September-2022 second wave; CISA carries only
+    "In September 2022" (no day) — the 9–10 Sept day is external reporting,
+    flagged in the field comment (kept approximate-to-month per repo
+    convention). published_on verified: Treasury 2022-09-09; CISA
+    2022-09-21 (initial version; "Last Revised September 23, 2022"); MSTIC
+    2022-09-08.
+
+    [d] DOCTRINE_LINKS — both UPGRADED to attested under the attested-
+    reframe (corroboration of strategic purpose, not slug-naming), each
+    with inference_basis.source_quote + perspective: attacker-rationale.
+    persona-laundering: state-op-behind-persona stated in substance by CISA
+    ("Iranian state cyber actors—identifying as 'HomeLand Justice'"),
+    Treasury (MOIS the state hand + doc leak) and MSTIC ("Homeland Justice,
+    the group overtly pushing messages and leaking data" + "broad-based
+    information operation"); the doctrine file itself marks HomeLand Justice
+    → MOIS attested. regime-preservation: counter-MEK purpose stated in
+    substance by MSTIC ("retaliation … [against] the Mujahedin-e Khalq
+    (MEK) … that seeks to overthrow the Islamic Republic of Iran"; MEK "the
+    primary target") + CISA ("anti-Mujahideen E-Khalq (MEK) message";
+    "posting anti-MEK messages"). CAVEAT recorded in-link: constitutional-
+    IRGC-role is AUSPEX's frame for a MOIS op (the pillar is authored MOIS-
+    inclusive — APT39/Rana mapped to it), so the corroboration is of the
+    counter-MEK MOTIVE, not an IRGC nexus. Replaced the old
+    strongly_inferred/signals scaffolding.
+
+    [e] ATTRIBUTION_LEVEL — added (was absent on every row): Treasury
+    named-unit (MOIS service), CISA named-actor, MSTIC named-actor.
+
+    [f] ACTOR_ID — ir/mois/homeland-justice resolves to
+    atlas/actors/ir/homeland-justice.yaml (id: ir/mois/homeland-justice;
+    primary_service_id ir/mois; KEEP-verdict 2026-06-24). service_id
+    ir/mois valid. incident_type set to [destructive, wiper, disruption,
+    data-theft, influence-operation] — all five source-carried (destructive/
+    wiper: CISA "disk wiping malware" + MSTIC ZeroCleare/cl.exe; disruption:
+    all three; data-theft: CISA "exfiltrating e-mail content" + MSTIC
+    DEV-0861/DEV-0166; influence-operation: the anti-MEK HomeLand Justice
+    IO). Target re-pointed from the DANGLING orgs/government-of-albania (no
+    such target file exists) to sectors/government + country: al (valid
+    fileless taxonomy used 182×; matches sibling 2022-09/hunt-forward-
+    albania).
+
+    LEVEL full: every load-bearing claim is carried by a captured+hashed
+    source (Treasury MOIS attribution; CISA persona + MEK + Sept-wave +
+    diplomatic rupture; MSTIC July-15 + May-2021 + ZeroCleare + MEK-motive +
+    false-flag assessment). The only non-carried specifics were REMOVED, not
+    relied on.
+
+    FLAGS for orchestrator/Kara:
+    (1) RE-SOURCE candidate: the "e-Albania" portal, the "TIMS / Total
+    Information Management System" border-system takedown, the precise
+    Sept-7-2022 diplomatic-severance date, and the "first country to sever
+    ties over a cyberattack" superlative are all REAL but carried only by
+    news reporting (Reuters/AP/White House 2022-09-07), not by the three
+    primary/vendor sources — add a news/govt source to restore those to
+    prose if wanted.
+    (2) TARGET: consider creating orgs/government-of-albania (precedent:
+    orgs/polish-government, orgs/ukraine-government); re-pointed to
+    sectors/government + country: al for now.
+    (3) SOURCE-NOTE FIX applied to the event's own cited source
+    treasury/2022-09-09_mois-albania — removed two FALSE claims (Treasury
+    names neither "HomeLand Justice" nor "MEK").
+    (4) DOCTRINE framing: ir/constitutional-irgc-role/regime-preservation
+    attests the counter-MEK MOTIVE of a MOIS op — confirm the IRGC-doctrine/
+    MOIS-actor assignment is intended.
+    (5) MODEL-ID: verified_by stamped claude-opus-4.8 (dotted, corpus-
+    canonical); runtime id claude-opus-4-8[1m].

@@ -1,52 +1,74 @@
 id: 2016-10/global-swift-campaign
-name: Global SWIFT campaign (FEIB Taiwan, BancoEstado Chile, others)
-start_date: 2016-10-01
-disclosure_date: 2017-10-06  # FEIB Taiwan disclosed October 2017
-end_date: 2019-08-01  # extends into Cosmos Bank / Bank of Valletta era
+# NOTE (2026-07-11 audit): id-slug/path say 2016-10 but the earliest in-scope, sourced
+# operation is FEIB Taiwan, October 2017 (Mandiant). The Dec-2015 Tien Phong and Feb-2016
+# Bangladesh operations are recorded as their OWN events. Flag for orchestrator: re-home
+# id/path to 2017-10/ (FK propagation). id left UNCHANGED here to preserve referential integrity.
+name: Global SWIFT campaign (FEIB Taiwan, Banco de Chile, Bancomext, others)
+start_date: 2017-10-01  # FEIB Taiwan heist, October 2017 (Mandiant: "Far Eastern International Bank in Taiwan in October 2017") — earliest post-Bangladesh in-scope op; was an unsourced 2016-10-01
+disclosure_date: 2017-10-06  # FEIB Taiwan disclosed October 2017 (first public disclosure of an in-scope op)
+end_date: 2019-02-13  # Bank of Valletta (Malta) SWIFT op; DOJ 2021 bounds the bank campaign "2015 through 2019" and names Malta; was an unsourced 2019-08-01
 incident_type:
   - financial-theft
   - intrusion
 initial_vector: phishing
 outcome_summary: |
-  Coordinated multi-year APT38 / BeagleBoyz campaign against
-  smaller-tier SWIFT-network banks: Vietnam (Tien Phong Bank,
-  attempted), Taiwan (Far Eastern International Bank ~$60M),
-  Mexico (Bancomext attempted), Chile (BancoEstado), among
-  others. Tens of millions stolen across operations; pattern
-  documented in CISA AA20-239A (BeagleBoyz).
+  Post-Bangladesh wave of the APT38 / BeagleBoyz SWIFT-network
+  campaign against second-tier banks. Taiwan's Far Eastern
+  International Bank saw ~$60M in fraudulent SWIFT transfers
+  (October 2017) routed to the US, Cambodia and Sri Lanka — all but
+  ~$500K recovered, with two arrests in Sri Lanka; Mexico's Bancomext
+  attempt (January 2018) was blocked; Banco de Chile lost ~$10M (May
+  2018) in a SWIFT fraud masked by a KillDisk wiper that crashed
+  ~9,000 workstations. DOJ 2021 bounds the whole 2015-2019 bank
+  campaign at more than $1.2B attempted across Vietnam, Bangladesh,
+  Taiwan, Mexico, Malta and Africa; the pattern was consolidated in
+  CISA AA20-239A (BeagleBoyz).
 quantified_impact:
-  usd_stolen: 60000000  # FEIB alone; full campaign totals higher
+  usd_stolen: 10000000       # Banco de Chile (24 May 2018) net SWIFT theft (~$10M, routed to Hong Kong)
+  usd_attempted: 60000000    # FEIB Taiwan (Oct 2017) fraudulent SWIFT transfers; all but ~$500K recovered
+  usd_recovered: 59500000    # FEIB: "all but $500,000 has been recovered" (The Register 2017-10-11)
+  # Campaign-wide DOJ 2021 total: >$1.2B ATTEMPTED 2015-2019 across all banks, which INCLUDES the
+  # separately-recorded Bangladesh ($81M) and Tien Phong events; CISA AA20-239A: ~$2B attempted since 2015.
 false_flag_risk: none
-campaign_id: apt38-swift-bank-heists
+campaign_id: apt38-swift-bank-heists  # free-text campaign tag shared with the Bangladesh / Tien Phong siblings; no campaign record exists (flag)
 operators_named:
-  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
-  - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
-  - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment
+  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment (named in cited DOJ 2021 source)
+  - jon-chang-hyok  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment (named in cited DOJ 2021 source)
+  - kim-il  # DPRK RGB / Lab 110, DOJ Feb 2021 indictment (named in cited DOJ 2021 source)
 summary: |
-  Continuation of the Bangladesh Bank SWIFT-network pattern at
-  scale. Demonstrated APT38's progressive operationalization of
-  SWIFT-manipulation tradecraft across geographies. CISA AA20-239A
-  formally consolidated the campaign attribution under the
-  BeagleBoyz designation. Tradecraft per the advisory, Mandiant's
-  2018 APT38 report, and the 2021 Lazarus indictment includes:
-  spear-phishing of bank IT and treasury staff with weaponized
-  Office documents, the DYEPACK SWIFT-message-manipulation toolkit
-  used to suppress confirmation messages on the targeted bank's
-  Alliance Access SWIFT software, the NESTEGG / KEYMARBLE /
-  HOPLIGHT / FALLCHILL backdoors, valid credentials for lateral
-  movement, Mimikatz credential dumping, and the deployment of
-  the Hermes (FEIB Taiwan) or DYEPACK-paired wiper components as
-  post-heist evidence destruction.
+  The post-Bangladesh wave of APT38's SWIFT-network bank campaign
+  (the December 2015 Tien Phong and February 2016 Bangladesh Bank
+  operations are recorded as separate events). Demonstrated the
+  group's progressive operationalization of SWIFT-manipulation
+  tradecraft across geographies — Taiwan (Far Eastern International
+  Bank, October 2017), Mexico (Bancomext, January 2018) and Chile
+  (Banco de Chile, May 2018) — alongside the FASTCash ATM cash-out
+  operations and, into 2019, the Bank of Valletta (Malta) heist.
+  CISA AA20-239A formally consolidated the campaign under the
+  BeagleBoyz designation. Tradecraft per that advisory, Mandiant's
+  October 2018 APT38 report, and the February 2021 DOJ indictment
+  includes: spear-phishing of bank IT and treasury staff with
+  weaponized Office documents; the DYEPACK toolkit used to
+  manipulate outgoing messages and suppress confirmations on the
+  targeted bank's SWIFT Alliance Access software; the NESTEGG and
+  HOPLIGHT backdoors; Mimikatz credential dumping with valid-
+  credential lateral movement; FASTCash ATM cash-out malware; and
+  post-heist distraction / evidence-destruction payloads — the
+  Hermes ransomware, and at Banco de Chile a KillDisk wiper variant
+  that crashed ~9,000 workstations to mask the fraudulent SWIFT
+  transfers.
 attributions:
   - actor_id: kp/rgb/apt38
     attributing_org: US CISA + Treasury + FBI + USCYBERCOM
     attributing_org_confidence: high
+    attribution_level: named-actor  # CISA: "The BeagleBoyz [= APT38 alias], an element of the North Korean government's Reconnaissance General Bureau"
     auspex_assessment: concur
     attribution_date: 2020-08-26
     attribution_source_id: cisa/2020-08-26_aa20-239a-beagleboyz
   - actor_id: kp/rgb/apt38
     attributing_org: US DOJ
     attributing_org_confidence: high
+    attribution_level: named-actor  # DOJ: defendants "members of units of the Reconnaissance General Bureau (RGB) ... known by ... Lazarus Group and Advanced Persistent Threat 38 (APT38)"
     auspex_assessment: concur
     attribution_date: 2021-02-17
     attribution_source_id: doj/2021-02-17_lazarus-three-officers-indictment
@@ -54,29 +76,130 @@ doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # downgraded 2026-07-11 from attested (see reasoning)
+    perspective: attacker-rationale
     reasoning: |
-      CISA AA20-239A (BeagleBoyz) explicitly states the terminal
-      WMD-financing strategic goal underlying APT38's SWIFT campaign
-      — this is the attestation basis. (The DOJ 2021 indictment, also
-      cited, states only the proximate sanctions-evasion goal and is
-      NOT sufficient for attestation on its own.)
-    attesting_source_id: cisa/2020-08-26_aa20-239a-beagleboyz  # switched 2026-07-01 from the DOJ indictment (proximate goal only) to the CISA BeagleBoyz advisory (states the terminal WMD-financing goal)
+      APT38's SWIFT-network bank thefts are the operational core of
+      the DPRK's cyber-enabled hard-currency generation, which the
+      Byungjin sanctions-evasion-revenue pillar encodes (the era-
+      correct framework for 2017-2019; kp/8th-congress-defense-plan
+      is 2021 and would be anachronistic here). CISA AA20-239A draws
+      the theft-revenue -> weapons linkage, but hedges it modally
+      ("North Korea CAN use these funds ...") and frames the primary
+      purpose as UN-sanctions evasion / revenue generation. That is a
+      strong signal of the terminal weapons-financing goal but short
+      of a flat attestation of it — hence strongly_inferred, not
+      attested (harmonized with the 2016-02 Bangladesh Bank sibling,
+      which was likewise downgraded).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "CISA AA20-239A: 'North Korea can use these funds for its UN-prohibited nuclear weapons and ballistic missile programs.' — a joint govt-primary advisory drawing the theft-revenue -> WMD/ballistic-missile linkage, but modally hedged ('can use')."
+        - "CISA AA20-239A frames the activity as UN-Security-Council-resolution evasion that 'generates substantial revenue for North Korea' and is 'likely a major source of funding for the North Korean regime' — the proximate revenue function the pillar encodes."
+        - "APT38 / BeagleBoyz is a dedicated financial-theft element of the RGB (CISA AA20-239A; DOJ 2021), whose raison d'etre is sanctions-evasion revenue generation (Mandiant APT38 report)."
+      ruled_out: "Attested: no cited source states the terminal weapons-financing purpose outright — CISA's WMD linkage is modal ('can use') and DOJ 2021 names only the proximate sanctions-evasion / revenue goal."
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/feib-taiwan
+  - target_id: orgs/feib-taiwan  # org record MISSING — flag for orchestrator to create (Far Eastern International Bank, Taiwan)
     role: primary
-    outcome: ~$60M routed to international destinations; substantial recovery.
-  - target_id: orgs/bancoestado-chile
+    outcome: |
+      ~$60M in fraudulent SWIFT transfers (Oct 2017) to the US,
+      Cambodia and Sri Lanka; all but ~$500K recovered; two arrests
+      in Sri Lanka.
+  - target_id: orgs/banco-de-chile  # CORRECTED from orgs/bancoestado-chile (BancoEstado was a SEPARATE Sept-2020 REvil incident). org record MISSING — flag for orchestrator to create
     role: primary
-  - target_id: orgs/bancomext-mexico
+    outcome: |
+      ~$10M stolen via four fraudulent SWIFT transactions (24 May
+      2018), masked by a KillDisk wiper that crashed ~9,000
+      workstations / ~500 servers.
+  - target_id: orgs/bancomext-mexico  # org record MISSING — flag for orchestrator to create
     role: primary
-    outcome: Attempted theft blocked.
-  - target_id: orgs/tien-phong-bank-vietnam
-    role: primary
-    outcome: Attempted theft blocked.
+    outcome: Attempted theft blocked (Jan 2018).
 sources:
   - cisa/2020-08-26_aa20-239a-beagleboyz
   - doj/2021-02-17_lazarus-three-officers-indictment
   - mandiant/2018-10-03_apt38-report
+  - theregister/2017-10-11_feib-taiwan-swift-60m
+  - theregister/2018-06-11_banco-de-chile-swift-10m
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW (Opus 4.8, max effort). All five cited
+    sources snapshotted + sha256-verified. NB the task brief framed this
+    as the "Bangladesh $81M" event — it is NOT: Bangladesh Bank ($81M,
+    Feb 2016) and Tien Phong (Dec 2015) are SEPARATE events; this is the
+    post-Bangladesh "other banks" wave (FEIB Taiwan, Bancomext, Banco de
+    Chile, +BoV/FASTCash).
+
+    [a] FACTS — Corrected two embellishments the brief flagged:
+      (1) usd_stolen: 60000000 was WRONG — FEIB's ~$60M was ATTEMPTED and
+      near-fully recovered. Re-sourced to The Register 2017-10-11 (raw
+      a87b22af…d15a42c9): "$60m had already been wired to banks in the US,
+      Cambodia, and Sri Lanka" and "all but $500,000 has been recovered."
+      Now usd_attempted 60M / usd_recovered 59.5M.
+      (2) "Chile (BancoEstado)" was WRONG — Mandiant names "Banco de Chile
+      in May 2018"; BancoEstado was a separate 2020 REvil incident.
+      Corrected target orgs/bancoestado-chile -> orgs/banco-de-chile;
+      re-sourced $10M net theft + KillDisk-wiper diversion to The Register
+      2018-06-11 (raw ade3fbfe…877a563a68): CEO "stolen '$10m'" + "KillDisk
+      wiper malware to distract attention before targeting … SWIFT".
+      Trimmed unsourced malware from summary: KEYMARBLE and FALLCHILL are
+      0-hits across all three govt/vendor raws — STRIPPED. Kept the sourced
+      set: DYEPACK (Mandiant x26), NESTEGG (Mandiant x13), HOPLIGHT (CISA
+      x8), Hermes (Mandiant x13), Mimikatz (Mandiant x1), "Alliance Access"
+      (Mandiant), FASTCash (CISA x29). Mandiant carries the bank list with
+      dates verbatim: "Far Eastern International Bank in Taiwan in October
+      2017 • Bancomext in January 2018 • Banco de Chile in May 2018."
+      Campaign total corrected to the sourced DOJ figure ">$1.2 billion
+      attempted 2015-2019" (raw) / CISA "nearly $2 billion since … 2015."
+    [b] ATTRIBUTION — kp/rgb/apt38, US CISA + US DOJ, both high/concur:
+      SOLID and raw-verified. CISA: "The BeagleBoyz, an element of the
+      North Korean government's Reconnaissance General Bureau" (BeagleBoyz
+      = APT38 alias). DOJ: defendants "members of units of the
+      Reconnaissance General Bureau (RGB) … including Lazarus Group and
+      Advanced Persistent Threat 38 (APT38)." No over-attestation.
+    [c] DATES — start_date 2016-10-01 was UNSOURCED (no Oct-2016 op; the
+      2016 campaign event is the carved-out Bangladesh Feb-2016). Corrected
+      to 2017-10-01 (FEIB, Mandiant-dated Oct 2017). end_date 2019-08-01
+      (no Aug-2019 op) -> 2019-02-13 (Bank of Valletta / Malta; DOJ bounds
+      "through 2019" + names Malta). disclosure_date 2017-10-06 kept (FEIB).
+      Source published_on re-verified: CISA 2020-08-26, DOJ 2021-02-17,
+      Mandiant 2018-10-03, Register 2017-10-11 & 2018-06-11 (URL-path dates).
+    [d] DOCTRINE — kp/byungjin/sanctions-evasion-revenue is the era-correct
+      pillar (NOT the anachronistic 2021 8th-Congress plan). DOWNGRADED
+      attested -> strongly_inferred: the only WMD-linking source (CISA) is
+      MODALLY HEDGED — "North Korea CAN use these funds for its UN-prohibited
+      nuclear weapons and ballistic missile programs" — a possible
+      application, not an asserted terminal purpose; CISA's stated purpose is
+      UN-sanctions evasion / revenue. attesting_source_id -> null;
+      inference_basis.signals preserves the CISA quote. perspective:
+      attacker-rationale (DPRK attacker's own doctrine). Consistent with the
+      Bangladesh sibling.
+    [e] ATTRIBUTION_LEVEL — was MISSING; added named-actor to both
+      attributions (APT38 named by both; the discrete atlas unit Lab-110 is
+      in neither cited text, so not named-unit).
+    [f] ACTOR_ID — kp/rgb/apt38 resolves to atlas/actors/kp/apt38.yaml
+      (id: kp/rgb/apt38). Directionality correct: APT38 attacker, banks
+      victims; incident_type [financial-theft, intrusion].
+
+    Source sha256: cisa 6dfc26c1…f86bd36f37 (re-verified matching);
+    doj 4e3209c4…f98b8f21 (globalsecurity.org verbatim mirror; justice.gov
+    bot-walled — re-verified matching); mandiant b6460375…d986ed71 (PDF,
+    re-verified matching); theregister/FEIB a87b22af…d15a42c9 (NEW);
+    theregister/Chile ade3fbfe…877a563a68 (NEW). level: full — every
+    load-bearing claim now carried by a snapshotted source.
+
+    ORCHESTRATOR FLAGS (out of audit scope — event + own sources only):
+      - RE-HOME id/path 2016-10/ -> 2017-10/global-swift-campaign (start now
+        2017-10; FK propagation).
+      - CREATE missing target org records: orgs/feib-taiwan,
+        orgs/banco-de-chile, orgs/bancomext-mexico (none exist).
+      - Removed target orgs/tien-phong-bank-vietnam: duplicative (has its own
+        event 2015-12/tien-phong-bank-swift, which uses orgs/tien-phong-bank)
+        AND out of this event's 2017+ window.
+      - No campaign record exists for campaign_id apt38-swift-bank-heists
+        (shared free-text tag across the SWIFT siblings).

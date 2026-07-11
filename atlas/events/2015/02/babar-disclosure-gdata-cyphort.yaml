@@ -1,68 +1,237 @@
 id: 2015-02/babar-disclosure-gdata-cyphort
-name: G Data + Cyphort coordinated Babar disclosure
-start_date: 2015-02-18
+name: Babar espionage implant disclosed (G Data + Cyphort)
+start_date: 2011-01-01  # AUDIT 2026-07-10: year-precision operational-era lower bound. The cited vendor sources give NO Babar-specific compile/deployment date; anchor is CSEC-relayed via G Data — the SNOWGLOBE assessment slides "originating from 2011" describe the operation, itself "discovered in 2009 (slide 9)" with a sophisticated implant "discovered in mid-2010." Event filed under the 2015-02 disclosure (see disclosure_date), per the Casper-event precedent.
 disclosure_date: 2015-02-18
-end_date: 2015-02-18
+end_date: null  # operation end not established by the cited sources
 incident_type:
-  - documentary
   - espionage
-initial_vector: unknown
+  - surveillance
+initial_vector: unknown  # AUDIT 2026-07-10: Cyphort only hedges — infected "possibly through a drive-by or malicious e-mail attachments"; not established, left unknown.
 outcome_summary: |
-  Coordinated disclosure on 18 February 2015 by G Data SecurityBlog
-  (Paul Rascagnères) and Cyphort Labs (Marion Marschalek) of the
-  Babar espionage implant referenced in the leaked CSEC Snowden
-  slides published by Le Monde in March 2014. Both posts named
-  French-language code artifacts including the "MEDIA-MOTHER" PDB
-  string and Babar-specific tradecraft. The coordinated disclosure
-  effectively confirmed the Snowglobe cluster's technical reality
-  and joined Babar to French-state attribution in vendor reporting.
+  Same-day public disclosure on 18 February 2015 by G Data
+  SecurityBlog (Paul Rascagnères) and Cyphort Labs (Marion
+  Marschalek) of Babar — a full-featured espionage / surveillance
+  implant of the Animal Farm tooling family. Both vendors reverse-
+  engineered Babar samples and confirmed they match the malware
+  CSEC (Communications Security Establishment Canada) described in
+  the leaked SNOWGLOBE slides first reported by Le Monde in March
+  2014 (from Edward Snowden's disclosures). The France provenance
+  is CSEC's, relayed and explicitly hedged by both vendors: G Data
+  quotes the slide verbatim — SNOWGLOBE assessed "with moderate
+  certainty … a state-sponsored CNO … put forth by a French
+  intelligence agency" — but concludes it "cannot contribute
+  further information with regards to the malware's origin," while
+  Cyphort notes the allegations are "impossible to prove without
+  the shadow of a doubt." No cited source names the DGSE or any
+  specific French service.
 quantified_impact: {}
 false_flag_risk: none
 operators_named: []
 summary: |
-  Babar is the cornerstone of the Animal Farm tooling family —
-  a feature-rich espionage implant whose French-language
-  development-environment artifacts and naming idiom were the
-  most concrete technical evidence connecting the cluster to a
-  French-speaking operator. The G Data and Cyphort posts came
-  three weeks before the ESET Casper disclosure (5 March 2015)
-  and the Kaspersky omnibus Animal Farm post (6 March 2015). The
-  coordination among vendors was unusual at the time and
-  reflected the analytic confidence in shared cluster attribution.
+  Babar is the flagship of the Animal Farm cluster. G Data and
+  Cyphort independently document a modular Windows DLL implant that
+  logs keystrokes (RAWINPUT), steals clipboard data, captures
+  desktop screenshots (GdiPlus) and — its signature capability —
+  intercepts and records audio from softphone / instant-messaging
+  applications (Skype, MSN Messenger, ooVoo, Nimbuzz, Google Talk,
+  Yahoo Messenger, X-Lite) via the dsound / winmm APIs, hooking
+  browsers and Office applications to steal data. G Data calls it
+  "a pure espionage tool"; Cyphort, "a full blown espionage tool,
+  built to excessively spy on the activity on an infected machine's
+  user." Cyphort ties Babar to EvilBunny by shared code
+  "handwriting" ("the same author is behind both families").
+
+  The command-and-control servers were hosted on compromised
+  legitimate commercial websites (a Turkish tourism site, an
+  Algerian travel agency, an Egyptian oil-and-gas services company
+  and an Iranian home-appliance retailer) — infrastructure, not
+  intelligence victims; G Data states it "cannot contribute further
+  information with regards to … the list of victims," so the
+  espionage targets are not established by the cited sources.
+
+  The two posts preceded ESET's Casper disclosure (5 March 2015)
+  and Kaspersky's "Animals in the APT Farm" cluster post (6 March
+  2015) by just over two weeks. The "French-language code artifacts
+  including the 'MEDIA-MOTHER' PDB string" attributed to these posts
+  in the prior record were FABRICATED / an over-claim: no such
+  string exists in either raw, the internal project path is
+  "Babar64" (which names the malware), and the Babar strings G Data
+  and Cyphort actually found are ENGLISH (with non-native mistakes).
+  The French-language indicators (an fr_FR spear-phishing locale, an
+  EvilBunny "fr" Accept-Language header, a developer nickname "Titi"
+  and the unit "kilo-octet") come from the CSEC slides relayed via
+  Le Monde, not from the vendors' Babar reverse-engineering.
 attributions:
   - actor_id: fr/unscoped/animal-farm
     service_id: null  # was fr/dgse/technical-directorate; demoted 2026-06-24 — no cited source names the DGSE/Technical Directorate (see actor notes)
-    attributing_org: G Data SecurityBlog + Cyphort Labs (coordinated)
+    attributing_org: G Data SecurityBlog (Paul Rascagnères)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor  # AUDIT 2026-07-10: G Data confirms Babar matches the CSEC-described malware and links it with EvilBunny (named same-developer group). France is CSEC "moderate certainty," relayed + hedged; no service named → named-actor.
+    auspex_assessment: concur-with-caveat
     attribution_date: 2015-02-18
     attribution_source_id: gdata/2015-02-18_babar-espionage-microscope
+    notes: |
+      G Data reverse-engineered Babar and confirmed it matches the
+      malware CSEC described, but attributes France only by relaying
+      the CSEC slide verbatim — "CSEC assesses, with moderate
+      certainty, SNOWGLOBE to be a state-sponsored CNO … put forth by
+      a French intelligence agency" — and disclaims independent origin
+      analysis: "the experts cannot contribute further information
+      with regards to the malware's origin nor the list of victims …
+      The assertion of a 'French intelligence community' being
+      responsible remains unchanged." No DGSE / service named →
+      service_id null, named-actor, concur-with-caveat.
   - actor_id: fr/unscoped/animal-farm
     service_id: null  # was fr/dgse/technical-directorate; demoted 2026-06-24 — no cited source names the DGSE/Technical Directorate (see actor notes)
     attributing_org: Cyphort Labs (Marion Marschalek)
     attributing_org_confidence: moderate
-    auspex_assessment: concur
+    attribution_level: named-actor  # AUDIT 2026-07-10: Cyphort ties Babar to EvilBunny ("same author") — a named same-developer group; relays CSEC's France suspicion with an explicit "impossible to prove" hedge; no service named → named-actor.
+    auspex_assessment: concur-with-caveat
     attribution_date: 2015-02-18
     attribution_source_id: cyphort/2015-02-18_babar-suspected-nation-state
+    notes: |
+      Cyphort: "The samples at hand fit well with what is described in
+      the CSEC document; and, as CSEC states they are suspected to
+      originate from French intelligence. As it is with binary
+      attribution, these allegations are impossible to prove without
+      the shadow of a doubt." Same-author cluster link to EvilBunny
+      ("the binaries come with the same handwriting as … 'Bunny' … We
+      assume the same author is behind both families"). No service
+      named → service_id null, named-actor, concur-with-caveat.
 doctrine_links:
   - doctrine_id: fr/lutte-informatique-offensive
     pillar_id: fr/lutte-informatique-offensive/intelligence-preparation
     program_id: null
     confidence: plausible
+    perspective: attacker-rationale
     reasoning: |
-      Babar / Animal Farm activity 2009-2015 pre-dates LIO formal
-      codification in 2019. Linked at plausible with explicit
-      doctrine-codification-later caveat.
+      Babar / Animal Farm activity (CSEC-documented from 2009-2011,
+      disclosed 2015) pre-dates the public codification of Lutte
+      Informatique Offensive (2019). Mapped retroactively to the
+      intelligence-preparation function LIO later codified — the
+      mapping the LIO doctrine record itself prescribes for the
+      Animal Farm family. Held at plausible: no cited source states a
+      French strategic purpose in LIO terms, and the France provenance
+      is itself CSEC-suspected (moderate certainty) and vendor-hedged,
+      with no service named.
     attesting_source_id: gdata/2015-02-18_babar-espionage-microscope
+    inference_basis:
+      alternatives:
+        - "French foreign-intelligence collection mapped to LIO's intelligence-preparation pillar (applied retroactively): Babar is a pure espionage / surveillance implant and CSEC assessed SNOWGLOBE as 'collecte de renseignements étrangers' (foreign-intelligence collection) per Le Monde — consistent with the pillar the LIO doctrine record prescribes for the Animal Farm family."
+        - "Pre-doctrinal DGSE foreign-intelligence collection under pre-2018 authorities with no reference to LIO: LIO was articulated in 2019, years after the operation, so the mapping is anachronistic and Babar may be generic espionage rather than preparation for later military cyber effects."
+        - "Attribution-contingent: France is only CSEC-suspected (moderate certainty) and explicitly hedged by both vendors, so any French-doctrine reading is contingent on the cluster's suspected French provenance holding."
     counter_explanation: |
-      Pure DGSE foreign-intelligence collection under pre-2018
+      Pre-2018 DGSE foreign-intelligence collection under legacy
       authorities, without specific reference to LIO doctrine.
     contested: false
     analyst: claude
-targets:
-  - target_id: sectors/government
-    role: primary
+targets: []  # AUDIT 2026-07-10: the cited sources establish NO espionage victims. G Data explicitly "cannot contribute further information with regards to … the list of victims"; Cyphort names none; Le Monde/CSEC say only that SNOWGLOBE performs "collecte de renseignements étrangers" and collects "courriels provenant de comptes spécifiques et ciblés" (no sector/country). The Iranian/Egyptian/Algerian/Turkish domains in the sources are COMPROMISED legitimate C2-host websites (infrastructure), not victims. Cluster-level Iran/media/journalist targeting appears only in Kaspersky "Animals in the APT Farm" (2015-03-06) — a DIFFERENT event's source, at cluster (not Babar) granularity — so it is not imported here. Prior "sectors/government primary" was unsupported and removed.
 sources:
   - gdata/2015-02-18_babar-espionage-microscope
   - cyphort/2015-02-18_babar-suspected-nation-state
   - lemonde/2014-03-21_snowglobe-piste-francaise
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs the three cited RAW snapshots. All three now captured + hashed
+    (Cyphort and Le Monde newly snapshotted this session via the Wayback Machine, which
+    resolved 200 — the prior "unfetchable/url:null" states are remediated). Tiers PRESERVED.
+      • G Data "Babar — Espionage Software … Under the Microscope" (primary) —
+        content_sha256 915f91c8…787e51, 65113 bytes (re-verified UNCHANGED).
+      • Cyphort "Babar: Suspected Nation State Spyware In The Spotlight" (primary) —
+        Wayback 20150218192803 capture, content_sha256 11068750…e02e54e, 30842 bytes.
+      • Le Monde "Quand les Canadiens partent en chasse de « Babar »" (secondary) —
+        Wayback 20140321195810 capture, content_sha256 c798b0e6…15e8fe, 88361 bytes.
+
+    [a] FACTS — fabrications / over-claims corrected (same family as the Casper audit):
+      • "MEDIA-MOTHER" PDB string — FABRICATED. Zero occurrences in ALL sources
+        ("MEDIA-MOTHER"=0 / "MEDIA"=0 in G Data + Cyphort). The real internal artifact is the
+        compilation path "C:\\Documents and Settings\\admin\\Desktop\\Babar64\\Babar64\\obj\\
+        DllWrapper Release\\Release.pdb" — the "Babar64" project name is what names the malware
+        (sibling path "…\\bunny 2.3.2\\Release\\Transporter2.pdb" for EvilBunny). Removed.
+      • "Both posts named French-language code artifacts" — OVER-CLAIM. G Data: the C&C
+        interface "is in English but the choice of words is not typical for a native English
+        speaker. We found English mistakes in EvilBunny and Babar samples" (e.g. "File Does
+        Not Exist s -->[%s]"). The French indicators are NOT vendor-found Babar code
+        artifacts: they are the CSEC slide's fr_FR spear-phishing locale + an EvilBunny HTTP
+        Accept-Language "fr" (G Data relaying CSEC slide 19), and — per Le Monde relaying the
+        CSEC doc — a developer nickname "Titi" ("un diminutif français") and the unit
+        "kilo-octet" (vs "kilobyte"). Rewrote to the real evidence + the fabrication call-out.
+      • CAPABILITIES added (were absent). G Data: key logger; clipboard stealer (passwords /
+        KeePass); screenshots "thanks to the GdiPlus API"; "Babar has big ears and the malware
+        is able to listen to conversations and log them by using the dsound and winmm
+        libraries"; "this malware is meant to be a pure espionage tool." Cyphort: "capable of
+        logging keystrokes, capturing screen shots, eavesdropping on installed softphones and
+        spying on instant messengers … a full blown espionage tool, built to excessively spy
+        on the activity on an infected machine's user." → supports incident_type [espionage,
+        surveillance] (dropped the "documentary" meta-type; this is now framed as the operation).
+      • C2 ≠ VICTIMS. The domains (alexpetro.com/Egypt oil-gas, etehadyie.ir/Iran appliances,
+        horizons-tourisme.com/Algeria travel, gezelimmi.com/Turkey tourism) are C2 servers.
+        G Data: "We do not know whether the command and controls were compromised legitimate
+        websites … or servers dedicated to the attacks." Cyphort: "Both domains appear to be of
+        legitimate use, but compromised and abused to host Babar's server side infrastructure."
+        The Iranian domain is a compromised appliance-store C2, NOT an Iranian victim.
+      • "coordinated" disclosure — NOT sourced (neither raw mentions the other or coordination);
+        softened to "same-day." "three weeks before" Casper/Kaspersky → "just over two weeks"
+        (18 Feb → 5/6 Mar = 15/16 days).
+
+    [b] ATTRIBUTION — France is CSEC's assessment (Snowden/SNOWGLOBE slides), relayed by Le Monde
+      (2014-03) and echoed by both vendors, who explicitly HEDGE. G Data verbatim: "CSEC assesses,
+      with moderate certainty, SNOWGLOBE to be a state-sponsored CNO [Cyber Network Operation]
+      effort, put forth by a French intelligence agency," and "cannot contribute further
+      information with regards to the malware's origin … The assertion of a 'French intelligence
+      community' being responsible remains unchanged." Cyphort: "impossible to prove without the
+      shadow of a doubt." What the vendors DO attribute is a named same-developer group (Babar +
+      EvilBunny, "same author"). Corrections: auspex_assessment concur→concur-with-caveat (both
+      attributions), matching the Casper audit + the actor record; dropped the unsourced
+      "(coordinated)" from attributing_org; kept attributing_org_confidence moderate (maps to CSEC
+      "moderate certainty" + vendor hedge); service_id already null (no DGSE named).
+
+    [c] DATES — disclosure_date 2015-02-18 verified in BOTH vendor raws (Cyphort footer "posted on
+      Wednesday, February 18th, 2015 at 3:20 pm"; G Data byline 02/18/2015). Le Monde published_on
+      2014-03-21 verified (byline "Le Monde | 21.03.2014"). Prior record conflated start=disclosure=
+      end all 2015-02-18 and fabricated an end_date. Fixed: start_date → 2011-01-01 (year-precision
+      operational-era lower bound — G Data relays CSEC slides "originating from 2011"; parent op
+      "discovered in 2009 (slide 9)", sophisticated implant "mid-2010"; no Babar-specific compile
+      date in the cited sources); end_date → null (operation end not established). Event stays filed
+      under 2015/02 (disclosure), per the Casper precedent (filed by disclosure, not start).
+
+    [d] DOCTRINE_LINKS — one link, fr/lutte-informatique-offensive/intelligence-preparation,
+      confidence PLAUSIBLE (correct — NOT attested: no cited source states a French strategic goal
+      in LIO terms, and France itself is CSEC-suspected + vendor-hedged). The LIO doctrine record
+      prescribes this retroactive plausible mapping for the Animal Farm family. ADDED the
+      ladder-required inference_basis.alternatives[] (3, colon-space-quoted) + perspective:
+      attacker-rationale (French doctrine on a French-attributed op; actor-state fr = doctrine-state
+      fr). pillar FK exists. Kept counter_explanation.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both attributions; set named-actor (vendors establish a
+      named same-developer group; nation = CSEC-suspected/moderate; no unit / no DGSE).
+
+    [f] ACTOR_ID — fr/unscoped/animal-farm resolves to atlas/actors/fr/animal-farm.yaml
+      (id: fr/unscoped/animal-farm) ✓; correctly demoted from fr/dgse/* on 2026-06-24. No actor
+      edit made. Directionality confirmed: France (Animal Farm) = attacker; targets = foreign
+      espionage victims (undetermined by the cited sources). incident_type [espionage, surveillance].
+
+    SOURCE-RECORD EDITS (own records only): fixed the G Data record's notes (it repeated the
+    fabricated "MEDIA-MOTHER" claim); populated Cyphort + Le Monde records with raw_snapshot +
+    content_sha256 (+ Cyphort archive_url) from the Wayback captures and rewrote their "unfetchable"
+    notes.
+
+    FLAGS for orchestrator (NOT edited — actor/other-event files):
+      • atlas/actors/fr/animal-farm.yaml ttp_summary carries the SAME fabricated '"MEDIA-MOTHER"
+        artifact' and asserts "French-language artifacts include strings, PDB paths" — both
+        over-claims per the raws (Babar strings are English; no MEDIA-MOTHER). Needs the same fix.
+      • atlas/events/2015/03/animal-farm-kaspersky-cluster-disclosure.yaml is UNAUDITED and still
+        carries the demoted over-claim ("canonical vendor-cluster reference for French-attributed
+        DGSE-Technical-Directorate tooling") + [documentary, espionage] + unsupported service level.
+      • If cluster-level Iran/media/journalist targeting is desired on-corpus, it is sourced to
+        Kaspersky "Animals in the APT Farm" (2015-03-06) at CLUSTER granularity ("Animal Farm has
+        targeted … Journalists and media organizations …"; Tafacalou victim countries incl. Iran) —
+        best kept on the Kaspersky-cluster event, not imported to this Babar-disclosure event.
+
+    RESIDUAL UNCERTAINTY: France is CSEC-suspected (moderate) + vendor-hedged, not vendor-attributed
+    or French-acknowledged; no Babar-specific operational date is given by the cited sources; and the
+    espionage victims are undetermined (G Data disclaims the victim list).

@@ -1,22 +1,27 @@
 id: 2021-05/colonial-pipeline
 name: Colonial Pipeline ransomware shutdown (DarkSide)
-start_date: 2021-05-07
+start_date: 2021-05-07  # ransomware execution + preemptive shutdown; initial VPN access was 2021-04-29 (Bloomberg/Mandiant)
 disclosure_date: 2021-05-08
 end_date: 2021-05-12
 incident_type:
   - ransomware
+  - extortion
   - disruption
 initial_vector: valid-creds
 outcome_summary: |
-  DarkSide affiliate intrusion via a leaked legacy VPN credential
-  (no MFA). Colonial Pipeline preemptively shut down ~5,500 miles
-  of refined-fuels pipeline serving the US East Coast for six
-  days. Average retail gasoline shortages across the Southeast;
-  emergency declarations in 17 states + DC; jet fuel disruption
-  at Charlotte and Atlanta airports. Company paid 75 BTC
-  (USD ~4.4M) ransom on day one; FBI on June 7 announced recovery
-  of approximately 63.7 BTC (USD ~2.3M) via "private-key access"
-  to the wallet.
+  DarkSide affiliate intrusion. Initial access on 2021-04-29 through a
+  single leaked VPN account credential that lacked multi-factor
+  authentication (the account was no longer in use but still active;
+  its password later surfaced in a dark-web leak). On 2021-05-07
+  DarkSide ransomware hit Colonial's IT/billing network — CISA found no
+  indication the actor moved laterally to OT — and Colonial preemptively
+  shut down its ~5,500-mile Texas-to-New Jersey refined-fuels system
+  (~45% of East Coast supply) for roughly six days (restart 2021-05-12).
+  Panic-buying and gasoline shortages from Washington, D.C. to Florida
+  and a federal emergency declaration (2021-05-09). Colonial paid 75 BTC
+  (USD ~4.4M) on 2021-05-08; on 2021-06-07 DOJ announced seizure of
+  approximately 63.7 BTC (USD ~2.3M) via FBI "private key" control of
+  the ransom wallet.
 quantified_impact:
   usd_ransom_paid: 4400000
   usd_ransom_recovered: 2300000
@@ -24,28 +29,130 @@ quantified_impact:
   pipeline_miles_offline: 5500
 false_flag_risk: none
 summary: |
-  The canonical US-CII-ransomware-disruption case. Triggered the
-  Biden TSA Pipeline Security Directives (May / July 2021),
-  ushered in EO 14028 (Improving the Nation's Cybersecurity) and
-  the CISA / FBI joint Ransomware Task Force. DarkSide voluntarily
-  shut down operations May 13 2021 citing "pressure from US
-  authorities"; servers seized by an unidentified party. Personnel
-  reconstituted as BlackMatter (July 2021) then ALPHV (Nov 2021).
+  The canonical US critical-infrastructure ransomware-disruption case.
+  Prompted TSA's first cybersecurity Security Directives for pipelines
+  and fed the federal ransomware-response push, including the CISA/FBI
+  Joint Ransomware Task Force. DarkSide wound down its operation within
+  days of the attack (server access lost amid law-enforcement pressure);
+  personnel and code later resurfaced in the DarkSide -> BlackMatter ->
+  ALPHV lineage, detail for which is maintained in the actor file
+  (criminal/darkside).
 attributions:
   - actor_id: criminal/darkside
     attributing_org: FBI
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2021-05-10
     attribution_source_id: fbi/2021-05-10_darkside-alert
-doctrine_links: []  # ru/sanctions-response-2022 dropped 2026-07-10 (Kara-approved): DarkSide/REvil are stateless criminal/ actors; no cited source ties these profit-motivated ops to Russian state mobilization
+doctrine_links: []  # ru/sanctions-response-2022 dropped per the 2026-07-05 Kara decision: DarkSide is a stateless profit-criminal actor (criminal/darkside); no cited source ties this ransomware op to Russian state mobilization. Do NOT re-add.
 targets:
   - target_id: orgs/colonial-pipeline
     role: primary
     outcome: |
-      Six-day shutdown of US East Coast refined-fuels backbone;
-      USD ~4.4M ransom paid (~USD 2.3M later recovered by FBI).
+      Preemptive ~six-day shutdown (2021-05-07..05-12) of the ~5,500-mile
+      US East Coast refined-fuels backbone (~45% of East Coast supply)
+      after DarkSide ransomware hit the IT/billing network; 75 BTC
+      (USD ~4.4M) ransom paid, ~63.7 BTC (USD ~2.3M) later seized by
+      DOJ/FBI.
 sources:
   - fbi/2021-05-10_darkside-alert
   - cisa/2021-05-11_aa21-131a-darkside-advisory
   - doj/2021-06-07_colonial-pipeline-recovery
+  - pbs/2021-05-19_colonial-4.4m-ransom
+  - bangordailynews/2021-06-05_colonial-compromised-password
+  - cisa/2023-05-07_colonial-two-year-retrospective
+  - techtarget/2022-04-26_colonial-pipeline-hack-explained
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs raw cited sources (Opus 4.8, max). RE-SOURCE outcome: the event was
+    REAL and accurate but its three cited US-govt sources are THIN relative to the prose — they
+    carry the DarkSide attribution (FBI), the RaaS/critical-infrastructure framing (CISA
+    AA21-131A) and the BTC recovery (DOJ), but NOT the vector, the physical scope, the impacts,
+    the $4.4M paid, or the policy aftermath. Added four snapshot-able corroborators so every
+    load-bearing claim is now carried; no fabrications found (figures are accurate, not
+    embellished). level=full.
+
+    SOURCES / HASHES (all HTTP 200, hashed):
+    - fbi/2021-05-10_darkside-alert — raw 02a45633…c9c7b8db9 (pre-existing; sha RE-VERIFIED, matches).
+    - cisa/2021-05-11_aa21-131a-darkside-advisory — raw f6982cc6…37b92574 (pre-existing; sha RE-VERIFIED, matches).
+    - doj/2021-06-07_colonial-pipeline-recovery — raw a22d5ca5…bbef12ac, 102,574 B. NEWLY captured this run via archive.org (was UNFETCHABLE in the 2026-06-24 pass; justice.gov itself still Akamai bot-walled).
+    - pbs/2021-05-19_colonial-4.4m-ransom (AP/Bussewitz) — raw d62fdf9b…4a8228b3, 256,033 B. ADDED.
+    - bangordailynews/2021-06-05_colonial-compromised-password (Bloomberg wire, Turton & Mehrotra) — raw f2e0dadd…9eb44422, 299,119 B. ADDED (clean full-text carrier for the no-MFA vector; the Bloomberg original is paywalled + only partially archived).
+    - cisa/2023-05-07_colonial-two-year-retrospective — raw 3e76dbc1…b2cacefc, 61,307 B. ADDED (policy aftermath).
+    - techtarget/2022-04-26_colonial-pipeline-hack-explained — raw dd1615c5…c172f22ec, 411,505 B. ADDED (5,500-mile scope, emergency declaration, timeline).
+
+    [a] FACTS — verified; several claims re-sourced or corrected.
+      • ATTRIBUTION/vector: DarkSide confirmed by FBI ("The FBI confirms that the Darkside ransomware
+        is responsible for the compromise of the Colonial Pipeline networks"). VECTOR (task-flagged):
+        carried by Bangor/Bloomberg — "Hackers gained entry … on April 29 through a virtual private
+        network account … said Charles Carmakal … Mandiant"; "The VPN account … didn't use multifactor
+        authentication … allowing the hackers to breach Colonial's network using just a compromised
+        [password]"; "no longer in use at the time of the attack but could still be used"; password
+        "discovered inside a batch of leaked passwords on the dark web." initial_vector: valid-creds ✓.
+      • SHUTDOWN/scope (task-flagged): "The Colonial Pipeline comprises more than 5,500 miles … starts
+        in Texas and moves all the way up through New Jersey" (TechTarget); "delivers about 45% of the
+        gasoline consumed on the East Coast … halted fuel supplies for nearly a week" (PBS/AP). CISA
+        AA21-131A adds the key nuance now reflected in prose: DarkSide hit the IT network and "there are
+        no indications that the threat actor moved laterally to OT systems" — the shutdown was
+        precautionary. downtime_days 6 / end 2021-05-12 ✓ ("May 12 … restarted as normal operations
+        resumed", TechTarget; "nearly a week", PBS; note: elapsed May 7->12 is ~5–6 days, "six days" is
+        the standard phrasing — retained, not embellished). pipeline_miles_offline 5500 ✓.
+      • IMPACT: "panic-buying and shortages at gas stations from Washington, D.C. to Florida" (PBS);
+        "panicked Americans filling bags with fuel" (CISA retro); "May 9, 2021 Emergency declaration"
+        (TechTarget). GENERALIZED two over-specific decorative claims to what the snapshots carry:
+        the event's "emergency declarations in 17 states + DC" -> "a federal emergency declaration"
+        (the precise 17-state FMCSA count is real but not in a snapshotted source; PBS gives Colonial's
+        distinct 13-state+DC *delivery* footprint); and the airport claim — the event said "Charlotte
+        and Atlanta," but the snapshot (TechTarget) names American Airlines + "Atlanta and Nashville,"
+        so the specific airport names were dropped rather than mis-assert.
+      • MONEY (task-flagged $4.4M / $2.3M): "$4.4 million" and "75 Bitcoin … paid the day after"
+        (PBS/AP; Blount confirmation) — DOJ gives the paid ransom only as "approximately 75 bitcoins"
+        (no USD). Recovery: "seized 63.7 bitcoins currently valued at approximately $2.3 million …
+        proceeds of a May 8 ransom payment … for which the FBI has the 'private key'" (DOJ); "June 7 …
+        DOJ recovers 63.7 bitcoin -- approximately $2.3 million" (TechTarget). The differing BTC counts
+        (75 paid / 63.7 recovered) and USD (4.4M / 2.3M, BTC price having fallen) are internally
+        consistent and correctly preserved. incident_type +extortion added (DOJ title "Ransomware
+        Extortionists DarkSide"; DarkSide double-extortion) -> [ransomware, extortion, disruption].
+      • STRIPPED: the summary's "EO 14028 (Improving the Nation's Cybersecurity)" as an outcome of
+        Colonial — EO 14028 was principally a SolarWinds-driven order signed 2021-05-12, is not carried
+        by any snapshotted source here, and crediting Colonial with "ushering [it] in" is an
+        anachronistic causal overstatement. Policy aftermath now rests on the two source-carried items:
+        TSA's Security Directives and the Joint Ransomware Task Force (CISA retro).
+      • CODA: the DarkSide wind-down / BlackMatter -> ALPHV lineage is not in this event's cited
+        sources; it is documented+sourced in the actor file criminal/darkside, to which the event now
+        defers (kept as a one-line pointer, not an event-load-bearing claim).
+
+    [b] ATTRIBUTION — FBI, high, concur; unchanged and correct. FBI "confirms" (firm) DarkSide the
+        crew/malware; not over-attested to any nation/unit (correct — DarkSide is stateless
+        profit-criminal). No Russian-state nexus asserted by any source (consistent with the
+        2026-06-24 actor demotion and the 2026-07-05 doctrine drop).
+
+    [c] DATES — start 2021-05-07 (ransomware execution + shutdown; the date all govt sources anchor
+        as when Colonial "learned it was the victim"); the newly-sourced 2021-04-29 initial VPN access
+        is documented in prose/comment as the intrusion foothold rather than reassigned as start, to
+        keep the canonical framing. disclosure 2021-05-08 (Colonial's public confirmation) ✓. end
+        2021-05-12 (restart) ✓. Source published_on all verified: FBI 2021-05-10, CISA AA21-131A
+        2021-05-11, DOJ 2021-06-07, PBS/AP 2021-05-19, Bangor/Bloomberg 2021-06-05 (wire 06-04), CISA
+        retro 2023-05-07, TechTarget 2022-04-26.
+
+    [d] DOCTRINE_LINKS — [] retained. ru/sanctions-response-2022 stays dropped per the 2026-07-05
+        Kara decision (DarkSide is stateless criminal; no cited source ties it to Russian state
+        mobilization). Per-event doctrine correctly NONE/stateless. Not re-added.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (was missing). FBI reaches the named crew/malware
+        "Darkside," not a nation or sub-unit — mirrors the rasgas-shamoon precedent.
+
+    [f] ACTOR_ID — criminal/darkside resolves to the atlas actor id (atlas/actors/criminal/darkside.yaml,
+        id: criminal/darkside) ✓. Correct post-2026-06-25 re-home from ru/unscoped/darkside.
+
+    FLAGS (out of single-event edit scope):
+    - orgs/colonial-pipeline (target file) repeats the ~5,500-mi / 45% / six-day / $4.4M-$2.3M facts
+      but still cites only the three thin govt sources; it should adopt the four corroborators added
+      here (pbs, bangordailynews, cisa 2023 retro, techtarget).
+    - actor file criminal/darkside is the correct home for the DarkSide->BlackMatter->ALPHV lineage and
+      the mid-May-2021 wind-down; no change needed there.

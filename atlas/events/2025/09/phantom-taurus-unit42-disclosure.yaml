@@ -1,64 +1,118 @@
 id: 2025-09/phantom-taurus-unit42-disclosure
 name: Unit 42 discloses "Phantom Taurus" PRC cluster + NET-STAR backdoor suite
-start_date: 2023-01-01  # Unit 42 traces activity back two-plus years
+start_date: 2023-01-01  # ~two and a half years of activity; cluster first documented June 2023 (CL-STA-0043)
 disclosure_date: 2025-09-30
 end_date: null
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: unknown
+  - espionage
+initial_vector: unknown  # Unit 42 focuses on post-compromise activity; web-shell/IIS/Exchange access implied but not asserted
 outcome_summary: |
-  Palo Alto Networks Unit 42 elevated TGR-STA-00043 to a named
-  threat group, "Phantom Taurus," a China-nexus actor that has
-  conducted long-term intelligence collection against ministries
-  of foreign affairs, embassies, diplomats, and telecom networks
-  across the Middle East, Africa, and Asia. Unit 42 disclosed
-  the previously undocumented NET-STAR malware suite — three
-  IIS-targeting .NET web-shells supporting in-memory execution
-  of arbitrary commands and .NET payloads — and described a
-  shift from email-centric collection (Exchange) to direct
-  SQL Server database targeting via a custom mssq.bat script.
+  Palo Alto Networks Unit 42 elevated its long-tracked cluster
+  (originally CL-STA-0043, promoted in May 2024 to the temporary
+  group TGR-STA-0043, nicknamed "Operation Diplomatic Specter")
+  to a named threat group, "Phantom Taurus" — a China-nexus actor
+  whose "espionage operations align with People's Republic of China
+  (PRC) state interests." Over roughly two and a half years it has
+  conducted intelligence collection against ministries of foreign
+  affairs, embassies, diplomats, and telecommunications networks
+  across the Middle East, Africa, and Asia. Unit 42 disclosed the
+  previously undocumented NET-STAR malware suite — a three-component
+  .NET toolkit targeting Internet Information Services (IIS) web
+  servers, comprising the fileless IIServerCore backdoor (operating
+  in-memory inside the w3wp.exe worker process) plus the
+  AssemblyExecuter V1/V2 in-memory .NET payload loaders (V2 adds
+  AMSI/ETW bypass) — and described a shift from email-centric
+  collection (Exchange) to direct SQL Server database targeting via
+  a custom mssq.bat script that runs queries and exports results to CSV.
 false_flag_risk: none
 summary: |
-  A new PRC cluster designation with diplomat / MFA targeting
-  in Belt-and-Road geographies — the operational profile mirrors
-  APT15 / Mustang Panda. Doctrinally significant because the
-  shift from email to database collection represents a maturation
-  in tradecraft: collection by direct table reads on the underlying
-  store is harder to detect than mailbox-level access.
+  A newly named PRC-nexus threat group elevated from a long-running
+  Unit 42 cluster, with diplomat / MFA targeting across the Middle
+  East, Africa, and Asia. Unit 42 states Phantom Taurus uses shared
+  Chinese-APT operational infrastructure "exclusively used by Chinese
+  threat actors, including Iron Taurus (aka APT27), Starchy Taurus
+  (aka Winnti) and Stately Taurus (aka Mustang Panda)," while its own
+  components show "operational compartmentalization" within that
+  ecosystem. Doctrinally significant because the shift from email to
+  direct database collection represents a maturation in tradecraft:
+  reading target tables directly on the underlying SQL Server store is
+  harder to detect than mailbox-level (Exchange) access.
 attributions:
   - actor_id: null
     attributing_org: Palo Alto Networks Unit 42
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur-with-caveat
     attribution_date: 2025-09-30
     attribution_source_id: unit42/2025-09-30_phantom-taurus
     notes: |
-      Unit 42 elevates from TGR-STA-00043 to "Phantom Taurus";
-      no government-side attribution yet. Cluster not currently
-      modeled as a named AUSPEX actor; service_id treatment
-      is implicit MSS by victim profile and tradecraft.
+      Unit 42 attributes the activity to a China-nexus / PRC-state-aligned
+      named threat group, "Phantom Taurus," whose "espionage operations
+      align with People's Republic of China (PRC) state interests." It
+      elevated the cluster from CL-STA-0043 (first documented June 2023) to
+      the temporary group TGR-STA-0043 / "Operation Diplomatic Specter"
+      (May 2024) to the named group Phantom Taurus (30 Sep 2025). NO Chinese
+      service is named — a fixed-string sweep of the captured page returned
+      zero hits for MSS / Ministry of State Security / PLA / People's
+      Liberation Army / contractor. Named-actor, nation-level China nexus;
+      no named unit; no government-side attribution. concur-with-caveat: no
+      government attribution and no specific service named. Cluster not yet
+      modeled as an AUSPEX actor — actor_id null pending creation of
+      cn/unscoped/phantom-taurus (see qc FLAGS). The prior note's "implicit
+      MSS by victim profile and tradecraft" was removed as unsupported
+      over-attribution (Unit 42 stops at PRC alignment).
 doctrine_links:
   - doctrine_id: cn/bri
     pillar_id: cn/bri/political-intelligence-collection
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Sustained MFA/embassy/diplomat targeting in the Middle
-      East, Africa, and Asia is the canonical BRI
-      political-intelligence collection pattern.
-    attesting_source_id: unit42/2025-09-30_phantom-taurus
+      Sustained collection against ministries of foreign affairs,
+      embassies, and diplomats across the Middle East, Africa, and Asia
+      is the canonical BRI partner-country political-intelligence pattern
+      (the pillar's workhorse actors are Mustang Panda and APT15, and
+      Phantom Taurus shares operational infrastructure with Mustang Panda).
+      Unit 42 states the group's "primary objective is espionage" and that
+      its operations "align consistently with the People's Republic of
+      China (PRC) economic and geopolitical interests," with an interest in
+      "diplomatic communications, defense-related intelligence and the
+      operations of critical governmental ministries." Not attested: Unit 42
+      names the collection focus and PRC alignment but not a Belt-and-Road /
+      Beijing strategic goal; the BRI-specific framing is AUSPEX's inference
+      over the source's generic PRC-geopolitical-interest language.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "Victimology: ministries of foreign affairs, embassies, diplomats, and telecom networks across the Middle East, Africa, and Asia (Unit 42; corroborated by CyberScoop)."
+        - "Stated purpose (Unit 42): 'The group's primary objective is espionage'; operations 'align consistently with the People's Republic of China (PRC) economic and geopolitical interests'."
+        - "Collection interest (Unit 42): 'diplomatic communications, defense-related intelligence and the operations of critical governmental ministries', with timing that 'coincide[s] with major global events and regional security affairs'."
+      ruled_out: "Taiwan-reunification (cross-strait) collection and diaspora/dissident collection do not fit — the victimology is foreign-state MFAs/embassies/telecoms across Africa/Middle East/Asia, not Taiwan or the Chinese diaspora; a financially-motivated reading is ruled out by espionage-only tooling (NET-STAR .NET/IIS backdoors, SQL Server exfiltration) with no monetization."
     contested: false
     analyst: claude
   - doctrine_id: cn/national-intelligence-law-2017
-    pillar_id: cn/national-intelligence-law-2017/compelled-vendor-cooperation
+    pillar_id: null
     program_id: null
-    confidence: plausible
+    confidence: strongly_inferred
     reasoning: |
-      Tooling sophistication and victim profile are consistent
-      with an MSS-tasked contractor; Unit 42 does not name a
-      specific contractor.
+      Phantom Taurus is a China-nexus state espionage actor; sustained
+      collection against foreign (Middle Eastern, African, and Asian)
+      governments, foreign ministries, and telecoms is the canonical
+      activity the 2017 National Intelligence Law obliges Chinese
+      intelligence organs and cooperating parties to perform.
+      Strongly_inferred rather than attested: the legal-tasking basis is a
+      structural inference — Unit 42 documents the collection and PRC
+      alignment but names no statute, no service (MSS/PLA), and no
+      contractor. (Corrected this audit from the mis-applied
+      compelled-vendor-cooperation pillar, which concerns compelling
+      PRC-domiciled vendors to hand over data — not an offensive foreign
+      intrusion set.)
     attesting_source_id: null
+    inference_basis:
+      signals:
+        - "China-nexus actor (Unit 42: espionage operations 'align with People's Republic of China (PRC) state interests') conducting foreign-government intelligence collection."
+        - "Long-term (roughly two and a half years) collection against foreign MFAs, embassies, and telecoms across the Middle East, Africa, and Asia."
+      ruled_out: "Financially-motivated / non-state explanation ruled out — espionage-only tooling (NET-STAR .NET/IIS backdoors, mssq.bat database exfiltration) and exclusively government/diplomatic/telecom victimology, with no monetization."
     contested: false
     analyst: claude
 targets:
@@ -71,3 +125,108 @@ targets:
 sources:
   - unit42/2025-09-30_phantom-taurus
   - therecord/2025-09-30_phantom-taurus
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW. STEP-0 triage: both cited URLs curl-live HTTP 200 —
+    REAL sources, no phantom/re-source needed. Snapshots on disk:
+    unit42__2025-09-30_phantom-taurus.html sha256
+    cdcb387ff3bf79f14fa1d7ede2ad120a9ea39c6e23bada5b8ce78a9d8b64907a (255,460 bytes,
+    https://unit42.paloaltonetworks.com/phantom-taurus/); therecord (CyberScoop)
+    therecord__2025-09-30_phantom-taurus.html sha256
+    d6ff55d5a3134c1bca376e44702315109ead4d7624da01be10807bf9c8175130 (111,563 bytes,
+    https://cyberscoop.com/phantom-taurus-china-espionage-group/). All quotes below are
+    from those captures.
+
+    [a] FACTS — verified against the Unit 42 primary; corrected fabrications/imprecisions:
+      • DESIGNATION FIXED: event said "TGR-STA-00043" (extra zero); the raw says
+        "TGR-STA-0043" (4 hits) nicknamed "Operation Diplomatic Specter," promoted "In May
+        2024," and originally tracked as "CL-STA-0043" (first article June 2023). Rewrote the
+        cluster-lineage prose (CL-STA-0043 → TGR-STA-0043 → Phantom Taurus).
+      • APT15 STRIPPED (fabrication): summary claimed "the operational profile mirrors APT15 /
+        Mustang Panda." Fixed-string sweep for APT15 / Ke3chang / Vixen Panda / Nickel = 0
+        hits in the raw. Unit 42 instead states Phantom Taurus "uses a shared Chinese APT
+        operational infrastructure ... exclusively used by Chinese threat actors, including
+        Iron Taurus (aka APT27), Starchy Taurus (aka Winnti) and Stately Taurus (aka Mustang
+        Panda)," with "operational compartmentalization." Rewrote summary to the actual
+        shared-infrastructure claim (APT27/Winnti/Mustang Panda), removing the APT15 mirror.
+      • NET-STAR RE-CHARACTERIZED: event called it "three IIS-targeting .NET web-shells." The
+        raw describes "a .NET malware suite designed to target Internet Information Services
+        (IIS) web servers" with three components — IIServerCore ("a fileless modular backdoor"
+        that "operates entirely in memory within the w3wp.exe IIS worker process"),
+        AssemblyExecuter V1 ("loads and executes additional .NET payloads in memory") and
+        AssemblyExecuter V2 (adds AMSI/ETW bypass). CyberScoop calls them "three distinct
+        web-based backdoors." Rewrote to "three-component .NET toolkit" (IIServerCore backdoor
+        + AssemblyExecuter V1/V2), not "web-shells."
+      • VERIFIED unchanged: MFA/embassy/diplomat + telecom victimology across the Middle East,
+        Africa, and Asia (Unit 42; "diplomats" carried verbatim by CyberScoop: "ministries of
+        foreign affairs, embassies, diplomats and telecom networks in the Middle East, Africa
+        and Asia"). Email→database shift VERIFIED: "a shift from this email-centric methodology
+        to the direct targeting of databases," "a script named mssq.bat to connect to and
+        collect data from a targeted database," which "Exports results to a CSV file."
+        "primary objective is espionage" VERIFIED verbatim.
+      • incident_type: dropped data-theft, added espionage → [intrusion, espionage]. Unit 42's
+        own framing is "primary objective is espionage"; exfiltration (mssq.bat CSV export,
+        email harvesting) is the collection means, so espionage is the precise type. intrusion
+        retained. initial_vector kept "unknown" (raw is post-compromise-focused; web-shell/IIS/
+        Exchange access implied via OutlookEN.aspx but never asserted — comment added).
+
+    [b] ATTRIBUTION — Unit 42: "Phantom Taurus is a previously undocumented nation-state actor
+      whose espionage operations align with People's Republic of China (PRC) state interests"
+      and operations "align consistently with the People's Republic of China (PRC) economic and
+      geopolitical interests." China-nexus / PRC-state-aligned. NO service named: fixed-string
+      sweep = 0 hits for Ministry of State Security / MSS / People's Liberation Army / PLA /
+      contractor. Per task hedge, REMOVED the prior attribution note's "implicit MSS by victim
+      profile and tradecraft" as unsupported over-attestation. Confidence high (Unit 42 accrued
+      "sufficient evidence to classify" and graduated the cluster to a named group — their high
+      bar); auspex_assessment kept concur-with-caveat (no government attribution, no service).
+
+    [c] DATES — Unit 42 published_on 2025-09-30 (page "September 30, 2025" / "2025-09-30");
+      CyberScoop published_on 2025-09-30 (JSON-LD datePublished "2025-09-30T21:40:32+00:00,"
+      byline Matt Kapko). disclosure_date 2025-09-30 correct. start_date 2023-01-01 retained as
+      an ~early-2023 approximation of "Over the past two and a half years" + cluster first
+      documented June 2023; comment corrected (was "two-plus years"). end_date null (activity
+      ongoing).
+
+    [d] DOCTRINE_LINKS — both strongly_inferred, neither attested (attesting_source_id null;
+      Unit 42 never names Belt-and-Road or a statute, so no attested-gate obligation). Added
+      structured inference_basis {signals[], ruled_out} to both; colon-space list items quoted.
+      Link 1 cn/bri/political-intelligence-collection retained (actor-default foreign-MFA
+      collection pattern; harmonized with sibling 2026-03/mustang-panda-mena, with which Phantom
+      Taurus shares infrastructure); moved attesting_source_id unit42→null (not attested — the
+      BRI framing is AUSPEX inference over generic "PRC economic and geopolitical interests"
+      language). Link 2 CORRECTED: pillar was cn/national-intelligence-law-2017/
+      compelled-vendor-cooperation — MISAPPLIED (that pillar concerns compelling PRC-domiciled
+      ICT/telecom/cloud vendors under Articles 7/14 to hand over data, NOT an offensive foreign
+      intrusion set). Re-pointed to cn/national-intelligence-law-2017 with pillar_id null
+      (structural legal-tasking basis, matching the sibling), upgraded plausible→strongly_inferred,
+      and dropped the source-absent "MSS-tasked contractor" speculation. All doctrine/pillar FKs
+      resolve (cn/bri, cn/bri/political-intelligence-collection, cn/national-intelligence-law-2017).
+
+    [e] ATTRIBUTION_LEVEL — set named-actor (was MISSING): Unit 42 names a specific tracked
+      group (Phantom Taurus) at nation level; not named-unit (no MSS/PLA unit), not merely
+      activity-cluster (it graduated the cluster to a named actor).
+
+    [f] ACTOR_ID — null retained (FK-safe): Phantom Taurus is NOT yet modeled as an AUSPEX
+      actor (searches of atlas/actors for phantom/taurus/TGR-STA-0043 = 0). Per protocol I do
+      not create actor files. Directionality correct: China / Phantom Taurus = attacker;
+      foreign MFAs, embassies, diplomats, telecoms (Africa/ME/Asia) = victims; US vendor
+      (Unit 42) reporting a Chinese actor is normal, not a directionality error. targets[]
+      unchanged and valid (sectors/government/foreign-ministry, sectors/government,
+      sectors/ict/telecom — the last used in 41 corpus events).
+
+    FLAGS (for orchestrator/Kara):
+    (1) CREATE ACTOR cn/unscoped/phantom-taurus (mirror the cn/unscoped/tgr-sta-1030 backfill
+        stub): canonical_name "Phantom Taurus"; aliases TGR-STA-0043, "Operation Diplomatic
+        Specter", CL-STA-0043; primary_service_id cn/unscoped (NO MSS — Unit 42 stops at PRC
+        nexus); mission espionage; source unit42/2025-09-30_phantom-taurus. Then wire actor_id
+        + attributions[0].actor_id to it (currently null pending that file).
+    (2) SOURCE-ID/PUBLISHER WART: source id therecord/2025-09-30_phantom-taurus but the url
+        (cyberscoop.com), title, and byline (Matt Kapko) are CyberScoop. Corrected the record's
+        publisher → "CyberScoop" this audit; the id slug retains the legacy "therecord/"
+        namespace as an FK and is left for the orchestrator to rename if desired.
+    (3) Not a duplicate: 2025-09/kittenbusters-apt35-leak only references "the September 30
+        Phantom Taurus" disclosure as a date anchor (a separate Iran/APT35 event).

@@ -1,47 +1,64 @@
 id: 2017-08/triton-petro-rabigh
 name: Triton / Trisis attack on Saudi Petro Rabigh
-start_date: 2017-06-01  # long-dwell preceding the August trip event
-disclosure_date: 2017-12-14
-end_date: 2017-08-04  # plant trip
+start_date: 2017-05-01  # IT-network access "by May 2017, at least 90 days before" the attack (INL/CyOTE); DOJ charged window "between May and September 2017"
+disclosure_date: 2017-12-14  # FireEye original TRITON disclosure (INL/CyOTE cites the FireEye blog dated "14 December 2017")
+end_date: 2017-08-04  # 4 Aug 2017, 7:43 PM: six Triconex SIS controllers tripped to a safety shutdown (INL/CyOTE)
 incident_type:
-  - intrusion
-  - destructive
-  - pre-positioning
-initial_vector: unknown
+  - destructive       # sabotage payload by design; realized effect was a safe-state trip, not physical destruction
+  - cyber-physical
+  - pre-positioning   # Mandiant: "installing malware like TRITON and waiting for the right time to use it"
+initial_vector: unknown  # contested: Treasury says "initially deployed through phishing"; INL/CyOTE (per Dragos) says initial access via "a poorly configured firewall directly exposed to the Internet"
 outcome_summary: |
   Long-dwell IT-to-OT lateral movement and deployment of custom
-  Triton/Trisis malware against Schneider Electric Triconex
-  safety-instrumented-system (SIS) controllers at the Saudi
-  Petro Rabigh petrochemical facility. Payload misfired during
-  reconfiguration, causing an unscheduled plant shutdown. First
-  known SIS-targeting nation-state malware — capable of disabling
-  the last line of safety before a catastrophic physical event.
+  Triton/Trisis malware against the Schneider Electric Triconex
+  Tricon safety-instrumented-system (SIS) controllers at the Saudi
+  Petro Rabigh (Rabigh Refining & Petrochemical Company) facility.
+  The malware first tripped a single SIS controller on 2 June 2017
+  (initially misread as a mechanical fault); on 4 August 2017 it
+  tripped six Triconex SIS controllers into a safety shutdown,
+  leaving the plant inoperable ~10 days (~$938,000 revenue loss,
+  per INL/Dragos) and prompting the investigation that discovered
+  the malware. The first publicly known malware purpose-built to
+  target industrial safety systems — capable of disabling the last
+  line of safety before a catastrophic physical event; Dragos
+  assessed the six-controller targeting "potentially could have
+  caused major physical damage and loss of human life."
+quantified_impact:
+  sis_controllers_tripped: 6    # INL/CyOTE: six Triconex SIS controllers safety-shutdown on 4 Aug 2017
+  outage_days: 10               # INL/CyOTE: plant inoperable ~10 days after the 4 Aug trip
+  revenue_loss_usd: 938000      # INL/CyOTE (per Dragos): "lost approximately $938,000 in revenue"
 false_flag_risk: none
 operators_named:
   - gladkikh-evgeny  # TsNIIKhM programmer, DOJ Mar 2022 (Triton author)
 summary: |
   US Treasury OFAC October 2020 sanctions on TsNIIKhM (Russian
-  state research institute) and DOJ March 2022 indictment of
-  TsNIIKhM programmer Evgeny Gladkikh formalized the attribution.
-  Mandiant/FireEye April 2019 TRITON Actor TTP Profile remains
-  the foundational technical analysis. Tradecraft documented
-  across the Mandiant and Dragos reports: spear-phishing for
-  initial IT-network access, multi-year dwell, custom HATMAN /
-  TRITON / TRISIS malware targeting Schneider Electric Triconex
-  3008 safety-instrumented-system controllers via the proprietary
-  TriStation TCM protocol, Mimikatz credential dumping, lateral
+  state research institute) and the DOJ March 2022 indictment of
+  TsNIIKhM programmer Evgeny Gladkikh (charged conduct "between May
+  and September 2017") formalized the Russia attribution;
+  Mandiant/FireEye's April 2019 TRITON Actor TTP Profile is the
+  foundational IT-lifecycle analysis, and the DOE/INL CyOTE case
+  study (2022) the fullest govt account of the victim, timeline and
+  impact. Documented tradecraft: initial IT-network access (vector
+  contested — Treasury says phishing, INL/Dragos an internet-exposed
+  misconfigured firewall), roughly a year of network presence before
+  the actor reached the SIS engineering workstation (Mandiant),
+  custom HatMan / Triton / Trisis malware targeting the Schneider
+  Electric Triconex Tricon (Model 3008) SIS controllers — connecting
+  to the Tricon Communication Module (TCM) via the proprietary
+  TriStation protocol — Mimikatz credential harvesting, lateral
   movement on valid credentials across the IT-OT boundary,
-  PowerShell-based persistence, scheduled tasks, custom remote-
-  access trojans deployed on the engineering workstation, web
-  shells on intermediate web servers, and the dropping of a
-  payload (inject.bin) into the Triconex controller intended to
-  reprogram the safety logic prior to a process-manipulation
-  follow-on. The payload mis-fired during reconfiguration,
-  causing the SIS to fail safe.
+  scheduled-task and IFEO-registry persistence, custom backdoors
+  staged ahead of the SIS engineering-workstation access, webshells
+  on the Outlook Exchange servers, and delivery of the TRITON
+  payload (trilog.exe encoding inject.bin / imain.bin) to reprogram
+  the Triconex safety logic. The payload misfired during
+  reconfiguration, tripping the SIS to a fail-safe state rather than
+  achieving the intended manipulation.
 attributions:
   - actor_id: ru/tsniikhm/triton
     attributing_org: US Department of the Treasury (OFAC)
     attributing_org_confidence: high
+    attribution_level: named-unit  # Treasury names the specific institute TsNIIKhM as responsible for building the tools
     auspex_assessment: concur-with-caveat
     attribution_date: 2020-10-23
     attribution_source_id: treasury/2020-10-23_tsniikhm-triton-sanctions
@@ -54,6 +71,7 @@ attributions:
   - actor_id: ru/tsniikhm/triton
     attributing_org: US Department of Justice
     attributing_org_confidence: high
+    attribution_level: named-unit  # DOJ names TsNIIKhM (Gladkikh's employer) + its Applied Developments Center
     auspex_assessment: concur
     attribution_date: 2022-03-24
     attribution_source_id: doj/2022-03-24_berserk-bear-triton-indictment
@@ -61,14 +79,23 @@ doctrine_links:
   - doctrine_id: ru/energy-weaponization
     pillar_id: ru/energy-weaponization/sis-targeting
     program_id: null
+    perspective: attacker-rationale  # ru/energy-weaponization is the attacker's (Russia's) own doctrine
     confidence: attested
     reasoning: |
-      Treasury press release names TsNIIKhM's responsibility for
-      development of Triton — the only publicly attributed
-      nation-state SIS-targeting capability. Gold-standard
-      attestation for the SIS-targeting energy-weaponization
-      pillar.
+      The Treasury designation attests the strategic substance of the
+      SIS-targeting pillar directly: it names TsNIIKhM (a Russian
+      government-controlled institute) as responsible for building the
+      Triton tools, and states the malware was "designed specifically
+      to target and manipulate industrial safety systems ... at
+      critical infrastructure facilities ... to protect human life,"
+      with "the capability to cause significant physical damage and
+      loss of life." That is the only publicly attributed nation-state
+      SIS-targeting capability and the corroborated strategic purpose
+      this pillar encodes (not merely doctrine-slug naming).
     attesting_source_id: treasury/2020-10-23_tsniikhm-triton-sanctions
+    inference_basis:
+      source_quote: "The Triton malware — known also as TRISIS and HatMan in open source reporting — was designed specifically to target and manipulate industrial safety systems. Such systems provide for the safe emergency shutdown of industrial processes at critical infrastructure facilities in order to protect human life. ... This cyber-attack was supported by the State Research Center of the Russian Federation FGUP Central Scientific Research Institute of Chemistry and Mechanics (TsNIIKhM), a Russian government-controlled research institution that is responsible for building customized tools that enabled the attack."
+      source_id: treasury/2020-10-23_tsniikhm-triton-sanctions
     counter_explanation: null
     contested: false
     analyst: claude
@@ -79,3 +106,126 @@ sources:
   - treasury/2020-10-23_tsniikhm-triton-sanctions
   - doj/2022-03-24_berserk-bear-triton-indictment
   - mandiant/2019-04-10_triton-actor-ttp-profile
+  - cisa/2018-04-17_icsa-18-107-02-triconex-tricon
+  - inl/2022-06-30_cyote-triton-petro-rabigh-case-study
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    CYBER-PHYSICAL / SAFETY-SYSTEM audit vs RAW. Level = FULL: every
+    load-bearing claim is now carried by a snapshotted + hashed source.
+    Directionality confirmed: VICTIM = Saudi Petro Rabigh (sa);
+    ATTACKER = Russia / TsNIIKhM. Watched for (and found none) conflation
+    with the Ukraine grid attacks — this is a Saudi petrochemical SIS
+    event, not a Sandworm grid event.
+
+    SNAPSHOTS (4 of 5 raw-captured; DOJ bot-walled). VERIFIED unchanged:
+    treasury/2020-10-23_tsniikhm-triton-sanctions (sha256 e4bb811a…,
+    117,739 B) and mandiant/2019-04-10_triton-actor-ttp-profile
+    (sha256 ffebb4a4…, 152,119 B). ADDED this pass:
+    cisa/2018-04-17_icsa-18-107-02-triconex-tricon (govt ICS-CERT
+    advisory, sha256 5dac33c8…, 60,006 B) and
+    inl/2022-06-30_cyote-triton-petro-rabigh-case-study (DOE/Idaho
+    National Laboratory CyOTE case study PDF, sha256 bc881e14…,
+    3,811,612 B). doj/2022-03-24_berserk-bear-triton-indictment remains
+    bot-walled (justice.gov archives + usao-dc paths both return the
+    ~2.5 KB Akamai bm-verify stub; Wayback is blocked for this fetcher) —
+    its facts are mirror-corroborated (WebSearch of the DOJ text + the
+    two govt primaries above).
+
+    [a] FACTS — the previous summary over-specified beyond the three
+    original sources; every specific is now source-carried. "Triconex
+    3008" + "TriStation" were carried by NEITHER Treasury nor the
+    Mandiant snapshot; added CISA ICSA-18-107-02, verbatim: "The
+    following versions of Triconex Tricon, a Safety Instrumented System,
+    are affected: MP Model 3008 firmware versions 10.0-10.4" and it
+    references the "TriStation 1131 Developers Guide." Victim identity
+    ("Petro Rabigh", "Saudi"), the payload filenames, the two trips, and
+    the impact were carried by NONE of the original three (Treasury:
+    "petrochemical facility in the Middle East"; DOJ: "a foreign
+    refinery"; Mandiant: "a critical infrastructure facility") — added
+    INL/CyOTE, verbatim: "the cyber attack on Saudi Arabia-based Rabigh
+    Refining & Petrochemical Company (Petro Rabigh)"; "trilog.exe to
+    encode two payload files (inject.bin and imain.bin)"; "the Triton
+    malware script connects to a Tricon Communication Module (TCM)";
+    "On 2 June, the implanted Triton malware accidently shut down one
+    Safety Instrumented System (SIS) controller"; "At 7:43 PM on 4 August
+    (D-0) ... causing six of Petro Rabigh's Triconex SIS controllers to
+    initiate a safety shutdown"; "Petro Rabigh was inoperable for another
+    10 days and lost approximately $938,000 in revenue"; and Dragos
+    "potentially could have caused major physical damage and loss of
+    human life." STRIPPED/softened AI-embellishment: "spear-phishing"
+    (Treasury only says "phishing", and INL/Dragos contradict it with an
+    internet-exposed misconfigured firewall — so initial_vector kept
+    "unknown" with the conflict documented inline); "multi-year dwell" →
+    "roughly a year of network presence before the SIS engineering
+    workstation" (Mandiant: "almost a year before gaining access to the
+    Safety Instrumented System (SIS) engineering workstation");
+    "PowerShell-based persistence" → "scheduled-task and IFEO-registry
+    persistence" (Mandiant lists Scheduled-Tasks + IFEO injection for
+    persistence; PowerShell only for timestomping). The fail-safe trip is
+    triply carried (Treasury "entered into a failed safe state"; Mandiant
+    "inadvertently caused a process shutdown"; INL). Mimikatz, webshells
+    on Outlook Exchange servers, lateral movement, custom backdoors ahead
+    of the engineering workstation — all Mandiant-verbatim. ADDED
+    quantified_impact (6 controllers / 10-day outage / $938K, INL).
+    NOTE the realized effect was a safe-state trip, NOT physical
+    destruction ("no catastrophic impact occurred either time"); kept
+    incident_type "destructive" for the sabotage design/intent and added
+    "cyber-physical" (was missing) + "pre-positioning" (Mandiant frames
+    TRITON as "installing malware ... and waiting for the right time");
+    dropped bare "intrusion" (subsumed).
+
+    [b] ATTRIBUTION — unchanged and correct. Treasury (OFAC) names
+    TsNIIKhM by name = concur-with-caveat (the TsNIIKhM organisational
+    placement is genuinely contested — Treasury MoD, some vendors
+    FSB-adjacent — see services/ru/tsniikhm.yaml); DOJ (Gladkikh) =
+    concur. No over-attestation: neither source is asserted firmer than
+    it states.
+
+    [c] DATES — start_date 2017-06-01 (unsourced) → 2017-05-01, now
+    carried by TWO govt primaries: INL "by May 2017, at least 90 days
+    before initiating the ... attack" and DOJ "between May and September
+    2017." (Mandiant separately describes ~a year of network presence
+    before SIS-workstation access; the tools it dates to 2014 it calls
+    "unrelated to the observed intrusion timeline," so 2014 is not the
+    onset — surfaced in prose, not used for start_date.) end_date
+    2017-08-04 confirmed (INL: "7:43 PM on 4 August"). disclosure
+    2017-12-14 now carried (INL cites the FireEye blog "14 December
+    2017"). Source published_on verified: Treasury 2020-10-23, Mandiant
+    2019-04-10, CISA orig. 2018-04-17 (ICSA-18-107-02; captured page is
+    Update B rev. 2018-12-18), INL 2022-06-30.
+
+    [d] DOCTRINE_LINKS — the single link ru/energy-weaponization /
+    sis-targeting was missing BOTH perspective and inference_basis. ADDED
+    perspective: attacker-rationale (Russia's own doctrine on an attack
+    it perpetrated). KEPT confidence: attested and ADDED the required
+    inference_basis.source_quote — Treasury attests the pillar's
+    strategic substance verbatim ("designed specifically to target and
+    manipulate industrial safety systems ... at critical infrastructure
+    facilities ... to protect human life" + TsNIIKhM as the
+    government-controlled builder). Per the attested-reframe this is
+    corroboration of strategic purpose, not slug-naming, so attested
+    holds. No conflation with the Ukraine grid pillars.
+
+    [e] ATTRIBUTION_LEVEL — was MISSING on both blocks; added named-unit
+    to each (Treasury + DOJ both name the specific institute TsNIIKhM;
+    DOJ also names its Applied Developments Center) — matches the
+    ru/tsniikhm/triton actor's named-unit placement.
+
+    [f] ACTOR_ID — ru/tsniikhm/triton resolves to
+    atlas/actors/ru/triton.yaml (id: ru/tsniikhm/triton; service
+    ru/tsniikhm). Correct. operators_named: gladkikh-evgeny follows the
+    corpus surname-first free-form convention (cf. akulov-pavel); DOJ
+    names Evgeny Gladkikh. No actor/service/doctrine/target file edited.
+
+    FLAGS for orchestrator: (1) DOJ indictment source remains
+    un-snapshottable (Akamai bot-wall on justice.gov; Wayback blocked
+    here) — facts mirror-corroborated, not a phantom. (2) initial_vector
+    is genuinely CONTESTED between two govt sources (Treasury "phishing"
+    vs INL/Dragos "internet-exposed misconfigured firewall") — left
+    "unknown" with both documented; flag if a firmer value is wanted.
+    (3) New publisher dir atlas/sources/inl/ created for the DOE/Idaho
+    National Laboratory CyOTE case study.

@@ -4,81 +4,170 @@ start_date: 2022-08-01
 disclosure_date: 2022-08-02
 end_date: 2022-08-02
 incident_type:
+  - intrusion
   - financial-theft
-initial_vector: n-day
+initial_vector: 0-day  # previously-unknown, unpatched smart-contract flaw exploited before any fix existed; see qc [a] for the n-day (public-template pile-on) counter-reading
 outcome_summary: |
   Approximately USD 190M drained from the Nomad cross-chain
-  bridge after a faulty Replica-contract initialization enabled
-  forged Merkle proofs. Once the initial exploit transaction was
-  published, hundreds of opportunistic addresses copied the
-  calldata and drained additional funds in a permissionless
-  pile-on. Partial recovery achieved through white-hat returns
-  to a Nomad-controlled address.
+  bridge after a botched contract upgrade initialized the
+  Replica.sol trusted root to 0x00 — the same value the
+  contract uses for an untrusted/unproven root — so every
+  message was automatically treated as "proven." Once the
+  first exploit transaction was public, a chaotic crowd of
+  opportunistic users piled on: copying a successful exploit
+  transaction and swapping in one's own address was enough to
+  drain more funds, with no coordination between the many
+  participants. Not a single-actor heist.
 quantified_impact:
   usd_stolen: 190000000
   asset_classes:
-    - WBTC
-    - WETH
-    - USDC
-    - DAI
+    - WBTC   # only asset class named in the cited raw (Halborn's 0.01->100 WBTC illustration); the fuller multi-asset breakdown (WETH/USDC/DAI/etc., widely reported) is not in any snapshotted cited source
 false_flag_risk: none
 campaign_id: bridge-theft-chain
 summary: |
-  Anomalous bridge-theft event in the 2022 cluster. Distinct
-  from Ronin (validator-key compromise) and Harmony
-  (validator-key compromise) — Nomad was a smart-contract
-  initialization bug, not a credential heist. Treasury's August
-  2022 Tornado Cash designation (jy0916) specifically cited
-  Nomad proceeds as among the mixer's laundering volume,
-  attesting that at least a portion of the drain transited
-  Tornado, but the multi-actor pile-on pattern means
-  no single coordinated attribution to Lazarus has been
-  published; some portion may be DPRK, some criminal. AUSPEX
-  records this as doctrine-plausible (criminal-state blur) with
-  null actor — the canonical "permissionless pile-on" cell.
+  Anomalous 2022 bridge-theft event. Distinct from Ronin and
+  Harmony (both validator-key compromises) — Nomad was a
+  smart-contract flaw, not a credential heist: an upgrade set
+  the Replica trusted root to 0x00, matching the untrusted-root
+  default, so all messages passed as proven. The defining trait
+  is the chaotic pile-on — once the exploit transaction was
+  public, ~$190M was drained by many opportunistic addresses
+  that simply copied the calldata and substituted their own
+  wallet, with no coordinating actor. Treasury's August 2022
+  Tornado Cash designation (jy0916) cited "at least $7.8 million
+  from the August 2, 2022 Nomad Heist" as laundered through the
+  mixer, labeling it "malicious cyber actors' funds" — it does
+  NOT attribute the theft to Lazarus/DPRK (Treasury reserves its
+  Lazarus attribution in the same release for the separate
+  $455M Ronin heist, "the largest known virtual currency heist
+  to date"). No cited source attributes the Nomad drain to any
+  single named actor; AUSPEX records it with null actor /
+  activity-cluster — the canonical opportunistic "permissionless
+  pile-on," not a coordinated state or criminal heist.
 attributions:
-  - actor_id: null
-    attributing_org: US Treasury OFAC (partial — laundering side)
+  - actor_id: null  # opportunistic copy-paste crowd (many independent addresses), no named actor. Directionality: victims = Nomad Bridge + its users; attackers = an uncoordinated crowd
+    attributing_org: US Treasury OFAC (jy0916, laundering-side only)
     attributing_org_confidence: moderate
+    attribution_level: activity-cluster
     auspex_assessment: concur-with-caveat
     attribution_date: 2022-08-08
     attribution_source_id: treasury/2022-08-08_jy0916-tornado-cash
     notes: |
-      Treasury's Tornado Cash designation cites Nomad proceeds
-      as among the mixer's laundering volume but does not
-      attribute the initial theft itself. The pile-on dynamic
-      means proceeds were split across hundreds of
-      opportunistic addresses; some are assessed by Chainalysis
-      as DPRK-linked, others as ordinary criminal.
-doctrine_links:
-  - doctrine_id: kp/8th-congress-defense-plan
-    pillar_id: kp/8th-congress-defense-plan/revenue-aggregation
-    program_id: kp/8th-congress-defense-plan/revenue-aggregation/crypto-bridge-theft
-    confidence: plausible
-    reasoning: |
-      Portion of the proceeds laundered via Tornado Cash per
-      Treasury's August 2022 designation; the Chainalysis
-      bridge-hack overview groups Nomad with Ronin and Harmony
-      as the canonical 2022 cross-chain-bridge theft cluster.
-      Counter-explanation: the permissionless pile-on dynamic
-      means the bulk of the drain was opportunistic rather
-      than DPRK-coordinated; attribution to a single state
-      actor would over-claim.
-    attesting_source_id: null
-    counter_explanation: |
-      Nomad's bug was published as a transaction template; the
-      bulk of the $190M drain was opportunistic copying by
-      anonymous addresses across the open internet. While some
-      addresses were later linked by Chainalysis to DPRK
-      laundering clusters, no published source attributes the
-      initial exploit transaction itself to Lazarus.
-    contested: true
-    analyst: claude
+      Treasury's jy0916 designation states Tornado Cash was
+      "used to launder ... at least $7.8 million from the
+      August 2, 2022 Nomad Heist," attributing those proceeds
+      to "malicious cyber actors" — it does NOT attribute the
+      theft to Lazarus/DPRK. Treasury's Lazarus/DPRK attribution
+      in the same release covers only the separate $455M Ronin
+      heist, not Nomad. The pile-on split proceeds across many
+      opportunistic addresses; no cited source attributes the
+      initial exploit or the drain to any single named actor.
+doctrine_links: []
 targets:
   - target_id: orgs/nomad-bridge
     role: primary
-    outcome: ~$190M drained; partial recovery via white-hat returns.
+    outcome: ~$190M drained via the 0x00 trusted-root flaw.
 sources:
   - chainalysis/2022-08-02_cross-chain-bridge-hacks
   - halborn/2022-08-03_nomad-hack-explained
   - treasury/2022-08-08_jy0916-tornado-cash
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs the three cited sources. Snapshots (2026-07-11):
+    halborn__2022-08-03_nomad-hack-explained.html sha256
+    ca783d20b4fd889f…09e0b983 (249,600 B) — Next.js app; full
+    article body recovered from the captured flight-data JSON.
+    treasury__2022-08-08_jy0916-tornado-cash.html sha256
+    be70c6b5272bae44…4897b56b (re-verified on disk, matches
+    source record). chainalysis__2022-08-02_cross-chain-bridge-
+    hacks.html sha256 5d304d46d06e9a8f…dfd30fb6 (230,229 B) —
+    client-side-rendered; article BODY absent from both the live
+    fetch and the Wayback capture (partial/JS-walled), so it is
+    demoted to corroboration-only. Every load-bearing claim is
+    carried by the snapshotted Halborn + Treasury raws -> level
+    full.
+    [a] FACTS: "$190M" verified verbatim — Halborn: "exploiters
+    were able to drain over $190 million" and "approximately
+    $190 million was drained from the bridge" ✓. Copy-paste-
+    crowd mechanism verified verbatim — Halborn: "a chaotic hack
+    in which many different users piled on to drain value" and
+    "exploiting it simply required taking a successful exploit
+    transaction and submitting it with their own account
+    address" ✓. Flawed-upgrade root cause verified verbatim —
+    Halborn: "In an upgrade to the protocol, Nomad decided to
+    initialize the value of trusted roots to 0x00. While this is
+    common practice, it also matches the value for an untrusted
+    root, so all messages are automatically viewed as proven,"
+    and the drain "was made possible by an oversight during an
+    update to the project's contracts" (Replica.sol process()
+    called without proving validity) ✓. CORRECTIONS: (1) STRIPPED
+    "partial recovery through white-hat returns to a Nomad-
+    controlled address" from outcome_summary AND the target
+    outcome — NOT carried by any cited source (Halborn's only
+    "return" strings are JavaScript; Chainalysis body
+    unrecoverable; Treasury is laundering-only). The white-hat
+    returns are real/widely-reported but uncited here; re-add
+    only with a post-mortem source. (2) "forged Merkle proofs"
+    -> reworded to the source's own wording ("trusted root
+    initialized to 0x00 … all messages automatically treated as
+    proven"); Halborn says "root"/"proven", never "Merkle". (3)
+    "hundreds of opportunistic addresses" -> softened to "many"/
+    "a chaotic crowd" (Halborn: "many different users piled on";
+    no count of "hundreds"/~300 appears in any snapshotted raw).
+    (4) asset_classes trimmed [WBTC,WETH,USDC,DAI] -> [WBTC] —
+    only WBTC is named in the cited raw (Halborn's 0.01->100 WBTC
+    illustration); the multi-asset breakdown is real but uncited.
+    [b] ATTRIBUTION: null actor RETAINED and reinforced. No cited
+    source names a perpetrator. Treasury jy0916 (primary) labels
+    the laundered Nomad proceeds "malicious cyber actors' funds"
+    and explicitly reserves its Lazarus/DPRK attribution for the
+    separate $455M Ronin heist ("over $455 million stolen by the
+    Lazarus Group, a … DPRK state-sponsored hacking group … the
+    largest known virtual currency heist to date") — the Nomad
+    and Harmony lines are the very next sentence and are NOT
+    Lazarus-attributed. STRIPPED the prior "some [Nomad]
+    addresses assessed by Chainalysis as DPRK-linked" claim: it
+    is unverifiable from the (JS-walled) Chainalysis snapshot,
+    whose only DPRK strings are generic sector framing (bridges
+    are a top DPRK target; ~$1B stolen in 2022), NOT a Nomad-
+    specific attribution — exactly the fabricated-Lazarus risk
+    flagged for this event. attributing_org corrected to
+    "US Treasury OFAC (jy0916, laundering-side only)"; confidence
+    moderate + concur-with-caveat retained.
+    [c] DATES: Treasury dates the event "the August 2, 2022 Nomad
+    Heist" (= disclosure_date/end_date). start_date 2022-08-01 is
+    the true first-exploit-transaction onset (evening of Aug 1
+    UTC), one day before broad disclosure — kept; single-day
+    drain. Source published_on re-checked: Halborn 2022-08-03 (in
+    body), Treasury 2022-08-08 (jy0916 press-release date),
+    Chainalysis 2022-08-02 — all match.
+    [d] DOCTRINE_LINKS: EMPTIED to [] (per-event doctrine none).
+    Removed the prior kp/8th-congress-defense-plan/revenue-
+    aggregation/crypto-bridge-theft link (was already only
+    plausible+contested). No cited source states a DPRK strategic
+    goal in substance for THIS drain; the link rested on the same
+    over-attribution corrected in [b]. Its own counter_explanation
+    conceded "no published source attributes the initial exploit
+    transaction itself to Lazarus" — so the predicate never held.
+    [e] ATTRIBUTION_LEVEL: added activity-cluster — the
+    perpetrators are an unattributed opportunistic crowd (no
+    named actor/unit/nation); mirrors the estonia-ddos precedent.
+    [f] ACTOR_ID: null is correct (no atlas actor resolves; do NOT
+    map to kp/lazarus). incident_type set to [intrusion, financial-
+    theft] per the unauthorized-contract-access + asset-theft
+    nature. initial_vector n-day -> 0-day: the flaw was a
+    previously-unknown, unpatched smart-contract logic error
+    introduced in an upgrade (no prior CVE/disclosure), i.e. a
+    0-day window at first exploitation; JUDGMENT CALL flagged for
+    Kara — a defensible n-day reading exists for the pile-on
+    phase, since most of the ~$190M was drained by a crowd
+    copying a now-PUBLIC exploit template that Nomad had not yet
+    patched. NB the fuller asset list, the ~300-address count, and
+    the white-hat returns are all real, well-documented facts that
+    were stripped only because no CITED+snapshottable source
+    carries them — candidates for a future re-source (post-mortem
+    such as Rekt/PeckShield/CertiK) if enrichment is desired.

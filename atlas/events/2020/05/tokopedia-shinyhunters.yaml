@@ -2,45 +2,69 @@ id: 2020-05/tokopedia-shinyhunters
 name: Tokopedia 91M user-record leak (ShinyHunters)
 start_date: 2020-03-01
 disclosure_date: 2020-05-02
-end_date: 2020-05-10
+end_date: 2020-05-03
 incident_type:
   - data-theft
+  - leak
 initial_vector: unknown
 outcome_summary: |
-  ShinyHunters posted approximately 91 million Tokopedia user
-  records on RaidForums and EmpireMarket in early May 2020 —
-  initial 15M sample on May 2 followed by the full database
-  days later. Records included user IDs, email addresses, full
-  names, dates of birth, genders, mobile numbers, and bcrypt-
-  hashed passwords. The dataset was offered for USD 5,000.
-  Tokopedia is Indonesia's largest e-commerce platform
-  (subsequently merged with Gojek as GoTo). The breach is the
-  first major incident attributed to the ShinyHunters brand and
-  established the 2020 ShinyHunters data-broker pattern of
-  scraping under-secured web applications and reposting on
-  English-language breach forums.
+  In March 2020 an intruder obtained the user database of
+  Tokopedia, Indonesia's largest online store. On Friday 1 May
+  2020 the hacker leaked a 15-million-record sample for free --
+  reportedly to solicit help cracking the password hashes -- and
+  by Sunday 3 May had listed the full database, claimed to hold
+  approximately 91 million user accounts, for sale on the Empire
+  (EmpireMarket) dark-web marketplace for USD 5,000. ZDNET, with
+  breach-monitor Under the Breach, obtained the sample and
+  verified its authenticity against Tokopedia's live site. The
+  PostgreSQL dump contained full names, email addresses, phone
+  numbers, dates of birth, SHA2-384 (unsalted) hashed passwords,
+  and assorted profile fields (account-creation / last-login
+  timestamps, location details, messenger IDs, and more). The
+  ShinyHunters handle was attached to the breach a week later,
+  when ZDNET reported the same group had moved on to a ten-company
+  data-broker wave; the DoJ's 2024 Raoult prosecution later
+  confirmed ShinyHunters as a real crew that sold data from more
+  than 60 companies (April 2020 - July 2021).
 quantified_impact:
   individuals_affected: 91000000
   asking_price_usd: 5000
 false_flag_risk: none
 summary: |
-  Foundational ShinyHunters event. Notable as the first major
-  incident under the ShinyHunters handle and a marker for the
-  April-May 2020 data-broker wave (Tokopedia, Wishbone,
-  Mathway, Chatbooks, ProctorU, Microsoft GitHub, others).
-  Cluster-overlap: data was also re-traded on EmpireMarket
-  before that marketplace's August 2020 exit-scam shutdown.
+  Standalone per-company event for the Tokopedia posting in the
+  April-May 2020 ShinyHunters data-broker wave -- separately
+  modeled from, and explicitly excluded by, the aggregate event
+  2020-05/shinyhunters-data-broker-wave-may (which brackets out
+  the Tokopedia 91M and Wishbone 40M postings; NOT a duplicate).
+  Widely reported as the first major data-broker sale associated
+  with the ShinyHunters handle, and the profit that (per ZDNET)
+  "encouraged and emboldened" the group's subsequent ten-company
+  wave. Attribution note: the 1-3 May breach reporting named only
+  "a hacker"; the ShinyHunters brand was attached on 9 May, and
+  what ZDNET independently verified was the data's authenticity,
+  not the handle.
 attributions:
   - actor_id: criminal/shinyhunters
-    attributing_org: ZDNET + journalism consensus
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2020-05-03
-    attribution_source_id: zdnet/2020-05-03_tokopedia-91m-leak
+    attributing_org: ZDNET (Cimpanu) + threat-intel consensus (Nightlion, Under the Breach, ZeroFOX)
+    attributing_org_confidence: moderate
+    attribution_level: named-actor
+    auspex_assessment: concur-with-caveat
+    attribution_date: 2020-05-09
+    attribution_source_id: zdnet/2020-05-10_shinyhunters-73m-records
     notes: |
-      Attribution backed by 2024 DOJ Raoult sentencing, which
-      identifies ShinyHunters as the broker persona used for
-      ~60 company datasets posted April 2020 – July 2021.
+      Self-claim / broker-listing basis. The 2 May breach report
+      named only "a hacker"; ZDNET tied the ShinyHunters handle to
+      the Tokopedia sale on 9 May ("the same group who breached
+      last week Tokopedia"). Threat-intel sources (Nightlion, Under
+      the Breach, ZeroFOX) regard ShinyHunters as a legitimate
+      actor, but ZDNET notes the authenticity of some wave datasets
+      "cannot be verified." Corroborated by the 2024 DoJ Raoult
+      sentencing, which identifies ShinyHunters as the broker
+      persona behind sales of data from more than 60 companies
+      (April 2020 - July 2021). NB the Tokopedia data was
+      independently verified authentic by ZDNET against the live
+      site; the caveat attaches to the brand attribution, not to
+      the breach itself.
 doctrine_links: []
 targets:
   - target_id: orgs/tokopedia
@@ -49,3 +73,106 @@ sources:
   - zdnet/2020-05-03_tokopedia-91m-leak
   - zdnet/2020-05-10_shinyhunters-73m-records
   - doj/2024-01-09_raoult-shinyhunters-sentencing
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit (claude-opus-4.8, effort max) vs RAW snapshots.
+    Sources hashed: zdnet__2020-05-03_tokopedia-91m-leak.html sha256
+    eec9cd61..d4f1198e (1,008,107 B, NEW snapshot this audit); zdnet__2020-
+    05-10_shinyhunters-73m-records.html sha256 86a069b2..000dafc4 (994,599 B,
+    pre-existing, re-verified); doj__2024-01-09_raoult-shinyhunters-
+    sentencing.html sha256 eb577ef4..757c3cb9 (101,375 B, pre-existing,
+    re-verified). All three match their source records.
+
+    [a] FACTS -- CORRECTED (embellishment + wrong-detail stripped). (1)
+    PASSWORD HASH: prior outcome_summary said "bcrypt-hashed passwords" --
+    WRONG. RAW 91m article: "The hashed passwords ... were secured with the
+    SHA2-384 hashing algorithm" and "the database didn't contain the 'salt'
+    random strings"; "bcrypt" has ZERO hits in the raw. bcrypt -> SHA2-384
+    (unsalted). (2) FIELDS: prior list "user IDs, ..., genders, mobile
+    numbers" -- "gender"/"genders" has ZERO hits in the raw and "user IDs" is
+    not stated; both stripped. RAW field list: PostgreSQL dump "containing ...
+    full names, emails, phone numbers, hashed passwords, dates of birth, and
+    Tokopedia profile-related details (account creation date, last login, ...
+    location details, messenger IDs, ...)". "mobile numbers" -> "phone
+    numbers" (verbatim). (3) VENUE: prior "on RaidForums and EmpireMarket" --
+    RAW 91m names ONLY the "Empire dark web marketplace" for the 91M sale
+    (ZERO "RaidForums" hits); the 15M sample was "leaked ... for free" with
+    no forum named. "RaidForums" is carried only generically by DoJ (one of
+    three ShinyHunters venues, April 2020-July 2021), NOT tied to Tokopedia
+    by any cited source. RaidForums removed from the Tokopedia-specific
+    narrative; Empire/EmpireMarket retained (91m-carried). (4) COUNT: 91M is
+    NOT embellished -- it is the hacker's CLAIM for the full DB ("The hacker
+    claims they're in possession of 91 million user accounts", 91m) and
+    ZDNET's own framing of the sold DB ("entire database of 91 million user
+    records on sale for $5,000", 73m). Only the 15M sample was independently
+    verified ("ZDNet has verified the authenticity of the leaked data against
+    the official Tokopedia website"); prose now states claimed-91M vs
+    verified-15M. individuals_affected 91,000,000 retained; asking_price_usd
+    5,000 retained (73m: "on sale for $5,000"; the 91m article carries NO
+    price). (5) UNSOURCED CONTEXT stripped: "merged with Gojek as GoTo" (2021,
+    post-dates + not in cited sources) and EmpireMarket's "August 2020
+    exit-scam shutdown" (not in cited sources) removed. (6) summary wave
+    enumeration "(Tokopedia, Wishbone, Mathway, Chatbooks, ProctorU,
+    Microsoft GitHub, others)" removed -- Mathway/ProctorU are NOT in any
+    cited source (per the sibling aggregate audit); replaced with an explicit
+    cross-link to the aggregate event id.
+
+    [b] ATTRIBUTION -- HEDGED DOWN + RE-SOURCED. attribution_source_id
+    zdnet/2020-05-03_tokopedia-91m-leak -> zdnet/2020-05-10_shinyhunters-73m-
+    records: the 91m article (former attribution source) names ONLY "a hacker"
+    (ZERO "ShinyHunters" hits) and cannot carry the ShinyHunters attribution.
+    The 73m article carries it: "The hackers are the same group who breached
+    last week Tokopedia" + "A hacker group going by the name of ShinyHunters
+    claims to have breached ten companies". Self-claim / broker-listing basis
+    + ZDNET's authenticity hedge ("authenticity of some of the listed
+    databases cannot be verified"): attributing_org "ZDNET + journalism
+    consensus" -> "ZDNET (Cimpanu) + threat-intel consensus (Nightlion, Under
+    the Breach, ZeroFOX)"; attributing_org_confidence high -> moderate;
+    auspex_assessment concur -> concur-with-caveat. DoJ 2024 corroborates the
+    actor is real/convicted (Raoult; "more than 60 companies"). false_flag_
+    risk kept `none` (NOT `suspected` like the wave/Wishbone siblings): the
+    Tokopedia data was independently verified authentic against the live site
+    and the same hacker did the March intrusion + the leak -- no re-post /
+    misdirection; the brand softness is captured by concur-with-caveat.
+
+    [c] DATES -- CORRECTED. RAW 91m JSON-LD datePublished 2020-05-02T14:10:00Z
+    (author Catalin Cimpanu; dateModified 2020-05-07). disclosure_date
+    2020-05-02 confirmed. start_date 2020-03-01 = month-granularity placeholder
+    for "an intrusion that took place in March 2020" (kept; no day stated).
+    end_date 2020-05-10 -> 2020-05-03: last Tokopedia-specific dated action in
+    the raw is the full-DB-for-sale posting, "Updated on Sunday, May 3 ... now
+    selling Tokopedia's entire user database"; the prior 05-10 traced to the
+    73m article's id-slug, which is itself mis-dated (that article is 2020-05-
+    09) and only references Tokopedia retrospectively. attribution_date
+    2020-05-03 -> 2020-05-09 (date ZDNET attached the ShinyHunters name, per
+    the 73m article). DoJ published_on 2024-01-09 confirmed (dateline "Tuesday,
+    January 9, 2024").
+
+    [d] DOCTRINE_LINKS -- none. Financially-motivated criminal data-broker /
+    leak activity, no strategic doctrine; [] retained (per-event doctrine none).
+
+    [e] ATTRIBUTION_LEVEL -- added named-actor. ShinyHunters is a named brand /
+    forum-handle (not a nation or unit); self-claim + journalism identify a
+    named actor, nothing narrower.
+
+    [f] ACTOR_ID + TYPES + DIRECTIONALITY. criminal/shinyhunters resolves to
+    atlas actor id criminal/shinyhunters (verified). incident_type [data-theft]
+    -> [data-theft, leak] (free 15M sample leak + full-DB sale listing).
+    Directionality: Tokopedia (orgs/tokopedia) is the VICTIM, role primary --
+    retained. CROSS-LINK (prose, no structured field exists in corpus):
+    2020-05/shinyhunters-data-broker-wave-may is the aggregate that EXCLUDES
+    this 91M posting -- NOT a duplicate; named in summary + here. Sources[]
+    kept at 3 (91m = breach facts/15M/91M-claim/Empire/SHA2-384; 73m =
+    ShinyHunters attribution + 91M/$5,000; DoJ = actor corroboration); order
+    put 91m first as primary breach-facts source.
+
+    FLAG (not editable here -- target file): atlas/targets/orgs/tokopedia.yaml
+    summary says the 91M was posted "on RaidForums" and lists "hashed
+    passwords" without the SHA2-384 detail; no cited source ties RaidForums to
+    Tokopedia (91m names only the Empire marketplace). Recommend re-word to
+    Empire/EmpireMarket + SHA2-384, and it carries sources: [] (could cite
+    zdnet/2020-05-03_tokopedia-91m-leak).

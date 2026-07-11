@@ -2,42 +2,60 @@ id: 2023-11/reuters-appin-disclosure
 name: Reuters publishes "How an Indian Startup Hacked the World" — Appin Security exposé
 start_date: 2009-01-01
 disclosure_date: 2023-11-16
-end_date: 2014-01-01  # active period of original Appin entity per Reuters
+end_date: 2014-01-01  # approx. wind-down of the original Appin entity; SentinelOne dates covert ops "since at least 2009," successors continued
 incident_type:
+  - espionage
   - intrusion
   - data-theft
 initial_vector: phishing
 outcome_summary: |
   Reuters published a major investigation tying Appin Security
   Group of New Delhi to a multi-year, multi-client hack-for-hire
-  operation. Documented clients included Russian oligarchs, US
-  litigation participants, foreign governments, lobbying firms,
-  and corporate adversaries. The investigation drew on internal
-  Appin files, Reuters interviews, and SentinelOne's companion
-  technical report. Appin and founder Rajat Khare denied
-  wrongdoing; Reuters and SentinelOne stood by their reporting.
-  Aggressive legal pressure on Reuters (Delhi court orders
-  forcing temporary unpublishing in late 2023) became part of
-  the story.
+  operation — an "educational startup [that] evolved into a
+  hack-for-hire powerhouse ... stealing secrets from global
+  executives, politicians, and wealthy elites." Documented clients
+  commissioned intrusions through Appin's customer portals (branded
+  GoldenEye / Commando / MyCommando) and, per Reuters, included
+  private investigators acting for law firms and litigants,
+  corporate clients, and government-adjacent customers; SentinelOne
+  corroborated "customers tied to major litigation battles" and
+  hacking "against high value individuals, governmental
+  organizations, and other businesses." (Documented Russian-oligarch
+  and senior-official connections were as TARGETS, not clients.)
+  The investigation drew on a large cache of internal Appin files,
+  Reuters interviews with hundreds of people, and SentinelOne's
+  companion technical report. Appin and co-founder Rajat Khare
+  contested the reporting and pursued takedown litigation; Reuters
+  and SentinelOne stood by it. A New Delhi district-court order
+  forced Reuters to temporarily unpublish the piece in December
+  2023 (full litigation arc: 2023-12/appin-litigation-pressure).
 false_flag_risk: none
 summary: |
   The largest public exposure of an Indian hack-for-hire operation
   to date. Notable for the breadth of clientele and the multi-
   jurisdictional legal pressure deployed against Reuters and
-  related publishers in response. SentinelOne's companion
-  technical analysis ("A Glimpse into the Shadowy Realm of the
-  Appin Hack-for-Hire Operation") provides the malware /
-  infrastructure / tradecraft view.
+  related publishers in response. SentinelOne's companion technical
+  analysis ("Elephant Hunting | Inside an Indian Hack-For-Hire
+  Group," Tom Hegel, 16 Nov 2023) provides the malware /
+  infrastructure / tradecraft view, assessing "with high confidence"
+  that the cache "correlates with previously known Appin intrusions"
+  and attributing global intrusions "encompassing instances of
+  espionage, surveillance, and disruptive actions" to Appin. This is
+  a commercial mercenary (hack-for-hire) operation, not a
+  nation-state program: tasking is client-driven, India-based, with
+  targets worldwide and clients largely private.
 attributions:
   - actor_id: in/appin-security
-    attributing_org: Reuters (Raphael Satter, Christopher Bing)
+    attributing_org: Reuters (Raphael Satter, Zeba Siddiqui, Christopher Bing)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-11-16
     attribution_source_id: reuters/2023-11-16_appin-hack-for-hire
   - actor_id: in/appin-security
-    attributing_org: SentinelOne SentinelLABS (Tom Hegel)
+    attributing_org: SentinelOne SentinelLabs (Tom Hegel)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2023-11-16
     attribution_source_id: sentinelone/2023-11-16_appin-hack-for-hire-deep-dive
@@ -48,9 +66,12 @@ doctrine_links:
     confidence: attested
     reasoning: |
       Reuters and SentinelOne directly characterize Appin as a
-      commercial hack-for-hire vendor with documented client
-      relationships.
-    attesting_source_id: reuters/2023-11-16_appin-hack-for-hire
+      commercial hack-for-hire vendor whose customers commissioned
+      intrusions tied to litigation and corporate disputes — the
+      substance of the commercial-litigation pillar.
+    attesting_source_id: sentinelone/2023-11-16_appin-hack-for-hire-deep-dive
+    inference_basis:
+      source_quote: "Our analysis and observations corroborate the June 2022 reporting from Reuters noting some of Appin's customers tied to major litigation battles. The group has conducted hacking operations against high value individuals, governmental organizations, and other businesses involved in specific legal disputes."
     contested: false
     analyst: claude
   - doctrine_id: in/contractor-hack-for-hire
@@ -58,15 +79,139 @@ doctrine_links:
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Foreign-government and lobbying-firm clients per Reuters
-      reporting place this in the political-espionage pillar
-      as well as the commercial-litigation pillar.
+      Alongside commercial-litigation clients, Reuters and
+      SentinelOne document government-adjacent tasking — data-theft
+      against Chinese government/PLA officials and (per Reuters) the
+      Qatar operation against FIFA officials reached via a
+      subcontractor — placing part of Appin's book in the
+      political-espionage pillar. Strongly inferred rather than
+      attested because the sources document discrete
+      government-adjacent operations, not a stated program-level
+      political-collection mandate. ("Lobbying-firm" clients, in the
+      prior reasoning, were uncarried and removed; the documented
+      commercial intermediaries are law firms and the private
+      investigators acting for them.)
+    attesting_source_id: sentinelone/2023-11-16_appin-hack-for-hire-deep-dive
+    inference_basis:
+      signals:
+        - "SentinelOne: Appin 'has conducted hacking operations against high value individuals, governmental organizations, and other businesses,' and cases 'starting in 2009 involved data theft operations against Chinese government officials. These include the successful compromise of multiple PLA officers.'"
+        - "Reuters (per secondary corroboration) traces the Qatar 'Project Merciless' operation against FIFA officials to Appin, reached through the contractor Global Risk Advisors — a state-client tasking channel."
+      ruled_out: "Purely private commercial tasking with no government-adjacent component — undercut by the documented targeting of government officials (Chinese/PLA officers; FIFA officials via the Qatar contract)."
     contested: false
     analyst: claude
+# Targets are the VICTIMS of Appin's tasking (executives, politicians,
+# government officials, litigants), NOT Appin's paying clients. The prior
+# row orgs/various-appin-clients was a dangling FK (no registry record) and
+# conflated clients with victims; replaced with the documented victim sectors.
 targets:
-  - target_id: orgs/various-appin-clients
+  - target_id: sectors/government
     role: primary
+  - target_id: sectors/finance
+    role: primary
+  - target_id: sectors/civil-society
+    role: collateral
 sources:
   - reuters/2023-11-16_appin-hack-for-hire
   - sentinelone/2023-11-16_appin-hack-for-hire-deep-dive
-  - reuters/2023-12-05_appin-litigation-pressure
+  - techdirt/2023-12-07_indian-court-orders-reuters-appin-takedown
+  - reuters/2024-10-26_appin-expose-back-online
+notes: |
+  Underlying-exposé event (Appin's hack-for-hire findings). Its
+  companion meta event 2023-12/appin-litigation-pressure covers the
+  court-ordered unpublishing and the downstream takedown campaign;
+  keep the litigation detail there. Appin is a COMMERCIAL mercenary
+  (hack-for-hire) firm, not a state actor — modeled host-nation
+  India (id in/appin-security), the belltrox/dark-basin pattern.
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: partial
+  notes: |
+    Full 6-point audit vs RAW; PHANTOM-REMEDIATION applied to the
+    third source. Snapshots: SentinelOne re-captured from the
+    pre-takedown Wayback (2023-11-21) —
+    sentinelone__2023-11-16_appin-hack-for-hire-deep-dive.html,
+    sha256 cbf58250875c6ba094693dc2289f1d307113d3c74083f535a0fc4013f203ab85,
+    357,329 B (the LIVE S1 URL returns 200 but shows only the Dec-22
+    removal notice, no body — see the S1 source record). Reuters
+    PRIMARY is un-snapshottable (live 401 bot-wall; only Wayback
+    capture is the 401 wall itself; archive.today 429) — every fact
+    it carries is mirror-corroborated by snapshotted records, so
+    LEVEL=partial is due solely to the primary's bot-wall, not any
+    unverified claim.
+    [a] FACTS — corrected: (1) SentinelOne report title in summary
+    was fabricated ("A Glimpse into the Shadowy Realm of the Appin
+    Hack-for-Hire Operation"); real title "Elephant Hunting | Inside
+    an Indian Hack-For-Hire Group" (Tom Hegel), carried by the S1
+    snapshot <title> + reuters/2024-10-26. (2) "Russian oligarchs"
+    listed as CLIENTS — refuted: the Russian-oligarch link (Boris
+    Berezovsky) is a TARGET, not a client; reframed. (3) "lobbying
+    firms" as clients — uncarried by any of 6 fetched sources;
+    replaced with the documented intermediaries (private
+    investigators + law firms, per Reuters/404media). (4) Added
+    snapshot-carried framing: reuters/2024-10-26 verbatim "Appin grew
+    from an educational startup to a hack-for-hire powerhouse that
+    stole secrets from executives, politicians and wealthy elites
+    around the globe" (dropped "military officials" — not in this
+    snapshot); techdirt/2023-12-07 "interviews with hundreds of
+    people, thousands of documents"; SentinelOne customer portals
+    "GoldenEye, Commando, or MyCommando". (5) "denied wrongdoing" ->
+    "contested the reporting and pursued takedown litigation"
+    (snapshot-carried via eff/wired/techdirt). No fabricated
+    figures were present in the event body.
+    [b] ATTRIBUTION — both rows kept (concur, high): SentinelOne
+    "assess with high confidence that it correlates with previously
+    known Appin intrusions"; Reuters authenticated the cache + S1
+    verified. Reuters byline corrected to add Zeba Siddiqui (was
+    "Satter, Christopher Bing"); "SentinelLABS" -> "SentinelLabs".
+    attribution_level: named-actor added to both (source names the
+    specific firm, Appin Security Group; not a state organ).
+    [c] DATES — start 2009-01-01 carried (S1 "covert hacking
+    operations since at least 2009"); disclosure 2023-11-16 carried
+    (techdirt/reuters); end 2014-01-01 kept as an editorial bracket
+    for the original entity's wind-down (comment softened —
+    successors continued). Each source published_on verified:
+    Reuters main 2023-11-16, S1 2023-11-16, techdirt 2023-12-07,
+    reuters-restoration 2024-10-26.
+    [d] DOCTRINE_LINKS — link 1 (commercial-litigation, attested):
+    attesting_source_id moved reuters -> the SNAPSHOTTED SentinelOne
+    record; inference_basis.source_quote added verbatim ("...customers
+    tied to major litigation battles. The group has conducted hacking
+    operations against high value individuals, governmental
+    organizations, and other businesses involved in specific legal
+    disputes" — note: "disputes", not the loosely-remembered
+    "battles" in the 2nd clause). Kept attested — sources state the
+    pillar's substance directly. Link 2 (political-espionage,
+    strongly_inferred): reasoning de-fabricated ("lobbying-firm"
+    removed), inference_basis {signals, ruled_out} added, anchored on
+    the S1 snapshot (Chinese/PLA-officer data theft; governmental
+    organizations) + secondary Qatar/FIFA corroboration. Perspective
+    = attacker-rationale (default; Appin's own ecosystem doctrine).
+    [e] ATTRIBUTION_LEVEL — named-actor on both rows.
+    [f] ACTOR_ID — in/appin-security resolves
+    (atlas/actors/in/appin-security.yaml); commercial hack-for-hire,
+    host-nation India model, correct (NOT a state actor). Kept.
+    PHANTOM-REMEDIATION (re-source, "badrabbit"): removed the
+    confirmed-phantom reuters/2023-12-05_appin-litigation-pressure
+    (Reuters /world/india/ section shell, 401, prior-audit PHANTOM)
+    from sources[]; re-pointed the litigation-pressure claim to the
+    snapshotted techdirt/2023-12-07 + reuters/2024-10-26. The full
+    litigation arc lives in the sibling 2023-12/appin-litigation-pressure.
+    TARGETS — replaced dangling+wrong orgs/various-appin-clients
+    (no registry record; "clients" are customers, not victims) with
+    victim sectors government/finance (primary) + civil-society
+    (collateral).
+    FLAGS FOR ORCHESTRATOR (out-of-scope files, not edited):
+    (1) actor in/appin-security still cites the phantom
+    reuters/2023-12-05_appin-litigation-pressure — now the ONLY
+    remaining citation; re-point (actor already cites Reuters main +
+    S1) then retire the phantom. (2) actor ttp_summary repeats the
+    same "Russian oligarchs" clients error and names "ManiBeacon" as
+    Appin tooling — ManiBeacon is NOT in the SentinelOne report (the
+    documented portals are GoldenEye/Commando/MyCommando); verify or
+    correct. (3) actor status "active" vs active_until 2014 tension.
+    RESIDUAL UNCERTAINTY: the private-investigator/law-firm and
+    Qatar/FIFA client details rest on the un-snapshottable Reuters
+    primary + secondary (404media/Wikipedia), not a snapshot — hence
+    level=partial.

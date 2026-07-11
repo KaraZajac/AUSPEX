@@ -1,75 +1,224 @@
 id: 2026-04/ncsc-apt28-router-dns-hijacking
 name: UK NCSC + FBI — APT28 (GRU 26165) router DNS-hijacking campaign for credential theft
-start_date: 2024-01-01  # NCSC-stated campaign onset
+start_date: 2024-01-01  # approx onset; NCSC "Since 2024", FBI "since at least 2024" — no exact date stated
 disclosure_date: 2026-04-07
 end_date: null
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: n-day
+  - espionage
+initial_vector: n-day  # CVE-2023-50224 is a public/known vuln; NCSC: "likely utilising public vulnerabilities"
 outcome_summary: |
-  UK NCSC plus FBI IC3 PSA 260407 publicly attributed a
-  multi-year router DNS-hijacking campaign to GRU Unit 26165 /
-  APT28. The actor exploits CVE-2023-50224 in TP-Link WR841N
-  consumer routers and similar bugs in MikroTik devices, then
-  alters DHCP DNS settings to point victims at attacker-controlled
-  malicious DNS servers. The resulting adversary-in-the-middle
-  position harvests OAuth tokens, passwords, and credentials
-  for web mail and other Microsoft / Google services. At
-  December 2025 peak, more than 18,000 unique victim IP
-  addresses across 120 countries were communicating with APT28
-  AitM infrastructure.
+  UK NCSC and FBI/IC3 (PSA Alert I-040726-PSA), with NSA and 15
+  international partners, publicly attributed a router DNS-hijacking
+  credential-theft operation to GRU 85th Main Special Service Centre
+  (85th GTsSS) / Military Intelligence Unit 26165 / APT28. Since 2024
+  and into 2026 the actor exploited vulnerable SOHO/consumer routers —
+  notably the TP-Link WR841N via CVE-2023-50224, plus other TP-Link
+  models, and (in a second infrastructure cluster) compromised MikroTik
+  routers, a small number often located in Ukraine — then rewrote the
+  devices' DHCP/DNS settings to route downstream traffic through
+  attacker-controlled DNS servers. The resulting adversary-in-the-
+  middle position harvested passwords, OAuth/authentication tokens and
+  other credentials for Microsoft Outlook web-mail and other web/email
+  services. Both NCSC and FBI characterise the activity as opportunistic
+  and indiscriminate against a wide pool of global victims, then
+  filtered for users of intelligence value — especially military,
+  government and critical infrastructure. The FBI further notes that the
+  US Department of Justice and FBI disrupted a GRU network of
+  compromised SOHO routers used to facilitate the DNS-hijacking
+  operations. NCSC published corroborating VPS banner clusters, an
+  exploited-TP-Link-model list, targeted Outlook domains and AitM IP
+  ranges as IOCs.
 false_flag_risk: none
-campaign_id: gru-26165-western-logistics
+campaign_id: gru-26165-western-logistics  # AUDIT-FLAG: free-form umbrella cluster for GRU-26165 ops (shared w/ Authentic Antics, AA25-141A, Moobot); label is a partial misnomer for this opportunistic DNS-hijack op — NCSC lists "western logistics" as a SEPARATE prior advisory. Orchestrator: consider renaming the cluster.
 summary: |
   Companion to the July 2025 Authentic Antics disclosure of
-  GRU 26165 Outlook credential-theft tooling — same actor,
-  same Microsoft-credential collection objective, different
-  vector (router-mediated DNS hijack rather than in-Outlook
-  implant). The geographic spread (120 countries / 18,000 IPs)
-  makes this one of the largest GRU credential-collection
-  operations ever publicly documented.
+  GRU 26165 Outlook credential-theft tooling — same actor, same
+  Microsoft-credential collection objective, different vector
+  (router-mediated DHCP/DNS hijack + adversary-in-the-middle rather
+  than an in-Outlook implant). Co-released same-day (7 Apr 2026) by
+  NCSC-UK and FBI/IC3 with NSA and a 15-nation partner coalition, and
+  accompanied by a DOJ/FBI disruption of the GRU SOHO-router network.
 attributions:
   - actor_id: ru/gru/26165/apt28
-    attributing_org: UK NCSC + FBI IC3
+    attributing_org: UK NCSC
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2026-04-07
     attribution_source_id: ncsc-uk/2026-04-07_apt28-router-dns-hijacking
+    notes: |
+      NCSC: "We assess that APT28 is almost certainly the Russian
+      General Staff Main Intelligence Directorate (GRU) 85th Main
+      Special Service Centre (GTsSS) Military Intelligence Unit
+      26165." "Almost certainly" = high confidence; reaches
+      named-unit (26165). Org label narrowed to "UK NCSC" (this
+      entry's cited source is NCSC-only; the NCSC page does not
+      co-brand with the FBI).
   - actor_id: ru/gru/26165/apt28
-    attributing_org: FBI IC3 (PSA 260407)
+    attributing_org: FBI IC3 (PSA Alert I-040726-PSA)
     attributing_org_confidence: high
+    attribution_level: named-unit
     auspex_assessment: concur
     attribution_date: 2026-04-07
     attribution_source_id: fbi/2026-04-07_psa-260407-gru-routers
+    notes: |
+      FBI names "Russian GRU 85th Main Special Service Center
+      (85th GTsSS) ... also known as APT28, Fancy Bear, and Forest
+      Blizzard" (flat assertion = high; reaches named-unit at the
+      GTsSS parent-centre level, does not itself cite "26165").
+      Co-released with NSA + 15 international partners and
+      cross-references the same-day NCSC advisory by name.
 doctrine_links:
-  - doctrine_id: ru/fpc-2023
-    pillar_id: ru/fpc-2023/anti-anglo-saxon
-    program_id: null
-    confidence: strongly_inferred
-    reasoning: |
-      Credential harvesting at scale across 120 countries with
-      consumer-router compromise is the bulk-collection mode
-      of the anti-Anglo-Saxon strategic-collection pillar.
-    attesting_source_id: null
-    contested: false
-    analyst: claude
   - doctrine_id: ru/info-security-2016
     pillar_id: ru/info-security-2016/information-sphere-as-domain
     program_id: null
     confidence: strongly_inferred
+    perspective: attacker-rationale
     reasoning: |
-      Mass credential collection treats the open Internet as a
-      collection domain consistent with the 2016 information-
-      security doctrine's framing.
+      Opportunistic mass credential / OAuth-token harvesting by a GRU
+      information unit against Western Microsoft-cloud email — the
+      operational expression of the 2016 Information Security
+      Doctrine's framing of information confrontation as continuous
+      and its bureaucratic licence for GRU external information
+      operations. Mirrors the companion Authentic Antics disclosure
+      (same actor, same Microsoft-credential collection objective).
+      No source names the doctrine, so the linkage is inferred.
     attesting_source_id: null
+    inference_basis:
+      source_id: ncsc-uk/2026-04-07_apt28-router-dns-hijacking
+      signals:
+        - "NCSC/FBI attribute a persistent Microsoft-Outlook credential/OAuth-token espionage operation to GRU information Unit 26165 / 85th GTsSS (APT28), conducted against a wide pool of external/Western targets"
+      ruled_out: "the 2016 Information Security Doctrine by name — not named in either advisory"
+    contested: false
+    analyst: claude
+  - doctrine_id: ru/fpc-2023
+    pillar_id: ru/fpc-2023/anti-anglo-saxon
+    program_id: null
+    confidence: strongly_inferred
+    perspective: attacker-rationale
+    reasoning: |
+      GRU credential-collection filtered for military, government and
+      critical-infrastructure targets, disclosed by the FBI/NSA with a
+      15-nation Western partner coalition, is consistent with the
+      FPC-2023 anti-Anglo-Saxon / collective-West collection priority.
+      Neither advisory names FPC-2023, so the linkage is inferred from
+      the GRU actor and the intelligence-value target set.
+    attesting_source_id: null
+    inference_basis:
+      source_id: fbi/2026-04-07_psa-260407-gru-routers
+      signals:
+        - "FBI: GRU actors 'especially targeting information related to military, government, and critical infrastructure'; advisory co-signed by NSA + 15 international partners against a Russian GRU operation"
+      alternatives:
+        - "The operation is explicitly opportunistic/indiscriminate against a wide global victim pool — anti-Anglo-Saxon is the broad doctrinal umbrella, not a narrow tasking, so it may be over-broad for this specific bulk-collection activity (cf. the counter_explanation on the sibling AA25-141A event)"
+      ruled_out: "the Foreign Policy Concept 2023 / anti-Anglo-Saxon priority by name — not named in either advisory"
     contested: false
     analyst: claude
 targets:
+  # Intelligence targets per FBI ("especially targeting information
+  # related to military, government, and critical infrastructure");
+  # broad victim pool is opportunistic/global.
+  - target_id: sectors/government
+    role: primary
+  - target_id: sectors/defense
+    role: primary
+  - target_id: sectors/critical-infrastructure
+    role: primary
+  # Compromised SOHO/consumer routers (TP-Link + MikroTik edge devices)
+  # = transit infrastructure, not the intelligence target.
   - target_id: sectors/ict/networking
-    role: primary
-  - target_id: sectors/ict
-    role: primary
+    role: transit
 sources:
   - ncsc-uk/2026-04-07_apt28-router-dns-hijacking
   - fbi/2026-04-07_psa-260407-gru-routers
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW cited sources; both snapshotted this pass.
+    STEP 0 triage: both cited URLs live HTTP 200 and on-topic — REAL event,
+    normal audit (no phantom/re-source).
+    Snapshots (live fetch 2026-07-10):
+      - NCSC advisory "APT28 exploit routers to enable DNS hijacking
+        operations", ncsc.gov.uk, published 7 Apr 2026 (News type: Alert)
+        -> ncsc-uk__2026-04-07_apt28-router-dns-hijacking.html
+        sha256 8799d6543e59d515c7b4769e554e98099d6c2b6f7b74ce4976b3590605c36098
+      - FBI/IC3 PSA "Russian GRU Exploiting Vulnerable Routers to Steal
+        Sensitive Information", Alert I-040726-PSA / URL PSA260407, 07 Apr 2026
+        -> fbi__2026-04-07_psa-260407-gru-routers.html
+        sha256 9b5ccff9eb1384561a66c2e9491c9a8cb500b634e4b5c867eabc44ad0c50e29d
+
+    [a] FACTS — corrected. VERIFIED by raw: router exploitation ->
+    DHCP/DNS overwrite -> AitM harvesting "passwords, OAuth tokens and
+    other credentials for web and email related services" (NCSC exec
+    summary); TP-Link WR841N via CVE-2023-50224 ("likely using
+    CVE-2023-50224 ... enables an unauthenticated attacker to obtain
+    information such as password credentials"); MikroTik in cluster two
+    ("interactive operations against a small number of MikroTik routers,
+    often located in Ukraine"); targeted domains all Microsoft Outlook
+    (outlook.office365/live/office, imap-mail.outlook, autodiscover-s);
+    FBI "Microsoft Outlook Web Access". STRIPPED as FABRICATED (present in
+    NEITHER source): (1) "At December 2025 peak, more than 18,000 unique
+    victim IP addresses across 120 countries" — both sources are purely
+    qualitative ("high volumes", "wide pool", "large pool"); zero hits for
+    18,000 / 120 / countries / December / peak in either raw. (2) "Google
+    services" — zero hits for Google/Gmail in either raw; all targeted
+    domains are Microsoft/Outlook. (3) summary superlative "one of the
+    largest GRU credential-collection operations ever" — built on the
+    fabricated figure. CORRECTED "similar bugs in MikroTik" (NCSC states no
+    MikroTik CVE/method). ADDED source-carried facts previously omitted:
+    DOJ/FBI disruption of the GRU SOHO-router network (FBI: "The U.S.
+    Department of Justice and the FBI recently disrupted a GRU network of
+    compromised small-office home-office (SOHO) routers"); 15-nation partner
+    coalition + NSA; opportunistic/indiscriminate targeting filtered for
+    military/government/critical-infrastructure (FBI verbatim).
+
+    [b] ATTRIBUTION — corrected. Split muddled "UK NCSC + FBI IC3" org on
+    the NCSC-sourced entry down to "UK NCSC". Both entries high + concur,
+    corroborated by two govt-primaries + a 15-nation coalition. NCSC:
+    "almost certainly ... GRU 85th Main Special Service Centre (GTsSS)
+    Military Intelligence Unit 26165" ("almost certainly" = high). FBI:
+    flat "Russian GRU 85th Main Special Service Center (85th GTsSS) ...
+    APT28". No over-attestation (the firm "26165" is NCSC's; FBI stops at
+    85th GTsSS — noted per entry).
+
+    [c] DATES — verified. start 2024 (NCSC "Since 2024 and into 2026"; FBI
+    "Since at least 2024") — comment softened, exact date not stated.
+    disclosure 2026-04-07 = both sources ("Publish date 7 April 2026";
+    FBI "07 April 2026"). end null (ongoing "into 2026"). Both source
+    published_on 2026-04-07 confirmed against bylines.
+
+    [d] DOCTRINE_LINKS — upgraded to standard. Both remain non-attested
+    (neither advisory names any Russian doctrine) -> strongly_inferred with
+    perspective: attacker-rationale + inference_basis, matching the sibling
+    Authentic Antics event. info-security-2016/information-sphere-as-domain:
+    GRU external Microsoft-credential/OAuth espionage (parallels Authentic
+    Antics, same actor/objective). fpc-2023/anti-anglo-saxon: FBI
+    "especially targeting ... military, government, and critical
+    infrastructure" + 15-nation Western coalition; alternatives note the
+    explicitly opportunistic/indiscriminate global scope may make the pillar
+    over-broad. Removed the fabricated "120 countries" from the reasoning.
+
+    [e] ATTRIBUTION_LEVEL — added named-unit to both attribution entries
+    (schema field lives per-attribution): NCSC reaches Unit 26165; FBI
+    reaches the 85th GTsSS parent centre — both named-unit.
+
+    [f] ACTOR_ID — ru/gru/26165/apt28 resolves to atlas/actors/ru/apt28.yaml
+    (id ru/gru/26165/apt28). Correct — this is the operation, actor_id set
+    (not a counter-action), so incident_type stays operational
+    [intrusion, espionage] (bulk-collection also strongly apt given the
+    "indiscriminately compromised a wide pool" characterisation).
+
+    OTHER: incident_type data-theft -> espionage (intelligence motive).
+    targets reframed for directionality — government/defense/critical-
+    infrastructure primary (FBI victim set), SOHO routers ict/networking as
+    transit infra (was mis-tagged primary; dropped vague sectors/ict).
+    initial_vector n-day retained (public CVE). false_flag_risk none — ok.
+    FLAG (not changed — cross-event, orchestrator scope): campaign_id
+    gru-26165-western-logistics is a free-form umbrella cluster shared by 4
+    GRU-26165 events (this, Authentic Antics, AA25-141A, Moobot); the label
+    is a partial misnomer for this opportunistic DNS-hijack op (NCSC lists
+    "western logistics" as a SEPARATE prior advisory) — recommend renaming
+    the cluster. Sources PRESERVE tier; only snapshot keys added.

@@ -1,55 +1,121 @@
 id: 2019-02/sea-turtle-netnod-dns-registry-mitm
-name: Netnod (Swedish DNS root operator) discloses Sea Turtle man-in-the-middle compromise
+name: Netnod (Swedish internet-infrastructure operator) discloses Sea Turtle man-in-the-middle compromise
 start_date: 2018-12-14
 disclosure_date: 2019-02-05
 end_date: 2019-01-02
 incident_type:
   - intrusion
-  - data-theft
-initial_vector: valid-creds
+  - espionage
+initial_vector: valid-creds  # Sea Turtle campaign MO (credential capture -> DNS control); Netnod's own initial vector is not stated by the cited sources
 outcome_summary: |
-  Netnod, the Swedish operator of the i.root-servers.net DNS root
-  and a major Nordic Internet-exchange / DNS-services provider,
-  publicly acknowledged a man-in-the-middle attack against its
-  infrastructure during the December 14 2018 – January 2 2019
-  window. Subsequent Cisco Talos attribution in April 2019 tied
-  the incident to the Sea Turtle DNS-hijacking campaign. The
-  Netnod compromise is the first publicly confirmed case of a
-  DNS-registry-operator compromise by a state-aligned actor and
-  was used to capture authentication credentials for services in
-  jurisdictions outside Sweden — consistent with the broader
-  Sea Turtle pattern of using infrastructure-operator access as
-  staging for downstream victim-of-interest credential capture.
+  Netnod, a Swedish non-profit internet-infrastructure operator (an
+  Internet-exchange and DNS-services provider that Cisco Talos noted
+  also managed the i.root-server.net root-server zone), publicly
+  acknowledged on 5 February 2019 a man-in-the-middle attack against
+  its infrastructure. Per Netnod's statement the incident "occurred
+  in several short windows during the period 14 December 2018 - 2
+  January 2019" — three distinct attacks, the third (29 December - 2
+  January) redirecting some DNSNODE web-portal and API traffic to an
+  attacker-controlled proxy. Netnod stated it "was not the ultimate
+  goal of the attack. The goal is considered to have been the capture
+  of login details for Internet services in countries outside of
+  Sweden," and that after forensic work "no customers who used the
+  services during this time were affected" (its zones being
+  DNSSEC-signed and -validated). Netnod named no threat actor,
+  pointing only to FireEye's "Global DNS Hijacking Campaign" write-up
+  for the method. Cisco Talos's 17 April 2019 report subsequently
+  placed the NetNod compromise within its "Sea Turtle" state-sponsored
+  DNS-hijacking campaign, describing NetNod as "a non-profit,
+  independent internet infrastructure organization based in Sweden"
+  and documenting that the actors used the access to manipulate the
+  DNS records for sa1[.]dnsnode[.]net and "harvest credentials of
+  administrators who manage domains with the TLD of Saudi Arabia
+  (.sa)." Talos characterised the case as "the first publicly
+  confirmed case against an organization that manages a root server
+  zone," while a joint statement Talos cited found "no signs of ...
+  compromise of the content of the root [server] zone."
 false_flag_risk: none
 summary: |
-  Operationally distinctive Sea Turtle staging compromise. The
-  Netnod incident demonstrates the cluster's willingness to
-  target tier-1 Internet infrastructure operators in non-target
-  countries to obtain credential-capture position against the
-  ultimate Middle Eastern and Mediterranean victim set. The
-  Netnod public statement preceded ICANN's February 22 2019
-  DNS-hijacking advisory and the April 2019 Talos attribution.
+  Operationally distinctive Sea Turtle staging compromise: the
+  cluster's willingness to compromise a tier-1 internet-infrastructure
+  operator in a non-target country (Sweden) to obtain credential-capture
+  position against victims elsewhere. The NetNod access is the node
+  whose Talos-documented downstream product was Saudi Arabia (.sa)
+  TLD-administrator credentials (via sa1.dnsnode.net) — a MENA/Gulf
+  collection outcome, not an Eastern-Mediterranean one, so the Mavi
+  Vatan doctrine link is inherited from the broader campaign's
+  geopolitics rather than evidenced by this node's specific downstream
+  (see doctrine_links). The Netnod public statement (5 Feb 2019)
+  preceded ICANN's 22 Feb 2019 DNSSEC-deployment advisory and the 17
+  Apr 2019 Talos attribution. Microsoft later tracked the same actor
+  as MARBLED DUST (alias equivalence stated once in the canonical
+  parent event 2019-04/talos-sea-turtle-dns-hijacking); the
+  contemporaneous vendor label here is Talos's "Sea Turtle."
 attributions:
   - actor_id: tr/unscoped/sea-turtle
-    attributing_org: Cisco Talos (attribution; Netnod did not name an actor)
+    attributing_org: Cisco Talos (attribution; Netnod named no actor)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2019-04-17
     attribution_source_id: talos/2019-04-17_sea-turtle-dns-hijacking
     notes: |
-      Netnod itself did not name an actor in its public statement;
-      the Turkish-aligned attribution rests on the subsequent
-      Talos Sea Turtle report and victim-set pattern fit.
+      Netnod's own 5 Feb 2019 statement named NO actor — it pointed to
+      FireEye's "Global DNS Hijacking Campaign" report for the method
+      only. The Sea Turtle attribution rests on Cisco Talos's 17 April
+      2019 report, which NAMES NetNod as a compromised victim ("the
+      attackers were able to compromise NetNod ... NetNod acknowledged
+      the compromise in a public statement on February 5, 2019") and
+      assesses the campaign "with high confidence" to be "an advanced,
+      state-sponsored actor." attribution_level: named-actor — Talos
+      names the "Sea Turtle" cluster and NetNod specifically; it names
+      NO nation (Turkey appears only as one entry in the victim
+      IP/country table) and NO service/unit. Harmonized with the
+      canonical parent, ICS-Forth, and StrikeReady siblings (all
+      named-actor); the 2018-06 Cyprus sibling's activity-cluster off
+      this same April source is the flagged outlier. The Turkey nexus
+      carried by the tr/unscoped prefix rests on LATER, hedged reporting
+      (Reuters 2020-01-27, "acting in the interests of the Turkish
+      government," per three Western officials; Hunt & Hackett 2024,
+      "Turkey based"), NOT on this Talos source. Actor is
+      tr/unscoped/sea-turtle (demoted from tr/mit 2026-06-25; no cited
+      source names a Turkish service).
 doctrine_links:
   - doctrine_id: tr/mavi-vatan
+    perspective: attacker-rationale
     pillar_id: tr/mavi-vatan/eastern-med-energy
     program_id: null
     confidence: strongly_inferred
     reasoning: |
-      Netnod compromise served as staging for Sea Turtle's
-      downstream Mediterranean / Middle Eastern victim set,
-      which aligns with the maritime-and-energy collection
-      framing of the Mavi Vatan pillar.
+      The NetNod compromise is a staging operation within the
+      Turkey-aligned Sea Turtle campaign, whose overall collection
+      profile (per the canonical parent event) — "ministries of foreign
+      affairs" and "prominent energy organizations" across the
+      Eastern-Mediterranean / MENA victim set — fits the
+      maritime-and-energy framing of the Mavi Vatan eastern-med-energy
+      pillar. Not `attested`: no cited source names Mavi Vatan or states
+      an energy-competition goal. The link is inherited from the
+      campaign's geopolitics and the actor's default Mavi Vatan
+      alignment, NOT evidenced by this node itself — Netnod is a Swedish
+      infrastructure-staging victim, and its Talos-documented downstream
+      product was Saudi Arabia (.sa) admin credentials (a MENA/Gulf
+      outcome, not an Eastern-Med one).
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "The compromised asset is tier-1 internet infrastructure used as staging (Netnod: 'was not the ultimate goal ... The goal is considered to have been the capture of login details for Internet services in countries outside of Sweden'), consistent with a strategic state-sponsored collection campaign, not opportunistic or criminal activity (Talos: 'an advanced, state-sponsored actor')."
+        - "The parent Sea Turtle campaign's primary victims are 'national security organizations, ministries of foreign affairs, and prominent energy organizations' (Talos) across an Eastern-Med / MENA victim set — a strategic diplomatic/energy collection profile aligned with Turkish regional requirements."
+        - "The actor's documented default doctrine alignment includes tr/mavi-vatan/eastern-med-energy, and the later-sourced Turkey nexus (Reuters 2020, 'acting in the interests of the Turkish government') aligns the campaign with Turkish strategic interests."
+      ruled_out: |
+        Financially-motivated / non-state crime is inconsistent with the
+        credential-capture staging against critical DNS infrastructure
+        and Talos's high-confidence "advanced, state-sponsored actor"
+        assessment. Honest caveat: the eastern-med-energy pillar is
+        INHERITED from the campaign, not evidenced by the NetNod node —
+        its specific documented downstream (Saudi .sa admin credentials
+        via sa1.dnsnode.net) is a MENA/Gulf target, not an
+        Eastern-Mediterranean or energy one, so this link is weaker for
+        this sub-event than for the Cyprus/Greece siblings.
     contested: false
     analyst: claude
 targets:
@@ -60,3 +126,139 @@ sources:
   - netnod/2019-02-05_mitm-statement
   - talos/2019-04-17_sea-turtle-dns-hijacking
   - icann/2019-02-22_dns-hijacking-public-statement
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    6-point audit vs snapshotted raw. This is the 5TH Sea Turtle event
+    (siblings: 2019-04 canonical parent, 2018-06 Cyprus, 2019-04
+    ICS-Forth, 2023-12 StrikeReady). All three cited sources are REAL,
+    200-OK, and on disk with hashes verified this pass — no
+    phantom/re-source path (STEP 0 triage: netnod canonical URL HTTP 200):
+      - netnod/2019-02-05_mitm-statement (primary): SNAPSHOTTED THIS PASS
+        — sha256 0bf433075218201a48ecc2ff5f6e4c7e6da7e2abf887dd50ea9e63ac89222025
+        (netnod__2019-02-05_mitm-statement.html, 39,839 B). raw_snapshot +
+        content_sha256 written; kind govt-primary -> press-release and
+        publisher "DNS root operator" -> "internet-infrastructure operator"
+        corrected in that record (Netnod is non-profit/non-government per
+        Talos).
+      - talos/2019-04-17_sea-turtle-dns-hijacking (primary): already
+        snapshotted; hash re-verified sha256
+        eae3a9043814c97a218e3cbd3ac61289bf260ce7fcfda79ab208a7d8b060af0f
+        (199,058 B) — MATCHES record.
+      - icann/2019-02-22_dns-hijacking-public-statement (contextual):
+        hash re-verified sha256
+        2b34f65728a41432298931cdc043e610da5e5f61b8e4693e0ebbf3d76cf22930
+        (277,433 B) — MATCHES. Names no actor/nation/victim; contextual only.
+    All load-bearing claims carried by snapshotted sources -> level: full.
+
+    [a] FACTS — corrected against both raws (watched for conflation with
+    the other Sea Turtle victims, per task):
+      • NAME/PUBLISHER "DNS root operator" softened. Talos DOES tie Netnod
+        to a root zone ("the company [Cafax] states that one of their
+        consultants actively manages the i[.]root-server[.]net zone. NetNod
+        managed this particular DNS server zone") and calls the case "the
+        first publicly confirmed case against an organization that manages a
+        root server zone" — so the root-zone-management fact is SOURCED and
+        retained in outcome_summary. BUT the root zone itself was NOT
+        compromised (Talos quotes a joint statement: "There are no signs of
+        lost integrity or compromise of the content of the root [server]
+        zone"; Netnod: "no customers ... were affected"). "DNS root
+        operator" as the headline framing over-implies root compromise, so
+        the name now reads "internet-infrastructure operator" (Talos:
+        "a non-profit, independent internet infrastructure organization
+        based in Sweden"), with the root-zone-management nuance + the
+        not-compromised caveat carried in the body.
+      • "first publicly confirmed case of a DNS-REGISTRY-OPERATOR compromise"
+        MIS-STATED Talos. Talos's actual wording is "the first publicly
+        confirmed case against an organization that manages a ROOT SERVER
+        ZONE." Corrected to Talos's wording (grep: "first publicly"=1 hit,
+        that sentence; "registry-operator"=0).
+      • DOWNSTREAM PRODUCT anchored to prevent Eastern-Med conflation. The
+        vague "services in jurisdictions outside Sweden" (true per Netnod)
+        is now supplemented with Talos's specific documented downstream:
+        the NetNod access was used to "manipulate the DNS records for
+        sa1[.]dnsnode[.]net" and "harvest credentials of administrators who
+        manage domains with the TLD of Saudi Arabia (.sa)" — i.e. the
+        concrete product was SAUDI/GULF, not the Eastern-Med victim set of
+        the Cyprus/Greece siblings.
+      • DATES/WINDOW verbatim-anchored: "occurred in several short windows
+        during the period 14 December 2018 - 2 January 2019" (three attacks;
+        the third 29 Dec - 2 Jan redirected DNSNODE portal/API traffic to an
+        attacker proxy). ADDED Netnod's own no-customer-impact finding ("no
+        customers who used the services during this time were affected" via
+        DNSSEC) — material for accuracy, previously omitted.
+      • ADDED that Netnod named no actor and pointed to FireEye's method
+        write-up (Netnod raw), and that the Sea Turtle placement is Talos's
+        (Apr 2019). ICANN retained as contextual (generic DNSSEC-deployment
+        call; names no actor/nation/victim). Removed the anachronism-free
+        prior text's imprecise superlatives; no fabricated CVE/malware/figure
+        was present.
+
+    [b] ATTRIBUTION — Cisco Talos / high / concur retained; ADDED
+    attribution_level: named-actor (was MISSING). Talos NAMES the "Sea
+    Turtle" cluster and NetNod specifically as a compromised victim, and
+    assesses "an advanced, state-sponsored actor" with high confidence —
+    NO nation (Turkey only in the victim IP/country table), NO service.
+    No over-attestation. Turkey nexus recorded as resting on LATER hedged
+    reporting (Reuters 2020; Hunt & Hackett 2024), not this source.
+
+    [c] DATES — start_date 2018-12-14 CONFIRMED (Netnod: window opens "14
+    December 2018"); end_date 2019-01-02 CONFIRMED (window closes "2
+    January 2019"; Netnod "became aware on 2 January 2019"). disclosure_date
+    2019-02-05 CONFIRMED — the Netnod static HTML shows NO visible byline
+    date, but Talos independently corroborates ("acknowledged the compromise
+    in a public statement on February 5, 2019") and the source published_on
+    matches. Chronology preceding ICANN (Feb 22) and Talos (Apr 17) holds.
+    Source published_on re-verified: Talos = 2019-04-17 (byline); ICANN =
+    2019-02-22.
+
+    [d] DOCTRINE_LINKS — tr/mavi-vatan/eastern-med-energy KEPT at
+    strongly_inferred (per task) but RESTRUCTURED to spec: added
+    perspective: attacker-rationale (Turkey's own doctrine on its op),
+    attesting_source_id: null, and inference_basis {signals[], ruled_out}
+    (list items quoted). NOT attested (no cited source names Mavi Vatan / an
+    energy goal). Honest caveat recorded prominently: this is a STAGING node
+    whose Talos-documented downstream was Saudi (.sa) — MENA/Gulf, not
+    Eastern-Med — so the pillar is INHERITED from the campaign geopolitics
+    and the actor's default alignment, weaker here than for the Cyprus/Greece
+    siblings. Single link only (no regional-influence link added; the NetNod
+    node evidences no MFA/diplomatic victim of its own).
+
+    [e] ATTRIBUTION_LEVEL — was MISSING; set named-actor (see [b]).
+    Harmonization (per task): parent + ICS-Forth + StrikeReady = named-actor;
+    2018-06 Cyprus = activity-cluster off this same April Talos source (the
+    flagged sibling outlier). named-actor chosen here because the April Talos
+    report is the source that NAMES "Sea Turtle" AND names NetNod specifically
+    as a compromised victim — a firmer basis than Cyprus, which appears only
+    in the victim IP table.
+
+    [f] ACTOR_ID — tr/unscoped/sea-turtle resolves to
+    atlas/actors/tr/sea-turtle.yaml (internal id tr/unscoped/sea-turtle;
+    audited + demoted from tr/mit 2026-06-25) ✓. No actor-file edit.
+
+    MARBLED DUST (per task): stated as an equivalent Microsoft alias
+    (post-April-2023 taxonomy) and cross-referenced to the canonical parent
+    (2019-04/talos-sea-turtle-dns-hijacking), where the alias equivalence is
+    asserted once; this 2019 Talos-sourced op keeps the contemporaneous label
+    "Sea Turtle" and does not anachronistically self-label as MARBLED DUST.
+
+    FLAGS for orchestrator (no cross-file edits beyond the event + its own
+    source records):
+      - orgs/netnod is a DANGLING FK — no atlas/targets/orgs/netnod.yaml
+        exists (dir has saudi-aramco.yaml but no netnod). Role staging /
+        country se is correct and well-supported (Netnod: "not the ultimate
+        goal"). Orchestrator should create the org registry record.
+      - Completeness: the Talos-documented downstream (.sa TLD administrators
+        / Saudi Arabia; "likely ... additional Saudi Arabia-based victims")
+        is carried in prose but NOT added to targets[] — it is a generic
+        ".sa admin" set, not a named org, so no new FK minted here. Consider
+        a Saudi downstream target once org files exist.
+      - Netnod source record: kind corrected govt-primary -> press-release
+        (Netnod is non-profit/non-government); flag if a different
+        org-disclosure kind convention is preferred.
+      - Sibling attribution_level divergence persists (2018-06 Cyprus
+        activity-cluster vs the named-actor of parent/ICS-Forth/StrikeReady/
+        this event) — a future pass could align Cyprus.

@@ -5,21 +5,35 @@ disclosure_date: 2023-09-11
 end_date: 2023-09-20
 incident_type:
   - ransomware
+  - extortion
   - disruption
-initial_vector: phishing  # IT help-desk social engineering for MFA bypass
+  - data-theft
+initial_vector: phishing  # voice social engineering (vishing) of the IT help desk -> password/MFA reset; enum has no dedicated social-engineering/vishing value
 outcome_summary: |
-  Scattered Spider executed two near-simultaneous intrusions of
-  the two largest Las Vegas Strip gaming operators using ALPHV
-  ransomware. Tradecraft: short voice call to IT help desk
-  impersonating an employee identified via LinkedIn, social-
-  engineered MFA-reset, Okta superuser pivot, vSphere encryption.
-  Caesars (Aug 27 intrusion, settled with ALPHV ~USD 15M ransom
-  payment per SEC 8-K). MGM Resorts (Sept 7 onward) refused
-  payment; ten-day outage of slot machines, hotel-room digital
-  keys, casino-floor systems across MGM Grand, Bellagio, Aria,
-  Mandalay Bay, and other Strip / Atlantic City / Mississippi
-  / Maryland properties. MGM disclosed USD 100M of impact in
-  SEC filing.
+  Scattered Spider (an English-speaking social-engineering crew;
+  aka Octo Tempest / UNC3944 / 0ktapus) executed two near-
+  simultaneous intrusions of the two largest Las Vegas Strip gaming
+  operators as an affiliate of the ALPHV/BlackCat ransomware-as-a-
+  service brand. Tradecraft (per Microsoft + CISA): voice-phishing
+  (vishing) the IT help desk to socially engineer a password / MFA
+  reset for an impersonated employee, then identity-provider
+  (Okta / Azure) pivoting and — for MGM — encryption of the VMware
+  ESXi estate.
+  Caesars Entertainment: a social-engineering compromise of an
+  outsourced IT support vendor; Caesars determined on Sept 7 2023
+  that its loyalty-program database (driver's-license and/or SSN
+  data) had been copied and — per Wall Street Journal / Bloomberg
+  reporting — paid roughly USD 15M, about half of the attackers'
+  initial USD 30M demand, to suppress the leak. Customer-facing
+  operations were not disrupted.
+  MGM Resorts: disruption from ~Sept 10-11 (press statement Sept 12)
+  of slot machines, casino-floor systems (credit-card terminals,
+  ATMs) and its website / online reservations, with more than 100
+  ESXi hypervisors encrypted and pre-March-2019 customer PII
+  (incl. driver's-license data) stolen; MGM did not pay (per
+  contemporaneous reporting) and disclosed an ~USD 100M impact to
+  Q3 Adjusted Property EBITDAR (plus <USD 10M one-time costs) in its
+  Oct 5 2023 SEC 8-K.
 quantified_impact:
   caesars_ransom_paid_usd: 15000000
   mgm_disclosed_impact_usd: 100000000
@@ -27,40 +41,170 @@ quantified_impact:
 false_flag_risk: none
 campaign_id: scattered-spider-cluster
 summary: |
-  Canonical Scattered Spider × ALPHV affiliate-relationship case.
-  Caesars / MGM is the AUSPEX type-specimen for "Anglophone youth-
-  led affiliate × Russian-tolerated RaaS brand × Western
-  hospitality target." The SEC 8-K disclosure by Caesars was
-  among the first under the then-new SEC cybersecurity-disclosure
-  rules (effective Dec 2023).
+  Canonical Scattered Spider × ALPHV affiliate-relationship case —
+  the AUSPEX type-specimen for "Anglophone youth-led affiliate ×
+  profit-criminal RaaS brand × Western hospitality target." Both
+  actors are stateless criminals: Scattered Spider is Western-
+  jurisdictional (US / UK / Canada) and ALPHV/BlackCat carries no
+  source-documented state nexus (criminal/alphv; the former
+  "Russian-tolerated"/ru-proxy framing was dropped per Kara). Caesars
+  and MGM filed their September 2023 8-Ks voluntarily under Items
+  8.01 / 7.01 — months BEFORE the SEC's cyber-disclosure rule (Item
+  1.05) took effect Dec 18 2023 — an early signal of the disclosure
+  regime that followed, not a filing under it.
 attributions:
   - actor_id: criminal/scattered-spider
-    attributing_org: Microsoft + Mandiant + CISA
+    attributing_org: CISA / FBI (AA23-320A); Microsoft Threat Intelligence; Mandiant
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
-    attribution_date: 2023-09-14
+    attribution_date: 2023-11-16
+    attribution_source_id: cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+    notes: |
+      Scattered Spider (= Octo Tempest / UNC3944 / 0ktapus) was the
+      intrusion/affiliate operator. CISA/FBI AA23-320A names Scattered
+      Spider and (in its reference list) the MGM Resorts compromise;
+      Microsoft's Octo Tempest blog independently maps the alias set
+      and the ALPHV/BlackCat affiliation. NB the AA23-320A snapshot on
+      file is the living document as updated 2025-07-29 (it now
+      foregrounds DragonForce, no longer names ALPHV, and cites MGM only
+      in a footnote) — the incident-specific ALPHV brand tie rests on
+      Microsoft + WSJ/Bloomberg reporting (BleepingComputer) + the
+      original Nov-2023 advisory + ALPHV's own public claim.
+  - actor_id: criminal/alphv  # was ru/proxies/alphv; demoted 2026-06-24 (claude-opus-4.8/max) — no source-documented Russia-state nexus, see actor notes
+    attributing_org: Microsoft Threat Intelligence; WSJ / Bloomberg (via BleepingComputer); ALPHV (self-claimed, MGM)
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2023-10-25
     attribution_source_id: msft/2023-10-25_octo-tempest
     notes: |
-      Scattered Spider acted as the affiliate; ALPHV provided the
-      ransomware payload. Both are jointly attributed in CISA
-      AA23-320A (Nov 2023).
-  - actor_id: criminal/alphv  # was ru/proxies/alphv; demoted 2026-06-24 (claude-opus-4.8/max) — no source-documented Russia-state nexus, see actor notes
-    attributing_org: Microsoft + Mandiant + CISA
-    attributing_org_confidence: high
-    auspex_assessment: concur
-    attribution_date: 2023-09-14
-    attribution_source_id: cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+      ALPHV/BlackCat supplied the ransomware-as-a-service payload;
+      Scattered Spider was its affiliate. Microsoft (verbatim): "In
+      mid-2023, Octo Tempest became an affiliate of ALPHV/BlackCat" and
+      "started deploying ALPHV/BlackCat ransomware payloads ... primarily
+      on VMWare ESXi servers." ALPHV publicly claimed the MGM attack;
+      BleepingComputer ties "the BlackCat/ALPHV ransomware gang known as
+      Scattered Spider" to MGM. Stateless profit-criminal actor — no
+      source-documented Russia-state nexus (see criminal/alphv actor
+      notes; ru/proxies -> criminal/ per Kara); NO state link asserted.
 doctrine_links: []  # Scattered Spider has no defensible doctrine alignment
 targets:
   - target_id: orgs/mgm-resorts
     role: primary
     outcome: |
-      Ten-day outage; USD 100M disclosed impact; no ransom paid.
+      ~10-day operational disruption (slot machines, casino-floor
+      systems, website / reservations); >100 ESXi hypervisors
+      encrypted; pre-March-2019 customer PII (incl. driver's-license
+      data) stolen; ~USD 100M disclosed impact to Q3 Adjusted Property
+      EBITDAR (+ <USD 10M one-time costs); no ransom paid (per
+      reporting).
   - target_id: orgs/caesars-entertainment
     role: primary
     outcome: |
-      USD 15M ransom paid; minimal customer-facing disruption.
+      Loyalty-program database (driver's-license / SSN data) copied;
+      ~USD 15M paid (roughly half of a USD 30M demand, per WSJ /
+      Bloomberg) to suppress the leak; customer-facing operations not
+      disrupted.
 sources:
-  - msft/2023-10-25_octo-tempest
   - cisa/2023-11-16_aa23-320a-scattered-spider-advisory
+  - msft/2023-10-25_octo-tempest
   - sec/2023-09-14_caesars-8k
+  - sec/2023-10-05_mgm-8k-cyber-impact
+  - bleepingcomputer/2023-09-14_caesars-confirms-ransom-payment
+  - bleepingcomputer/2023-10-06_mgm-ransomware-100m-loss-data-theft
+  - techcrunch/2023-10-06_mgm-confirms-customer-data-stolen
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Audited vs RAW. 7 cited sources, all snapshotted + hashed:
+    cisa/2023-11-16_aa23-320a (e0dc1004…add0f64, living doc updated
+    2025-07-29), msft/2023-10-25_octo-tempest (73e08ed8…4882382),
+    sec/2023-09-14_caesars-8k (e421f249…bc8362e9), sec/2023-10-05_mgm-
+    8k-cyber-impact (6ddff145…c8fe4598, NEW), bleepingcomputer/2023-09-
+    14_caesars-confirms-ransom-payment (e11f8590…d685d1f6, NEW),
+    bleepingcomputer/2023-10-06_mgm-ransomware-100m-loss-data-theft
+    (59d4a3c5…08bc1974, NEW), techcrunch/2023-10-06_mgm-confirms-
+    customer-data-stolen (c853600c…8377e476, NEW). Every load-bearing
+    claim now has a snapshotted carrier -> level full.
+
+    [a] FACTS — corrections + re-sourcing:
+    • "~USD 15M ... per SEC 8-K" was FALSE ATTRIBUTION. The Caesars
+      8-K (grep-confirmed) states NO ransom/"$15 million"/"million"/
+      "paid" — it only implies payment ("steps to ensure ... deleted").
+      The ~$15M-of-a-$30M-demand figure is press (WSJ / Bloomberg);
+      re-sourced to bleepingcomputer/2023-09-14 (verbatim: "a Wall
+      Street Journal report says the hotel and casino entertainment
+      company paid roughly $15 million, half of the attackers' initial
+      $30 million demand"). Prose no longer credits the 8-K.
+    • MGM ~$100M now carried by a PRIMARY (was "disclosed ... in SEC
+      filing" with no filing in sources[]): MGM 8-K, verbatim "a
+      negative impact ... of approximately $100 million to Adjusted
+      Property EBITDAR" + "less than $10 million in one-time expenses."
+    • "Aug 27 intrusion" REMOVED — no primary carries it and reporting
+      splits Aug 23 vs Aug 27; anchored instead on the 8-K's hard date
+      ("on September 7, 2023, we determined that the unauthorized actor
+      acquired a copy of ... our loyalty program database, which
+      includes driver's license numbers and/or social security
+      numbers").
+    • "identified via LinkedIn" GENERALIZED to "impersonated employee":
+      the LinkedIn-recon detail is from ALPHV's own public statement,
+      not carried by any snapshot here; Microsoft carries the vector
+      (help-desk vishing -> impersonation) but not "LinkedIn." The
+      "LinkedIn" footer-link hits in Microsoft/CISA are UI chrome.
+    • Property list ("hotel-room digital keys ... MGM Grand, Bellagio,
+      Aria, Mandalay Bay ... Atlantic City / Mississippi / Maryland")
+      trimmed to the source-carried operational scope (BleepingComputer:
+      "slot machines, credit card terminals, and ATMs ... main website,
+      online reservations systems"; ">a hundred ESXi hypervisors"). MGM
+      customer-data theft (pre-March-2019 PII incl. driver's-license)
+      carried by BleepingComputer + TechCrunch.
+    • MGM non-payment: carried by TechCrunch (WSJ) — "MGM Resorts
+      reportedly did not pay the attackers' ransom demand"; hedged
+      in-prose as "(per reporting)". Caesars "customer-facing operations
+      not disrupted" = 8-K verbatim.
+
+    [b] ATTRIBUTION — both actors high/concur, attribution_level named-
+    actor (added). Scattered Spider: CISA/FBI AA23-320A + Microsoft +
+    Mandiant (uncontested). ALPHV/BlackCat: Microsoft documents the
+    affiliate relationship + ESXi payload; BleepingComputer ties ALPHV/
+    Scattered-Spider to MGM; ALPHV self-claimed MGM. VERSION FLAG: the
+    on-file AA23-320A snapshot is the 2025-07-29 update, which no longer
+    names ALPHV (0 hits) and cites MGM only in a footnote — so ALPHV's
+    incident tie was moved off CISA onto Microsoft (attribution_source_
+    id) + the two new secondaries. attributing_org strings de-inflated
+    from "Microsoft + Mandiant + CISA" to the actual per-actor asserters.
+
+    [c] DATES — start 2023-09-07 kept (Caesars' 8-K "determined" date;
+    earliest HARD-sourced anchor; late-Aug Caesars-intrusion onset is
+    reported but not primary-carried, so not used). disclosure 2023-09-
+    11 kept (MGM's first public acknowledgment; MGM's formal press
+    statement was Sept 12 per the 8-K — noted in prose). end 2023-09-20
+    kept (MGM restoration window; 8-K "operations ... returned to
+    normal"). Source published_on all verified against filing/byline
+    metadata (Caesars 8-K accession 0001193125-23-235015 filed 09-14;
+    MGM 8-K accession 0001193125-23-251667 filed 10-05).
+
+    [d] DOCTRINE_LINKS — [] correct. Stateless criminal actors; no
+    doctrine alignment. Removed the residual "Russian-tolerated RaaS
+    brand" framing from summary (a soft state-link): ALPHV is criminal/
+    alphv with no source-documented state nexus (per Kara / actor
+    notes). NO state link added.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor to both (Scattered Spider,
+    ALPHV are named criminal actors; no state unit/nation).
+
+    [f] ACTOR_ID — both resolve: criminal/scattered-spider,
+    criminal/alphv (verified against atlas/actors/**). No LE/meta type
+    needed (this is the attack event, not a takedown). FLAGS for other
+    files (NOT edited): none blocking — criminal/alphv already carries
+    the ru->criminal demotion notes.
+
+    SNAPSHOT/SOURCE housekeeping: Caesars 8-K source URL was a browse-
+    edgar catalogue shell (403 to curl, no filing body) -> corrected to
+    the actual Item 8.01 document + snapshotted. Microsoft record given
+    snapshot keys (PRESERVE). 4 new source records created (MGM 8-K, 2x
+    BleepingComputer, TechCrunch).

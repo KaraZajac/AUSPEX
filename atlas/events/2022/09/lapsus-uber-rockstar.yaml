@@ -6,38 +6,53 @@ end_date: 2022-09-19
 incident_type:
   - intrusion
   - data-theft
-initial_vector: valid-creds
+  - extortion  # Rockstar/GTA VI: "24 hours or I release the source code" ransom demand
+initial_vector: valid-creds  # Uber: purchased contractor creds (dark web) + MFA-fatigue/push-bombing to defeat 2FA
 outcome_summary: |
-  Uber (Sep 15 2022): MFA-fatigue / push-bombing attack on a
-  contractor account followed by lateral movement to Slack,
-  AWS, Google Workspace, vSphere, and HackerOne. Attacker
-  posted internal screenshots on Telegram. Uber CISO Joe Sullivan
-  separately convicted Oct 5 2022 on charges related to the
-  earlier 2016 breach. Rockstar Games (Sep 18 2022): exfiltration
-  of ~90 in-development Grand Theft Auto VI gameplay videos and
-  source code, posted publicly to GTAForums. Take-Two confirmed
-  the breach Sep 19. Both attributed to Lapsus$ operator Arion
-  Kurtaj (UK, 17 at time), already on bail for prior Lapsus$
-  offenses while staying at a Travelodge hotel under police
-  protection.
-false_flag_risk: none
+  Two loosely-linked Lapsus$ intrusions in one week. UBER
+  (disclosed Sep 15 2022): the attacker likely bought an Uber EXT
+  contractor's corporate password on the dark web (after the
+  contractor's personal device was malware-infected), then defeated
+  the second factor by MFA-fatigue / push-bombing — "the contractor
+  received a two-factor login approval request... Eventually,
+  however, the contractor accepted one." From there the attacker
+  reached elevated permissions to "a number of tools, including
+  G-Suite and Slack," posted to a company-wide Slack channel,
+  reconfigured Uber's OpenDNS to display a graphic, downloaded some
+  internal Slack messages and finance/invoice-tool data, and accessed
+  Uber's HackerOne bug-bounty dashboard (reports since remediated).
+  Uber found NO access to production systems, user accounts,
+  sensitive-user databases, or codebase changes. ROCKSTAR GAMES (leak
+  posted Sep 17-18 2022): exfiltration and public leak of 90+
+  in-development Grand Theft Auto VI gameplay videos plus source code
+  (with Confluence/Slack assets), posted to GTAForums; the actor
+  extorted Rockstar first — "if Rockstar does not contact me on
+  Telegram within 24 hours I will start releasing the source code."
+  Rockstar/Take-Two confirmed the breach Sep 19. Both attributed to
+  Lapsus$ operator Arion Kurtaj (UK, 17 at the time), then on bail
+  for prior Lapsus$ offenses — he ran the GTA hack from a hotel using
+  an Amazon Fire TV Stick, the hotel TV and his phone.
+false_flag_risk: none  # attacker self-claimed as Lapsus$-affiliated; operator later criminally convicted
 operators_named:
-  - kurtaj-arion  # Lapsus$, UK CPS Aug 2023 conviction
+  - kurtaj-arion  # Lapsus$; UK jury conviction Aug 2023 (hacking, fraud, extortion)
 summary: |
-  Concluding cluster of Lapsus$ activity before UK arrests.
-  Kurtaj convicted Aug 24 2023 in UK; sentenced to indefinite
-  detention in a secure hospital Dec 21 2023 due to autism
-  diagnosis preventing trial in lower court. AUSPEX uses this
-  cluster as the canonical "youth-led crew with no state nexus"
-  closure.
+  Final Lapsus$ cluster before the group's core operators were
+  convicted. Kurtaj — already on bail from a prior (Mar 2022) UK
+  arrest — was re-arrested after these Sep 2022 breaches; a British
+  jury convicted him and a co-defendant in Aug 2023 of hacking,
+  fraud and extortion, and he was sentenced Dec 21 2023 to indefinite
+  detention in a secure hospital (severely autistic, deemed unfit to
+  stand trial). AUSPEX uses this cluster as the canonical "youth-led
+  crew with no state nexus" closure.
 attributions:
   - actor_id: criminal/lapsus
-    attributing_org: UK CPS / City of London Police
+    attributing_org: UK criminal conviction (CPS) + Uber + CSRB
     attributing_org_confidence: high
+    attribution_level: named-actor  # Lapsus$ group; named member Kurtaj convicted
     auspex_assessment: concur
-    attribution_date: 2023-08-24
-    attribution_source_id: bbc/2023-08-24_kurtaj-conviction
-doctrine_links: []
+    attribution_date: 2023-08-24  # UK jury verdict (Kurtaj); Uber self-attributed Sep 19 2022
+    attribution_source_id: cbsnews/2023-12-21_kurtaj-gta6-hospital-order
+doctrine_links: []  # transnational youth criminal crew; no state doctrine applies (CSRB: not a nation-state actor)
 targets:
   - target_id: orgs/uber
     role: primary
@@ -45,5 +60,100 @@ targets:
     role: primary
 sources:
   - uber/2022-09-19_breach-update
-  - bbc/2023-08-24_kurtaj-conviction
   - csrb/2023-08-10_lapsus-report
+  - cbsnews/2023-12-21_kurtaj-gta6-hospital-order
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Full 6-point audit vs RAW snapshots. Sibling of 2022-02/lapsus-microsoft-okta-samsung.
+    Sources (all snapshotted+hashed):
+    - Uber first-party statement uber__2022-09-19_breach-update.html
+      sha256 d634f3cd72633c63cafe3c58e2e934a12e27f09e81b94dc031b51917383fe907
+      (captured via archive.org 20260304 snapshot; live uber.com URL bot-walls
+      automated fetches with HTTP 406 — body verified intact against known text)
+    - CSRB PDF csrb__2023-08-10_lapsus-report.pdf
+      sha256 d6e6382699cc4268ded2008edf358bd2ee9c50442704dad8bc3fe2846de2f8fc
+    - CBS News cbsnews__2023-12-21_kurtaj-gta6-hospital-order.html
+      sha256 54db7481fedaea12a87f2a08dc6fff83cfceacef2cff66d0318b5dce044ae0e0
+
+    [a] FACTS — one CONFLATION STRIPPED and the Uber access list corrected against
+    first-party wording. STRIPPED: "Uber CISO Joe Sullivan separately convicted Oct 5
+    2022 on charges related to the earlier 2016 breach" — 0 hits in any cited source;
+    this is a SEPARATE 2016-breach cover-up prosecution, unrelated to the 2022 Lapsus$
+    intrusion (classic conflation), removed. Uber access list "Slack, AWS, Google
+    Workspace, vSphere, and HackerOne" corrected: Uber's statement says "elevated
+    permissions to a number of tools, including G-Suite and Slack" (so "Google
+    Workspace" -> "G-Suite" per source), "accessed our dashboard at HackerOne", and
+    "an internal tool our finance team uses to manage some invoices" (= CSRB fn150:
+    "downloaded internal Slack messages, accessed or downloaded information from an
+    internal invoice management tool and bug bounty reports of one organization").
+    "vSphere" REMOVED (absent from first-party; a press/screenshot artifact, no cited
+    source). "AWS" REMOVED as an accessed system — the ONLY AWS mention is a NEGATIVE:
+    "have not found that the attacker accessed any customer or user data stored by our
+    cloud providers (e.g. AWS S3)". Added the source-carried blast-radius negatives
+    (no production/user-account/sensitive-DB/codebase-change access). MFA-fatigue
+    VERIFIED verbatim (Uber): "The attacker then repeatedly tried to log in ... Each
+    time, the contractor received a two-factor login approval request, which initially
+    blocked access. Eventually, however, the contractor accepted one" (CSRB corroborates
+    the TTP: "Threat actors used MFA fatigue, spamming employees with MFA prompts ...
+    until they said yes"). Initial vector VERIFIED (Uber): "likely that the attacker
+    purchased the contractor's Uber corporate password on the dark web, after the
+    contractor's personal device had been infected with malware" -> valid-creds correct.
+    GTA VI leak VERIFIED (CSRB fn151: "stole and published source code for two flagship
+    games from a gaming company, including related assets from the company's Confluence
+    and Slack servers"; title "GTA 6 (Americas) leak - 90+ .mp4 footage/videos,
+    September 17, 2022") + CBS ("leaked 90 clips from Rockstar Games' forthcoming Grand
+    Theft Auto VI"). Extortion VERIFIED verbatim (CBS): Kurtaj "wrote, 'if Rockstar does
+    not contact me on Telegram within 24 hours I will start releasing the source code.'
+    He publicly posted the code and clips" -> added `extortion` to incident_type.
+    Take-Two/Rockstar Sep 19 confirmation and OpenDNS graphic retained (Uber statement +
+    public record).
+
+    [b] ATTRIBUTION — high/concur upheld, NOT over-attested. Triangulated: Uber
+    self-attributed ("this attacker ... affiliated with a hacking group called
+    Lapsus$"), CSRB reviewed the campaign, and a UK jury CONVICTED named Lapsus$ member
+    Arion Kurtaj (Aug 2023) for these acts — about as firm as attribution gets, yet
+    still a criminal crew with no state nexus. attributing_org tidied to "UK criminal
+    conviction (CPS) + Uber + CSRB"; attribution_level named-actor added.
+
+    [c] DATES — start_date/disclosure_date 2022-09-15 (Uber incident surfaced Sep 15,
+    Slack message posted / OpenDNS defaced that night), end_date 2022-09-19
+    (Rockstar/Take-Two confirmation + Uber's dated update "September 19, 10:45am PT").
+    Rockstar leak posted Sep 17-18 (CSRB fn151 Sep 17; BleepingComputer fn255 Sep 18) —
+    within the window. Source published_on verified: Uber 2022-09-19 (byline
+    "September 19, 10:45am PT"); CSRB 2023-08-10; CBS 2023-12-21 (byline "Updated on:
+    December 22, 2023", story dated the Thursday Dec 21 sentencing). attribution_date
+    2023-08-24 = the UK jury verdict (event fact), correctly distinct from source dates.
+
+    [d] DOCTRINE_LINKS — empty, correct. Transnational youth extortion crew; CSRB frames
+    Lapsus$ as non-nation-state. No attacker/defender/victim doctrine applies.
+
+    [e] ATTRIBUTION_LEVEL — added named-actor (Lapsus$ named group; named member Kurtaj
+    convicted; no finer state-unit level applies to a criminal crew).
+
+    [f] ACTOR_ID — criminal/lapsus resolves to atlas/actors/criminal/lapsus.yaml
+    (id: criminal/lapsus; aliases DEV-0537/Storm-0875/Strawberry Tempest/Slippy Spider/
+    UNC3661). operators_named `kurtaj-arion` is a valid individual-name slug per
+    docs/SCHEMA.md ("indicted/named individuals (slugs)"), NOT an actor FK — no dangling
+    reference. Directionality correct: Uber + Rockstar are the victims (targets, both
+    role: primary).
+
+    RE-SOURCE (badrabbit model): PHANTOM/link-rotted source bbc/2023-08-24_kurtaj-
+    conviction had url:null (original bbc.com/news/technology-66877441 now 404, no
+    archive.org capture available) yet carried the load-bearing conviction/extortion
+    facts. Replaced with a live, snapshot-able secondary (CBS News, HTTP 200) that
+    carries the same facts verbatim. Removed BBC from sources[] and re-pointed
+    attribution_source_id to the CBS record. The BBC record is now orphaned (cited
+    nowhere else in the corpus) -> annotated as a RETIRE candidate in its own file (not
+    deleted; orchestrator handles FK propagation). New source record created:
+    cbsnews/2023-12-21_kurtaj-gta6-hospital-order.
+
+    FLAGS (cross-file, not edited here): target FK files orgs/uber.yaml and
+    orgs/rockstar-games.yaml do NOT exist under atlas/targets/orgs/ — orchestrator
+    should create them or the refs dangle. Actor file atlas/actors/criminal/lapsus.yaml
+    ttp_summary repeats the same press-derived victim specifics (e.g. Uber "vSphere",
+    Microsoft "Bing/Cortana source") that were trimmed here and in the sibling event —
+    flag for actor-QC harmonization (not edited per scope).

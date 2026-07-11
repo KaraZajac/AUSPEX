@@ -1,80 +1,236 @@
 id: 2015-12/tien-phong-bank-swift
 name: Tien Phong Bank (Vietnam) attempted SWIFT theft
-start_date: 2015-12-01
-disclosure_date: 2016-05-15
-end_date: 2015-12-31
+start_date: 2015-12-08  # fraudulent SWIFT transfer attempt; State Bank of Vietnam: "thwarted transfer on Dec. 8"; Mandiant: "December 2015"
+disclosure_date: 2016-05-15  # TPBank statement to Reuters, after the Bangladesh Bank disclosure
+end_date: 2015-12-08  # single thwarted attempt — "the only hack attempt via SWIFT detected by TPBank" (State Bank of Vietnam)
 incident_type:
   - intrusion
   - financial-theft
-initial_vector: phishing
+initial_vector: supply-chain  # via a malware-infected third-party SWIFT-connectivity vendor (servers in Singapore); NOT phishing (unsourced for TPBank) — see qc
 outcome_summary: |
-  Attempted USD 1.1M fraudulent SWIFT transfer from Vietnam's
-  Tien Phong Bank (TPBank) via a third-party software vendor's
-  trusted infrastructure. The fraudulent message instructed a
-  transfer through a Slovenia-based bank; TPBank's internal
-  reconciliation flagged the message before funds left the
-  correspondent system. Disclosed publicly by TPBank in May 2016
-  in the aftermath of the Bangladesh Bank disclosure. Symantec
-  and Mandiant subsequently linked Tien Phong, Bangladesh Bank
-  (February 2016), and Banco del Austro (January 2015) to a
-  common DPRK-attributed actor cluster ("APT38" / "Stardust
-  Chollima" subset of Lazarus).
+  Attempted fraudulent SWIFT transfer from Vietnam's Tien Phong
+  Bank (TPBank) on 8 December 2015. TPBank's own statement (via
+  Reuters) reported fraudulent SWIFT messages seeking to move
+  "more than 1 million euros ($1.1 million)"; the State Bank of
+  Vietnam subsequently specified EUR 1.2M ($1.36M) directed to a
+  Slovenia-based bank in a single transaction. The transfer was
+  made through the infrastructure of an outside vendor TPBank had
+  hired to connect to SWIFT — a third party whose software was
+  infected with malware and whose servers were based in Singapore
+  (the vendor was not named). TPBank detected the fraudulent
+  messages and halted the transfer by immediately contacting SWIFT
+  and the involved correspondent parties; no funds were lost, and
+  Interpol was informed. TPBank disclosed the December 2015 attempt
+  only belatedly, in May 2016, after the Bangladesh Bank heist
+  became public. Symantec (May 2016) tied the Bangladesh Bank, Tien
+  Phong and Banco del Austro SWIFT operations to the Lazarus Group
+  on shared malware; Mandiant's October 2018 "APT38" report
+  formalized the financial-theft sub-cluster and explicitly lists
+  "Vietnam TP Bank in December 2015" among APT38 heists.
 quantified_impact:
-  usd_attempted: 1100000
+  usd_attempted: 1100000  # TPBank's own disclosed floor ("more than EUR1M / $1.1M"); the State Bank of Vietnam later specified EUR1.2M / $1.36M
   usd_stolen: 0
 false_flag_risk: none
 campaign_id: apt38-swift-bank-heists
 operators_named:
-  - park-jin-hyok  # DPRK RGB / Lab 110, DOJ Sep 2018 complaint covers this campaign
+  - park-jin-hyok  # DPRK RGB / Lab 110; DOJ Sep 2018 complaint charges the Lazarus conspiracy incl. the "Vietnamese Bank" (=TPBank) intrusion
 summary: |
   Tien Phong is one of the foundational events in the public
-  evidence base for APT38 — the DPRK-attributed financial-
-  theft cluster within the broader Lazarus umbrella that
-  operationalized SWIFT-network abuse as a sanctions-evasion
-  revenue stream. The September 2018 Park Jin Hyok DOJ
-  complaint covers the broader campaign; Tien Phong, Bangladesh
-  Bank, and Banco del Austro form the SWIFT-era core of the
-  case.
+  evidence base for APT38 — the DPRK-attributed financial-theft
+  sub-cluster within the broader Lazarus umbrella that
+  operationalized SWIFT-network abuse as a hard-currency revenue
+  stream. It is the direct precursor to the February 2016
+  Bangladesh Bank heist: the same tradecraft, thwarted ~two months
+  earlier. The September 2018 Park Jin Hyok DOJ complaint charges
+  the Lazarus conspiracy and treats the "Vietnamese Bank" (TPBank,
+  not named) alongside Bangladesh Bank as linked SWIFT intrusions
+  (shared infrastructure; FoxItReader.exe evidence-suppression
+  malware); it does not mention Banco del Austro. Mandiant's
+  October 2018 report is the cited source that carries the "APT38"
+  designation for this operation.
 attributions:
   - actor_id: kp/rgb/apt38
-    attributing_org: Symantec + BAE Systems + Mandiant
+    attributing_org: Symantec Security Response + BAE Systems
     attributing_org_confidence: high
+    attribution_level: named-actor  # Symantec/BAE named "Lazarus" (2016); AUSPEX maps to the APT38 financial subset
     auspex_assessment: concur
     attribution_date: 2016-05-26
     attribution_source_id: symantec/2016-05-26_swift-attacks-lazarus
     notes: |
-      Initial Symantec/BAE technical linkage to Lazarus on the
-      basis of shared malware (a wiper tool with Sony Pictures
-      / Banco del Austro tradecraft). Mandiant's 2018 APT38
-      report formalized the cluster designation.
+      Earliest technical linkage: Symantec (and BAE Systems) tied the
+      Vietnam bank malware to the Bangladesh Bank / Banco del Austro
+      SWIFT operations and to the Lazarus Group on shared wiper/tooling.
+      The 2016 report named "Lazarus," not "APT38" (Mandiant coined
+      APT38 in Oct 2018); AUSPEX maps it to the APT38 financial subset.
+      Source is un-snapshottable (JS-shell / Broadcom 404) — see its
+      record; the linkage is mirror-corroborated by the snapshotted
+      Mandiant and DOJ sources below.
   - actor_id: kp/rgb/apt38
+    attributing_org: Mandiant
+    attributing_org_confidence: high
+    attribution_level: named-actor
+    auspex_assessment: concur
+    attribution_date: 2018-10-03
+    attribution_source_id: mandiant/2018-10-03_apt38-report
+    notes: |
+      Mandiant's "APT38: Un-usual Suspects" formalized the APT38
+      financial sub-cluster and — unlike its hedged Banco del Austro
+      entry — firmly lists "Vietnam TP Bank in December 2015" among the
+      "publicly reported attempted heists attributable to APT38." This
+      is the cited source that carries the APT38 designation for the
+      event.
+  - actor_id: kp/rgb/lazarus
     attributing_org: US DOJ (Park Jin Hyok complaint)
     attributing_org_confidence: high
+    attribution_level: named-actor
     auspex_assessment: concur
     attribution_date: 2018-09-06
     attribution_source_id: doj/2018-09-06_park-jin-hyok-complaint
+    notes: |
+      The criminal complaint charges Park Jin Hyok as a member of the
+      "Lazarus Group" and treats the unnamed "Vietnamese Bank" (=TPBank)
+      as a linked SWIFT intrusion: forensic artifacts from "late 2015,"
+      FoxItReader.exe malware designed to conceal fraudulent SWIFT
+      messages, and infrastructure/IP overlap with Bangladesh Bank. The
+      2018 complaint uses "Lazarus Group" (it predates the APT38 label),
+      hence actor_id kp/rgb/lazarus (the parent umbrella).
 doctrine_links:
   - doctrine_id: kp/byungjin
     pillar_id: kp/byungjin/sanctions-evasion-revenue
     program_id: null
-    confidence: attested
+    confidence: strongly_inferred  # downgraded 2026-07-10 from attested: the cited attesting source (DOJ 2018 complaint) carries ZERO "weapons of mass destruction"/"ballistic missile" language (raw term-scan) — only the proximate state-directed-theft goal — not the pillar's TERMINAL weapons-program-funding purpose; no WMD-financing source is cited here (mirrors siblings bangladesh-bank-swift / banco-del-austro)
     reasoning: |
-      The Park Jin Hyok complaint explicitly identifies SWIFT-
-      network fraud as a sanctions-evasion revenue mechanism
-      for the DPRK regime. Tien Phong sits inside the Byungjin
-      window (2013–2018) and is the canonical pre-Bangladesh
-      Bank operational data point.
-    attesting_source_id: doj/2018-09-06_park-jin-hyok-complaint
+      Byungjin-window (2013–2018) hard-currency generation via SWIFT-
+      network theft — the same doctrinal logic as the Bangladesh Bank /
+      Banco del Austro cluster. strongly_inferred, NOT attested: the
+      cited sources state at most the proximate state-directed revenue-
+      theft goal (the DOJ 2018 complaint's only regime framing is
+      "likely regime-sanctioned"; it carries no WMD/ballistic-missile-
+      financing language), and the actor's revenue-for-the-regime motive
+      is itself the proximate goal the byungjin pillar specializes —
+      which is the strongly_inferred bar, not attested.
+    attesting_source_id: null
+    inference_basis:
+      signals:
+        - "APT38/Lazarus is a financially-motivated DPRK/RGB cluster whose mission is hard-currency generation under sanctions (Mandiant; Treasury)."
+        - "The operation is a SWIFT-network bank heist inside the byungjin window, matching the cluster's signature revenue tradecraft."
+        - "Later authoritative reporting (CISA AA20-239A BeagleBoyz) states the terminal WMD/ballistic-missile-financing goal for the APT38 bank-heist campaign generally — but it is not cited on this event and does not name TPBank, so it is not used here as an attestation basis."
+      ruled_out: |
+        Pure-criminal (non-state) financial crime is ruled out by the
+        DPRK-state attribution; an espionage/sabotage reading is ruled
+        out by the financial-theft mechanism and thwarted-transfer
+        outcome.
     contested: false
     analyst: claude
 targets:
-  - target_id: orgs/tien-phong-bank
+  - target_id: orgs/tien-phong-bank  # registry file not yet created — corpus-wide tolerated target-FK gap (validate.ts: "targets/ normalization deferred"); mirrors sibling banco-del-austro
     country: vn
     role: primary
     outcome: |
-      USD 1.1M fraudulent SWIFT message attempted; flagged and
-      blocked by internal reconciliation. No funds lost.
+      Fraudulent SWIFT messages for EUR 1.2M ($1.36M) to a Slovenia-
+      based bank attempted on 8 December 2015 via a malware-infected
+      third-party SWIFT-connectivity vendor (servers in Singapore);
+      detected and blocked by TPBank. No funds lost.
 sources:
   - symantec/2016-05-26_swift-attacks-lazarus
+  - mandiant/2018-10-03_apt38-report
   - doj/2018-09-06_park-jin-hyok-complaint
   - reuters/2016-05-15_tien-phong-attempted
+  - reuters/2016-05-17_tpbank-slovenia-central-bank
+qc:
+  verified_by: claude-opus-4.8
+  effort: max
+  verified_on: 2026-07-10
+  level: full
+  notes: |
+    Dec-2015 attempted SWIFT theft from Tien Phong Bank (TPBank, Vietnam) —
+    the thwarted APT38/Lazarus precursor to the Feb-2016 Bangladesh Bank heist.
+    Full 6-point audit vs raw; two sources re-fetched + snapshotted, one new
+    source added.
+    [a] FACTS — verified against primary raw. Reuters (2016-05-15, snapshotted
+    sha f015a2c4…): "Tien Phong Bank said that it interrupted an attempted cyber
+    heist that involved the use of fraudulent SWIFT messages… in the fourth
+    quarter of last year it identified suspicious requests through fraudulent
+    SWIFT messages to transfer more than 1 million euros ($1.1 million)… did not
+    cause any losses… the transfers were made using infrastructure of an outside
+    vendor hired to connect it to the SWIFT bank messaging system… malware
+    installed on a software application used by the third-party vendor… servers
+    of the third-party vendor were based overseas." State Bank of Vietnam via
+    Reuters (2016-05-17, snapshotted sha 3f494fa2…): "a failed hacking attempt on
+    Tien Phong Bank (TPBank)… sought to fraudulently transfer 1.2 million euros
+    ($1.36 million) to a Slovenian bank late last year in one transaction. The
+    thwarted transfer on Dec. 8 was the only hack attempt via SWIFT detected by
+    TPBank… Interpol was immediately informed… A third-party vendor… was possibly
+    infected with malware and its servers were based in Singapore." CORRECTIONS:
+    (1) The "Slovenia-based bank" destination is REAL and now source-carried (SBV
+    via Reuters) — NOT stripped (initially suspected an AI-conflation with the
+    2017 NiceHash "Slovenian company" case, then web+raw-verified as genuine).
+    (2) Amount kept at usd_attempted 1,100,000 (TPBank's own disclosed floor
+    "more than EUR1M/$1.1M"); prose now also carries the SBV's more precise
+    EUR1.2M/$1.36M. (3) Removed the unsourced over-specific mechanism ("transfer
+    through a Slovenia-based bank; internal reconciliation flagged before funds
+    left the correspondent system") — replaced with the source-carried halt
+    (TPBank contacted SWIFT + involved parties). (4) Summary claim that the DOJ
+    complaint's "SWIFT-era core" = "Tien Phong, Bangladesh Bank, and Banco del
+    Austro" CORRECTED: the complaint (342 KB raw) has 0 mentions of Banco del
+    Austro and 0 of Tien Phong/TPBank; it covers Bangladesh (112 hits) + the
+    unnamed "Vietnamese Bank" (Vietnam 20 hits). Reworded.
+    [c] DATES — start/end 2015-12-01…2015-12-31 → 2015-12-08 (SBV: "thwarted
+    transfer on Dec. 8"; Mandiant: "December 2015"; DOJ: forensic artifacts "in
+    late 2015"). Single thwarted attempt, so end=start. disclosure_date
+    2016-05-15 confirmed (Reuters byline "Sun, May 15, 2016"). Pre-positioning
+    intrusion onset is undated in sources; event scoped to the transfer attempt.
+    [b]/[e] ATTRIBUTION — restructured to 3 rows with attribution_level added.
+    Neither 2016-era cited source names "APT38": Symantec (2016-05-26) named
+    "Lazarus"; the DOJ complaint (2018-09-06, one month BEFORE Mandiant coined
+    APT38) says "the subjects comprise members of the 'Lazarus Group,' the name
+    that private security researchers (including Symantec, Novetta, and BAE) have
+    given to the set of hackers who perpetrated the attacks on SPE, Bangladesh
+    Bank, and other entities" (raw, snapshotted PDF sha 4876114d…). So the DOJ row
+    is retargeted kp/rgb/apt38 → kp/rgb/lazarus (parent umbrella), matching sibling
+    bangladesh-bank-swift. APT38 is carried by a NEW cited row: Mandiant
+    "APT38: Un-usual Suspects" (2018-10-03, snapshotted sha b64603759c…) firmly
+    lists "Vietnam TP Bank in December 2015" among "publicly reported attempted
+    heists attributable to APT38" (NOT hedged, unlike its Banco del Austro entry).
+    Symantec row kept at kp/rgb/apt38 named-actor with the "named Lazarus =
+    APT38 subset" mapping note (house convention per banco-del-austro). All
+    confidence=high/concur (the TPBank linkage is firm, unlike BDA).
+    [d] DOCTRINE — kp/byungjin is era-correct (adopted 2013-03-31, superseded by
+    8th-congress-defense-plan; Dec-2015 sits inside the window). confidence
+    DOWNGRADED attested → strongly_inferred: the former attesting source (DOJ 2018
+    complaint) carries ZERO "weapons of mass destruction" / "ballistic missile"
+    hits (its lone "nuclear" hit is a fictional TV-series plot; its only regime
+    framing is "likely regime-sanctioned") — i.e. proximate state-directed-theft
+    goal only, NOT the pillar's terminal weapons-program-financing purpose.
+    attesting_source_id set to null; added inference_basis {signals, ruled_out}.
+    This matches siblings bangladesh-bank-swift and banco-del-austro (both
+    strongly_inferred); attested is reserved for the campaign roll-up
+    global-swift-campaign, which cites CISA AA20-239A (terminal WMD goal).
+    Perspective is attacker-rationale (default; DPRK doctrine on a DPRK op).
+    [f] ACTOR_ID — kp/rgb/apt38 resolves (id in atlas/actors/kp/apt38.yaml;
+    primary_service kp/rgb/lab-110; RGB nexus raw-verified on OFAC/DOJ/CISA per
+    that file); kp/rgb/lazarus resolves (atlas/actors/kp/lazarus.yaml). operators
+    park-jin-hyok verified against the DOJ complaint's Vietnamese-Bank coverage.
+    initial_vector phishing → supply-chain: the disclosed TPBank vector is a
+    malware-infected third-party SWIFT-connectivity vendor (a trusted-relationship
+    / third-party compromise; closest enum value = supply-chain), NOT phishing
+    (unsourced for TPBank; phishing is APT38's GENERAL initial access per
+    DOJ/Mandiant, not the disclosed TPBank entry point). JUDGMENT-CALL flag.
+    SNAPSHOTS: reuters 2016-05-15 (f015a2c4…) + reuters 2016-05-17 (3f494fa2…)
+    newly captured (Yahoo-hosted Reuters copies, article bodies intact); DOJ
+    complaint PDF (4876114d…) captured from the justice.gov file endpoint (the
+    press-release HTML is Akamai bot-walled, but the underlying complaint the
+    release announces is retrievable — see that source's record); Mandiant PDF
+    (b64603759c…) already on disk. Symantec 2016-05-26 is un-snapshottable (all
+    Wayback captures of symantec.com/connect are JS-app shells with no article
+    body; live Broadcom docs 404) — no content_sha256; its Lazarus/three-bank
+    linkage is redundantly mirror-corroborated by the snapshotted Mandiant + DOJ
+    sources, so it is not load-bearing for any un-snapshotted claim.
+    OTHER-FILE FLAGS (not edited): (i) sibling global-swift-campaign references
+    target orgs/tien-phong-bank-vietnam whereas this event + banco-del-austro use
+    orgs/tien-phong-bank — an org-id mismatch to reconcile in the org registry.
+    (ii) No orgs/tien-phong-bank registry file exists (tolerated target-FK gap).
+    level: full — every load-bearing factual + attribution claim is carried by a
+    snapshotted source (Reuters x2, Mandiant, DOJ); the sole un-snapshottable
+    source (Symantec) is redundantly corroborated (mirrors banco-del-austro,
+    which is level: full on the same Symantec constraint).
