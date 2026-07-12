@@ -9,7 +9,7 @@ data disagree, the data wins; re-run the introspector.
 This document is the human-readable form; the **machine-checkable form** is
 [`audit/schemas/atlas.schema.json`](../audit/schemas/atlas.schema.json) (standard JSON
 Schema), enforced over every record by `audit/check_conformance.py` — currently
-**PASS, 3,459/3,459 records conform**. Keep the two in step.
+**PASS, 3,437/3,437 records conform**. Keep the two in step.
 
 Current as of the 785-event corpus (2026-07-11). Regenerate / verify:
 
@@ -21,7 +21,7 @@ pnpm --dir site validate                  # the engine's own validator (FKs + fe
 ```
 
 Entity counts: events 785 · actors 222 · services 93 · nation-states 18 · doctrines 86
-(199 pillars) · sources 1,794 · targets 113 · timeline-markers 73 · policy-actions 179 ·
+(199 pillars) · sources 1,772 · targets 113 · timeline-markers 73 · policy-actions 179 ·
 sectors 96 (one aggregate file). `campaigns/` is empty — campaigns are editorial
 `campaign_id` strings on events, not their own files.
 

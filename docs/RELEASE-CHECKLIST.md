@@ -11,7 +11,7 @@ Owners: **[K]** = Kara (judgment / human verification) · **[auto]** = tooled, I
 ---
 
 ## 0 · Machine gate (must be green at the *tagged* commit)
-- ✅ `make verify` — schema conformance 3,459/3,459, 0 structural errors, engine validator clean.
+- ✅ `make verify` — schema conformance 3,437/3,437, 0 structural errors, engine validator clean.
 - ✅ `python3 audit/check_conformance.py --self-test` passes (validator validated).
 - ✅ Schema is standard JSON Schema (`audit/schemas/atlas.schema.json`) — independently re-validatable with ajv / jsonschema, no AUSPEX code required.
 
@@ -46,8 +46,8 @@ Owners: **[K]** = Kara (judgment / human verification) · **[auto]** = tooled, I
 ## 5 · Metadata & publication mechanics (FAIR / DOI / ORCID)
 - ◐ **[K]** `CITATION.cff`: ✅ `version` = **1.0.0**, `date-released` = **2026-07-11**, `repository-code` + `url` + ORCID + CC-BY-4.0 all present [2026-07-11]. *Remaining:* uncomment the concept/version `doi:` post-Zenodo.
 - ✅ **[auto]** `LICENSE` file added (CC BY 4.0 legalcode, canonical text from creativecommons.org). [2026-06-20]
-- ◐ **[K/auto]** `DATASHEET.md` refreshed to the post-census corpus [2026-07-11]: counts current (**785/222/1,794/86/93**), verification coverage stated (**100% — 691 full + 94 partial of 785, 0 unstamped**), over-attestation correction + uniform-status note present. **Remaining [K] blank:** inter-rater κ (and any final prose blanks).
-- ✅ **[auto]** README counts + accuracy current — **785/222/1,794**, engine **50.8/62.8/57.6/38.0** top-1, honesty caveats (retrodiction, vendor-truth, null=miss) intact. [2026-07-11]
+- ◐ **[K/auto]** `DATASHEET.md` refreshed to the post-census corpus [2026-07-11]: counts current (**785/222/1,772/86/93**), verification coverage stated (**100% — 691 full + 94 partial of 785, 0 unstamped**), over-attestation correction + uniform-status note present. **Remaining [K] blank:** inter-rater κ (and any final prose blanks).
+- ✅ **[auto]** README counts + accuracy current — **785/222/1,772**, engine **50.8/62.8/57.6/38.0** top-1, honesty caveats (retrodiction, vendor-truth, null=miss) intact. [2026-07-11]
 - ✅ **[K]** Version **v1.0.0** assigned (`CITATION.cff`, `.zenodo.json`) + `CHANGELOG.md` release notes written. [2026-07-11]
 - ⬜ **[auto]** `publish/export_release.py` produces the distributable bundle; run it and sanity-check the artifact.
 - ⬜ **[K]** Zenodo↔GitHub integration enabled (tag → auto-mint DOI) *or* manual-upload plan; note the concept DOI vs version DOI.
@@ -67,7 +67,7 @@ Owners: **[K]** = Kara (judgment / human verification) · **[auto]** = tooled, I
 ---
 
 ### Where it stands (2026-07-11)
-**Green:** the machine gate (3,459/3,459), source-anchoring integrity, the over-attestation
+**Green:** the machine gate (3,437/3,437), source-anchoring integrity, the over-attestation
 correction, provisional promotion — **plus the two former hard blockers, now cleared:** (1) the
 **T2 `qc:` census** (§2 — **100%**: 691 full + 94 partial of 785), and (2) the **engine
 re-evaluation on the post-census corpus** (§4 — attribution 50.8 / doctrine 62.8 / pillar 57.6 /

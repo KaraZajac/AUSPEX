@@ -6,11 +6,11 @@
 > (bot-walled / link-rotted) and mirror-corroborated. Each event was LLM-audited 6-point (Claude
 > Opus 4.8, `verified_by: claude-opus-4.8`) against its RAW cited sources — a 100%-coverage
 > record-vs-source audit; human inter-rater verification (`verified_by: kara`) is the separate
-> tier. Machine gate green: `make verify` = 3,459/3,459 schema-conform.
+> tier. Machine gate green: `make verify` = 3,437/3,437 schema-conform.
 > The plan below is retained as the executed methodology; the risk tiers are the order the
 > census ran in (**T2 is done**; the T3 sample was superseded — every event got the full protocol).
 
-**The problem.** Full hand-verification of every record (785 events · 1,794 sources · ~930
+**The problem.** Full hand-verification of every record (785 events · 1,772 sources · ~930
 doctrine links) at 10–20 min/event is 200+ hours — possible over a year, but uniform effort is
 the *wrong* allocation. Examiners don't expect a census; they expect a **defensible quality
 methodology**: census where risk concentrates, measured error rates where it doesn't, and a
@@ -49,7 +49,7 @@ has confirmed, against the cited sources:
 | tier | what | coverage | status |
 |---|---|---|---|
 | **T0 — machine, continuous** | schema conformance, FK/enum integrity, perspective/attested rules, the pre-commit gate | 100%, every commit | ✅ built, enforced |
-| **T1 — machine, periodic** | URL liveness (`verify_atlas.py --check-urls`) + **archive.org snapshot of all 1,794 source URLs** (links *will* rot before a defense) | 100% of sources | tool exists; archiving to build |
+| **T1 — machine, periodic** | URL liveness (`verify_atlas.py --check-urls`) + **archive.org snapshot of all 1,772 source URLs** (links *will* rot before a defense) | 100% of sources | tool exists; archiving to build |
 | **T2 — human census (full-census decision)** | full protocol verification of **every** record | every event (785) | ✅ **COMPLETE** — 691 full + 94 partial |
 | **T3 — human stratified sample of the rest** | full protocol on a random sample of the remaining ~460 events; **report the measured per-field error rate with a CI** in the dissertation; any stratum whose error rate exceeds threshold escalates to census | n≈100, stratified by state × year-band × source-tier | **superseded** — full census elected (see decision above) |
 

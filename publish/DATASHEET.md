@@ -19,7 +19,7 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 
 - **Instances:** 785 events (648 operational, 137 meta/announcement), 222 actors, 93 services,
   18 nation-states, 86 doctrines (199 pillars; kinds: 48 strategy / 23 posture / 7 statute /
-  6 treaty / 2 event-anchor), 1,794 sources, 179 policy-actions, 113 target entities,
+  6 treaty / 2 event-anchor), 1,772 sources, 179 policy-actions, 113 target entities,
   96 sectors, 73 timeline markers. Years 2003–2026 (regenerate from stats.json).
 - **What does an instance contain?** An event carries dated summary prose, typed incident
   classification, victims (sector × country), `attributions[]` (actor FK + attributing

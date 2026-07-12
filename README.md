@@ -24,7 +24,7 @@ actor, and doctrine, with the attribution/doctrine engine and prospective foreca
 | Actors (state + criminal) | **222** |
 | Services | **93** |
 | Policy-actions (takedowns / sanctions / indictments) | **179** |
-| Source records | **1,794** |
+| Source records | **1,772** |
 | Target entities · timeline markers | 113 · 73 |
 
 Doctrine-authoring states covered: **US, RU, CN, IR, KP, IL, IN, PK, TR, BY, VN, UK, FR, KR, AE.**
@@ -39,7 +39,7 @@ it is *not* the same as, and is disclosed separately from, independent human int
 verification (a distinct reliability study). *Full* means every load-bearing claim is carried by a
 snapshotted source; *partial* means a load-bearing source was un-snapshottable (bot-walled or
 link-rotted) and was mirror-corroborated. Independently, the machine gate (`make verify`) proves
-3,459/3,459 records fit the JSON Schema with zero structural errors.
+3,437/3,437 records fit the JSON Schema with zero structural errors.
 
 ## Repo layout
 
@@ -110,7 +110,7 @@ Doctrine generalizes best temporally (rankable top-5 74.8%). This retrodictive-v
 stated plainly rather than papered over.
 
 **On the numbers moving.** Every accuracy figure here is *lower* than earlier AUSPEX reports
-(attribution 64.9→50.8, doctrine 68.5→62.8, joint 47.9→38.0). That is the **100% human census
+(attribution 64.9→50.8, doctrine 68.5→62.8, joint 47.9→38.0). That is the **100% audit census
 working as intended**: it removed fabricated and over-attributed events the engines had partly
 memorized, so these are de-circularized, honest numbers on a harder, cleaner corpus. Full
 diagnostics — actor-depth stratification, corpus-growth composition, prose de-leak, calibration —

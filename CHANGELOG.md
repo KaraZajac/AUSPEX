@@ -3,7 +3,7 @@
 All notable changes to the AUSPEX dataset. Versions follow the Zenodo release series; the concept
 DOI always resolves to the latest.
 
-## v1.0.0 — 2026-07-11 (first public release)
+## v1.0.0 — 2026-07-12 (first public release)
 
 The first public, citable release of the AUSPEX corpus.
 
@@ -19,10 +19,10 @@ mirror-corroborated).
 
 ### Dataset
 - 785 events · 222 actors · 86 doctrines (199 pillars / 7 programs) · 93 services · 179
-  policy-actions · 1,794 source records · 113 target entities · 73 timeline markers, across 15
+  policy-actions · 1,772 source records · 113 target entities · 73 timeline markers, across 15
   doctrine-authoring states.
 - Formal JSON Schema (`audit/schemas/atlas.schema.json`), independently re-validatable.
-- Machine gate `make verify`: 3,459/3,459 records conform, 0 structural errors, engine validator clean.
+- Machine gate `make verify`: 3,437/3,437 records conform, 0 structural errors, engine validator clean.
 
 ### What the census changed (vs. pre-audit corpus)
 - Removed fabricated and duplicate events; merged duplicates (e.g. an Olympic-Games/Stuxnet duplicate
