@@ -57,6 +57,8 @@ AUSPEX/
 
 The atlas is the product; the site renders it. Rights and layered attribution:
 [DATA-RIGHTS.md](DATA-RIGHTS.md). Full dataset documentation: [publish/DATASHEET.md](publish/DATASHEET.md).
+Every source cited anywhere in the corpus, grouped by publisher with its cited-by count:
+[SOURCES.md](SOURCES.md) (generated).
 
 ## Editorial discipline
 
@@ -129,6 +131,7 @@ pnpm validate                  # validate the atlas
 pnpm dev                       # local dev at http://localhost:4321
 pnpm eval-doctrine             # doctrine LOO ·  eval-pillar · eval-temporal · etc.
 pnpm exec tsx tools/eval-stacked-cnb.ts     # deployed attribution headline (CNB + stacked, 5-fold)
+pnpm exec tsx tools/gen-sources-bib.ts      # regenerate the source bibliography (SOURCES.md)
 ```
 
 The atlas is the source of truth; `make verify` must be clean before any commit (a pre-commit hook

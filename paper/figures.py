@@ -177,12 +177,12 @@ def fig_precedence():
     ax.axvline(med, color="#D55E00", lw=1.4, ls="--")
     ax.text(med + 0.6, ax.get_ylim()[1] * 0.92, f"median +{med:.0f} yr",
             color="#D55E00", fontsize=8.5)
-    follow = 100 * sum(g > 0 for g in gaps) / len(gaps)
+    follow = 100 * sum(g > 0 for g in gaps) // len(gaps)   # floor — matches the FINDINGS ledger convention
     ax.set_xlim(lo - 1, hi + 1)
     ax.set_xlabel("operation year − doctrine year   (>0 = follows)")
     ax.set_ylabel("(op, dated-doctrine) pairs")
-    ax.set_title(f"n={len(gaps)} pairs · {follow:.0f}% follow publication "
-                 f"(attested-only n={len(gaps_att)}, {100*sum(g>0 for g in gaps_att)/max(len(gaps_att),1):.0f}% follow)",
+    ax.set_title(f"n={len(gaps)} pairs · {follow}% follow publication "
+                 f"(attested-only n={len(gaps_att)}, {100*sum(g>0 for g in gaps_att)//max(len(gaps_att),1)}% follow)",
                  fontsize=8.5, loc="left")
     save(fig, "fig-precedence.pdf")
 
@@ -208,7 +208,7 @@ def fig_mo():
         for j in range(len(mos)):
             v = M[i, j]
             if v >= 0.005:
-                ax.text(j, i, f"{100*v:.0f}", ha="center", va="center", fontsize=7,
+                ax.text(j, i, f"{int(100*v)}",   # floor — matches mo_narrowing ledger ha="center", va="center", fontsize=7,
                         color="white" if v > 0.55 else "#1a1a2e")
     ax.grid(False)
     ax.set_title("share of each state's operations by terminal outcome (%)",
@@ -230,6 +230,7 @@ def fig_information():
                     ha="center", fontsize=8)
         ax.set_title(f"{title}\n effective suspect pool {pool0} → {pool1} actors",
                      fontsize=8.5)
+        ax.tick_params(axis="x", labelsize=7.5)
         ax.set_ylim(0, 7.2)
     axes[0].set_ylabel("bits")
     fig.suptitle("Doctrine → actor information (permutation null, K=40): "
@@ -289,6 +290,7 @@ def fig_census():
     ax1.set_title("engine accuracy before/after the audit\n(drop = de-circularization, not regression)",
                   fontsize=8.5)
     ax1.legend(frameon=False, fontsize=7.5)
+    ax2.tick_params(axis="x", labelsize=8)
     ax2.bar(["full", "partial", "unstamped"], [full, part, len(events) - full - part],
             color=["#0072B2", "#56B4E9", "#D55E00"], width=0.6, linewidth=0)
     for i, v in enumerate([full, part, len(events) - full - part]):

@@ -41,7 +41,7 @@ cited sources under a documented six-point protocol; the audit reaches \textbf{1
 \emph{attacker/victim/defender} perspective tag, so who$\times$why analyses use only the attacker's own
 doctrine. On this corpus we report three descriptive results and one engine. First, operations are
 doctrinally \emph{legible} (76\% carry an attacker-rationale link) and \emph{follow} their doctrine in
-time (median $+3$ years; 75\% of dated pairs postdate publication). Second, doctrine is
+time (median $+3$ years; 74\% of dated pairs postdate publication). Second, doctrine is
 \emph{informative} about attribution: null-corrected mutual information is $1.67$ bits, cutting the
 effective suspect pool $88\!\rightarrow\!28$ actors. Third, deterrence is \emph{not identifiable}
 from an event atlas of this size --- we show why, rather than reporting a spurious effect. A
@@ -69,7 +69,8 @@ and so on across fifteen doctrine-authoring states. No prior public dataset carr
 
 \begin{enumerate}\itemsep2pt
 \item \textbf{The dataset} (\S\ref{sec:data}): 785 events, 222 actors, 86 doctrines (199 pillars),
-1{,}794 per-claim source records, on a formal JSON~Schema with an independent verification harness.
+1{,}794 per-claim source records, on a formal JSON~Schema with an independent verification harness;
+a Datasheet for Datasets \citep{gebru2021} accompanies the release.
 \item \textbf{A verification census} (\S\ref{sec:census}): every event audited six-point against its
 raw sources, 100\% coverage, with the status reported honestly (no ``verified'' overclaim) --- and,
 unusually, we show the audit made the engine numbers \emph{worse} on purpose.
@@ -127,7 +128,8 @@ omitted from this panel.}
 \code{incident\_type}, \code{initial\_vector}, dates (operation start, disclosure, end, kept
 distinct); attributions, each with an attributing organization, that organization's confidence, an
 AUSPEX assessment, an attribution level (nation / named-actor / named-unit / activity-cluster), and a
-source; targets; and \code{doctrine\_links}. Every load-bearing claim links to a primary source
+source; targets; and \code{doctrine\_links}. Actor identifiers and aliases follow the MISP Galaxy
+threat-actor clustering where it exists, reviewed on conflict \citep{mispgalaxy}. Every load-bearing claim links to a primary source
 (government release, vendor report, court document, indictment); URLs are curl-verified, and where a
 source is un-fetchable it is recorded \code{url:~null} with a note. We do not redistribute copyrighted
 source bodies --- only the URL and a SHA-256 content hash (\code{content\_sha256}) are published, so a
@@ -202,7 +204,7 @@ get a link.
 
 \paragraph{Precedence.} If doctrine merely rationalized operations after the fact, operations would
 predate their documents. They do not. Across 468 (operation, dated-doctrine) pairs, the median gap is
-$+3$ years and 75\% of pairs \emph{postdate} the document's publication (Figure~\ref{fig:precedence});
+$+3$ years and 74\% of pairs \emph{postdate} the document's publication (Figure~\ref{fig:precedence});
 restricting to formally dated instruments (statute / strategy / treaty), $n=400$ pairs, median $+4$
 years, 72\% follow. Precedence does not prove generation --- a state can codify what it already does ---
 but it rules out the simplest reverse-causation story.
@@ -211,7 +213,7 @@ but it rules out the simplest reverse-causation story.
 \includegraphics[width=.80\textwidth]{figures/fig-precedence.pdf}
 \caption{Temporal precedence. Distribution of (operation year $-$ doctrine publication year) over
 dated pairs. The mass sits to the right of zero: operations follow their doctrine (median $+3$~yr,
-75\% follow). The small right-tail overflow is foundational doctrines (e.g. Israel's Begin Doctrine,
+74\% follow). The small right-tail overflow is foundational doctrines (e.g. Israel's Begin Doctrine,
 1981) paired with recent operations.}
 \label{fig:precedence}
 \end{figure}
@@ -240,8 +242,8 @@ quarter of actor uncertainty and roughly triples the resolving power of a suspec
 
 Conditioning on the terminal outcome of an operation (data theft / systems denial / money / influence /
 access) also carries state identity. Figure~\ref{fig:mo} shows each state's outcome fingerprint. China
-is overwhelmingly data-theft (87\%); the profit-motivated buckets are unmistakable --- \code{criminal}
-66\% money, DPRK 51\% money (the only \emph{state} above 25\% on money, a signature of the
+is overwhelmingly data-theft (86\%); the profit-motivated buckets are unmistakable --- \code{criminal}
+65\% money, DPRK 50\% money (the only \emph{state} above 25\% on money, a signature of the
 sanctions-evasion revenue doctrine); Russia and Iran mix data-theft with a substantial denial /
 disruption share (31\%, 35\%). Formally, $H(\text{state})$ falls from $3.54$ to $3.00$ bits given the
 outcome (null $3.44$): modus operandi alone resolves 12\% of state identity beyond chance. As an actor
@@ -287,7 +289,7 @@ Four prediction engines run over the atlas: attribution (actor), doctrine, pilla
 the severe class imbalance of the one-and-few-event actor tail --- re-ranked by an L2 logistic stacker
 over discriminative meta-features (named-operator and target-org overlap, malware-lineage hits, campaign
 match, active-window). Doctrine and pillar use a multi-hot Naive Bayes. Features span target
-sectors/countries, initial vectors, incident types, MITRE ATT\&CK techniques and co-occurrence pairs,
+sectors/countries, initial vectors, incident types, MITRE ATT\&CK techniques \citep{mitreattack} and co-occurrence pairs,
 malware families with lineage partial-credit, named targets, geopolitical-marker proximity,
 dyad-reactivity lag, editorial and algorithmic campaign clusters, and TF-IDF prose --- with a temporal
 service prior (Empirical Bayes, $\lambda=0.2$) and temperature-scaled calibration.
@@ -305,7 +307,7 @@ not an exclusion, so numbers are comparable across engines and against the basel
 a MITRE ATT\&CK Groups technique lookup --- scores 3.4\% top-5, so the engines are learning structure,
 not exploiting a trivial prior. The honest prospective figure is the \textbf{temporal holdout} (train
 $\le$ 2023-12-31, score 2024+): on the \emph{rankable} subset --- events whose true actor existed before
-the split, the fair cold-start comparator --- attribution holds 56.2\% top-5 and doctrine 74.8\%;
+the split, the fair cold-start comparator --- attribution holds 56.2\% top-5 and doctrine 74.8\%;\footnote{The 56.2\% is the pre-registered reference-engine (multi-hot Naive Bayes) comparator, held fixed as the P6 target; the deployed ComplementNB\,$+$\,stack engine scores 56.9\% top-5 on the same rankable subset, so the deployed headline of $\approx$56\% is if anything conservative.}
 counting cold-start new-actor events as misses, the all-test figures are lower (attribution 40.8\%),
 which is the genuine cost of a fast-moving corpus stated plainly. Doctrine generalizes best through
 time: the strategic frame an operation serves is the most temporally stable thing the engines predict,
