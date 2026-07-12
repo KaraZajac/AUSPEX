@@ -3,6 +3,7 @@
  * plus Monte Carlo corpus-stability resampling.
  */
 import { atlas, eventActorStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { memoizeEval } from './eval-cache';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -67,6 +68,9 @@ function trueStateFor(event: AuspexEvent, a: ReturnType<typeof atlas>): string |
  * on the remaining N-1, score, find the rank of the true actor.
  */
 export function runLeaveOneOut(opts: ScoringOptions = {}, includeMeta = false): EvalSummary {
+  return memoizeEval('attribution-loo', { opts, includeMeta }, () => runLeaveOneOutImpl(opts, includeMeta));
+}
+function runLeaveOneOutImpl(opts: ScoringOptions = {}, includeMeta = false): EvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && (includeMeta || !isMetaEvent(e)));
@@ -194,6 +198,9 @@ export interface StabilityResult {
  * top candidate is the same as on the full corpus.
  */
 export function runStability(n: number = 10, dropFraction: number = 0.1, opts: ScoringOptions = {}, seed: number = 0xc0ffee): StabilityResult {
+  return memoizeEval('attribution-stability', { n, dropFraction, opts, seed }, () => runStabilityImpl(n, dropFraction, opts, seed));
+}
+function runStabilityImpl(n: number = 10, dropFraction: number = 0.1, opts: ScoringOptions = {}, seed: number = 0xc0ffee): StabilityResult {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => actorsOfEvent(e).size > 0 && !isMetaEvent(e));

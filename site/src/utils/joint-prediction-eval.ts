@@ -3,6 +3,7 @@
  * Pair-level multi-label evaluation.
  */
 import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { memoizeEval } from './eval-cache';
 import { actorsOfEvent, extractFeatures } from './attribution';
 import { doctrinesOfEvent } from './doctrine-prediction';
 import { rankPairs, type JointPair, type JointScoringOptions } from './joint-prediction';
@@ -43,6 +44,9 @@ export interface JointEvalSummary {
 }
 
 export function runJointLOO(opts: JointScoringOptions = {}, includeMeta = false): JointEvalSummary {
+  return memoizeEval('joint-loo', { opts, includeMeta }, () => runJointLOOImpl(opts, includeMeta));
+}
+function runJointLOOImpl(opts: JointScoringOptions = {}, includeMeta = false): JointEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter(

@@ -11,6 +11,7 @@
  * baseline)" — falsifiable, backtestable.
  */
 import { atlas, eventStateId, isAttackerRationale, type AuspexEvent, type PolicyAction } from './atlas';
+import { memoizeEval } from './eval-cache';
 
 export interface ClassKey {
   action_type: string;
@@ -206,6 +207,9 @@ export function runPolicyResponseAnalysis(opts: { minInstances?: number; windows
   totalEvents: number;
   generatedAt: string;
 } {
+  return memoizeEval('policy-response', { opts }, () => runPolicyResponseAnalysisImpl(opts));
+}
+function runPolicyResponseAnalysisImpl(opts: { minInstances?: number; windows?: LagWindow[] } = {}) {
   const minInstances = opts.minInstances ?? 3;
   const windows = opts.windows ?? DEFAULT_WINDOWS;
   const a = atlas();

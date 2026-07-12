@@ -14,6 +14,7 @@
  *  - Which states / years degrade most?
  */
 import { atlas, eventActorStateId, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { memoizeEval } from './eval-cache';
 import {
   actorsOfEvent,
   buildProfiles,
@@ -353,6 +354,9 @@ export function runAllTemporal(trainEnd: string): {
   joint: EngineTemporalSummary;
   generatedAt: string;
 } {
+  return memoizeEval('temporal-all', { trainEnd }, () => runAllTemporalImpl(trainEnd));
+}
+function runAllTemporalImpl(trainEnd: string) {
   return {
     attribution: runAttributionTemporal(trainEnd),
     doctrine: runDoctrineTemporal(trainEnd),

@@ -3,6 +3,7 @@
  * Multi-label evaluation on the ~129-pillar label space.
  */
 import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { memoizeEval } from './eval-cache';
 import { extractFeatures, buildVocab, type Vocab } from './attribution';
 import {
   buildPillarProfiles,
@@ -75,6 +76,9 @@ function pillarToDoctrine(pillarId: string, a: ReturnType<typeof atlas>): string
 }
 
 export function runPillarLOO(opts: PillarScoringOptions = {}, includeMeta = false): PillarEvalSummary {
+  return memoizeEval('pillar-loo', { opts, includeMeta }, () => runPillarLOOImpl(opts, includeMeta));
+}
+function runPillarLOOImpl(opts: PillarScoringOptions = {}, includeMeta = false): PillarEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => pillarsOfEvent(e, a).size > 0 && (includeMeta || !isMetaEvent(e)));

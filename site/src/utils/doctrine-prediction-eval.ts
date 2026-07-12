@@ -4,6 +4,7 @@
  * score the ranking against the whole set.
  */
 import { atlas, eventStateId, isMetaEvent, type AuspexEvent } from './atlas';
+import { memoizeEval } from './eval-cache';
 import { extractFeatures, buildVocab, type Vocab } from './attribution';
 import {
   buildDoctrineProfiles,
@@ -74,6 +75,9 @@ function averagePrecisionForEvent(true_: Set<string>, ranked: RankedDoctrine[]):
 }
 
 export function runDoctrineLOO(opts: DoctrineScoringOptions = {}, includeMeta = false): DoctrineEvalSummary {
+  return memoizeEval('doctrine-loo', { opts, includeMeta }, () => runDoctrineLOOImpl(opts, includeMeta));
+}
+function runDoctrineLOOImpl(opts: DoctrineScoringOptions = {}, includeMeta = false): DoctrineEvalSummary {
   const a = atlas();
   const allEvents = [...a.events.values()];
   const labeled = allEvents.filter((e) => doctrinesOfEvent(e, a).size > 0 && (includeMeta || !isMetaEvent(e)));
