@@ -50,7 +50,7 @@ Owners: **[K]** = Kara (judgment / human verification) · **[auto]** = tooled, I
 - ✅ **[auto]** README counts + accuracy current — **785/222/1,772**, engine **50.8/62.8/57.6/38.0** top-1, honesty caveats (retrodiction, vendor-truth, null=miss) intact. [2026-07-11]
 - ✅ **[K]** Version **v1.0.0** assigned (`CITATION.cff`, `.zenodo.json`) + `CHANGELOG.md` release notes written. [2026-07-11]
 - ⬜ **[auto]** `publish/export_release.py` produces the distributable bundle; run it and sanity-check the artifact.
-- ⬜ **[K]** Zenodo↔GitHub integration enabled (tag → auto-mint DOI) *or* manual-upload plan; note the concept DOI vs version DOI.
+- ✅ **[K]** Zenodo↔GitHub integration enabled; the `v1.0.0` release (2026-07-12) auto-minted concept DOI **10.5281/zenodo.21327251** (resolves to latest version).
 
 ## 6 · Ethics / scope / conflict-of-interest (reviewers + responsible publication)
 - ✅ No-conflict-of-interest statement (README; AUSPEX takes no govt/vendor funding).
