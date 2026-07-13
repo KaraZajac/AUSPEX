@@ -25,6 +25,7 @@ html {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;               /* never let a stray wide child scroll the whole page sideways */
 }
 
 body {
@@ -186,6 +187,72 @@ ul, ol {
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
+}
+/* search reads as an icon on desktop; gets a label in the collapsed mobile menu */
+.masthead-nav .nav-search-label { display: none; }
+
+/* Hamburger toggle — hidden on desktop, revealed when the nav collapses */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--ctp-surface0);
+  border-radius: var(--radius-sm);
+  color: var(--ctp-subtext1);
+  padding: 0.35rem;
+  cursor: pointer;
+  line-height: 0;
+}
+.nav-toggle svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.nav-toggle:hover { border-color: var(--ctp-overlay0); color: var(--ctp-text); }
+.nav-toggle .nt-close { display: none; }
+.nav-toggle.open .nt-open { display: none; }
+.nav-toggle.open .nt-close { display: block; }
+
+/* --- Responsive: collapse the 13-item nav into a toggle menu on narrow screens --- */
+@media (max-width: 900px) {
+  .nav-toggle { display: inline-flex; }
+  .masthead-inner { flex-wrap: wrap; gap: 0.75rem; }
+  .masthead-nav {
+    display: none;
+    order: 3;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-top: 0.25rem;
+    border-top: 1px solid var(--ctp-surface0);
+  }
+  .masthead-nav.open { display: flex; }
+  .masthead-nav a {
+    padding: 0.7rem 0.25rem;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .masthead-nav .nav-search {
+    margin-left: 0;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--ctp-surface0);
+  }
+  .masthead-nav .nav-search svg { width: 16px; height: 16px; }
+  .masthead-nav .nav-search-label { display: inline; }
+  .masthead-nav .theme-toggle { align-self: flex-start; margin-top: 0.6rem; }
+}
+
+/* --- Responsive: tighten spacing + headings on phones --- */
+@media (max-width: 640px) {
+  main { padding: 1.5rem 1rem 3rem; }
+  .hero { padding: 2.5rem 0 2rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
 }
 
 /* Hero */
