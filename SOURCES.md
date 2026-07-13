@@ -2,7 +2,7 @@
 
 Every source cited anywhere in the atlas — 1,772 records across 832 publishers — grouped by publisher, each with the atlas entities that cite it. Generated from `atlas/sources/**` by `site/tools/gen-sources-bib.ts`; do not edit by hand.
 
-**Tiers:** 796 primary · 884 secondary · 92 tertiary. **Links:** 1,720 carry a live URL, 1,572 an archive snapshot. Copyrighted source bodies are **not** redistributed — only the URL, the archive URL, and (in the atlas) a `content_sha256`; see [DATA-RIGHTS.md](DATA-RIGHTS.md). "Cited by" collapses per-claim references (an attribution or doctrine-link citation counts its parent event once).
+**Tiers:** 796 primary · 884 secondary · 92 tertiary. **Links:** 1,720 carry a live URL, 1,694 an archive snapshot. Copyrighted source bodies are **not** redistributed — only the URL, the archive URL, and (in the atlas) a `content_sha256`; see [DATA-RIGHTS.md](DATA-RIGHTS.md). "Cited by" collapses per-claim references (an attribution or doctrine-link citation counts its parent event once).
 
 ---
 
@@ -40,7 +40,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## ABC News (Australia)  <sup>1</sup>
 
 - [**'YOU HAVE BEEN PWND': Victoria's court system hit by ransomware attack**](https://www.abc.net.au/news/2024-01-02/victoria-court-system-targeted-in-cyber-attack-russian-hackers/103272118)  
-  <sub>`abc/2024-01-02_victoria-court-system-cyber-attack` · 2024-01-02 · secondary · cited by 1 event</sub>
+  <sub>`abc/2024-01-02_victoria-court-system-cyber-attack` · 2024-01-02 · secondary · [archived](https://web.archive.org/web/20260713201245/https://www.abc.net.au/news/2024-01-02/victoria-court-system-targeted-in-cyber-attack-russian-hackers/103272118) · cited by 1 event</sub>
 
 ## adidas Group  <sup>1</sup>
 
@@ -167,7 +167,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## arXiv (Puya Pakshad)  <sup>1</sup>
 
 - [**An In-depth Analysis of a Nation-Sponsored Attack: Case Study and Cybersecurity Insights**](https://arxiv.org/html/2409.19194v1)  
-  <sub>`arxiv/2024-09-28_darkseoul-nation-sponsored-attack-case-study` · 2024-09-28 · secondary · cited by 1 event</sub>
+  <sub>`arxiv/2024-09-28_darkseoul-nation-sponsored-attack-case-study` · 2024-09-28 · secondary · [archived](https://web.archive.org/web/20260713201547/https://arxiv.org/html/2409.19194v1) · cited by 1 event</sub>
 
 ## Asia-Pacific Economic Cooperation  <sup>1</sup>
 
@@ -211,7 +211,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Two bytes to $951m**](https://baesystemsai.blogspot.com/2016/04/two-bytes-to-951m.html)  
   <sub>`baesystems/2016-04-25_two-bytes-to-951m` · 2016-04-25 · primary · [archived](https://web.archive.org/web/20260708232257/https://baesystemsai.blogspot.com/2016/04/two-bytes-to-951m.html) · cited by 1 event</sub>
 - [**Lazarus & Watering-hole attacks**](https://baesystemsai.blogspot.com/2017/02/lazarus-watering-hole-attacks.html)  
-  <sub>`baesystems/2017-02-12_lazarus-watering-hole-attacks` · 2017-02-12 · primary · cited by 1 event</sub>
+  <sub>`baesystems/2017-02-12_lazarus-watering-hole-attacks` · 2017-02-12 · primary · [archived](https://web.archive.org/web/20260630162810/https://baesystemsai.blogspot.com/2017/02/lazarus-watering-hole-attacks.html) · cited by 1 event</sub>
 
 ## Baker Institute for Public Policy (Rice University)  <sup>1</sup>
 
@@ -354,15 +354,15 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**MGM Resorts ransomware attack led to $100 million loss, data theft**](https://www.bleepingcomputer.com/news/security/mgm-resorts-ransomware-attack-led-to-100-million-loss-data-theft/)  
   <sub>`bleepingcomputer/2023-10-06_mgm-ransomware-100m-loss-data-theft` · 2023-10-06 · secondary · [archived](https://web.archive.org/web/20260503134706/https://www.bleepingcomputer.com/news/security/mgm-resorts-ransomware-attack-led-to-100-million-loss-data-theft/) · cited by 1 event</sub>
 - [**New Hunters International ransomware possible rebrand of Hive**](https://www.bleepingcomputer.com/news/security/new-hunters-international-ransomware-possible-rebrand-of-hive/)  
-  <sub>`bleepingcomputer/2023-10-29_hunters-international-possible-hive-rebrand` · 2023-10-29 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2023-10-29_hunters-international-possible-hive-rebrand` · 2023-10-29 · secondary · [archived](https://web.archive.org/web/20260306130554/https://www.bleepingcomputer.com/news/security/new-hunters-international-ransomware-possible-rebrand-of-hive/) · cited by 1 event</sub>
 - [**Ransomware gang behind threats to Fred Hutch cancer patients**](https://www.bleepingcomputer.com/news/security/ransomware-gang-behind-threats-to-fred-hutch-cancer-patients/)  
   <sub>`bleepingcomputer/2023-12-15_ransomware-gang-behind-threats-fred-hutch-cancer-patients` · 2023-12-15 · secondary · [archived](https://web.archive.org/web/20260312003712/https://www.bleepingcomputer.com/news/security/ransomware-gang-behind-threats-to-fred-hutch-cancer-patients/) · cited by 1 event</sub>
 - [**Integris Health patients get extortion emails after cyberattack**](https://www.bleepingcomputer.com/news/security/integris-health-patients-get-extortion-emails-after-cyberattack/)  
   <sub>`bleepingcomputer/2023-12-26_integris-health-patients-extortion-emails` · 2023-12-26 · secondary · [archived](https://web.archive.org/web/20260203024828/https://www.bleepingcomputer.com/news/security/integris-health-patients-get-extortion-emails-after-cyberattack/) · cited by 1 event</sub>
 - [**Victoria court recordings exposed in reported ransomware attack**](https://www.bleepingcomputer.com/news/security/victoria-court-recordings-exposed-in-reported-ransomware-attack/)  
-  <sub>`bleepingcomputer/2024-01-02_victoria-court-recordings-qilin` · 2024-01-02 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-01-02_victoria-court-recordings-qilin` · 2024-01-02 · secondary · [archived](https://web.archive.org/web/20260611143321/https://www.bleepingcomputer.com/news/security/victoria-court-recordings-exposed-in-reported-ransomware-attack/) · cited by 1 event</sub>
 - [**Energy giant Schneider Electric hit by Cactus ransomware attack**](https://www.bleepingcomputer.com/news/security/energy-giant-schneider-electric-hit-by-cactus-ransomware-attack/)  
-  <sub>`bleepingcomputer/2024-01-29_schneider-electric-cactus-ransomware` · 2024-01-29 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-01-29_schneider-electric-cactus-ransomware` · 2024-01-29 · secondary · [archived](https://web.archive.org/web/20260713201751/https://www.bleepingcomputer.com/news/security/energy-giant-schneider-electric-hit-by-cactus-ransomware-attack/) · cited by 1 event</sub>
 - [**Clorox says cyberattack caused $49 million in expenses**](https://www.bleepingcomputer.com/news/security/clorox-says-cyberattack-caused-49-million-in-expenses/)  
   <sub>`bleepingcomputer/2024-02-03_clorox-49-million-expenses` · 2024-02-03 · secondary · [archived](https://web.archive.org/web/20250828221623/https://www.bleepingcomputer.com/news/security/clorox-says-cyberattack-caused-49-million-in-expenses/) · cited by 1 event</sub>
 - [**Integris Health says data breach impacts 2.4 million patients**](https://www.bleepingcomputer.com/news/security/integris-health-says-data-breach-impacts-24-million-patients/)  
@@ -374,7 +374,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Omni Hotels confirms cyberattack behind ongoing IT outage**](https://www.bleepingcomputer.com/news/security/omni-hotels-confirms-cyberattack-behind-ongoing-it-outage/)  
   <sub>`bleepingcomputer/2024-04-03_omni-hotels-confirms-cyberattack-behind-ongoing-it-outage` · 2024-04-03 · secondary · [archived](https://web.archive.org/web/20260220090941/https://www.bleepingcomputer.com/news/security/omni-hotels-confirms-cyberattack-behind-ongoing-it-outage/) · cited by 1 event</sub>
 - [**Daixin ransomware gang claims attack on Omni Hotels**](https://www.bleepingcomputer.com/news/security/daixin-ransomware-gang-claims-attack-on-omni-hotels/)  
-  <sub>`bleepingcomputer/2024-04-15_daixin-ransomware-gang-claims-attack-on-omni-hotels` · 2024-04-15 · secondary · cited by 1 event, 1 actor</sub>
+  <sub>`bleepingcomputer/2024-04-15_daixin-ransomware-gang-claims-attack-on-omni-hotels` · 2024-04-15 · secondary · [archived](https://web.archive.org/web/20260108154422/https://www.bleepingcomputer.com/news/security/daixin-ransomware-gang-claims-attack-on-omni-hotels/) · cited by 1 event, 1 actor</sub>
 - [**Ransomware gang starts leaking alleged stolen Change Healthcare data**](https://www.bleepingcomputer.com/news/security/ransomware-gang-starts-leaking-alleged-stolen-change-healthcare-data/)  
   <sub>`bleepingcomputer/2024-04-15_ransomhub-change-healthcare-data-leak` · 2024-04-15 · secondary · [archived](https://web.archive.org/web/20260218080312/https://www.bleepingcomputer.com/news/security/ransomware-gang-starts-leaking-alleged-stolen-change-healthcare-data/) · cited by 2 events</sub>
 - [**REvil hacker behind Kaseya ransomware attack gets 13 years in prison**](https://www.bleepingcomputer.com/news/security/revil-hacker-behind-kaseya-ransomware-attack-gets-13-years-in-prison/)  
@@ -382,13 +382,13 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Cencora data breach exposes US patient info from 11 drug companies**](https://www.bleepingcomputer.com/news/security/cencora-data-breach-exposes-us-patient-info-from-11-drug-companies/)  
   <sub>`bleepingcomputer/2024-05-24_cencora-breach-11-drug-companies` · 2024-05-24 · secondary · [archived](https://web.archive.org/web/20260222024802/https://www.bleepingcomputer.com/news/security/cencora-data-breach-exposes-us-patient-info-from-11-drug-companies/) · cited by 1 event</sub>
 - [**Christie's confirms breach after RansomHub threatens to leak data**](https://www.bleepingcomputer.com/news/security/christies-confirms-breach-after-ransomhub-threatens-to-leak-data/)  
-  <sub>`bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach` · 2024-05-28 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-05-28_christies-confirms-ransomhub-breach` · 2024-05-28 · secondary · [archived](https://web.archive.org/web/20260130212815/https://www.bleepingcomputer.com/news/security/christies-confirms-breach-after-ransomhub-threatens-to-leak-data/) · cited by 1 event</sub>
 - [**Snowflake account hacks linked to Santander, Ticketmaster breaches**](https://www.bleepingcomputer.com/news/security/snowflake-account-hacks-linked-to-santander-ticketmaster-breaches/)  
   <sub>`bleepingcomputer/2024-05-31_snowflake-hacks-santander-ticketmaster` · 2024-05-31 · secondary · [archived](https://web.archive.org/web/20260501121500/https://www.bleepingcomputer.com/news/security/snowflake-account-hacks-linked-to-santander-ticketmaster-breaches/) · cited by 1 event</sub>
 - [**Ticketmaster confirms massive breach after stolen data for sale online**](https://www.bleepingcomputer.com/news/security/ticketmaster-confirms-massive-breach-after-stolen-data-for-sale-online/)  
   <sub>`bleepingcomputer/2024-05-31_ticketmaster-confirms-breach` · 2024-05-31 · secondary · [archived](https://web.archive.org/web/20260501121457/https://www.bleepingcomputer.com/news/security/ticketmaster-confirms-massive-breach-after-stolen-data-for-sale-online/) · cited by 2 events</sub>
 - [**Qilin ransomware gang linked to attack on London hospitals**](https://www.bleepingcomputer.com/news/security/qilin-ransomware-gang-linked-to-attack-on-london-hospitals/)  
-  <sub>`bleepingcomputer/2024-06-05_qilin-london-hospitals` · 2024-06-05 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-06-05_qilin-london-hospitals` · 2024-06-05 · secondary · [archived](https://web.archive.org/web/20260611143125/https://www.bleepingcomputer.com/news/security/qilin-ransomware-gang-linked-to-attack-on-london-hospitals/) · cited by 1 event</sub>
 - [**Fake CrowdStrike fixes target companies with malware, data wipers**](https://www.bleepingcomputer.com/news/security/fake-crowdstrike-fixes-target-companies-with-malware-data-wipers/)  
   <sub>`bleepingcomputer/2024-07-22_handala-crowdstrike-outage-wiper` · 2024-07-21 · secondary · [archived](https://web.archive.org/web/20240723002220/https://www.bleepingcomputer.com/news/security/fake-crowdstrike-fixes-target-companies-with-malware-data-wipers/) · cited by 1 event</sub>
 - [**FrostyGoop malware attack cut off heat in Ukraine during winter**](https://www.bleepingcomputer.com/news/security/frostygoop-malware-attack-cut-off-heat-in-ukraine-during-winter/)  
@@ -432,7 +432,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## BleepingComputer — Sergiu Gatlan  <sup>1</sup>
 
 - [**Media giant Lee Enterprises says data breach affects 39,000 people**](https://www.bleepingcomputer.com/news/security/media-giant-lee-enterprises-says-data-breach-affects-39-000-people/)  
-  <sub>`bleepingcomputer/2025-06-04_lee-enterprises-data-breach-39000` · 2025-06-04 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2025-06-04_lee-enterprises-data-breach-39000` · 2025-06-04 · secondary · [archived](https://web.archive.org/web/20260514072735/https://www.bleepingcomputer.com/news/security/media-giant-lee-enterprises-says-data-breach-affects-39-000-people/) · cited by 1 event</sub>
 
 ## BleepingComputer (Bill Toulas)  <sup>6</sup>
 
@@ -445,7 +445,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Optics giant Hoya hit with $10 million ransomware demand**](https://www.bleepingcomputer.com/news/security/optics-giant-hoya-hit-with-10-million-ransomware-demand/)  
   <sub>`bleepingcomputer/2024-04-11_optics-giant-hoya-hit-with-10-million-ransomware-demand` · 2024-04-11 · secondary · [archived](https://web.archive.org/web/20251208130343/https://www.bleepingcomputer.com/news/security/optics-giant-hoya-hit-with-10-million-ransomware-demand/) · cited by 1 event</sub>
 - [**Russian charged by U.S. for creating RedLine infostealer malware**](https://www.bleepingcomputer.com/news/security/russian-charged-by-us-for-creating-redline-infostealer-malware/)  
-  <sub>`bleepingcomputer/2024-10-29_rudometov-redline-charges` · 2024-10-29 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-10-29_rudometov-redline-charges` · 2024-10-29 · secondary · [archived](https://web.archive.org/web/20260326115640/https://www.bleepingcomputer.com/news/security/russian-charged-by-us-for-creating-redline-infostealer-malware/) · cited by 1 event</sub>
 - [**Clop ransomware is now extorting 66 Cleo data-theft victims**](https://www.bleepingcomputer.com/news/security/clop-ransomware-is-now-extorting-66-cleo-data-theft-victims/)  
   <sub>`bleepingcomputer/2024-12-24_clop-extorting-66-cleo-victims` · 2024-12-24 · secondary · [archived](https://web.archive.org/web/20251205123815/https://www.bleepingcomputer.com/news/security/clop-ransomware-is-now-extorting-66-cleo-data-theft-victims/) · cited by 1 event</sub>
 
@@ -456,7 +456,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Microsoft's GitHub account hacked, private repositories stolen**](https://www.bleepingcomputer.com/news/security/microsofts-github-account-hacked-private-repositories-stolen/)  
   <sub>`bleepingcomputer/2020-05-06_microsoft-github-account-hacked` · 2020-05-06 · secondary · [archived](https://web.archive.org/web/20260603084413/https://www.bleepingcomputer.com/news/security/microsofts-github-account-hacked-private-repositories-stolen/) · cited by 1 event</sub>
 - [**South Korea's Nuclear Research agency hacked using VPN flaw**](https://www.bleepingcomputer.com/news/security/south-koreas-nuclear-research-agency-hacked-using-vpn-flaw/)  
-  <sub>`bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn` · 2021-06-19 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2021-06-19_kaeri-nuclear-research-agency-hacked-vpn` · 2021-06-19 · secondary · [archived](https://web.archive.org/web/20260306003324/https://www.bleepingcomputer.com/news/security/south-koreas-nuclear-research-agency-hacked-using-vpn-flaw/) · cited by 1 event</sub>
 - [**US govt offers $10 million bounty for info on Clop ransomware**](https://www.bleepingcomputer.com/news/security/us-govt-offers-10-million-bounty-for-info-on-clop-ransomware/)  
   <sub>`bleepingcomputer/2023-06-17_rfj-10m-clop-bounty` · 2023-06-17 · secondary · [archived](https://web.archive.org/web/20260220085057/https://www.bleepingcomputer.com/news/security/us-govt-offers-10-million-bounty-for-info-on-clop-ransomware/) · cited by 1 event</sub>
 - [**FBI disrupts Blackcat ransomware operation, creates decryption tool**](https://www.bleepingcomputer.com/news/security/fbi-disrupts-blackcat-ransomware-operation-creates-decryption-tool/)  
@@ -473,32 +473,32 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Trojan-Riddled WinRAR, Winbox, IDM Spreads StrongPity Spyware**](https://www.bleepingcomputer.com/news/security/trojan-riddled-winrar-winbox-idm-spreads-strongpity-spyware/)  
   <sub>`bleepingcomputer/2019-07-17_strongpity-winrar-winbox-idm` · 2019-07-17 · secondary · [archived](https://web.archive.org/web/20250717133656/https://www.bleepingcomputer.com/news/security/trojan-riddled-winrar-winbox-idm-spreads-strongpity-spyware/) · cited by 1 event</sub>
 - [**BMW Infiltrated by Hackers Hunting for Automotive Trade Secrets**](https://www.bleepingcomputer.com/news/security/bmw-infiltrated-by-hackers-hunting-for-automotive-trade-secrets/)  
-  <sub>`bleepingcomputer/2019-12-06_bmw-infiltrated-automotive-trade-secrets` · 2019-12-06 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2019-12-06_bmw-infiltrated-automotive-trade-secrets` · 2019-12-06 · secondary · [archived](https://web.archive.org/web/20251212110922/https://www.bleepingcomputer.com/news/security/bmw-infiltrated-by-hackers-hunting-for-automotive-trade-secrets/) · cited by 1 event</sub>
 - [**Ukraine links Belarusian hackers to phishing targeting its military**](https://www.bleepingcomputer.com/news/security/ukraine-links-belarusian-hackers-to-phishing-targeting-its-military/)  
   <sub>`bleepingcomputer/2022-02-25_ukraine-belarusian-hackers-military-phishing` · 2022-02-25 · secondary · [archived](https://web.archive.org/web/20250602140433/https://www.bleepingcomputer.com/news/security/ukraine-links-belarusian-hackers-to-phishing-targeting-its-military/) · cited by 1 event</sub>
 - [**LockBit ransomware gang claims Royal Mail cyberattack**](https://www.bleepingcomputer.com/news/security/lockbit-ransomware-gang-claims-royal-mail-cyberattack/)  
-  <sub>`bleepingcomputer/2023-02-07_lockbit-royal-mail-cyberattack` · 2023-02-07 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2023-02-07_lockbit-royal-mail-cyberattack` · 2023-02-07 · secondary · [archived](https://web.archive.org/web/20260301103901/https://www.bleepingcomputer.com/news/security/lockbit-ransomware-gang-claims-royal-mail-cyberattack/) · cited by 1 event</sub>
 - [**Clop ransomware claims it breached 130 orgs using GoAnywhere zero-day**](https://www.bleepingcomputer.com/news/security/clop-ransomware-claims-it-breached-130-orgs-using-goanywhere-zero-day/)  
-  <sub>`bleepingcomputer/2023-02-10_clop-claims-130-orgs-goanywhere` · 2023-02-10 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2023-02-10_clop-claims-130-orgs-goanywhere` · 2023-02-10 · secondary · [archived](https://web.archive.org/web/20260511140309/https://www.bleepingcomputer.com/news/security/clop-ransomware-claims-it-breached-130-orgs-using-goanywhere-zero-day/) · cited by 1 event</sub>
 - [**FBI seizes 13 more domains linked to DDoS-for-hire services**](https://www.bleepingcomputer.com/news/security/fbi-seizes-13-more-domains-linked-to-ddos-for-hire-services/)  
   <sub>`bleepingcomputer/2023-05-08_fbi-seizes-13-more-ddos-domains` · 2023-05-08 · secondary · [archived](https://web.archive.org/web/20260602075711/https://www.bleepingcomputer.com/news/security/fbi-seizes-13-more-domains-linked-to-ddos-for-hire-services/) · cited by 1 event</sub>
 - [**Yamaha Motor confirms ransomware attack on Philippines subsidiary**](https://www.bleepingcomputer.com/news/security/yamaha-motor-confirms-ransomware-attack-on-philippines-subsidiary/)  
-  <sub>`bleepingcomputer/2023-11-17_yamaha-motor-confirms-ransomware-attack-philippines` · 2023-11-17 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2023-11-17_yamaha-motor-confirms-ransomware-attack-philippines` · 2023-11-17 · secondary · [archived](https://web.archive.org/web/20260710115217/https://www.bleepingcomputer.com/news/security/yamaha-motor-confirms-ransomware-attack-on-philippines-subsidiary/) · cited by 1 event</sub>
 - [**Frontier Communications shuts down systems after cyberattack**](https://www.bleepingcomputer.com/news/security/frontier-communications-shuts-down-systems-after-cyberattack/)  
-  <sub>`bleepingcomputer/2024-04-18_frontier-shuts-down-systems-after-cyberattack` · 2024-04-18 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-04-18_frontier-shuts-down-systems-after-cyberattack` · 2024-04-18 · secondary · [archived](https://web.archive.org/web/20260217013648/https://www.bleepingcomputer.com/news/security/frontier-communications-shuts-down-systems-after-cyberattack/) · cited by 1 event</sub>
 - [**Romania's election systems targeted in over 85,000 cyberattacks**](https://www.bleepingcomputer.com/news/security/romanias-election-systems-targeted-in-over-85-000-cyberattacks/)  
-  <sub>`bleepingcomputer/2024-12-05_romania-election-systems-85000-cyberattacks` · 2024-12-05 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-12-05_romania-election-systems-85000-cyberattacks` · 2024-12-05 · secondary · [archived](https://web.archive.org/web/20260217151936/https://www.bleepingcomputer.com/news/security/romanias-election-systems-targeted-in-over-85-000-cyberattacks/) · cited by 1 event</sub>
 - [**Ascension: Health data of 5.6 million stolen in ransomware attack**](https://www.bleepingcomputer.com/news/security/ascension-health-data-of-56-million-stolen-in-ransomware-attack/)  
-  <sub>`bleepingcomputer/2024-12-20_ascension-health-data-56-million-stolen` · 2024-12-20 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-12-20_ascension-health-data-56-million-stolen` · 2024-12-20 · secondary · [archived](https://web.archive.org/web/20260713202034/https://www.bleepingcomputer.com/news/security/ascension-health-data-of-56-million-stolen-in-ransomware-attack/) · cited by 1 event</sub>
 - [**US Treasury hack linked to Silk Typhoon Chinese state hackers**](https://www.bleepingcomputer.com/news/security/us-treasury-hack-linked-to-silk-typhoon-chinese-state-hackers/)  
-  <sub>`bleepingcomputer/2025-01-09_treasury-hack-silk-typhoon` · 2025-01-09 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2025-01-09_treasury-hack-silk-typhoon` · 2025-01-09 · secondary · [archived](https://web.archive.org/web/20260411043654/https://www.bleepingcomputer.com/news/security/us-treasury-hack-linked-to-silk-typhoon-chinese-state-hackers/) · cited by 1 event</sub>
 - [**US nuclear weapons agency hacked in Microsoft SharePoint attacks**](https://www.bleepingcomputer.com/news/security/us-nuclear-weapons-agency-hacked-in-microsoft-sharepoint-attacks/)  
   <sub>`bleepingcomputer/2025-07-23_us-nuclear-agency-hacked-sharepoint` · 2025-07-23 · secondary · [archived](https://web.archive.org/web/20260712172304/https://www.bleepingcomputer.com/news/security/us-nuclear-weapons-agency-hacked-in-microsoft-sharepoint-attacks/) · cited by 1 event</sub>
 
 ## BlockchainReporter  <sup>1</sup>
 
 - [**North Korea-Linked Actor Accused Of $14M WOO X Theft, Rapid BTC Conversion Reported**](https://blockchainreporter.net/north-korea-linked-actor-accused-of-14m-woo-x-theft-rapid-btc-conversion-reported)  
-  <sub>`blockchainreporter/2025-10_woo-x-14m-tradertraitor-theft` · 2025-10-01 · secondary · cited by 1 event</sub>
+  <sub>`blockchainreporter/2025-10_woo-x-14m-tradertraitor-theft` · 2025-10-01 · secondary · [archived](https://web.archive.org/web/20260713202141/https://blockchainreporter.net/north-korea-linked-actor-accused-of-14m-woo-x-theft-rapid-btc-conversion-reported) · cited by 1 event</sub>
 
 ## blogeclecticiq  <sup>1</sup>
 
@@ -778,7 +778,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**CNMF Identifies and Discloses Malware used by Iranian APT MuddyWater**](https://www.cisa.gov/news-events/alerts/2022/01/12/cnmf-identifies-and-discloses-malware-used-iranian-apt-muddywater)  
   <sub>`cisa/2022-01-12_cnmf-discloses-muddywater-iran` · 2022-01-12 · primary · [archived](https://web.archive.org/web/20260127225833/https://www.cisa.gov/news-events/alerts/2022/01/12/cnmf-identifies-and-discloses-malware-used-iranian-apt-muddywater) · cited by 1 event</sub>
 - [**FBI and USSS Release Advisory on BlackByte Ransomware**](https://www.cisa.gov/news-events/alerts/2022/02/15/fbi-and-usss-release-advisory-blackbyte-ransomware)  
-  <sub>`cisa/2022-02-15_fbi-usss-release-advisory-blackbyte-ransomware` · 2022-02-15 · primary · cited by 1 event</sub>
+  <sub>`cisa/2022-02-15_fbi-usss-release-advisory-blackbyte-ransomware` · 2022-02-15 · primary · [archived](https://web.archive.org/web/20250806015205/https://www.cisa.gov/news-events/alerts/2022/02/15/fbi-and-usss-release-advisory-blackbyte-ransomware) · cited by 1 event</sub>
 - [**CNMF Discloses Malware in Ukraine**](https://www.cisa.gov/news-events/alerts/2022/07/21/cnmf-discloses-malware-ukraine)  
   <sub>`cisa/2022-07-21_cnmf-discloses-malware-ukraine` · 2022-07-21 · primary · [archived](https://web.archive.org/web/20250617113358/https://www.cisa.gov/news-events/alerts/2022/07/21/cnmf-discloses-malware-ukraine) · cited by 1 event</sub>
 
@@ -869,7 +869,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Alert (AA23-320A): Scattered Spider**](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a)  
   <sub>`cisa/2023-11-16_aa23-320a-scattered-spider-advisory` · 2023-11-16 · primary · [archived](https://web.archive.org/web/20260429015605/https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a) · cited by 3 events, 1 actor</sub>
 - [**Alert (AA23-353A): #StopRansomware: ALPHV Blackcat**](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-353a)  
-  <sub>`cisa/2023-12-19_aa23-353a-alphv-advisory` · 2023-12-19 · primary · cited by 1 event, 1 actor</sub>
+  <sub>`cisa/2023-12-19_aa23-353a-alphv-advisory` · 2023-12-19 · primary · [archived](https://web.archive.org/web/20260516014159/https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-353a) · cited by 1 event, 1 actor</sub>
 - [**Cybersecurity Advisory AA23-320A — Scattered Spider (July 29, 2025 update)**](https://www.ic3.gov/CSA/2025/250729.pdf)  
   <sub>`cisa/2025-07-29_aa23-320a-scattered-spider-update` · 2025-07-29 · primary · [archived](https://web.archive.org/web/20260625001941/https://www.ic3.gov/CSA/2025/250729.pdf) · cited by 1 event</sub>
 
@@ -1053,7 +1053,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Fox Kitten Campaign — Widespread Iranian Espionage-Offensive Campaign**](https://www.clearskysec.com/fox-kitten/)  
   <sub>`clearsky/2020-02_fox-kitten` · 2020-02-16 · secondary · [archived](https://web.archive.org/web/20260527201347/https://www.clearskysec.com/fox-kitten/) · cited by 1 event, 1 actor</sub>
 - [**Pay2Kitten (Fox Kitten 2) — Pay2Key Ransomware: A New Campaign by Fox Kitten**](https://www.clearskysec.com/pay2kitten/)  
-  <sub>`clearsky/2020-12_pay2kitten` · 2020-12-17 · secondary · cited by 1 event</sub>
+  <sub>`clearsky/2020-12_pay2kitten` · 2020-12-17 · secondary · [archived](https://web.archive.org/web/20260611033351/https://www.clearskysec.com/pay2kitten/) · cited by 1 event</sub>
 
 ## Cloudflare  <sup>1</sup>
 
@@ -1063,7 +1063,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## cloudgoogle  <sup>4</sup>
 
 - [**APT41 TOUGHPROGRESS malware using Google Calendar for C2**](https://cloud.google.com/blog/topics/threat-intelligence/apt41-innovative-tactics)  
-  <sub>`cloudgoogle/2025-05_apt41-toughprogress-malware-using-google` · 2025-05-28 · secondary · cited by 1 event</sub>
+  <sub>`cloudgoogle/2025-05_apt41-toughprogress-malware-using-google` · 2025-05-28 · secondary · [archived](https://web.archive.org/web/20260630163738/https://cloud.google.com/blog/topics/threat-intelligence/apt41-innovative-tactics) · cited by 1 event</sub>
 - [**COLDRIVER / Star Blizzard LOSTKEYS document-theft malware campaign**](https://cloud.google.com/blog/topics/threat-intelligence/coldriver-steal-documents-western-targets-ngos)  
   <sub>`cloudgoogle/2025-05_coldriver-star-blizzard-lostkeys-documen` · 2025-05-07 · secondary · [archived](https://web.archive.org/web/20260421080423/https://cloud.google.com/blog/topics/threat-intelligence/coldriver-steal-documents-western-targets-ngos) · cited by 1 event</sub>
 - [**Cl0p mass extortion via Oracle E-Business Suite zero-day (CVE-2025-61882)**](https://cloud.google.com/blog/topics/threat-intelligence/oracle-ebusiness-suite-zero-day-exploitation)  
@@ -1238,7 +1238,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Cybersecurity Incident - Frequently Asked Questions**](https://courts.vic.gov.au/csv-cybersecurity-incident-faqs)  
   <sub>`courts-vic/2024-01-02_csv-cybersecurity-incident-faqs` · 2024-01-02 · primary · [archived](https://web.archive.org/web/20260313110809/https://courts.vic.gov.au/csv-cybersecurity-incident-faqs) · cited by 1 event</sub>
 - [**Court Services Victoria – Cyber Incident Information (CEO statement, Thursday 18 January 2024: expanded per-court date ranges)**](https://courts.vic.gov.au/news/court-services-victoria-cyber-incident)  
-  <sub>`courts-vic/2024-01-18_csv-cyber-incident-update` · 2024-01-18 · primary · cited by 1 event</sub>
+  <sub>`courts-vic/2024-01-18_csv-cyber-incident-update` · 2024-01-18 · primary · [archived](https://web.archive.org/web/20260713202600/https://courts.vic.gov.au/news/court-services-victoria-cyber-incident) · cited by 1 event</sub>
 
 ## Courts and Tribunals Judiciary (England and Wales — High Court, Family Division)  <sup>1</sup>
 
@@ -1259,7 +1259,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Refined Kitten (APT33) — Adversary Profile**](https://www.crowdstrike.com/blog)  
   <sub>`crowdstrike/refined-kitten-profile` · 2019-01-01 · secondary · [archived](https://web.archive.org/web/20240929021727/https://www.crowdstrike.com/blog/) · cited by 1 actor</sub>
 - [**Glacial Panda — Adversary Profile (CrowdStrike Adversary Universe)**](https://www.crowdstrike.com/adversaries/glacial-panda/)  
-  <sub>`crowdstrike/glacial-panda-adversary-profile` · n.d. · secondary · cited by 1 event</sub>
+  <sub>`crowdstrike/glacial-panda-adversary-profile` · n.d. · secondary · [archived](https://web.archive.org/web/20260211195418/https://www.crowdstrike.com/adversaries/glacial-panda/) · cited by 1 event</sub>
 
 ## crowdstrike  <sup>1</sup>
 
@@ -1357,7 +1357,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## CyberScoop  <sup>16</sup>
 
 - [**Trump signs new memorandum to loosen rules on offensive cyber operations (NSPM-13)**](https://cyberscoop.com/ppd-20-eliminated-cyber-war-donald-trump-mike-rounds/)  
-  <sub>`cyberscoop/2018_nspm-13-existence-reporting` · 2018-08-15 · secondary · cited by 1 doctrine, 1 marker</sub>
+  <sub>`cyberscoop/2018_nspm-13-existence-reporting` · 2018-08-15 · secondary · [archived](https://web.archive.org/web/20260419111645/https://cyberscoop.com/ppd-20-eliminated-cyber-war-donald-trump-mike-rounds/) · cited by 1 doctrine, 1 marker</sub>
 - [**Cyber Command's midterm election work included trips to Ukraine, Montenegro, and North Macedonia**](https://cyberscoop.com/cyber-command-midterm-elections-ukraine-montenegro-and-north-macedonia/)  
   <sub>`cyberscoop/2019-03-14_hunt-forward-montenegro-midterms` · 2019-03-14 · secondary · [archived](https://web.archive.org/web/20260417083652/https://cyberscoop.com/cyber-command-midterm-elections-ukraine-montenegro-and-north-macedonia/) · cited by 1 event</sub>
 - [**Cyber Command's biggest VirusTotal upload looks to expose North Korean-linked malware**](https://cyberscoop.com/cyber-command-virus-total-north-korean-malware/)  
@@ -1369,7 +1369,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Belarusian hacktivist group attacks Belarusian Railways as military frictions mount**](https://cyberscoop.com/cyber-partisans-belarus-russia-ukraine/)  
   <sub>`cyberscoop/2022-01-24_cyber-partisans-belarus-railway` · 2022-01-24 · secondary · [archived](https://web.archive.org/web/20260514132203/https://cyberscoop.com/cyber-partisans-belarus-russia-ukraine/) · cited by 1 event</sub>
 - [**Russian hackers thwarted in attempt to take out electrical grid, Ukrainians say**](https://cyberscoop.com/ukrainian-electrical-grid-industroyer2-russia-sandworm/)  
-  <sub>`cyberscoop/2022-04-12_industroyer2-ukraine-grid-thwarted` · 2022-04-12 · secondary · cited by 1 event</sub>
+  <sub>`cyberscoop/2022-04-12_industroyer2-ukraine-grid-thwarted` · 2022-04-12 · secondary · [archived](https://web.archive.org/web/20260705184634/https://cyberscoop.com/ukrainian-electrical-grid-industroyer2-russia-sandworm/) · cited by 1 event</sub>
 - [**U.S. Cyber Command completes defensive cyber mission in Croatia**](https://cyberscoop.com/u-s-cyber-command-hunts-forward/)  
   <sub>`cyberscoop/2022-08-18_hunt-forward-croatia` · 2022-08-18 · secondary · [archived](https://web.archive.org/web/20260314133646/https://cyberscoop.com/u-s-cyber-command-hunts-forward/) · cited by 1 event</sub>
 - [**Belarusian hacktivists try NFTs to support antigovernment campaign**](https://cyberscoop.com/belarusian-hacktivist-group-nft-passport-lukashenko/)  
@@ -1377,7 +1377,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Wallets tied to CDK ransom group received $25 million two days after attack**](https://cyberscoop.com/cdk-ransom-blacksuit-25-million/)  
   <sub>`cyberscoop/2024-07-12_cdk-blacksuit-25-million` · 2024-07-12 · secondary · [archived](https://web.archive.org/web/20260313142720/https://cyberscoop.com/cdk-ransom-blacksuit-25-million/) · cited by 1 event</sub>
 - [**Alleged Russian Phobos ransomware administrator extradited to U.S., in custody**](https://cyberscoop.com/alleged-russian-phobos-ransomware-administrator-extradited-to-u-s-in-custody/)  
-  <sub>`cyberscoop/2024-11-18_ptitsyn-phobos-extradited` · 2024-11-18 · secondary · cited by 1 event</sub>
+  <sub>`cyberscoop/2024-11-18_ptitsyn-phobos-extradited` · 2024-11-18 · secondary · [archived](https://web.archive.org/web/20260713202817/https://cyberscoop.com/alleged-russian-phobos-ransomware-administrator-extradited-to-u-s-in-custody/) · cited by 1 event</sub>
 - [**Leaked documents show how firm supports Chinese hacking operations**](https://cyberscoop.com/isoon-chinese-apt-contractor-leak/)  
   <sub>`cyberscoop/isoon-contractor-leak` · 2024-02-22 · secondary · [archived](https://web.archive.org/web/20260411182818/https://cyberscoop.com/isoon-chinese-apt-contractor-leak/) · cited by 1 event</sub>
 - [**Russian court releases several REvil ransomware gang members**](https://cyberscoop.com/revil-ransomware-sentence-russia-time-served/)  
@@ -1449,7 +1449,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Change Healthcare, compromised by stolen credentials, did not have MFA turned on**](https://www.cybersecuritydive.com/news/change-healthcare-compromised-credentials-no-mfa/714792/)  
   <sub>`cybersecuritydive/2024-04-30_change-healthcare-compromised-credentials-no-mfa` · 2024-04-30 · secondary · [archived](https://web.archive.org/web/20260420055537/https://www.cybersecuritydive.com/news/change-healthcare-compromised-credentials-no-mfa/714792/) · cited by 1 event</sub>
 - [**UnitedHealth hikes number of Change cyberattack breach victims to 190M**](https://www.cybersecuritydive.com/news/change-healthcare-attack-affects-190-million/738369/)  
-  <sub>`cybersecuritydive/2025-01-27_change-healthcare-190-million` · 2025-01-27 · secondary · cited by 1 event</sub>
+  <sub>`cybersecuritydive/2025-01-27_change-healthcare-190-million` · 2025-01-27 · secondary · [archived](https://web.archive.org/web/20260705063415/https://www.cybersecuritydive.com/news/change-healthcare-attack-affects-190-million/738369/) · cited by 1 event</sub>
 - [**M&S says hackers gained access to customer data in April cyberattack**](https://www.cybersecuritydive.com/news/ms-hackers-customer-data-cyberattack/747956/)  
   <sub>`cybersecuritydive/2025-05-13_ms-customer-data` · 2025-05-13 · secondary · [archived](https://web.archive.org/web/20260516144739/https://www.cybersecuritydive.com/news/ms-hackers-customer-data-cyberattack/747956/) · cited by 1 event</sub>
 - [**Clorox files $380 million suit blaming Cognizant for 2023 cyberattack**](https://www.cybersecuritydive.com/news/clorox-380-million-suit-cognizant-cyberattack/753837/)  
@@ -1463,7 +1463,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Cybersecurity Dive (David Jones)  <sup>1</sup>
 
 - [**Hertz says personal data breached in connection with Cleo file-transfer flaws**](https://www.cybersecuritydive.com/news/hertz-data-breach-cleo/745391/)  
-  <sub>`cybersecuritydive/2025-04-15_hertz-data-breach-cleo` · 2025-04-15 · secondary · cited by 1 event</sub>
+  <sub>`cybersecuritydive/2025-04-15_hertz-data-breach-cleo` · 2025-04-15 · secondary · [archived](https://web.archive.org/web/20260116112922/https://www.cybersecuritydive.com/news/hertz-data-breach-cleo/745391/) · cited by 1 event</sub>
 
 ## Cyberspace Solarium Commission  <sup>1</sup>
 
@@ -1487,7 +1487,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Cyble Research and Intelligence Labs  <sup>1</sup>
 
 - [**Notorious SideCopy APT Group Sets Sights On India's DRDO**](https://cyble.com/blog/notorious-sidecopy-apt-group-sets-sights-on-indias-drdo/)  
-  <sub>`cyble/2023-03-21_sidecopy-drdo` · 2023-03-21 · primary · cited by 1 event, 1 actor</sub>
+  <sub>`cyble/2023-03-21_sidecopy-drdo` · 2023-03-21 · primary · [archived](https://web.archive.org/web/20260315165337/https://cyble.com/blog/notorious-sidecopy-apt-group-sets-sights-on-indias-drdo/) · cited by 1 event, 1 actor</sub>
 
 ## CYFIRMA  <sup>4</sup>
 
@@ -1496,14 +1496,14 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**DoNot APT Elevates its Tactics by Deploying Malicious Android Apps on Google Play Store**](https://www.cyfirma.com/research/donot-apt-elevates-its-tactics-by-deploying-malicious-android-apps-on-google-play-store/)  
   <sub>`cyfirma/2023-06-16_donot-android-google-play` · 2023-06-16 · secondary · [archived](https://web.archive.org/web/20260129090307/https://www.cyfirma.com/research/donot-apt-elevates-its-tactics-by-deploying-malicious-android-apps-on-google-play-store/) · cited by 1 event</sub>
 - [**APT Profile: Transparent Tribe aka APT36**](https://www.cyfirma.com/research/apt-profile-transparent-tribe-aka-apt36/)  
-  <sub>`cyfirma/2023-01-18_transparent-tribe-government-targeting` · 2025-05-15 · secondary · cited by 1 doctrine, 1 actor</sub>
+  <sub>`cyfirma/2023-01-18_transparent-tribe-government-targeting` · 2025-05-15 · secondary · [archived](https://web.archive.org/web/20260317122540/https://www.cyfirma.com/research/apt-profile-transparent-tribe-aka-apt36/) · cited by 1 doctrine, 1 actor</sub>
 - [**Android Malware in DONOT APT Operations**](https://www.cyfirma.com/research/android-malware-in-donot-apt-operations/)  
   <sub>`cyfirma/2025-01-17_donot-tanzeem-android` · 2025-01-17 · secondary · [archived](https://web.archive.org/web/20260308031243/https://www.cyfirma.com/research/android-malware-in-donot-apt-operations/) · cited by 1 event</sub>
 
 ## Cyfirma  <sup>1</sup>
 
 - [**Firewalls and Frontlines: The India-Pakistan Cyber Battlefield Crisis**](https://www.cyfirma.com/research/firewalls-and-frontlines-the-india-pakistan-cyber-battlefield-crisis/)  
-  <sub>`cyfirma/2025-05-15_apt36-pahalgam-tempo` · 2025-06-05 · secondary · cited by 1 event</sub>
+  <sub>`cyfirma/2025-05-15_apt36-pahalgam-tempo` · 2025-06-05 · secondary · [archived](https://web.archive.org/web/20260610023949/https://www.cyfirma.com/research/firewalls-and-frontlines-the-india-pakistan-cyber-battlefield-crisis/) · cited by 1 event</sub>
 
 ## cyfirma  <sup>1</sup>
 
@@ -1554,7 +1554,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Defense News  <sup>1</sup>
 
 - [**French defense chief touts offensive tack in new cyber strategy**](https://www.defensenews.com/global/europe/2019/01/18/french-defense-chief-touts-offensive-tack-in-new-cyber-strategy/)  
-  <sub>`defensenews/2019-01-18_french-defense-chief-offensive-cyber-strategy` · 2019-01-18 · secondary · cited by 1 event</sub>
+  <sub>`defensenews/2019-01-18_french-defense-chief-offensive-cyber-strategy` · 2019-01-18 · secondary · [archived](https://web.archive.org/web/20260713202916/https://www.defensenews.com/global/europe/2019/01/18/french-defense-chief-touts-offensive-tack-in-new-cyber-strategy/) · cited by 1 event</sub>
 
 ## Defense One  <sup>2</sup>
 
@@ -1584,13 +1584,13 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**GCHQ Operation Socialist — Belgacom intrusion**](https://www.spiegel.de/international/europe/british-spy-agency-gchq-hacked-belgian-telecoms-firm-a-923406.html)  
   <sub>`spiegel/2013-09-20_socialist-belgacom` · 2013-09-20 · primary · [archived](https://web.archive.org/web/20260526144208/https://www.spiegel.de/international/europe/british-spy-agency-gchq-hacked-belgian-telecoms-firm-a-923406.html) · cited by 1 event, 2 actors, 1 service, 1 target</sub>
 - [**Merkel Cellphone Tap — NSA SCS / STATEROOM Berlin**](https://www.spiegel.de/international/world/cover-story-how-nsa-spied-on-merkel-cell-phone-from-berlin-embassy-a-930205.html)  
-  <sub>`spiegel/2013-10-23_merkel-phone-tap` · 2013-10-23 · primary · cited by 1 event, 1 actor, 1 service</sub>
+  <sub>`spiegel/2013-10-23_merkel-phone-tap` · 2013-10-23 · primary · [archived](https://web.archive.org/web/20260713210900/https://www.spiegel.de/international/germany/cover-story-how-nsa-spied-on-merkel-cell-phone-from-berlin-embassy-a-930205.html) · cited by 1 event, 1 actor, 1 service</sub>
 - [**Inside TAO: Documents Reveal Top NSA Hacking Unit (ANT Catalog)**](https://www.spiegel.de/international/world/the-nsa-uses-powerful-toolbox-in-effort-to-spy-on-global-networks-a-940969.html)  
   <sub>`spiegel/2013-12-30_nsa-ant-catalog` · 2013-12-30 · primary · [archived](https://web.archive.org/web/20260601145342/https://www.spiegel.de/international/world/the-nsa-uses-powerful-toolbox-in-effort-to-spy-on-global-networks-a-940969.html) · cited by 2 actors, 2 services</sub>
 - [**NSA Targeting of Huawei HQ (Snowden documents)**](https://www.spiegel.de/international/world/nsa-spied-on-chinese-government-and-networking-firm-huawei-a-960199.html)  
   <sub>`spiegel/2014-03-22_huawei-nsa` · 2014-03-22 · primary · [archived](https://web.archive.org/web/20260502074825/https://www.spiegel.de/international/world/nsa-spied-on-chinese-government-and-networking-firm-huawei-a-960199.html) · cited by 1 event</sub>
 - [**The Digital Arms Race: NSA Preps America for Future Battle**](https://www.spiegel.de/international/world/the-digital-arms-race-nsa-preps-america-for-future-battle-a-1013409.html)  
-  <sub>`spiegel/2014-12-28_belgacom-bics-grx` · 2014-12-28 · primary · cited by 3 events</sub>
+  <sub>`spiegel/2014-12-28_belgacom-bics-grx` · 2014-12-28 · primary · [archived](https://web.archive.org/web/20260713211044/https://www.spiegel.de/international/world/new-snowden-docs-indicate-scope-of-nsa-preparations-for-cyber-battle-a-1013409.html) · cited by 3 events</sub>
 
 ## Der Spiegel (in cooperation with The Intercept)  <sup>1</sup>
 
@@ -1758,7 +1758,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**DoNot Go! Do not respawn!**](https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/)  
   <sub>`eset/2019-04_donot-pakistan-government-targeting` · 2022-01-18 · primary · [archived](https://web.archive.org/web/20260417031638/https://www.welivesecurity.com/2022/01/18/donot-go-do-not-respawn/) · cited by 1 event</sub>
 - [**Love scam or espionage? Transparent Tribe lures Indian and Pakistani officials**](https://www.welivesecurity.com/2023/03/07/love-scam-espionage-transparent-tribe-lures-indian-pakistani-officials/)  
-  <sub>`eset/2023-03-07_love-scam-espionage-transparent-tribe` · 2023-03-07 · primary · cited by 1 event</sub>
+  <sub>`eset/2023-03-07_love-scam-espionage-transparent-tribe` · 2023-03-07 · primary · [archived](https://web.archive.org/web/20260713203250/https://www.welivesecurity.com/2023/03/07/love-scam-espionage-transparent-tribe-lures-indian-pakistani-officials/) · cited by 1 event</sub>
 
 ## ESET Research  <sup>3</sup>
 
@@ -1777,7 +1777,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## ESET WeLiveSecurity  <sup>5</sup>
 
 - [**BlackEnergy trojan strikes again: Attacks Ukrainian electric power industry**](https://www.welivesecurity.com/2016/01/04/blackenergy-trojan-strikes-again-attacks-ukrainian-electric-power-industry/)  
-  <sub>`eset/2016-01-04_blackenergy-ukraine-electric-power` · 2016-01-04 · primary · cited by 1 event</sub>
+  <sub>`eset/2016-01-04_blackenergy-ukraine-electric-power` · 2016-01-04 · primary · [archived](https://web.archive.org/web/20260513234439/https://www.welivesecurity.com/2016/01/04/blackenergy-trojan-strikes-again-attacks-ukrainian-electric-power-industry/) · cited by 1 event</sub>
 - [**WIN32/INDUSTROYER — A New Threat for Industrial Control Systems**](https://www.welivesecurity.com/2017/06/12/industroyer-biggest-threat-industrial-control-systems-since-stuxnet/)  
   <sub>`eset/2017-06_industroyer-win32` · 2017-06-12 · primary · [archived](https://web.archive.org/web/20260630161446/https://www.welivesecurity.com/2017/06/12/industroyer-biggest-threat-industrial-control-systems-since-stuxnet/) · cited by 1 event, 1 target</sub>
 - [**IsaacWiper and HermeticWizard — New Wiper and Worm Targeting Ukraine**](https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine/)  
@@ -1868,7 +1868,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Federation of American Scientists  <sup>1</sup>
 
 - [**Section 1642 of the FY2019 NDAA — Analysis of Military Cyber Operations Authority**](https://sgp.fas.org/news/2018/07/ndaa-1642.html)  
-  <sub>`fas/section-1642-analysis` · 2018-12-01 · tertiary · cited by 1 doctrine</sub>
+  <sub>`fas/section-1642-analysis` · 2018-12-01 · tertiary · [archived](https://web.archive.org/web/20250915215310/https://sgp.fas.org/news/2018/07/ndaa-1642.html) · cited by 1 doctrine</sub>
 
 ## Federation of American Scientists (FAS) Nuclear Information Project  <sup>1</sup>
 
@@ -1895,7 +1895,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Cyber Espionage Is Alive and Well: APT32 and the Threat to Global Corporations**](https://www.mandiant.com/resources/blog/cyber-espionage-apt32)  
   <sub>`fireeye/2017-05-14_apt32-cyber-espionage` · 2017-05-14 · primary · [archived](https://web.archive.org/web/20240229221531/https://www.mandiant.com/resources/blog/cyber-espionage-apt32) · cited by 1 event, 1 doctrine, 1 actor, 1 service</sub>
 - [**Insights into Iranian Cyber Espionage — APT33 Targets Aerospace and Energy Sectors and has Ties to Destructive Malware**](https://cloud.google.com/blog/topics/threat-intelligence/apt33-insights-into-iranian-cyber-espionage/)  
-  <sub>`fireeye/2017-09-20_apt33` · 2017-09-20 · primary · cited by 1 target</sub>
+  <sub>`fireeye/2017-09-20_apt33` · 2017-09-20 · primary · [archived](https://web.archive.org/web/20260523073945/https://cloud.google.com/blog/topics/threat-intelligence/apt33-insights-into-iranian-cyber-espionage/) · cited by 1 target</sub>
 - [**APT37 (Reaper) — The Overlooked North Korean Actor**](https://www.mandiant.com/resources/blog/apt37-overlooked-north-korean-actor)  
   <sub>`mandiant/2018-02-20_apt37-reaper-report` · 2018-02-20 · secondary · [archived](https://web.archive.org/web/20240405164714/https://www.mandiant.com/resources/blog/apt37-overlooked-north-korean-actor) · cited by 1 doctrine, 1 actor, 1 service</sub>
 
@@ -1984,7 +1984,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Notice of information security incident involving Fred Hutchinson Cancer Center**](https://www.fredhutch.org/en/news/releases/2023/12/notice-of-information-security-incident-involving-fred-hutchinso.html)  
   <sub>`fredhutch/2023-12-01_notice-of-information-security-incident` · 2023-12-01 · primary · [archived](https://web.archive.org/web/20260112051211/https://www.fredhutch.org/en/news/releases/2023/12/notice-of-information-security-incident-involving-fred-hutchinso.html) · cited by 1 event</sub>
 - [**Fred Hutchinson Cancer Center notifies patients of data security incident**](https://www.fredhutch.org/en/news/releases/2023/12/fred-hutchinson-cancer-center-notifies-patients-of-data-security.html)  
-  <sub>`fredhutch/2023-12-22_notifies-patients-of-data-security-incident` · 2023-12-22 · primary · cited by 1 event</sub>
+  <sub>`fredhutch/2023-12-22_notifies-patients-of-data-security-incident` · 2023-12-22 · primary · [archived](https://web.archive.org/web/20260115224145/https://www.fredhutch.org/en/news/releases/2023/12/fred-hutchinson-cancer-center-notifies-patients-of-data-security.html) · cited by 1 event</sub>
 
 ## Freedom House  <sup>1</sup>
 
@@ -2122,19 +2122,19 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Group-IB  <sup>7</sup>
 
 - [**Cobalt: Their Evolution and Joint Operations — analysis of the Cobalt ATM-jackpotting cybercrime group**](https://www.group-ib.com/resources/research-hub/cobalt/)  
-  <sub>`group-ib/2017-08-01_cobalt-group-report` · 2018-05-29 · primary · cited by 1 event, 1 actor</sub>
+  <sub>`group-ib/2017-08-01_cobalt-group-report` · 2018-05-29 · primary · [archived](https://web.archive.org/web/20260713203538/https://www.group-ib.com/resources/research-hub/cobalt-evolution/) · cited by 1 event, 1 actor</sub>
 - [**Group with numerous faces: chronicle of UltraRank's deceptive JS-sniffer campaigns (UltraRank: the unexpected twist of a JS-sniffer triple threat)**](https://www.group-ib.com/media-center/press-releases/ultrarank/)  
   <sub>`group-ib/2020-08-27_ultrarank-triple-threat` · 2020-08-27 · primary · [archived](https://web.archive.org/web/20220925010038/https://www.group-ib.com/media-center/press-releases/ultrarank/) · cited by 1 event, 1 actor</sub>
 - [**New attacks by UltraRank group**](https://www.group-ib.com/blog/ultrarank/)  
   <sub>`group-ib/2020-11-12_ultrarank-clusters` · 2020-12-23 · secondary · [archived](https://web.archive.org/web/20230928164715/https://www.group-ib.com/blog/ultrarank/) · cited by 1 event, 1 actor</sub>
 - [**Roasting 0ktapus: The phishing campaign going after Okta identity credentials**](https://www.group-ib.com/blog/0ktapus/)  
-  <sub>`group-ib/2022-08-25_0ktapus-okta-phishing` · 2022-08-25 · primary · cited by 1 event</sub>
+  <sub>`group-ib/2022-08-25_0ktapus-okta-phishing` · 2022-08-25 · primary · [archived](https://web.archive.org/web/20260623165608/https://www.group-ib.com/blog/0ktapus/) · cited by 1 event</sub>
 - [**APT SideWinder — Attacks Against the Public Sector of Pakistan, Bangladesh, and Beyond**](https://www.group-ib.com/resources/research-hub/sidewinder-apt/)  
   <sub>`groupib/2022-05-17_sidewinder-pakistan-china-targeting` · 2022-05-17 · primary · [archived](https://web.archive.org/web/20260610034551/https://www.group-ib.com/resources/research-hub/sidewinder-apt/) · cited by 1 event, 1 doctrine, 1 actor</sub>
 - [**SideWinder.AntiBot.Script — SideWinder's new tool that narrows their reach to Pakistan**](https://www.group-ib.com/blog/sidewinder-antibot/)  
-  <sub>`groupib/2022-06-01_sidewinder-antibot-script` · 2022-06-01 · primary · cited by 1 event</sub>
+  <sub>`groupib/2022-06-01_sidewinder-antibot-script` · 2022-06-01 · primary · [archived](https://web.archive.org/web/20230928180634/https://www.group-ib.com/blog/sidewinder-antibot/) · cited by 1 event</sub>
 - [**The distinctive rattle of APT SideWinder**](https://www.group-ib.com/blog/hunting-sidewinder/)  
-  <sub>`groupib/2023-05-17_sidewinder-distinctive-rattle` · 2023-05-17 · primary · cited by 1 event</sub>
+  <sub>`groupib/2023-05-17_sidewinder-distinctive-rattle` · 2023-05-17 · primary · [archived](https://web.archive.org/web/20260713203626/https://www.group-ib.com/blog/hunting-sidewinder/) · cited by 1 event</sub>
 
 ## Hacker Combat  <sup>1</sup>
 
@@ -2172,7 +2172,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Healthcare Finance News (Susan Morse)  <sup>1</sup>
 
 - [**Ascension restores its EHR system hospital-wide after ransomware attack**](https://www.healthcarefinancenews.com/news/ascension-restores-its-ehr-system-hospital-wide-after-ransomware-attack)  
-  <sub>`healthcarefinancenews/2024-06-14_ascension-restores-ehr-hospital-wide` · 2024-06-14 · secondary · cited by 1 event</sub>
+  <sub>`healthcarefinancenews/2024-06-14_ascension-restores-ehr-hospital-wide` · 2024-06-14 · secondary · [archived](https://web.archive.org/web/20250723034805/https://www.healthcarefinancenews.com/news/ascension-restores-its-ehr-system-hospital-wide-after-ransomware-attack) · cited by 1 event</sub>
 
 ## Healthcare IT News (Andrea Fox)  <sup>1</sup>
 
@@ -2239,7 +2239,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Human Rights Watch  <sup>2</sup>
 
 - [**Vietnam: Withdraw Problematic Cyber Security Law**](https://www.hrw.org/news/2018/06/07/vietnam-withdraw-problematic-cyber-security-law)  
-  <sub>`hrw/2018-06-08_vietnam-cybersecurity-law` · 2018-06-07 · secondary · cited by 1 event, 1 doctrine, 1 service, 1 marker</sub>
+  <sub>`hrw/2018-06-08_vietnam-cybersecurity-law` · 2018-06-07 · secondary · [archived](https://web.archive.org/web/20260309024132/https://www.hrw.org/news/2018/06/07/vietnam-withdraw-problematic-cyber-security-law) · cited by 1 event, 1 doctrine, 1 service, 1 marker</sub>
 - [**Belarus — Events of 2020 (World Report 2021 chapter)**](https://www.hrw.org/world-report/2021/country-chapters/belarus)  
   <sub>`hrw/2021-01-25_belarus-2020-repression-overview` · 2021-01-25 · secondary · [archived](https://web.archive.org/web/20260320002242/https://www.hrw.org/world-report/2021/country-chapters/belarus) · cited by 1 doctrine, 1 service</sub>
 
@@ -2309,7 +2309,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Chanel and Pandora Breached as Salesforce Campaign Continues**](https://www.infosecurity-magazine.com/news/chanel-pandora-breach-salesforce/)  
   <sub>`infosecurity-magazine/2025-08-06_chanel-pandora-salesforce-breach` · 2025-08-06 · secondary · [archived](https://web.archive.org/web/20260514185109/https://www.infosecurity-magazine.com/news/chanel-pandora-breach-salesforce/) · cited by 1 event</sub>
 - [**Inside DragonForce, the Group Tied to M&S, Co-op and Harrods Hacks**](https://www.infosecurity-magazine.com/news/dragonforce-goup-ms-coop-harrods/)  
-  <sub>`infosecuritymag/2025-05-06_dragonforce-ms-coop-harrods` · 2025-05-06 · secondary · cited by 1 event</sub>
+  <sub>`infosecuritymag/2025-05-06_dragonforce-ms-coop-harrods` · 2025-05-06 · secondary · [archived](https://web.archive.org/web/20260602002337/https://www.infosecurity-magazine.com/news/dragonforce-goup-ms-coop-harrods/) · cited by 1 event</sub>
 
 ## Institut Montaigne  <sup>1</sup>
 
@@ -2336,7 +2336,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## International Institute for Strategic Studies (IISS)  <sup>3</sup>
 
 - [**Cyber Capabilities and National Power: A Net Assessment — Chapter 15: Vietnam**](https://www.iiss.org/globalassets/media-library---content--migration/files/research-papers/cyber-power-report/cyber-capabilities-and-national-power---vietnam.pdf)  
-  <sub>`iiss/2021-06_cyber-capabilities-national-power-vietnam` · 2021-06-28 · secondary · cited by 1 event</sub>
+  <sub>`iiss/2021-06_cyber-capabilities-national-power-vietnam` · 2021-06-28 · secondary · [archived](https://web.archive.org/web/20260713204250/https://www.iiss.org/globalassets/media-library---content--migration/files/research-papers/cyber-power-report/cyber-capabilities-and-national-power---vietnam.pdf) · cited by 1 event</sub>
 - [**Cyber Capabilities and National Power, Volume 2 — Chapter 13: The United Arab Emirates**](https://www.iiss.org/globalassets/media-library---content--migration/files/research-papers/2023/09/cyber-capabilities-and-national-power-vol-2/cyber-capabilities-and-national-power_volume-2_13-the-united-arab-emirates.pdf)  
   <sub>`iiss/2023-09_cyber-capabilities-national-power-vol2-uae` · 2023-09-01 · secondary · [archived](https://web.archive.org/web/20260302175138/https://www.iiss.org/globalassets/media-library---content--migration/files/research-papers/2023/09/cyber-capabilities-and-national-power-vol-2/cyber-capabilities-and-national-power_volume-2_13-the-united-arab-emirates.pdf) · cited by 1 event</sub>
 - [**China's 15th Five-Year Plan**](https://www.iiss.org/online-analysis/online-analysis/2026/03/chinas-15th-five-year-plan/)  
@@ -2396,7 +2396,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**\[Security Update\] Incident Details — July 2023**](https://jumpcloud.com/blog/security-update-incident-details)  
   <sub>`jumpcloud/2023-07-12_incident-details` · 2023-07-12 · primary · [archived](https://web.archive.org/web/20260312112744/https://jumpcloud.com/blog/security-update-incident-details) · cited by 1 event</sub>
 - [**July 2023 Incident Indicators of Compromise (IoCs)**](https://jumpcloud.com/blog/july-2023-iocs)  
-  <sub>`jumpcloud/2023-07-12_post-incident` · 2023-07-12 · primary · cited by 1 event</sub>
+  <sub>`jumpcloud/2023-07-12_post-incident` · 2023-07-12 · primary · [archived](https://web.archive.org/web/20260713204323/https://jumpcloud.com/support/july-2023-iocs) · cited by 1 event</sub>
 
 ## K7 Labs  <sup>2</sup>
 
@@ -2433,7 +2433,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**On the StrongPity Waterhole Attacks Targeting Italian and Belgian Encryption Users**](https://securelist.com/on-the-strongpity-waterhole-attacks-targeting-italian-and-belgian-encryption-users/76147/)  
   <sub>`kaspersky/2016-10_strongpity-watering-hole` · 2016-10-03 · primary · [archived](https://web.archive.org/web/20260521035610/https://securelist.com/on-the-strongpity-waterhole-attacks-targeting-italian-and-belgian-encryption-users/76147/) · cited by 1 event, 1 actor</sub>
 - [**APT Trends report Q1 2018**](https://securelist.com/apt-trends-report-q1-2018/85100/)  
-  <sub>`kaspersky/2018-03-07_sidewinder-targeting-pakistan` · 2018-04-12 · primary · cited by 1 event, 1 doctrine, 1 actor</sub>
+  <sub>`kaspersky/2018-03-07_sidewinder-targeting-pakistan` · 2018-04-12 · primary · [archived](https://web.archive.org/web/20260713204501/https://securelist.com/apt-trends-report-q1-2018/85280/) · cited by 1 event, 1 doctrine, 1 actor</sub>
 - [**Transparent Tribe: Evolution analysis, part 1**](https://securelist.com/transparent-tribe-part-1/98127/)  
   <sub>`securelist/2020-08-20_transparent-tribe-evolution-part1` · 2020-08-20 · secondary · [archived](https://web.archive.org/web/20260630160150/https://securelist.com/transparent-tribe-part-1/98127/) · cited by 1 event</sub>
 - [**SideWinder APT — A New Wave of Attacks and the StealerBot Toolset**](https://securelist.com/sidewinder-apt/114089/)  
@@ -2448,7 +2448,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Flame / sKyWIper Analysis**](https://securelist.com/the-flame-questions-and-answers/34344/)  
   <sub>`kaspersky/2012-05-28_flame-skywiper` · 2012-05-28 · secondary · [archived](https://web.archive.org/web/20260603170600/https://securelist.com/the-flame-questions-and-answers/34344/) · cited by 1 event</sub>
 - [**Flame: Replication via Windows Update MITM proxy server ("Gadget in the middle")**](https://securelist.com/gadget-in-the-middle-flame-malware-spreading-vector-identified/33002/)  
-  <sub>`kaspersky/2012-06-04_gadget-in-the-middle` · 2012-06-04 · secondary · cited by 1 event</sub>
+  <sub>`kaspersky/2012-06-04_gadget-in-the-middle` · 2012-06-04 · secondary · [archived](https://web.archive.org/web/20260713204409/https://securelist.com/flame-replication-via-windows-update-mitm-proxy-server/33002/) · cited by 1 event</sub>
 - [**Back to Stuxnet: the missing link**](https://securelist.com/back-to-stuxnet-the-missing-link/33174/)  
   <sub>`kaspersky/2012-06-11_back-to-stuxnet-missing-link` · 2012-06-11 · secondary · [archived](https://web.archive.org/web/20260508145243/https://securelist.com/back-to-stuxnet-the-missing-link/33174/) · cited by 1 event</sub>
 - [**Gauss: Nation-state cyber-surveillance meets banking Trojan**](https://securelist.com/gauss-abnormal-distribution/36620/)  
@@ -2466,7 +2466,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Unraveling the Lamberts Toolkit**](https://securelist.com/unraveling-the-lamberts-toolkit/77990/)  
   <sub>`kaspersky/2017-04-11_lamberts-toolkit` · 2017-04-11 · secondary · [archived](https://web.archive.org/web/20260509144457/https://securelist.com/unraveling-the-lamberts-toolkit/77990/) · cited by 2 events, 1 actor, 1 service</sub>
 - [**Andariel deploys DTrack and Maui ransomware**](https://securelist.com/andariel-deploys-dtrack-and-maui-ransomware/108022/)  
-  <sub>`kaspersky/2022-08-09_andariel-dtrack-maui` · 2022-08-09 · secondary · cited by 1 event</sub>
+  <sub>`kaspersky/2022-08-09_andariel-dtrack-maui` · 2022-08-09 · secondary · [archived](https://web.archive.org/web/20260713204552/https://securelist.com/andariel-deploys-dtrack-and-maui-ransomware/107063/) · cited by 1 event</sub>
 - [**BlueNoroff introduces new methods bypassing MoTW**](https://securelist.com/bluenoroff-methods-bypass-motw/108383/)  
   <sub>`kaspersky/2022-12-27_bluenoroff-motw-bypass` · 2022-12-27 · primary · [archived](https://web.archive.org/web/20260630160239/https://securelist.com/bluenoroff-methods-bypass-motw/108383/) · cited by 1 event</sub>
 
@@ -2500,7 +2500,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**DarkHotel hotel-WiFi targeted espionage against traveling executives**](https://securelist.com/the-darkhotel-apt/66779/)  
   <sub>`securelist/2014-11_darkhotel-hotel-wifi-targeted-espionage-` · 2014-11-01 · secondary · [archived](https://web.archive.org/web/20260509191506/https://securelist.com/the-darkhotel-apt/66779/) · cited by 1 event, 1 actor</sub>
 - [**ScarCruft / APT37 — Persistent DPRK Espionage Research**](https://securelist.com/operation-daybreak/75100/)  
-  <sub>`kaspersky/2016-06-01_scarcruft-research` · 2016-06-01 · secondary · cited by 1 doctrine, 1 actor, 1 service</sub>
+  <sub>`kaspersky/2016-06-01_scarcruft-research` · 2016-06-01 · secondary · [archived](https://web.archive.org/web/20260630163524/https://securelist.com/operation-daybreak/75100/) · cited by 1 doctrine, 1 actor, 1 service</sub>
 - [**Lazarus Under The Hood**](https://securelist.com/lazarus-under-the-hood/77908/)  
   <sub>`kaspersky/2017-04-03_lazarus-under-the-hood` · 2017-04-03 · secondary · [archived](https://web.archive.org/web/20260702000844/https://securelist.com/lazarus-under-the-hood/77908/) · cited by 1 actor</sub>
 - [**ExPetr/Petya/NotPetya is a Wiper, Not Ransomware**](https://securelist.com/expetrpetyanotpetya-is-a-wiper-not-ransomware/78902/)  
@@ -2563,7 +2563,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Accused "Raccoon" Malware Developer Fled Ukraine After Russian Invasion**](https://krebsonsecurity.com/2022/10/accused-raccoon-malware-developer-fled-ukraine-after-russian-invasion/)  
   <sub>`krebs/2022-10-25_raccoon-developer-fled-ukraine` · 2022-10-31 · secondary · [archived](https://web.archive.org/web/20260317093910/https://krebsonsecurity.com/2022/10/accused-raccoon-malware-developer-fled-ukraine-after-russian-invasion/) · cited by 1 event</sub>
 - [**Disneyland Malware Team: It's a Puny World After All**](https://krebsonsecurity.com/2022/11/disneyland-malware-team/)  
-  <sub>`krebs/2022-11-21_disneyland-malware-team` · 2022-11-16 · secondary · cited by 1 event</sub>
+  <sub>`krebs/2022-11-21_disneyland-malware-team` · 2022-11-16 · secondary · [archived](https://web.archive.org/web/20260713205005/https://krebsonsecurity.com/2022/11/disneyland-malware-team-its-a-puny-world-after-all/) · cited by 1 event</sub>
 - [**FBI's Vetted Info Sharing Network 'InfraGard' Hacked**](https://krebsonsecurity.com/2022/12/fbis-vetted-info-sharing-network-infragard-hacked/)  
   <sub>`krebs/2022-12-13_infragard-hacked` · 2022-12-13 · secondary · [archived](https://web.archive.org/web/20260521004627/https://krebsonsecurity.com/2022/12/fbis-vetted-info-sharing-network-infragard-hacked/) · cited by 1 event</sub>
 - [**Six Charged in Mass Takedown of DDoS-for-Hire Sites**](https://krebsonsecurity.com/2022/12/six-charged-in-mass-takedown-of-ddos-for-hire-sites/)  
@@ -2596,11 +2596,11 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Chinese Hackers Blamed for Intrusion at Energy Industry Giant Telvent**](https://krebsonsecurity.com/2012/09/chinese-hackers-blamed-for-intrusion-at-energy-industry-giant-telvent/)  
   <sub>`krebs/2012-09_telvent-comment-crew` · 2012-09-26 · secondary · [archived](https://web.archive.org/web/20260707020235/https://krebsonsecurity.com/2012/09/chinese-hackers-blamed-for-intrusion-at-energy-industry-giant-telvent/) · cited by 1 event</sub>
 - [**Premera Blue Cross Breach Exposes Financial, Medical Records**](https://krebsonsecurity.com/2015/03/premera-blue-cross-breach-exposes-financial-medical-records/)  
-  <sub>`krebs/2015-03-17_premera-blue-cross-breach` · 2015-03-17 · secondary · cited by 1 event, 1 target</sub>
+  <sub>`krebs/2015-03-17_premera-blue-cross-breach` · 2015-03-17 · secondary · [archived](https://web.archive.org/web/20260713204833/https://krebsonsecurity.com/2015/03/premera-blue-cross-breach-exposes-financial-medical-records/) · cited by 1 event, 1 target</sub>
 - [**New Leak Shows Business Side of China's APT Menace**](https://krebsonsecurity.com/2024/02/new-leak-shows-business-side-of-chinas-apt-menace/)  
   <sub>`krebs/2024-02_isoon-leak` · 2024-02-21 · secondary · [archived](https://web.archive.org/web/20260306234422/https://krebsonsecurity.com/2024/02/new-leak-shows-business-side-of-chinas-apt-menace/) · cited by 1 event</sub>
 - [**BlackCat Ransomware Group Implodes After Apparent $22M Payment by Change Healthcare**](https://krebsonsecurity.com/2024/03/blackcat-ransomware-group-implodes-after-apparent-22m-ransom-payment-by-change-healthcare/)  
-  <sub>`krebs/2024-03-05_blackcat-implodes-change-healthcare` · 2024-03-05 · secondary · cited by 3 events</sub>
+  <sub>`krebs/2024-03-05_blackcat-implodes-change-healthcare` · 2024-03-05 · secondary · [archived](https://web.archive.org/web/20260422150555/https://krebsonsecurity.com/2024/03/blackcat-ransomware-group-implodes-after-apparent-22m-ransom-payment-by-change-healthcare/) · cited by 3 events</sub>
 - [**Crooks Steal Phone, SMS Records for Nearly All AT&T Customers**](https://krebsonsecurity.com/2024/07/hackers-steal-phone-sms-records-for-nearly-all-att-customers/)  
   <sub>`krebs/2024-07-12_hackers-steal-phone-sms-records-att` · 2024-07-12 · secondary · [archived](https://web.archive.org/web/20260623165458/https://krebsonsecurity.com/2024/07/hackers-steal-phone-sms-records-for-nearly-all-att-customers/) · cited by 2 events</sub>
 - [**Low-Drama 'Dark Angels' Reap Record Ransoms**](https://krebsonsecurity.com/2024/08/low-drama-dark-angels-reap-record-ransoms/)  
@@ -2643,7 +2643,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**The 2023 Department of Defense Cyber Strategy: What's Next?**](https://www.lawfaremedia.org/article/the-2023-department-of-defense-cyber-strategy-what-s-next-)  
   <sub>`lawfare/2023_dod-cyber-strategy-analysis` · 2023-09-19 · tertiary · cited by 1 doctrine</sub>
 - [**The 2023 National Cybersecurity Strategy — analysis**](https://www.lawfaremedia.org/article/biden-harris-administration-releases-new-national-cybersecurity-strategy)  
-  <sub>`lawfare/2023_ncs-2023-analysis` · 2023-03-02 · tertiary · cited by 1 doctrine</sub>
+  <sub>`lawfare/2023_ncs-2023-analysis` · 2023-03-02 · tertiary · [archived](https://web.archive.org/web/20260713205201/https://www.lawfaremedia.org/article/biden-harris-administration-releases-new-national-cybersecurity-strategy) · cited by 1 doctrine</sub>
 - [**The Trump Cyber Strategy for America: Implications for the Private Sector**](https://www.lawfaremedia.org/topics/cybersecurity)  
   <sub>`lawfare/2026_trump-cyber-strategy-private-sector` · 2026-03-01 · tertiary · cited by 1 doctrine</sub>
 
@@ -2687,7 +2687,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Lt. Gen. (ret.) Khalid Kidwai (former SPD Director-General; speech at Carnegie International Nuclear Policy Conference)  <sup>1</sup>
 
 - [**Pakistan's Full-Spectrum Deterrence Posture — Articulation by Former SPD DG Kidwai**](https://carnegieendowment.org/2015/03/23/conversation-with-gen-khalid-kidwai)  
-  <sub>`kidwai/2015_full-spectrum-deterrence-articulation` · 2015-03-23 · secondary · cited by 1 service</sub>
+  <sub>`kidwai/2015_full-spectrum-deterrence-articulation` · 2015-03-23 · secondary · [archived](https://web.archive.org/web/20260713204742/https://carnegieendowment.org/2015/03/23/conversation-with-gen-khalid-kidwai) · cited by 1 service</sub>
 
 ## Lumen Black Lotus Labs  <sup>2</sup>
 
@@ -2742,7 +2742,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Hacktivists Collaborate with GRU-sponsored Threat Actors**](https://cloud.google.com/blog/topics/threat-intelligence/gru-rise-telegram-minions)  
   <sub>`mandiant/2023-09-14_gru-telegram-minions` · 2022-09-23 · primary · [archived](https://web.archive.org/web/20260417032015/https://cloud.google.com/blog/topics/threat-intelligence/gru-rise-telegram-minions/) · cited by 1 event, 2 actors</sub>
 - [**Fortra GoAnywhere MFT Exploited by CL0P for Mass Data Theft**](https://cloud.google.com/blog/topics/threat-intelligence/fortra-goanywhere-cl0p)  
-  <sub>`mandiant/2023-02-23_goanywhere-cl0p` · 2023-02-23 · secondary · cited by 1 event</sub>
+  <sub>`mandiant/2023-02-23_goanywhere-cl0p` · 2023-02-23 · secondary · [archived](https://web.archive.org/web/20260713205525/https://cloud.google.com/blog/topics/threat-intelligence/fortra-goanywhere-cl0p) · cited by 1 event</sub>
 - [**Not So Lazarus: Mapping DPRK Cyber Threat Groups to Government Organizations**](https://cloud.google.com/blog/topics/threat-intelligence/mapping-dprk-groups-to-government)  
   <sub>`mandiant/2023-03-23_not-so-lazarus-dprk-mapping` · 2023-03-23 · secondary · [archived](https://web.archive.org/web/20260611030658/https://cloud.google.com/blog/topics/threat-intelligence/mapping-dprk-groups-to-government/) · cited by 1 event</sub>
 - [**APT43: North Korean Group Uses Cybercrime to Fund Espionage Operations**](https://cloud.google.com/blog/topics/threat-intelligence/apt43-north-korea-cybercrime-espionage)  
@@ -2804,7 +2804,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Marriott International (Form 8-K Exhibit 99, filed via US SEC EDGAR)  <sup>1</sup>
 
 - [**Marriott Provides Update on Starwood Database Security Incident**](https://www.sec.gov/Archives/edgar/data/0001048286/000162828019000090/mar201901ex99.htm)  
-  <sub>`sec-edgar/2019-01-04_marriott-starwood-update` · 2019-01-04 · primary · cited by 1 event</sub>
+  <sub>`sec-edgar/2019-01-04_marriott-starwood-update` · 2019-01-04 · primary · [archived](https://web.archive.org/web/20260713210431/https://www.sec.gov/Archives/edgar/data/1048286/000162828019000090/mar201901ex99.htm) · cited by 1 event</sub>
 
 ## Match Systems  <sup>1</sup>
 
@@ -3080,7 +3080,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Mozilla dev-security-policy mailing list (via mail-archive.com)  <sup>1</sup>
 
 - [**RE: DarkMatter Concerns (Benjamin Gabriel / DigitalTrust appeal)**](https://www.mail-archive.com/dev-security-policy@lists.mozilla.org/msg12186.html)  
-  <sub>`mail-archive-mozilla/2019-07-16_darkmatter-concerns-msg12186` · 2019-07-16 · primary · cited by 1 event</sub>
+  <sub>`mail-archive-mozilla/2019-07-16_darkmatter-concerns-msg12186` · 2019-07-16 · primary · [archived](https://web.archive.org/web/20260713205449/https://www.mail-archive.com/dev-security-policy@lists.mozilla.org/msg12186.html) · cited by 1 event</sub>
 
 ## Mozilla Foundation (Wayne Thayer, Marshall Erwin)  <sup>1</sup>
 
@@ -3149,7 +3149,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## NATO CCDCOE (Cyber Law Toolkit)  <sup>1</sup>
 
 - [**Shamoon (2012) — Cyber Law Toolkit incident entry**](https://cyberlaw.ccdcoe.org/wiki/Shamoon_(2012))  
-  <sub>`ccdcoe/shamoon-cyberlaw` · 2021-09-17 · secondary · cited by 1 event, 1 target</sub>
+  <sub>`ccdcoe/shamoon-cyberlaw` · 2021-09-17 · secondary · [archived](https://web.archive.org/web/20260410141230/https://cyberlaw.ccdcoe.org/wiki/Shamoon_(2012)) · cited by 1 event, 1 target</sub>
 
 ## NATO CCDCOE Cyber Law Toolkit  <sup>1</sup>
 
@@ -3306,7 +3306,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## NSFOCUS  <sup>1</sup>
 
 - [**Bitter (APT-C-08) spear-phishes a Chinese government agency with a Havoc-based trojan**](https://nsfocusglobal.com/bitter-apt-targets-chinese-government-agency/)  
-  <sub>`nsfocusglobal/2024-03_bitter-apt-c-08-spear-phishes-a-chinese-` · 2024-03-28 · secondary · cited by 1 event, 1 actor</sub>
+  <sub>`nsfocusglobal/2024-03_bitter-apt-c-08-spear-phishes-a-chinese-` · 2024-03-28 · secondary · [archived](https://web.archive.org/web/20260610041617/https://nsfocusglobal.com/bitter-apt-targets-chinese-government-agency/) · cited by 1 event, 1 actor</sub>
 
 ## NVD (NIST)  <sup>1</sup>
 
@@ -3542,7 +3542,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Ransomware gang leaks stolen Scottish healthcare patient data in extortion bid**](https://therecord.media/healthcare-ransomware-data-breach-nhs-scotland)  
   <sub>`therecord/2024-03-29_nhs-scotland-inc-ransom-data-breach` · 2024-03-29 · secondary · [archived](https://web.archive.org/web/20260215100118/https://therecord.media/healthcare-ransomware-data-breach-nhs-scotland) · cited by 1 event</sub>
 - [**Ransomware attack contributed to patient's death, says Britain's NHS**](https://therecord.media/ransomware-attack-contributed-patient-death-uk-nhs)  
-  <sub>`therecord/2025-06-25_ransomware-contributed-patient-death` · 2025-06-25 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2025-06-25_ransomware-contributed-patient-death` · 2025-06-25 · secondary · [archived](https://web.archive.org/web/20260113120339/https://therecord.media/ransomware-attack-contributed-patient-death-uk-nhs) · cited by 1 event</sub>
 
 ## Recorded Future News (The Record) — Daryna Antoniuk  <sup>1</sup>
 
@@ -3606,7 +3606,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Russia Vetoes Renewal of UN Sanctions Monitors on North Korea**](https://www.reuters.com/world/russia-vetoes-renewal-un-monitors-north-korea-sanctions-2024-03-28/)  
   <sub>`reuters/2024-03-28_russia-veto-poe` · 2024-03-28 · tertiary · cited by 1 event, 1 marker</sub>
 - [**Reuters exposé of hack-for-hire world is back online after Indian court ruling**](https://www.yahoo.com/news/reuters-expos-hack-hire-world-140443187.html)  
-  <sub>`reuters/2024-10-26_appin-expose-back-online` · 2024-10-26 · secondary · cited by 2 events</sub>
+  <sub>`reuters/2024-10-26_appin-expose-back-online` · 2024-10-26 · secondary · [archived](https://web.archive.org/web/20241106220815/https://www.yahoo.com/news/reuters-expos-hack-hire-world-140443187.html) · cited by 2 events</sub>
 
 ## Reuters (Christopher Bing and Joel Schectman)  <sup>1</sup>
 
@@ -3840,7 +3840,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Winter Vivern | Uncovering a Wave of Global Espionage**](https://www.sentinelone.com/labs/winter-vivern-uncovering-a-wave-of-global-espionage/)  
   <sub>`sentinelone/2023-03-16_winter-vivern-global-espionage` · 2023-03-16 · primary · [archived](https://web.archive.org/web/20260512235146/https://www.sentinelone.com/labs/winter-vivern-uncovering-a-wave-of-global-espionage/) · cited by 1 event, 1 actor</sub>
 - [**JumpCloud Intrusion | Attacker Infrastructure Links Compromise to North Korean APT Activity**](https://www.sentinelone.com/labs/jumpcloud-intrusion-attacker-infrastructure-links-compromise-to-north-korean-apt-activity/)  
-  <sub>`sentinelone/2023-07-20_jumpcloud-intrusion-north-korean-apt` · 2023-07-20 · secondary · cited by 1 event</sub>
+  <sub>`sentinelone/2023-07-20_jumpcloud-intrusion-north-korean-apt` · 2023-07-20 · secondary · [archived](https://web.archive.org/web/20260713210512/https://www.sentinelone.com/labs/jumpcloud-intrusion-attacker-infrastructure-links-compromise-to-north-korean-apt-activity/#cq=i1) · cited by 1 event</sub>
 - [**AcidPour | New Embedded Wiper Variant of AcidRain Appears in Ukraine**](https://www.sentinelone.com/labs/acidpour-new-embedded-wiper-variant-of-acidrain-appears-in-ukraine/)  
   <sub>`sentinelone/2024-03-21_acidpour-acidrain-ukraine` · 2024-03-21 · primary · [archived](https://web.archive.org/web/20260509172328/https://www.sentinelone.com/labs/acidpour-new-embedded-wiper-variant-of-acidrain-appears-in-ukraine/) · cited by 1 event</sub>
 
@@ -3944,11 +3944,11 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## SOCRadar  <sup>4</sup>
 
 - [**Hacktivist Group Black Reward Leaked Iran's Nuclear Program Secrets**](https://socradar.io/blog/hacktivist-group-black-reward-leaked-iran-nuclear-program-secrets/)  
-  <sub>`socradar/2022-10_black-reward-aeoi` · 2022-11-04 · tertiary · cited by 1 event, 1 actor</sub>
+  <sub>`socradar/2022-10_black-reward-aeoi` · 2022-11-04 · tertiary · [archived](https://web.archive.org/web/20260713210642/https://socradar.io/blog/hacktivist-group-black-reward-leaked-iran-nuclear-program-secrets/) · cited by 1 event, 1 actor</sub>
 - [**Dark Web Profile: Moses Staff**](https://socradar.io/dark-web-profile-moses-staff/)  
   <sub>`socradar/moses-staff-profile` · 2022-06-01 · tertiary · [archived](https://web.archive.org/web/20260522170233/https://socradar.io/) · cited by 1 actor</sub>
 - [**Dark Web Profile: Bashe (APT73)**](https://socradar.io/blog/dark-web-profile-bashe-apt73/)  
-  <sub>`socradar/2024-12-24_bashe-apt73-profile` · 2024-12-24 · tertiary · cited by 1 event</sub>
+  <sub>`socradar/2024-12-24_bashe-apt73-profile` · 2024-12-24 · tertiary · [archived](https://web.archive.org/web/20260713210724/https://socradar.io/blog/dark-web-profile-bashe-apt73/) · cited by 1 event</sub>
 - [**Dark Web Profile — Handala Hack**](https://socradar.io/blog/dark-web-profile-handala-hack/)  
   <sub>`socradar/2024_handala-dark-web-profile` · 2026-03-13 · tertiary · [archived](https://web.archive.org/web/20260503160020/https://socradar.io/blog/dark-web-profile-handala-hack/) · cited by 1 event, 1 actor</sub>
 
@@ -4005,7 +4005,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Svenska Yle (Lucas Dahlström)  <sup>1</sup>
 
 - [**Finskt bolag utsatt för rysk hackerattack i Sverige – biobiljetter skrivs för hand**](https://yle.fi/a/7-10049579)  
-  <sub>`yle/2024-01-22_tietoevry-hackerattack-sverige` · 2024-01-22 · secondary · cited by 1 event</sub>
+  <sub>`yle/2024-01-22_tietoevry-hackerattack-sverige` · 2024-01-22 · secondary · [archived](https://web.archive.org/web/20260713211937/https://yle.fi/a/7-10049579) · cited by 1 event</sub>
 
 ## swapcontext (hfiref0x / The Vault)  <sup>1</sup>
 
@@ -4092,7 +4092,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Team Cymru  <sup>1</sup>
 
 - [**AllaKore(d) SideCopy in Latest Threat Campaign**](https://www.team-cymru.com/post/allakore-d-the-sidecopy-train)  
-  <sub>`team-cymru/2023-04-19_allakore-sidecopy-train` · 2023-04-19 · primary · cited by 1 event</sub>
+  <sub>`team-cymru/2023-04-19_allakore-sidecopy-train` · 2023-04-19 · primary · [archived](https://web.archive.org/web/20260630155042/https://www.team-cymru.com/post/allakore-d-the-sidecopy-train) · cited by 1 event</sub>
 
 ## TechCrunch  <sup>8</sup>
 
@@ -4121,9 +4121,9 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## TechCrunch (Carly Page)  <sup>2</sup>
 
 - [**Royal Mail restores global shipping weeks after LockBit ransomware attack**](https://techcrunch.com/2023/02/23/royal-mail-restores-global-shipping-weeks-after-lockbit-ransomware-attack/)  
-  <sub>`techcrunch/2023-02-23_royal-mail-restores-shipping` · 2023-02-23 · secondary · cited by 1 event</sub>
+  <sub>`techcrunch/2023-02-23_royal-mail-restores-shipping` · 2023-02-23 · secondary · [archived](https://web.archive.org/web/20250724190244/https://techcrunch.com/2023/02/23/royal-mail-restores-global-shipping-weeks-after-lockbit-ransomware-attack/) · cited by 1 event</sub>
 - [**Clop ransomware gang names dozens of victims hit by Cleo mass-hack, but several firms dispute breaches**](https://techcrunch.com/2025/01/16/clop-ransomware-gang-names-dozens-of-victims-hit-by-cleo-mass-hack-but-several-firms-dispute-breaches/)  
-  <sub>`techcrunch/2025-01-16_clop-names-cleo-victims-disputes` · 2025-01-16 · secondary · cited by 1 event</sub>
+  <sub>`techcrunch/2025-01-16_clop-names-cleo-victims-disputes` · 2025-01-16 · secondary · [archived](https://web.archive.org/web/20260208180707/https://techcrunch.com/2025/01/16/clop-ransomware-gang-names-dozens-of-victims-hit-by-cleo-mass-hack-but-several-firms-dispute-breaches/) · cited by 1 event</sub>
 
 ## TechCrunch (Lorenzo Franceschi-Bicchierai)  <sup>1</sup>
 
@@ -4202,19 +4202,19 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## The Guardian  <sup>2</sup>
 
 - [**GCHQ taps fibre-optic cables for secret access to world's communications**](https://www.theguardian.com/uk/2013/jun/21/gchq-cables-secret-world-communications-nsa)  
-  <sub>`guardian/2013-06-21_gchq-tempora` · 2013-06-21 · primary · cited by 1 event, 1 doctrine, 1 actor, 1 service, 2 markers</sub>
+  <sub>`guardian/2013-06-21_gchq-tempora` · 2013-06-21 · primary · [archived](https://web.archive.org/web/20260713203715/https://www.theguardian.com/uk/2013/jun/21/gchq-cables-secret-world-communications-nsa) · cited by 1 event, 1 doctrine, 1 actor, 1 service, 2 markers</sub>
 - [**Revealed: how US and UK spy agencies defeat internet privacy and security (Ball / Borger / Greenwald — BULLRUN / EDGEHILL disclosure)**](https://www.theguardian.com/world/2013/sep/05/nsa-gchq-encryption-codes-security)  
-  <sub>`guardian/2013-09-05_nsa-gchq-encryption-codes` · 2013-09-05 · primary · cited by 1 event</sub>
+  <sub>`guardian/2013-09-05_nsa-gchq-encryption-codes` · 2013-09-05 · primary · [archived](https://web.archive.org/web/20260713203814/https://www.theguardian.com/world/2013/sep/05/nsa-gchq-encryption-codes-security) · cited by 1 event</sub>
 
 ## The Guardian (Pegasus Project consortium reporting partner)  <sup>1</sup>
 
 - [**Emmanuel Macron identified in leaked Pegasus project data**](https://www.theguardian.com/world/2021/jul/20/emmanuel-macron-identified-in-leaked-pegasus-project-data)  
-  <sub>`guardian/2021-07-20_macron-identified-pegasus-project-data` · 2021-07-20 · primary · cited by 1 event</sub>
+  <sub>`guardian/2021-07-20_macron-identified-pegasus-project-data` · 2021-07-20 · primary · [archived](https://web.archive.org/web/20260713204011/https://www.theguardian.com/world/2021/jul/20/emmanuel-macron-identified-in-leaked-pegasus-project-data) · cited by 1 event</sub>
 
 ## The Guardian (text leaked by Edward Snowden)  <sup>1</sup>
 
 - [**Presidential Policy Directive 20 — U.S. Cyber Operations Policy (full leaked text)**](https://www.theguardian.com/world/interactive/2013/jun/07/obama-cyber-directive-full-text)  
-  <sub>`ppd-20/leaked-text` · 2013-06-07 · primary · cited by 1 event</sub>
+  <sub>`ppd-20/leaked-text` · 2013-06-07 · primary · [archived](https://web.archive.org/web/20260713205910/https://www.theguardian.com/world/interactive/2013/jun/07/obama-cyber-directive-full-text) · cited by 1 event</sub>
 
 ## The Hacker News  <sup>13</sup>
 
@@ -4227,7 +4227,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**SideCopy Using Action RAT and AllaKore RAT to infiltrate Indian Organizations**](https://thehackernews.com/2023/05/sidecopy-using-action-rat-and-allakore.html)  
   <sub>`thehackernews/2023-05-08_sidecopy-action-allakore-rat` · 2023-05-08 · tertiary · [archived](https://web.archive.org/web/20260311214810/https://thehackernews.com/2023/05/sidecopy-using-action-rat-and-allakore.html) · cited by 1 event</sub>
 - [**State-Sponsored Sidewinder Hacker Group's Covert Attack Infrastructure Uncovered**](https://thehackernews.com/2023/05/state-sponsored-sidewinder-hacker.html)  
-  <sub>`thehackernews/2023-05-17_sidewinder-infrastructure-uncovered` · 2023-05-17 · secondary · cited by 1 event</sub>
+  <sub>`thehackernews/2023-05-17_sidewinder-infrastructure-uncovered` · 2023-05-17 · secondary · [archived](https://web.archive.org/web/20260214075345/https://thehackernews.com/2023/05/state-sponsored-sidewinder-hacker.html) · cited by 1 event</sub>
 - [**FBI Seizes BreachForums Again, Urges Users to Report Criminal Activity**](https://thehackernews.com/2024/05/fbi-seizes-breachforums-again-urges.html)  
   <sub>`thehackernews/2024-05-15_fbi-seizes-breachforums-again` · 2024-05-15 · secondary · [archived](https://web.archive.org/web/20260521215553/https://thehackernews.com/2024/05/fbi-seizes-breachforums-again-urges.html) · cited by 1 event</sub>
 - [**OilRig Exploits Windows Kernel Flaw in Espionage Campaign Targeting UAE and Gulf**](https://thehackernews.com/2024/10/oilrig-exploits-windows-kernel-flaw-in.html)  
@@ -4260,7 +4260,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**RansomHub Went Dark April 1; Affiliates Fled to Qilin, DragonForce Claimed Control**](https://thehackernews.com/2025/04/ransomhub-went-dark-april-1-affiliates.html)  
   <sub>`thehackernews/2025-04-30_ransomhub-went-dark-affiliates-to-qilin` · 2025-04-30 · secondary · [archived](https://web.archive.org/web/20260619200832/https://thehackernews.com/2025/04/ransomhub-went-dark-april-1-affiliates.html) · cited by 1 event</sub>
 - [**South Asian Ministries Hit by SideWinder APT Using Old Office Flaws and Custom Malware**](https://thehackernews.com/2025/05/south-asian-ministries-hit-by.html)  
-  <sub>`thehackernews/2025-05-20_sidewinder-south-asian-ministries` · 2025-05-20 · secondary · cited by 1 event</sub>
+  <sub>`thehackernews/2025-05-20_sidewinder-south-asian-ministries` · 2025-05-20 · secondary · [archived](https://web.archive.org/web/20260412122114/https://thehackernews.com/2025/05/south-asian-ministries-hit-by.html) · cited by 1 event</sub>
 - [**SideWinder Adopts New ClickOnce-Based Attack Chain Targeting South Asian Diplomats**](https://thehackernews.com/2025/10/sidewinder-adopts-new-clickonce-based.html)  
   <sub>`thehackernews/2025-10-28_sidewinder-clickonce-diplomats` · 2025-10-28 · secondary · [archived](https://web.archive.org/web/20260312080658/https://thehackernews.com/2025/10/sidewinder-adopts-new-clickonce-based.html) · cited by 1 event</sub>
 
@@ -4353,7 +4353,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## The Record (Recorded Future News, Joe Warminsky)  <sup>1</sup>
 
 - [**Japanese optics company Hoya says cyber incident affected production**](https://therecord.media/hoya-japan-cyberattack-affects-production)  
-  <sub>`therecord/2024-04-04_hoya-japan-cyberattack-affects-production` · 2024-04-04 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2024-04-04_hoya-japan-cyberattack-affects-production` · 2024-04-04 · secondary · [archived](https://web.archive.org/web/20260314162329/https://therecord.media/hoya-japan-cyberattack-affects-production) · cited by 1 event</sub>
 
 ## The Record (Recorded Future News, Jonathan Greig)  <sup>1</sup>
 
@@ -4363,9 +4363,9 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## The Record (Recorded Future News)  <sup>32</sup>
 
 - [**North Korean hackers breach South Korea's atomic research agency through VPN bug**](https://therecord.media/north-korean-hackers-breach-south-koreas-atomic-research-agency-through-vpn-bug)  
-  <sub>`therecord/2021-06-19_north-korean-hackers-breach-kaeri-vpn` · 2021-06-19 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2021-06-19_north-korean-hackers-breach-kaeri-vpn` · 2021-06-19 · secondary · [archived](https://web.archive.org/web/20260713211343/https://therecord.media/north-korean-hackers-breach-south-koreas-atomic-research-agency-through-vpn-bug) · cited by 1 event</sub>
 - [**San Francisco 49ers confirm ransomware attack**](https://therecord.media/san-francisco-49ers-confirm-ransomware-attack)  
-  <sub>`therecord/2022-02-13_san-francisco-49ers-confirm-ransomware-attack` · 2022-02-13 · secondary · cited by 1 event, 1 actor</sub>
+  <sub>`therecord/2022-02-13_san-francisco-49ers-confirm-ransomware-attack` · 2022-02-13 · secondary · [archived](https://web.archive.org/web/20260630164720/https://therecord.media/san-francisco-49ers-confirm-ransomware-attack) · cited by 1 event, 1 actor</sub>
 - [**Cyber Command deployed 'hunt forward' defenders to Croatia to help secure systems**](https://therecord.media/cyber-command-deployed-hunt-forward-defenders-to-croatia-to-help-secure-systems)  
   <sub>`therecord/2022-08-18_hunt-forward-croatia` · 2022-08-18 · secondary · [archived](https://web.archive.org/web/20260220053935/https://therecord.media/cyber-command-deployed-hunt-forward-defenders-to-croatia-to-help-secure-systems) · cited by 1 event</sub>
 - [**Iran says 'specific foreign country' behind hacktivist leak of atomic energy emails**](https://therecord.media/iran-says-specific-foreign-country-behind-hacktivist-leak-of-atomic-energy-emails)  
@@ -4377,7 +4377,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Israel blames state-sponsored Iranian hackers for ransomware attack on university**](https://therecord.media/israel-technion-ransomware-attack-iran-darkbit-muddywater)  
   <sub>`therecord/2023-03-07_technion-darkbit-muddywater` · 2023-03-07 · secondary · [archived](https://web.archive.org/web/20260306034352/https://therecord.media/israel-technion-ransomware-attack-iran-darkbit-muddywater) · cited by 1 event</sub>
 - [**Clop ransomware expands GoAnywhere victims list, as Hitachi and more confirm incidents**](https://therecord.media/clop-ransomware-adds-dozens-to-goanywhere-victim-list)  
-  <sub>`therecord/2023-03-17_clop-goanywhere-victim-list` · 2023-03-17 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2023-03-17_clop-goanywhere-victim-list` · 2023-03-17 · secondary · [archived](https://web.archive.org/web/20260207105236/https://therecord.media/clop-ransomware-adds-dozens-to-goanywhere-victim-list) · cited by 1 event</sub>
 - [**Iran-linked incidents spurred Cyber Command to send 'hunt forward' team to Albania**](https://therecord.media/iran-albania-cyber-command-hunt-forward)  
   <sub>`therecord/2023-03-23_hunt-forward-albania` · 2023-03-23 · secondary · [archived](https://web.archive.org/web/20260217050527/https://therecord.media/iran-albania-cyber-command-hunt-forward) · cited by 1 event</sub>
 - [**US Cyber Command wrapped second 'hunt forward' mission to Lithuania**](https://therecord.media/cyber-command-lithuania-hunt-forward-second-mission)  
@@ -4385,9 +4385,9 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Pro-Palestinian operation claims dozens of data breaches against Israeli firms**](https://therecord.media/cyber-toufan-data-breaches-israel-iran-palestinians)  
   <sub>`therecord/2023-12_cyber-toufan-data-breaches` · 2023-12-29 · tertiary · [archived](https://web.archive.org/web/20260118111228/https://therecord.media/cyber-toufan-data-breaches-israel-iran-palestinians) · cited by 1 event, 1 actor</sub>
 - [**US Cyber Command conducted first 'hunt forward' mission in Zambia last year**](https://therecord.media/us-cyber-command-hunt-forward-zambia)  
-  <sub>`therecord/2024_hunt-forward-zambia` · 2024-05-22 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2024_hunt-forward-zambia` · 2024-05-22 · secondary · [archived](https://web.archive.org/web/20260410124601/https://therecord.media/us-cyber-command-hunt-forward-zambia) · cited by 1 event</sub>
 - [**US confirms takedown of China-run botnet targeting home and office routers**](https://therecord.media/china-run-botnet-takedown-fbi-doj-routers)  
-  <sub>`therecord/2024-01-31_china-run-botnet-takedown-fbi-doj-routers` · 2024-01-31 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2024-01-31_china-run-botnet-takedown-fbi-doj-routers` · 2024-01-31 · secondary · [archived](https://web.archive.org/web/20260501121208/https://therecord.media/china-run-botnet-takedown-fbi-doj-routers) · cited by 1 event</sub>
 - [**UN probing 58 alleged crypto heists by North Korea worth $3 billion**](https://therecord.media/north-korea-cryptocurrency-hacks-un-experts)  
   <sub>`therecord/2024-03-22_north-korea-cryptocurrency-hacks-un-experts` · 2024-03-22 · secondary · [archived](https://web.archive.org/web/20260503100756/https://therecord.media/north-korea-cryptocurrency-hacks-un-experts) · cited by 2 events</sub>
 - [**Familiar North Korean groups cited in cyberattacks against South Korean defense firms**](https://therecord.media/south-korean-defense-companies-cyber-espionage-north-korea)  
@@ -4403,7 +4403,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Cyberattack on telecom giant Frontier claimed by RansomHub**](https://therecord.media/frontier-communications-cyberattack-ransomhub)  
   <sub>`therecord/2024-06-03_frontier-communications-cyberattack-ransomhub` · 2024-06-03 · secondary · [archived](https://web.archive.org/web/20260311065523/https://therecord.media/frontier-communications-cyberattack-ransomhub) · cited by 1 event</sub>
 - [**As Cyber Command evolves, its novel malware alert system fades away**](https://therecord.media/cyber-command-virustotal-twitter-malware-alerts-cnmf)  
-  <sub>`therecord/2024-07-08_cyber-command-virustotal-malware-alerts-fade` · 2024-07-08 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2024-07-08_cyber-command-virustotal-malware-alerts-fade` · 2024-07-08 · secondary · [archived](https://web.archive.org/web/20260308035520/https://therecord.media/cyber-command-virustotal-twitter-malware-alerts-cnmf) · cited by 1 event</sub>
 - [**Two Russian nationals arrested in takedown of Phobos ransomware infrastructure**](https://therecord.media/phobos-ransomware-takedown-arrests-russian-nationals)  
   <sub>`therecord/2025-02-11_phobos-ransomware-takedown-arrests-russian-nationals` · 2025-02-11 · secondary · [archived](https://web.archive.org/web/20260419002153/https://therecord.media/phobos-ransomware-takedown-arrests-russian-nationals) · cited by 1 event</sub>
 - [**Iran-linked hackers target Israeli, Egyptian critical infrastructure through phishing campaign**](https://therecord.media/iran-linked-hackers-target-israel-egypt-phishing)  
@@ -4434,7 +4434,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Hackers nick $60m from Taiwanese bank in tailored SWIFT attack**](https://www.theregister.com/2017/10/11/hackers_swift_taiwan/)  
   <sub>`theregister/2017-10-11_feib-taiwan-swift-60m` · 2017-10-11 · secondary · [archived](https://web.archive.org/web/20260125120246/https://www.theregister.com/2017/10/11/hackers_swift_taiwan/) · cited by 1 event</sub>
 - [**Hackers target payment transfer system at Chile's biggest bank, 'take $10m'**](https://www.theregister.com/2018/06/11/chile_bank_wiper_prelude_cyberheaist/)  
-  <sub>`theregister/2018-06-11_banco-de-chile-swift-10m` · 2018-06-11 · secondary · cited by 1 event</sub>
+  <sub>`theregister/2018-06-11_banco-de-chile-swift-10m` · 2018-06-11 · secondary · [archived](https://web.archive.org/web/20260312133814/https://www.theregister.com/2018/06/11/chile_bank_wiper_prelude_cyberheaist/) · cited by 1 event</sub>
 - [**Belgium: Oi, Brits, explain why Belgacom hack IPs pointed at you and your GCHQ**](https://www.theregister.com/2018/10/26/belgium_finds_evidence_gchq_belgacom_hack_proximus/)  
   <sub>`theregister/2018-10-26_belgium-gchq-belgacom-proximus` · 2018-10-26 · secondary · [archived](https://web.archive.org/web/20260221110245/https://www.theregister.com/2018/10/26/belgium_finds_evidence_gchq_belgacom_hack_proximus/) · cited by 1 event</sub>
 - [**Hacktivists 'steal' 100,000 emails from Iran nuclear agency**](https://www.theregister.com/security/2022/10/24/hacktivists-steal-100000-emails-from-iran-nuclear-agency/677528)  
@@ -4475,7 +4475,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## The Register (Jessica Lyons)  <sup>1</sup>
 
 - [**British Airways, Boots, BBC payroll data stolen in MOVEit supply-chain attack**](https://www.theregister.com/2023/06/05/british_airways_boots_moveit/)  
-  <sub>`theregister/2023-06-05_ba-bbc-boots-moveit-zellis` · 2023-06-05 · secondary · cited by 1 event</sub>
+  <sub>`theregister/2023-06-05_ba-bbc-boots-moveit-zellis` · 2023-06-05 · secondary · [archived](https://web.archive.org/web/20260309180522/https://www.theregister.com/2023/06/05/british_airways_boots_moveit/) · cited by 1 event</sub>
 
 ## The Register (John Leyden)  <sup>3</sup>
 
@@ -4506,7 +4506,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Iran attempted cyber attack on Israeli water and sewage facilities -- report**](https://www.timesofisrael.com/iran-attempted-cyber-attack-on-israeli-water-and-sewage-facilities-report/)  
   <sub>`timesofisrael/2020-05_israel-water-iran` · 2020-05-07 · secondary · [archived](https://web.archive.org/web/20250710234054/https://www.timesofisrael.com/iran-attempted-cyber-attack-on-israeli-water-and-sewage-facilities-report/) · cited by 1 event</sub>
 - [**6 facilities said hit in Iran's cyberattack on Israel's water system in April**](https://www.timesofisrael.com/6-facilities-said-hit-in-irans-cyberattack-on-israels-water-system-in-april/)  
-  <sub>`timesofisrael/2020-05-19_six-facilities-israel-water` · 2020-05-19 · secondary · cited by 1 event</sub>
+  <sub>`timesofisrael/2020-05-19_six-facilities-israel-water` · 2020-05-19 · secondary · [archived](https://web.archive.org/web/20260523175853/https://www.timesofisrael.com/6-facilities-said-hit-in-irans-cyberattack-on-israels-water-system-in-april/) · cited by 1 event</sub>
 - [**Iran cyberattack on Israel's water supply could have sickened hundreds - report**](https://www.timesofisrael.com/iran-cyberattack-on-israels-water-supply-could-have-sickened-hundreds-report/)  
   <sub>`timesofisrael/2020-06-01_israel-water-chlorine-report` · 2020-06-01 · secondary · [archived](https://web.archive.org/web/20260628174204/https://www.timesofisrael.com/iran-cyberattack-on-israels-water-supply-could-have-sickened-hundreds-report/) · cited by 1 event</sub>
 - [**Hackers breach Israeli insurance company, steal client data**](https://www.timesofisrael.com/hackers-breach-israeli-insurance-company-steal-client-data/)  
@@ -4644,14 +4644,14 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**DOJ indicts DPRK nationals Jin Sung-Il and Pak Jin-Song in IT-worker fraud scheme**](https://thehackernews.com/2025/01/doj-indicts-5-individuals-for-866k.html)  
   <sub>`thehackernews/2025-01_doj-indicts-dprk-nationals-jin-sung-il-a` · 2025-01-24 · secondary · [archived](https://web.archive.org/web/20251216204839/https://thehackernews.com/2025/01/doj-indicts-5-individuals-for-866k.html) · cited by 1 event</sub>
 - [**DoNot APT Expands Operations, Targets European Foreign Ministries with LoptikMod Malware**](https://thehackernews.com/2025/07/donot-apt-expands-operations-targets.html)  
-  <sub>`thehackernews/2025-07_donot-team-loptikmod-espionage-campaign-` · 2025-07-09 · secondary · cited by 1 event</sub>
+  <sub>`thehackernews/2025-07_donot-team-loptikmod-espionage-campaign-` · 2025-07-09 · secondary · [archived](https://web.archive.org/web/20260522025727/https://thehackernews.com/2025/07/donot-apt-expands-operations-targets.html) · cited by 1 event</sub>
 - [**APT36 and SideCopy cross-platform (Windows/Linux) RAT campaigns against Indian defense — Geta RAT, Ares RAT, DeskRAT**](https://thehackernews.com/2026/02/apt36-and-sidecopy-launch-cross.html)  
   <sub>`thehackernews/2026-02_apt36-and-sidecopy-cross-platform-window` · 2026-02-11 · secondary · [archived](https://web.archive.org/web/20260331075140/https://thehackernews.com/2026/02/apt36-and-sidecopy-launch-cross.html) · cited by 1 event</sub>
 
 ## therecord  <sup>1</sup>
 
 - [**DOJ indicts 12 Chinese contract hackers incl. i-Soon (Anxun), MPS officers, and APT27 operators**](https://therecord.media/doj-charges-chinese-nationals-isoon-cyberattacks-treasury)  
-  <sub>`therecord/2025-03_doj-indicts-12-chinese-contract-hackers-` · 2025-03-05 · secondary · cited by 1 event</sub>
+  <sub>`therecord/2025-03_doj-indicts-12-chinese-contract-hackers-` · 2025-03-05 · secondary · [archived](https://web.archive.org/web/20260428041359/https://therecord.media/doj-charges-chinese-nationals-isoon-cyberattacks-treasury) · cited by 1 event</sub>
 
 ## ThreatConnect  <sup>1</sup>
 
@@ -4708,7 +4708,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Trend Micro  <sup>8</sup>
 
 - [**Untangling the Patchwork Cyberespionage Group**](https://www.trendmicro.com/en_us/research/17/l/untangling-the-patchwork-cyberespionage-group.html)  
-  <sub>`trend-micro/2017-12-11_untangling-patchwork-cyberespionage-group` · 2017-12-11 · secondary · cited by 1 event</sub>
+  <sub>`trend-micro/2017-12-11_untangling-patchwork-cyberespionage-group` · 2017-12-11 · secondary · [archived](https://web.archive.org/web/20260410090023/https://www.trendmicro.com/en_us/research/17/l/untangling-the-patchwork-cyberespionage-group.html) · cited by 1 event</sub>
 - [**Trend Micro details Confucius bespoke backdoors and file stealers against South Asian military and businessmen**](https://www.trendmicro.com/en_us/research/18/b/deciphering-confucius-cyberespionage-operations.html)  
   <sub>`trendmicro/2018-02_trend-micro-details-confucius-bespoke-ba` · 2018-02-13 · secondary · [archived](https://web.archive.org/web/20260108023604/https://www.trendmicro.com/en_us/research/18/b/deciphering-confucius-cyberespionage-operations.html) · cited by 1 event</sub>
 - [**SideWinder Targets Nepal, Bhutan, Sri Lanka governments**](https://www.trendmicro.com/en_us/research/20/l/sidewinder-leverages-south-asian-territorial-issues-for-spear-ph.html)  
@@ -4732,7 +4732,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Trend Micro Research  <sup>1</sup>
 
 - [**Earth Simnavaz (aka APT34) Levies Advanced Cyberattacks Against UAE and Gulf Regions**](https://www.trendmicro.com/en_us/research/24/j/earth-simnavaz-cyberattacks-uae-gulf-regions.html)  
-  <sub>`trend-micro/2024-10-11_earth-simnavaz-uae-gulf` · 2024-10-11 · primary · cited by 1 event</sub>
+  <sub>`trend-micro/2024-10-11_earth-simnavaz-uae-gulf` · 2024-10-11 · primary · [archived](https://web.archive.org/web/20260713211700/https://www.trendmicro.com/en_us/research/24/j/earth-simnavaz-cyberattacks.html) · cited by 1 event</sub>
 
 ## TRM Labs  <sup>1</sup>
 
@@ -4747,7 +4747,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Türkiye, Resmi Gazete (Official Gazette)  <sup>1</sup>
 
 - [**Devlet İstihbarat Hizmetleri ve Milli İstihbarat Teşkilatı Kanununda Değişiklik Yapılmasına Dair Kanun (Law No. 6532)**](https://cdn.tbmm.gov.tr/KKBSPublicFile/D24/Y4/T2/KanunMetni/7d23ac8a-e930-4ab6-9be6-79162570c4d3.html)  
-  <sub>`mit-gov-tr/2014-04-26_law-6532-overview` · 2014-04-26 · primary · cited by 1 service</sub>
+  <sub>`mit-gov-tr/2014-04-26_law-6532-overview` · 2014-04-26 · primary · [archived](https://web.archive.org/web/20260713205746/https://cdn.tbmm.gov.tr/KKBSPublicFile/D24/Y4/T2/KanunMetni/7d23ac8a-e930-4ab6-9be6-79162570c4d3.html) · cited by 1 service</sub>
 
 ## TV Globo (Fantástico) / Glenn Greenwald  <sup>1</sup>
 
@@ -4772,7 +4772,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## U.S. District Court for the Western District of Washington (via CourtListener RECAP)  <sup>1</sup>
 
 - [**United States v. Raoult, No. 2:21-cr-00109-RSL-002 (W.D. Wash. Jan. 9, 2024) — Judgment in a Criminal Case (Dkt. 61)**](https://storage.courtlistener.com/recap/gov.uscourts.wawd.300745/gov.uscourts.wawd.300745.61.0.pdf)  
-  <sub>`wawd/2024-01-09_usa-v-raoult-judgment-dkt61` · 2024-01-09 · primary · cited by 1 event</sub>
+  <sub>`wawd/2024-01-09_usa-v-raoult-judgment-dkt61` · 2024-01-09 · primary · [archived](https://web.archive.org/web/20260713211827/https://storage.courtlistener.com/recap/gov.uscourts.wawd.300745/gov.uscourts.wawd.300745.61.0.pdf) · cited by 1 event</sub>
 
 ## U.S. European Command  <sup>1</sup>
 
@@ -4844,7 +4844,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## UK Investigatory Powers Tribunal  <sup>1</sup>
 
 - [**Liberty & Others v GCHQ — ruling on UK receipt of US PRISM/UPSTREAM intelligence**](https://investigatorypowerstribunal.org.uk/judgement/liberty-privacy-no-2/)  
-  <sub>`ipt-uk/2015-02-06_liberty-v-gchq-ruling` · 2015-02-06 · primary · cited by 1 event, 1 doctrine</sub>
+  <sub>`ipt-uk/2015-02-06_liberty-v-gchq-ruling` · 2015-02-06 · primary · [archived](https://web.archive.org/web/20241005040002/https://investigatorypowerstribunal.org.uk/judgement/liberty-privacy-no-2/) · cited by 1 event, 1 doctrine</sub>
 
 ## UK Ministry of Defence  <sup>2</sup>
 
@@ -4958,12 +4958,12 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## United States Secret Service  <sup>1</sup>
 
 - [**281 Arrested Worldwide in Coordinated International Enforcement Operation Targeting Hundreds of Individuals in Cyber-enabled Financial Fraud**](https://www.secretservice.gov/press/releases/2019/09/281-arrested-worldwide-coordinated-international-enforcement-operation)  
-  <sub>`usss/2019-09-10_operation-rewired-bec` · 2019-09-10 · primary · cited by 1 event</sub>
+  <sub>`usss/2019-09-10_operation-rewired-bec` · 2019-09-10 · primary · [archived](https://web.archive.org/web/20260426180226/https://www.secretservice.gov/press/releases/2019/09/281-arrested-worldwide-coordinated-international-enforcement-operation) · cited by 1 event</sub>
 
 ## Uptycs Threat Research  <sup>1</sup>
 
 - [**Cyber Espionage in India: Decoding APT-36's New Linux Malware Campaign**](https://www.uptycs.com/blog/threat-research-report-team/cyber-espionage-in-india-decoding-apt-36-new-linux-malware)  
-  <sub>`uptycs/2023-04-17_apt36-poseidon-linux-kavach` · 2023-04-17 · primary · cited by 1 event</sub>
+  <sub>`uptycs/2023-04-17_apt36-poseidon-linux-kavach` · 2023-04-17 · primary · [archived](https://web.archive.org/web/20260713211744/https://www.uptycs.com/blog/threat-research-report-team/cyber-espionage-in-india-decoding-apt-36-new-linux-malware) · cited by 1 event</sub>
 
 ## US CISA  <sup>3</sup>
 
@@ -4977,7 +4977,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US CISA (Director Christopher C. Krebs)  <sup>1</sup>
 
 - [**CISA Statement on Iranian Cybersecurity Threats**](https://www.cisa.gov/news-events/news/cisa-statement-iranian-cybersecurity-threats)  
-  <sub>`cisa/2019-06-22_krebs-iran-wiper-statement` · 2019-06-22 · primary · cited by 1 event</sub>
+  <sub>`cisa/2019-06-22_krebs-iran-wiper-statement` · 2019-06-22 · primary · [archived](https://web.archive.org/web/20260713202424/https://www.cisa.gov/news-events/news/cisa-statement-iranian-cybersecurity-threats) · cited by 1 event</sub>
 
 ## US CISA (joint with FBI, NSA, DC3)  <sup>1</sup>
 
@@ -5100,7 +5100,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Emergency Directive 21-01: Mitigate SolarWinds Orion Code Compromise**](https://www.cisa.gov/news-events/directives/ed-21-01-mitigate-solarwinds-orion-code-compromise)  
   <sub>`cisa/2020-12-13_ed-21-01-solarwinds` · 2020-12-13 · primary · [archived](https://web.archive.org/web/20260108074223/https://www.cisa.gov/news-events/directives/ed-21-01-mitigate-solarwinds-orion-code-compromise) · cited by 1 event, 1 target</sub>
 - [**Tactics, Techniques, and Procedures of Indicted State-Sponsored Russian Cyber Actors Targeting the Energy Sector (AA22-083A)**](https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-083a)  
-  <sub>`cisa/2022-03-24_aa22-083a-energy-sector` · 2022-03-24 · primary · cited by 2 events</sub>
+  <sub>`cisa/2022-03-24_aa22-083a-energy-sector` · 2022-03-24 · primary · [archived](https://web.archive.org/web/20260609205521/https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-083a) · cited by 2 events</sub>
 - [**Emergency Directive ED 25-03 — Identify and Mitigate Potential Compromise of Cisco Devices**](https://www.cisa.gov/news-events/directives/ed-25-03-identify-and-mitigate-potential-compromise-cisco-devices)  
   <sub>`cisa/2025-09-25_ed-25-03-cisco-asa` · 2025-09-25 · primary · [archived](https://web.archive.org/web/20260709154905/https://www.cisa.gov/news-events/directives/ed-25-03-identify-and-mitigate-potential-compromise-cisco-devices) · cited by 1 event</sub>
 - [**Emergency Directive ED 26-01 — Mitigate Vulnerabilities in F5 Devices**](https://www.cisa.gov/news-events/directives/ed-26-01-mitigate-vulnerabilities-f5-devices)  
@@ -5136,7 +5136,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US Department of Commerce, Bureau of Industry and Security  <sup>9</sup>
 
 - [**Addition of Entities to the Entity List: Huawei Technologies Co., Ltd. and Affiliated Entities**](https://www.federalregister.gov/documents/2019/05/21/2019-10616/addition-of-entities-to-the-entity-listaddition-of-entities-to-the-entity-list)  
-  <sub>`bis/2019-05-15_huawei-entity-list` · 2019-05-16 · primary · cited by 1 policy action</sub>
+  <sub>`bis/2019-05-15_huawei-entity-list` · 2019-05-16 · primary · [archived](https://web.archive.org/web/20260713201631/https://unblock.federalregister.gov/) · cited by 1 policy action</sub>
 - [**Addition of Huawei Non-U.S. Affiliates to the Entity List, the Removal of Temporary General License, and Amendments to General Prohibition Three (Foreign-Produced Direct Product Rule)**](https://www.federalregister.gov/documents/2020/08/20/2020-18213/addition-of-huawei-non-us-affiliates-to-the-entity-list-the-removal-of-temporary-general-license-and)  
   <sub>`bis/2020-08-17_huawei-fdpr-amendment` · 2020-08-20 · primary · [archived](https://web.archive.org/web/20251213185313/https://www.federalregister.gov/documents/2020/08/20/2020-18213/addition-of-huawei-non-us-affiliates-to-the-entity-list-the-removal-of-temporary-general-license-and) · cited by 1 policy action</sub>
 - [**Addition of Entities to the Entity List, Revision of Entry on the Entity List, and Removal of Entities from the Entity List**](https://www.federalregister.gov/documents/2020/12/22/2020-28031/addition-of-entities-to-the-entity-list-revision-of-entry-on-the-entity-list-and-removal-of-entities)  
@@ -5215,11 +5215,11 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Six Russian GRU Officers Charged in Connection with Worldwide Deployment of Destructive Malware and Other Disruptive Actions in Cyberspace**](https://www.justice.gov/archives/opa/pr/six-russian-gru-officers-charged-connection-worldwide-deployment-destructive-malware-and)  
   <sub>`doj/2020-10-15_sandworm-six-gru-officers-indictment` · 2020-10-19 · primary · [archived](https://web.archive.org/web/20220115133724id_/https://www.justice.gov/opa/pr/six-russian-gru-officers-charged-connection-worldwide-deployment-destructive-malware-and) · cited by 4 events, 1 actor, 2 services, 1 policy action, 2 targets</sub>
 - [**Superseding Indictment — United States v. Jon Chang Hyok, Kim Il, and Park Jin Hyok (C.D. Cal., filed Dec. 8 2020, unsealed Feb. 17 2021)**](https://www.justice.gov/opa/press-release/file/1367701/download)  
-  <sub>`doj/2021-02-17_dprk-hackers-superseding-indictment` · 2021-02-17 · primary · cited by 1 event</sub>
+  <sub>`doj/2021-02-17_dprk-hackers-superseding-indictment` · 2021-02-17 · primary · [archived](https://web.archive.org/web/20240314003827/https://www.justice.gov/opa/press-release/file/1367701/download) · cited by 1 event</sub>
 - [**Three North Korean Military Hackers Indicted in Wide-Ranging Scheme to Commit Cyberattacks and Financial Crimes Across the Globe**](https://www.justice.gov/archives/opa/pr/three-north-korean-military-hackers-indicted-wide-ranging-scheme-commit-cyberattacks-and)  
   <sub>`doj/2021-02-17_lazarus-three-officers-indictment` · 2021-02-17 · primary · [archived](https://web.archive.org/web/20260610024708/https://www.justice.gov/archives/opa/pr/three-north-korean-military-hackers-indicted-wide-ranging-scheme-commit-cyberattacks-and) · cited by 7 events, 2 actors, 1 service, 1 policy action, 1 target</sub>
 - [**High-Level Organizer of Notorious Hacking Group FIN7 Sentenced to Prison for Scheme that Compromised Tens of Millions of Debit and Credit Cards**](https://www.justice.gov/archives/opa/pr/high-level-organizer-notorious-hacking-group-fin7-sentenced-prison-scheme-compromised-tens)  
-  <sub>`doj/2021-04-16_iarmak-fin7-extradition` · 2021-04-16 · primary · cited by 1 actor</sub>
+  <sub>`doj/2021-04-16_iarmak-fin7-extradition` · 2021-04-16 · primary · [archived](https://web.archive.org/web/20260610024903/https://www.justice.gov/archives/opa/pr/high-level-organizer-notorious-hacking-group-fin7-sentenced-prison-scheme-compromised-tens) · cited by 1 actor</sub>
 - [**Department of Justice Seizes $2.3 Million in Cryptocurrency Paid to the Ransomware Extortionists DarkSide**](https://www.justice.gov/opa/pr/department-justice-seizes-23-million-cryptocurrency-paid-ransomware-extortionists-darkside)  
   <sub>`doj/2021-06-07_colonial-pipeline-recovery` · 2021-06-07 · primary · [archived](https://web.archive.org/web/20250205225039/https://www.justice.gov/opa/pr/department-justice-seizes-23-million-cryptocurrency-paid-ransomware-extortionists-darkside) · cited by 1 event, 1 actor, 1 policy action, 1 target</sub>
 - [**Chinese Intelligence Officer Convicted of Espionage Crimes, Attempting to Steal Trade Secrets From U.S. Aviation Companies (Yanjun Xu, MSS JSSD)**](https://www.justice.gov/archives/opa/pr/chinese-intelligence-officer-convicted-espionage-crimes-attempting-steal-trade-secrets)  
@@ -5227,13 +5227,13 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Ukrainian Arrested and Charged with Ransomware Attack on Kaseya**](https://www.justice.gov/opa/pr/ukrainian-arrested-and-charged-ransomware-attack-kaseya)  
   <sub>`doj/2021-11-08_revil-vasinskyi-polyanin-indictment` · 2021-11-08 · primary · [archived](https://web.archive.org/web/20250205230323/https://www.justice.gov/opa/pr/ukrainian-arrested-and-charged-ransomware-attack-kaseya) · cited by 3 events, 1 actor, 1 policy action, 1 target</sub>
 - [**Sodinokibi/REvil Ransomware Defendant Extradited to United States and Arraigned in Texas**](https://www.justice.gov/archives/opa/pr/sodinokibirevil-ransomware-defendant-extradited-united-states-and-arraigned-texas)  
-  <sub>`doj/2022-03-03_vasinskyi-extradition` · 2022-03-09 · primary · cited by 1 event</sub>
+  <sub>`doj/2022-03-03_vasinskyi-extradition` · 2022-03-09 · primary · [archived](https://web.archive.org/web/20260611121929/https://www.justice.gov/archives/opa/pr/sodinokibirevil-ransomware-defendant-extradited-united-states-and-arraigned-texas) · cited by 1 event</sub>
 - [**United States v. Pavel Aleksandrovich Akulov, Mikhail Mikhailovich Gavrilov, and Marat Valeryevich Tyukov — indictment (D. Kan., returned 26 Aug 2021, unsealed 24 Mar 2022)**](https://www.justice.gov/d9/press-releases/attachments/2022/03/24/ks_akulov_gavrilov_tyukov_0.pdf)  
   <sub>`doj/2022-03-24_akulov-gavrilov-tyukov-indictment` · 2022-03-24 · primary · [archived](https://web.archive.org/web/20230621191517/https://www.justice.gov/d9/press-releases/attachments/2022/03/24/ks_akulov_gavrilov_tyukov_0.pdf) · cited by 1 event</sub>
 - [**Four Russian Government Employees Charged in Two Historical Hacking Campaigns Targeting Critical Infrastructure Worldwide**](https://www.justice.gov/archives/opa/pr/four-russian-government-employees-charged-two-historical-hacking-campaigns-targeting)  
   <sub>`doj/2022-03-24_berserk-bear-triton-indictment` · 2022-03-24 · primary · [archived](https://web.archive.org/web/2022*/https://www.justice.gov/archives/opa/pr/four-russian-government-employees-charged-two-historical-hacking-campaigns-targeting) · cited by 2 events, 1 doctrine, 2 actors, 3 services, 1 policy action, 1 target</sub>
 - [**Justice Department Investigation Leads to Shutdown of Largest Online Darknet Marketplace**](https://www.justice.gov/archives/opa/pr/justice-department-investigation-leads-shutdown-largest-online-darknet-marketplace)  
-  <sub>`doj/2022-04-05_hydra-shutdown-pavlov` · 2022-04-05 · primary · cited by 1 event</sub>
+  <sub>`doj/2022-04-05_hydra-shutdown-pavlov` · 2022-04-05 · primary · [archived](https://web.archive.org/web/20260611132131/https://www.justice.gov/archives/opa/pr/justice-department-investigation-leads-shutdown-largest-online-darknet-marketplace) · cited by 1 event</sub>
 - [**United States Leads Seizure of One of the World's Largest Hacker Forums and Arrests Administrator**](https://www.justice.gov/archives/opa/pr/united-states-leads-seizure-one-world-s-largest-hacker-forums-and-arrests-administrator)  
   <sub>`doj/2022-04-12_raidforums-seizure` · 2022-04-12 · primary · [archived](https://web.archive.org/web/20260608154741/https://www.justice.gov/archives/opa/pr/united-states-leads-seizure-one-world-s-largest-hacker-forums-and-arrests-administrator) · cited by 1 event</sub>
 - [**Iranian Nationals Charged with Multi-Year Hacking Campaign Targeting U.S. Critical Infrastructure**](https://www.justice.gov/archives/opa/pr/iranian-nationals-charged-multi-year-hacking-campaign-targeting-us-critical-infrastructure)  
@@ -5245,7 +5245,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**North Korean Foreign Trade Bank Rep Charged for Role in Two Crypto Laundering Conspiracies**](https://www.justice.gov/usao-dc/pr/north-korean-foreign-trade-bank-rep-charged-role-two-crypto-laundering-conspiracies)  
   <sub>`doj/2023-04-24_sim-hyon-sop-unsealing` · 2023-04-24 · primary · [archived](https://web.archive.org/web/20260525015559/https://www.justice.gov/usao-dc/pr/north-korean-foreign-trade-bank-rep-charged-role-two-crypto-laundering-conspiracies) · cited by 1 event</sub>
 - [**Federal Authorities Seize 13 Internet Domains Associated with 'Booter' Websites that Offered DDoS Computer Attack Services**](https://www.justice.gov/usao-cdca/pr/federal-authorities-seize-13-internet-domains-associated-booter-websites-offered-ddos)  
-  <sub>`doj/2023-05-08_seize-13-booter-domains` · 2023-05-08 · primary · cited by 1 event</sub>
+  <sub>`doj/2023-05-08_seize-13-booter-domains` · 2023-05-08 · primary · [archived](https://web.archive.org/web/20260525044213/https://www.justice.gov/usao-cdca/pr/federal-authorities-seize-13-internet-domains-associated-booter-websites-offered-ddos) · cited by 1 event</sub>
 - [**Justice Department Announces Court-Authorized Disruption of the Snake Malware Network Controlled by Russia's Federal Security Service**](https://www.justice.gov/archives/opa/pr/justice-department-announces-court-authorized-disruption-snake-malware-network-controlled)  
   <sub>`doj/2023-05-09_operation-medusa-snake-disruption` · 2023-05-09 · primary · [archived](https://web.archive.org/web/20250206023532/https://www.justice.gov/opa/pr/justice-department-announces-court-authorized-disruption-snake-malware-network-controlled) · cited by 1 event, 1 actor, 2 services</sub>
 - [**Russian National Charged for Conspiring to Use LockBit, Babuk, and Hive Ransomware Against US Targets — Mikhail Matveev**](https://www.justice.gov/opa/pr/russian-national-charged-ransomware-attacks-against-critical-infrastructure)  
@@ -5279,7 +5279,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**United States v. Connor Riley Moucka and John Erin Binns (WDWA case page; Snowflake / UNC5537 data-theft & extortion indictment)**](https://www.justice.gov/usao-wdwa/united-states-vs-connor-riley-moucka-and-john-erin-binns)  
   <sub>`doj/2024-11-04_moucka-snowflake-indictment` · 2024-11-04 · primary · [archived](https://web.archive.org/web/20260523223242/https://www.justice.gov/usao-wdwa/united-states-vs-connor-riley-moucka-and-john-erin-binns) · cited by 4 events, 1 actor, 1 target</sub>
 - [**Russian National Extradited to the United States for Administering the Phobos Ransomware Variant**](https://www.justice.gov/usao-md/pr/russian-national-extradited-united-states-face-charges-administration-and-operating)  
-  <sub>`doj/2024-11-12_ptitsyn-phobos-extradition` · 2024-11-18 · primary · cited by 1 event, 2 actors</sub>
+  <sub>`doj/2024-11-12_ptitsyn-phobos-extradition` · 2024-11-18 · primary · [archived](https://web.archive.org/web/20260610032238/https://www.justice.gov/usao-md/pr/russian-national-extradited-united-states-face-charges-administration-and-operating) · cited by 1 event, 2 actors</sub>
 - [**Five Defendants Charged for Multi-Year Scheme to Hack Into Companies and Steal Cryptocurrency and Other Information**](https://www.justice.gov/archives/opa/pr/five-defendants-charged-multi-year-scheme-hack-companies-and-steal-cryptocurrency-and)  
   <sub>`doj/2024-11-20_scattered-spider-five-indictment` · 2024-11-20 · primary · [archived](https://web.archive.org/web/20260526200327/https://www.justice.gov/archives/opa/pr/five-defendants-charged-multi-year-scheme-hack-companies-and-steal-cryptocurrency-and) · cited by 2 events, 1 actor, 1 policy action</sub>
 - [**5 Defendants Charged Federally with Running Scheme that Targeted Victim Companies via Phishing Text Messages**](https://www.justice.gov/usao-cdca/pr/5-defendants-charged-federally-running-scheme-targeted-victim-companies-phishing-text)  
@@ -5321,7 +5321,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US Department of Justice (EDPA / Criminal Division)  <sup>1</sup>
 
 - [**Justice Department Investigation Leads to Takedown of Darknet Cryptocurrency Mixer that Processed Over $3 Billion of Unlawful Transactions**](https://www.justice.gov/archives/opa/pr/justice-department-investigation-leads-takedown-darknet-cryptocurrency-mixer-processed-over)  
-  <sub>`doj/2023-03-15_chipmixer-takedown` · 2023-03-15 · primary · cited by 1 event</sub>
+  <sub>`doj/2023-03-15_chipmixer-takedown` · 2023-03-15 · primary · [archived](https://web.archive.org/web/20260610031035/https://www.justice.gov/archives/opa/pr/justice-department-investigation-leads-takedown-darknet-cryptocurrency-mixer-processed-over) · cited by 1 event</sub>
 
 ## US Department of Justice (Northern District of California) / FBI  <sup>1</sup>
 
@@ -5336,7 +5336,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US Department of Justice (Office of Public Affairs)  <sup>5</sup>
 
 - [**74 Arrested in Coordinated International Enforcement Operation Targeting Hundreds of Individuals in Business Email Compromise Schemes (Operation WireWire)**](https://www.justice.gov/archives/opa/pr/74-arrested-coordinated-international-enforcement-operation-targeting-hundreds-individuals)  
-  <sub>`doj/2018-06-11_operation-wirewire-bec` · 2018-06-11 · primary · cited by 1 event</sub>
+  <sub>`doj/2018-06-11_operation-wirewire-bec` · 2018-06-11 · primary · [archived](https://web.archive.org/web/20260525210809/https://www.justice.gov/archives/opa/pr/74-arrested-coordinated-international-enforcement-operation-targeting-hundreds-individuals) · cited by 1 event</sub>
 - [**Three Former U.S. Intelligence Community and Military Personnel Agree to Pay More Than $1.68 Million to Resolve Criminal Charges Arising from Their Provision of Hacking-Related Services to a Foreign Government**](https://www.justice.gov/archives/opa/pr/three-former-us-intelligence-community-and-military-personnel-agree-pay-more-168-million)  
   <sub>`doj/2021-09-14_baier-adams-gericke-dpa` · 2021-09-14 · primary · [archived](https://web.archive.org/web/20260526031335/https://www.justice.gov/archives/opa/pr/three-former-us-intelligence-community-and-military-personnel-agree-pay-more-168-million) · cited by 3 events, 2 actors</sub>
 - [**Court-Authorized Operation Disrupts Worldwide Botnet Used by People's Republic of China State-Sponsored Hackers**](https://www.justice.gov/archives/opa/pr/court-authorized-operation-disrupts-worldwide-botnet-used-peoples-republic-china-state)  
@@ -5344,7 +5344,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Justice Department Seizes Domains Behind Major Information-Stealing Malware Operation**](https://www.justice.gov/opa/pr/justice-department-seizes-domains-behind-major-information-stealing-malware-operation)  
   <sub>`doj/2025-05-21_lumma-opa-seizes-domains` · 2025-05-21 · primary · [archived](https://web.archive.org/web/20260524140104/https://www.justice.gov/opa/pr/justice-department-seizes-domains-behind-major-information-stealing-malware-operation) · cited by 1 event</sub>
 - [**Justice Department Disrupts Iranian Cyber Enabled Psychological Operations**](https://www.justice.gov/opa/pr/justice-department-disrupts-iranian-cyber-enabled-psychological-operations)  
-  <sub>`doj/2026-03-19_iranian-cyber-psyop-domain-seizure` · 2026-03-19 · primary · cited by 1 event</sub>
+  <sub>`doj/2026-03-19_iranian-cyber-psyop-domain-seizure` · 2026-03-19 · primary · [archived](https://web.archive.org/web/20260625155235/https://www.justice.gov/opa/pr/justice-department-disrupts-iranian-cyber-enabled-psychological-operations) · cited by 1 event</sub>
 
 ## US Department of Justice (Office of Special Counsel)  <sup>1</sup>
 
@@ -5372,7 +5372,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US Department of Justice (USAO Eastern District of Louisiana)  <sup>1</sup>
 
 - [**Operation reWired — 281 arrested worldwide in coordinated international BEC enforcement**](https://www.justice.gov/usao-edla/pr/281-arrested-worldwide-coordinated-international-enforcement-operation-targeting-hundreds)  
-  <sub>`doj/2019-09-10_operation-rewired-bec` · 2019-09-10 · primary · cited by 1 event</sub>
+  <sub>`doj/2019-09-10_operation-rewired-bec` · 2019-09-10 · primary · [archived](https://web.archive.org/web/20260713203124/https://www.justice.gov/usao-edla/pr/281-arrested-worldwide-coordinated-international-enforcement-operation-targeting-hundreds) · cited by 1 event</sub>
 
 ## US Department of Justice (USAO Eastern District of Michigan)  <sup>1</sup>
 
@@ -5386,12 +5386,12 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Two Russian Nationals Charged with Running Massive E-Book Piracy Website Z-Library**](https://www.justice.gov/usao-edny/pr/two-russian-nationals-charged-running-massive-e-book-piracy-website-z-library)  
   <sub>`doj/2022-11-16_z-library-takedown` · 2022-11-16 · primary · [archived](https://web.archive.org/web/20260610030521/https://www.justice.gov/usao-edny/pr/two-russian-nationals-charged-running-massive-e-book-piracy-website-z-library) · cited by 1 event</sub>
 - [**Founder and Majority Owner of Bitzlato Russian Cryptocurrency Exchange Charged with Unlicensed Money Transmitting**](https://www.justice.gov/usao-edny/pr/founder-and-majority-owner-bitzlato-russian-cryptocurrency-exchange-charged-unlicensed)  
-  <sub>`doj/2023-01-18_bitzlato-takedown` · 2023-01-18 · primary · cited by 1 event</sub>
+  <sub>`doj/2023-01-18_bitzlato-takedown` · 2023-01-18 · primary · [archived](https://web.archive.org/web/20260610030836/https://www.justice.gov/usao-edny/pr/founder-and-majority-owner-bitzlato-russian-cryptocurrency-exchange-charged-unlicensed) · cited by 1 event</sub>
 
 ## US Department of Justice (USAO Eastern District of Virginia)  <sup>1</sup>
 
 - [**Conor Fitzpatrick aka Pompompurin pleads guilty to running BreachForums cybercrime marketplace**](https://www.justice.gov/usao-edva/pr/conor-fitzpatrick-aka-pompompurin-pleads-guilty-running-breach-forums-cybercrime-marketplace)  
-  <sub>`doj/2024-07-09_fitzpatrick-breachforums-plea` · 2023-07-11 · primary · cited by 1 event</sub>
+  <sub>`doj/2024-07-09_fitzpatrick-breachforums-plea` · 2023-07-11 · primary · [archived](https://web.archive.org/web/20260610031820/https://www.justice.gov/usao-edva/pr/conor-fitzpatrick-aka-pompompurin-pleads-guilty-running-breach-forums-cybercrime-marketplace) · cited by 1 event</sub>
 
 ## US Department of Justice (USAO Western District of Texas)  <sup>2</sup>
 
@@ -5813,7 +5813,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Patchwork APT Group Targets US Think Tanks**](https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/)  
   <sub>`volexity/2018-01-09_patchwork-china-think-tanks` · 2018-06-07 · primary · [archived](https://web.archive.org/web/20260417030053/https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/) · cited by 1 event</sub>
 - [**Magecart Strikes Again: Newegg in the Crosshairs**](https://www.volexity.com/blog/2018/09/19/magecart-strikes-again-newegg/)  
-  <sub>`volexity/2018-09-19_magecart-strikes-again-newegg` · 2018-09-19 · primary · cited by 1 event</sub>
+  <sub>`volexity/2018-09-19_magecart-strikes-again-newegg` · 2018-09-19 · primary · [archived](https://web.archive.org/web/20260307031152/https://www.volexity.com/blog/2018/09/19/magecart-strikes-again-newegg/) · cited by 1 event</sub>
 - [**OceanLotus — Extending Cyber Espionage Operations Through Fake Websites**](https://www.volexity.com/blog/2020/11/06/oceanlotus-extending-cyber-espionage-operations-through-fake-websites/)  
   <sub>`volexity/2020-11-06_oceanlotus-watering-hole` · 2020-11-06 · primary · [archived](https://web.archive.org/web/20260508063938/https://www.volexity.com/blog/2020/11/06/oceanlotus-extending-cyber-espionage-operations-through-fake-websites/) · cited by 1 event, 1 actor, 1 service</sub>
 - [**Active Exploitation of Microsoft Exchange Zero-Day Vulnerabilities**](https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/)  
@@ -5860,7 +5860,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Persistent Engagement, Agreed Competition, and Cyberspace Interaction Dynamics and Escalation**](https://cyberdefensereview.army.mil/Portals/6/CDR-SE_S5-P3-Fischerkeller.pdf)  
   <sub>`warontherocks/2018_persistent-engagement-healey` · 2018-05-15 · tertiary · [archived](https://web.archive.org/web/20260327154002/https://cyberdefensereview.army.mil/Portals/6/CDR-SE_S5-P3-Fischerkeller.pdf) · cited by 1 doctrine</sub>
 - [**Cyber Realism in a Time of Strategic Competition (analysis of the 2023 DoD Cyber Strategy)**](https://warontherocks.com/2023/09/welcome-to-cyber-realism-parsing-the-2023-department-of-defense-cyber-strategy/)  
-  <sub>`warontherocks/2023-09_cyber-realism` · 2023-09-15 · tertiary · cited by 1 doctrine</sub>
+  <sub>`warontherocks/2023-09_cyber-realism` · 2023-09-15 · tertiary · [archived](https://web.archive.org/web/20260218033151/https://warontherocks.com/2023/09/welcome-to-cyber-realism-parsing-the-2023-department-of-defense-cyber-strategy/) · cited by 1 doctrine</sub>
 
 ## Washington Post  <sup>3</sup>
 
@@ -5886,7 +5886,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## White House (Biden administration)  <sup>2</sup>
 
 - [**Leaders' Joint Statement in Commemoration of the 70th Anniversary of the Alliance between the United States of America and the Republic of Korea**](https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/04/26/leaders-joint-statement-in-commemoration-of-the-70th-anniversary-of-the-alliance-between-the-united-states-of-america-and-the-republic-of-korea/)  
-  <sub>`whitehouse/2023-04-26_korus-70th-anniversary` · 2023-04-26 · primary · cited by 1 event</sub>
+  <sub>`whitehouse/2023-04-26_korus-70th-anniversary` · 2023-04-26 · primary · [archived](https://web.archive.org/web/20260610060944/https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/04/26/leaders-joint-statement-in-commemoration-of-the-70th-anniversary-of-the-alliance-between-the-united-states-of-america-and-the-republic-of-korea/) · cited by 1 event</sub>
 - [**Washington Declaration**](https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/04/26/washington-declaration-2/)  
   <sub>`whitehouse/2023-04-26_washington-declaration` · 2023-04-26 · primary · [archived](https://web.archive.org/web/20260316154044/https://bidenwhitehouse.archives.gov/briefing-room/statements-releases/2023/04/26/washington-declaration-2/) · cited by 1 event</sub>
 
@@ -5961,7 +5961,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**'Crash Override': The Malware That Took Down a Power Grid**](https://www.wired.com/story/crash-override-malware/)  
   <sub>`wired/2017-06-12_crash-override-malware` · 2017-06-12 · secondary · [archived](https://web.archive.org/web/20260601184907/https://www.wired.com/story/crash-override-malware/) · cited by 1 event</sub>
 - [**The Full Story of the Stunning RSA Hack Can Finally Be Told**](https://www.wired.com/story/the-full-story-of-the-stunning-rsa-hack-can-finally-be-told/)  
-  <sub>`wired/2021-05-20_full-story-rsa-hack` · 2021-05-20 · secondary · cited by 1 event</sub>
+  <sub>`wired/2021-05-20_full-story-rsa-hack` · 2021-05-20 · secondary · [archived](https://web.archive.org/web/20260704140851/https://www.wired.com/story/the-full-story-of-the-stunning-rsa-hack-can-finally-be-told/) · cited by 1 event</sub>
 - [**A Startup Allegedly 'Hacked the World.' Then Came the Censorship — and Now the Backlash**](https://www.wired.com/story/appin-training-centers-lawsuits-censorship/)  
   <sub>`wired/2024-02-01_appin-censorship-backlash` · 2024-02-01 · secondary · [archived](https://web.archive.org/web/20260707014353/https://www.wired.com/story/appin-training-centers-lawsuits-censorship/) · cited by 1 event</sub>
 
@@ -5988,7 +5988,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Xerox Corporation  <sup>1</sup>
 
 - [**Xerox Releases Statement Regarding Cybersecurity Incident Affecting XBS Subsidiary**](https://www.news.xerox.com/news/xerox-releases-statement-regarding-cybersecurity-incident-affecting-xbs-subsidiary)  
-  <sub>`xerox/2023-12-30_statement-cybersecurity-incident-xbs-subsidiary` · 2023-12-30 · primary · cited by 1 event</sub>
+  <sub>`xerox/2023-12-30_statement-cybersecurity-incident-xbs-subsidiary` · 2023-12-30 · primary · [archived](https://web.archive.org/web/20250630232435/https://www.news.xerox.com/news/xerox-releases-statement-regarding-cybersecurity-incident-affecting-xbs-subsidiary) · cited by 1 event</sub>
 
 ## Yahoo News (Jenna McLaughlin, Zach Dorfman & Sean D. Naylor)  <sup>1</sup>
 
@@ -6003,7 +6003,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Yle Uutiset (Mikko Leppänen)  <sup>1</sup>
 
 - [**Ruotsalaisministeri: Kyberhyökkäys ohjelmistoyhtiö Tietoevryyn oli vakava tapaus**](https://yle.fi/a/74-20008814/64-3-204957)  
-  <sub>`yle/2024-01-26_swedish-minister-tietoevry-cyberattack` · 2024-01-26 · secondary · cited by 1 event</sub>
+  <sub>`yle/2024-01-26_swedish-minister-tietoevry-cyberattack` · 2024-01-26 · secondary · [archived](https://web.archive.org/web/20260713212017/https://yle.fi/a/74-20008814/64-3-204957) · cited by 1 event</sub>
 
 ## ZachXBT (independent OSINT)  <sup>1</sup>
 
@@ -6029,7 +6029,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Hackers Publish Source Code, Victim Data of Iran's APT34**](https://www.zdnet.com/article/source-code-of-iranian-cyber-espionage-tools-leaked-on-telegram/)  
   <sub>`zdnet/2019-04-17_lab-dookhtegan-leak` · 2019-04-17 · secondary · [archived](https://web.archive.org/web/20260702002114/https://www.zdnet.com/article/source-code-of-iranian-cyber-espionage-tools-leaked-on-telegram/) · cited by 1 event</sub>
 - [**BMW and Hyundai hacked by Vietnamese hackers, report claims**](https://www.zdnet.com/article/bmw-and-hyundai-hacked-by-vietnamese-hackers-report-claims/)  
-  <sub>`zdnet/2019-12-06_bmw-hyundai-vietnamese-hackers` · 2019-12-06 · secondary · cited by 3 events</sub>
+  <sub>`zdnet/2019-12-06_bmw-hyundai-vietnamese-hackers` · 2019-12-06 · secondary · [archived](https://web.archive.org/web/20260628191727/https://www.zdnet.com/article/bmw-and-hyundai-hacked-by-vietnamese-hackers-report-claims/) · cited by 3 events</sub>
 
 ## ZDNet (Chris Duckett)  <sup>1</sup>
 
@@ -6047,4 +6047,4 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
   <sub>`zscaler/2023-09-12_apt36-updated-arsenal` · 2023-09-12 · primary · [archived](https://web.archive.org/web/20260602225511/https://www.zscaler.com/blogs/security-research/peek-apt36-s-updated-arsenal) · cited by 1 event</sub>
 
 ---
-<sub>Generated 2026-07-13 · git `e9c3311` · 1,772 sources · 785 events. Regenerate: `cd site && pnpm exec tsx tools/gen-sources-bib.ts`.</sub>
+<sub>Generated 2026-07-13 · git `a5b89574` · 1,772 sources · 785 events. Regenerate: `cd site && pnpm exec tsx tools/gen-sources-bib.ts`.</sub>
