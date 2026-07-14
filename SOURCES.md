@@ -2,7 +2,7 @@
 
 Every source cited anywhere in the atlas — 1,772 records across 832 publishers — grouped by publisher, each with the atlas entities that cite it. Generated from `atlas/sources/**` by `site/tools/gen-sources-bib.ts`; do not edit by hand.
 
-**Tiers:** 796 primary · 884 secondary · 92 tertiary. **Links:** 1,720 carry a live URL, 1,694 an archive snapshot. Copyrighted source bodies are **not** redistributed — only the URL, the archive URL, and (in the atlas) a `content_sha256`; see [DATA-RIGHTS.md](DATA-RIGHTS.md). "Cited by" collapses per-claim references (an attribution or doctrine-link citation counts its parent event once).
+**Tiers:** 796 primary · 884 secondary · 92 tertiary. **Links:** 1,720 carry a live URL, 1,699 an archive snapshot. Copyrighted source bodies are **not** redistributed — only the URL, the archive URL, and (in the atlas) a `content_sha256`; see [DATA-RIGHTS.md](DATA-RIGHTS.md). "Cited by" collapses per-claim references (an attribution or doctrine-link citation counts its parent event once).
 
 ---
 
@@ -55,7 +55,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Agari Cyber Intelligence Division  <sup>3</sup>
 
 - [**London Blue: The Geography of BEC (Threat Intelligence Brief)**](https://www.fortra.com/resources/guides/threat-intelligence-brief-geography-bec)  
-  <sub>`agari/2018-12-04_london-blue-report` · 2018-12-04 · primary · cited by 1 event</sub>
+  <sub>`agari/2018-12-04_london-blue-report` · 2018-12-04 · primary · [archived](https://web.archive.org/web/20260714025851/https://www.fortra.com/resources/guides/threat-intelligence-brief-geography-bec) · cited by 1 event</sub>
 - [**Scattered Canary — the evolution and inner workings of a Nigerian BEC organization**](https://static.fortra.com/agari/pdfs/guide/ag-scattered-canary-gd.pdf)  
   <sub>`agari/2019-04-09_scattered-canary-bec` · 2019-06-05 · primary · [archived](https://web.archive.org/web/20260523073848/https://static.fortra.com/agari/pdfs/guide/ag-scattered-canary-gd.pdf) · cited by 1 event</sub>
 - [**Cosmic Lynx — the rise of Russian BEC**](https://www.handd.co.uk/wp-content/uploads/2020/08/acid-agari-cosmic-lynx-russian-bec-report.pdf)  
@@ -366,7 +366,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**Clorox says cyberattack caused $49 million in expenses**](https://www.bleepingcomputer.com/news/security/clorox-says-cyberattack-caused-49-million-in-expenses/)  
   <sub>`bleepingcomputer/2024-02-03_clorox-49-million-expenses` · 2024-02-03 · secondary · [archived](https://web.archive.org/web/20250828221623/https://www.bleepingcomputer.com/news/security/clorox-says-cyberattack-caused-49-million-in-expenses/) · cited by 1 event</sub>
 - [**Integris Health says data breach impacts 2.4 million patients**](https://www.bleepingcomputer.com/news/security/integris-health-says-data-breach-impacts-24-million-patients/)  
-  <sub>`bleepingcomputer/2024-02-13_integris-health-breach-2-4-million` · 2024-02-13 · secondary · cited by 1 event</sub>
+  <sub>`bleepingcomputer/2024-02-13_integris-health-breach-2-4-million` · 2024-02-13 · secondary · [archived](https://web.archive.org/web/20260714025933/https://www.bleepingcomputer.com/news/security/integris-health-says-data-breach-impacts-24-million-patients/) · cited by 1 event</sub>
 - [**Cactus ransomware claim to steal 1.5TB of Schneider Electric data**](https://www.bleepingcomputer.com/news/security/cactus-ransomware-claim-to-steal-15tb-of-schneider-electric-data/)  
   <sub>`bleepingcomputer/2024-02-19_cactus-15tb-schneider-electric` · 2024-02-19 · secondary · [archived](https://web.archive.org/web/20251218112720/https://www.bleepingcomputer.com/news/security/cactus-ransomware-claim-to-steal-15tb-of-schneider-electric-data/) · cited by 1 event</sub>
 - [**Omni Hotels experiencing nationwide IT outage since Friday**](https://www.bleepingcomputer.com/news/security/omni-hotels-experiencing-nationwide-it-outage-since-friday/)  
@@ -1138,7 +1138,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## Cognizant Technology Solutions Corporation (SEC EDGAR)  <sup>1</sup>
 
 - [**Cognizant Technology Solutions — Form 10-Q, quarterly period ended March 31, 2020 (Maze security-incident disclosure)**](https://www.sec.gov/Archives/edgar/data/0001058290/000105829020000033/ctsh-20200331.htm)  
-  <sub>`cognizant/2020-05-08_10q-security-incident` · 2020-05-08 · primary · cited by 1 event</sub>
+  <sub>`cognizant/2020-05-08_10q-security-incident` · 2020-05-08 · primary · [archived](https://web.archive.org/web/20260714030211/https://www.sec.gov/Archives/edgar/data/1058290/000105829020000033/ctsh-20200331.htm) · cited by 1 event</sub>
 
 ## CoinDesk  <sup>2</sup>
 
@@ -2645,7 +2645,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 - [**The 2023 National Cybersecurity Strategy — analysis**](https://www.lawfaremedia.org/article/biden-harris-administration-releases-new-national-cybersecurity-strategy)  
   <sub>`lawfare/2023_ncs-2023-analysis` · 2023-03-02 · tertiary · [archived](https://web.archive.org/web/20260713205201/https://www.lawfaremedia.org/article/biden-harris-administration-releases-new-national-cybersecurity-strategy) · cited by 1 doctrine</sub>
 - [**The Trump Cyber Strategy for America: Implications for the Private Sector**](https://www.lawfaremedia.org/topics/cybersecurity)  
-  <sub>`lawfare/2026_trump-cyber-strategy-private-sector` · 2026-03-01 · tertiary · cited by 1 doctrine</sub>
+  <sub>`lawfare/2026_trump-cyber-strategy-private-sector` · 2026-03-01 · tertiary · [archived](https://web.archive.org/web/20260714030929/https://www.lawfaremedia.org/topics/cybersecurity) · cited by 1 doctrine</sub>
 
 ## Le Monde (Pixels — Jacques Follorou and Martin Untersinger)  <sup>1</sup>
 
@@ -5754,7 +5754,7 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
 ## US Securities and Exchange Commission (The Clorox Company 8-K filing)  <sup>2</sup>
 
 - [**The Clorox Company — Form 8-K, Item 8.01 (initial cybersecurity incident disclosure)**](https://www.sec.gov/Archives/edgar/data/0000021076/000120677423000969/clx4231381-8k.htm)  
-  <sub>`sec/2023-08-14_clorox-8k-unauthorized-activity` · 2023-08-14 · primary · cited by 1 event</sub>
+  <sub>`sec/2023-08-14_clorox-8k-unauthorized-activity` · 2023-08-14 · primary · [archived](https://web.archive.org/web/20260714031808/https://www.sec.gov/Archives/edgar/data/21076/000120677423000969/clx4231381-8k.htm) · cited by 1 event</sub>
 - [**The Clorox Company — Form 8-K, Item 8.01 (cybersecurity incident update; material Q1 impact)**](https://www.sec.gov/Archives/edgar/data/21076/000120677423001133/clx4242401-8k.htm)  
   <sub>`sec/2023-09-18_clorox-8k-material-impact` · 2023-09-18 · primary · [archived](https://web.archive.org/web/20260429023721/https://www.sec.gov/Archives/edgar/data/21076/000120677423001133/clx4242401-8k.htm) · cited by 1 event</sub>
 
@@ -6047,4 +6047,4 @@ Every source cited anywhere in the atlas — 1,772 records across 832 publishers
   <sub>`zscaler/2023-09-12_apt36-updated-arsenal` · 2023-09-12 · primary · [archived](https://web.archive.org/web/20260602225511/https://www.zscaler.com/blogs/security-research/peek-apt36-s-updated-arsenal) · cited by 1 event</sub>
 
 ---
-<sub>Generated 2026-07-13 · git `a5b89574` · 1,772 sources · 785 events. Regenerate: `cd site && pnpm exec tsx tools/gen-sources-bib.ts`.</sub>
+<sub>Generated 2026-07-14 · git `cd6a6dcb` · 1,772 sources · 785 events. Regenerate: `cd site && pnpm exec tsx tools/gen-sources-bib.ts`.</sub>
