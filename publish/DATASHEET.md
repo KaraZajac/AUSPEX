@@ -12,7 +12,7 @@ event datasets record *who* and *what*; none systematically record *why* — the
 doctrine an operation serves. AUSPEX operationalizes doctrine as a label space joined to
 attribution ("attribution names the who; doctrine names the why").
 
-**Who created it / funding?** **[KARA]** — single analyst (Black Flag Intelligence);
+**Who created it / funding?** **[KARA]** — single analyst;
 self-funded; machine-assisted curation with human verification (see Reliability).
 
 ## Composition
@@ -129,7 +129,7 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 ## Distribution
 
 - **License:** CC BY 4.0 (decided 2026-06-09 — open gold standard, widest audience; reuse
-  requires attribution to Kara Zajac / Black Flag Intelligence).
+  requires attribution to Kara Zajac).
 - **DOI / access:** Zenodo, frozen tag `v1.0-dissertation`; living version at
   auspex.karazajac.io.
 

@@ -3,8 +3,8 @@
 [![DOI](https://zenodo.org/badge/1252892880.svg)](https://doi.org/10.5281/zenodo.21327251)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LICENSE)
 
-**A doctrine-tagged corpus of state-sponsored cyber operations.** A research dataset from
-[Black Flag Intelligence](https://blackflagintel.com).
+**A doctrine-tagged corpus of state-sponsored cyber operations.** A research dataset by
+[Kara Zajac](https://karazajac.io).
 
 AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events tagged against the
 strategic doctrines under which they were tasked. The thesis: vendor attribution names the *who*;
@@ -156,4 +156,4 @@ in the atlas.
 
 ---
 
-© 2026 Kara Zajac / Black Flag Intelligence — released under CC BY 4.0.
+© 2026 Kara Zajac — released under CC BY 4.0.

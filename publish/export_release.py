@@ -133,9 +133,9 @@ strategic doctrines under which they were tasked, with per-claim sourcing.
   record validates). Corpus statistics in `stats.json`. Documentation in `DATASHEET.md`.
 - Integrity: verify with `shasum -a 256 -c SHA256SUMS`.
 - License: **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/) — reuse freely with
-  attribution to Kara Zajac / Black Flag Intelligence (see CITATION.cff).
+  attribution to Kara Zajac (see CITATION.cff).
 - A continuously maintained version exists; this snapshot is frozen for reproducibility.
-  Questions, corrections, or consulting: Black Flag Intelligence (blackflagintel.com).
+  Questions or corrections: Kara Zajac (kara@soulstone.org).
 """)
 
     # ---- checksums (last) ----

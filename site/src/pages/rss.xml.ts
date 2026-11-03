@@ -8,7 +8,7 @@ export const GET: APIRoute = (context) => {
   const site = context.site?.toString() ?? 'https://auspex.karazajac.io';
 
   return rss({
-    title: 'AUSPEX — Black Flag Intelligence',
+    title: 'AUSPEX — Kara Zajac',
     description:
       'Doctrine-tagged state-sponsored cyber events. The strategic frame behind the cyber news cycle.',
     site,
