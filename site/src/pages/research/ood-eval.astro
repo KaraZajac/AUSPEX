@@ -76,19 +76,16 @@ const barW = hInnerW / HIST_BINS;
   <h1>Out-of-distribution detection</h1>
   <p class="lede">
     Two complementary methodologies for "is this event weird enough
-    that I should treat the engine's prediction with extra caution?"
-    <strong>Jaccard nearest-neighbor</strong> catches structural
+    that I should treat the engine's prediction with extra caution?" <strong>Jaccard nearest-neighbor</strong> catches structural
     novelty — events whose feature set doesn't match anything in
-    the training corpus. <strong>Calibrated-softmax entropy</strong>
-    catches model uncertainty — events where the engine itself can't
+    the training corpus. <strong>Calibrated-softmax entropy</strong> catches model uncertainty — events where the engine itself can't
     decide between candidates. They're orthogonal signals; we expose
     both.
   </p>
 
   {!data ? (
     <p class="reading">
-      <strong>No cached result.</strong> Run <code>pnpm run eval-ood</code>
-      from <code>site/</code> to populate <code>.cache/ood-eval.json</code>,
+      <strong>No cached result.</strong> Run <code>pnpm run eval-ood</code> from <code>site/</code> to populate <code>.cache/ood-eval.json</code>,
       then rebuild.
     </p>
   ) : (
@@ -238,16 +235,14 @@ const barW = hInnerW / HIST_BINS;
         <h2>Methodology</h2>
         <ol>
           <li>
-            <strong>Jaccard nearest-neighbor (existing).</strong>
-            Feature-set similarity max over training events.
+            <strong>Jaccard nearest-neighbor (existing).</strong> Feature-set similarity max over training events.
             1 − max-similarity = distance. Hand-tuned thresholds
             (0.55 borderline, 0.75 OOD) selected to match the LOO
             error-rate transition. Catches structural OOD — events
             whose features don't co-occur in any training event.
           </li>
           <li>
-            <strong>Calibrated-softmax entropy (Hendrycks &amp; Gimpel 2016).</strong>
-            Softmax the top-10 NB log-scores with temperature scaling
+            <strong>Calibrated-softmax entropy (Hendrycks &amp; Gimpel 2016).</strong> Softmax the top-10 NB log-scores with temperature scaling
             (T = {(2.0).toFixed(1)}, fitted via the engine-wide
             calibration); take Shannon entropy. High entropy means
             the engine is spread thin across many candidates.
@@ -274,8 +269,7 @@ const barW = hInnerW / HIST_BINS;
           exactly once with its entropy computed from a model that
           never saw it). The single-LOO distribution is a close
           approximation but should be re-computed under k-fold for
-          the snapshot. See <a href="/research/stacked-eval">/research/stacked-eval</a>
-          for the k-fold pattern.
+          the snapshot. See <a href="/research/stacked-eval">/research/stacked-eval</a> for the k-fold pattern.
         </p>
       </section>
     </>
