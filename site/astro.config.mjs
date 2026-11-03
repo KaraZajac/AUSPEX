@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://auspex.blackflagintel.com',
+  site: 'https://auspex.karazajac.io',
   server: {
     host: '127.0.0.1',
     port: 4321,

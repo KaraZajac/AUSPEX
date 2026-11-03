@@ -10,7 +10,7 @@ AUSPEX is a hand-curated, source-anchored corpus of state-sponsored cyber events
 strategic doctrines under which they were tasked. The thesis: vendor attribution names the *who*;
 doctrine names the *why*. Both are necessary; the join is the contribution.
 
-**Live site:** [auspex.blackflagintel.com](https://auspex.blackflagintel.com) — browse every event,
+**Live site:** [auspex.karazajac.io](https://auspex.karazajac.io) — browse every event,
 actor, and doctrine, with the attribution/doctrine engine and prospective forecasts.
 
 ## The dataset

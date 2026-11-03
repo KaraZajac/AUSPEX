@@ -22,7 +22,7 @@ commercial threat-intel firms publishing research data — is **dual-track**:
   get. It ages naturally — it is a historical snapshot, not the living product.
 - **Living product:** the continuously-updated atlas + engine + site stays yours, under
   whatever commercial terms you want. The paper can say "a continuously maintained version is
-  available at auspex.blackflagintel.com."
+  available at auspex.karazajac.io."
 
 License options for the research snapshot, in order of venue-compatibility:
 1. **CC BY 4.0** — required by Scientific Data and friends; maximal reuse incl. commercial.

@@ -42,6 +42,6 @@ mirror-corroborated).
 
 ### Notes
 - This is a frozen research snapshot; a continuously maintained version lives at
-  https://auspex.blackflagintel.com.
+  https://auspex.karazajac.io.
 - The pre-registered confirmatory predictions (`thesis/preregistration-2026-06.md`) are **not** locked
   by this release — the `v1.0-dissertation` pre-registration freeze is a separate, later tag.

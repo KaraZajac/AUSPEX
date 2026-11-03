@@ -131,7 +131,7 @@ self-funded; machine-assisted curation with human verification (see Reliability)
 - **License:** CC BY 4.0 (decided 2026-06-09 — open gold standard, widest audience; reuse
   requires attribution to Kara Zajac / Black Flag Intelligence).
 - **DOI / access:** Zenodo, frozen tag `v1.0-dissertation`; living version at
-  auspex.blackflagintel.com.
+  auspex.karazajac.io.
 
 ## Maintenance
 

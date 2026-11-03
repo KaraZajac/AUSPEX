@@ -5,7 +5,7 @@ import { atlas, eventStateId } from '../utils/atlas';
 export const GET: APIRoute = (context) => {
   const a = atlas();
   const events = a.recentEvents(50);
-  const site = context.site?.toString() ?? 'https://auspex.blackflagintel.com';
+  const site = context.site?.toString() ?? 'https://auspex.karazajac.io';
 
   return rss({
     title: 'AUSPEX — Black Flag Intelligence',
